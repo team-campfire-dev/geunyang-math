@@ -16,6 +16,8 @@
 | migration 계정 | `geunyang_math_migrator` — 전용 DB의 DML, CREATE, ALTER, INDEX, REFERENCES |
 | DB 계정의 접속 제한 | 앱 VM `10.0.0.130`에서만 접속, REQUIRE SSL |
 
+DB 서버의 `partial_revokes=OFF`에서는 DB 권한 이름의 `_`가 와일드카드다. 두 계정 모두 `geunyang\_math`로 escape한 DB scope만 부여해 비슷한 이름의 다른 DB로 권한이 넓어지지 않도록 했다.
+
 이번 운영 범위는 공개 클래스 카탈로그와 수업 설명 열람이다. Google OAuth가 없는 상태이므로 운영 환경에서는 개발용 계정 생성과 기존 개발 세션 사용을 모두 거부한다. 개인 학습 저장을 공개하려면 운영용 인증을 별도로 연결해야 한다.
 
 ## Cooo에서 참고한 부분
@@ -76,7 +78,7 @@ include /data/nginx/geunyang-math/server.conf;
 - 앱 VM 자원·포트와 DB 서버 버전·TLS 지원: 읽기 전용 확인 완료.
 - 기존 DNS와 와일드카드 인증서: 확인 완료.
 - ARM64 앱 이미지와 별도 migrator: 로컬 컨테이너 빌드·실행 성공. non-root, health, revision, 개발 로그인 차단 확인.
-- 콘텐츠·학습/과제·인증/TLS 검사: 전체 89개 통과.
+- 콘텐츠·학습/과제·인증/TLS 검사 89개 통과. 배포 포인터 복구 회귀 검사 5개 추가 통과.
 - 운영 DB·계정 생성: 사용자의 명시적 승인 후 생성 완료. 두 계정의 DB 한정 권한과 앱 VM 호스트 제한, REQUIRE SSL을 확인함.
 - NPM custom HTTPS 프록시: 기존 설정 백업, nginx 문법 검사와 reload 완료.
 - GitHub 배포 시크릿: 사용자의 명시적 승인 후 6개 등록 완료. `ORACLE_DEPLOY_ENABLED=true` 설정 완료.

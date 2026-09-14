@@ -45,6 +45,7 @@ previous_image_id=''
 app_env_existed=0
 migration_env_existed=0
 environment_touched=0
+pointer_commit_started=0
 deployment_committed=0
 phase=preflight
 
@@ -170,8 +171,10 @@ on_exit() {
   rm -f -- "$symlink_temp"
   if [[ $status -ne 0 && $deployment_committed == 0 ]]; then
     log "Deployment failed during ${phase}. Restoring the previous release state." >&2
-    if ! restore_current_pointer; then
-      log 'Could not restore the current release pointer; manual recovery is required.' >&2
+    if [[ $pointer_commit_started == 1 ]]; then
+      if ! restore_current_pointer; then
+        log 'Could not restore the current release pointer; manual recovery is required.' >&2
+      fi
     fi
     # A same-SHA rebuild may replace its tag, so restore the exact old image ID.
     if [[ -n "$previous_image_id" ]]; then
@@ -264,6 +267,7 @@ run_step 'Verify public HTTPS application health' verify_endpoint "$public_origi
 run_step 'Verify public HTTPS application commit' verify_endpoint "$public_origin" version "$release_sha"
 
 phase='Commit the current release pointer'
+pointer_commit_started=1
 ln -s -- "$release_dir" "$symlink_temp"
 mv -fT -- "$symlink_temp" "$current_link"
 deployment_committed=1
