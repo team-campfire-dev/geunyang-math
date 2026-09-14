@@ -86,6 +86,20 @@ model Skill {
   key   String @id @db.VarChar(100)
   label String @db.VarChar(191)
   order Int
+  terms TermVersion[]
+}
+
+model TermVersion {
+  id          String @id @db.VarChar(191)
+  termKey     String @db.VarChar(100)
+  skillKey    String @db.VarChar(100)
+  skill       Skill @relation(fields: [skillKey], references: [key])
+  label       String @db.VarChar(191)
+  summary     String @db.VarChar(500)
+  document    Json
+  contentHash String @db.VarChar(64)
+  publishedAt DateTime @default(now())
+  @@index([termKey, publishedAt])
 }
 
 model DiagnosticVersion {

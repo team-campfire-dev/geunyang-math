@@ -1,23 +1,69 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { useId, useState, type ReactNode } from 'react';
 import katex from 'katex';
-import type { ContentBlock, PublicProblem } from '@/shared/api';
+import type { ContentBlock, GlossaryEntry, PublicProblem } from '@/shared/api';
+import { locateTerms, splitRichText, type TermAnnotation } from '@/shared/rich-text';
+import { Icon } from './icons';
 
-export function RichText({ text, asCaption = false }: { text: string; asCaption?: boolean }) {
+/**
+ * Terms the server chose to reveal here. An annotation whose term is absent renders as plain text,
+ * so the decision to withhold a definition lives on the server and never leaks into the markup.
+ */
+export type GlossaryContext = {
+  entries: GlossaryEntry[];
+  /** Concepts the learner is still practising; their terms get a stronger hint that help is there. */
+  reviewSkillKeys?: string[];
+  currentClassKey?: string;
+  onOpenClass?: (classKey: string) => void;
+};
+const noGlossary: GlossaryContext = { entries: [] };
+
+export function RichText({ text, terms = [], glossary = noGlossary, asCaption = false }: { text: string; terms?: TermAnnotation[]; glossary?: GlossaryContext; asCaption?: boolean }) {
+  const [openTerm, setOpenTerm] = useState<string | null>(null);
+  const panelId = useId();
+  const entryOf = (termKey: string) => glossary.entries.find((entry) => entry.termKey === termKey);
+  // A caption renders inline inside figcaption, where an expanding panel has nowhere to open.
+  const spans = asCaption ? [] : locateTerms(text, terms.filter((term) => entryOf(term.termKey))).spans;
+  const open = openTerm ? entryOf(openTerm) : undefined;
   // Only the math renderer creates HTML. Text and authored content remain React text nodes.
-  const fragments = text.split(/(\$\$[\s\S]+?\$\$|\\\([\s\S]+?\\\)|\$[^$\n]+?\$)/g);
+  const nodes: ReactNode[] = [];
+  const pushText = (value: string, key: number) => { if (value) nodes.push(<span key={key}>{value}</span>); };
+  for (const segment of splitRichText(text)) {
+    if (segment.kind === 'math') {
+      try {
+        const html = katex.renderToString(segment.equation, { displayMode: segment.display, throwOnError: false, trust: false, strict: 'error', maxExpand: 1000 });
+        nodes.push(<span key={segment.start} className={segment.display ? 'display-math' : undefined} dangerouslySetInnerHTML={{ __html: html }} />);
+      } catch { pushText(segment.value, segment.start); }
+      continue;
+    }
+    const segmentEnd = segment.start + segment.value.length;
+    let cursor = segment.start;
+    for (const span of spans) {
+      if (span.start < cursor || span.end > segmentEnd) continue;
+      const entry = entryOf(span.termKey)!;
+      const expanded = openTerm === span.termKey;
+      pushText(text.slice(cursor, span.start), cursor);
+      nodes.push(<button key={span.start} type="button" aria-expanded={expanded} aria-controls={expanded ? panelId : undefined}
+        className={`term-mark${glossary.reviewSkillKeys?.includes(entry.skillKey) ? ' needs-review' : ''}${expanded ? ' open' : ''}`}
+        onClick={() => setOpenTerm(expanded ? null : span.termKey)}>{text.slice(span.start, span.end)}</button>);
+      cursor = span.end;
+    }
+    pushText(text.slice(cursor, segmentEnd), cursor);
+  }
   const Wrapper = asCaption ? 'span' : 'div';
-  return <Wrapper className={asCaption ? 'caption-text' : 'rich-text'}>{fragments.map((part, index) => {
-    const display = part.startsWith('$$') && part.endsWith('$$');
-    const inline = (part.startsWith('\\(') && part.endsWith('\\)')) || (part.startsWith('$') && part.endsWith('$'));
-    if (!display && !inline) return <span key={index}>{part}</span>;
-    const equation = part.slice(display || part.startsWith('\\(') ? 2 : 1, display || part.startsWith('\\(') ? -2 : -1);
-    try {
-      const html = katex.renderToString(equation, { displayMode: display, throwOnError: false, trust: false, strict: 'error', maxExpand: 1000 });
-      return <span key={index} className={display ? 'display-math' : undefined} dangerouslySetInnerHTML={{ __html: html }} />;
-    } catch { return <span key={index}>{part}</span>; }
-  })}</Wrapper>;
+  return <Wrapper className={asCaption ? 'caption-text' : 'rich-text'} onKeyDown={(event) => { if (event.key === 'Escape' && openTerm) { event.stopPropagation(); setOpenTerm(null); } }}>
+    {nodes}
+    {open && <aside className="term-panel" id={panelId}>
+      <div className="term-panel-head"><strong>{open.label}</strong>
+        <button type="button" className="icon-button" aria-label="용어 설명 닫기" onClick={() => setOpenTerm(null)}><Icon name="close" size={15} /></button></div>
+      <p className="term-summary">{open.summary}</p>
+      {/* Definitions never nest: the inner blocks render without a glossary of their own. */}
+      <ContentBlocks blocks={open.blocks} />
+      {open.classKey && open.classKey !== glossary.currentClassKey && glossary.onOpenClass &&
+        <button type="button" className="text-button" onClick={() => glossary.onOpenClass!(open.classKey!)}>이 개념 다시 배우기<Icon name="arrow" size={15} /></button>}
+    </aside>}
+  </Wrapper>;
 }
 
 export function FractionStrip({ parts, filled, label, accessibleLabel }: { parts: number; filled: number; label?: string; accessibleLabel?: string }) {
@@ -29,13 +75,18 @@ export function FractionStrip({ parts, filled, label, accessibleLabel }: { parts
   </figure>;
 }
 
-type BlockContext = { problems: PublicProblem[]; renderProblem: (problem: PublicProblem) => ReactNode };
+type BlockContext = { problems: PublicProblem[]; renderProblem: (problem: PublicProblem) => ReactNode; glossary: GlossaryContext };
 type Renderer = { validate: (payload: Record<string, unknown>, context: BlockContext) => boolean; render: (block: ContentBlock, context: BlockContext) => ReactNode };
 const validFraction = (payload: Record<string, unknown>) => Number.isInteger(payload.parts) && Number(payload.parts) >= 1 && Number(payload.parts) <= 100 && Number.isInteger(payload.filled) && Number(payload.filled) >= 0 && Number(payload.filled) <= Number(payload.parts);
+const validTerms = (payload: Record<string, unknown>) => Array.isArray(payload.terms) && payload.terms.every((term) => !!term && typeof term === 'object' && typeof (term as TermAnnotation).termKey === 'string' && typeof (term as TermAnnotation).surface === 'string');
 const registry: Record<string, Renderer> = {
   'core.rich_text@1': {
     validate: (payload) => typeof payload.text === 'string',
     render: (block) => <RichText text={block.payload.text as string} />,
+  },
+  'core.rich_text@2': {
+    validate: (payload) => typeof payload.text === 'string' && validTerms(payload),
+    render: (block, context) => <RichText text={block.payload.text as string} terms={block.payload.terms as TermAnnotation[]} glossary={context.glossary} />,
   },
   'math.fraction_strip@1': {
     validate: (payload) => validFraction(payload) && (!String(payload.label ?? '').includes('$') || typeof payload.labelAlt === 'string'),
@@ -59,12 +110,12 @@ const registry: Record<string, Renderer> = {
 };
 
 export function unsupportedRequiredBlocks(blocks: ContentBlock[], problems: PublicProblem[] = []): boolean {
-  const context: BlockContext = { problems, renderProblem: () => null };
+  const context: BlockContext = { problems, renderProblem: () => null, glossary: noGlossary };
   return blocks.some((block) => block.required && !registry[`${block.kind}@${block.typeVersion}`]?.validate(block.payload, context));
 }
 
-export function ContentBlocks({ blocks, problems = [], renderProblem = () => null }: { blocks: ContentBlock[]; problems?: PublicProblem[]; renderProblem?: BlockContext['renderProblem'] }) {
-  const context: BlockContext = { problems, renderProblem };
+export function ContentBlocks({ blocks, problems = [], renderProblem = () => null, glossary = noGlossary }: { blocks: ContentBlock[]; problems?: PublicProblem[]; renderProblem?: BlockContext['renderProblem']; glossary?: GlossaryContext }) {
+  const context: BlockContext = { problems, renderProblem, glossary };
   return <div className="content-blocks">{blocks.map((block) => {
     const renderer = registry[`${block.kind}@${block.typeVersion}`];
     if (!renderer?.validate(block.payload, context)) return <div key={block.blockId} className={block.required ? 'unsupported-block' : 'optional-block'} role={block.required ? 'alert' : undefined}>

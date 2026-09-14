@@ -9,12 +9,28 @@ import initial from './fixtures/initial-content.json';
 import { seedClasses } from './fixtures/content';
 
 const bundle = () => parseContentBundle(structuredClone(initial));
-const empty = () => ({ schemaVersion: 1 as const, skills: [], classes: [], diagnostics: [] });
+const empty = () => ({ schemaVersion: 1 as const, skills: [], classes: [], diagnostics: [], terms: [] });
 function newClass() {
   const key = `content-test-${randomUUID()}`;
   const c = JSON.parse(JSON.stringify(seedClasses[0]).replaceAll('fraction-meaning', key)) as typeof seedClasses[number];
   c.public.order = 1000;
   return c;
+}
+
+const termFixture = {
+  versionId: 'term.denominator:v1', termKey: 'term.denominator', skillKey: 'fraction.meaning',
+  label: '분모', summary: '전체를 몇 조각으로 나누었는지 나타내는 수예요.',
+  blocks: [{ blockId: 'term.denominator:v1:b1', kind: 'core.rich_text', typeVersion: 1, required: true,
+    payload: { text: '분모는 전체를 몇 조각으로 나누었는지 알려줘요.' } }],
+};
+/** The third class links a prerequisite term; its own concept must never link here. */
+function withTerms() {
+  const b = bundle();
+  b.terms = [structuredClone(termFixture)];
+  const block = b.classes[2].sections[0].contentBlocks[0];
+  b.classes[2].sections[0].contentBlocks[0] = { ...block, typeVersion: 2,
+    payload: { text: block.payload.text, terms: [{ termKey: 'term.denominator', surface: '분모' }] } };
+  return b;
 }
 
 describe('content publishing contract', () => {
@@ -44,6 +60,31 @@ describe('content publishing contract', () => {
     expect(() => validateReferences(a)).toThrow(/letter case/);
     const b = bundle(); b.diagnostics[0].problems[0].problemVersionId = b.classes[0].problems[0].problemVersionId.toUpperCase();
     expect(() => validateReferences(b)).toThrow(/letter case/);
+  });
+  it('links class text to published terms and rejects a class that links to none', () => {
+    expect(() => validateReferences(withTerms())).not.toThrow();
+    const orphan = withTerms(); orphan.terms = [];
+    expect(() => validateReferences(orphan)).toThrow(/Missing term/);
+    const moved = withTerms(); moved.terms.push({ ...moved.terms[0], versionId: 'term.denominator:v2', skillKey: 'fraction.addition' });
+    expect(() => validateReferences(moved)).toThrow(/concept cannot change/);
+    const cased = withTerms(); cased.terms.push({ ...cased.terms[0], versionId: 'term.denominator:v2', termKey: 'TERM.denominator' });
+    expect(() => validateReferences(cased)).toThrow(/letter case/);
+  });
+  it('refuses a question that explains the concept it assesses', () => {
+    const b = withTerms();
+    const problem = b.classes[0].problems[0];
+    problem.promptContent[0] = { ...problem.promptContent[0], typeVersion: 2,
+      payload: { text: '분모가 4인 분수를 고르세요.', terms: [{ termKey: 'term.denominator', surface: '분모' }] } };
+    expect(problem.skillKeys).toContain('fraction.meaning');
+    expect(() => validateReferences(b)).toThrow(/cannot explain the concept it assesses/);
+  });
+  it('keeps term definitions free of questions and of further term links', () => {
+    const withBlock = (block: unknown) => ({ ...structuredClone(initial), terms: [{ ...termFixture, blocks: [block] }] });
+    expect(() => parseContentBundle(withBlock({ blockId: 'term:bad:v1', kind: 'core.problem_set', typeVersion: 1, required: true,
+      payload: { problemVersionIds: [initial.classes[0].problems[0].problemVersionId] } }))).toThrow();
+    expect(() => parseContentBundle(withBlock({ blockId: 'term:bad:v1', kind: 'core.rich_text', typeVersion: 2, required: true,
+      payload: { text: '분모를 설명해요.', terms: [{ termKey: 'term.denominator', surface: '분모' }] } }))).toThrow();
+    expect(() => parseContentBundle(withBlock(termFixture.blocks[0]))).not.toThrow();
   });
   it('keeps fixture imports outside runtime and migrator code', () => {
     function visit(dir: string): string[] { return readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? visit(`${dir}/${e.name}`) : /\.[cm]?[jt]sx?$/.test(e.name) ? [`${dir}/${e.name}`] : []); }
@@ -168,5 +209,52 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     expect(catalogue.skills.map(skill => skill.key)).not.toContain(unreleased);
     // Signed-out copy reads these labels, so the response must stay free of answers and grading rules.
     expect(JSON.stringify(catalogue)).not.toMatch(/"(?:gradingSpec|solution|hints)"/);
+  });
+
+  it('publishes terms, reveals only the earlier concept, and rewords a definition without a new class', async () => {
+    const suffix = randomUUID();
+    const earlier = `test.earlier.${suffix}`, current = `test.current.${suffix}`;
+    const first = newClass(), second = newClass();
+    first.public.order = 1001; first.public.skillKeys = [earlier]; first.public.prerequisiteSkillKeys = [];
+    first.problems.forEach(p => { p.skillKeys = [earlier]; });
+    second.public.order = 1002; second.public.skillKeys = [current]; second.public.prerequisiteSkillKeys = [earlier];
+    second.problems.forEach(p => { p.skillKeys = [current]; });
+    const earlierTerm = { versionId: `term.earlier.${suffix}:v1`, termKey: `term.earlier.${suffix}`, skillKey: earlier,
+      label: '분모', summary: '전체를 나눈 조각 수예요.', blocks: [{ blockId: `term.earlier.${suffix}:v1:b1`,
+        kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '분모는 전체를 몇 조각으로 나누었는지 알려줘요.' } }] };
+    const currentTerm = { ...earlierTerm, versionId: `term.current.${suffix}:v1`, termKey: `term.current.${suffix}`,
+      skillKey: current, label: '통분', summary: '분모를 같게 맞추는 일이에요.',
+      blocks: [{ ...earlierTerm.blocks[0], blockId: `term.current.${suffix}:v1:b1` }] };
+    const block = second.sections[0].contentBlocks[0];
+    second.sections[0].contentBlocks[0] = { ...block, typeVersion: 2, payload: { text: '분모가 다르면 통분을 해요.',
+      terms: [{ termKey: earlierTerm.termKey, surface: '분모' }, { termKey: currentTerm.termKey, surface: '통분' }] } };
+    const input = { ...empty(), classes: [first, second], terms: [earlierTerm, currentTerm],
+      skills: [{ key: earlier, label: '앞선 개념', order: 1001 }, { key: current, label: '지금 개념', order: 1002 }] };
+
+    await expect(importContent(db, { ...input, terms: [] })).rejects.toThrow(/Missing term/);
+    expect(await db.classVersion.findUnique({ where: { id: second.public.versionId } })).toBeNull();
+    expect(await importContent(db, input, true)).toMatchObject({ dryRun: true, newTerms: 2 });
+    expect(await db.termVersion.findUnique({ where: { id: earlierTerm.versionId } })).toBeNull();
+    await importContent(db, input);
+    expect((await verifyContent(db)).termVersions).toBeGreaterThanOrEqual(2);
+
+    const document = await service.classDocument(second.public.classKey);
+    expect(document.glossary.map(entry => entry.termKey)).toEqual([earlierTerm.termKey]);
+    expect(document.glossary[0]).toMatchObject({ label: '분모', skillKey: earlier, classKey: first.public.classKey });
+    // The withheld definition is absent from the payload, not merely unrendered.
+    expect(JSON.stringify(document)).not.toContain(currentTerm.summary);
+
+    const reworded = { ...currentTerm, versionId: `term.earlier.${suffix}:v2`, termKey: earlierTerm.termKey,
+      skillKey: earlier, label: '분모', summary: '다시 쓴 설명이에요.', blocks: [{ ...earlierTerm.blocks[0], blockId: `term.earlier.${suffix}:v2:b1` }] };
+    const classRows = await db.classVersion.findMany({ orderBy: { id: 'asc' } });
+    await importContent(db, { ...empty(), terms: [reworded] });
+    expect((await service.classDocument(second.public.classKey)).glossary[0].summary).toBe('다시 쓴 설명이에요.');
+    expect(await db.classVersion.findMany({ orderBy: { id: 'asc' } })).toEqual(classRows);
+
+    const edited = { ...earlierTerm, summary: 'Cannot overwrite' };
+    await expect(importContent(db, { ...empty(), terms: [edited] })).rejects.toThrow(/Published term is immutable/);
+    expect((await db.termVersion.findUniqueOrThrow({ where: { id: earlierTerm.versionId } })).summary).toBe(earlierTerm.summary);
+    const exported = await exportContent(db);
+    expect(await importContent(db, JSON.parse(JSON.stringify(exported)))).toMatchObject({ newTerms: 0, newClasses: 0 });
   });
 });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getActivityProblemIds, supportedBlockTypes, toPublicClass, validateClass } from '@/core/content';
+import { blockTermKeys, getActivityProblemIds, supportedBlockTypes, termReferences, toPublicClass, validateClass } from '@/core/content';
 import { seedClasses, skillLabels } from './fixtures/content';
 
 describe('versioned class content', () => {
@@ -222,5 +222,47 @@ describe('versioned class content', () => {
 
   it('fails clearly for a section that is not in the pinned class version', () => {
     expect(() => getActivityProblemIds(seedClasses[0], 'missing:v2')).toThrow(/Unknown section/);
+  });
+});
+
+describe('glossary term annotations in class text', () => {
+  const annotated = (terms: unknown[], blockIndex = 0) => {
+    const record = structuredClone(seedClasses[2]);
+    const block = record.sections[0].contentBlocks[blockIndex];
+    block.typeVersion = 2;
+    block.payload = { text: block.payload.text, terms };
+    return record;
+  };
+
+  it('registers the annotated text format alongside the plain one', () => {
+    expect(supportedBlockTypes).toContainEqual({ kind: 'core.rich_text', typeVersion: 1 });
+    expect(supportedBlockTypes).toContainEqual({ kind: 'core.rich_text', typeVersion: 2 });
+  });
+
+  it('accepts an annotation that resolves in the block text', () => {
+    const record = annotated([{ termKey: 'term.denominator', surface: '분모' }, { termKey: 'term.equivalent', surface: '동치분수' }]);
+    expect(() => validateClass(record)).not.toThrow();
+    expect(toPublicClass(record).sections[0].contentBlocks[0].payload.terms).toHaveLength(2);
+  });
+
+  it('rejects an annotation the text does not carry', () => {
+    expect(() => validateClass(annotated([{ termKey: 'term.decimal', surface: '소수점' }]))).toThrow(/does not occur/);
+    expect(() => validateClass(annotated([{ termKey: 'term.denominator', surface: '분모', occurrence: 99 }]))).toThrow(/does not occur/);
+  });
+
+  it('rejects a malformed annotation payload', () => {
+    expect(() => validateClass(annotated([{ termKey: 'term.denominator' }]))).toThrow(/Invalid payload/);
+    expect(() => validateClass(annotated([{ termKey: 'term.denominator', surface: '분모', note: '설명' }]))).toThrow(/Invalid payload/);
+  });
+
+  it('reports term references with the skills of the problem that holds them', () => {
+    const record = structuredClone(seedClasses[2]);
+    record.sections[0].contentBlocks[0] = { ...record.sections[0].contentBlocks[0], typeVersion: 2,
+      payload: { text: record.sections[0].contentBlocks[0].payload.text, terms: [{ termKey: 'term.denominator', surface: '분모' }] } };
+    const problem = record.problems[0];
+    problem.hints[0] = { ...problem.hints[0], typeVersion: 2, payload: { text: problem.hints[0].payload.text, terms: [] } };
+    expect(() => validateClass(record)).not.toThrow();
+    expect(termReferences(record)).toEqual([{ termKey: 'term.denominator', blockId: record.sections[0].contentBlocks[0].blockId, problemSkillKeys: null }]);
+    expect(blockTermKeys(record.sections[0].contentBlocks)).toEqual(['term.denominator']);
   });
 });

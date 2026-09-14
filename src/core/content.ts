@@ -1,7 +1,8 @@
 import 'server-only';
 
 import { z } from 'zod';
-import type { ClassDocument, ClassSection, ContentBlock, PublicClass, PublicProblem } from '@/shared/api';
+import type { ClassDocument, ClassSection, ContentBlock, GlossaryEntry, PublicClass, PublicProblem } from '@/shared/api';
+import { locateTerms, type TermAnnotation } from '@/shared/rich-text';
 
 /** Private content records stay on the server; only toPublicClass crosses the API boundary. */
 export type StoredProblem = PublicProblem & {
@@ -37,8 +38,19 @@ const carriesMath = (value?: string) => !!value && (value.includes('$') || value
 const plainText = (max: number) => z.string().trim().min(1).max(max).refine((value) => !carriesMath(value), 'Accessible text must not contain math markup');
 
 /** New block kinds register a versioned payload schema here and a renderer in the UI. */
+const richText = z.string().min(1).max(20_000);
+const termAnnotation = z.object({
+  termKey: id.max(100),
+  surface: z.string().min(1).max(100),
+  // Terms repeat in a paragraph; the author picks which mention carries the definition.
+  occurrence: z.number().int().min(1).max(100).optional(),
+}).strict();
 const blockSchemas = {
-  'core.rich_text@1': z.object({ text: z.string().min(1).max(20_000) }).strict(),
+  'core.rich_text@1': z.object({ text: richText }).strict(),
+  'core.rich_text@2': z.object({ text: richText, terms: z.array(termAnnotation).max(20) }).strict()
+    .superRefine((payload, ctx) => {
+      for (const issue of locateTerms(payload.text, payload.terms).issues) ctx.addIssue({ code: 'custom', message: issue });
+    }),
   'core.problem_set@1': z.object({ problemVersionIds: z.array(id).min(1).max(50) }).strict(),
   // caption may carry math: the wrapping role="img" takes its accessible name from alt.
   'core.figure@1': z.object({
@@ -77,6 +89,12 @@ const blockSchema = z.object({
   const parsed = schema.safeParse(block.payload);
   if (!parsed.success) ctx.addIssue({ code: 'custom', path: ['payload'], message: `Invalid payload for ${key}: ${parsed.error.message}` });
 });
+
+// Term definitions are leaves: no problem groups, and no annotations nesting a term inside a term.
+export const termContentBlockSchema = blockSchema.refine(
+  (block) => block.kind !== 'core.problem_set' && !(block.kind === 'core.rich_text' && block.typeVersion === 2),
+  { message: 'Term definitions cannot embed problems or further term annotations' },
+);
 
 const responseSchema = z.object({
   kind: z.enum(['integer', 'rational']),
@@ -202,13 +220,36 @@ function publicProblem(problem: StoredProblem): PublicProblem {
   };
 }
 
-export function toPublicClass(record: StoredClass): ClassDocument {
+export function toPublicClass(record: StoredClass, glossary: GlossaryEntry[] = []): ClassDocument {
   validateClass(record);
   return {
     ...structuredClone(record.public),
     sections: structuredClone(record.sections),
     problems: record.problems.map(publicProblem),
+    glossary: structuredClone(glossary),
   };
+}
+
+const blockAnnotations = (block: ContentBlock): TermAnnotation[] =>
+  block.kind === 'core.rich_text' && block.typeVersion === 2 ? (block.payload.terms as TermAnnotation[]) : [];
+
+/** Term keys linked from any of these blocks, for resolving definitions before delivery. */
+export function blockTermKeys(blocks: ContentBlock[]): string[] {
+  return [...new Set(blocks.flatMap((block) => blockAnnotations(block).map((term) => term.termKey)))];
+}
+
+/**
+ * Term annotations name a published term by key; the definition itself lives in its own version so
+ * that rewording it does not republish every class. Callers resolve the keys against TermVersion.
+ */
+export function termReferences(record: StoredClass): { termKey: string; blockId: string; problemSkillKeys: string[] | null }[] {
+  const annotations = (block: ContentBlock, problemSkillKeys: string[] | null) =>
+    blockAnnotations(block).map((term) => ({ termKey: term.termKey, blockId: block.blockId, problemSkillKeys }));
+  return [
+    ...record.sections.flatMap((section) => section.contentBlocks.flatMap((block) => annotations(block, null))),
+    ...record.problems.flatMap((problem) => [...problem.promptContent, ...problem.hints, ...problem.solution]
+      .flatMap((block) => annotations(block, problem.skillKeys))),
+  ];
 }
 
 export function getActivityProblemIds(record: StoredClass, sectionId: string): string[] {

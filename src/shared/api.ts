@@ -33,7 +33,17 @@ export type PublicClass = {
   sectionCount: number;
   order: number;
 };
-export type ClassDocument = PublicClass & { sections: ClassSection[]; problems: PublicProblem[] };
+/**
+ * A term the learner may review while reading. Only terms the server decided to reveal are sent,
+ * so a definition for the concept currently being taught or assessed never reaches the client.
+ */
+export type GlossaryEntry = {
+  termKey: string; label: string; summary: string; skillKey: string;
+  blocks: ContentBlock[];
+  // The class that teaches this concept, when one is published.
+  classKey: string | null;
+};
+export type ClassDocument = PublicClass & { sections: ClassSection[]; problems: PublicProblem[]; glossary: GlossaryEntry[] };
 // Display-only concept names for the signed-out catalogue. Never carries answers or grading rules.
 export type PublicSkill = { key: string; label: string };
 export type PublicCatalog = { classes: PublicClass[]; skills: PublicSkill[] };
@@ -50,6 +60,7 @@ export type AssignmentView = {
   items: { id: string; problem: PublicProblem; attempt: AttemptView | null }[];
   submissionId: string;
   reason?: string;
+  glossary: GlossaryEntry[];
 };
 export type DiagnosticAnswer = { problemVersionId: string; answer: string | null; status: 'correct' | 'incorrect' | 'skipped' };
 export type DiagnosticOffering = { version: string; title: string; description: string; total: number; estimatedMinutes: number };
