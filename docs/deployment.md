@@ -1,6 +1,6 @@
 # Oracle 운영 배포
 
-2026-09-14 배포 준비. 현재 상태는 아래 검증 기록을 기준으로 한다.
+2026-09-14 기준 운영 배포 완료. 최근 기능 릴리스는 DB 콘텐츠 전환 `0c5e505`이며, 릴리스별 실행과 검증 범위는 아래 [검증 기록](#릴리스별-검증-기록)을 기준으로 한다. 문서 변경 이후 최신 배포 commit은 `/api/version`과 GitHub Actions에서 확인한다.
 
 ## 대상과 범위
 
@@ -18,7 +18,7 @@
 
 DB 서버의 `partial_revokes=OFF`에서는 DB 권한 이름의 `_`가 와일드카드다. 두 계정 모두 `geunyang\_math`로 escape한 DB scope만 부여해 비슷한 이름의 다른 DB로 권한이 넓어지지 않도록 했다.
 
-기존 공개 범위는 클래스 카탈로그와 수업 설명 열람이다. 이번 변경에는 Google 웹 로그인과 같은 Google 계정의 학습 기록 복원을 구현했고 전용 Google web client·배포 시크릿을 준비했다. 운영에서 개인 학습 저장을 제공하는 상태는 해당 릴리스의 배포·실계정 검증 결과로 확정한다. 개발용 계정 생성과 기존 개발 세션 사용은 운영에서 계속 거부한다.
+비로그인 사용자는 클래스 카탈로그와 수업 설명을 열람할 수 있다. Google 로그인 후에는 개인 진도·답안·과제·진단·추천 이력을 저장하고 같은 계정으로 복원한다. Google 운영 로그인·설정 복원과 DB 콘텐츠 전환 후 기존 학습 상태 조회를 확인했다. 개발용 계정 생성과 기존 개발 세션 사용은 운영에서 거부한다.
 
 ## Cooo에서 참고한 부분
 
@@ -96,7 +96,7 @@ Google `sub`를 대소문자까지 구분해 `GoogleIdentity`에 연결한다. �
 | Access List | Public |
 | Cache Assets | 꺼짐 |
 
-인증서는 2026-11-17까지 유효함을 확인했다. 프록시 호스트와 인증서 설정은 NPM UI에서 변경하며, 앱 배포 workflow는 이 설정을 수정하지 않는다.
+2026-09-14 점검에서 인증서 만료일이 2026-11-17임을 확인했다. 이후 갱신 여부는 NPM에서 확인한다. 프록시 호스트와 인증서 설정은 NPM UI에서 변경하며, 앱 배포 workflow는 이 설정을 수정하지 않는다.
 
 UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고, `/home/ubuntu/nginx/data/nginx/custom/http.conf`에서 이 프로젝트 설정을 포함하던 한 줄만 제거했다. 서버에 남아 있는 `/home/ubuntu/nginx/data/nginx/geunyang-math/server.conf`는 현재 비활성 파일이며 사용하지 않는다. 저장소의 이전 custom 프록시 설정과 설치 스크립트도 제거했다. 같은 도메인의 변경은 기존 Proxy Hosts 항목에서 진행한다.
 
@@ -112,18 +112,29 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 
 독립 앱 서비스만 교체하므로 같은 VM의 Cooo·서랍·Constella 등은 재시작하지 않는다. 새 배포가 진행 중인 운영 workflow를 자동 취소하지 않으며, 원격에서도 프로젝트별 잠금을 사용한다.
 
-## 검증 기록
+## 릴리스별 검증 기록
 
-- 앱 VM 자원·포트와 DB 서버 버전·TLS 지원: 읽기 전용 확인 완료.
-- 기존 DNS와 와일드카드 인증서: 확인 완료.
-- ARM64 앱 이미지와 별도 migrator: 로컬 컨테이너 빌드·실행 성공. non-root, health, revision, 개발 로그인 차단 확인.
-- Google OAuth 변경 후 로컬 전체 검사 161개와 타입 검사 통과. OAuth 공식 verifier 단위 검사 21개·MySQL 인증 통합 검사 10개, 클라이언트 인증 경계 검사 28개 포함. 실제 Google 계정의 로그인 결과와는 구분한다.
-- 운영 DB·계정 생성: 사용자의 명시적 승인 후 생성 완료. 두 계정의 DB 한정 권한과 앱 VM 호스트 제한, REQUIRE SSL을 확인함.
-- NPM Proxy Hosts UI: 도메인과 `http://10.0.0.130:3007` 연결, 와일드카드 SSL 설정 저장 및 Online 상태 확인. 기존 custom include는 백업 후 제거 완료.
-- GitHub 배포 시크릿: 사용자의 명시적 승인 후 6개 등록 완료. `ORACLE_DEPLOY_ENABLED=true` 설정 완료.
-- Google OAuth 전용 web client 생성과 앱 배포 시크릿 등록: 완료. 릴리스별 운영 배포·추가 migration·실계정 검증 결과는 아래 Actions 실행과 별도 배포 결과 기록을 기준으로 확인.
-- 실제 DB TLS 연결, 운영 migration, 공개 HTTPS와 배포 SHA는 [GitHub Actions](https://github.com/team-campfire-dev/geunyang-math/actions)의 운영 배포 기록에서 확인한다. 기존 릴리스의 성공을 새 OAuth 릴리스의 검증 완료로 취급하지 않는다.
+모든 날짜는 2026-09-14다. 아래 commit은 기능 검증 당시의 릴리스이며, 후속 문서 배포의 commit과 다를 수 있다.
 
-운영 연결 후에는 TLS cipher 존재, 잘못된 CA/호스트 이름 거부, 앱 계정의 DDL 거부, health 200, 정확한 commit, 카탈로그 3개, 비인증 쓰기 거부를 확인한다. 이 준비 기록은 특정 후속 릴리스의 정상 상태를 보장하지 않으며, 릴리스별 성공 여부는 해당 배포 실행 결과를 기준으로 한다.
+| 릴리스 | commit | 검증·운영 결과 |
+|---|---|---|
+| [Google 로그인 #4](https://github.com/team-campfire-dev/geunyang-math/pull/4) | `4509346` | 161개 테스트, 웹·모바일 빌드, 운영 DB migration·배포 성공. 실제 Google 로그인에서 학습 시간 저장→로그아웃→같은 계정 재로그인 복원 확인. [실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/34805433313) |
+| [규칙 기반 개인화 #5](https://github.com/team-campfire-dev/geunyang-math/pull/5) | `87a1717` | 179개 테스트, 웹·모바일 빌드·운영 배포 성공. 로컬 브라우저 진단 이어하기·추천 변경·직접 선택 검증, 운영 개인화 화면 조회 확인. [실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/34809013344) |
+| [DB 콘텐츠 관리 #6](https://github.com/team-campfire-dev/geunyang-math/pull/6) | `0c5e505` | 190개 테스트, 신규 DB 설치·기존 DB 업그레이드·CLI 검증, 웹·모바일 빌드·Oracle 배포 성공. 공개 클래스 3개·블록·15문항의 이전 내용 일치와 기존 계정 학습 상태 조회 확인. [실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/34811307476) |
+
+DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVersion과 초기 콘텐츠를 등록한다. 기본 콘텐츠는 클래스 3개(수업·숙제 문항 15개), 진단 1종(6문항), 개념 3개다. 기존 ClassVersion 행의 내용·해시·발행 시각을 덮어쓰지 않는다. 배포용 migrator는 `db:migrate` 후 `content:verify`를 실행하며 기본 파일을 매번 다시 seed하지 않는다. 등록 명령과 불변 판본 정책은 [DB 콘텐츠 관리](content-management.md)를 따른다.
+
+초기 인프라 점검에서는 앱 VM·포트·DNS·와일드카드 인증서, ARM64 non-root 이미지·revision·health, DB TLS 연결과 잘못된 CA/호스트 이름 거부, 앱 계정의 DB 한정 DML·호스트 제한·REQUIRE SSL을 확인했다. NPM Proxy Hosts 등록과 Google HTTPS callback 로그 제외, 배포 시크릿 6개와 자동 배포 활성화도 완료했다. 이 기록은 이후 인증서·권한·프록시 변경을 자동 검증한다는 뜻은 아니다.
+
+최근 기능 릴리스에서는 공개 health 정상, 정확한 commit, `googleLogin=true`·`developmentLogin=false`를 확인했다. 공개 API의 클래스 문서에서 비공개 채점 명세가 노출되지 않음을 비교했다. 운영 화면 점검은 기존 계정의 조회만 수행했고 실제 진단·과제 답안을 새로 제출하지 않았다. 기존 DB 업그레이드의 모든 행·해시·시각·snapshot 보존 비교는 별도의 로컬 테스트 DB에서 수행했다.
+
+## 운영 후속 작업
+
+- 백업 생성·복원 훈련과 복구 소요 시간 확인.
+- 계정 삭제·데이터 보관 절차, 장애 관측과 모니터링 확장.
+- 사용자 결정에 따라 Google 동의 화면의 공유 이름 변경.
+- 인증서 갱신과 DB CA/호스트 변경 시 앱·migrator의 TLS 연결 및 프록시 설정 재검증.
+
+새 릴리스는 해당 Actions 성공과 공개 `/api/health`·`/api/version`을 확인한다. 과거 릴리스의 성공 기록만으로 현재 배포 상태를 확정하지 않는다.
 
 구현 근거: [Google OpenID Connect](https://developers.google.com/identity/openid-connect/openid-connect), [Google 공식 Node.js 인증 라이브러리](https://github.com/googleapis/google-auth-library-nodejs).
