@@ -8,9 +8,10 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 FROM base AS dependencies
-COPY package.json package-lock.json ./
-COPY prisma.config.ts tsconfig.json ./
-COPY prisma ./prisma
+# Archived releases retain private file modes; the non-root migrator must own them.
+COPY --chown=node:node package.json package-lock.json ./
+COPY --chown=node:node prisma.config.ts tsconfig.json ./
+COPY --chown=node:node prisma ./prisma
 # Prisma needs a syntactically valid URL to load its config during generation.
 # This placeholder is build-only; no database connection or real credential is needed.
 RUN --mount=type=cache,target=/root/.npm \
