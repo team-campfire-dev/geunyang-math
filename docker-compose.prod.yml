@@ -1,0 +1,81 @@
+name: geunyang-math-prod
+
+services:
+  app:
+    image: ${IMAGE_REPOSITORY:-geunyang-math}:${IMAGE_TAG:?Set IMAGE_TAG to the deployed commit SHA}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+      args:
+        BUILD_COMMIT: ${BUILD_COMMIT:?Set BUILD_COMMIT to the deployed commit SHA}
+    env_file:
+      - ${DEPLOY_ENV_FILE:?Set DEPLOY_ENV_FILE to the separate runtime environment file}
+    extra_hosts:
+      - "mysql_server_8.0.42_auto_generated_server_certificate:10.0.0.135"
+    volumes:
+      - "${DEPLOY_CA_FILE:?Set DEPLOY_CA_FILE to the verified MySQL CA}:/run/geunyang-math/mysql-ca.pem:ro"
+    environment:
+      NODE_ENV: production
+      DEV_LOGIN_ENABLED: "false"
+      HOSTNAME: 0.0.0.0
+      PORT: "3000"
+    ports:
+      # Set the VM's private address and a dedicated port explicitly, never 0.0.0.0.
+      - "${APP_BIND_IP:?Set APP_BIND_IP to the VM private IP}:${APP_PORT:?Set APP_PORT to the dedicated host port}:3000"
+    init: true
+    restart: unless-stopped
+    mem_limit: 1g
+    pids_limit: 256
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/api/health', { signal: AbortSignal.timeout(4000) }).then(response => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  migrate:
+    image: ${IMAGE_REPOSITORY:-geunyang-math}:${IMAGE_TAG:?Set IMAGE_TAG to the deployed commit SHA}-migrator
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrator
+      args:
+        BUILD_COMMIT: ${BUILD_COMMIT:?Set BUILD_COMMIT to the deployed commit SHA}
+    profiles:
+      - tools
+    env_file:
+      - ${DEPLOY_MIGRATION_ENV_FILE:?Set DEPLOY_MIGRATION_ENV_FILE to the separate migration environment file}
+    extra_hosts:
+      - "mysql_server_8.0.42_auto_generated_server_certificate:10.0.0.135"
+    volumes:
+      - "${DEPLOY_CA_FILE:?Set DEPLOY_CA_FILE to the verified MySQL CA}:/run/geunyang-math/mysql-ca.pem:ro"
+    environment:
+      NODE_ENV: production
+      DEV_LOGIN_ENABLED: "false"
+    init: true
+    restart: "no"
+    mem_limit: 1g
+    pids_limit: 256
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
