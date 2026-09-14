@@ -1,0 +1,14 @@
+node_modules/
+.next/
+.mobile-build/
+out/
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+coverage/
+test-results/
+playwright-report/
+.DS_Store
+src/generated/
+
