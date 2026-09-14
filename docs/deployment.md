@@ -104,7 +104,7 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 
 [GitHub workflow](../.github/workflows/ci.yml)는 모든 브랜치의 타입·단위/실제 MySQL 검사·웹/모바일 빌드를 실행한다. 운영 배포는 검증에 성공한 `main` push 또는 `main`의 수동 실행에서만 진행한다. PR에서는 배포 비밀값을 사용하지 않는다.
 
-검증한 Git SHA의 archive와 환경 파일을 `incoming/`으로 전송한다. SHA별 `releases/<sha>/` 디렉터리에서 [deploy-remote.sh](../scripts/deploy-remote.sh)를 실행한다. 스크립트는 앱과 migrator 이미지를 따로 만들고, migration→content:verify→기동→사설·공개 health/version 확인이 끝나야 `current`를 새 릴리스로 바꾼다.
+검증한 Git SHA의 archive와 환경 파일을 `incoming/`으로 전송한다. SHA별 `releases/<sha>/` 디렉터리에서 [deploy-remote.sh](../scripts/deploy-remote.sh)를 실행한다. 스크립트는 앱과 migrator 이미지를 따로 만들고, migration→저장소 번들 발행→content:verify→기동→사설·공개 health/version 확인이 끝나야 `current`를 새 릴리스로 바꾼다.
 
 릴리스 archive는 제한된 파일 권한을 유지한다. Dockerfile은 migrator가 읽는 package·Prisma 설정·소스를 `node` 사용자 소유로 복사한다. CI는 실제로 권한 600/700의 archive에서 migrator를 빌드하고, 일반 사용자로 소스를 읽으며 빈 테스트 DB에 migration과 콘텐츠 검증을 실행하는지 검사한다. 최초 배포에서 확인된 root 소유 파일의 `EACCES` 재발을 이 경로로 검증한다.
 
@@ -122,7 +122,7 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 | [규칙 기반 개인화 #5](https://github.com/team-campfire-dev/geunyang-math/pull/5) | `87a1717` | 179개 테스트, 웹·모바일 빌드·운영 배포 성공. 로컬 브라우저 진단 이어하기·추천 변경·직접 선택 검증, 운영 개인화 화면 조회 확인. [실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/34809013344) |
 | [DB 콘텐츠 관리 #6](https://github.com/team-campfire-dev/geunyang-math/pull/6) | `0c5e505` | 190개 테스트, 신규 DB 설치·기존 DB 업그레이드·CLI 검증, 웹·모바일 빌드·Oracle 배포 성공. 공개 클래스 3개·블록·15문항의 이전 내용 일치와 기존 계정 학습 상태 조회 확인. [실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/34811307476) |
 
-DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVersion과 초기 콘텐츠를 등록한다. 기본 콘텐츠는 클래스 3개(수업·숙제 문항 15개), 진단 1종(6문항), 개념 3개다. 기존 ClassVersion 행의 내용·해시·발행 시각을 덮어쓰지 않는다. 배포용 migrator는 `db:migrate` 후 `content:verify`를 실행하며 기본 파일을 매번 다시 seed하지 않는다. 등록 명령과 불변 판본 정책은 [DB 콘텐츠 관리](content-management.md)를 따른다.
+DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVersion과 초기 콘텐츠를 등록한다. 기본 콘텐츠는 클래스 3개(수업·숙제 문항 15개), 진단 1종(6문항), 개념 3개다. 기존 ClassVersion 행의 내용·해시·발행 시각을 덮어쓰지 않는다. 배포용 migrator는 `db:migrate` 후 저장소의 `content/*.json`을 `content:publish`로 발행하고 `content:verify`를 실행한다. `AppliedContentBundle`에 같은 checksum이 있으면 건너뛰므로 내용이 그대로인 배포는 DB를 건드리지 않고, 이미 발행한 판본을 고쳐 커밋하면 배포가 실패한다. 등록 명령과 불변 판본 정책은 [DB 콘텐츠 관리](content-management.md)를 따른다.
 
 초기 인프라 점검에서는 앱 VM·포트·DNS·와일드카드 인증서, ARM64 non-root 이미지·revision·health, DB TLS 연결과 잘못된 CA/호스트 이름 거부, 앱 계정의 DB 한정 DML·호스트 제한·REQUIRE SSL을 확인했다. NPM Proxy Hosts 등록과 Google HTTPS callback 로그 제외, 배포 시크릿 6개와 자동 배포 활성화도 완료했다. 이 기록은 이후 인증서·권한·프록시 변경을 자동 검증한다는 뜻은 아니다.
 

@@ -1,8 +1,9 @@
 import { execFileSync, spawnSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync, existsSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readdirSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
+import { parseContentBundle } from '@/core/content-bundle';
 
 const deploymentScript = resolve('scripts/deploy-remote.sh');
 const source = readFileSync(deploymentScript, 'utf8');
@@ -76,5 +77,39 @@ describe('deployment pointer rollback', () => {
     const { result, current } = pointerScenario('first-commit-signal');
     expect(result.status, result.stderr).toBe(143);
     expect(existsSync(current)).toBe(false);
+  });
+});
+
+describe('reviewed content bundles published by the migrator', () => {
+  const dockerfile = readFileSync(resolve('Dockerfile'), 'utf8');
+  const migrator = dockerfile.slice(dockerfile.indexOf('AS migrator'), dockerfile.indexOf('AS builder'));
+  const bundles = readdirSync(resolve('content')).filter(name => name.endsWith('.json'));
+
+  it('ships the bundles it publishes and keeps them out of the running app', () => {
+    expect(bundles.length).toBeGreaterThan(0);
+    expect(migrator).toMatch(/COPY --chown=node:node content \.\/content/);
+    expect(readFileSync(resolve('.dockerignore'), 'utf8').split('\n')).not.toContain('content');
+    // The runtime image serves published DB rows; a bundle file has no place in it.
+    expect(dockerfile.slice(dockerfile.indexOf('AS runtime'))).not.toMatch(/content/);
+  });
+
+  it('publishes bundles between migrating and verifying', () => {
+    const command = migrator.slice(migrator.indexOf('CMD'));
+    for (const step of ['db:migrate', 'content:publish', 'content:verify']) expect(command).toContain(`npm run ${step}`);
+    expect(command.indexOf('db:migrate')).toBeLessThan(command.indexOf('content:publish'));
+    expect(command.indexOf('content:publish')).toBeLessThan(command.indexOf('content:verify'));
+    // Each step gates the next, so a rejected bundle stops the release before the app starts.
+    expect(command.split('npm run').length - 1).toBe(command.split('&&').length);
+  });
+
+  it('keeps answer keys out of every committed bundle', () => {
+    for (const name of bundles) {
+      const raw = readFileSync(resolve('content', name), 'utf8');
+      expect(raw, name).not.toMatch(/"(?:gradingSpec|solution|hints|problems)"/);
+      const bundle = parseContentBundle(JSON.parse(raw));
+      expect(bundle.classes, name).toHaveLength(0);
+      expect(bundle.diagnostics, name).toHaveLength(0);
+      expect(bundle.terms.length, name).toBeGreaterThan(0);
+    }
   });
 });

@@ -20,7 +20,23 @@ rich text는 `$...$`, `$$...$$`, `\(...\)` 안에 LaTeX를 담고, 도형 캡션
 
 `20260914030000_database_content` migration이 기본 3개 클래스(문항 15개), 진단 1개(문항 6개), 개념 3개를 한 번 등록한다. 클래스 판본이 이미 있으면 내용, 해시, 발행 시각을 그대로 둔다. 기존 진단 실행과 과제 snapshot을 변경하지 않는다. 테이블 및 UTF-8 SQL 문자열 비교에 기존과 동일한 `utf8mb4_unicode_ci`를 명시한다.
 
-배포는 `db:migrate → content:verify` 순서다. 매번 기본 파일을 다시 등록하지 않는다. `db:seed`는 이전 명령 호환용 읽기 전용 검증 별칭이다. migration SQL의 초기 데이터와 `tests/fixtures/initial-content.json`은 역사적 이전 자료·테스트 fixture이므로 운영 콘텐츠를 수정하는 곳이 아니다.
+배포는 `db:migrate → content:publish → content:verify` 순서다. migration의 초기 데이터와 이미 적용한 번들은 다시 등록하지 않는다. `db:seed`는 이전 명령 호환용 읽기 전용 검증 별칭이다. migration SQL의 초기 데이터와 `tests/fixtures/initial-content.json`은 역사적 이전 자료·테스트 fixture이므로 운영 콘텐츠를 수정하는 곳이 아니다.
+
+## 저장소 번들의 발행
+
+`content/`의 JSON은 검토를 마친 **정답이 없는** 번들이다. 배포용 migrator 이미지가 이 디렉터리를 함께 담고, 기동 전에 `content:publish`로 파일 이름 순서대로 발행한다. 새 용어나 개념을 추가하려면 파일을 고쳐 머지하면 되고, 서버에서 따로 명령을 실행하지 않는다.
+
+적용 여부는 migration과 같은 방식으로 판단한다. `AppliedContentBundle`이 파일 이름과 내용 checksum, 적용 시각을 보관하고, checksum이 같으면 DB 작업 없이 건너뛴다. 파일이 바뀌었을 때만 등록을 시도하며, 원장 기록은 등록과 같은 transaction에서 쓰므로 내용이 들어가지 않으면 적용으로 남지 않는다.
+
+이미 발행한 `versionId`의 내용을 고쳐 커밋하면 등록이 거부되어 배포가 실패한다. 판본 불변 규칙을 배포 단계에서 강제하는 것이다. 수정은 새 `versionId`를 파일에 추가한다.
+
+```sh
+npm run content:publish -- --dry-run
+npm run content:publish
+npm run content:publish -- --dir /secure/path/reviewed
+```
+
+정답·채점 규칙·힌트·해설이 들어가는 클래스와 진단 번들은 이 디렉터리에 두지 않는다. 아래 수동 등록 경로를 쓴다.
 
 ## 콘텐츠 내보내기·등록
 
@@ -120,4 +136,4 @@ npm run content:import -- --file content/glossary-v1.json
 
 ## 검증
 
-`tests/content-store.test.ts`에서 MySQL 초기 데이터, 내보내기 재등록, dry run, DB만으로 새 클래스·개념·진단 제공, 불변 판본·문항 보호, 과제와 진단 snapshot 보존을 검사한다. 용어는 발행·불변 판본·없는 참조 거부와, 클래스를 재발행하지 않고 정의를 고쳐 쓰는 경로를 함께 검사한다. 노출 규칙은 `tests/glossary.test.ts`, 본문 표시 위치 계산은 `tests/rich-text.test.ts`, 클래스·과제 응답에서의 실제 노출은 `tests/learning-integration.test.ts`에서 확인한다. 기존 채점·개인화·인증 테스트도 함께 실행한다. 전체 229개 테스트·타입 검사·웹/모바일 빌드를 통과했다. 로컬에서 이전 릴리스의 DB와 학습 기록을 생성한 뒤 새 migration을 적용해 기존 모든 행과 해시·시각·snapshot이 동일함을 확인했다. 운영에서도 migration·배포 성공과 공개 클래스 3개·블록·15문항의 이전 내용 일치를 확인했다. 이 검증은 수학 콘텐츠의 전문가 검수를 대신하지 않는다.
+`tests/content-store.test.ts`에서 MySQL 초기 데이터, 내보내기 재등록, dry run, DB만으로 새 클래스·개념·진단 제공, 불변 판본·문항 보호, 과제와 진단 snapshot 보존을 검사한다. 용어는 발행·불변 판본·없는 참조 거부와, 클래스를 재발행하지 않고 정의를 고쳐 쓰는 경로를 함께 검사한다. 노출 규칙은 `tests/glossary.test.ts`, 본문 표시 위치 계산은 `tests/rich-text.test.ts`, 클래스·과제 응답에서의 실제 노출은 `tests/learning-integration.test.ts`에서 확인한다. 기존 채점·개인화·인증 테스트도 함께 실행한다. 전체 233개 테스트·타입 검사·웹/모바일 빌드를 통과했다. 로컬에서 이전 릴리스의 DB와 학습 기록을 생성한 뒤 새 migration을 적용해 기존 모든 행과 해시·시각·snapshot이 동일함을 확인했다. 운영에서도 migration·배포 성공과 공개 클래스 3개·블록·15문항의 이전 내용 일치를 확인했다. 이 검증은 수학 콘텐츠의 전문가 검수를 대신하지 않는다.
