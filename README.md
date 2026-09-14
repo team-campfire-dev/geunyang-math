@@ -2,7 +2,7 @@
 
 성인이 기초부터 자신의 속도로 수학을 다시 배우는 웹 서비스입니다. 기본 클래스와 학습 기록, 과제 배정·제출을 먼저 만들고, 이후 클래스 편집기와 AI 맞춤 클래스 작성으로 확장합니다.
 
-현재 [운영 웹](https://geunyang-math.team-campfire.dev/)에서 **Google 로그인 → 선택형 진단 → 맞춤 추천 → 클래스 학습 → 개인 복습 과제 → 제출·기록 복원**을 제공합니다. 2026-09-14 기준 DB 콘텐츠 전환까지 배포했고, MySQL 통합 검사를 포함한 190개 테스트와 웹·모바일 빌드를 통과했습니다. 기능별 구현·후속 범위는 [구현 현황](docs/implementation-status.md), 릴리스별 근거는 [배포 기록](docs/deployment.md#릴리스별-검증-기록)에서 확인합니다.
+현재 [운영 웹](https://geunyang-math.team-campfire.dev/)에서 **Google 로그인 → 선택형 진단 → 맞춤 추천 → 클래스 학습 → 개인 복습 과제 → 제출·기록 복원**을 제공합니다. 2026-09-14 기준 DB 콘텐츠 전환까지 배포했고, MySQL 통합 검사를 포함한 229개 테스트와 웹·모바일 빌드를 통과했습니다. 본문 용어에 진행도에 따라 풀이를 붙이는 기능은 구현을 마쳤고 아직 배포하지 않았습니다. 기능별 구현·후속 범위는 [구현 현황](docs/implementation-status.md), 릴리스별 근거는 [배포 기록](docs/deployment.md#릴리스별-검증-기록)에서 확인합니다.
 
 ## 지금 제공하는 것
 
@@ -12,7 +12,7 @@
 - 수강 완료 시 생성되는 개인 복습 과제, 문항별 답안 저장과 최종 제출
 - 기본 6문제 진단, 선수개념·첫 풀이 기반 추천과 이유·이력, 직접 선택/자동 추천 복귀
 - 목표·하루 5·10·20분 설정, 새 복습 과제의 문항 수와 1/3일 권장 시점 조정
-- DB 기반 클래스·진단·개념, 콘텐츠 import/export/verify와 기존 수강·과제 판본 보존
+- DB 기반 클래스·진단·개념·용어, 콘텐츠 import/export/verify와 기존 수강·과제 판본 보존
 - Google 웹 로그인, 같은 Google 계정의 학습 기록 복원, 세션 만료·로그아웃
 - 화면 크기에 대응하는 공용 UI와 Capacitor용 정적 export 빌드
 
@@ -113,6 +113,7 @@ src/core/                  콘텐츠 계약 · 등록 검증 · 채점 · 개인
 src/server/                세션 · DB 콘텐츠 관리 · 학습/과제 서비스 · 요청 검증
 prisma/                    MySQL schema · 버전 migration · 초기 콘텐츠 이전
 tests/                     콘텐츠/채점 단위 검사와 실제 MySQL 통합 검사
+content/                    정답이 없는 검토 완료 콘텐츠 번들(용어 풀이)
 scripts/content.ts          콘텐츠 import/export/verify CLI
 scripts/build-mobile.mjs    서버 코드를 제외한 정적 export
 ```
