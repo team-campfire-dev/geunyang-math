@@ -1,7 +1,12 @@
 import type { ActionResponse, ClassDocument, LearningAction, LearningState, PublicClass } from '@/shared/api';
+import { canUseWebAuthentication } from './auth-client';
 
-export type Session = { user: { id: string; displayName: string } | null; developmentLogin: boolean };
+export type Session = { user: { id: string; displayName: string } | null; developmentLogin: boolean; googleLogin: boolean };
 const apiOrigin = (process.env.NEXT_PUBLIC_API_ORIGIN ?? '').replace(/\/$/, '');
+
+export function supportsWebAuthentication(browserOrigin: string, nativePlatform: boolean) {
+  return canUseWebAuthentication(apiOrigin, browserOrigin, nativePlatform);
+}
 
 export class ApiError extends Error {
   constructor(public readonly status: number, public readonly code: string, message: string) {

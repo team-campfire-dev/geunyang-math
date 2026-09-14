@@ -2,7 +2,7 @@
 
 성인이 기초부터 자신의 속도로 수학을 다시 배우는 웹 서비스입니다. 기본 클래스와 학습 기록, 과제 배정·제출을 먼저 만들고, 이후 클래스 편집기와 AI 맞춤 클래스 작성으로 확장합니다.
 
-현재는 **클래스 학습 → 문제 풀이 → 수강 완료 → 개인 복습 과제 → 제출**을 실행할 수 있는 첫 구현입니다. 계획 v0.2 전체를 완료한 상태는 아닙니다. 실제 Google 로그인은 아직 연결하지 않았으며 운영 인증 없이 공개할 범위는 클래스 열람입니다. [Oracle 배포 문서](docs/deployment.md)에 실제 배포 상태를 기록합니다.
+현재는 **클래스 학습 → 문제 풀이 → 수강 완료 → 개인 복습 과제 → 제출**을 실행할 수 있는 첫 구현입니다. Google 웹 로그인과 같은 계정으로 학습 기록을 다시 불러오는 서버·화면 코드를 구현했습니다. 운영 릴리스의 배포·실계정 검증 상태는 배포 기록에서 확인합니다. 계획 v0.2 전체를 완료한 상태는 아니며, [Oracle 배포 문서](docs/deployment.md)에 실제 배포 상태를 기록합니다.
 
 ## 지금 제공하는 것
 
@@ -11,6 +11,7 @@
 - 서버에 저장하는 진도·답안·힌트 사용 기록과 결정적인 정수·분수 채점
 - 수강 완료 시 생성되는 개인 복습 과제, 문항별 답안 저장과 최종 제출
 - 진행 중 클래스 우선 추천, 미완료 클래스 안내, 목표·하루 학습 시간 설정
+- Google 웹 로그인, 같은 Google 계정의 학습 기록 복원, 세션 만료·로그아웃
 - 화면 크기에 대응하는 공용 UI와 Capacitor용 정적 export 빌드
 
 현재 추천 순서는 진행 중 수업과 기본 클래스 순서에 기반합니다. 목표·시간은 안내에 반영하며, 진단·오답·선행개념에 따라 경로와 분량을 바꾸는 전체 적응형 개인화는 후속 작업입니다. AI 호출과 클래스 편집기는 아직 없습니다.
@@ -34,12 +35,21 @@ npm run dev
 | 환경 변수 | 용도 |
 |---|---|
 | `DATABASE_URL` | 앱과 Prisma CLI가 사용하는 MySQL 연결 |
-| `APP_ORIGIN` | 쓰기 요청의 동일 origin 확인. 기본 예시는 `http://127.0.0.1:3017` |
+| `APP_ORIGIN` | 고정 OAuth 콜백·복귀 주소와 쓰기 요청 origin 검증. production은 HTTPS, 개발은 loopback만 허용 |
+| `GOOGLE_LOGIN_ENABLED` | `true`이고 Google 자격증명·APP_ORIGIN이 유효할 때만 Google 웹 로그인 허용 |
+| `GOOGLE_CLIENT_ID` | 이 프로젝트 전용 Google OAuth Web application 클라이언트 ID |
+| `GOOGLE_CLIENT_SECRET` | 서버 전용 Google OAuth 클라이언트 비밀값. 공개 번들에 넣지 않음 |
 | `DEV_LOGIN_ENABLED` | `true`일 때 개발용 로그인 허용 조건에 참여 |
 | `TEST_DATABASE_URL` | 통합 테스트 전용 DB. 이름이 `_test`로 끝나야 함 |
 | `NEXT_PUBLIC_API_ORIGIN` | 모바일 번들이 호출할 원격 API의 HTTPS origin |
 
-개발용 로그인은 **`NODE_ENV=development` + `DEV_LOGIN_ENABLED=true` + loopback 호스트**에서만 열립니다. 새 학습자를 만들고 이 브라우저의 HttpOnly cookie로 학습을 이어갑니다. 로그아웃·세션 만료 후 기존 계정으로 다시 로그인하는 기능은 없습니다. `npm run build`·`npm start`로 실행한 production에서는 신규 로그인과 기존 개발용 세션 사용을 모두 거부합니다.
+개발용 로그인은 **`NODE_ENV=development` + `DEV_LOGIN_ENABLED=true` + loopback 호스트**에서만 열립니다. 매번 새 학습자를 만드는 로컬 도구이며, 로그아웃·만료 후 그 개발 계정을 복구하는 로그인 방식은 없습니다. production에서는 개발용 신규 로그인과 기존 `gm_session` 사용을 모두 거부합니다.
+
+Google 로그인은 `GET /api/auth/google/start`에서 시작하고 `GET /api/auth/google/callback`에서 완료합니다. Google Cloud의 **Web application** 클라이언트에 `${APP_ORIGIN}/api/auth/google/callback`을 정확한 승인 리디렉션 URI로 등록한 뒤 세 가지 Google 환경 변수를 설정합니다. 운영 콜백은 `https://geunyang-math.team-campfire.dev/api/auth/google/callback`입니다. 로컬에서 Google 로그인을 시험할 경우 별도로 승인한 loopback 콜백과 그에 맞는 APP_ORIGIN을 사용합니다. `.env.example`의 기본값은 Google 로그인 비활성입니다.
+
+요청 범위는 `openid email profile`뿐입니다. 서버는 일회용 state·브라우저 바인딩, PKCE, nonce와 Google ID 토큰의 서명·issuer·audience·만료·verified email을 검증합니다. 계정은 이메일이 아닌 Google `sub`로 연결하므로 같은 Google 계정으로 재로그인하면 기존 진도·과제를 불러옵니다. 이름이나 이메일이 같아도 개발 계정이나 다른 Google 계정과 자동 병합하지 않습니다. 운영 세션은 7일짜리 `__Host-gm_session` HttpOnly·Secure·SameSite=Lax cookie이며, 재로그인 시 해당 브라우저 세션을 회전하고 로그아웃 시 폐기합니다. Google access/refresh token은 보관하지 않습니다.
+
+Google 클라이언트 비밀값, 인증 코드, ID/access/refresh token, 세션 cookie를 Git·브라우저 저장소·로그에 남기지 않습니다. 프록시의 OAuth 콜백 query 로깅도 별도로 확인해야 합니다. 설정·배포와 검증 상태는 [배포 문서](docs/deployment.md)를 따릅니다.
 
 운영 DB는 `sslcert=<절대 CA 경로>&sslaccept=strict`로 인증서와 호스트 이름을 검증합니다. 알려지지 않은 옵션이나 검증 완화는 거부하며, 로컬 개발 URL은 기존대로 사용할 수 있습니다. 앱과 migration 계정·환경 파일은 분리합니다.
 
@@ -47,7 +57,7 @@ npm run dev
 
 ## 테스트
 
-DB 없이 채점·콘텐츠·개발 로그인 보호 검사를 실행할 수 있습니다. `TEST_DATABASE_URL`을 지정하지 않으면 MySQL 통합 검사만 건너뜁니다.
+DB 없이 채점·콘텐츠·공식 Google ID 토큰 검증과 로그인 보호 검사를 실행할 수 있습니다. `TEST_DATABASE_URL`을 지정하지 않으면 MySQL 통합 검사만 건너뜁니다.
 
 ```sh
 npm run typecheck
@@ -68,7 +78,7 @@ TEST_DATABASE_URL=mysql://geunyang:local-development-only@127.0.0.1:3317/geunyan
 
 통합 검사는 연결 전에 테스트 DB명을 확인하고, 새 테스트 사용자와 개인 scope를 만듭니다. 클래스 seed는 기존 content hash를 검사한 뒤 없는 판본만 추가합니다. 기존 데이터의 truncate·drop·일괄 삭제는 수행하지 않으므로 반복 실행하면 테스트 기록이 쌓입니다.
 
-검사 범위는 사용자 간 접근 차단, 배정 문항 확인, 단계 순서, 중복·동시 요청, 힌트 전후의 판정, 수강 완료와 과제 생성, 확정 제출 보존, 독립 과제와 클래스 판본 고정입니다.
+검사 범위는 사용자 간 접근 차단, 배정 문항 확인, 단계 순서, 중복·동시 요청, 힌트 전후의 판정, 수강 완료와 과제 생성, 확정 제출 보존, 독립 과제와 클래스 판본 고정입니다. Google 인증에는 위조 서명·잘못된 audience·만료·nonce, 일회용 callback의 동시 소비, 동시 첫 로그인 시 계정 중복 방지, 세션 회전·로그아웃 CSRF와 개발 계정 분리 검사가 포함됩니다. 자동 테스트는 실제 Google 계정으로 진행하는 동의 화면·브라우저 로그인을 대신하지 않습니다.
 
 ## 웹·모바일 빌드
 
@@ -85,7 +95,7 @@ NEXT_PUBLIC_API_ORIGIN=https://api.example.invalid npm run build:mobile
 TEST_DATABASE_URL=mysql://geunyang:local-development-only@127.0.0.1:3317/geunyang_math_test NEXT_PUBLIC_API_ORIGIN=https://api.example.invalid npm run verify
 ```
 
-정적 export는 실제 성공했지만, Capacitor runtime·iOS/Android 프로젝트·네이티브 인증·CORS·오프라인 제출·OTA는 구현하지 않았습니다. 현재 웹 cookie 인증이 native WebView에서 그대로 작동한다고 가정하지 않습니다. 자세한 경계와 로컬 API 빌드 예외는 [모바일 구조 문서](docs/mobile-architecture.md)에 있습니다.
+정적 export는 실제 성공했지만, Capacitor runtime·iOS/Android 프로젝트·네이티브 인증·CORS·오프라인 제출·OTA는 구현하지 않았습니다. Google 로그인 버튼은 서버가 사용 가능하다고 응답한 같은 origin의 일반 웹에서만 제공합니다. 현재 웹 cookie 인증이 native WebView에서 그대로 작동한다고 가정하지 않으며, Google 인증을 embedded WebView 안에서 여는 방식으로 확장하지 않습니다. 자세한 경계와 로컬 API 빌드 예외는 [모바일 구조 문서](docs/mobile-architecture.md)에 있습니다.
 
 GitHub Actions의 [CI](.github/workflows/ci.yml)는 Node 22와 MySQL 8.4로 의존성 설치, Prisma 생성·migration, 타입 검사, 단위·통합 테스트, 웹 빌드와 모바일 정적 export를 실행합니다. `ORACLE_DEPLOY_ENABLED=true`와 배포 시크릿을 설정한 뒤에는 검증된 main만 Oracle에 배포하며, private/public health와 commit까지 확인합니다. 최초 서버 준비와 복구 방식은 [배포 문서](docs/deployment.md)를 참고하세요.
 

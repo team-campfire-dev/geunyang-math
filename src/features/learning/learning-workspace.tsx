@@ -1,8 +1,12 @@
 'use client';
 
 import { useEffect, useRef, useState, type FormEvent } from 'react';
+import Link from 'next/link';
 import type { ActionResponse, AssignmentView, AttemptView, ClassDocument, ContentBlock, EnrollmentView, Goal, LearningAction, LearningState, PublicClass, PublicProblem } from '@/shared/api';
-import { ApiError, learningApi, type Session } from './api-client';
+import { ApiError, learningApi, supportsWebAuthentication, type Session } from './api-client';
+import { clearAuthReturn, GOOGLE_LOGIN_PATH, isNativeBrowser, parseAuthError, readAuthReturn, saveAuthReturn, type AuthReturn } from './auth-client';
+import { GoogleLoginButton } from './google-login-button';
+import { ServiceFooter } from './service-footer';
 import { ContentBlocks, unsupportedRequiredBlocks } from './content-blocks';
 import { Icon, type IconName } from './icons';
 
@@ -87,12 +91,19 @@ function ProblemCard({ problem, attempt, context, contextId, dispatch, busy, dis
 export function LearningWorkspace() {
   const [page, setPage] = useState<Page>('home');
   const [session, setSession] = useState<Session | null>(null);
+  const authenticatedUserId = useRef<string | null>(null);
   const [state, setState] = useState<LearningState | null>(null);
   const [catalog, setCatalog] = useState<PublicClass[]>([]);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const busyRef = useRef(false);
   const [error, setError] = useState('');
+  const [authError, setAuthError] = useState('');
+  const [webAuthentication, setWebAuthentication] = useState(false);
+  const [googleStarting, setGoogleStarting] = useState(false);
+  const googleStartingRef = useRef(false);
+  const loadGeneration = useRef(0);
+  const authReturn = useRef<{ message: string | null; returnTo: AuthReturn | null } | null>(null);
   const [document, setDocument] = useState<ClassDocument | null>(null);
   const [classLoading, setClassLoading] = useState(false);
   const classRequest = useRef(0);
@@ -113,7 +124,7 @@ export function LearningWorkspace() {
     if (!modal) return;
     modalReturnFocus.current = window.document.activeElement as HTMLElement;
     const dialog = modalRef.current;
-    const focusable = () => Array.from(dialog?.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex="0"]') ?? []);
+    const focusable = () => Array.from(dialog?.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex="0"]') ?? []);
     focusable()[0]?.focus();
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && !busyRef.current) setModal(null);
@@ -126,17 +137,89 @@ export function LearningWorkspace() {
     return () => { window.document.removeEventListener('keydown', onKey); modalReturnFocus.current?.focus(); };
   }, [modal]);
 
-  async function refresh() {
+  function clearPersonalState() {
+    authenticatedUserId.current = null;
+    setState(null);
+    setSession((previous) => previous ? { ...previous, user: null } : null);
+    setSelectedAssignment(null); setDirtyProblems([]); submissionRequests.current.clear();
+    classRequest.current += 1; setDocument(null); setClassLoading(false);
+    setSectionIndex(0); setFinishedClass(false); setDisplayName('');
+    setGoal('foundation-recovery'); setMinutes(10); setModal(null); setPage('home');
+    if (authReturn.current) authReturn.current.returnTo = null;
+    try { clearAuthReturn(window.sessionStorage); } catch { /* Browser storage may be restricted. */ }
+  }
+
+  async function refresh(restoreAfterLogin = false) {
+    const generation = ++loadGeneration.current;
     setLoading(true); setError('');
     try {
-      const [nextSession, publicCatalog] = await Promise.all([learningApi.session(), learningApi.catalog()]);
-      setSession(nextSession); setCatalog(publicCatalog.classes);
-      if (nextSession.user) setState(await learningApi.state());
-      else setState(null);
-    } catch (reason) { setError(messageOf(reason)); }
-    finally { setLoading(false); }
+      const nextSession = await learningApi.session();
+      if (generation !== loadGeneration.current) return;
+      // A pageshow listener keeps its initial closure; compare the confirmed account via a ref.
+      // Clear the old account before fetching more data, even if the new account's load fails.
+      if (authenticatedUserId.current && authenticatedUserId.current !== nextSession.user?.id) clearPersonalState();
+      authenticatedUserId.current = nextSession.user?.id ?? null;
+      setSession(nextSession);
+      const [publicCatalog, nextState] = await Promise.all([
+        learningApi.catalog(),
+        nextSession.user ? learningApi.state() : Promise.resolve(null),
+      ]);
+      if (generation !== loadGeneration.current) return;
+      setCatalog(publicCatalog.classes); setState(nextState);
+      const pending = authReturn.current;
+      if (restoreAfterLogin && pending?.returnTo && (nextState || pending.message)) {
+        // Stored content keys are only used after matching the public catalogue, never as URLs.
+        if (publicCatalog.classes.some((item) => item.classKey === pending.returnTo?.classKey)) {
+          await openClass(pending.returnTo.classKey, nextState);
+        }
+        if (generation !== loadGeneration.current) return;
+        if (nextState) {
+          try { clearAuthReturn(window.sessionStorage); } catch { /* Navigation metadata is optional. */ }
+          pending.returnTo = null;
+        }
+      }
+      if (restoreAfterLogin && pending?.message) { setAuthError(pending.message); setModal('login'); }
+    } catch (reason) {
+      if (generation !== loadGeneration.current) return;
+      if (reason instanceof ApiError && reason.status === 401) clearPersonalState();
+      setError(messageOf(reason));
+    } finally { if (generation === loadGeneration.current) setLoading(false); }
   }
-  useEffect(() => { void refresh(); }, []);
+
+  useEffect(() => {
+    const bridge = (window as Window & { Capacitor?: Parameters<typeof isNativeBrowser>[0] }).Capacitor;
+    setWebAuthentication(supportsWebAuthentication(window.location.origin, isNativeBrowser(bridge)));
+    if (!authReturn.current) {
+      const returned = parseAuthError(window.location.search);
+      let returnTo: AuthReturn | null = null;
+      try { returnTo = readAuthReturn(window.sessionStorage); } catch { /* Storage may be unavailable. */ }
+      authReturn.current = { message: returned?.message ?? null, returnTo };
+      if (returned) {
+        setAuthError(returned.message); setModal('login');
+        // Only remove our own error parameter; preserve the current same-origin path, query and hash.
+        try {
+          const currentUrl = new URL(window.location.href);
+          currentUrl.search = returned.cleanSearch;
+          window.history.replaceState(window.history.state, '', currentUrl.href);
+        } catch { /* The allowlisted message still works if this browser restricts history changes. */ }
+      }
+    }
+    void refresh(true);
+    const onPageShow = (event: PageTransitionEvent) => {
+      googleStartingRef.current = false; setGoogleStarting(false);
+      if (event.persisted) void refresh();
+    };
+    window.addEventListener('pageshow', onPageShow);
+    return () => { loadGeneration.current += 1; window.removeEventListener('pageshow', onPageShow); };
+  }, []);
+
+  function beginGoogleLogin() {
+    if (!session?.googleLogin || !webAuthentication || busyRef.current || googleStartingRef.current) return;
+    try { saveAuthReturn(window.sessionStorage, page === 'lesson' ? document?.classKey ?? null : null); }
+    catch { /* OAuth can continue without optional class navigation metadata. */ }
+    googleStartingRef.current = true; setGoogleStarting(true); setAuthError(''); setError('');
+    window.location.assign(GOOGLE_LOGIN_PATH);
+  }
 
   function navigate(next: Page) { setPage(next); setNotice(''); setError(''); window.scrollTo({ top: 0, behavior: 'instant' }); }
   const classes = state?.classes ?? catalog;
@@ -152,19 +235,19 @@ export function LearningWorkspace() {
     busyRef.current = true; setBusy(true); setError(''); setNotice('');
     try { const response = await learningApi.action(action); setState(response.state); return response; }
     catch (reason) {
-      if (reason instanceof ApiError && reason.status === 401) { setState(null); setSession((value) => value ? { ...value, user: null } : value); setModal('login'); }
+      if (reason instanceof ApiError && reason.status === 401) { clearPersonalState(); setModal('login'); }
       setError(messageOf(reason)); throw reason;
     } finally { busyRef.current = false; setBusy(false); }
   };
 
-  async function openClass(key: string) {
+  async function openClass(key: string, learningState = state) {
     const requestId = ++classRequest.current;
     navigate('lesson'); setClassLoading(true); setDocument(null); setFinishedClass(false);
     try {
       const nextDocument = await learningApi.class(key);
       if (requestId !== classRequest.current) return;
       setDocument(nextDocument);
-      const enrollment = state?.enrollments.find((entry) => entry.classKey === key);
+      const enrollment = learningState?.enrollments.find((entry) => entry.classKey === key);
       const firstIncomplete = nextDocument.sections.findIndex((section) => !enrollment?.completedSectionIds.includes(section.sectionId));
       setSectionIndex(enrollment?.status === 'completed' ? 0 : Math.max(0, firstIncomplete));
     } catch (reason) { if (requestId === classRequest.current) setError(messageOf(reason)); }
@@ -202,18 +285,21 @@ export function LearningWorkspace() {
     catch { /* Keep the same idempotency key for retries. */ }
   }
   async function login(event: FormEvent) {
-    event.preventDefault(); if (busyRef.current) return;
-    busyRef.current = true; setBusy(true); setError('');
-    try { const nextSession = await learningApi.login(displayName.trim() || '학습자'); setSession((previous) => ({ user: nextSession.user, developmentLogin: previous?.developmentLogin ?? false })); setState(await learningApi.state()); setModal(null); setNotice('학습 공간이 준비됐어요. 첫 클래스를 시작해 보세요.'); }
+    event.preventDefault(); if (busyRef.current || !webAuthentication || !session?.developmentLogin) return;
+    busyRef.current = true; setBusy(true); setError(''); setAuthError('');
+    try { const nextSession = await learningApi.login(displayName.trim() || '학습자'); authenticatedUserId.current = nextSession.user?.id ?? null; setSession((previous) => ({ user: nextSession.user, developmentLogin: previous?.developmentLogin ?? false, googleLogin: previous?.googleLogin ?? false })); setState(await learningApi.state()); setModal(null); setNotice('학습 공간이 준비됐어요. 첫 클래스를 시작해 보세요.'); }
     catch (reason) { setError(messageOf(reason)); }
     finally { busyRef.current = false; setBusy(false); }
   }
   async function logout() {
     if (busyRef.current) return;
-    busyRef.current = true; setBusy(true);
-    try { await learningApi.logout(); setState(null); setSession((value) => value ? { ...value, user: null } : value); navigate('home'); }
+    busyRef.current = true; setBusy(true); loadGeneration.current += 1;
+    try {
+      await learningApi.logout(); clearPersonalState(); setAuthError(''); navigate('home');
+      setNotice('로그아웃했어요. 다시 로그인하면 저장한 학습을 이어갈 수 있어요.');
+    }
     catch (reason) { setError(messageOf(reason)); }
-    finally { busyRef.current = false; setBusy(false); }
+    finally { busyRef.current = false; setBusy(false); setLoading(false); }
   }
   function openProfile() {
     if (!state) { setModal('login'); return; }
@@ -273,7 +359,32 @@ export function LearningWorkspace() {
     return <><button className="back-button" onClick={() => navigate('practice')}><Icon name="back" size={17} />연습장으로</button><div className="page-heading"><div className="eyebrow">MAKE WHAT YOU LEARNED YOURS</div><h1>{assignment.title}</h1><p>{formatDate(assignment.recommendedAt)} 권장 · {assignment.items.length}문제 · {assignment.policy === 'fixed' ? '지정된 내용으로 푸는 과제' : '나의 학습과 연결된 복습'}</p></div><div className={`assignment-instruction ${submitted ? 'is-submitted' : ''}`}><Icon name={submitted ? 'check' : 'pencil'} size={23} /><div><strong>{submitted ? '과제 제출을 완료했어요.' : '문제마다 답안을 저장하고, 마지막에 제출해 주세요.'}</strong><p>{submitted ? '제출한 답안과 풀이 결과를 아래에서 다시 확인할 수 있어요.' : '완벽하게 풀지 못해도 괜찮아요. 막히면 힌트를 확인하고 다시 생각해 보세요.'}</p></div><span>{submitted ? '제출 완료' : `${answered} / ${assignment.items.length} 저장`}</span></div><div className="assignment-problems">{assignment.items.map((item, index) => <section key={item.id}><div className="assignment-number">문제 {String(index + 1).padStart(2, '0')}</div><ProblemCard problem={item.problem} attempt={item.attempt} context="assignment" contextId={assignment.recipientId} dispatch={dispatch} busy={busy} disabled={submitted} onLogin={() => setModal('login')} onDraftChange={(id, dirty) => setDirtyProblems((previous) => dirty ? previous.includes(id) ? previous : [...previous, id] : previous.filter((item) => item !== id))} /></section>)}</div>{!submitted && <div className="assignment-submit"><div><strong>연습을 마무리해 볼까요?</strong><p>{dirtyProblems.length ? `아직 저장하지 않은 답안이 ${dirtyProblems.length}개 있어요. 먼저 답안을 저장해 주세요.` : '모든 문제의 답안을 저장하면 제출할 수 있어요.'}</p></div><button className="button primary" disabled={busy || unsupported || dirtyProblems.length > 0 || answered !== assignment.items.length || !assignment.items.length} onClick={() => void submitAssignment()}>{busy ? '제출 중…' : '과제 제출하기'}<Icon name="check" size={18} /></button></div>}</>;
   }
 
-  return <div className="app-shell"><a href="#main-content" className="skip-link">본문으로 이동</a><aside className="sidebar"><button className="brand-button" aria-label="geunyang math 홈" onClick={() => navigate('home')}><Brand /></button><div className="sidebar-caption">그냥, 나의 속도로.</div><nav aria-label="주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'nav-item active' : 'nav-item'} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={19} /><span>{item.label}</span>{item.page === 'practice' && pendingAssignments.length > 0 && <span className="nav-badge">{pendingAssignments.length}</span>}</button>)}</nav><div className="sidebar-bottom"><button className="learning-goal" onClick={openProfile}><span className="goal-overline"><Icon name="spark" size={14} />나의 작은 목표</span><strong>{goalLabels[state?.user.goal ?? 'foundation-recovery']}</strong><span>하루 {state?.user.dailyMinutes ?? 10}분, 꾸준히<Icon name="chevron" size={14} /></span><div className="goal-line"><i /><i /><i /><i /><i /><i /><i /></div></button><div className="sidebar-signature">수학을 이해하는 즐거움<span>geunyang math © 2026</span></div></div></aside><div className="workspace"><header className="topbar"><div className="mobile-brand"><button className="brand-button" onClick={() => navigate('home')} aria-label="홈으로"><Brand /></button></div><div className="breadcrumb"><span>나의 학습 공간</span><Icon name="chevron" size={13} /><strong>{navItems.find((item) => item.page === activeNav)?.label}</strong></div><div className="account-controls">{session?.developmentLogin && <span className="dev-label">개발 미리보기</span>}{state ? <><button className="account-button" onClick={openProfile}><span className="avatar">{state.user.displayName.slice(0, 1)}</span><span>{state.user.displayName}</span></button><button className="icon-button logout" onClick={() => void logout()} disabled={busy} aria-label="로그아웃" title="로그아웃"><Icon name="logout" size={17} /></button></> : <button className="login-link" onClick={() => setModal('login')} disabled={loading}>내 학습 시작<Icon name="arrow" size={15} /></button>}</div></header><nav className="mobile-nav" aria-label="모바일 주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'active' : ''} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={18} />{item.label}</button>)}</nav><main id="main-content" className={`main-content page-${page}`} tabIndex={-1}>{error && <div className="error-banner" role="alert"><span>{error}</span><button className="text-button" disabled={busy || loading} onClick={() => void refresh()}>다시 불러오기</button><button className="icon-button" aria-label="오류 알림 닫기" onClick={() => setError('')}><Icon name="close" size={16} /></button></div>}{notice && <div className="notice-banner" role="status"><Icon name="check" size={18} /><span>{notice}</span><button className="icon-button" aria-label="알림 닫기" onClick={() => setNotice('')}><Icon name="close" size={16} /></button></div>}{loading ? <div className="loading-panel" role="status"><span className="loader" />나의 학습 공간을 준비하고 있어요…</div> : page === 'home' ? renderHome() : page === 'classes' ? renderClasses() : page === 'practice' ? renderPractice() : page === 'history' ? renderHistory() : page === 'lesson' ? renderLesson() : renderAssignment()}</main></div>{modal && <div className="modal-backdrop" onClick={(event) => { if (event.target === event.currentTarget && !busy) setModal(null); }}><div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" ref={modalRef}><button className="icon-button modal-close" aria-label="닫기" disabled={busy} onClick={() => setModal(null)}><Icon name="close" /></button>{modal === 'login' ? <><span className="modal-symbol"><Icon name="book" size={27} /></span><div className="eyebrow">YOUR OWN LITTLE LEARNING SPACE</div><h2 id="modal-title">나의 속도로 시작해 볼까요?</h2><p>{session?.developmentLogin ? '개발용 학습 공간에서 클래스, 풀이, 과제 흐름을 체험할 수 있어요.' : '클래스 설명은 바로 둘러볼 수 있어요. 개인 학습을 위한 계정 연결은 준비 중이에요.'}</p>{session?.developmentLogin ? <form onSubmit={login}><label className="form-label">어떻게 불러드릴까요?<input type="text" value={displayName} onChange={(event) => setDisplayName(event.target.value)} placeholder="학습자" maxLength={30} disabled={busy} autoComplete="nickname" /></label><div className="dev-login-note"><strong>개발용 로그인</strong><span>이 브라우저의 임시 세션으로 학습을 저장해요. Google 로그인은 아직 연결되지 않았으며, 로그아웃 후에는 새 학습 공간이 만들어질 수 있어요.</span></div>{error && <p role="alert" className="field-error">{error}</p>}<button className="button primary full-width" type="submit" disabled={busy}>{busy ? '학습 공간 준비 중…' : '개발용 학습 시작하기'}<Icon name="arrow" size={17} /></button></form> : <button className="button primary full-width" onClick={() => { setModal(null); navigate('classes'); }}>클래스 둘러보기<Icon name="arrow" size={17} /></button>}</> : <><span className="modal-symbol"><Icon name="spark" size={27} /></span><div className="eyebrow">SMALL STEPS, YOUR PACE</div><h2 id="modal-title">나에게 맞는 작은 목표.</h2><p>배우고 싶은 이유와 하루에 함께할 시간을 정해 보세요.</p><form onSubmit={saveProfile}><label className="form-label">무엇을 위해 배우고 싶나요?<select value={goal} onChange={(event) => setGoal(event.target.value as Goal)} disabled={busy}>{Object.entries(goalLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label><label className="form-label">하루에 얼마나 함께할까요?<select value={minutes} onChange={(event) => setMinutes(Number(event.target.value))} disabled={busy}>{[5, 10, 20].map((value) => <option key={value} value={value}>{value}분</option>)}</select></label>{error && <p role="alert" className="field-error">{error}</p>}<button className="button primary full-width" type="submit" disabled={busy}>{busy ? '저장 중…' : '나의 목표 저장하기'}<Icon name="check" size={17} /></button></form></>}</div></div>}</div>;
+  return <div className="app-shell"><a href="#main-content" className="skip-link">본문으로 이동</a><aside className="sidebar"><button className="brand-button" aria-label="geunyang math 홈" onClick={() => navigate('home')}><Brand /></button><div className="sidebar-caption">그냥, 나의 속도로.</div><nav aria-label="주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'nav-item active' : 'nav-item'} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={19} /><span>{item.label}</span>{item.page === 'practice' && pendingAssignments.length > 0 && <span className="nav-badge">{pendingAssignments.length}</span>}</button>)}</nav><div className="sidebar-bottom"><button className="learning-goal" onClick={openProfile}><span className="goal-overline"><Icon name="spark" size={14} />나의 작은 목표</span><strong>{goalLabels[state?.user.goal ?? 'foundation-recovery']}</strong><span>하루 {state?.user.dailyMinutes ?? 10}분, 꾸준히<Icon name="chevron" size={14} /></span><div className="goal-line"><i /><i /><i /><i /><i /><i /><i /></div></button><div className="sidebar-signature">수학을 이해하는 즐거움<span>geunyang math © 2026</span></div></div></aside><div className="workspace"><header className="topbar"><div className="mobile-brand"><button className="brand-button" onClick={() => navigate('home')} aria-label="홈으로"><Brand /></button></div><div className="breadcrumb"><span>나의 학습 공간</span><Icon name="chevron" size={13} /><strong>{navItems.find((item) => item.page === activeNav)?.label}</strong></div><div className="account-controls">{session?.developmentLogin && <span className="dev-label">개발 미리보기</span>}{state ? <><button className="account-button" onClick={openProfile}><span className="avatar">{state.user.displayName.slice(0, 1)}</span><span>{state.user.displayName}</span></button><button className="icon-button logout" onClick={() => void logout()} disabled={busy || loading} aria-label="로그아웃" title="로그아웃"><Icon name="logout" size={17} /></button></> : <button className="login-link" onClick={() => setModal('login')} disabled={loading}>내 학습 시작<Icon name="arrow" size={15} /></button>}</div></header><nav className="mobile-nav" aria-label="모바일 주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'active' : ''} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={18} />{item.label}</button>)}</nav><main id="main-content" className={`main-content page-${page}`} tabIndex={-1}>{authError && <div className="auth-error-banner" role="alert"><Icon name="lightbulb" size={18} /><span>{authError}</span><button className="text-button" disabled={loading || busy} onClick={() => setModal('login')}>로그인 다시 하기</button><button className="icon-button" aria-label="로그인 안내 닫기" onClick={() => setAuthError('')}><Icon name="close" size={16} /></button></div>}{error && <div className="error-banner" role="alert"><span>{error}</span><button className="text-button" disabled={busy || loading} onClick={() => void refresh()}>다시 불러오기</button><button className="icon-button" aria-label="오류 알림 닫기" onClick={() => setError('')}><Icon name="close" size={16} /></button></div>}{notice && <div className="notice-banner" role="status"><Icon name="check" size={18} /><span>{notice}</span><button className="icon-button" aria-label="알림 닫기" onClick={() => setNotice('')}><Icon name="close" size={16} /></button></div>}{loading ? <div className="loading-panel" role="status"><span className="loader" />나의 학습 공간을 준비하고 있어요…</div> : page === 'home' ? renderHome() : page === 'classes' ? renderClasses() : page === 'practice' ? renderPractice() : page === 'history' ? renderHistory() : page === 'lesson' ? renderLesson() : renderAssignment()}</main><ServiceFooter /></div>{modal && <div className="modal-backdrop" onClick={(event) => { if (event.target === event.currentTarget && !busy) setModal(null); }}><div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" ref={modalRef}><button className="icon-button modal-close" aria-label="닫기" disabled={busy} onClick={() => setModal(null)}><Icon name="close" /></button>{modal === 'login' ? <>
+        <span className="modal-symbol"><Icon name="book" size={27} /></span>
+        <div className="eyebrow">YOUR OWN LITTLE LEARNING SPACE</div>
+        <h2 id="modal-title">나의 속도로 시작해 볼까요?</h2>
+        <p>{!webAuthentication
+          ? '앱에서의 계정 연결은 준비 중이에요. 지금은 웹브라우저에서 Google 로그인으로 학습을 이어갈 수 있어요.'
+          : session?.googleLogin
+            ? 'Google 계정으로 시작하면 나만의 학습 공간이 생겨요. 언제 다시 와도 진도와 풀이 기록을 이어갈 수 있어요.'
+            : session?.developmentLogin
+              ? '개발용 학습 공간에서 클래스, 풀이, 과제 흐름을 체험할 수 있어요.'
+              : 'Google 로그인을 준비하고 있어요. 그동안 클래스 설명을 먼저 둘러보세요.'}</p>
+        {authError && <p role="alert" className="field-error">{authError}</p>}
+        {error && <p role="alert" className="field-error">{error}</p>}
+        {webAuthentication && session?.googleLogin && <>
+          <GoogleLoginButton pending={googleStarting} disabled={busy || loading} onClick={beginGoogleLogin} />
+          <p className="google-login-note">같은 Google 계정으로 다시 로그인하면 학습을 이어갈 수 있어요.</p>
+        </>}
+        {webAuthentication && session?.developmentLogin && <form onSubmit={login}>
+          {session.googleLogin && <div className="login-divider"><span>개발 환경에서만</span></div>}
+          <label className="form-label">어떻게 불러드릴까요?<input type="text" value={displayName} onChange={(event) => setDisplayName(event.target.value)} placeholder="학습자" maxLength={30} disabled={busy || googleStarting} autoComplete="nickname" /></label>
+          <div className="dev-login-note"><strong>개발용 로그인</strong><span>Google 계정과 별개의 개발용 계정이에요. 이 브라우저의 임시 세션으로 저장되며, 로그아웃하면 새 학습 공간이 만들어질 수 있어요.</span></div>
+          <button className="button secondary full-width" type="submit" disabled={busy || googleStarting}>{busy ? '학습 공간 준비 중…' : '개발용 학습 시작하기'}<Icon name="arrow" size={17} /></button>
+        </form>}
+        <p className="login-privacy-note">계정과 학습 기록을 사용하는 방법은 <Link href="/privacy/" target="_blank" rel="noopener noreferrer">개인정보 안내<span className="sr-only"> (새 창)</span></Link>에서 확인할 수 있어요.</p>
+        <button className="text-button login-browse" disabled={busy || googleStarting} onClick={() => { setModal(null); navigate('classes'); }}>클래스 먼저 둘러보기<Icon name="arrow" size={16} /></button>
+      </> : <><span className="modal-symbol"><Icon name="spark" size={27} /></span><div className="eyebrow">SMALL STEPS, YOUR PACE</div><h2 id="modal-title">나에게 맞는 작은 목표.</h2><p>배우고 싶은 이유와 하루에 함께할 시간을 정해 보세요.</p><form onSubmit={saveProfile}><label className="form-label">무엇을 위해 배우고 싶나요?<select value={goal} onChange={(event) => setGoal(event.target.value as Goal)} disabled={busy}>{Object.entries(goalLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label><label className="form-label">하루에 얼마나 함께할까요?<select value={minutes} onChange={(event) => setMinutes(Number(event.target.value))} disabled={busy}>{[5, 10, 20].map((value) => <option key={value} value={value}>{value}분</option>)}</select></label>{error && <p role="alert" className="field-error">{error}</p>}<button className="button primary full-width" type="submit" disabled={busy}>{busy ? '저장 중…' : '나의 목표 저장하기'}<Icon name="check" size={17} /></button></form><button className="text-button profile-logout" disabled={busy || loading} onClick={() => void logout()}><Icon name="logout" size={16} />이 기기에서 로그아웃</button></>}</div></div>}</div>;
 }
 
 function EmptyState({ title, text, actionLabel, onAction }: { title: string; text: string; actionLabel?: string; onAction?: () => void }) {
