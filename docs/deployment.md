@@ -78,6 +78,8 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 
 검증한 Git SHA의 archive와 환경 파일을 `incoming/`으로 전송한다. SHA별 `releases/<sha>/` 디렉터리에서 [deploy-remote.sh](../scripts/deploy-remote.sh)를 실행한다. 스크립트는 앱과 migrator 이미지를 따로 만들고, migration→seed→기동→사설·공개 health/version 확인이 끝나야 `current`를 새 릴리스로 바꾼다.
 
+릴리스 archive는 제한된 파일 권한을 유지한다. Dockerfile은 migrator가 읽는 package·Prisma 설정·소스를 `node` 사용자 소유로 복사한다. CI는 실제로 권한 600/700의 archive에서 migrator를 빌드하고, 일반 사용자로 소스를 읽으며 빈 테스트 DB에 migration과 seed를 실행하는지 검사한다. 최초 배포에서 확인된 root 소유 파일의 `EACCES` 재발을 이 경로로 검증한다.
+
 이전 릴리스와 해당 환경 파일은 복구를 위해 보존한다. 실패하면 이전 앱 이미지와 환경으로 복귀한다. 앱 복귀는 이미 적용한 DB migration을 되돌리지 않으므로 후속 migration은 이전 앱과 호환되도록 작성해야 한다. 자동화는 운영 DB의 DROP이나 데이터 삭제 권한을 새로 부여하지 않는다.
 
 독립 앱 서비스만 교체하므로 같은 VM의 Cooo·서랍·Constella 등은 재시작하지 않는다. 새 배포가 진행 중인 운영 workflow를 자동 취소하지 않으며, 원격에서도 프로젝트별 잠금을 사용한다.

@@ -41,6 +41,35 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run db:generate
+      - name: Verify non-root migrator from a private release archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          archive_context="$(mktemp -d "$RUNNER_TEMP/geunyang-private-archive.XXXXXX")"
+          git archive --format=tar HEAD |
+            tar --no-same-owner --no-same-permissions -xf - -C "$archive_context"
+          # Match the remote release extraction instead of the checkout's readable modes.
+          test "$(stat -c '%a' "$archive_context/package.json")" = 600
+          test "$(stat -c '%a' "$archive_context/prisma")" = 700
+          migrator_image="geunyang-math-ci-migrator:$GITHUB_SHA"
+          docker build --target migrator --build-arg "BUILD_COMMIT=$GITHUB_SHA" \
+            --tag "$migrator_image" "$archive_context"
+          docker run --rm --entrypoint node "$migrator_image" -e '
+            const assert = require("node:assert/strict");
+            const fs = require("node:fs");
+            const uid = process.getuid();
+            assert.notEqual(uid, 0, "The migrator must run without root privileges");
+            for (const file of ["package.json", "package-lock.json", "prisma.config.ts", "tsconfig.json", "prisma/schema.prisma", "prisma/seed.ts", "prisma/migrations/migration_lock.toml", "src/core/seed.ts", "src/server/db.ts"]) {
+              fs.accessSync(file, fs.constants.R_OK);
+              const metadata = fs.statSync(file);
+              assert.equal(metadata.uid, uid, `${file} must belong to the runtime user`);
+              assert.equal(metadata.mode & 0o777, 0o600, `${file} must retain its private archive mode`);
+            }
+            console.log("Private archived source is readable by the non-root migrator");
+          '
+          # This runs before host-side migration, against the job's fresh MySQL service.
+          docker run --rm --network host --env DATABASE_URL "$migrator_image"
       - run: npm run db:migrate
       - run: npm run typecheck
       - run: npm test
