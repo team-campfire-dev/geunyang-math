@@ -53,15 +53,24 @@ Prisma CLI와 MariaDB 어댑터 모두 CA 및 호스트 이름을 검증한다. 
 
 ## HTTPS 프록시
 
-사용할 와일드카드 인증서는 NPM의 `npm-8`이며 2026-11-17까지 유효함을 확인했다. DNS는 기존 Cloudflare 경로로 해석된다. [NPM의 공식 custom HTTP 설정](https://nginxproxymanager.com/advanced-config/#custom-nginx-configurations)을 이용한다.
+프록시는 Nginx Proxy Manager의 **Hosts → Proxy Hosts**에 등록된 `geunyang-math.team-campfire.dev` 항목에서 관리한다. UI에서 설정을 저장했고 목록의 상태가 **Online**임을 확인했다. DNS는 기존 Cloudflare 경로로 해석된다.
 
-[geunyang-math.conf](../deploy/nginx/geunyang-math.conf)를 앱 VM의 `/home/ubuntu/nginx/data/nginx/geunyang-math/server.conf`에 두고, `/home/ubuntu/nginx/data/nginx/custom/http.conf`에서 다음 한 줄로 포함한다.
+| NPM UI 항목 | 현재 설정 |
+|---|---|
+| Domain Names | `geunyang-math.team-campfire.dev` |
+| Scheme | `http` |
+| Forward Hostname / IP | `10.0.0.130` |
+| Forward Port | `3007` |
+| SSL Certificate | Let's Encrypt 와일드카드 인증서 `npm-8` |
+| Force SSL | 켜짐 |
+| HTTP/2 Support | 켜짐 |
+| Websockets Support | 켜짐 |
+| Access List | Public |
+| Cache Assets | 꺼짐 |
 
-```nginx
-include /data/nginx/geunyang-math/server.conf;
-```
+인증서는 2026-11-17까지 유효함을 확인했다. 프록시 호스트와 인증서 설정은 NPM UI에서 변경하며, 앱 배포 workflow는 이 설정을 수정하지 않는다.
 
-기존 설정을 백업하고 `docker exec nginx-app-1 nginx -t`가 성공한 뒤 reload한다. 실패하면 추가 설정만 복구한다. 이 호스트는 저장소에서 관리하는 custom 설정이며 NPM UI의 Proxy Hosts 목록에 자동 등록되는 항목은 아니다. 같은 도메인의 UI 항목을 중복 생성하지 않는다.
+UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고, `/home/ubuntu/nginx/data/nginx/custom/http.conf`에서 이 프로젝트 설정을 포함하던 한 줄만 제거했다. 서버에 남아 있는 `/home/ubuntu/nginx/data/nginx/geunyang-math/server.conf`는 현재 비활성 파일이며 사용하지 않는다. 저장소의 이전 custom 프록시 설정과 설치 스크립트도 제거했다. 같은 도메인의 변경은 기존 Proxy Hosts 항목에서 진행한다.
 
 ## 배포와 복구
 
@@ -80,7 +89,7 @@ include /data/nginx/geunyang-math/server.conf;
 - ARM64 앱 이미지와 별도 migrator: 로컬 컨테이너 빌드·실행 성공. non-root, health, revision, 개발 로그인 차단 확인.
 - 콘텐츠·학습/과제·인증/TLS 검사 89개 통과. 배포 포인터 복구 회귀 검사 5개 추가 통과.
 - 운영 DB·계정 생성: 사용자의 명시적 승인 후 생성 완료. 두 계정의 DB 한정 권한과 앱 VM 호스트 제한, REQUIRE SSL을 확인함.
-- NPM custom HTTPS 프록시: 기존 설정 백업, nginx 문법 검사와 reload 완료.
+- NPM Proxy Hosts UI: 도메인과 `http://10.0.0.130:3007` 연결, 와일드카드 SSL 설정 저장 및 Online 상태 확인. 기존 custom include는 백업 후 제거 완료.
 - GitHub 배포 시크릿: 사용자의 명시적 승인 후 6개 등록 완료. `ORACLE_DEPLOY_ENABLED=true` 설정 완료.
 - 실제 DB TLS 연결, 운영 migration, 공개 HTTPS: 최초 운영 배포의 검증 항목. 실행 결과와 배포 SHA는 [GitHub Actions](https://github.com/team-campfire-dev/geunyang-math/actions)의 운영 배포 기록에서 확인한다.
 
