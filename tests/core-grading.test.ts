@@ -9,6 +9,24 @@ describe('exact arithmetic grading', () => {
     expect(gradeAnswer(answer, half).status).toBe('correct');
   });
 
+  it.each(['\\frac{1}{2}', '\\dfrac{1}{2}', '\\tfrac{2}{4}', '$\\frac{1}{2}$', '\\(\\frac{2}{4}\\)', '$$\\frac{1}{2}$$', '\\[\\frac{1}{2}\\]', '\\frac{-1}{-2}', ' \\frac{ 1 }{ 2 } '])('accepts the LaTeX an equation editor would emit: %s', (answer) => {
+    expect(gradeAnswer(answer, half).status).toBe('correct');
+  });
+
+  it('treats LaTeX as notation only and never evaluates an expression', () => {
+    for (const answer of ['\\frac{1+1}{4}', '\\frac{2}{2+2}', '\\frac{1}{2}+\\frac{0}{2}', '\\frac{\\frac{1}{2}}{1}', '\\sqrt{4}/4', '\\frac{a}{b}', '\\frac{1}{0}', '\\frac{1}{2}x']) {
+      expect(gradeAnswer(answer, half).status, answer).toBe('invalid');
+    }
+  });
+
+  it('applies the integer and reduced-fraction rules to LaTeX answers as well', () => {
+    expect(gradeAnswer('\\frac{6}{2}', { kind: 'integer', value: 3 }).status).toBe('invalid');
+    expect(gradeAnswer('$3$', { kind: 'integer', value: 3 }).status).toBe('correct');
+    const reduced = { ...half, requiredForm: 'reduced_fraction' as const };
+    expect(gradeAnswer('\\frac{1}{2}', reduced).status).toBe('correct');
+    expect(gradeAnswer('\\frac{2}{4}', reduced).status).toBe('incorrect');
+  });
+
   it('compares large exact rationals without JavaScript rounding', () => {
     expect(gradeAnswer('9007199254740993/18014398509481986', half).status).toBe('correct');
     expect(gradeAnswer('9007199254740992/18014398509481986', half).status).toBe('incorrect');

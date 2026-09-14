@@ -34,6 +34,9 @@ export type PublicClass = {
   order: number;
 };
 export type ClassDocument = PublicClass & { sections: ClassSection[]; problems: PublicProblem[] };
+// Display-only concept names for the signed-out catalogue. Never carries answers or grading rules.
+export type PublicSkill = { key: string; label: string };
+export type PublicCatalog = { classes: PublicClass[]; skills: PublicSkill[] };
 export type AttemptView = {
   id: string; problemVersionId: string; answer: string; result: GradeResult; hintUsed: boolean;
 };

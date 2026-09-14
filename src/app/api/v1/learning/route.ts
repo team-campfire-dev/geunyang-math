@@ -10,7 +10,7 @@ export function GET(request: Request) {
   return handle(async () => {
     const service = new LearningService(getDatabase());
     const params = new URL(request.url).searchParams;
-    if (params.get('catalog') === '1') return json({ classes: await service.catalog() });
+    if (params.get('catalog') === '1') return json(await service.publicCatalog());
     const classKey = params.get('classKey');
     if (classKey) return json(await service.classDocument(classKey, (await sessionUser(request))?.id));
     return json(await service.state((await requireUser(request)).id));
