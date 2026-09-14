@@ -44,11 +44,17 @@ MOBILE_ALLOW_LOCAL_API=1 NEXT_PUBLIC_API_ORIGIN=http://127.0.0.1:3017 npm run bu
 
 CI의 `https://api.example.invalid`는 네트워크 호출 없이 정적 빌드만 검증하기 위한 예약된 예시 주소다. 이 산출물은 배포하지 않는다. `capacitor.config.ts`는 `webDir: 'out'`과 앱 식별자 초안만 정의한다. iOS/Android 프로젝트, 서명 키와 스토어 등록은 아직 생성하지 않는다.
 
-## 인증과 제출의 후속 작업
+## 웹 Google 인증과 네이티브 인증의 경계
 
-현재 웹 인증은 서버가 관리하는 cookie를 사용한다. 네이티브 WebView에서 이 cookie 세션이 자동으로 공유된다고 가정하지 않는다. 모바일 출시에 앞서 네이티브 OAuth·딥링크 또는 id token 교환, 폐기 가능한 세션, 기기용 보안 저장소 어댑터, 로그인 복원 이후의 데이터 로딩을 구현해야 한다. 서버에서는 웹·모바일 요청 모두 같은 사용자·기관 권한 검증을 통과시킨다.
+웹에는 Google OAuth authorization code 로그인을 구현했다. 같은 origin의 일반 브라우저에서 `GET /api/auth/google/start`로 전체 페이지를 이동하고, 서버 callback은 `${APP_ORIGIN}/api/auth/google/callback`만 사용한다. state·브라우저 바인딩·PKCE·nonce·Google ID 토큰 검증은 서버 전용 코드에서 처리한다. 운영 배포와 실제 Google 계정 로그인은 아직 검증 전이다.
 
-CORS는 실제 사용할 native origin의 정확한 허용 목록으로 구성하고 Authorization 요청과 OPTIONS를 처리한다. CORS 허용만으로 요청을 신뢰하지 않는다. 계정 전환·로그아웃 때 이전 사용자의 캐시와 대기 중 작업이 남지 않도록 한다.
+`GET /api/v1/session`의 `googleLogin` 기능 여부와 실제 브라우저·API origin을 함께 확인해 로그인 버튼을 표시한다. native 또는 다른 origin의 API를 사용하는 정적 번들은 웹 로그인 버튼을 실행하지 않고 별도 인증이 필요함을 안내한다. `NEXT_PUBLIC_API_ORIGIN`을 지정하는 것만으로 네이티브 Google 로그인이 완성되지 않는다.
+
+Google 계정은 서버의 고유 `sub` identity로 같은 User·학습 기록에 연결된다. 이메일로 기존 개발 계정을 병합하지 않는다. 브라우저에는 운영용 Secure·HttpOnly·SameSite=Lax cookie만 전달하고, Google access/refresh token을 저장하지 않는다. 웹의 클래스 복귀 정보는 classKey와 시각만 sessionStorage에 두며 인증 정보를 넣지 않는다. 콜백 실패는 allowlist의 `authError`만 표시하고 해당 query를 제거한다.
+
+네이티브 WebView에서 웹 cookie 세션이 자동으로 공유된다고 가정하지 않는다. Google 로그인 화면을 embedded WebView에 여는 방식도 사용하지 않는다. 모바일 출시에 앞서 플랫폼별 Google 클라이언트, 시스템 브라우저나 공식 native SDK를 통한 인증, PKCE와 검증된 앱 링크·딥링크 복귀 또는 ID token 교환, 폐기 가능한 앱 세션, 기기용 보안 저장소 어댑터, 로그인 복원 이후의 데이터 로딩을 별도로 구현해야 한다. 웹 callback이나 토큰을 임의의 딥링크로 전달하지 않는다. 서버에서는 웹·모바일 요청 모두 같은 사용자·기관 권한 검증을 통과시킨다.
+
+CORS는 실제 사용할 native origin의 정확한 허용 목록으로 구성하고 Authorization 요청과 OPTIONS를 처리한다. CORS 허용만으로 요청을 신뢰하지 않는다. 계정 전환·로그아웃 때 이전 사용자의 캐시와 대기 중 작업이 남지 않도록 한다. OAuth 코드·토큰·cookie·클라이언트 비밀값은 앱 로그, crash report, 브라우저 저장소에 기록하지 않는다.
 
 오프라인 제출은 현재 제공하지 않는다. 네트워크 오류를 제출 성공으로 바꾸지 않고 서버 접수를 확인한 뒤 완료를 표시한다. 이후 초안·오프라인 큐를 도입하더라도 `pending`과 서버의 `submitted` 상태, 서버 접수 시각, 중복 재시도를 막는 request ID를 유지한다. 기관 과제의 고정 문항·마감 정책을 로컬 시계나 AI가 덮어쓸 수 없다.
 

@@ -13,7 +13,7 @@
 | 학습 대상·내용 | 성인 기초 재학습용 분수 클래스 3개 | 소수·백분율을 포함한 9개 클래스, 전문가 콘텐츠 검수와 학습자 파일럿 |
 | 학습 흐름 | 설명→예시→연습→확인퀴즈→정리, 진도·답안 저장과 이어하기 | 진단, 건너뛰기 정책, 다양한 활동 완료 기준 |
 | 콘텐츠 표현 | 역할인 Section과 표현인 ContentBlock 분리, 종류·버전별 검증과 렌더링 | 그래프·기하 조작, 일반 이미지/미디어, 형식별 편집기와 응답·채점 확장 |
-| 계정·인증 | 서버 저장 세션, HttpOnly cookie, 로그아웃과 만료, 개발·loopback 한정 로그인 | Google OAuth, 기존 계정 재로그인, 계정 관리·삭제, 공개 서비스 운영 정책 |
+| 계정·인증 | Google 웹 OAuth, 같은 Google 계정 재접속, 7일 서버 세션·회전·로그아웃, 별도 개발·loopback 로그인 | 계정 관리·자동 삭제, 공개 서비스 운영 정책 정비 |
 | 개인화 | 진행 중 수업 우선, 미완료 수업 기본 순서 추천, 목표·시간 설정과 안내 | 진단·선행개념·오답에 따른 실제 경로와 분량 조정, 복습 간격, 추천 이유 이력 |
 | 학습 증거 | 미확인·연습 중·직접 해결·지연 복습 상태, 힌트 사용과 첫 유효 시도 구분 | 학습 효과가 검증된 기준, 다양한 독립 문항과 진단 결합 |
 | 과제 | 독립 과제 내용, 개인 배정, 초안 제출 묶음, 답안 저장·확정 제출 | 독립 과제 작성 화면/API, 재배정·재제출·취소, 기관 마감·공개 정책 |
@@ -21,12 +21,12 @@
 | 재채점 | `AssessmentRevision` 테이블 정의 | 정정 요청·재채점·이전 판정과 비교·사용자 안내 flow |
 | 기관 확장 | 개인 scope와 과제/배정/제출의 경계 | Organization, Membership, LearningGroup, 교사 권한·성적·기관 간 격리 |
 | 모바일 | 같은 UI의 정적 export 성공, Capacitor config 초안 | runtime와 native 프로젝트, OAuth·CORS·기기 저장소, 실기 검증·스토어 출시 |
-| 운영 | 개발 MySQL Compose, migration, health/version API, ARM64 운영 이미지·검증 후 배포 workflow·DB TLS·앱 복구 스크립트 | 실제 배포 상태는 [배포 문서](deployment.md) 참조. 운영용 인증·백업 복원 훈련·모니터링 확장 |
+| 운영 | 개발 MySQL Compose, migration, health/version API, ARM64 운영 이미지·검증 후 배포 workflow·DB TLS·앱 복구 스크립트 | 실제 배포 상태는 [배포 문서](deployment.md) 참조. Google 인증 운영 확인·백업 복원 훈련·모니터링 확장 |
 | AI | 모델 호출 없음 | 편집기 이후 같은 초안 형식으로 생성·검증·검수, 평가와 비용 관리 |
 
 ## 현재 가능한 학습 흐름
 
-개발 서버의 loopback 주소에서 개발용 학습자를 만든다. 목표와 하루 5·10·20분 설정을 저장하고, 클래스 하나를 시작한다. 서버는 수강한 클래스 판본을 고정하고 앞 단계를 완료해야 뒤의 활동을 진행할 수 있도록 확인한다.
+Google 설정이 유효한 같은 origin의 웹에서는 Google 계정으로 로그인한다. 로컬 개발에서는 loopback 전용 개발 학습자도 사용할 수 있다. Google 로그인 구현은 자동 검사까지 확인했으며 운영 배포·실계정 결과는 릴리스별 배포 기록에서 확인한다. 로그인 후 목표와 하루 5·10·20분 설정을 저장하고, 클래스 하나를 시작한다. 서버는 수강한 클래스 판본을 고정하고 앞 단계를 완료해야 뒤의 활동을 진행할 수 있도록 확인한다.
 
 문항은 서버에서 정수·유리수로 판정하며 부동소수점 근사 비교나 수식 실행을 사용하지 않는다. 파싱 실패와 오답을 구분하고 기약분수 요구를 검사한다. 정답을 맞혀야만 다음 단계로 갈 수 있는 구조는 아니다. 각 필수 문항에 유효한 시도가 있으면 단계 완료가 가능하다.
 
@@ -70,13 +70,21 @@
 
 ## 인증·모바일·운영 상태
 
-실제 Google OAuth는 없다. 개발용 로그인은 `NODE_ENV=development`, `DEV_LOGIN_ENABLED=true`, loopback 호스트일 때만 동작한다. production에서는 플래그를 켜도 사용할 수 없다. 화면에서 이름을 입력하는 것은 OAuth나 기존 사용자 확인 절차가 아니며, 세션이 사라진 뒤 기존 학습자 계정으로 재접속하는 용도로 사용할 수 없다.
+Google 웹 OAuth를 구현했다. 시작·콜백 주소는 `/api/auth/google/start`, `/api/auth/google/callback`이며 APP_ORIGIN으로 고정한 주소만 사용한다. `GOOGLE_LOGIN_ENABLED=true`와 유효한 전용 클라이언트 ID·secret이 모두 있어야 로그인 가능 여부를 공개한다. Google Cloud 전용 web client 생성과 배포 시크릿 등록을 완료했다. 운영 배포와 실제 Google 계정의 로그인 결과는 릴리스별 검증 기록에서 확인한다.
 
-모바일 정적 export는 실행해 성공했다. 서버 API·DB·정답 seed를 제외한 HTML/CSS/JS 번들이 `out/`에 생성된다. 하지만 `capacitor.config.ts`와 CLI 설치만으로 실행 가능한 native 앱이 완성된 것은 아니다. Capacitor runtime, iOS/Android 프로젝트, native 인증 어댑터·CORS·딥링크·보안 저장소는 후속 작업이다. 현재 cookie 기반 API를 native에서 그대로 사용할 수 있다고 보장하지 않는다.
+DB의 `OAuthAttempt`가 약 10분 동안 state hash·브라우저 바인딩·PKCE verifier·nonce를 보관하고 callback을 한 번만 소비한다. Google 공식 라이브러리로 서명·issuer·audience·토큰 시각을 검증하고 nonce·verified email·authorized party·엄격한 만료를 추가 확인한다. 네트워크 요청은 10초 취소 신호를 사용하고 인증 코드 교환을 자동 재시도하지 않는다.
+
+`GoogleIdentity.subject`는 대소문자를 구분하는 Google `sub`이며 User와 개인 Scope에 연결된다. 같은 계정으로 다시 로그인하면 기존 진도·과제를 유지한다. 이메일로 계정을 연결하거나 개발 계정을 자동 병합하지 않는다. 동시에 첫 로그인을 해도 고유 identity와 transaction을 사용해 User·Scope가 중복 생성되지 않도록 검사했다.
+
+운영 세션은 `__Host-gm_session`이라는 host-only Secure·HttpOnly·SameSite=Lax cookie로 전달하며 수명은 7일이다. 서버에는 token hash와 `authMethod=google`을 저장한다. 재로그인 때 해당 브라우저의 이전 Google 세션을 폐기하고 새 세션을 만든다. 로그아웃은 origin을 확인한 뒤 세션을 폐기하고 관련 cookie를 지운다. Google access/refresh token은 보관하지 않는다. 기존 Session에는 추가 migration으로 `authMethod=development` 기본값을 부여한다.
+
+개발용 로그인은 `NODE_ENV=development`, `DEV_LOGIN_ENABLED=true`, loopback 호스트일 때만 동작한다. production에서는 플래그를 켜거나 기존 `gm_session` 값을 새 cookie 이름으로 옮겨도 개발 세션을 사용할 수 없다. 개발 계정은 이름으로 복구할 수 없으며 Google 계정과 분리한다.
+
+모바일 정적 export는 실행해 성공했다. 서버 API·DB·정답 seed를 제외한 HTML/CSS/JS 번들이 `out/`에 생성된다. 하지만 `capacitor.config.ts`와 CLI 설치만으로 실행 가능한 native 앱이 완성된 것은 아니다. Capacitor runtime, iOS/Android 프로젝트, native 인증 어댑터·CORS·딥링크·보안 저장소는 후속 작업이다. Google 로그인 버튼은 같은 origin의 일반 웹에서만 활성화하며, native·원격 API 번들에는 별도 인증 준비 안내를 표시한다. 현재 cookie 기반 API를 native에서 그대로 사용할 수 있다고 보장하지 않는다. embedded WebView에서 Google 로그인을 여는 방식은 사용하지 않는다.
 
 오프라인 저장·제출 큐와 OTA도 없다. 네트워크 오류는 오류로 표시하고 서버 접수를 확인하기 전 제출 완료로 처리하지 않는다. 자세한 모바일 경계는 [모바일 구조 문서](mobile-architecture.md)를 따른다.
 
-개발 Compose는 별도 로컬 MySQL을 실행한다. 운영용 Dockerfile과 별도 migrator, Oracle 배포 workflow, 엄격한 DB TLS와 제한된 계정을 추가했다. 기존 프로젝트의 DB 데이터·OAuth 자격증명은 공유하지 않는다. 공개 학습자 서비스를 시작하려면 운영용 인증, 백업 복원 훈련, 데이터 보관 정책과 관측을 추가해야 한다. 실제 운영 연결·배포 결과는 [배포 문서](deployment.md)에 기록한다.
+개발 Compose는 별도 로컬 MySQL을 실행한다. 운영용 Dockerfile과 별도 migrator, Oracle 배포 workflow, 엄격한 DB TLS와 제한된 계정을 추가했다. 기존 프로젝트의 DB 데이터·OAuth 자격증명은 공유하지 않는다. 공개 학습자 서비스를 시작하려면 구현된 Google 인증의 실제 배포·계정 복원 검증, 백업 복원 훈련, 데이터 보관 정책과 관측이 필요하다. 앱은 OAuth 코드·토큰·cookie·원문 provider 오류를 로그에 남기지 않으며 프록시·엣지의 callback query 로깅도 별도로 확인해야 한다. 실제 운영 연결·배포 결과는 [배포 문서](deployment.md)에 기록한다.
 
 ## 검증 기록
 
@@ -86,21 +94,25 @@
 | 콘텐츠·채점 검사 | 57개 통과 |
 | DB TLS 설정 검사 | 20개 통과. 검증 완화·잘못된 옵션·hostname 불일치 거부 확인 |
 | 실제 MySQL 학습/과제 통합 검사 10개와 개발 로그인 보호 검사 2개 | 12개 통과. 테스트 DB에는 새 테스트 기록만 추가 |
-| 배포 포인터 복구 | 사전 검사 실패·같은 SHA 재배포·교체 직후 중단 등 5개 통과. 전체 검사 94개 |
-| TEST_DATABASE_URL 미설정 | MySQL 검사 10개를 건너뛰고 개발 로그인 보호 검사는 실행 |
+| 배포 포인터 복구 | 사전 검사 실패·같은 SHA 재배포·교체 직후 중단 등 5개 통과 |
+| 학습 요청 계정 확인 | 실제 MySQL HTTP 검사 8개 통과. 다른 탭 계정 변경·헤더 누락·중복을 본문 처리 전 거부하고 DB 무변경 확인 |
+| Google OAuth | 공식 verifier 단위 검사 21개와 실제 MySQL 인증 통합 검사 10개 통과. 위조·nonce·만료·일회용 state·동시 계정 생성·세션 회전·로그아웃 검증 |
+| 웹 로그인 표시·복귀 | 클라이언트 인증 경계 검사 28개 통과. 전체 로컬 검사 161개 통과 |
+| TEST_DATABASE_URL 미설정 | MySQL 학습·인증 검사 20개를 건너뛰고 DB 없는 인증 보호 검사는 실행 |
 | 모바일 정적 export | `https://api.example.invalid`를 사용한 컴파일 검증 성공 |
 | 모바일 산출물 문자열 확인 | `gradingSpec`, `PrismaClient`, 로컬 개발 DB 암호 문자열 미검출. 이 검사는 전체 보안 검토를 대체하지 않음 |
 | 웹 운영 빌드 | 통과 |
 | 브라우저 화면/전체 흐름 QA | 개발 로그인→수강→채점·힌트→완료→과제 답안 저장·최종 제출→새로고침 기록 보존 통과. 목표·시간 저장, 390px/1280px 가로 넘침 없음 확인 |
-| CI | workflow 작성 완료. 원격 GitHub 실행 결과와는 구분 |
+| CI | 기존 배포 이력과 이번 OAuth 변경의 원격 검증 결과를 구분. 이 문서의 161개는 로컬 실행 기록이며 새 릴리스 CI는 GitHub Actions 참조 |
 | Oracle 운영 | 준비 상태는 [배포 문서](deployment.md), 릴리스 결과는 GitHub Actions 배포 실행 참조 |
+| 실제 Google 로그인 | 운영 배포와 실계정 동의·재로그인·기록 복원은 릴리스별 배포 결과 기록 참조 |
 | 실제 모바일·학습 효과 | 아직 검증하지 않음 |
 
 테스트 실행과 별도 `_test` DB 생성 방법은 [README](../README.md)에 있다. 변경 이후에는 같은 검증을 다시 통과해야 하며 이 표만으로 후속 코드의 상태를 보장하지 않는다.
 
 ## 다음 구현 순서
 
-1. 웹의 실제 Google 로그인과 계정 재접속·관리 기능을 연결하고, 콘텐츠를 전문가가 검수한다.
+1. 구현된 웹 Google 로그인을 운영에 배포하고 실제 계정으로 로그인·재접속·학습 기록 보존을 검증한다. 계정 관리·삭제와 콘텐츠 전문가 검수를 이어간다.
 2. 진단·선행개념·오답·가용 시간에 따라 추천 순서와 복습 분량이 실제로 달라지게 만들고 추천 이력을 남긴다.
 3. 콘텐츠 import·초안·검수·새 판본 발행 경로와 콘텐츠 오류 정정·재채점 흐름을 만든다. 그 위에 사람용 편집기를 연결한다.
 4. 사용 사례에 따라 그래프·도형 형식, 기관 배정·평가, 모바일 runtime·인증을 각각 확장한다.

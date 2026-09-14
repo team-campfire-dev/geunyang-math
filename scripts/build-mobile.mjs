@@ -58,6 +58,7 @@ async function buildMobile() {
       'src/shared',
       'src/features',
       'src/app/page.tsx',
+      'src/app/privacy',
       'src/app/layout.tsx',
       'src/app/globals.css',
     ]) {
@@ -117,6 +118,7 @@ export default {
     if (build.status !== 0) throw new Error(`Mobile static export failed (${build.signal ?? build.status}).`);
 
     await stat(path.join(stage, 'out/index.html'));
+    await stat(path.join(stage, 'out/privacy/index.html'));
     const output = path.join(root, 'out');
     // Preserve the previous output when compilation fails. Replace it only after success.
     await rm(output, { recursive: true, force: true });

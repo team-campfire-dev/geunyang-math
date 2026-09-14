@@ -15,6 +15,7 @@ model User {
   createdAt    DateTime @default(now())
   scopes       Scope[]
   sessions     Session[]
+  googleIdentity GoogleIdentity?
   enrollments  Enrollment[]
   recipients   AssignmentRecipient[]
   attempts     Attempt[]
@@ -37,6 +38,7 @@ model Session {
   userId    String @db.VarChar(191)
   user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
+  authMethod String @default("development") @db.VarChar(20)
   createdAt DateTime @default(now())
   @@index([expiresAt])
 }
@@ -177,4 +179,24 @@ model AssessmentRevision {
   correctedResult Json
   reason          String @db.Text
   createdAt       DateTime @default(now())
+}
+
+// Google subject is case-sensitive ASCII (the migration pins its collation).
+model GoogleIdentity {
+  subject String @id @db.VarChar(255)
+  userId String @unique @db.VarChar(191)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+// Short-lived authorization request; never stores provider access or refresh tokens.
+model OAuthAttempt {
+  stateHash String @id @db.VarChar(64)
+  browserHash String @db.VarChar(64)
+  codeVerifier String @db.VarChar(128)
+  nonce String @db.VarChar(64)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@index([expiresAt])
+  @@index([browserHash])
 }
