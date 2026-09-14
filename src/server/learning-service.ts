@@ -1,15 +1,21 @@
 import 'server-only';
+import { createHash } from 'node:crypto';
+import { diagnosticProblems, diagnosticVersion } from '@/core/diagnostic';
+import { recommend, reviewSelection, skillReadiness, type Evidence } from '@/core/personalization';
 import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
 import { getActivityProblemIds, toPublicClass, validateClass, type StoredClass, type StoredProblem } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
 import { skillLabels } from '@/core/seed';
-import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicProblem } from '@/shared/api';
+import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicProblem, DiagnosticAnswer, Recommendation } from '@/shared/api';
 import { AppError } from './errors';
 
 const id = z.string().min(1).max(191);
 const context = z.enum(['class', 'assignment']);
 export const actionSchema = z.discriminatedUnion('action', [
+  z.object({ action: z.literal('recommendation.choose'), classKey: z.string().min(1).max(100).nullable() }).strict(),
+  z.object({ action: z.literal('diagnostic.start') }).strict(),
+  z.object({ action: z.literal('diagnostic.answer'), diagnosticId: id, problemVersionId: id, answer: z.string().trim().min(1).max(128).nullable() }).strict(),
   z.object({ action: z.literal('profile.update'), goal: z.enum(['daily-math', 'foundation-recovery', 'algebra-ready']), dailyMinutes: z.union([z.literal(5), z.literal(10), z.literal(20)]) }).strict(),
   z.object({ action: z.literal('enrollment.start'), classKey: id }).strict(),
   z.object({ action: z.literal('section.complete'), enrollmentId: id, sectionId: id }).strict(),
@@ -33,8 +39,8 @@ function attemptView(a: Attempt): AttemptView {
 export class LearningService {
   constructor(private readonly db: PrismaClient) {}
 
-  async catalog() {
-    const rows = await this.db.classVersion.findMany({ orderBy: [{ publishedAt: 'desc' }, { id: 'asc' }] });
+  async catalog(db: Tx = this.db) {
+    const rows = await db.classVersion.findMany({ orderBy: [{ publishedAt: 'desc' }, { id: 'asc' }] });
     const seen = new Set<string>();
     return rows.filter(row => { if (seen.has(row.classKey)) return false; seen.add(row.classKey); return true; })
       .map(row => stored(row.document).public).sort((a, b) => a.order - b.order);
@@ -47,18 +53,22 @@ export class LearningService {
     return toPublicClass(stored(row.document));
   }
 
-  async state(userId: string): Promise<LearningState> {
-    const [user, classes, enrollments, recipients] = await Promise.all([
-      this.db.user.findUnique({ where: { id: userId } }), this.catalog(),
-      this.db.enrollment.findMany({ where: { userId }, include: { classVersion: true, attempts: { orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] } }, orderBy: { createdAt: 'asc' } }),
-      this.db.assignmentRecipient.findMany({ where: { learnerUserId: userId }, include: {
+  async state(userId: string, db: Tx = this.db): Promise<LearningState> {
+    const [user, classes, enrollments, recipients, diagnostic, history] = await Promise.all([
+      db.user.findUnique({ where: { id: userId } }), this.catalog(db),
+      db.enrollment.findMany({ where: { userId }, include: { classVersion: true, attempts: { orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] } }, orderBy: { createdAt: 'asc' } }),
+      db.assignmentRecipient.findMany({ where: { learnerUserId: userId }, include: {
         assignment: { include: { items: { orderBy: { position: 'asc' } } } },
         submissions: { orderBy: { submissionIndex: 'desc' }, include: { items: { include: { selectedAttempt: true } }, attempts: { orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] } } },
       }, orderBy: { recommendedAt: 'asc' } }),
+      db.diagnosticRun.findFirst({ where: { userId }, orderBy: { createdAt: 'desc' } }),
+      db.recommendationHistory.findMany({ where: { userId }, orderBy: [{ createdAt: 'desc' }, { id: 'desc' }], take: 10 }),
     ]);
     if (!user) throw notFound();
     const skills: LearningState['skills'] = Object.entries(skillLabels).map(([key, label]) => ({ key, label, state: 'unknown' }));
     const firstEvidence = new Map<string, { result: GradeResult; date: Date; skillKeys: string[]; delayed: boolean }>();
+    const evidence: Evidence[] = [];
+    const observedIds = new Set<string>();
     for (const e of enrollments) {
       const record = stored(e.classVersion.document);
       const checks = new Set(record.sections.filter(s => s.role === 'check').flatMap(s => getActivityProblemIds(record, s.sectionId)));
@@ -67,6 +77,10 @@ export class LearningService {
         if (result.status === 'invalid') continue;
         const p = record.problems.find(p => p.problemVersionId === a.problemVersionId);
         if (!p) continue;
+        if (!observedIds.has(p.problemVersionId)) {
+          observedIds.add(p.problemVersionId);
+          evidence.push({ problemVersionId: p.problemVersionId, skillKeys: p.skillKeys, result, date: a.createdAt, check: checks.has(p.problemVersionId), assessmentId: e.id });
+        }
         for (const skill of skills.filter(s => p.skillKeys.includes(s.key))) if (skill.state === 'unknown') skill.state = 'practicing';
         if (checks.has(p.problemVersionId) && !firstEvidence.has(p.problemVersionId)) firstEvidence.set(p.problemVersionId, { result, date: a.createdAt, skillKeys: p.skillKeys, delayed: false });
       }
@@ -84,6 +98,10 @@ export class LearningService {
         // Only finalized, server-received work contributes homework evidence.
         if (submission.status === 'submitted') {
           const first = matching.find(a => (a.result as GradeResult).status !== 'invalid');
+          if (first && !observedIds.has(p.problemVersionId)) {
+            observedIds.add(p.problemVersionId);
+            evidence.push({ problemVersionId: p.problemVersionId, skillKeys: p.skillKeys, result: first.result as GradeResult, date: first.createdAt, check: true, assessmentId: r.id });
+          }
           if (first && !firstEvidence.has(p.problemVersionId)) firstEvidence.set(p.problemVersionId, {
             result: first.result as GradeResult, date: first.createdAt, skillKeys: p.skillKeys,
             delayed: first.createdAt >= r.recommendedAt,
@@ -96,23 +114,29 @@ export class LearningService {
       });
       return { id: r.assignmentId, recipientId: r.id, title: r.assignment.title, classKey,
         recommendedAt: r.recommendedAt.toISOString(), policy: r.assignmentPolicy as 'adaptive' | 'fixed',
-        status: r.status as 'assigned' | 'submitted', items, submissionId: submission.id };
+        status: r.status as 'assigned' | 'submitted', items, submissionId: submission.id,
+        reason: typeof (r.assignment.policySnapshot as { reviewReason?: string }).reviewReason === 'string' ? (r.assignment.policySnapshot as { reviewReason: string }).reviewReason : undefined };
     });
     for (const skill of skills) {
       const correct = [...firstEvidence.values()].filter(e => e.skillKeys.includes(skill.key) && e.result.status === 'correct' && !e.result.assisted);
       if (correct.length >= 2) skill.state = 'independent';
       if (correct.some(e => e.delayed) && correct.some(e => !e.delayed)) skill.state = 'retained';
     }
-    const active = enrollments.find(e => e.status === 'active');
-    const incomplete = classes.filter(c => !enrollments.some(e => e.classVersion.classKey === c.classKey && e.status === 'completed'));
-    const goals = { 'daily-math': '생활 속 비율을 이해하기 위한', 'foundation-recovery': '기초부터 차근차근 이어가는', 'algebra-ready': '대수를 배우기 위한 기초' };
-    const recommendations = active
-      ? [{ classKey: active.classVersion.classKey, reason: '이전에 배우던 곳에서 이어갈 수 있어요.' }]
-      : incomplete.slice(0, 2).map(c => ({ classKey: c.classKey,
-        reason: user.dailyMinutes === 5 ? '짧게 시작하고, 다음에 이어서 배워도 괜찮아요.' : `${goals[user.goal as keyof typeof goals]} 수업이에요.` }));
+    const diagnosticBank = diagnostic?.document as unknown as StoredProblem[] | undefined;
+    const diagnosticAnswers = (diagnostic?.answers ?? []) as unknown as DiagnosticAnswer[];
+    const completedDiagnostic = diagnostic?.status === 'completed';
+    const readiness = skillReadiness(skillLabels, completedDiagnostic && diagnosticBank ? { answers: diagnosticAnswers, problems: diagnosticBank } : null, evidence);
+    const { recommendations, plan } = recommend({ classes, enrollments: enrollments.map(e => ({ classKey: e.classVersion.classKey, status: e.status })),
+      assignments, readiness, dailyMinutes: user.dailyMinutes, goal: user.goal as LearningState['user']['goal'], now: new Date(), preferredClassKey: user.preferredClassKey });
     return {
       user: { id: user.id, displayName: user.displayName, goal: user.goal as LearningState['user']['goal'], dailyMinutes: user.dailyMinutes },
-      classes, assignments, recommendations, skills,
+      classes, assignments, recommendations, skills, plan,
+      diagnostic: diagnostic && diagnosticBank ? { id: diagnostic.id, version: diagnostic.version, status: diagnostic.status as 'active' | 'completed',
+        completedAt: diagnostic.completedAt?.toISOString() ?? null, total: diagnosticBank.length, answered: diagnosticAnswers.length,
+        currentProblem: !completedDiagnostic && diagnosticBank[diagnosticAnswers.length] ? publicProblem(diagnosticBank[diagnosticAnswers.length]) : null,
+        results: completedDiagnostic ? diagnosticAnswers : [] } : null,
+      recommendationHistory: history.map(h => ({ id: h.id, createdAt: h.createdAt.toISOString(), trigger: h.trigger,
+        recommendations: (h.snapshot as unknown as { recommendations: Recommendation[] }).recommendations })),
       enrollments: enrollments.map(e => ({ id: e.id, classKey: e.classVersion.classKey, classVersionId: e.classVersionId,
         completedSectionIds: e.completedSectionIds as string[], status: e.status as 'active' | 'completed', attempts: e.attempts.map(attemptView) })),
     };
@@ -152,7 +176,39 @@ export class LearningService {
         extra = await this.db.$transaction(async tx => {
           const scope = await tx.scope.findUnique({ where: { ownerUserId: userId } });
           if (!scope || scope.kind !== 'personal') throw notFound();
+          const outcome = await (async (): Promise<Omit<ActionResponse, 'state'>> => {
           switch (action.action) {
+            case 'recommendation.choose': {
+              if (action.classKey && !await tx.classVersion.findFirst({ where: { classKey: action.classKey } })) throw notFound();
+              await tx.user.update({ where: { id: userId }, data: { preferredClassKey: action.classKey } });
+              return {};
+            }
+            case 'diagnostic.start': {
+              await tx.diagnosticRun.upsert({ where: { userId_version: { userId, version: diagnosticVersion } }, update: {},
+                create: { userId, version: diagnosticVersion, document: asJson(diagnosticProblems), answers: [] } });
+              return {};
+            }
+            case 'diagnostic.answer': {
+              const run = await tx.diagnosticRun.findFirst({ where: { id: action.diagnosticId, userId } });
+              if (!run) throw notFound();
+              const bank = run.document as unknown as StoredProblem[];
+              const answers = run.answers as unknown as DiagnosticAnswer[];
+              const previous = answers.find(a => a.problemVersionId === action.problemVersionId);
+              if (previous) {
+                if (previous.answer !== action.answer) throw conflict('이미 저장한 진단 답안은 바꿀 수 없어요. 이후 수업에서 새 풀이를 반영해요.');
+                return {};
+              }
+              if (run.status !== 'active') throw conflict('이미 마친 진단이에요.');
+              const problem = bank[answers.length];
+              if (!problem || problem.problemVersionId !== action.problemVersionId) throw conflict('현재 진단 문제부터 확인해 주세요.');
+              const result = action.answer === null ? null : gradeAnswer(action.answer, problem.gradingSpec, false);
+              if (result?.status === 'invalid') return { result };
+              const next = [...answers, { problemVersionId: problem.problemVersionId, answer: action.answer, status: result?.status ?? 'skipped' }];
+              const completed = next.length === bank.length;
+              await tx.diagnosticRun.update({ where: { id: run.id }, data: { answers: asJson(next),
+                status: completed ? 'completed' : 'active', completedAt: completed ? new Date() : null } });
+              return {};
+            }
             case 'profile.update':
               await tx.user.update({ where: { id: userId }, data: { goal: action.goal, dailyMinutes: action.dailyMinutes } }); return {};
             case 'enrollment.start': {
@@ -205,6 +261,7 @@ export class LearningService {
               if (record.sections.some(s => !(enrollment.completedSectionIds as string[]).includes(s.sectionId))) throw conflict('남은 학습 단계를 마무리해 주세요.');
               await tx.enrollment.update({ where: { id: enrollment.id }, data: { status: 'completed', completedAt: new Date() } });
               await this.createPersonalAssignment(tx, userId, scope.id, record, enrollment.id);
+              await tx.user.updateMany({ where: { id: userId, preferredClassKey: record.public.classKey }, data: { preferredClassKey: null } });
               return {};
             }
             case 'assignment.submit': {
@@ -221,6 +278,13 @@ export class LearningService {
               await tx.assignmentRecipient.update({ where: { id: recipient.id }, data: { status: 'submitted' } }); return {};
             }
           }
+          })();
+          const nextState = await this.state(userId, tx);
+          const snapshot = { recommendations: nextState.recommendations, plan: nextState.plan };
+          const fingerprint = createHash('sha256').update(JSON.stringify(snapshot)).digest('hex');
+          const previous = await tx.recommendationHistory.findFirst({ where: { userId }, orderBy: [{ createdAt: 'desc' }, { id: 'desc' }] });
+          if (previous?.fingerprint !== fingerprint) await tx.recommendationHistory.create({ data: { userId, fingerprint, trigger: action.action, snapshot: asJson(snapshot) } });
+          return outcome;
         }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable, maxWait: 10000, timeout: 20000 });
         break;
       } catch (error) {
@@ -236,11 +300,24 @@ export class LearningService {
     validateClass(record);
     const scope = await tx.scope.findFirst({ where: { id: scopeId, ownerUserId: userId, kind: 'personal' } });
     if (!scope) throw notFound();
+    const user = await tx.user.findUniqueOrThrow({ where: { id: userId } });
+    const attempts = sourceEnrollmentId ? await tx.attempt.findMany({ where: { userId, enrollmentId: sourceEnrollmentId }, orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] }) : [];
+    const checkIds = new Set(record.sections.filter(s => s.role === 'check').flatMap(s => getActivityProblemIds(record, s.sectionId)));
+    const seen = new Set<string>();
+    const evidence: Evidence[] = [];
+    for (const attempt of attempts) {
+      const p = record.problems.find(p => p.problemVersionId === attempt.problemVersionId);
+      const result = attempt.result as GradeResult;
+      if (!p || result.status === 'invalid' || seen.has(p.problemVersionId)) continue;
+      seen.add(p.problemVersionId);
+      evidence.push({ problemVersionId: p.problemVersionId, skillKeys: p.skillKeys, responseKind: p.responseSpec.kind, result, date: attempt.createdAt, check: checkIds.has(p.problemVersionId) });
+    }
+    const selection = reviewSelection(record.homeworkProblemIds.map(id => record.problems.find(p => p.problemVersionId === id)!), evidence, user.dailyMinutes);
     return tx.assignment.create({ data: {
       ownerScopeId: scopeId, title: `${record.public.title} · 다시 풀기`, sourceClassVersionId: record.public.versionId,
-      policySnapshot: { version: 1, audience: 'self-study', hints: 'on-request-assisted', results: 'after-item-attempt', solutions: 'not-exposed' },
-      items: { create: record.homeworkProblemIds.map((problemVersionId, position) => ({ problemVersionId, position, problemSnapshot: asJson(record.problems.find(p => p.problemVersionId === problemVersionId)!) })) },
-      recipients: { create: { learnerUserId: userId, sourceEnrollmentId, recommendedAt: new Date(Date.now() + 86400000),
+      policySnapshot: { version: 1, audience: 'self-study', hints: 'on-request-assisted', results: 'after-item-attempt', solutions: 'not-exposed', reviewVersion: selection.version, reviewReason: selection.reason, dailyMinutes: user.dailyMinutes, intervalDays: selection.intervalDays },
+      items: { create: selection.items.map((problem, position) => ({ problemVersionId: problem.problemVersionId, position, problemSnapshot: asJson(problem) })) },
+      recipients: { create: { learnerUserId: userId, sourceEnrollmentId, recommendedAt: new Date(Date.now() + selection.intervalDays * 86400000),
         submissions: { create: { submissionIndex: 1 } } } },
     } });
   }

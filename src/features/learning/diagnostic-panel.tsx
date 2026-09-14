@@ -1,0 +1,42 @@
+'use client';
+import { useState, type FormEvent } from 'react';
+import type { ActionResponse, DiagnosticView, LearningAction } from '@/shared/api';
+import { ContentBlocks } from './content-blocks';
+
+export function DiagnosticPanel({ diagnostic, dispatch, busy, onBack }: {
+  diagnostic: DiagnosticView | null; dispatch: (action: LearningAction) => Promise<ActionResponse>; busy: boolean; onBack: () => void;
+}) {
+  const [answer, setAnswer] = useState('');
+  const [error, setError] = useState('');
+  async function start() {
+    try { await dispatch({ action: 'diagnostic.start' }); } catch { /* Shared banner displays the error. */ }
+  }
+  async function save(value: string | null) {
+    if (!diagnostic?.currentProblem || busy) return;
+    setError('');
+    try {
+      const response = await dispatch({ action: 'diagnostic.answer', diagnosticId: diagnostic.id,
+        problemVersionId: diagnostic.currentProblem.problemVersionId, answer: value });
+      if (response.result?.status === 'invalid') { setError(response.result.message); return; }
+      setAnswer('');
+    } catch (reason) { setError(reason instanceof Error ? reason.message : '저장하지 못했어요. 다시 시도해 주세요.'); }
+  }
+  return <section className="diagnostic-panel">
+    <button className="back-button" onClick={onBack} disabled={busy}>← 내 학습으로</button>
+    <div className="page-heading"><div className="eyebrow">FIND YOUR STARTING POINT</div><h1>어디서 시작하면 편할까요?</h1><p>분수의 의미, 약분, 덧셈을 짧게 확인해요. 모르는 문제는 건너뛰어도 괜찮아요.</p></div>
+    {!diagnostic ? <div className="lesson-sheet"><h2>6문제로 찾는 나의 시작점</h2><p>약 3~5분이 걸려요. 점수를 매기기보다 지금 필요한 수업을 찾는 데 사용해요. 저장한 답은 변경할 수 없고, 결과는 마지막에 함께 확인해요.</p><p>나중에 돌아와도 저장한 문제 다음부터 이어갈 수 있어요. 진단 없이 클래스에서 바로 시작해도 괜찮아요.</p><button className="button primary" disabled={busy} onClick={() => void start()}>시작점 확인하기</button></div>
+      : diagnostic.status === 'completed' ? <div className="lesson-sheet"><h2>시작점을 확인했어요.</h2><p>{diagnostic.total}문제 중 {diagnostic.results.filter(a => a.status === 'correct').length}문제에서 풀이를 확인했어요. 건너뛴 {diagnostic.results.filter(a => a.status === 'skipped').length}문제는 아직 모르는 상태로 두었어요.</p><p>이 결과는 잠정적인 추천에만 사용해요. 이후 실제 수업과 제출한 복습 기록을 우선 반영해요.</p><button className="button primary" onClick={onBack}>나에게 맞는 학습 보기</button></div>
+        : diagnostic.currentProblem && <article className="lesson-sheet" key={diagnostic.currentProblem.problemVersionId}>
+          <p className="eyebrow">{diagnostic.answered + 1} / {diagnostic.total} · {diagnostic.answered ? '앞의 답안은 저장됐어요' : '편하게 시작해 보세요'}</p>
+          <progress aria-label="시작점 확인 진행" value={diagnostic.answered} max={diagnostic.total} />
+          <ContentBlocks blocks={diagnostic.currentProblem.promptContent} />
+          <form className="answer-form" onSubmit={(event: FormEvent) => { event.preventDefault(); if (answer.trim()) void save(answer.trim()); }}>
+            <label>나의 답<input aria-label="진단 답안" value={answer} maxLength={128} onChange={event => setAnswer(event.target.value)} disabled={busy} autoComplete="off" placeholder={diagnostic.currentProblem.responseSpec.kind === 'integer' ? '정수를 입력해 주세요' : '예: 3/4'} /></label>
+            <button className="button primary" disabled={busy || !answer.trim()}>{busy ? '저장 중…' : diagnostic.answered + 1 === diagnostic.total ? '저장하고 결과 보기' : '저장하고 다음 문제'}</button>
+          </form>
+          {error && <p className="field-error" role="alert">{error}</p>}
+          <button className="text-button" disabled={busy} onClick={() => void save(null)}>아직 모르겠어요 · 건너뛰기</button>
+          <p className="input-help">건너뛰기는 오답으로 기록하지 않아요. 결과는 마지막 문제를 마친 뒤 함께 확인해요.</p>
+        </article>}
+  </section>;
+}

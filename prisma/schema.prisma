@@ -10,6 +10,7 @@ model User {
   id           String   @id @default(cuid()) @db.VarChar(191)
   displayName  String   @db.VarChar(80)
   goal         String   @default("foundation-recovery") @db.VarChar(40)
+  preferredClassKey String? @db.VarChar(100)
   dailyMinutes Int      @default(10)
   timezone     String   @default("Asia/Seoul") @db.VarChar(80)
   createdAt    DateTime @default(now())
@@ -20,6 +21,32 @@ model User {
   recipients   AssignmentRecipient[]
   attempts     Attempt[]
   hints        HintUse[]
+  diagnostics  DiagnosticRun[]
+  recommendationHistory RecommendationHistory[]
+}
+
+model DiagnosticRun {
+  id          String @id @default(cuid()) @db.VarChar(191)
+  userId      String @db.VarChar(191)
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  version     String @db.VarChar(80)
+  document    Json
+  answers     Json
+  status      String @default("active") @db.VarChar(20)
+  createdAt   DateTime @default(now())
+  completedAt DateTime?
+  @@unique([userId, version])
+}
+
+model RecommendationHistory {
+  id          String @id @default(cuid()) @db.VarChar(191)
+  userId      String @db.VarChar(191)
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fingerprint String @db.VarChar(64)
+  trigger     String @db.VarChar(40)
+  snapshot    Json
+  createdAt   DateTime @default(now())
+  @@index([userId, createdAt])
 }
 
 model Scope {
