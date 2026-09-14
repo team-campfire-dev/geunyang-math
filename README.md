@@ -2,7 +2,7 @@
 
 성인이 기초부터 자신의 속도로 수학을 다시 배우는 웹 서비스입니다. 기본 클래스와 학습 기록, 과제 배정·제출을 먼저 만들고, 이후 클래스 편집기와 AI 맞춤 클래스 작성으로 확장합니다.
 
-현재는 **클래스 학습 → 문제 풀이 → 수강 완료 → 개인 복습 과제 → 제출**을 실행할 수 있는 첫 구현입니다. 계획 v0.2 전체를 완료한 상태는 아닙니다. 실제 Google 로그인과 운영 배포는 아직 연결하지 않았습니다.
+현재는 **클래스 학습 → 문제 풀이 → 수강 완료 → 개인 복습 과제 → 제출**을 실행할 수 있는 첫 구현입니다. 계획 v0.2 전체를 완료한 상태는 아닙니다. 실제 Google 로그인은 아직 연결하지 않았으며 운영 인증 없이 공개할 범위는 클래스 열람입니다. [Oracle 배포 문서](docs/deployment.md)에 실제 배포 상태를 기록합니다.
 
 ## 지금 제공하는 것
 
@@ -41,7 +41,7 @@ npm run dev
 
 개발용 로그인은 **`NODE_ENV=development` + `DEV_LOGIN_ENABLED=true` + loopback 호스트**에서만 열립니다. 새 학습자를 만들고 이 브라우저의 HttpOnly cookie로 학습을 이어갑니다. 로그아웃·세션 만료 후 기존 계정으로 다시 로그인하는 기능은 없습니다. `npm run build`·`npm start`로 실행한 production에서는 신규 로그인과 기존 개발용 세션 사용을 모두 거부합니다.
 
-현재 DB 어댑터는 `DATABASE_URL`의 query 옵션을 지원하지 않으며 옵션이 있으면 명시적으로 거부합니다. 원격 DB의 TLS·인증서 설정은 운영 배포 단계에서 구현해야 합니다.
+운영 DB는 `sslcert=<절대 CA 경로>&sslaccept=strict`로 인증서와 호스트 이름을 검증합니다. 알려지지 않은 옵션이나 검증 완화는 거부하며, 로컬 개발 URL은 기존대로 사용할 수 있습니다. 앱과 migration 계정·환경 파일은 분리합니다.
 
 `GET /api/health`는 DB 연결과 클래스 존재 여부를 확인합니다. seed가 없거나 DB에 연결하지 못하면 503을 반환합니다. `GET /api/version`은 앱 버전과 빌드 commit 값을 반환하며, 실제 배포에서는 `NEXT_PUBLIC_BUILD_COMMIT`을 주입해야 합니다.
 
@@ -87,7 +87,7 @@ TEST_DATABASE_URL=mysql://geunyang:local-development-only@127.0.0.1:3317/geunyan
 
 정적 export는 실제 성공했지만, Capacitor runtime·iOS/Android 프로젝트·네이티브 인증·CORS·오프라인 제출·OTA는 구현하지 않았습니다. 현재 웹 cookie 인증이 native WebView에서 그대로 작동한다고 가정하지 않습니다. 자세한 경계와 로컬 API 빌드 예외는 [모바일 구조 문서](docs/mobile-architecture.md)에 있습니다.
 
-GitHub Actions의 [CI](.github/workflows/ci.yml)는 Node 22와 MySQL 8.4로 의존성 설치, Prisma 생성·migration, 타입 검사, 단위·통합 테스트, 웹 빌드와 모바일 정적 export를 실행하도록 구성되어 있습니다. 운영 배포 workflow는 포함하지 않습니다.
+GitHub Actions의 [CI](.github/workflows/ci.yml)는 Node 22와 MySQL 8.4로 의존성 설치, Prisma 생성·migration, 타입 검사, 단위·통합 테스트, 웹 빌드와 모바일 정적 export를 실행합니다. `ORACLE_DEPLOY_ENABLED=true`와 배포 시크릿을 설정한 뒤에는 검증된 main만 Oracle에 배포하며, private/public health와 commit까지 확인합니다. 최초 서버 준비와 복구 방식은 [배포 문서](docs/deployment.md)를 참고하세요.
 
 ## 코드 구조
 

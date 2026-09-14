@@ -3,13 +3,14 @@ name: Verify web and mobile boundaries
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
   group: verify-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   verify:
@@ -49,3 +50,78 @@ jobs:
         env:
           # Reserved invalid domain: compile-only compatibility check, never a release bundle.
           NEXT_PUBLIC_API_ORIGIN: https://api.example.invalid
+
+  deploy:
+    name: Deploy verified main to Oracle
+    needs: verify
+    if: vars.ORACLE_DEPLOY_ENABLED == 'true' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: geunyang-math-production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Transfer the verified source and private environment files
+        shell: bash
+        env:
+          DEPLOY_HOST: ${{ secrets.HOST }}
+          DEPLOY_USER: ${{ secrets.USERNAME }}
+          DEPLOY_KEY: ${{ secrets.KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.KNOWN_HOSTS }}
+          APP_ENV: ${{ secrets.ENV_FILE }}
+          MIGRATION_ENV: ${{ secrets.MIGRATION_ENV_FILE }}
+        run: |
+          set -euo pipefail
+          umask 077
+          for name in DEPLOY_HOST DEPLOY_USER DEPLOY_KEY DEPLOY_KNOWN_HOSTS APP_ENV MIGRATION_ENV; do
+            value="${!name}"
+            if [[ -z "${value//[[:space:]]/}" ]]; then
+              printf '::error::Missing required deployment value %s\n' "$name"
+              exit 1
+            fi
+          done
+          [[ "$GITHUB_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$DEPLOY_HOST" =~ ^[a-zA-Z0-9.-]+$ ]]
+          [[ "$DEPLOY_USER" =~ ^[a-z_][a-z0-9_-]*$ ]]
+          printf '%s\n' "$DEPLOY_KEY" > "$RUNNER_TEMP/deploy-key"
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > "$RUNNER_TEMP/known-hosts"
+          printf '%s\n' "$APP_ENV" > "$RUNNER_TEMP/app.env"
+          printf '%s\n' "$MIGRATION_ENV" > "$RUNNER_TEMP/migrate.env"
+          git archive --format=tar -o "$RUNNER_TEMP/source.tar" "$GITHUB_SHA"
+          ssh_options=(-i "$RUNNER_TEMP/deploy-key" -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/known-hosts" -o ConnectTimeout=15)
+          destination="$DEPLOY_USER@$DEPLOY_HOST"
+          ssh "${ssh_options[@]}" "$destination" bash -s -- "$GITHUB_SHA" <<'REMOTE'
+          set -euo pipefail
+          umask 077
+          sha="$1"
+          [[ "$sha" =~ ^[0-9a-f]{40}$ ]]
+          mkdir -p "$HOME/geunyang-math/incoming" "$HOME/geunyang-math/releases/$sha" "$HOME/geunyang-math/shared"
+          REMOTE
+          scp "${ssh_options[@]}" "$RUNNER_TEMP/source.tar" "$destination:geunyang-math/incoming/$GITHUB_SHA.tar"
+          scp "${ssh_options[@]}" "$RUNNER_TEMP/app.env" "$destination:geunyang-math/incoming/$GITHUB_SHA.env"
+          scp "${ssh_options[@]}" "$RUNNER_TEMP/migrate.env" "$destination:geunyang-math/incoming/$GITHUB_SHA.migrate.env"
+          ssh "${ssh_options[@]}" "$destination" bash -s -- "$GITHUB_SHA" <<'REMOTE'
+          set -euo pipefail
+          umask 077
+          sha="$1"
+          [[ "$sha" =~ ^[0-9a-f]{40}$ ]]
+          root="$HOME/geunyang-math"
+          tar -xf "$root/incoming/$sha.tar" -C "$root/releases/$sha" --no-same-owner
+          # Public CA trust anchor is versioned; never copy a private database key.
+          if [[ -e "$root/shared/mysql-ca.pem" ]]; then
+            cmp "$root/shared/mysql-ca.pem" "$root/releases/$sha/deploy/tls/mysql-ca.pem" || { printf 'CA changed; review certificate rotation before deploying.\n'; exit 1; }
+          else
+            install -m 644 "$root/releases/$sha/deploy/tls/mysql-ca.pem" "$root/shared/mysql-ca.pem"
+          fi
+          bash "$root/releases/$sha/scripts/deploy-remote.sh" "$sha"
+          REMOTE
+      - name: Verify the public revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --retry 3 https://geunyang-math.team-campfire.dev/api/health
+          curl --fail --silent --show-error --retry 3 https://geunyang-math.team-campfire.dev/api/version |
+            python3 -c 'import json, os, sys; data=json.load(sys.stdin); assert data["commit"] == os.environ["GITHUB_SHA"], "Public revision mismatch"; print("Public revision verified:", data["commit"])'

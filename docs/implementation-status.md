@@ -21,7 +21,7 @@
 | 재채점 | `AssessmentRevision` 테이블 정의 | 정정 요청·재채점·이전 판정과 비교·사용자 안내 flow |
 | 기관 확장 | 개인 scope와 과제/배정/제출의 경계 | Organization, Membership, LearningGroup, 교사 권한·성적·기관 간 격리 |
 | 모바일 | 같은 UI의 정적 export 성공, Capacitor config 초안 | runtime와 native 프로젝트, OAuth·CORS·기기 저장소, 실기 검증·스토어 출시 |
-| 운영 | 개발 MySQL Compose, migration, health/version API, 검증 CI 정의 | 앱 Docker 이미지, Oracle 자원 조사·배포·TLS·백업/복구·운영 모니터링 |
+| 운영 | 개발 MySQL Compose, migration, health/version API, ARM64 운영 이미지·검증 후 배포 workflow·DB TLS·앱 복구 스크립트 | 실제 배포 상태는 [배포 문서](deployment.md) 참조. 운영용 인증·백업 복원 훈련·모니터링 확장 |
 | AI | 모델 호출 없음 | 편집기 이후 같은 초안 형식으로 생성·검증·검수, 평가와 비용 관리 |
 
 ## 현재 가능한 학습 흐름
@@ -76,7 +76,7 @@
 
 오프라인 저장·제출 큐와 OTA도 없다. 네트워크 오류는 오류로 표시하고 서버 접수를 확인하기 전 제출 완료로 처리하지 않는다. 자세한 모바일 경계는 [모바일 구조 문서](mobile-architecture.md)를 따른다.
 
-Docker Compose는 별도 로컬 MySQL을 실행한다. 앱 Dockerfile이나 Oracle 운영 배포는 아직 만들지 않았으며 기존 프로젝트의 운영 DB·OAuth 자격증명·배포 환경을 가져오지 않았다. 운영을 시작하려면 인증, TLS와 도메인, 전용 DB 계정, 백업·복구, 데이터 보관 정책, 관측과 rate limit을 준비해야 한다.
+개발 Compose는 별도 로컬 MySQL을 실행한다. 운영용 Dockerfile과 별도 migrator, Oracle 배포 workflow, 엄격한 DB TLS와 제한된 계정을 추가했다. 기존 프로젝트의 DB 데이터·OAuth 자격증명은 공유하지 않는다. 공개 학습자 서비스를 시작하려면 운영용 인증, 백업 복원 훈련, 데이터 보관 정책과 관측을 추가해야 한다. 실제 운영 연결·배포 결과는 [배포 문서](deployment.md)에 기록한다.
 
 ## 검증 기록
 
@@ -84,14 +84,16 @@ Docker Compose는 별도 로컬 MySQL을 실행한다. 앱 Dockerfile이나 Orac
 |---|---|
 | TypeScript 타입 검사 | 통과 |
 | 콘텐츠·채점 검사 | 57개 통과 |
-| 실제 MySQL 학습/과제 통합 검사 10개와 개발 로그인 보호 검사 2개 | 12개 통과. 전체 69개 통과. 테스트 DB에는 새 테스트 기록만 추가 |
+| DB TLS 설정 검사 | 20개 통과. 검증 완화·잘못된 옵션·hostname 불일치 거부 확인 |
+| 실제 MySQL 학습/과제 통합 검사 10개와 개발 로그인 보호 검사 2개 | 12개 통과. 전체 89개 통과. 테스트 DB에는 새 테스트 기록만 추가 |
 | TEST_DATABASE_URL 미설정 | MySQL 검사 10개를 건너뛰고 개발 로그인 보호 검사는 실행 |
 | 모바일 정적 export | `https://api.example.invalid`를 사용한 컴파일 검증 성공 |
 | 모바일 산출물 문자열 확인 | `gradingSpec`, `PrismaClient`, 로컬 개발 DB 암호 문자열 미검출. 이 검사는 전체 보안 검토를 대체하지 않음 |
 | 웹 운영 빌드 | 통과 |
 | 브라우저 화면/전체 흐름 QA | 개발 로그인→수강→채점·힌트→완료→과제 답안 저장·최종 제출→새로고침 기록 보존 통과. 목표·시간 저장, 390px/1280px 가로 넘침 없음 확인 |
 | CI | workflow 작성 완료. 원격 GitHub 실행 결과와는 구분 |
-| 실제 모바일·Oracle 운영·학습 효과 | 아직 검증하지 않음 |
+| Oracle 운영 | 준비 상태는 [배포 문서](deployment.md), 릴리스 결과는 GitHub Actions 배포 실행 참조 |
+| 실제 모바일·학습 효과 | 아직 검증하지 않음 |
 
 테스트 실행과 별도 `_test` DB 생성 방법은 [README](../README.md)에 있다. 변경 이후에는 같은 검증을 다시 통과해야 하며 이 표만으로 후속 코드의 상태를 보장하지 않는다.
 
