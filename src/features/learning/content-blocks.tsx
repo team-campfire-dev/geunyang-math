@@ -4,10 +4,11 @@ import type { ReactNode } from 'react';
 import katex from 'katex';
 import type { ContentBlock, PublicProblem } from '@/shared/api';
 
-export function RichText({ text }: { text: string }) {
+export function RichText({ text, asCaption = false }: { text: string; asCaption?: boolean }) {
   // Only the math renderer creates HTML. Text and authored content remain React text nodes.
   const fragments = text.split(/(\$\$[\s\S]+?\$\$|\\\([\s\S]+?\\\)|\$[^$\n]+?\$)/g);
-  return <div className="rich-text">{fragments.map((part, index) => {
+  const Wrapper = asCaption ? 'span' : 'div';
+  return <Wrapper className={asCaption ? 'caption-text' : 'rich-text'}>{fragments.map((part, index) => {
     const display = part.startsWith('$$') && part.endsWith('$$');
     const inline = (part.startsWith('\\(') && part.endsWith('\\)')) || (part.startsWith('$') && part.endsWith('$'));
     if (!display && !inline) return <span key={index}>{part}</span>;
@@ -16,13 +17,15 @@ export function RichText({ text }: { text: string }) {
       const html = katex.renderToString(equation, { displayMode: display, throwOnError: false, trust: false, strict: 'error', maxExpand: 1000 });
       return <span key={index} className={display ? 'display-math' : undefined} dangerouslySetInnerHTML={{ __html: html }} />;
     } catch { return <span key={index}>{part}</span>; }
-  })}</div>;
+  })}</Wrapper>;
 }
 
-export function FractionStrip({ parts, filled, label }: { parts: number; filled: number; label?: string }) {
-  return <figure className="fraction-figure" aria-label={label ?? `${parts}등분 중 ${filled}개`}>
+export function FractionStrip({ parts, filled, label, accessibleLabel }: { parts: number; filled: number; label?: string; accessibleLabel?: string }) {
+  // KaTeX gives the caption its own MathML; an aria-label would instead be read as raw markup.
+  const named = accessibleLabel ?? (label && !label.includes('$') ? label : `${parts}등분 중 ${filled}개`);
+  return <figure className="fraction-figure" aria-label={named}>
     <div className="fraction-strip" style={{ gridTemplateColumns: `repeat(${parts}, minmax(0, 1fr))`, minWidth: parts > 24 ? `${parts * 7}px` : undefined }} aria-hidden="true">{Array.from({ length: parts }, (_, index) => <span key={index} className={index < filled ? 'filled' : ''} />)}</div>
-    {label && <figcaption>{label}</figcaption>}
+    {label && <figcaption><RichText text={label} asCaption /></figcaption>}
   </figure>;
 }
 
@@ -35,14 +38,18 @@ const registry: Record<string, Renderer> = {
     render: (block) => <RichText text={block.payload.text as string} />,
   },
   'math.fraction_strip@1': {
-    validate: validFraction,
-    render: (block) => <FractionStrip parts={Number(block.payload.parts)} filled={Number(block.payload.filled)} label={typeof block.payload.label === 'string' ? block.payload.label : undefined} />,
+    validate: (payload) => validFraction(payload) && (!String(payload.label ?? '').includes('$') || typeof payload.labelAlt === 'string'),
+    render: (block) => <FractionStrip parts={Number(block.payload.parts)} filled={Number(block.payload.filled)}
+      label={typeof block.payload.label === 'string' ? block.payload.label : undefined}
+      accessibleLabel={typeof block.payload.labelAlt === 'string' ? block.payload.labelAlt : undefined} />,
   },
   'core.figure@1': {
     validate: (payload) => typeof payload.alt === 'string' && !!payload.primitive && typeof payload.primitive === 'object' && (payload.primitive as Record<string, unknown>).kind === 'fraction_strip' && validFraction(payload.primitive as Record<string, unknown>),
     render: (block) => {
       const primitive = block.payload.primitive as Record<string, unknown>;
-      return <div role="img" aria-label={block.payload.alt as string}><FractionStrip parts={Number(primitive.parts)} filled={Number(primitive.filled)} label={typeof block.payload.caption === 'string' ? block.payload.caption : typeof primitive.label === 'string' ? primitive.label : undefined} /></div>;
+      const caption = typeof block.payload.caption === 'string' ? block.payload.caption : typeof primitive.label === 'string' ? primitive.label : undefined;
+      // role="img" hides descendants, so alt alone names the figure and the caption may carry math.
+      return <div role="img" aria-label={block.payload.alt as string}><FractionStrip parts={Number(primitive.parts)} filled={Number(primitive.filled)} label={caption} accessibleLabel={block.payload.alt as string} /></div>;
     },
   },
   'core.problem_set@1': {

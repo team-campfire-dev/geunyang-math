@@ -147,6 +147,27 @@ describe('versioned class content', () => {
     expect(() => validateClass(record)).toThrow(/cannot require its own skill as a prerequisite/);
   });
 
+  it('lets a figure caption carry math while the accessible name stays plain', () => {
+    const record = structuredClone(seedClasses[0]);
+    const figure = record.sections[0].contentBlocks[1];
+    figure.payload.caption = '같은 크기의 4칸 중 3칸 = $\\frac{3}{4}$';
+    expect(() => validateClass(record)).not.toThrow();
+    figure.payload.alt = '$\\frac{3}{4}$를 채운 막대';
+    expect(() => validateClass(record)).toThrow(/math markup/);
+  });
+
+  it('requires a plain labelAlt when a standalone strip label carries math', () => {
+    const record = structuredClone(seedClasses[0]);
+    const strip = record.sections[1].contentBlocks[1];
+    expect(strip.kind).toBe('math.fraction_strip');
+    strip.payload.label = '먹은 양 $\\frac{2}{5}$';
+    expect(() => validateClass(record)).toThrow(/labelAlt/);
+    strip.payload.labelAlt = '먹은 양은 5분의 2';
+    expect(() => validateClass(record)).not.toThrow();
+    strip.payload.labelAlt = '먹은 양 $\\frac{2}{5}$';
+    expect(() => validateClass(record)).toThrow(/math markup/);
+  });
+
   it('allows a new catalog entry to retain existing immutable content IDs', () => {
     const record = structuredClone(seedClasses[0]);
     record.public.classKey = 'alternative-curriculum';

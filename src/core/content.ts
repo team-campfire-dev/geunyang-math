@@ -26,23 +26,31 @@ export type StoredClass = {
 const id = z.string().min(1).max(191).regex(/^[a-zA-Z0-9:._-]+$/);
 const shortText = z.string().trim().min(1).max(500);
 const integer = z.number().int().min(Number.MIN_SAFE_INTEGER).max(Number.MAX_SAFE_INTEGER);
-const fractionStrip = z.object({
+const fractionStripShape = {
   parts: z.number().int().min(1).max(100),
   filled: z.number().int().min(0).max(100),
   label: z.string().max(200).optional(),
-}).strict().refine((value) => value.filled <= value.parts, 'filled must not exceed parts');
+};
+const fractionStrip = z.object(fractionStripShape).strict().refine((value) => value.filled <= value.parts, 'filled must not exceed parts');
+/** Math markup renders visually; a screen reader needs a plain sentence instead. */
+const carriesMath = (value?: string) => !!value && (value.includes('$') || value.includes('\\('));
+const plainText = (max: number) => z.string().trim().min(1).max(max).refine((value) => !carriesMath(value), 'Accessible text must not contain math markup');
 
 /** New block kinds register a versioned payload schema here and a renderer in the UI. */
 const blockSchemas = {
   'core.rich_text@1': z.object({ text: z.string().min(1).max(20_000) }).strict(),
   'core.problem_set@1': z.object({ problemVersionIds: z.array(id).min(1).max(50) }).strict(),
+  // caption may carry math: the wrapping role="img" takes its accessible name from alt.
   'core.figure@1': z.object({
-    alt: shortText,
+    alt: plainText(500),
     caption: z.string().max(500).optional(),
     primitive: z.object({ kind: z.literal('fraction_strip'), ...fractionStrip.shape }).strict()
       .refine((value) => value.filled <= value.parts, 'filled must not exceed parts'),
   }).strict(),
-  'math.fraction_strip@1': fractionStrip,
+  // A standalone strip names itself from its label, so a math label needs a plain alternative.
+  'math.fraction_strip@1': z.object({ ...fractionStripShape, labelAlt: plainText(200).optional() }).strict()
+    .refine((value) => value.filled <= value.parts, 'filled must not exceed parts')
+    .refine((value) => !carriesMath(value.label) || !!value.labelAlt, 'A label containing math requires labelAlt for the accessible name'),
 } satisfies Record<string, z.ZodType>;
 
 export const supportedBlockTypes = Object.keys(blockSchemas).map((key) => {
