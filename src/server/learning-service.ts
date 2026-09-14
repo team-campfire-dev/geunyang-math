@@ -1,10 +1,11 @@
 import 'server-only';
 import { createHash } from 'node:crypto';
-import { currentDiagnostic } from './content-store';
+import { currentDiagnostic, currentTerms } from './content-store';
 import { recommend, reviewSelection, skillReadiness, type Evidence } from '@/core/personalization';
+import { visibleTerms } from '@/core/glossary';
 import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
-import { getActivityProblemIds, toPublicClass, validateClass, type StoredClass, type StoredProblem } from '@/core/content';
+import { blockTermKeys, getActivityProblemIds, termReferences, toPublicClass, validateClass, type StoredClass, type StoredProblem } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
 import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicCatalog, PublicProblem, DiagnosticAnswer, Recommendation } from '@/shared/api';
 import { AppError } from './errors';
@@ -58,7 +59,12 @@ export class LearningService {
     const enrollment = userId ? await this.db.enrollment.findFirst({ where: { userId, classVersion: { classKey } }, include: { classVersion: true } }) : null;
     const row = enrollment?.classVersion ?? await this.db.classVersion.findFirst({ where: { classKey }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
     if (!row) throw notFound();
-    return toPublicClass(stored(row.document));
+    const record = stored(row.document);
+    // Definitions resolve at delivery so a reworded term reaches an in-progress class version too.
+    const [terms, classes] = await Promise.all([
+      currentTerms(this.db, termReferences(record).map(reference => reference.termKey)), this.catalog(),
+    ]);
+    return toPublicClass(record, visibleTerms({ terms, classes, current: record.public }));
   }
 
   async state(userId: string, db: Tx = this.db): Promise<LearningState> {
@@ -95,6 +101,8 @@ export class LearningService {
         if (checks.has(p.problemVersionId) && !firstEvidence.has(p.problemVersionId)) firstEvidence.set(p.problemVersionId, { result, date: a.createdAt, skillKeys: p.skillKeys, delayed: false });
       }
     }
+    const assignmentProblems = recipients.flatMap(r => r.assignment.items.map(item => item.problemSnapshot as unknown as StoredProblem));
+    const assignmentTerms = await currentTerms(db, blockTermKeys(assignmentProblems.flatMap(p => [...p.promptContent, ...p.hints])));
     const assignments: AssignmentView[] = recipients.map(r => {
       const submission = r.submissions[0];
       if (!submission) throw new Error('Missing initial submission');
@@ -122,9 +130,12 @@ export class LearningService {
           : matching[matching.length - 1];
         return { id: item.id, problem: publicProblem(p), attempt: visibleAttempt ? attemptView(visibleAttempt) : null };
       });
+      // Review work has no class context, so the assessed skills of every item in it stay unexplained.
+      const assessedSkillKeys = [...new Set(items.flatMap(item => item.problem.skillKeys))];
       return { id: r.assignmentId, recipientId: r.id, title: r.assignment.title, classKey,
         recommendedAt: r.recommendedAt.toISOString(), policy: r.assignmentPolicy as 'adaptive' | 'fixed',
         status: r.status as 'assigned' | 'submitted', items, submissionId: submission.id,
+        glossary: visibleTerms({ terms: assignmentTerms, classes, current: { assessedSkillKeys } }),
         reason: typeof (r.assignment.policySnapshot as { reviewReason?: string }).reviewReason === 'string' ? (r.assignment.policySnapshot as { reviewReason: string }).reviewReason : undefined };
     });
     for (const skill of skills) {

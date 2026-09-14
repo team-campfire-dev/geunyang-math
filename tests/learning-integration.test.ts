@@ -294,6 +294,57 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     expect(nextEnrollment.classVersionId).toBe(second.public.versionId);
     expect((await db.classVersion.findUniqueOrThrow({ where: { id: first.public.versionId } })).document).toEqual(first);
   });
+
+  it('explains a linked term only where it is not the concept under assessment', async () => {
+    const learner = await newLearner();
+    const suffix = randomUUID();
+    const classKey = `integration-glossary-${suffix}`;
+    const [earlier, primary, secondary] = ['earlier', 'primary', 'secondary'].map(name => `test.${name}.${suffix}`);
+    await db.skill.createMany({ data: [earlier, primary, secondary].map((key, order) => ({ key, label: key, order: 2000 + order })) });
+    const publishTerm = (skillKey: string) => db.termVersion.create({ data: {
+      id: `term.${skillKey}:v1`, termKey: `term.${skillKey}`, skillKey, label: skillKey, summary: `${skillKey} 한 줄 설명`,
+      document: asJson([{ blockId: `term.${skillKey}:v1:b1`, kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: `${skillKey} 정의` } }]),
+      contentHash: createHash('sha256').update(skillKey).digest('hex'),
+    } });
+    for (const skillKey of [earlier, primary, secondary]) await publishTerm(skillKey);
+
+    // Fresh question IDs: a published problem version is immutable across every class in the database.
+    const custom = JSON.parse(JSON.stringify(record).replaceAll(record.public.classKey, classKey)) as StoredClass;
+    custom.public = { ...custom.public, skillKeys: [primary, secondary], prerequisiteSkillKeys: [earlier] };
+    for (const problem of custom.problems) problem.skillKeys = [primary];
+    const [firstHomework, secondHomework] = custom.homeworkProblemIds.map(id => custom.problems.find(p => p.problemVersionId === id)!);
+    secondHomework.skillKeys = [secondary];
+    const link = (termKey: string, surface: string) => ({ termKey, surface });
+    const section = custom.sections[0];
+    section.contentBlocks[0] = { ...section.contentBlocks[0], typeVersion: 2, payload: {
+      text: '앞선 개념 위에서 지금 개념을 배워요.',
+      terms: [link(`term.${earlier}`, '앞선 개념'), link(`term.${primary}`, '지금 개념')] } };
+    // Legal at publishing time: this question assesses the primary skill and explains neither.
+    firstHomework.promptContent[0] = { ...firstHomework.promptContent[0], typeVersion: 2, payload: {
+      text: '앞선 개념을 떠올리고 다른 개념도 확인해요.',
+      terms: [link(`term.${earlier}`, '앞선 개념'), link(`term.${secondary}`, '다른 개념')] } };
+    await publishImmutable(custom);
+
+    const document = await service.classDocument(classKey);
+    expect(document.glossary.map(entry => entry.termKey)).toEqual([`term.${earlier}`]);
+    expect(document.glossary[0]).toMatchObject({ skillKey: earlier, classKey: null, summary: `${earlier} 한 줄 설명` });
+    expect(JSON.stringify(document)).not.toContain(`${primary} 정의`);
+
+    const enrollmentId = await enroll(learner.userId, classKey);
+    for (const item of custom.sections) {
+      for (const problemVersionId of getActivityProblemIds(custom, item.sectionId)) {
+        await service.act(learner.userId, { action: 'attempt.submit', context: 'class', contextId: enrollmentId,
+          problemVersionId, answer: fixtureAnswer(custom.problems.find(p => p.problemVersionId === problemVersionId)!), requestId: requestId() });
+      }
+      await service.act(learner.userId, { action: 'section.complete', enrollmentId, sectionId: item.sectionId });
+    }
+    const state = (await service.act(learner.userId, { action: 'class.complete', enrollmentId })).state;
+    const assignment = state.assignments.find(item => item.classKey === classKey)!;
+    expect(assignment.items.map(item => item.problem.problemVersionId).sort()).toEqual([...custom.homeworkProblemIds].sort());
+    // The review assesses both skills, so only the prerequisite term keeps its definition here.
+    expect(assignment.glossary.map(entry => entry.termKey)).toEqual([`term.${earlier}`]);
+    expect(JSON.stringify(assignment)).not.toContain(`${secondary} 정의`);
+  });
 });
 
 describe('development login deployment guard', () => {
