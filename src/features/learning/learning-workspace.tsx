@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import Link from 'next/link';
-import type { ActionResponse, AssignmentView, AttemptView, ClassDocument, ContentBlock, EnrollmentView, Goal, LearningAction, LearningState, PublicClass, PublicProblem } from '@/shared/api';
+import type { ActionResponse, AssignmentView, AttemptView, ClassDocument, ContentBlock, EnrollmentView, Goal, LearningAction, LearningState, PublicClass, PublicProblem, PublicSkill } from '@/shared/api';
 import { ApiError, learningApi, supportsWebAuthentication, type Session } from './api-client';
 import { assertLearningResponseAccount, clearAuthReturn, GOOGLE_LOGIN_PATH, isNativeBrowser, LearningResponseError, parseAuthError, readAuthReturn, saveAuthReturn, type AuthReturn } from './auth-client';
 import { DiagnosticPanel } from './diagnostic-panel';
@@ -95,6 +95,7 @@ export function LearningWorkspace() {
   const authenticatedUserId = useRef<string | null>(null);
   const [state, setState] = useState<LearningState | null>(null);
   const [catalog, setCatalog] = useState<PublicClass[]>([]);
+  const [catalogSkills, setCatalogSkills] = useState<PublicSkill[]>([]);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const busyRef = useRef(false);
@@ -171,7 +172,7 @@ export function LearningWorkspace() {
         { userId: authenticatedUserId.current, generation: loadGeneration.current },
         nextState?.user.id ?? null,
       );
-      setCatalog(publicCatalog.classes); setState(nextState);
+      setCatalog(publicCatalog.classes); setCatalogSkills(publicCatalog.skills); setState(nextState);
       const pending = authReturn.current;
       if (restoreAfterLogin && pending?.returnTo && (nextState || pending.message)) {
         // Stored content keys are only used after matching the public catalogue, never as URLs.
@@ -230,6 +231,13 @@ export function LearningWorkspace() {
 
   function navigate(next: Page) { setPage(next); setNotice(''); setError(''); window.scrollTo({ top: 0, behavior: 'instant' }); }
   const classes = state?.classes ?? catalog;
+  // Catalogue copy names the concepts the published classes teach, so new subjects need no edit here.
+  const conceptLabels = catalogSkills.map((skill) => skill.label);
+  const catalogConcepts = conceptLabels.length
+    ? conceptLabels.slice(0, 4).join(' · ') + (conceptLabels.length > 4 ? ` 외 ${conceptLabels.length - 4}개` : '')
+    : '개념을 하나씩 익히는 기본 클래스';
+  const heroIntro = (conceptLabels.length > 1 ? `${conceptLabels[0]}부터 ${conceptLabels.at(-1)}까지.\n`
+    : conceptLabels.length === 1 ? `${conceptLabels[0]}부터 차근차근.\n` : '') + '짧은 설명과 직접 푸는 연습으로 다시 만나요.';
   const currentEnrollment = state?.enrollments.find((entry) => entry.classKey === document?.classKey);
   const assignment = state?.assignments.find((entry) => entry.recipientId === selectedAssignment);
   const completedCount = state?.enrollments.filter((entry) => entry.status === 'completed').length ?? 0;
@@ -360,7 +368,7 @@ export function LearningWorkspace() {
         <div className="readiness-list">{state.plan.readiness.map(skill => <span key={skill.key} className={`readiness ${skill.readiness}`}><strong>{skill.label}</strong> · {skill.readiness === 'ready' ? '다음 개념 준비' : skill.readiness === 'needs-practice' ? '한 번 더 연습' : '아직 확인 전'}{skill.source === 'diagnostic' ? ' (진단 기준)' : ''}</span>)}</div>
         {state.plan.review && <div className="review-callout"><p>{state.plan.review.reason}</p><button className="button primary" disabled={busy} onClick={() => { const review = state.assignments.find(a => a.recipientId === state.plan.review?.recipientId); if (review) openAssignment(review); }}>복습부터 시작하기</button></div>}
       </section>}
-      <section className="daily-hero"><div className="hero-copy"><span className="hero-eyebrow"><span />{state ? '오늘의 추천 클래스' : '기초부터 다시, 내 속도로'}</span><h2>{recommended?.title ?? '작은 조각에서\n시작하는 큰 이해'}</h2><p>{state?.recommendations[0]?.reason ?? '분수의 의미부터 약분과 덧셈까지.\n짧은 설명과 직접 푸는 연습으로 다시 만나요.'}</p><button className="button hero-button" onClick={() => recommended ? void openClass(recommended.classKey) : setModal('login')} disabled={loading}>{state && recommended && state.enrollments.some((entry) => entry.classKey === recommended.classKey) ? state.recommendations[0]?.kind === 'revisit' ? '설명 다시 펼치기' : '이어서 학습하기' : state ? '오늘의 학습 시작' : '첫 클래스 둘러보기'}<Icon name="arrow" size={18} /></button><span className="hero-duration"><Icon name="clock" size={13} />{state ? `오늘은 ${state.recommendations[0]?.suggestedMinutes ?? state.user.dailyMinutes}분씩 · 수업 전체 ${recommended?.estimatedMinutes ?? 15}분` : `약 ${recommended?.estimatedMinutes ?? 15}분 · 부담 없이 한 클래스`}</span></div><div className="hero-art"><div className="hero-paper"><span className="paper-caption">작게 나누면, 더 쉬워져요.</span><ClassArt index={0} large /><div className="paper-equation"><span>하나를 나누어 보는 것부터.</span><span>¼ + ¼ + ¼ = ¾</span></div></div><span className="hero-doodle">+</span><span className="hero-dot" /></div></section>
+      <section className="daily-hero"><div className="hero-copy"><span className="hero-eyebrow"><span />{state ? '오늘의 추천 클래스' : '기초부터 다시, 내 속도로'}</span><h2>{recommended?.title ?? '작은 조각에서\n시작하는 큰 이해'}</h2><p>{state?.recommendations[0]?.reason ?? heroIntro}</p><button className="button hero-button" onClick={() => recommended ? void openClass(recommended.classKey) : setModal('login')} disabled={loading}>{state && recommended && state.enrollments.some((entry) => entry.classKey === recommended.classKey) ? state.recommendations[0]?.kind === 'revisit' ? '설명 다시 펼치기' : '이어서 학습하기' : state ? '오늘의 학습 시작' : '첫 클래스 둘러보기'}<Icon name="arrow" size={18} /></button><span className="hero-duration"><Icon name="clock" size={13} />{state ? `오늘은 ${state.recommendations[0]?.suggestedMinutes ?? state.user.dailyMinutes}분씩 · 수업 전체 ${recommended?.estimatedMinutes ?? 15}분` : `약 ${recommended?.estimatedMinutes ?? 15}분 · 부담 없이 한 클래스`}</span></div><div className="hero-art"><div className="hero-paper"><span className="paper-caption">작게 나누면, 더 쉬워져요.</span><ClassArt index={0} large /><div className="paper-equation"><span>하나를 나누어 보는 것부터.</span><span>¼ + ¼ + ¼ = ¾</span></div></div><span className="hero-doodle">+</span><span className="hero-dot" /></div></section>
       <div className="learning-overview"><div><span className="overview-icon"><Icon name="book" size={20} /></span><span><small>나의 학습</small><strong>{completedCount}<em>개 클래스 완료</em></strong></span></div><div><span className="overview-icon"><Icon name="pencil" size={20} /></span><span><small>한 번 더 생각하기</small><strong>{pendingAssignments.length}<em>개 과제 남음</em></strong></span></div><button onClick={openProfile}><span className="overview-icon orange"><Icon name="clock" size={20} /></span><span><small>꾸준함을 위한 작은 약속</small><strong>하루 {state?.user.dailyMinutes ?? 10}<em>분씩 학습</em></strong></span><Icon name="chevron" size={16} /></button></div>
       <section className="dashboard-section"><div className="section-heading"><div><span className="eyebrow">BUILD YOUR FOUNDATION</span><h2>차근차근, 기본부터</h2></div><button className="text-button" onClick={() => navigate('classes')}>전체 클래스<Icon name="arrow" size={16} /></button></div><div className="class-grid">{classes.slice(0, 3).map((item, index) => <ClassCard key={item.classKey} item={item} index={index} enrollment={state?.enrollments.find((entry) => entry.classKey === item.classKey)} onOpen={() => void openClass(item.classKey)} />)}</div>{!loading && !classes.length && <div className="empty-inline">{error ? '클래스를 불러오지 못했어요. 상단에서 다시 시도해 주세요.' : '첫 번째 클래스를 준비하고 있어요.'}</div>}</section>
       <section className="dashboard-section practice-preview"><div className="section-heading"><div><span className="eyebrow">MAKE IT YOURS</span><h2>배운 것을 내 것으로</h2></div><button className="text-button" onClick={() => navigate('practice')}>연습장<Icon name="arrow" size={16} /></button></div>{pendingAssignments.length ? <div className="assignment-list">{pendingAssignments.slice(0, 2).map(assignmentRow)}</div> : <div className="gentle-empty"><span className="empty-drawing"><Icon name="pencil" size={28} /></span><div><h3>오늘의 이해가 내일도 남도록</h3><p>클래스를 마치면 복습 과제가 생겨요. 짧은 연습으로 배운 내용을 다시 꺼내보세요.</p></div><span className="small-note">한 번 더, 천천히.</span></div>}</section>
@@ -369,7 +377,7 @@ export function LearningWorkspace() {
   }
 
   function renderClasses() {
-    return <><div className="page-heading"><div className="eyebrow">YOUR LEARNING LIBRARY</div><h1>기초가 편안해지는 클래스.</h1><p>개념을 이해하고, 함께 풀고, 직접 확인해요. 필요한 곳부터 시작하세요.</p></div><div className="catalog-banner"><Icon name="book" size={24} /><div><strong>다시 배우는 기초 수학</strong><p>분수의 의미, 약분, 덧셈으로 이어지는 기본 개념</p></div><span>{classes.length}개 클래스</span></div><div className="class-grid">{classes.map((item, index) => <div className="class-option" key={item.classKey}><ClassCard item={item} index={index} enrollment={state?.enrollments.find((entry) => entry.classKey === item.classKey)} onOpen={() => void openClass(item.classKey)} />{state && <button className="button secondary" disabled={busy} onClick={() => { void dispatch({ action: 'recommendation.choose', classKey: item.classKey }).then(() => navigate('home')).catch(() => {}); }}>{state.plan.preferredClassKey === item.classKey ? '내가 고른 수업' : '이 수업을 내 추천으로'}</button>}</div>)}</div>{!classes.length && <EmptyState title="클래스를 준비하고 있어요" text="잠시 후 다시 확인해 주세요." />}</>;
+    return <><div className="page-heading"><div className="eyebrow">YOUR LEARNING LIBRARY</div><h1>기초가 편안해지는 클래스.</h1><p>개념을 이해하고, 함께 풀고, 직접 확인해요. 필요한 곳부터 시작하세요.</p></div><div className="catalog-banner"><Icon name="book" size={24} /><div><strong>다시 배우는 기초 수학</strong><p>{catalogConcepts}</p></div><span>{classes.length}개 클래스</span></div><div className="class-grid">{classes.map((item, index) => <div className="class-option" key={item.classKey}><ClassCard item={item} index={index} enrollment={state?.enrollments.find((entry) => entry.classKey === item.classKey)} onOpen={() => void openClass(item.classKey)} />{state && <button className="button secondary" disabled={busy} onClick={() => { void dispatch({ action: 'recommendation.choose', classKey: item.classKey }).then(() => navigate('home')).catch(() => {}); }}>{state.plan.preferredClassKey === item.classKey ? '내가 고른 수업' : '이 수업을 내 추천으로'}</button>}</div>)}</div>{!classes.length && <EmptyState title="클래스를 준비하고 있어요" text="잠시 후 다시 확인해 주세요." />}</>;
   }
 
   function renderPractice() {

@@ -6,7 +6,7 @@ import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
 import { getActivityProblemIds, toPublicClass, validateClass, type StoredClass, type StoredProblem } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
-import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicProblem, DiagnosticAnswer, Recommendation } from '@/shared/api';
+import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicCatalog, PublicProblem, DiagnosticAnswer, Recommendation } from '@/shared/api';
 import { AppError } from './errors';
 
 const id = z.string().min(1).max(191);
@@ -43,6 +43,15 @@ export class LearningService {
     const seen = new Set<string>();
     return rows.filter(row => { if (seen.has(row.classKey)) return false; seen.add(row.classKey); return true; })
       .map(row => stored(row.document).public).sort((a, b) => a.order - b.order);
+  }
+
+  // Signed-out screens name the concepts the published catalogue teaches. A skill without a
+  // published class stays out of the public response until its class is released.
+  async publicCatalog(db: Tx = this.db): Promise<PublicCatalog> {
+    const classes = await this.catalog(db);
+    const taught = new Set(classes.flatMap(item => item.skillKeys));
+    const rows = await db.skill.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }] });
+    return { classes, skills: rows.filter(row => taught.has(row.key)).map(row => ({ key: row.key, label: row.label })) };
   }
 
   async classDocument(classKey: string, userId?: string) {

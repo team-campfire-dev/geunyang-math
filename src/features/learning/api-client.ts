@@ -1,4 +1,4 @@
-import type { ActionResponse, ClassDocument, LearningAction, LearningState, PublicClass } from '@/shared/api';
+import type { ActionResponse, ClassDocument, LearningAction, LearningState, PublicCatalog } from '@/shared/api';
 import { canUseWebAuthentication } from './auth-client';
 
 export type Session = { user: { id: string; displayName: string } | null; developmentLogin: boolean; googleLogin: boolean };
@@ -37,7 +37,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const learningApi = {
   session: () => request<Session>('session'),
-  catalog: () => request<{ classes: PublicClass[] }>('learning?catalog=1'),
+  catalog: () => request<PublicCatalog>('learning?catalog=1'),
   state: () => request<LearningState>('learning'),
   class: (key: string) => request<ClassDocument>(`learning?classKey=${encodeURIComponent(key)}`),
   login: (displayName: string) => request<Session>('dev-session', { method: 'POST', body: JSON.stringify({ displayName }) }),

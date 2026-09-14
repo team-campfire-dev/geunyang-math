@@ -154,4 +154,19 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
       await db.diagnosticVersion.delete({ where: { id: definition.versionId } });
     }
   });
+  it('names published concepts for signed-out visitors and withholds skills without a released class', async () => {
+    const c = newClass(), taught = `test.taught.${randomUUID()}`, unreleased = `test.unreleased.${randomUUID()}`;
+    c.public.skillKeys = [taught]; c.public.prerequisiteSkillKeys = [];
+    c.problems.forEach(p => { p.skillKeys = [taught]; });
+    await importContent(db, { ...empty(), classes: [c], skills: [
+      { key: taught, label: '공개 카탈로그 개념', order: 990 },
+      { key: unreleased, label: '아직 수업이 없는 개념', order: 991 },
+    ] });
+    const catalogue = await service.publicCatalog();
+    expect(catalogue.classes.map(item => item.classKey)).toContain(c.public.classKey);
+    expect(catalogue.skills).toContainEqual({ key: taught, label: '공개 카탈로그 개념' });
+    expect(catalogue.skills.map(skill => skill.key)).not.toContain(unreleased);
+    // Signed-out copy reads these labels, so the response must stay free of answers and grading rules.
+    expect(JSON.stringify(catalogue)).not.toMatch(/"(?:gradingSpec|solution|hints)"/);
+  });
 });
