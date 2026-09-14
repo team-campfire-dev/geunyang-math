@@ -1,0 +1,20 @@
+name: geunyang-math-dev
+services:
+  db:
+    image: mysql:8.4
+    ports:
+      - "127.0.0.1:3317:3306"
+    environment:
+      MYSQL_DATABASE: geunyang_math
+      MYSQL_USER: geunyang
+      MYSQL_PASSWORD: local-development-only
+      MYSQL_ROOT_PASSWORD: local-root-only
+    volumes:
+      - geunyang-math-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+volumes:
+  geunyang-math-db:

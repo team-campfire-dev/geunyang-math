@@ -1,0 +1,180 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id           String   @id @default(cuid()) @db.VarChar(191)
+  displayName  String   @db.VarChar(80)
+  goal         String   @default("foundation-recovery") @db.VarChar(40)
+  dailyMinutes Int      @default(10)
+  timezone     String   @default("Asia/Seoul") @db.VarChar(80)
+  createdAt    DateTime @default(now())
+  scopes       Scope[]
+  sessions     Session[]
+  enrollments  Enrollment[]
+  recipients   AssignmentRecipient[]
+  attempts     Attempt[]
+  hints        HintUse[]
+}
+
+model Scope {
+  id          String @id @default(cuid()) @db.VarChar(191)
+  kind        String @db.VarChar(20)
+  ownerUserId String? @unique @db.VarChar(191)
+  owner       User? @relation(fields: [ownerUserId], references: [id])
+  enrollments Enrollment[]
+  assignments Assignment[]
+  attempts    Attempt[]
+}
+
+model Session {
+  id        String @id @default(cuid()) @db.VarChar(191)
+  tokenHash String @unique @db.VarChar(64)
+  userId    String @db.VarChar(191)
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@index([expiresAt])
+}
+
+model ClassVersion {
+  id          String @id @db.VarChar(191)
+  classKey    String @db.VarChar(100)
+  title       String @db.VarChar(191)
+  order       Int
+  document    Json
+  contentHash String @db.VarChar(64)
+  publishedAt DateTime @default(now())
+  enrollments Enrollment[]
+  @@index([classKey])
+}
+
+model Enrollment {
+  id                  String @id @default(cuid()) @db.VarChar(191)
+  userId              String @db.VarChar(191)
+  user                User @relation(fields: [userId], references: [id])
+  scopeId             String @db.VarChar(191)
+  scope               Scope @relation(fields: [scopeId], references: [id])
+  classVersionId      String @db.VarChar(191)
+  classVersion        ClassVersion @relation(fields: [classVersionId], references: [id])
+  completedSectionIds Json
+  status              String @default("active") @db.VarChar(20)
+  createdAt           DateTime @default(now())
+  completedAt         DateTime?
+  attempts            Attempt[]
+  sourceRecipients    AssignmentRecipient[]
+  @@unique([userId, classVersionId])
+}
+
+model Assignment {
+  id                   String @id @default(cuid()) @db.VarChar(191)
+  ownerScopeId         String @db.VarChar(191)
+  scope                Scope @relation(fields: [ownerScopeId], references: [id])
+  title                String @db.VarChar(191)
+  issuerType           String @default("system") @db.VarChar(20)
+  sourceClassVersionId String? @db.VarChar(191)
+  policySnapshot       Json
+  issuedAt             DateTime @default(now())
+  items                AssignmentItem[]
+  recipients           AssignmentRecipient[]
+}
+
+model AssignmentItem {
+  id               String @id @default(cuid()) @db.VarChar(191)
+  assignmentId     String @db.VarChar(191)
+  assignment       Assignment @relation(fields: [assignmentId], references: [id])
+  problemVersionId String @db.VarChar(191)
+  problemSnapshot  Json
+  position         Int
+  attempts         Attempt[]
+  submissions      SubmissionItem[]
+  @@unique([assignmentId, position])
+}
+
+model AssignmentRecipient {
+  id                 String @id @default(cuid()) @db.VarChar(191)
+  assignmentId       String @db.VarChar(191)
+  assignment         Assignment @relation(fields: [assignmentId], references: [id])
+  learnerUserId      String @db.VarChar(191)
+  learner            User @relation(fields: [learnerUserId], references: [id])
+  sourceEnrollmentId String? @unique @db.VarChar(191)
+  sourceEnrollment   Enrollment? @relation(fields: [sourceEnrollmentId], references: [id])
+  recommendedAt      DateTime
+  dueAt              DateTime?
+  assignmentPolicy   String @default("adaptive") @db.VarChar(20)
+  status             String @default("assigned") @db.VarChar(20)
+  submissions        Submission[]
+  @@unique([assignmentId, learnerUserId])
+}
+
+model Submission {
+  id              String @id @default(cuid()) @db.VarChar(191)
+  recipientId     String @db.VarChar(191)
+  recipient       AssignmentRecipient @relation(fields: [recipientId], references: [id])
+  submissionIndex Int @default(1)
+  status          String @default("draft") @db.VarChar(20)
+  finalizedAt     DateTime?
+  requestId       String? @db.VarChar(100)
+  attempts        Attempt[]
+  items           SubmissionItem[]
+  @@unique([recipientId, submissionIndex])
+}
+
+model Attempt {
+  id               String @id @default(cuid()) @db.VarChar(191)
+  userId           String @db.VarChar(191)
+  user             User @relation(fields: [userId], references: [id])
+  scopeId          String @db.VarChar(191)
+  scope            Scope @relation(fields: [scopeId], references: [id])
+  enrollmentId     String? @db.VarChar(191)
+  enrollment       Enrollment? @relation(fields: [enrollmentId], references: [id])
+  submissionId     String? @db.VarChar(191)
+  submission       Submission? @relation(fields: [submissionId], references: [id])
+  assignmentItemId String? @db.VarChar(191)
+  assignmentItem   AssignmentItem? @relation(fields: [assignmentItemId], references: [id])
+  problemVersionId String @db.VarChar(191)
+  answer           String @db.VarChar(128)
+  result           Json
+  hintUsed         Boolean @default(false)
+  requestId        String @db.VarChar(100)
+  createdAt        DateTime @default(now())
+  selectedIn       SubmissionItem[]
+  revisions        AssessmentRevision[]
+  @@unique([userId, requestId])
+  @@index([userId, createdAt])
+}
+
+model SubmissionItem {
+  id               String @id @default(cuid()) @db.VarChar(191)
+  submissionId     String @db.VarChar(191)
+  submission       Submission @relation(fields: [submissionId], references: [id])
+  assignmentItemId String @db.VarChar(191)
+  assignmentItem   AssignmentItem @relation(fields: [assignmentItemId], references: [id])
+  selectedAttemptId String @db.VarChar(191)
+  selectedAttempt Attempt @relation(fields: [selectedAttemptId], references: [id])
+  @@unique([submissionId, assignmentItemId])
+}
+
+model HintUse {
+  id               String @id @default(cuid()) @db.VarChar(191)
+  userId           String @db.VarChar(191)
+  user             User @relation(fields: [userId], references: [id])
+  contextKind      String @db.VarChar(20)
+  contextId        String @db.VarChar(191)
+  problemVersionId String @db.VarChar(191)
+  createdAt        DateTime @default(now())
+  @@unique([userId, contextKind, contextId, problemVersionId])
+}
+
+model AssessmentRevision {
+  id              String @id @default(cuid()) @db.VarChar(191)
+  attemptId       String @db.VarChar(191)
+  attempt         Attempt @relation(fields: [attemptId], references: [id])
+  correctedResult Json
+  reason          String @db.Text
+  createdAt       DateTime @default(now())
+}
