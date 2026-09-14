@@ -1,17 +1,21 @@
 import 'dotenv/config';
-import { readFileSync, statSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { ContentError } from '../src/core/content-bundle';
 import { getDatabase } from '../src/server/db';
-import { exportContent, importContent, verifyContent } from '../src/server/content-store';
+import { exportContent, importContent, publishBundle, verifyContent } from '../src/server/content-store';
 import { z } from 'zod';
 
 export async function runContentCommand(args: string[]) {
   const [command, ...flags] = args;
   const dryRun = flags.at(-1) === '--dry-run';
+  const publishFlags = dryRun ? flags.slice(0, -1) : flags;
   const valid = command === 'verify' ? flags.length === 0
     : command === 'export' ? flags.length === 2 && flags[0] === '--out' && !!flags[1]
+    : command === 'publish' ? publishFlags.length === 0 || (publishFlags.length === 2 && publishFlags[0] === '--dir' && !!publishFlags[1])
     : command === 'import' && flags[0] === '--file' && !!flags[1] && (flags.length === 2 || (flags.length === 3 && dryRun));
-  if (!valid) throw new ContentError('Usage: content:verify | content:export -- --out <new-file.json> | content:import -- --file <bundle.json> [--dry-run]');
+  if (!valid) throw new ContentError('Usage: content:verify | content:export -- --out <new-file.json> | content:import -- --file <bundle.json> [--dry-run] | content:publish [-- --dir <directory>] [--dry-run]');
   let input: unknown;
   if (command === 'import') {
     if (statSync(flags[1]).size > 5 * 1024 * 1024) throw new ContentError('Import is limited to 5 MiB. Split larger bundles.');
@@ -19,7 +23,20 @@ export async function runContentCommand(args: string[]) {
   }
   const db = getDatabase();
   try {
-    if (command === 'import') console.log(JSON.stringify(await importContent(db, input, dryRun)));
+    if (command === 'publish') {
+      // Reviewed, answer-free bundles ship with the repository and publish once per released change.
+      const directory = publishFlags.length ? publishFlags[1] : 'content';
+      const names = readdirSync(directory).filter(name => name.endsWith('.json')).sort();
+      for (const name of names) {
+        const path = join(directory, name);
+        if (statSync(path).size > 5 * 1024 * 1024) throw new ContentError(`Bundle is limited to 5 MiB: ${name}`);
+        const raw = readFileSync(path);
+        const checksum = createHash('sha256').update(raw).digest('hex');
+        console.log(JSON.stringify(await publishBundle(db, name, checksum, JSON.parse(raw.toString('utf8')), dryRun)));
+      }
+      if (!names.length) console.log(JSON.stringify({ bundles: 0 }));
+    }
+    else if (command === 'import') console.log(JSON.stringify(await importContent(db, input, dryRun)));
     else if (command === 'verify') console.log(JSON.stringify(await verifyContent(db)));
     else {
       const bundle = await db.$transaction(tx => exportContent(tx), { isolationLevel: 'RepeatableRead', timeout: 30_000 });

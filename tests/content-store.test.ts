@@ -4,7 +4,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { canonicalJson, parseContentBundle, validateReferences } from '@/core/content-bundle';
-import { currentDiagnostic, exportContent, importContent, verifyContent } from '@/server/content-store';
+import { currentDiagnostic, exportContent, importContent, publishBundle, verifyContent } from '@/server/content-store';
 import initial from './fixtures/initial-content.json';
 import { seedClasses } from './fixtures/content';
 
@@ -256,5 +256,39 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     expect((await db.termVersion.findUniqueOrThrow({ where: { id: earlierTerm.versionId } })).summary).toBe(earlierTerm.summary);
     const exported = await exportContent(db);
     expect(await importContent(db, JSON.parse(JSON.stringify(exported)))).toMatchObject({ newTerms: 0, newClasses: 0 });
+  });
+
+  it('publishes a reviewed bundle once and skips it while the file is unchanged', async () => {
+    const suffix = randomUUID();
+    const skillKey = `test.bundle.${suffix}`;
+    await db.skill.create({ data: { key: skillKey, label: '번들 개념', order: 3000 } });
+    const term = (id: string, summary: string) => ({ versionId: `term.bundle.${suffix}:${id}`, termKey: `term.bundle.${suffix}`,
+      skillKey, label: '번들 용어', summary, blocks: [{ blockId: `term.bundle.${suffix}:${id}:b1`, kind: 'core.rich_text',
+        typeVersion: 1, required: true, payload: { text: summary } }] });
+    const name = `test-${suffix}.json`;
+    const bundle = { ...empty(), terms: [term('v1', '처음 발행한 설명이에요.')] };
+    const checksum = createHash('sha256').update(JSON.stringify(bundle)).digest('hex');
+
+    expect(await publishBundle(db, name, checksum, bundle, true)).toMatchObject({ skipped: false, dryRun: true, newTerms: 1 });
+    expect(await db.appliedContentBundle.findUnique({ where: { name } })).toBeNull();
+    expect(await publishBundle(db, name, checksum, bundle)).toMatchObject({ skipped: false, newTerms: 1 });
+    const applied = await db.appliedContentBundle.findUniqueOrThrow({ where: { name } });
+    expect(applied.checksum).toBe(checksum);
+
+    // An unchanged file does no database work on the next release.
+    expect(await publishBundle(db, name, checksum, bundle)).toMatchObject({ skipped: true });
+    expect(await db.appliedContentBundle.findUniqueOrThrow({ where: { name } })).toEqual(applied);
+
+    // An edited file publishes only what it adds, and the ledger follows the new checksum.
+    const extended = { ...bundle, terms: [...bundle.terms, term('v2', '다시 쓴 설명이에요.')] };
+    const nextChecksum = createHash('sha256').update(JSON.stringify(extended)).digest('hex');
+    expect(await publishBundle(db, name, nextChecksum, extended)).toMatchObject({ skipped: false, newTerms: 1 });
+    expect((await db.appliedContentBundle.findUniqueOrThrow({ where: { name } })).checksum).toBe(nextChecksum);
+
+    // A rejected bundle leaves the ledger on the last content that actually landed.
+    const edited = structuredClone(extended); edited.terms[0].summary = 'Cannot overwrite';
+    const badChecksum = createHash('sha256').update(JSON.stringify(edited)).digest('hex');
+    await expect(publishBundle(db, name, badChecksum, edited)).rejects.toThrow(/immutable/);
+    expect((await db.appliedContentBundle.findUniqueOrThrow({ where: { name } })).checksum).toBe(nextChecksum);
   });
 });
