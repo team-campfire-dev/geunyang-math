@@ -51,6 +51,8 @@ Google 로그인은 `GET /api/auth/google/start`에서 시작하고 `GET /api/au
 
 Google 클라이언트 비밀값, 인증 코드, ID/access/refresh token, 세션 cookie를 Git·브라우저 저장소·로그에 남기지 않습니다. 프록시의 OAuth 콜백 query 로깅도 별도로 확인해야 합니다. 설정·배포와 검증 상태는 [배포 문서](docs/deployment.md)를 따릅니다.
 
+`POST /api/v1/learning` 요청에는 화면에서 확인한 계정 ID를 `X-Learning-User-Id` 헤더로 보냅니다. 서버는 먼저 cookie 인증과 origin을 검증하고 이 ID가 실제 로그인 계정과 일치해야 본문을 처리합니다. 헤더가 없거나 다른 탭의 로그인으로 계정이 바뀌었으면 `409 account_changed`를 반환하며 저장하지 않습니다. 클라이언트는 이전 계정의 화면·초안을 비우고 세션과 학습 상태를 다시 조회해야 합니다. 이 헤더는 인증 자격증명을 대신하지 않습니다.
+
 운영 DB는 `sslcert=<절대 CA 경로>&sslaccept=strict`로 인증서와 호스트 이름을 검증합니다. 알려지지 않은 옵션이나 검증 완화는 거부하며, 로컬 개발 URL은 기존대로 사용할 수 있습니다. 앱과 migration 계정·환경 파일은 분리합니다.
 
 `GET /api/health`는 DB 연결과 클래스 존재 여부를 확인합니다. seed가 없거나 DB에 연결하지 못하면 503을 반환합니다. `GET /api/version`은 앱 버전과 빌드 commit 값을 반환하며, 실제 배포에서는 `NEXT_PUBLIC_BUILD_COMMIT`을 주입해야 합니다.

@@ -72,3 +72,17 @@ export function isNativeBrowser(bridge?: { isNativePlatform?: () => boolean; get
     return false;
   } catch { return true; }
 }
+
+export type LearningAccountSnapshot = { userId: string | null; generation: number };
+export class LearningResponseError extends Error {
+  constructor(readonly kind: 'stale' | 'account-changed') {
+    super(kind === 'stale' ? '학습 공간을 새로 불러오고 있어요.' : '로그인 계정이 바뀌었어요. 화면을 새로 불러온 뒤 다시 시도해 주세요.');
+    this.name = 'LearningResponseError';
+  }
+}
+
+/** Check staleness first: an old response must never clear a newer account's state. */
+export function assertLearningResponseAccount(request: LearningAccountSnapshot, current: LearningAccountSnapshot, responseUserId: string | null): void {
+  if (request.generation !== current.generation || request.userId !== current.userId) throw new LearningResponseError('stale');
+  if (responseUserId !== request.userId) throw new LearningResponseError('account-changed');
+}

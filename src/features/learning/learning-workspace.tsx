@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import type { ActionResponse, AssignmentView, AttemptView, ClassDocument, ContentBlock, EnrollmentView, Goal, LearningAction, LearningState, PublicClass, PublicProblem } from '@/shared/api';
 import { ApiError, learningApi, supportsWebAuthentication, type Session } from './api-client';
-import { clearAuthReturn, GOOGLE_LOGIN_PATH, isNativeBrowser, parseAuthError, readAuthReturn, saveAuthReturn, type AuthReturn } from './auth-client';
+import { assertLearningResponseAccount, clearAuthReturn, GOOGLE_LOGIN_PATH, isNativeBrowser, LearningResponseError, parseAuthError, readAuthReturn, saveAuthReturn, type AuthReturn } from './auth-client';
 import { GoogleLoginButton } from './google-login-button';
 import { ServiceFooter } from './service-footer';
 import { ContentBlocks, unsupportedRequiredBlocks } from './content-blocks';
@@ -165,6 +165,11 @@ export function LearningWorkspace() {
         nextSession.user ? learningApi.state() : Promise.resolve(null),
       ]);
       if (generation !== loadGeneration.current) return;
+      assertLearningResponseAccount(
+        { userId: nextSession.user?.id ?? null, generation },
+        { userId: authenticatedUserId.current, generation: loadGeneration.current },
+        nextState?.user.id ?? null,
+      );
       setCatalog(publicCatalog.classes); setState(nextState);
       const pending = authReturn.current;
       if (restoreAfterLogin && pending?.returnTo && (nextState || pending.message)) {
@@ -181,7 +186,8 @@ export function LearningWorkspace() {
       if (restoreAfterLogin && pending?.message) { setAuthError(pending.message); setModal('login'); }
     } catch (reason) {
       if (generation !== loadGeneration.current) return;
-      if (reason instanceof ApiError && reason.status === 401) clearPersonalState();
+      if (reason instanceof LearningResponseError && reason.kind === 'stale') return;
+      if ((reason instanceof ApiError && reason.status === 401) || reason instanceof LearningResponseError) clearPersonalState();
       setError(messageOf(reason));
     } finally { if (generation === loadGeneration.current) setLoading(false); }
   }
@@ -232,9 +238,22 @@ export function LearningWorkspace() {
 
   const dispatch: Dispatch = async (action) => {
     if (busyRef.current) throw new Error('앞선 요청을 저장하고 있어요. 잠시 기다려 주세요.');
+    if (loading) throw new Error('학습 공간을 새로 불러오고 있어요. 잠시 기다려 주세요.');
+    const requestAccount = { userId: authenticatedUserId.current, generation: loadGeneration.current };
+    if (!requestAccount.userId) throw new Error('학습 공간을 새로 불러온 뒤 다시 시도해 주세요.');
     busyRef.current = true; setBusy(true); setError(''); setNotice('');
-    try { const response = await learningApi.action(action); setState(response.state); return response; }
+    try {
+      const response = await learningApi.action(action, requestAccount.userId);
+      assertLearningResponseAccount(requestAccount,
+        { userId: authenticatedUserId.current, generation: loadGeneration.current }, response.state.user.id);
+      setState(response.state); return response;
+    }
     catch (reason) {
+      // A previous tab/account's late success or failure cannot overwrite the current account.
+      if (requestAccount.generation !== loadGeneration.current || requestAccount.userId !== authenticatedUserId.current) throw reason;
+      if ((reason instanceof ApiError && reason.code === 'account_changed') || (reason instanceof LearningResponseError && reason.kind === 'account-changed')) {
+        clearPersonalState(); void refresh(); setNotice(messageOf(reason)); throw reason;
+      }
       if (reason instanceof ApiError && reason.status === 401) { clearPersonalState(); setModal('login'); }
       setError(messageOf(reason)); throw reason;
     } finally { busyRef.current = false; setBusy(false); }
@@ -287,9 +306,23 @@ export function LearningWorkspace() {
   async function login(event: FormEvent) {
     event.preventDefault(); if (busyRef.current || !webAuthentication || !session?.developmentLogin) return;
     busyRef.current = true; setBusy(true); setError(''); setAuthError('');
-    try { const nextSession = await learningApi.login(displayName.trim() || '학습자'); authenticatedUserId.current = nextSession.user?.id ?? null; setSession((previous) => ({ user: nextSession.user, developmentLogin: previous?.developmentLogin ?? false, googleLogin: previous?.googleLogin ?? false })); setState(await learningApi.state()); setModal(null); setNotice('학습 공간이 준비됐어요. 첫 클래스를 시작해 보세요.'); }
-    catch (reason) { setError(messageOf(reason)); }
-    finally { busyRef.current = false; setBusy(false); }
+    const generation = ++loadGeneration.current;
+    try {
+      const nextSession = await learningApi.login(displayName.trim() || '학습자');
+      if (generation !== loadGeneration.current) return;
+      authenticatedUserId.current = nextSession.user?.id ?? null;
+      setSession((previous) => ({ user: nextSession.user, developmentLogin: previous?.developmentLogin ?? false, googleLogin: previous?.googleLogin ?? false }));
+      const nextState = await learningApi.state();
+      assertLearningResponseAccount({ userId: nextSession.user?.id ?? null, generation },
+        { userId: authenticatedUserId.current, generation: loadGeneration.current }, nextState.user.id);
+      setState(nextState); setModal(null); setNotice('학습 공간이 준비됐어요. 첫 클래스를 시작해 보세요.');
+    }
+    catch (reason) {
+      if (generation !== loadGeneration.current || (reason instanceof LearningResponseError && reason.kind === 'stale')) return;
+      if (reason instanceof LearningResponseError || (reason instanceof ApiError && reason.status === 401)) clearPersonalState();
+      setError(messageOf(reason));
+    }
+    finally { busyRef.current = false; setBusy(false); if (generation === loadGeneration.current) setLoading(false); }
   }
   async function logout() {
     if (busyRef.current) return;

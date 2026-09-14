@@ -117,7 +117,7 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 - 앱 VM 자원·포트와 DB 서버 버전·TLS 지원: 읽기 전용 확인 완료.
 - 기존 DNS와 와일드카드 인증서: 확인 완료.
 - ARM64 앱 이미지와 별도 migrator: 로컬 컨테이너 빌드·실행 성공. non-root, health, revision, 개발 로그인 차단 확인.
-- Google OAuth 변경 후 로컬 전체 검사 149개와 타입 검사 통과. OAuth 공식 verifier 단위 검사 21개·MySQL 인증 통합 검사 10개, 클라이언트 인증 경계 검사 24개 포함. 실제 Google 계정의 로그인 결과와는 구분한다.
+- Google OAuth 변경 후 로컬 전체 검사 161개와 타입 검사 통과. OAuth 공식 verifier 단위 검사 21개·MySQL 인증 통합 검사 10개, 클라이언트 인증 경계 검사 28개 포함. 실제 Google 계정의 로그인 결과와는 구분한다.
 - 운영 DB·계정 생성: 사용자의 명시적 승인 후 생성 완료. 두 계정의 DB 한정 권한과 앱 VM 호스트 제한, REQUIRE SSL을 확인함.
 - NPM Proxy Hosts UI: 도메인과 `http://10.0.0.130:3007` 연결, 와일드카드 SSL 설정 저장 및 Online 상태 확인. 기존 custom include는 백업 후 제거 완료.
 - GitHub 배포 시크릿: 사용자의 명시적 승인 후 6개 등록 완료. `ORACLE_DEPLOY_ENABLED=true` 설정 완료.

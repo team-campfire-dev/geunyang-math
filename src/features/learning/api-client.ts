@@ -42,5 +42,7 @@ export const learningApi = {
   class: (key: string) => request<ClassDocument>(`learning?classKey=${encodeURIComponent(key)}`),
   login: (displayName: string) => request<Session>('dev-session', { method: 'POST', body: JSON.stringify({ displayName }) }),
   logout: () => request<unknown>('session', { method: 'DELETE' }),
-  action: (action: LearningAction) => request<ActionResponse>('learning', { method: 'POST', body: JSON.stringify(action) }),
+  action: (action: LearningAction, expectedUserId: string) => request<ActionResponse>('learning', {
+    method: 'POST', body: JSON.stringify(action), headers: { 'X-Learning-User-Id': expectedUserId },
+  }),
 };

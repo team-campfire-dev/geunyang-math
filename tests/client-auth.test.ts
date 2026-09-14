@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
-import { AUTH_RETURN_MAX_AGE_MS, AUTH_RETURN_STORAGE_KEY, canUseWebAuthentication, clearAuthReturn, isNativeBrowser, parseAuthError, parseAuthReturn, readAuthReturn, saveAuthReturn } from '@/features/learning/auth-client';
+import { describe, expect, it, vi } from 'vitest';
+import { AUTH_RETURN_MAX_AGE_MS, AUTH_RETURN_STORAGE_KEY, assertLearningResponseAccount, canUseWebAuthentication, clearAuthReturn, isNativeBrowser, parseAuthError, parseAuthReturn, readAuthReturn, saveAuthReturn } from '@/features/learning/auth-client';
+import { learningApi } from '@/features/learning/api-client';
 
 describe('web-only authentication boundary', () => {
   it('allows a same-origin HTTPS web app and explicit loopback development', () => {
@@ -85,5 +86,48 @@ describe('optional class return metadata', () => {
     expect(() => saveAuthReturn(storage, 'fraction-meaning', now)).not.toThrow();
     expect(readAuthReturn(storage, now)).toBeNull();
     expect(() => clearAuthReturn(storage)).not.toThrow();
+  });
+});
+
+describe('learning account changes across asynchronous requests', () => {
+  it('keeps B visible when A’s pending mutation finishes after a session refresh', async () => {
+    const requestAccount = { userId: 'learner-A', generation: 1 };
+    let current = requestAccount;
+    let visibleAccount = 'learner-A';
+    let finish!: (userId: string) => void;
+    const response = new Promise<string>(resolve => { finish = resolve; }).then(userId => {
+      assertLearningResponseAccount(requestAccount, current, userId);
+      visibleAccount = userId;
+    });
+    current = { userId: 'learner-B', generation: 2 };
+    visibleAccount = 'learner-B';
+    finish('learner-A');
+    await expect(response).rejects.toMatchObject({ kind: 'stale' });
+    expect(visibleAccount).toBe('learner-B');
+  });
+
+  it('rejects an old response even after the browser changes from A to B and back to A', () => {
+    expect(() => assertLearningResponseAccount(
+      { userId: 'learner-A', generation: 1 }, { userId: 'learner-A', generation: 3 }, 'learner-A',
+    )).toThrow(expect.objectContaining({ kind: 'stale' }));
+  });
+
+  it('rejects learning data from B when the preceding session request confirmed A', () => {
+    const account = { userId: 'learner-A', generation: 1 };
+    expect(() => assertLearningResponseAccount(account, account, 'learner-B'))
+      .toThrow(expect.objectContaining({ kind: 'account-changed' }));
+    expect(() => assertLearningResponseAccount(account, account, 'learner-A')).not.toThrow();
+  });
+
+  it('sends the displayed account as a mutation precondition alongside its session cookie', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response('{}', { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+    try {
+      await learningApi.action({ action: 'profile.update', goal: 'foundation-recovery', dailyMinutes: 10 }, 'learner-A');
+      const [, options] = fetchMock.mock.calls[0];
+      expect(options.credentials).toBe('include');
+      expect(new Headers(options.headers).get('X-Learning-User-Id')).toBe('learner-A');
+      expect(new Headers(options.headers).get('Content-Type')).toBe('application/json');
+    } finally { vi.unstubAllGlobals(); }
   });
 });
