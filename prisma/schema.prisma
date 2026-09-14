@@ -89,6 +89,13 @@ model Skill {
   terms TermVersion[]
 }
 
+/** Applied reviewed bundles, like a migration ledger: an unchanged file is never replayed. */
+model AppliedContentBundle {
+  name      String @id @db.VarChar(191)
+  checksum  String @db.VarChar(64)
+  appliedAt DateTime @default(now())
+}
+
 model TermVersion {
   id          String @id @db.VarChar(191)
   termKey     String @db.VarChar(100)

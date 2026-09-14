@@ -51,7 +51,8 @@ export async function verifyContent(db: Db) {
     termVersions: bundle.terms.length, terms: new Set(bundle.terms.map(t => t.termKey)).size };
 }
 
-async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: boolean) {
+type Ledger = { name: string; checksum: string };
+async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: boolean, ledger?: Ledger) {
   const existing = await exportContent(db);
   const newClasses: StoredClass[] = [], newDiagnostics: DiagnosticDefinition[] = [], newTerms: TermDefinition[] = [];
   for (const c of incoming.classes) {
@@ -95,17 +96,32 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
     // reference check above already proved every linked term exists.
     for (const t of newTerms) await db.termVersion.create({ data: { id: t.versionId, termKey: t.termKey, skillKey: t.skillKey,
       label: t.label, summary: t.summary, document: json(t.blocks), contentHash: hash(t), publishedAt: publishedAt() } });
+    // The ledger entry shares this transaction: a file counts as applied only if its content landed.
+    if (ledger) await db.appliedContentBundle.upsert({ where: { name: ledger.name }, create: { ...ledger },
+      update: { checksum: ledger.checksum, appliedAt: new Date() } });
   }
   return { dryRun, newClasses: newClasses.length, newDiagnostics: newDiagnostics.length, newTerms: newTerms.length, skills: incoming.skills.length,
     unchangedVersions: incoming.classes.length + incoming.diagnostics.length + incoming.terms.length - newClasses.length - newDiagnostics.length - newTerms.length };
 }
-export async function importContent(db: PrismaClient, input: unknown, dryRun = false) {
+export async function importContent(db: PrismaClient, input: unknown, dryRun = false, ledger?: Ledger) {
   const incoming = parseContentBundle(input);
   for (let retry = 0; ; retry++) {
-    try { return await db.$transaction(tx => importInTransaction(tx, incoming, dryRun), { isolationLevel: Prisma.TransactionIsolationLevel.Serializable, timeout: 30_000, maxWait: 10_000 }); }
+    try { return await db.$transaction(tx => importInTransaction(tx, incoming, dryRun, ledger), { isolationLevel: Prisma.TransactionIsolationLevel.Serializable, timeout: 30_000, maxWait: 10_000 }); }
     catch (error) {
       if (retry < 3 && error instanceof Prisma.PrismaClientKnownRequestError && ['P2002', 'P2034'].includes(error.code)) continue;
       throw error;
     }
   }
+}
+
+/**
+ * Publishes a reviewed bundle file once, the way a migration ledger works: an entry with the same
+ * checksum means the file already landed, so a release does no database work for unchanged content.
+ * An edited file publishes its new versions; an edited published version is rejected as immutable.
+ */
+export async function publishBundle(db: PrismaClient, name: string, checksum: string, input: unknown, dryRun = false) {
+  const applied = await db.appliedContentBundle.findUnique({ where: { name } });
+  if (applied?.checksum === checksum) return { name, skipped: true as const, appliedAt: applied.appliedAt.toISOString() };
+  const result = await importContent(db, input, dryRun, { name, checksum });
+  return { name, skipped: false as const, ...result };
 }

@@ -18,6 +18,7 @@
     "verify": "npm run typecheck && npm test && npm run build && npm run build:mobile",
     "content:import": "node --conditions=react-server --import tsx scripts/content.ts import",
     "content:export": "node --conditions=react-server --import tsx scripts/content.ts export",
+    "content:publish": "node --conditions=react-server --import tsx scripts/content.ts publish",
     "content:verify": "node --conditions=react-server --import tsx scripts/content.ts verify"
   },
   "dependencies": {
