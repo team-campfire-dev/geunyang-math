@@ -1,12 +1,11 @@
 import 'server-only';
 import { createHash } from 'node:crypto';
-import { diagnosticProblems, diagnosticVersion } from '@/core/diagnostic';
+import { currentDiagnostic } from './content-store';
 import { recommend, reviewSelection, skillReadiness, type Evidence } from '@/core/personalization';
 import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
 import { getActivityProblemIds, toPublicClass, validateClass, type StoredClass, type StoredProblem } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
-import { skillLabels } from '@/core/seed';
 import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicProblem, DiagnosticAnswer, Recommendation } from '@/shared/api';
 import { AppError } from './errors';
 
@@ -40,7 +39,7 @@ export class LearningService {
   constructor(private readonly db: PrismaClient) {}
 
   async catalog(db: Tx = this.db) {
-    const rows = await db.classVersion.findMany({ orderBy: [{ publishedAt: 'desc' }, { id: 'asc' }] });
+    const rows = await db.classVersion.findMany({ orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
     const seen = new Set<string>();
     return rows.filter(row => { if (seen.has(row.classKey)) return false; seen.add(row.classKey); return true; })
       .map(row => stored(row.document).public).sort((a, b) => a.order - b.order);
@@ -48,13 +47,13 @@ export class LearningService {
 
   async classDocument(classKey: string, userId?: string) {
     const enrollment = userId ? await this.db.enrollment.findFirst({ where: { userId, classVersion: { classKey } }, include: { classVersion: true } }) : null;
-    const row = enrollment?.classVersion ?? await this.db.classVersion.findFirst({ where: { classKey }, orderBy: { publishedAt: 'desc' } });
+    const row = enrollment?.classVersion ?? await this.db.classVersion.findFirst({ where: { classKey }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
     if (!row) throw notFound();
     return toPublicClass(stored(row.document));
   }
 
   async state(userId: string, db: Tx = this.db): Promise<LearningState> {
-    const [user, classes, enrollments, recipients, diagnostic, history] = await Promise.all([
+    const [user, classes, enrollments, recipients, diagnostic, history, skillRows, offering] = await Promise.all([
       db.user.findUnique({ where: { id: userId } }), this.catalog(db),
       db.enrollment.findMany({ where: { userId }, include: { classVersion: true, attempts: { orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] } }, orderBy: { createdAt: 'asc' } }),
       db.assignmentRecipient.findMany({ where: { learnerUserId: userId }, include: {
@@ -63,8 +62,10 @@ export class LearningService {
       }, orderBy: { recommendedAt: 'asc' } }),
       db.diagnosticRun.findFirst({ where: { userId }, orderBy: { createdAt: 'desc' } }),
       db.recommendationHistory.findMany({ where: { userId }, orderBy: [{ createdAt: 'desc' }, { id: 'desc' }], take: 10 }),
+      db.skill.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }] }), currentDiagnostic(db),
     ]);
     if (!user) throw notFound();
+    const skillLabels = Object.fromEntries(skillRows.map(s => [s.key, s.label]));
     const skills: LearningState['skills'] = Object.entries(skillLabels).map(([key, label]) => ({ key, label, state: 'unknown' }));
     const firstEvidence = new Map<string, { result: GradeResult; date: Date; skillKeys: string[]; delayed: boolean }>();
     const evidence: Evidence[] = [];
@@ -131,6 +132,8 @@ export class LearningService {
     return {
       user: { id: user.id, displayName: user.displayName, goal: user.goal as LearningState['user']['goal'], dailyMinutes: user.dailyMinutes },
       classes, assignments, recommendations, skills, plan,
+      diagnosticOffering: offering ? { version: offering.versionId, title: offering.title, description: offering.description,
+        total: offering.problems.length, estimatedMinutes: offering.estimatedMinutes } : null,
       diagnostic: diagnostic && diagnosticBank ? { id: diagnostic.id, version: diagnostic.version, status: diagnostic.status as 'active' | 'completed',
         completedAt: diagnostic.completedAt?.toISOString() ?? null, total: diagnosticBank.length, answered: diagnosticAnswers.length,
         currentProblem: !completedDiagnostic && diagnosticBank[diagnosticAnswers.length] ? publicProblem(diagnosticBank[diagnosticAnswers.length]) : null,
@@ -184,8 +187,12 @@ export class LearningService {
               return {};
             }
             case 'diagnostic.start': {
-              await tx.diagnosticRun.upsert({ where: { userId_version: { userId, version: diagnosticVersion } }, update: {},
-                create: { userId, version: diagnosticVersion, document: asJson(diagnosticProblems), answers: [] } });
+              // A published bank never replaces an in-progress learner snapshot.
+              if (await tx.diagnosticRun.findFirst({ where: { userId, status: 'active' } })) return {};
+              const definition = await currentDiagnostic(tx);
+              if (!definition) throw new AppError(503, 'content_unavailable', '시작점 확인을 준비하고 있어요. 잠시 후 다시 시도해 주세요.');
+              await tx.diagnosticRun.upsert({ where: { userId_version: { userId, version: definition.versionId } }, update: {},
+                create: { userId, version: definition.versionId, document: asJson(definition.problems), answers: [] } });
               return {};
             }
             case 'diagnostic.answer': {
@@ -212,7 +219,7 @@ export class LearningService {
             case 'profile.update':
               await tx.user.update({ where: { id: userId }, data: { goal: action.goal, dailyMinutes: action.dailyMinutes } }); return {};
             case 'enrollment.start': {
-              const version = await tx.classVersion.findFirst({ where: { classKey: action.classKey }, orderBy: { publishedAt: 'desc' } });
+              const version = await tx.classVersion.findFirst({ where: { classKey: action.classKey }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
               if (!version) throw notFound();
               const existing = await tx.enrollment.findFirst({ where: { userId, classVersion: { classKey: action.classKey } } });
               if (existing) return { enrollmentId: existing.id };

@@ -60,7 +60,7 @@ jobs:
             const fs = require("node:fs");
             const uid = process.getuid();
             assert.notEqual(uid, 0, "The migrator must run without root privileges");
-            for (const file of ["package.json", "package-lock.json", "prisma.config.ts", "tsconfig.json", "prisma/schema.prisma", "prisma/seed.ts", "prisma/migrations/migration_lock.toml", "src/core/seed.ts", "src/server/db.ts"]) {
+            for (const file of ["package.json", "package-lock.json", "prisma.config.ts", "tsconfig.json", "prisma/schema.prisma", "prisma/seed.ts", "prisma/migrations/migration_lock.toml", "src/core/content-bundle.ts", "src/server/content-store.ts", "scripts/content.ts", "src/server/db.ts"]) {
               fs.accessSync(file, fs.constants.R_OK);
               const metadata = fs.statSync(file);
               assert.equal(metadata.uid, uid, `${file} must belong to the runtime user`);

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { recommend, reviewSelection, skillReadiness, type Evidence } from '@/core/personalization';
-import { diagnosticProblems } from '@/core/diagnostic';
-import { seedClasses, skillLabels } from '@/core/seed';
+import { diagnosticProblems } from './fixtures/content';
+import { seedClasses, skillLabels } from './fixtures/content';
 import { gradeAnswer } from '@/core/grading';
 import type { DiagnosticAnswer, Goal } from '@/shared/api';
 
