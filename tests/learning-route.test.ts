@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as database from '@/server/db';
 import { hashSessionToken } from '@/server/auth';
-import { seedClasses } from '@/core/seed';
+import { seedClasses } from './fixtures/content';
 import { POST } from '@/app/api/v1/learning/route';
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;

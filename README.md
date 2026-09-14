@@ -14,7 +14,7 @@
 - Google 웹 로그인, 같은 Google 계정의 학습 기록 복원, 세션 만료·로그아웃
 - 화면 크기에 대응하는 공용 UI와 Capacitor용 정적 export 빌드
 
-현재 추천 순서는 진행 중 수업과 기본 클래스 순서에 기반합니다. 목표·시간은 안내에 반영하며, 진단·오답·선행개념에 따라 경로와 분량을 바꾸는 전체 적응형 개인화는 후속 작업입니다. AI 호출과 클래스 편집기는 아직 없습니다.
+진단·첫 풀이·선행개념에 따른 규칙 기반 추천과 시간에 맞춘 새 복습 과제를 제공합니다. 기본 클래스·진단 문항·개념은 DB에서 읽으며, [콘텐츠 관리 명령](docs/content-management.md)으로 새 판본을 등록할 수 있습니다. AI 호출과 클래스 편집기는 아직 없습니다.
 
 ## 로컬 실행
 
@@ -26,7 +26,7 @@ cp .env.example .env
 docker compose up -d --wait db
 npm run db:generate
 npm run db:migrate
-npm run db:seed
+npm run content:verify
 npm run dev
 ```
 
@@ -55,7 +55,7 @@ Google 클라이언트 비밀값, 인증 코드, ID/access/refresh token, 세션
 
 운영 DB는 `sslcert=<절대 CA 경로>&sslaccept=strict`로 인증서와 호스트 이름을 검증합니다. 알려지지 않은 옵션이나 검증 완화는 거부하며, 로컬 개발 URL은 기존대로 사용할 수 있습니다. 앱과 migration 계정·환경 파일은 분리합니다.
 
-`GET /api/health`는 DB 연결과 클래스 존재 여부를 확인합니다. seed가 없거나 DB에 연결하지 못하면 503을 반환합니다. `GET /api/version`은 앱 버전과 빌드 commit 값을 반환하며, 실제 배포에서는 `NEXT_PUBLIC_BUILD_COMMIT`을 주입해야 합니다.
+`GET /api/health`는 DB 연결과 클래스·개념·진단 콘텐츠 존재 여부를 확인합니다. 콘텐츠가 없거나 DB에 연결하지 못하면 503을 반환합니다. `GET /api/version`은 앱 버전과 빌드 commit 값을 반환하며, 실제 배포에서는 `NEXT_PUBLIC_BUILD_COMMIT`을 주입해야 합니다.
 
 ## 테스트
 
@@ -78,7 +78,7 @@ DATABASE_URL=mysql://geunyang:local-development-only@127.0.0.1:3317/geunyang_mat
 TEST_DATABASE_URL=mysql://geunyang:local-development-only@127.0.0.1:3317/geunyang_math_test npm test
 ```
 
-통합 검사는 연결 전에 테스트 DB명을 확인하고, 새 테스트 사용자와 개인 scope를 만듭니다. 클래스 seed는 기존 content hash를 검사한 뒤 없는 판본만 추가합니다. 기존 데이터의 truncate·drop·일괄 삭제는 수행하지 않으므로 반복 실행하면 테스트 기록이 쌓입니다.
+통합 검사는 연결 전에 테스트 DB명을 확인하고, 새 테스트 사용자와 개인 scope를 만듭니다. 기본 콘텐츠는 migration으로 한 번 등록합니다. 테스트 fixture는 기존 content hash를 검사한 뒤 없는 판본만 추가합니다. 기존 데이터의 truncate·drop·일괄 삭제는 수행하지 않으므로 반복 실행하면 테스트 기록이 쌓입니다.
 
 검사 범위는 사용자 간 접근 차단, 배정 문항 확인, 단계 순서, 중복·동시 요청, 힌트 전후의 판정, 수강 완료와 과제 생성, 확정 제출 보존, 독립 과제와 클래스 판본 고정입니다. Google 인증에는 위조 서명·잘못된 audience·만료·nonce, 일회용 callback의 동시 소비, 동시 첫 로그인 시 계정 중복 방지, 세션 회전·로그아웃 CSRF와 개발 계정 분리 검사가 포함됩니다. 자동 테스트는 실제 Google 계정으로 진행하는 동의 화면·브라우저 로그인을 대신하지 않습니다.
 
@@ -107,9 +107,9 @@ GitHub Actions의 [CI](.github/workflows/ci.yml)는 Node 22와 MySQL 8.4로 의�
 src/app/                    공용 화면 진입점과 서버 API 라우트
 src/features/learning/      학습 UI · 블록 렌더러 · HTTP 클라이언트
 src/shared/api.ts           브라우저에 전달하는 공개 DTO
-src/core/                  서버 전용 콘텐츠 계약 · seed · 채점
+src/core/                  서버 전용 콘텐츠 계약 · 등록 검증 · 채점
 src/server/                세션 · DB · 학습/과제 서비스 · 요청 검증
-prisma/                    MySQL schema · 버전 migration · immutable seed
+prisma/                    MySQL schema · 버전 migration · 초기 콘텐츠 이전
 tests/                     콘텐츠/채점 단위 검사와 실제 MySQL 통합 검사
 scripts/build-mobile.mjs    서버 코드를 제외한 정적 export
 ```

@@ -22,7 +22,7 @@ DB 서버의 `partial_revokes=OFF`에서는 DB 권한 이름의 `_`가 와일드
 
 ## Cooo에서 참고한 부분
 
-Cooo의 같은 앱·DB VM, Nginx Proxy Manager(NPM), 와일드카드 인증서를 사용한다. 사용 포트를 실제 조회해 기존 3000~3006과 겹치지 않는 3007을 선택했다. Cooo의 이미지 빌드→스키마 준비→앱 교체→healthy 확인 순서를 따르되, geunyang math는 `prisma migrate deploy`와 불변 seed를 사용한다. 공유 VM의 이미지 prune이나 다른 Compose 프로젝트 변경은 실행하지 않는다.
+Cooo의 같은 앱·DB VM, Nginx Proxy Manager(NPM), 와일드카드 인증서를 사용한다. 사용 포트를 실제 조회해 기존 3000~3006과 겹치지 않는 3007을 선택했다. Cooo의 이미지 빌드→스키마 준비→앱 교체→healthy 확인 순서를 따르되, geunyang math는 `prisma migrate deploy`와 DB 콘텐츠 검증을 사용한다. 공유 VM의 이미지 prune이나 다른 Compose 프로젝트 변경은 실행하지 않는다.
 
 ## DB TLS
 
@@ -104,9 +104,9 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 
 [GitHub workflow](../.github/workflows/ci.yml)는 모든 브랜치의 타입·단위/실제 MySQL 검사·웹/모바일 빌드를 실행한다. 운영 배포는 검증에 성공한 `main` push 또는 `main`의 수동 실행에서만 진행한다. PR에서는 배포 비밀값을 사용하지 않는다.
 
-검증한 Git SHA의 archive와 환경 파일을 `incoming/`으로 전송한다. SHA별 `releases/<sha>/` 디렉터리에서 [deploy-remote.sh](../scripts/deploy-remote.sh)를 실행한다. 스크립트는 앱과 migrator 이미지를 따로 만들고, migration→seed→기동→사설·공개 health/version 확인이 끝나야 `current`를 새 릴리스로 바꾼다.
+검증한 Git SHA의 archive와 환경 파일을 `incoming/`으로 전송한다. SHA별 `releases/<sha>/` 디렉터리에서 [deploy-remote.sh](../scripts/deploy-remote.sh)를 실행한다. 스크립트는 앱과 migrator 이미지를 따로 만들고, migration→content:verify→기동→사설·공개 health/version 확인이 끝나야 `current`를 새 릴리스로 바꾼다.
 
-릴리스 archive는 제한된 파일 권한을 유지한다. Dockerfile은 migrator가 읽는 package·Prisma 설정·소스를 `node` 사용자 소유로 복사한다. CI는 실제로 권한 600/700의 archive에서 migrator를 빌드하고, 일반 사용자로 소스를 읽으며 빈 테스트 DB에 migration과 seed를 실행하는지 검사한다. 최초 배포에서 확인된 root 소유 파일의 `EACCES` 재발을 이 경로로 검증한다.
+릴리스 archive는 제한된 파일 권한을 유지한다. Dockerfile은 migrator가 읽는 package·Prisma 설정·소스를 `node` 사용자 소유로 복사한다. CI는 실제로 권한 600/700의 archive에서 migrator를 빌드하고, 일반 사용자로 소스를 읽으며 빈 테스트 DB에 migration과 콘텐츠 검증을 실행하는지 검사한다. 최초 배포에서 확인된 root 소유 파일의 `EACCES` 재발을 이 경로로 검증한다.
 
 이전 릴리스와 해당 환경 파일은 복구를 위해 보존한다. 실패하면 이전 앱 이미지와 환경으로 복귀한다. 앱 복귀는 이미 적용한 DB migration을 되돌리지 않으므로 후속 migration은 이전 앱과 호환되도록 작성해야 한다. 자동화는 운영 DB의 DROP이나 데이터 삭제 권한을 새로 부여하지 않는다.
 

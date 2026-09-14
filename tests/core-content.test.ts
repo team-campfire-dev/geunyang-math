@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getActivityProblemIds, supportedBlockTypes, toPublicClass, validateClass } from '@/core/content';
-import { seedClasses, skillLabels } from '@/core/seed';
+import { seedClasses, skillLabels } from './fixtures/content';
 
 describe('versioned class content', () => {
   it('ships three complete sample classes with separate practice, checks, and homework', () => {

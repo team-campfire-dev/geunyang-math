@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { gradeAnswer } from '@/core/grading';
-import { seedClasses } from '@/core/seed';
+import { seedClasses } from './fixtures/content';
 
 const half = { kind: 'rational' as const, numerator: 1, denominator: 2 };
 

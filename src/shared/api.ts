@@ -49,6 +49,7 @@ export type AssignmentView = {
   reason?: string;
 };
 export type DiagnosticAnswer = { problemVersionId: string; answer: string | null; status: 'correct' | 'incorrect' | 'skipped' };
+export type DiagnosticOffering = { version: string; title: string; description: string; total: number; estimatedMinutes: number };
 export type DiagnosticView = {
   id: string; version: string; status: 'active' | 'completed'; completedAt: string | null;
   total: number; answered: number; currentProblem: PublicProblem | null;
@@ -72,6 +73,7 @@ export type LearningState = {
   assignments: AssignmentView[];
   recommendations: Recommendation[];
   diagnostic: DiagnosticView | null;
+  diagnosticOffering: DiagnosticOffering | null;
   plan: PersonalPlan;
   recommendationHistory: RecommendationHistoryView[];
   skills: { key: string; label: string; state: 'unknown' | 'practicing' | 'independent' | 'retained' }[];

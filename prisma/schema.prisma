@@ -82,6 +82,24 @@ model ClassVersion {
   @@index([classKey])
 }
 
+model Skill {
+  key   String @id @db.VarChar(100)
+  label String @db.VarChar(191)
+  order Int
+}
+
+model DiagnosticVersion {
+  id               String @id @db.VarChar(191)
+  diagnosticKey    String @db.VarChar(100)
+  title            String @db.VarChar(191)
+  description      String @db.Text
+  estimatedMinutes Int
+  document         Json
+  contentHash      String @db.VarChar(64)
+  publishedAt      DateTime @default(now())
+  @@index([diagnosticKey, publishedAt])
+}
+
 model Enrollment {
   id                  String @id @default(cuid()) @db.VarChar(191)
   userId              String @db.VarChar(191)

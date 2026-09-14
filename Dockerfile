@@ -25,10 +25,11 @@ LABEL org.opencontainers.image.revision=$BUILD_COMMIT
 ENV NODE_ENV=production \
     DEV_LOGIN_ENABLED=false
 COPY --chown=node:node src/core ./src/core
+COPY --chown=node:node scripts/content.ts ./scripts/content.ts
 COPY --chown=node:node src/server ./src/server
 COPY --chown=node:node src/shared ./src/shared
 USER node
-CMD ["sh", "-c", "npm run db:migrate && exec npm run db:seed"]
+CMD ["sh", "-c", "npm run db:migrate && exec npm run content:verify"]
 
 FROM dependencies AS builder
 ARG BUILD_COMMIT

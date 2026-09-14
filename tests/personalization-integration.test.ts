@@ -3,8 +3,8 @@ import { Prisma } from '@prisma/client';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
-import { diagnosticProblems } from '@/core/diagnostic';
-import { seedClasses } from '@/core/seed';
+import { diagnosticProblems } from './fixtures/content';
+import { seedClasses } from './fixtures/content';
 import { getActivityProblemIds } from '@/core/content';
 import type { DiagnosticView, LearningState } from '@/shared/api';
 

@@ -23,7 +23,7 @@ export type StoredClass = {
   homeworkProblemIds: string[];
 };
 
-const id = z.string().min(1).max(200).regex(/^[a-zA-Z0-9:._-]+$/);
+const id = z.string().min(1).max(191).regex(/^[a-zA-Z0-9:._-]+$/);
 const shortText = z.string().trim().min(1).max(500);
 const integer = z.number().int().min(Number.MIN_SAFE_INTEGER).max(Number.MAX_SAFE_INTEGER);
 const fractionStrip = z.object({
@@ -81,7 +81,7 @@ const problemContentBlockSchema = blockSchema.refine((block) => block.kind !== '
   message: 'core.problem_set is not allowed inside a problem',
 });
 
-const problemSchema = z.object({
+const problemShape = {
   problemVersionId: id,
   skillKeys: z.array(id).min(1).max(50),
   promptContent: z.array(problemContentBlockSchema).min(1).max(100, 'At most 100 blocks per content array'),
@@ -93,7 +93,8 @@ const problemSchema = z.object({
   ]),
   hints: z.array(problemContentBlockSchema).max(100, 'At most 100 blocks per content array'),
   solution: z.array(problemContentBlockSchema).min(1).max(100, 'At most 100 blocks per content array'),
-}).strict().superRefine((problem, ctx) => {
+};
+function validateProblemFields(problem: StoredProblem, ctx: z.RefinementCtx) {
   if (problem.responseSpec.kind !== problem.gradingSpec.kind) {
     ctx.addIssue({ code: 'custom', message: 'Response and grading kinds must match' });
   }
@@ -104,7 +105,13 @@ const problemSchema = z.object({
   if (problem.hintAvailable !== (problem.hints.length > 0)) {
     ctx.addIssue({ code: 'custom', message: 'hintAvailable must match the stored hints' });
   }
-});
+}
+const problemSchema = z.object(problemShape).strict().superRefine(validateProblemFields);
+// Placement omits hints and solutions, while retaining the same block and grading validation.
+export const diagnosticProblemSchema = z.object({ ...problemShape,
+  hintAvailable: z.literal(false), hints: z.array(problemContentBlockSchema).max(0),
+  solution: z.array(problemContentBlockSchema).max(0),
+}).strict().superRefine(validateProblemFields);
 
 const storedClassSchema = z.object({
   public: z.object({

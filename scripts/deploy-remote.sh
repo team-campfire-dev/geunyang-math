@@ -259,7 +259,7 @@ environment_touched=1
 run_step 'Install application environment atomically' atomic_install_env "$incoming_app_env" "$active_app_env"
 run_step 'Install migration environment atomically' atomic_install_env "$incoming_migration_env" "$active_migration_env"
 use_release "$release_sha" "$active_app_env" "$active_migration_env"
-run_step 'Apply migrations and seed immutable content' compose run --rm --no-deps migrate
+run_step 'Apply migrations and verify database content' compose run --rm --no-deps migrate
 run_step 'Start application and wait for readiness' compose up --detach --no-build --no-deps --wait --wait-timeout 120 app
 run_step 'Verify private application health' verify_endpoint "$private_origin" health "$release_sha"
 run_step 'Verify private application commit' verify_endpoint "$private_origin" version "$release_sha"
