@@ -295,7 +295,7 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     expect((await db.classVersion.findUniqueOrThrow({ where: { id: first.public.versionId } })).document).toEqual(first);
   });
 
-  it('explains a linked term only where it is not the concept under assessment', async () => {
+  it('explains every term a lesson linked, wherever the author linked it', async () => {
     const learner = await newLearner();
     const suffix = randomUUID();
     const classKey = `integration-glossary-${suffix}`;
@@ -319,16 +319,19 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     section.contentBlocks[0] = { ...section.contentBlocks[0], typeVersion: 2, payload: {
       text: '앞선 개념 위에서 지금 개념을 배워요.',
       terms: [link(`term.${earlier}`, '앞선 개념'), link(`term.${primary}`, '지금 개념')] } };
-    // Legal at publishing time: this question assesses the primary skill and explains neither.
+    // A question may carry links too; what it explains is the author's decision, not the server's.
     firstHomework.promptContent[0] = { ...firstHomework.promptContent[0], typeVersion: 2, payload: {
       text: '앞선 개념을 떠올리고 다른 개념도 확인해요.',
       terms: [link(`term.${earlier}`, '앞선 개념'), link(`term.${secondary}`, '다른 개념')] } };
     await publishImmutable(custom);
 
     const document = await service.classDocument(classKey);
-    expect(document.glossary.map(entry => entry.termKey)).toEqual([`term.${earlier}`]);
-    expect(document.glossary[0]).toMatchObject({ skillKey: earlier, classKey: null, summary: `${earlier} 한 줄 설명` });
-    expect(JSON.stringify(document)).not.toContain(`${primary} 정의`);
+    // Every word any of the document's blocks linked is explained — its sections and its questions
+    // alike — including the concept this very class teaches, which used to be withheld.
+    expect(document.glossary.map(entry => entry.termKey).sort())
+      .toEqual([`term.${earlier}`, `term.${primary}`, `term.${secondary}`].sort());
+    expect(document.glossary.find(entry => entry.termKey === `term.${earlier}`))
+      .toMatchObject({ skillKey: earlier, classKey: null, summary: `${earlier} 한 줄 설명` });
 
     const enrollmentId = await enroll(learner.userId, classKey);
     for (const item of custom.sections) {
@@ -341,9 +344,10 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     const state = (await service.act(learner.userId, { action: 'class.complete', enrollmentId })).state;
     const assignment = state.assignments.find(item => item.classKey === classKey)!;
     expect(assignment.items.map(item => item.problem.problemVersionId).sort()).toEqual([...custom.homeworkProblemIds].sort());
-    // The review assesses both skills, so only the prerequisite term keeps its definition here.
-    expect(assignment.glossary.map(entry => entry.termKey)).toEqual([`term.${earlier}`]);
-    expect(JSON.stringify(assignment)).not.toContain(`${secondary} 정의`);
+    // The review carries what its own questions linked, and only that: the section's link to the
+    // primary concept is not part of this assignment, so its definition is not sent here.
+    expect(assignment.glossary.map(entry => entry.termKey).sort()).toEqual([`term.${earlier}`, `term.${secondary}`].sort());
+    expect(JSON.stringify(assignment)).not.toContain(`${primary} 정의`);
   });
 });
 

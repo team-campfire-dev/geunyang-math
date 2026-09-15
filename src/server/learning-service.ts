@@ -2,7 +2,7 @@ import 'server-only';
 import { createHash } from 'node:crypto';
 import { currentDiagnostic, currentTerms } from './content-store';
 import { recommend, reviewSelection, skillReadiness, type Evidence } from '@/core/personalization';
-import { visibleTerms } from '@/core/glossary';
+import { glossaryEntries } from '@/core/glossary';
 import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
 import { blockTermRefs, getActivityProblemIds, termReferences, toPublicClass, validateClass, type StoredClass, type StoredProblem } from '@/core/content';
@@ -64,7 +64,7 @@ export class LearningService {
     const [terms, classes] = await Promise.all([
       currentTerms(this.db, termReferences(record)), this.catalog(),
     ]);
-    return toPublicClass(record, visibleTerms({ terms, classes, current: record.public }));
+    return toPublicClass(record, glossaryEntries(terms, classes));
   }
 
   async state(userId: string, db: Tx = this.db): Promise<LearningState> {
@@ -130,12 +130,10 @@ export class LearningService {
           : matching[matching.length - 1];
         return { id: item.id, problem: publicProblem(p), attempt: visibleAttempt ? attemptView(visibleAttempt) : null };
       });
-      // Review work has no class context, so the assessed skills of every item in it stay unexplained.
-      const assessedSkillKeys = [...new Set(items.flatMap(item => item.problem.skillKeys))];
       return { id: r.assignmentId, recipientId: r.id, title: r.assignment.title, classKey,
         recommendedAt: r.recommendedAt.toISOString(), policy: r.assignmentPolicy as 'adaptive' | 'fixed',
         status: r.status as 'assigned' | 'submitted', items, submissionId: submission.id,
-        glossary: visibleTerms({ terms: assignmentTerms, classes, current: { assessedSkillKeys } }),
+        glossary: glossaryEntries(assignmentTerms, classes),
         reason: typeof (r.assignment.policySnapshot as { reviewReason?: string }).reviewReason === 'string' ? (r.assignment.policySnapshot as { reviewReason: string }).reviewReason : undefined };
     });
     for (const skill of skills) {

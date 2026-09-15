@@ -256,7 +256,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     expect(JSON.stringify(catalogue)).not.toMatch(/"(?:gradingSpec|solution|hints)"/);
   });
 
-  it('publishes terms, reveals only the earlier concept, and rewords a definition without a new class', async () => {
+  it('publishes terms, explains what the lesson linked, and rewords a definition without a new class', async () => {
     const suffix = randomUUID();
     const earlier = `test.earlier.${suffix}`, current = `test.current.${suffix}`;
     const first = newClass(), second = newClass();
@@ -284,16 +284,17 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     expect((await verifyContent(db)).termVersions).toBeGreaterThanOrEqual(2);
 
     const document = await service.classDocument(second.public.classKey);
-    expect(document.glossary.map(entry => entry.termKey)).toEqual([earlierTerm.termKey]);
-    expect(document.glossary[0]).toMatchObject({ label: '분모', skillKey: earlier, classKey: first.public.classKey });
-    // The withheld definition is absent from the payload, not merely unrendered.
-    expect(JSON.stringify(document)).not.toContain(currentTerm.summary);
+    // Both linked words are explained; linking them was the author's decision to explain them.
+    expect(document.glossary.map(entry => entry.termKey).sort()).toEqual([earlierTerm.termKey, currentTerm.termKey].sort());
+    expect(document.glossary.find(entry => entry.termKey === earlierTerm.termKey))
+      .toMatchObject({ label: '분모', skillKey: earlier, classKey: first.public.classKey });
 
     const reworded = { ...currentTerm, versionId: `term.earlier.${suffix}:v2`, termKey: earlierTerm.termKey,
       skillKey: earlier, label: '분모', summary: '다시 쓴 설명이에요.', blocks: [{ ...earlierTerm.blocks[0], blockId: `term.earlier.${suffix}:v2:b1` }] };
     const classRows = await db.classVersion.findMany({ orderBy: { id: 'asc' } });
     await importContent(db, { ...empty(), terms: [reworded] });
-    expect((await service.classDocument(second.public.classKey)).glossary[0].summary).toBe('다시 쓴 설명이에요.');
+    expect((await service.classDocument(second.public.classKey)).glossary
+      .find(entry => entry.termKey === earlierTerm.termKey)!.summary).toBe('다시 쓴 설명이에요.');
     expect(await db.classVersion.findMany({ orderBy: { id: 'asc' } })).toEqual(classRows);
 
     const edited = { ...earlierTerm, summary: 'Cannot overwrite' };

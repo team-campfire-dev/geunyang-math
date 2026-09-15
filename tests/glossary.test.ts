@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { visibleTerms, type PublishedTerm } from '@/core/glossary';
+import { glossaryEntries, type PublishedTerm } from '@/core/glossary';
 import { seedClasses } from './fixtures/content';
 import type { PublicClass } from '@/shared/api';
 
 const classes: PublicClass[] = seedClasses.map(c => c.public);
-const meaning = classes[0], equivalence = classes[1], addition = classes[2];
+const meaning = classes[0], equivalence = classes[1];
 const term = (termKey: string, skillKey: string, scope?: { scopeKind: PublishedTerm['scopeKind']; scopeKey: string }): PublishedTerm => ({
   termKey, scopeKind: scope?.scopeKind ?? 'global', scopeKey: scope?.scopeKey ?? '',
   skillKey, label: termKey, summary: `${termKey} 설명`,
@@ -15,38 +15,36 @@ const terms = [
   term('term.equivalent', 'fraction.equivalence'),
   term('term.common-denominator', 'fraction.addition'),
 ];
-const keys = (current: Parameters<typeof visibleTerms>[0]['current']) =>
-  visibleTerms({ terms, classes, current }).map(entry => entry.termKey);
 
-describe('term visibility while reading a class', () => {
-  it('withholds the concepts the class itself teaches', () => {
-    expect(keys(addition)).not.toContain('term.common-denominator');
-    expect(keys(meaning)).not.toContain('term.denominator');
+describe('the definitions a lesson linked', () => {
+  it('sends every one of them, because linking is the decision', () => {
+    // Whoever wrote the lesson chose that word in that place; progress does not overrule it.
+    expect(glossaryEntries(terms, classes).map(entry => entry.termKey))
+      .toEqual(['term.denominator', 'term.equivalent', 'term.common-denominator']);
+    // Including the concept the class being read teaches, which used to be withheld.
+    expect(glossaryEntries([term('term.denominator', 'fraction.meaning')], classes)).toHaveLength(1);
   });
-  it('explains prerequisites and anything taught earlier', () => {
-    expect(keys(addition)).toEqual(['term.denominator', 'term.equivalent']);
-    expect(keys(equivalence)).toEqual(['term.denominator']);
+
+  it('points each definition at the class that teaches its concept', () => {
+    const entries = glossaryEntries(terms, classes);
+    expect(entries.find(entry => entry.termKey === 'term.equivalent'))
+      .toMatchObject({ classKey: equivalence.classKey, skillKey: 'fraction.equivalence', summary: 'term.equivalent 설명' });
+    expect(entries.find(entry => entry.termKey === 'term.denominator')).toMatchObject({ classKey: meaning.classKey });
   });
-  it('leaves concepts from later classes plain', () => {
-    expect(keys(meaning)).toEqual([]);
-    expect(keys(equivalence)).not.toContain('term.common-denominator');
-  });
-  it('points each definition at the class that teaches it', () => {
-    const entry = visibleTerms({ terms, classes, current: addition }).find(item => item.termKey === 'term.equivalent');
-    expect(entry).toMatchObject({ classKey: equivalence.classKey, skillKey: 'fraction.equivalence', summary: 'term.equivalent 설명' });
-  });
+
   it('offers no class link for a concept no published class teaches', () => {
-    const orphan = [term('term.decimal', 'decimal.meaning')];
-    expect(visibleTerms({ terms: orphan, classes, current: addition })).toEqual([]);
+    const [entry] = glossaryEntries([term('term.decimal', 'decimal.meaning')], classes);
+    expect(entry).toMatchObject({ termKey: 'term.decimal', classKey: null });
   });
-});
 
-describe('term visibility while solving assigned review work', () => {
-  it('withholds only the concepts the assignment assesses', () => {
-    expect(keys({ assessedSkillKeys: ['fraction.addition'] })).toEqual(['term.denominator', 'term.equivalent']);
-    expect(keys({ assessedSkillKeys: ['fraction.meaning', 'fraction.addition'] })).toEqual(['term.equivalent']);
+  it('carries the scope through, so a class term and a dictionary term stay apart', () => {
+    const scoped = term('term.denominator', 'fraction.meaning', { scopeKind: 'class', scopeKey: meaning.classKey });
+    const entries = glossaryEntries([terms[0], scoped], classes);
+    expect(entries.map(entry => `${entry.scopeKind}:${entry.scopeKey}`)).toEqual(['global:', `class:${meaning.classKey}`]);
   });
-  it('keeps a definition that no item in the assignment assesses', () => {
-    expect(keys({ assessedSkillKeys: [] })).toHaveLength(terms.length);
+
+  it('keeps the order the document asked for them in', () => {
+    expect(glossaryEntries([terms[2], terms[0]], classes).map(entry => entry.termKey))
+      .toEqual(['term.common-denominator', 'term.denominator']);
   });
 });
