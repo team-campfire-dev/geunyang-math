@@ -260,6 +260,16 @@
 .editor-add { border: 1px dashed #d5dfc5; border-radius: 10px; padding: 16px 18px; background: #fafbf5; }
 .editor-add-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 11px; }
 .editor-add-buttons .button { font-size: 11px; min-height: 36px; padding: 8px 12px; }
+/* Who may write content, read as a short list of people rather than a table of identifiers. */
+.role-list { display: flex; flex-direction: column; gap: 6px; margin-top: 14px; }
+.role-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fbfcf6; }
+.role-who { flex: 1 1 180px; min-width: 0; }
+.role-who strong { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #5f7154; }
+.role-who em { font-style: normal; font-size: 9px; color: #7d8a70; border: 1px solid #dbe3cd; border-radius: 3px; padding: 1px 5px; }
+.role-who small { display: block; font-size: 10px; color: #96a086; margin-top: 3px; }
+.role-row select { width: auto; padding: 8px 10px; border: 1px solid #dbe1cf; border-radius: 6px; background: #fffefb; color: #56684c; font-size: 11px; }
+.role-row .button { font-size: 11px; min-height: 34px; padding: 7px 12px; }
+
 .editor-preview { position: sticky; top: 20px; min-width: 0; }
 .editor-preview > .eyebrow { font-size: 8px; display: block; margin-bottom: 10px; }
 .editor-preview .lesson-sheet { padding: 24px; min-height: 0; }

@@ -7,10 +7,10 @@ import { importContent } from './content-store';
 import { AppError } from './errors';
 import type { AnswerSpec } from '@/shared/answer';
 import {
-  mayEditEveryDraft, mayPublish, pruneProblems, pruneSections, renameProblem, renamedProblemVersionId,
+  mayEditEveryDraft, mayGrantRoles, mayPublish, pruneProblems, pruneSections, renameProblem, renamedProblemVersionId,
   renameProblemReferences, responseSpecOf, suggestVersionId,
-  type AuthoringResponse, type AuthoringRole, type AuthoringWorkspace, type DraftDetail, type DraftEdit,
-  type DraftProblem, type DraftSummary,
+  type AccountRole, type AuthoringResponse, type AuthoringRole, type AuthoringWorkspace, type DraftDetail,
+  type DraftEdit, type DraftProblem, type DraftSummary,
 } from '@/shared/authoring';
 
 const id = z.string().min(1).max(191);
@@ -59,6 +59,9 @@ export const authoringActionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('draft.validate'), draftId: id }).strict(),
   z.object({ action: z.literal('draft.publish'), draftId: id }).strict(),
   z.object({ action: z.literal('draft.delete'), draftId: id }).strict(),
+  z.object({ action: z.literal('account.search'), query: z.string().trim().min(2).max(80) }).strict(),
+  z.object({ action: z.literal('role.grant'), userId: id, role: z.enum(['admin', 'author']) }).strict(),
+  z.object({ action: z.literal('role.revoke'), userId: id }).strict(),
 ]);
 
 /**
@@ -78,20 +81,29 @@ export async function openAuthoringAccount(db: PrismaClient) {
   return db.user.upsert({ where: { id: 'open-authoring' }, update: {}, create: { id: 'open-authoring', displayName: '열린 편집' } });
 }
 
+/** The Google subjects a deployment names as its first administrators, before any row exists. */
+const adminSubjects = () => (process.env.CONTENT_ADMIN_SUBJECTS || '').split(',').map((value) => value.trim()).filter(Boolean);
+
 /**
- * Content work is a role an account holds. The environment names the first administrators so a new
- * deployment has someone who can grant the rest; every other grant is a row a future teacher system
- * can write without touching this module's callers.
+ * Content work is a role an account holds, and where the role came from decides whether this
+ * application can take it back. The environment names the first administrators so a new deployment
+ * has someone who can grant the rest; every other grant is a row, which the role panel writes.
  */
-export async function authoringRole(db: PrismaClient, userId: string): Promise<AuthoringRole | null> {
-  if (openAuthoring()) return 'admin';
-  const subjects = (process.env.CONTENT_ADMIN_SUBJECTS || '').split(',').map((value) => value.trim()).filter(Boolean);
+export async function authoringRoleDetail(db: PrismaClient, userId: string): Promise<{ role: AuthoringRole | null; source: AccountRole['source'] }> {
+  if (openAuthoring()) return { role: 'admin', source: 'environment' };
+  const subjects = adminSubjects();
   if (subjects.length) {
     const identity = await db.googleIdentity.findUnique({ where: { userId } });
-    if (identity && subjects.includes(identity.subject)) return 'admin';
+    if (identity && subjects.includes(identity.subject)) return { role: 'admin', source: 'environment' };
   }
   const grant = await db.contentAuthor.findUnique({ where: { userId } });
-  return grant?.role === 'admin' || grant?.role === 'author' ? grant.role : null;
+  return grant?.role === 'admin' || grant?.role === 'author'
+    ? { role: grant.role, source: 'granted' }
+    : { role: null, source: 'none' };
+}
+
+export async function authoringRole(db: PrismaClient, userId: string): Promise<AuthoringRole | null> {
+  return (await authoringRoleDetail(db, userId)).role;
 }
 
 /** A stored question read back for editing; its response format is restated from the answer on save. */
@@ -199,11 +211,12 @@ export class AuthoringService {
 
   async workspace(userId: string): Promise<AuthoringWorkspace> {
     const role = await authoringRole(this.db, userId);
-    if (!role) return { role: null, drafts: [], classes: [] };
-    const [drafts, versions] = await Promise.all([
+    if (!role) return { role: null, drafts: [], classes: [], accounts: [] };
+    const [drafts, versions, accounts] = await Promise.all([
       this.db.contentDraft.findMany({ where: mayEditEveryDraft(role) ? {} : { authorId: userId },
         orderBy: { updatedAt: 'desc' }, take: 50, include: { author: { select: { displayName: true } } } }),
       this.db.classVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }], select: { id: true, classKey: true, title: true } }),
+      this.accounts(userId, role),
     ]);
     const openDrafts = new Set(drafts.filter((draft) => draft.status !== 'published').map((draft) => draft.classKey));
     const byKey = new Map<string, { title: string; versions: string[] }>();
@@ -215,12 +228,111 @@ export class AuthoringService {
     }
     return {
       role,
+      accounts,
       drafts: (drafts as DraftRow[]).map((row) => this.summary(row, userId)),
       classes: [...byKey.entries()].map(([classKey, entry]) => ({
         classKey, title: entry.title, latestVersionId: entry.versions[entry.versions.length - 1],
         suggestedVersionId: suggestVersionId(classKey, entry.versions), hasDraft: openDrafts.has(classKey),
       })),
     };
+  }
+
+  /**
+   * The accounts that hold content work today. Environment-named administrators are listed beside
+   * the granted ones so an administrator can see the whole picture, but they are not rows and this
+   * screen says so rather than offering a button that could not work.
+   */
+  private async accounts(userId: string, role: AuthoringRole | null): Promise<AccountRole[]> {
+    if (!mayGrantRoles(role)) return [];
+    const subjects = adminSubjects();
+    const [rows, named] = await Promise.all([
+      this.db.contentAuthor.findMany({ orderBy: { grantedAt: 'asc' }, include: { user: { select: { displayName: true } } } }),
+      subjects.length
+        ? this.db.googleIdentity.findMany({ where: { subject: { in: subjects } }, include: { user: { select: { displayName: true } } } })
+        : Promise.resolve([]),
+    ]);
+    const accounts = new Map<string, AccountRole>();
+    for (const row of rows) {
+      accounts.set(row.userId, { userId: row.userId, displayName: row.user.displayName,
+        role: row.role === 'admin' ? 'admin' : 'author', source: 'granted',
+        grantedAt: row.grantedAt.toISOString(), me: row.userId === userId });
+    }
+    // The environment wins the description: a row cannot take away what the environment grants.
+    for (const identity of named) {
+      accounts.set(identity.userId, { userId: identity.userId, displayName: identity.user.displayName,
+        role: 'admin', source: 'environment', grantedAt: null, me: identity.userId === userId });
+    }
+    return [...accounts.values()];
+  }
+
+  private async requireGranter(userId: string): Promise<AuthoringRole> {
+    const role = await this.require(userId);
+    if (!mayGrantRoles(role)) throw new AppError(403, 'not_a_granter', '편집 권한은 관리자만 줄 수 있어요.');
+    return role;
+  }
+
+  /** Names are what an administrator knows about a person, so that is what this looks up. */
+  async searchAccounts(userId: string, query: string): Promise<AuthoringResponse> {
+    await this.requireGranter(userId);
+    const found = await this.db.user.findMany({
+      where: { displayName: { contains: query }, id: { not: 'open-authoring' } },
+      orderBy: { createdAt: 'asc' }, take: 20,
+      select: { id: true, displayName: true, contentAuthor: { select: { role: true, grantedAt: true } } },
+    });
+    const subjects = adminSubjects();
+    const named = subjects.length
+      ? new Set((await this.db.googleIdentity.findMany({ where: { subject: { in: subjects }, userId: { in: found.map((user) => user.id) } },
+          select: { userId: true } })).map((identity) => identity.userId))
+      : new Set<string>();
+    const matches: AccountRole[] = found.map((user) => (named.has(user.id)
+      ? { userId: user.id, displayName: user.displayName, role: 'admin', source: 'environment', grantedAt: null, me: user.id === userId }
+      : {
+        userId: user.id, displayName: user.displayName,
+        role: user.contentAuthor?.role === 'admin' ? 'admin' : user.contentAuthor?.role === 'author' ? 'author' : null,
+        source: user.contentAuthor ? 'granted' : 'none',
+        grantedAt: user.contentAuthor?.grantedAt.toISOString() ?? null, me: user.id === userId,
+      }));
+    return { workspace: await this.workspace(userId), matches };
+  }
+
+  /**
+   * Two guards on anything that takes administrator away from an account, so that someone can still
+   * publish tomorrow. An administrator never stands themselves down, which alone keeps the granted
+   * list from emptying. The second is for an environment-named administrator, who could otherwise
+   * remove the last granted one and leave a deployment whose only administrator disappears with its
+   * environment. Lowering a role and taking it back are the same loss, so both pass through here.
+   */
+  private async assertAdminRemains(actorId: string, targetId: string): Promise<void> {
+    if (targetId === actorId) throw new AppError(422, 'role_self', '자기 관리자 역할은 여기서 내려놓을 수 없어요.');
+    if (await this.db.contentAuthor.count({ where: { role: 'admin' } }) <= 1) {
+      throw new AppError(422, 'role_last_admin', '마지막 관리자예요. 다른 관리자를 먼저 세워 주세요.');
+    }
+  }
+
+  async grantRole(userId: string, targetId: string, role: AuthoringRole): Promise<AuthoringResponse> {
+    await this.requireGranter(userId);
+    const target = await this.db.user.findUnique({ where: { id: targetId }, select: { id: true } });
+    if (!target) throw new AppError(404, 'account_missing', '그런 계정을 찾을 수 없어요.');
+    // The shared account exists because no one was signed in; there is no person to hand work to.
+    if (target.id === 'open-authoring') throw new AppError(422, 'account_shared', '공용 편집 계정에는 역할을 줄 수 없어요.');
+    const current = await this.db.contentAuthor.findUnique({ where: { userId: targetId } });
+    if (current?.role === 'admin' && role !== 'admin') await this.assertAdminRemains(userId, targetId);
+    await this.db.contentAuthor.upsert({ where: { userId: targetId }, update: { role }, create: { userId: targetId, role } });
+    return { workspace: await this.workspace(userId) };
+  }
+
+  /**
+   * An environment-named role is not a row, so there is nothing here to remove — that one changes
+   * with the deployment, and this says so rather than pretending to act.
+   */
+  async revokeRole(userId: string, targetId: string): Promise<AuthoringResponse> {
+    await this.requireGranter(userId);
+    const row = await this.db.contentAuthor.findUnique({ where: { userId: targetId } });
+    if (!row) throw new AppError(404, 'role_missing', '이 계정에는 거둘 역할이 없어요.');
+    if (row.role === 'admin') await this.assertAdminRemains(userId, targetId);
+    else if (targetId === userId) throw new AppError(422, 'role_self', '자기 역할은 여기서 거둘 수 없어요.');
+    await this.db.contentAuthor.delete({ where: { userId: targetId } });
+    return { workspace: await this.workspace(userId) };
   }
 
   async createDraft(userId: string, classKey: string): Promise<AuthoringResponse> {
@@ -332,6 +444,9 @@ export class AuthoringService {
       case 'draft.validate': return this.validateDraft(userId, action.draftId);
       case 'draft.publish': return this.publishDraft(userId, action.draftId);
       case 'draft.delete': return this.deleteDraft(userId, action.draftId);
+      case 'account.search': return this.searchAccounts(userId, action.query);
+      case 'role.grant': return this.grantRole(userId, action.userId, action.role);
+      case 'role.revoke': return this.revokeRole(userId, action.userId);
     }
   }
 }
