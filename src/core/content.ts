@@ -2,6 +2,7 @@ import 'server-only';
 
 import { z } from 'zod';
 import type { ClassDocument, ClassSection, ContentBlock, GlossaryEntry, PublicClass, PublicProblem } from '@/shared/api';
+import { builderLimits, sequenceLimits } from '@/shared/manipulatives';
 import { locateTerms, type TermAnnotation } from '@/shared/rich-text';
 
 /** Private content records stay on the server; only toPublicClass crosses the API boundary. */
@@ -63,7 +64,37 @@ const blockSchemas = {
   'math.fraction_strip@1': z.object({ ...fractionStripShape, labelAlt: plainText(200).optional() }).strict()
     .refine((value) => value.filled <= value.parts, 'filled must not exceed parts')
     .refine((value) => !carriesMath(value.label) || !!value.labelAlt, 'A label containing math requires labelAlt for the accessible name'),
+  // Frames of one strip played in order. alt names the whole movement, since a reader following
+  // the captions alone would only ever meet the frame that happens to be on screen.
+  'math.fraction_sequence@1': z.object({
+    parts: z.number().int().min(1).max(100),
+    frames: z.array(z.object({ filled: z.number().int().min(0).max(100), caption: z.string().max(200).optional() }).strict())
+      .min(sequenceLimits.minFrames).max(sequenceLimits.maxFrames),
+    alt: plainText(500),
+    frameMs: z.number().int().min(sequenceLimits.minMs).max(sequenceLimits.maxMs).optional(),
+    loop: z.boolean().optional(),
+    // Movement that starts on its own still stops on request, and never starts under reduced motion.
+    autoplay: z.boolean().optional(),
+  }).strict().refine((value) => value.frames.every((frame) => frame.filled <= value.parts), 'filled must not exceed parts'),
+  // Pieces the learner places by hand. Nothing here is graded, so the target is asked for openly
+  // rather than hidden as an answer, and the block carries no response or grading specification.
+  'math.fraction_builder@1': z.object({
+    parts: z.number().int().min(builderLimits.minParts).max(builderLimits.maxParts),
+    target: z.number().int().min(0).max(builderLimits.maxParts),
+    start: z.number().int().min(0).max(builderLimits.maxParts).optional(),
+    prompt: z.string().trim().min(1).max(300),
+    promptAlt: plainText(300).optional(),
+    successText: plainText(300).optional(),
+  }).strict()
+    .refine((value) => value.target <= value.parts, 'target must not exceed parts')
+    .refine((value) => (value.start ?? 0) <= value.parts, 'start must not exceed parts')
+    .refine((value) => value.target !== (value.start ?? 0), 'target must differ from the pieces already placed')
+    .refine((value) => !carriesMath(value.prompt) || !!value.promptAlt, 'A prompt containing math requires promptAlt for the accessible name'),
 } satisfies Record<string, z.ZodType>;
+
+/** Blocks the learner acts on. They report nothing to the server, so they stay out of anything
+ *  that is assessed: beside an answer box a manipulative reads as the answer itself. */
+const interactiveKinds = new Set(['math.fraction_builder']);
 
 export const supportedBlockTypes = Object.keys(blockSchemas).map((key) => {
   const [kind, version] = key.split('@');
@@ -91,9 +122,10 @@ const blockSchema = z.object({
 });
 
 // Term definitions are leaves: no problem groups, and no annotations nesting a term inside a term.
+// A definition is read while a problem waits, so it explains rather than asks for an interaction.
 export const termContentBlockSchema = blockSchema.refine(
-  (block) => block.kind !== 'core.problem_set' && !(block.kind === 'core.rich_text' && block.typeVersion === 2),
-  { message: 'Term definitions cannot embed problems or further term annotations' },
+  (block) => block.kind !== 'core.problem_set' && !(block.kind === 'core.rich_text' && block.typeVersion === 2) && !interactiveKinds.has(block.kind),
+  { message: 'Term definitions cannot embed problems, further term annotations, or an interactive block' },
 );
 
 const responseSchema = z.object({
@@ -105,6 +137,8 @@ const responseSchema = z.object({
 // including an optional future version, in its prompt, hint, or solution.
 const problemContentBlockSchema = blockSchema.refine((block) => block.kind !== 'core.problem_set', {
   message: 'core.problem_set is not allowed inside a problem',
+}).refine((block) => !interactiveKinds.has(block.kind), {
+  message: 'An interactive block is not allowed inside a problem',
 });
 
 const problemShape = {

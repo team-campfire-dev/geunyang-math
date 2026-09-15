@@ -23,6 +23,37 @@ model User {
   hints        HintUse[]
   diagnostics  DiagnosticRun[]
   recommendationHistory RecommendationHistory[]
+  contentAuthor ContentAuthor?
+  contentDrafts ContentDraft[]
+}
+
+/// Permission to write content, held as a role on an account rather than as a property of the one
+/// operator. A teacher system grants content work by writing rows here; routes and screens ask for
+/// the role, never for a particular person.
+model ContentAuthor {
+  userId    String @id @db.VarChar(191)
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      String @db.VarChar(20)
+  grantedAt DateTime @default(now())
+}
+
+/// A working copy of a class document. Published versions stay immutable, so publishing copies the
+/// draft into a new ClassVersion; a draft is never the record a learner reads.
+model ContentDraft {
+  id                 String @id @default(cuid()) @db.VarChar(191)
+  classKey           String @db.VarChar(100)
+  versionId          String @db.VarChar(191)
+  baseVersionId      String? @db.VarChar(191)
+  title              String @db.VarChar(191)
+  document           Json
+  status             String @default("draft") @db.VarChar(20)
+  authorId           String @db.VarChar(191)
+  author             User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  publishedVersionId String? @db.VarChar(191)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  @@index([classKey])
+  @@index([authorId, updatedAt])
 }
 
 model DiagnosticRun {
