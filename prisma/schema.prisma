@@ -113,6 +113,20 @@ model ClassVersion {
   @@index([classKey])
 }
 
+/**
+ * Every question a published version holds, by name. A draft asks whether editing a question in
+ * place would change what an already answered question meant, and that is a lookup by name — not a
+ * reason to read every published document. The owning document stays the record; this repeats it.
+ */
+model PublishedProblem {
+  ownerKind        String @db.VarChar(20)
+  ownerVersionId   String @db.VarChar(191)
+  problemVersionId String @db.VarChar(191)
+  document         Json
+  @@id([ownerKind, ownerVersionId, problemVersionId])
+  @@index([problemVersionId])
+}
+
 model Skill {
   key   String @id @db.VarChar(100)
   label String @db.VarChar(191)

@@ -143,18 +143,20 @@ const storedProblem = (problem: DraftProblem): StoredProblem => ({
 /**
  * Every question a published version already holds, by name. An attempt, a hint use and an
  * assignment snapshot each record the name a question was answered under, so a published name may
- * never come to mean a different question.
+ * never come to mean a different question. The index answers the two halves this needs: what the
+ * questions this draft names were published as, and which names are already spoken for.
  */
-async function publishedProblems(db: PrismaClient): Promise<Map<string, string>> {
-  const [classes, diagnostics] = await Promise.all([
-    db.classVersion.findMany({ select: { document: true } }),
-    db.diagnosticVersion.findMany({ select: { document: true } }),
+type PublishedProblems = { document: Map<string, string>; taken: Set<string> };
+async function publishedProblems(db: PrismaClient, named: string[]): Promise<PublishedProblems> {
+  const [wanted, names] = await Promise.all([
+    named.length ? db.publishedProblem.findMany({ where: { problemVersionId: { in: [...new Set(named)] } },
+      select: { problemVersionId: true, document: true }, distinct: ['problemVersionId'] }) : [],
+    db.publishedProblem.findMany({ select: { problemVersionId: true }, distinct: ['problemVersionId'] }),
   ]);
-  const seen = new Map<string, string>();
-  const record = (problem: StoredProblem) => seen.set(problem.problemVersionId, canonicalJson(problem));
-  for (const row of classes) (row.document as unknown as StoredClass).problems.forEach(record);
-  for (const row of diagnostics) (row.document as unknown as StoredProblem[]).forEach(record);
-  return seen;
+  return {
+    document: new Map(wanted.map(row => [row.problemVersionId, canonicalJson(row.document)])),
+    taken: new Set(names.map(row => row.problemVersionId)),
+  };
 }
 
 /**
@@ -162,14 +164,14 @@ async function publishedProblems(db: PrismaClient): Promise<Map<string, string>>
  * another matter: editing one in place would change what a learner's answer meant, so it becomes a
  * new question named for the version being written, and the references in this document move with it.
  */
-function renameEditedProblems(problems: StoredProblem[], versionId: string, published: Map<string, string>) {
+function renameEditedProblems(problems: StoredProblem[], versionId: string, published: PublishedProblems) {
   const taken = new Set(problems.map((problem) => problem.problemVersionId));
   const renames = new Map<string, string>();
   const next = problems.map((problem) => {
-    const before = published.get(problem.problemVersionId);
+    const before = published.document.get(problem.problemVersionId);
     if (!before || before === canonicalJson(problem)) return problem;
     const renamed = renameProblem(problem, renamedProblemVersionId(problem.problemVersionId, versionId,
-      (candidate) => taken.has(candidate) || published.has(candidate)));
+      (candidate) => taken.has(candidate) || published.taken.has(candidate)));
     taken.add(renamed.problemVersionId);
     renames.set(problem.problemVersionId, renamed.problemVersionId);
     return renamed;
@@ -447,7 +449,8 @@ export class AuthoringService {
     const role = await this.require(userId);
     const row = await this.load(draftId, userId, role);
     if (row.status === 'published') throw new AppError(409, 'draft_published', '이미 발행한 초안이에요. 새 초안을 만들어 주세요.');
-    const document = this.merge(row.document as unknown as StoredClass, edit, await publishedProblems(this.db));
+    const document = this.merge(row.document as unknown as StoredClass, edit,
+      await publishedProblems(this.db, edit.problems.map((problem) => problem.problemVersionId)));
     const saved = await this.db.contentDraft.update({ where: { id: draftId },
       data: { document: document as never, versionId: document.public.versionId, title: document.public.title },
       include: { author: { select: { displayName: true } } } });
@@ -455,7 +458,7 @@ export class AuthoringService {
   }
 
   /** Restates what the editor sent as a stored document, renaming the questions an edit changed. */
-  private merge(stored: StoredClass, edit: DraftEdit, published: Map<string, string>): StoredClass {
+  private merge(stored: StoredClass, edit: DraftEdit, published: PublishedProblems): StoredClass {
     // A version belongs to its class. Without this, a draft could claim another class's version ID
     // and publish a record whose name says one class while its content teaches another.
     if (!edit.meta.versionId.startsWith(`${stored.public.classKey}:`)) {
