@@ -32,12 +32,12 @@ type Drag = { index: number; mode: 'move' | 'resize'; on: 'item' | 'zone'; origi
  * Everything it produces is the declarative scene the validator already checks.
  */
 /**
- * `assessed` says this drawing sits inside something a learner is answering. Arranging reports
- * nothing and is never marked, so beside an answer box it would read as the answer itself — the
- * publishing validator refuses it, and this refuses it here rather than at the end of the work.
+ * `arrangingRefusal`, when set, is the reason this drawing may not be arranged by hand — it sits
+ * somewhere arranging would be read as an answer, or as the explanation of one. The publishing
+ * validator refuses those, and this refuses them here rather than at the end of the work.
  */
-export function SceneEditor({ payload, onChange, assessed = false }: {
-  payload: Record<string, unknown>; onChange: (next: Record<string, unknown>) => void; assessed?: boolean;
+export function SceneEditor({ payload, onChange, arrangingRefusal }: {
+  payload: Record<string, unknown>; onChange: (next: Record<string, unknown>) => void; arrangingRefusal?: string;
 }) {
   const scene = readScene(payload);
   const [selected, setSelected] = useState<{ on: 'item' | 'zone'; index: number } | null>(null);
@@ -202,13 +202,13 @@ export function SceneEditor({ payload, onChange, assessed = false }: {
         <span className="editor-label">직접 놓아 보기</span>
         {zones.length
           ? <button type="button" className="text-button" onClick={() => { writeZones(undefined, { task: undefined }); setSelected(null); }}>조작 끄기</button>
-          : <button type="button" className="text-button" disabled={!!frames || assessed}
+          : <button type="button" className="text-button" disabled={!!frames || !!arrangingRefusal}
               onClick={() => writeZones([createZone(scene, [])], { task: { prompt: '조각을 알맞은 자리에 놓아 보세요.' } })}>
               <Icon name="plus" size={13} />놓아 보게 만들기</button>}
       </div>
       {zones.length ? <>
-        {assessed
-          ? <p className="editor-note editor-warn">문항 안에는 놓아 보는 그림을 둘 수 없어요. 「조작 끄기」로 끄거나, 이 그림을 수업 본문으로 옮겨 주세요.</p>
+        {arrangingRefusal
+          ? <p className="editor-note editor-warn">{arrangingRefusal} 「조작 끄기」로 끄거나, 이 그림을 수업 본문으로 옮겨 주세요.</p>
           : <p className="editor-note">도형에 「끌 수 있음」을 켜고, 놓는 자리를 만들어 어떤 도형을 받을지 정합니다. 채점하지는 않아요.</p>}
         <label className="editor-field"><span className="editor-label">안내 문장</span>
           <input value={task?.prompt ?? ''} maxLength={300}
@@ -228,8 +228,8 @@ export function SceneEditor({ payload, onChange, assessed = false }: {
             onClick={() => { writeZones([...zones, createZone(scene, zones.map((current) => current.id))], { task }); setSelected({ on: 'zone', index: zones.length }); }}>
             <Icon name="plus" size={13} />놓는 자리 추가</button>
         </div>
-      </> : <p className="editor-note">{assessed
-        ? '문항 안에서는 놓아 보게 만들 수 없어요. 놓은 결과는 채점되지 않는데 답 칸 옆에 있으면 답으로 읽혀요. 수업 본문에서는 쓸 수 있어요.'
+      </> : <p className="editor-note">{arrangingRefusal
+        ? `${arrangingRefusal} 수업 본문에서는 쓸 수 있어요.`
         : frames ? '움직이는 그림은 직접 놓아 보게 만들 수 없어요. 한 그림은 스스로 움직이거나 학습자가 옮기거나, 둘 중 하나입니다.' : '학습자가 도형을 끌어다 놓게 하려면 켜세요.'}</p>}
     </div>
 

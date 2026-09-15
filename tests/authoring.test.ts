@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { supportedBlockTypes, validateClass } from '@/core/content';
+import { supportedBlockTypes, termContentBlockSchema, validateClass } from '@/core/content';
 import {
   blockForms, blockFormOf, moveBlock, newProblem, nextBlockId, nextProblemBlockId, nextProblemVersionId, nextSectionId,
   problemsOfBlock, pruneBlock, pruneSections, renameProblem, renameProblemReferences, renamedProblemVersionId,
-  responseSpecOf, scopeTermAnnotations, suggestVersionId, toPublicProblem, writePath,
+  nextTermVersionId, responseSpecOf, scopeTermAnnotations, suggestVersionId, termBlockForms, toPublicProblem, writePath,
 } from '@/shared/authoring';
 import { seedClasses } from './fixtures/content';
 
@@ -205,5 +205,30 @@ describe('which class keeps a linked term', () => {
     const pruned = pruneBlock({ blockId: 'b1', kind: 'core.rich_text', typeVersion: 2, required: true,
       payload: { text: '분모는 전체를 나눈 조각 수예요.', terms: [{ termKey: 'term.denominator', surface: '분모', scopeKind: '' }] } });
     expect(pruned.payload.terms).toEqual([{ termKey: 'term.denominator', surface: '분모' }]);
+  });
+});
+
+describe('writing a definition', () => {
+  it('names the next version after the scope that keeps the term', () => {
+    const shared = { termKey: 'term.denominator', scopeKind: 'global' as const, scopeKey: '' };
+    expect(nextTermVersionId(shared, [])).toBe('term.denominator:v1');
+    expect(nextTermVersionId(shared, ['term.denominator:v1', 'term.denominator:v2'])).toBe('term.denominator:v3');
+    const mine = { termKey: 'term.denominator', scopeKind: 'class' as const, scopeKey: 'fraction-meaning' };
+    expect(nextTermVersionId(mine, [])).toBe('fraction-meaning:term.denominator:v1');
+    // The two scopes count separately, so one class's versions never push the dictionary along.
+    expect(nextTermVersionId(mine, ['fraction-meaning:term.denominator:v1'])).toBe('fraction-meaning:term.denominator:v2');
+    expect(nextTermVersionId(shared, ['fraction-meaning:term.denominator:v7'])).toBe('term.denominator:v1');
+  });
+
+  it('offers only the blocks a definition may hold, and each one publishes as written', () => {
+    const offered = termBlockForms.filter((form) => !form.retired);
+    expect(offered.map((form) => form.kind)).not.toContain('core.problem_set');
+    // A definition read while a question waits explains; it does not annotate further or ask.
+    expect(offered.some((form) => form.kind === 'core.rich_text' && form.typeVersion === 2)).toBe(false);
+    expect(offered.map((form) => form.kind)).toContain('core.scene');
+    for (const form of offered) {
+      expect(() => termContentBlockSchema.parse({ blockId: 'term:block:1', kind: form.kind,
+        typeVersion: form.typeVersion, required: true, payload: form.create() }), form.kind).not.toThrow();
+    }
   });
 });

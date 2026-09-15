@@ -60,7 +60,8 @@ function ProblemBlocks({ label, hint, part, problem, blocks, taken, onChange }: 
   return <div className="editor-problem-part">
     <span className="editor-label">{label}</span>
     {hint && <p className="editor-note">{hint}</p>}
-    {blocks.map((block, index) => <BlockCard key={block.blockId} block={block} index={index} total={blocks.length} assessed
+    {blocks.map((block, index) => <BlockCard key={block.blockId} block={block} index={index} total={blocks.length}
+      arrangingRefusal="문항 안에서는 놓아 보게 만들 수 없어요. 놓은 결과는 채점되지 않는데 답 칸 옆에 있으면 답으로 읽혀요."
       onChange={(next) => onChange(blocks.map((item, position) => (position === index ? next : item)))}
       onMove={(delta) => onChange(moveBlock(blocks, index, delta))}
       onRemove={() => onChange(blocks.filter((_, position) => position !== index))} />)}

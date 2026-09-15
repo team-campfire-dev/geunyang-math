@@ -55,7 +55,19 @@ export const toPublicProblem = (problem: DraftProblem): PublicProblem => ({
   hintAvailable: problem.hints.length > 0,
 });
 export type ClassChoice = { classKey: string; title: string; latestVersionId: string; suggestedVersionId: string; hasDraft: boolean };
-export type AuthoringWorkspace = { role: AuthoringRole | null; drafts: DraftSummary[]; classes: ClassChoice[]; accounts: AccountRole[] };
+/** The scopes this screen writes. The catalogue's other levels exist in the model, not yet here. */
+export type EditableTermScope = 'global' | 'class';
+/** A definition as the editor holds it. Publishing turns it into the next version of that term. */
+export type TermEdit = {
+  termKey: string; scopeKind: EditableTermScope; scopeKey: string;
+  skillKey: string; label: string; summary: string; blocks: ContentBlock[];
+};
+export type TermSummary = TermEdit & { versionId: string; publishedAt: string };
+export type SkillChoice = { key: string; label: string };
+export type AuthoringWorkspace = {
+  role: AuthoringRole | null; drafts: DraftSummary[]; classes: ClassChoice[];
+  accounts: AccountRole[]; skills: SkillChoice[];
+};
 export type AuthoringAction =
   | { action: 'draft.create'; classKey: string }
   | { action: 'draft.save'; draftId: string; edit: DraftEdit }
@@ -64,9 +76,12 @@ export type AuthoringAction =
   | { action: 'draft.delete'; draftId: string }
   | { action: 'account.search'; query: string }
   | { action: 'role.grant'; userId: string; role: AuthoringRole }
-  | { action: 'role.revoke'; userId: string };
+  | { action: 'role.revoke'; userId: string }
+  | { action: 'term.list'; scopeKind: EditableTermScope; scopeKey: string }
+  | { action: 'term.save'; edit: TermEdit };
 export type AuthoringResponse = {
-  workspace: AuthoringWorkspace; draft?: DraftDetail; publishedVersionId?: string; matches?: AccountRole[];
+  workspace: AuthoringWorkspace; draft?: DraftDetail; publishedVersionId?: string;
+  matches?: AccountRole[]; terms?: TermSummary[]; publishedTermVersionId?: string;
 };
 
 const versionSuffix = /:v(\d+)$/;
@@ -111,6 +126,23 @@ export function nextSectionId(classKey: string, role: string, versionId: string,
  * question keeps its name as it moves between versions, so a name already in use is in use whatever
  * version it ends in: a new question takes the next name rather than the same one in a new version.
  */
+/**
+ * The next version of a term. A definition kept by a class carries the class in its name, so two
+ * scopes that share a key never collide, and reading an ID says which one it is.
+ */
+export function nextTermVersionId(term: { termKey: string; scopeKind: EditableTermScope; scopeKey: string }, existing: string[]): string {
+  const base = term.scopeKind === 'class' ? `${term.scopeKey}:${term.termKey}` : term.termKey;
+  const numbers = existing.map((id) => (id.startsWith(`${base}:v`) ? Number(id.slice(base.length + 2)) : NaN)).filter(Number.isInteger);
+  return `${base}:v${Math.max(0, ...numbers) + 1}`;
+}
+
+/** A definition starts as one paragraph, which is what most of them stay. */
+export function newTerm(scopeKind: EditableTermScope, scopeKey: string, skillKey: string): TermEdit {
+  return { termKey: '', scopeKind, scopeKey, skillKey, label: '', summary: '',
+    blocks: [{ blockId: 'term:block:1', kind: 'core.rich_text', typeVersion: 1, required: true,
+      payload: { text: '여기에 뜻을 풀어 씁니다.' } }] };
+}
+
 export function nextProblemVersionId(classKey: string, role: string, versionId: string, taken: string[]): string {
   const suffix = suffixOf(versionId);
   const names = new Set(taken.map((id) => (versionSuffix.test(id) ? id.slice(0, id.lastIndexOf(':')) : id)));
@@ -335,6 +367,10 @@ export function pruneProblems(problems: DraftProblem[]): DraftProblem[] {
   return problems.map((problem) => ({ ...problem, promptContent: problem.promptContent.map(pruneBlock),
     hints: problem.hints.map(pruneBlock), solution: problem.solution.map(pruneBlock) }));
 }
+
+/** Only the definition's own blocks: a definition never embeds a question or another annotation. */
+export const termBlockForms = blockForms.filter((form) =>
+  form.kind !== 'core.problem_set' && !(form.kind === 'core.rich_text' && form.typeVersion === 2));
 
 /** A question holds no activity of its own, and a drawing inside one is read rather than arranged. */
 export const problemBlockForms = blockForms.filter((form) => form.kind !== 'core.problem_set');
