@@ -5,7 +5,7 @@ import { recommend, reviewSelection, skillReadiness, type Evidence } from '@/cor
 import { visibleTerms } from '@/core/glossary';
 import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
-import { blockTermKeys, getActivityProblemIds, termReferences, toPublicClass, validateClass, type StoredClass, type StoredProblem } from '@/core/content';
+import { blockTermRefs, getActivityProblemIds, termReferences, toPublicClass, validateClass, type StoredClass, type StoredProblem } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
 import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicCatalog, PublicProblem, DiagnosticAnswer, Recommendation } from '@/shared/api';
 import { AppError } from './errors';
@@ -62,7 +62,7 @@ export class LearningService {
     const record = stored(row.document);
     // Definitions resolve at delivery so a reworded term reaches an in-progress class version too.
     const [terms, classes] = await Promise.all([
-      currentTerms(this.db, termReferences(record).map(reference => reference.termKey)), this.catalog(),
+      currentTerms(this.db, termReferences(record)), this.catalog(),
     ]);
     return toPublicClass(record, visibleTerms({ terms, classes, current: record.public }));
   }
@@ -102,7 +102,7 @@ export class LearningService {
       }
     }
     const assignmentProblems = recipients.flatMap(r => r.assignment.items.map(item => item.problemSnapshot as unknown as StoredProblem));
-    const assignmentTerms = await currentTerms(db, blockTermKeys(assignmentProblems.flatMap(p => [...p.promptContent, ...p.hints])));
+    const assignmentTerms = await currentTerms(db, blockTermRefs(assignmentProblems.flatMap(p => [...p.promptContent, ...p.hints])));
     const assignments: AssignmentView[] = recipients.map(r => {
       const submission = r.submissions[0];
       if (!submission) throw new Error('Missing initial submission');

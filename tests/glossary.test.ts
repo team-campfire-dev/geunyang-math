@@ -5,8 +5,9 @@ import type { PublicClass } from '@/shared/api';
 
 const classes: PublicClass[] = seedClasses.map(c => c.public);
 const meaning = classes[0], equivalence = classes[1], addition = classes[2];
-const term = (termKey: string, skillKey: string): PublishedTerm => ({
-  termKey, skillKey, label: termKey, summary: `${termKey} 설명`,
+const term = (termKey: string, skillKey: string, scope?: { scopeKind: PublishedTerm['scopeKind']; scopeKey: string }): PublishedTerm => ({
+  termKey, scopeKind: scope?.scopeKind ?? 'global', scopeKey: scope?.scopeKey ?? '',
+  skillKey, label: termKey, summary: `${termKey} 설명`,
   blocks: [{ blockId: `${termKey}-b1`, kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '정의' } }],
 });
 const terms = [

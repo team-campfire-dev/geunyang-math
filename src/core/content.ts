@@ -3,7 +3,7 @@ import 'server-only';
 import { z } from 'zod';
 import type { ClassDocument, ClassSection, ContentBlock, GlossaryEntry, PublicClass, PublicProblem } from '@/shared/api';
 import { frameLimits, isSceneColor, itemIdPattern, pathPattern, sceneLimits, stripLimits } from '@/shared/scene';
-import { locateTerms, type TermAnnotation } from '@/shared/rich-text';
+import { locateTerms, termRefId, type TermAnnotation, type TermRef } from '@/shared/rich-text';
 
 /** Private content records stay on the server; only toPublicClass crosses the API boundary. */
 export type StoredProblem = PublicProblem & {
@@ -97,10 +97,15 @@ const sceneTask = z.object({
 const richText = z.string().min(1).max(20_000);
 const termAnnotation = z.object({
   termKey: id.max(100),
+  // Absent means the operator's shared dictionary. Naming the scope here is what lets a definition
+  // be resolved without knowing which class, course or organisation the reader is inside.
+  scopeKind: z.enum(['global', 'organization', 'course', 'class']).optional(),
+  scopeKey: id.max(100).optional(),
   surface: z.string().min(1).max(100),
   // Terms repeat in a paragraph; the author picks which mention carries the definition.
   occurrence: z.number().int().min(1).max(100).optional(),
-}).strict();
+}).strict().refine((term) => (term.scopeKind ?? 'global') === 'global' ? !term.scopeKey : !!term.scopeKey,
+  { message: 'A scoped term must name the scope it belongs to, and a global one must not' });
 const blockSchemas = {
   'core.rich_text@1': z.object({ text: richText }).strict(),
   'core.rich_text@2': z.object({ text: richText, terms: z.array(termAnnotation).max(20) }).strict()
@@ -353,18 +358,23 @@ export function toPublicClass(record: StoredClass, glossary: GlossaryEntry[] = [
 const blockAnnotations = (block: ContentBlock): TermAnnotation[] =>
   block.kind === 'core.rich_text' && block.typeVersion === 2 ? (block.payload.terms as TermAnnotation[]) : [];
 
-/** Term keys linked from any of these blocks, for resolving definitions before delivery. */
-export function blockTermKeys(blocks: ContentBlock[]): string[] {
-  return [...new Set(blocks.flatMap((block) => blockAnnotations(block).map((term) => term.termKey)))];
+/** Terms linked from any of these blocks, for resolving definitions before delivery. */
+export function blockTermRefs(blocks: ContentBlock[]): TermRef[] {
+  const seen = new Map<string, TermRef>();
+  for (const block of blocks) for (const term of blockAnnotations(block)) {
+    seen.set(termRefId(term), { termKey: term.termKey, scopeKind: term.scopeKind, scopeKey: term.scopeKey });
+  }
+  return [...seen.values()];
 }
 
 /**
  * Term annotations name a published term by key; the definition itself lives in its own version so
  * that rewording it does not republish every class. Callers resolve the keys against TermVersion.
  */
-export function termReferences(record: StoredClass): { termKey: string; blockId: string; problemSkillKeys: string[] | null }[] {
+export function termReferences(record: StoredClass): (TermRef & { blockId: string; problemSkillKeys: string[] | null })[] {
   const annotations = (block: ContentBlock, problemSkillKeys: string[] | null) =>
-    blockAnnotations(block).map((term) => ({ termKey: term.termKey, blockId: block.blockId, problemSkillKeys }));
+    blockAnnotations(block).map((term) => ({ termKey: term.termKey, scopeKind: term.scopeKind, scopeKey: term.scopeKey,
+      blockId: block.blockId, problemSkillKeys }));
   return [
     ...record.sections.flatMap((section) => section.contentBlocks.flatMap((block) => annotations(block, null))),
     ...record.problems.flatMap((problem) => [...problem.promptContent, ...problem.hints, ...problem.solution]

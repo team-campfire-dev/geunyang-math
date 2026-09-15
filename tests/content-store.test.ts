@@ -18,7 +18,8 @@ function newClass() {
 }
 
 const termFixture = {
-  versionId: 'term.denominator:v1', termKey: 'term.denominator', skillKey: 'fraction.meaning',
+  versionId: 'term.denominator:v1', termKey: 'term.denominator',
+  scopeKind: 'global' as const, scopeKey: '', skillKey: 'fraction.meaning',
   label: '분모', summary: '전체를 몇 조각으로 나누었는지 나타내는 수예요.',
   blocks: [{ blockId: 'term.denominator:v1:b1', kind: 'core.rich_text', typeVersion: 1, required: true,
     payload: { text: '분모는 전체를 몇 조각으로 나누었는지 알려줘요.' } }],
@@ -70,6 +71,50 @@ describe('content publishing contract', () => {
     const cased = withTerms(); cased.terms.push({ ...cased.terms[0], versionId: 'term.denominator:v2', termKey: 'TERM.denominator' });
     expect(() => validateReferences(cased)).toThrow(/letter case/);
   });
+  it('keeps a class term and a dictionary term apart even when they share a key', () => {
+    const b = withTerms();
+    const classKey = b.classes[2].public.classKey;
+    // The same key, kept by the class itself: its own wording, not the operator's dictionary.
+    b.terms.push({ ...structuredClone(termFixture), versionId: `${classKey}:term.denominator:v1`,
+      scopeKind: 'class', scopeKey: classKey, summary: '이 수업에서만 쓰는 설명이에요.',
+      blocks: [{ ...termFixture.blocks[0], blockId: `${classKey}:term.denominator:v1:b1` }] });
+    const block = b.classes[2].sections[0].contentBlocks[0];
+    b.classes[2].sections[0].contentBlocks[0] = { ...block,
+      payload: { text: block.payload.text, terms: [{ termKey: 'term.denominator', surface: '분모', scopeKind: 'class', scopeKey: classKey }] } };
+    expect(() => validateReferences(b)).not.toThrow();
+    // Each scope keeps its own concept history, so one may be reworded without disturbing the other.
+    const moved = structuredClone(b);
+    moved.terms.push({ ...moved.terms[1], versionId: `${classKey}:term.denominator:v2`, skillKey: 'fraction.addition' });
+    expect(() => validateReferences(moved)).toThrow(/concept cannot change/);
+    const globalMoved = structuredClone(b);
+    globalMoved.terms.push({ ...globalMoved.terms[0], versionId: 'term.denominator:v2', skillKey: 'fraction.addition' });
+    expect(() => validateReferences(globalMoved)).toThrow(/concept cannot change/);
+  });
+
+  it('refuses a class that links a term another class keeps', () => {
+    const b = withTerms();
+    const owner = b.classes[0].public.classKey, borrower = b.classes[2].public.classKey;
+    b.terms.push({ ...structuredClone(termFixture), versionId: `${owner}:term.denominator:v1`,
+      scopeKind: 'class', scopeKey: owner,
+      blocks: [{ ...termFixture.blocks[0], blockId: `${owner}:term.denominator:v1:b1` }] });
+    const block = b.classes[2].sections[0].contentBlocks[0];
+    b.classes[2].sections[0].contentBlocks[0] = { ...block,
+      payload: { text: block.payload.text, terms: [{ termKey: 'term.denominator', surface: '분모', scopeKind: 'class', scopeKey: owner }] } };
+    expect(borrower).not.toBe(owner);
+    expect(() => validateReferences(b)).toThrow(/can only link its own terms/);
+  });
+
+  it('refuses a scope that does not say what it belongs to', () => {
+    const missingKey = { ...structuredClone(initial), terms: [{ ...termFixture, scopeKind: 'class' as const, scopeKey: '' }] };
+    expect(() => parseContentBundle(missingKey)).toThrow(/scope it belongs to/);
+    const strayKey = { ...structuredClone(initial), terms: [{ ...termFixture, scopeKey: 'fraction-meaning' }] };
+    expect(() => parseContentBundle(strayKey)).toThrow(/scope it belongs to/);
+    // A bundle written before scopes existed still imports as the shared dictionary.
+    const older = { ...structuredClone(initial), terms: [{ versionId: termFixture.versionId, termKey: termFixture.termKey,
+      skillKey: termFixture.skillKey, label: termFixture.label, summary: termFixture.summary, blocks: termFixture.blocks }] };
+    expect(parseContentBundle(older).terms[0]).toMatchObject({ scopeKind: 'global', scopeKey: '' });
+  });
+
   it('refuses a question that explains the concept it assesses', () => {
     const b = withTerms();
     const problem = b.classes[0].problems[0];
@@ -256,6 +301,47 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     expect((await db.termVersion.findUniqueOrThrow({ where: { id: earlierTerm.versionId } })).summary).toBe(earlierTerm.summary);
     const exported = await exportContent(db);
     expect(await importContent(db, JSON.parse(JSON.stringify(exported)))).toMatchObject({ newTerms: 0, newClasses: 0 });
+  });
+
+  it('lets a class keep its own wording for a word the shared dictionary already defines', async () => {
+    const suffix = randomUUID();
+    const earlier = `test.dict.earlier.${suffix}`, current = `test.dict.current.${suffix}`;
+    const first = newClass(), second = newClass();
+    first.public.order = 1101; first.public.skillKeys = [earlier]; first.public.prerequisiteSkillKeys = [];
+    first.problems.forEach(p => { p.skillKeys = [earlier]; });
+    second.public.order = 1102; second.public.skillKeys = [current]; second.public.prerequisiteSkillKeys = [earlier];
+    second.problems.forEach(p => { p.skillKeys = [current]; });
+    const termKey = `term.shared.${suffix}`;
+    const shared = { versionId: `${termKey}:v1`, termKey, skillKey: earlier, label: '분모', summary: '사전이 쓴 설명이에요.',
+      blocks: [{ blockId: `${termKey}:v1:b1`, kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '사전 정의' } }] };
+    // Same key, kept by the class: its own wording, published and versioned on its own.
+    const mine = { ...shared, versionId: `${second.public.classKey}:${termKey}:v1`,
+      scopeKind: 'class' as const, scopeKey: second.public.classKey, summary: '이 수업이 쓴 설명이에요.',
+      blocks: [{ ...shared.blocks[0], blockId: `${second.public.classKey}:${termKey}:v1:b1`, payload: { text: '수업 정의' } }] };
+    const block = second.sections[0].contentBlocks[0];
+    second.sections[0].contentBlocks[0] = { ...block, typeVersion: 2, payload: { text: '분모가 무엇인지 떠올려 보세요.',
+      terms: [{ termKey, surface: '분모', scopeKind: 'class', scopeKey: second.public.classKey }] } };
+    const input = { ...empty(), classes: [first, second], terms: [shared, mine],
+      skills: [{ key: earlier, label: '앞선 개념', order: 1101 }, { key: current, label: '지금 개념', order: 1102 }] };
+
+    // The dictionary alone does not answer for a reference that named the class.
+    await expect(importContent(db, { ...input, terms: [shared] })).rejects.toThrow(/Missing term/);
+    await importContent(db, input);
+
+    const document = await service.classDocument(second.public.classKey);
+    expect(document.glossary).toHaveLength(1);
+    expect(document.glossary[0]).toMatchObject({ termKey, scopeKind: 'class', scopeKey: second.public.classKey, summary: '이 수업이 쓴 설명이에요.' });
+    // The dictionary definition was never asked for, so its text is absent from the payload.
+    expect(JSON.stringify(document)).not.toContain('사전이 쓴 설명이에요.');
+
+    // Each scope is versioned on its own: rewording one leaves the other where it was.
+    const reworded = { ...mine, versionId: `${second.public.classKey}:${termKey}:v2`, summary: '수업 설명을 고쳤어요.',
+      blocks: [{ ...mine.blocks[0], blockId: `${second.public.classKey}:${termKey}:v2:b1` }] };
+    await importContent(db, { ...empty(), terms: [reworded] });
+    expect((await service.classDocument(second.public.classKey)).glossary[0].summary).toBe('수업 설명을 고쳤어요.');
+    expect((await db.termVersion.findUniqueOrThrow({ where: { id: shared.versionId } })).summary).toBe('사전이 쓴 설명이에요.');
+    // Exporting and re-importing the whole database carries the scopes back unchanged.
+    expect(await importContent(db, JSON.parse(JSON.stringify(await exportContent(db))))).toMatchObject({ newTerms: 0, newClasses: 0 });
   });
 
   it('publishes a reviewed bundle once and skips it while the file is unchanged', async () => {

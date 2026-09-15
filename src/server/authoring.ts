@@ -8,7 +8,7 @@ import { AppError } from './errors';
 import type { AnswerSpec } from '@/shared/answer';
 import {
   mayEditEveryDraft, mayGrantRoles, mayPublish, pruneProblems, pruneSections, renameProblem, renamedProblemVersionId,
-  renameProblemReferences, responseSpecOf, suggestVersionId,
+  renameProblemReferences, responseSpecOf, scopeTermAnnotations, suggestVersionId,
   type AccountRole, type AuthoringResponse, type AuthoringRole, type AuthoringWorkspace, type DraftDetail,
   type DraftEdit, type DraftProblem, type DraftSummary,
 } from '@/shared/authoring';
@@ -368,8 +368,14 @@ export class AuthoringService {
     if (!edit.meta.versionId.startsWith(`${stored.public.classKey}:`)) {
       throw new AppError(422, 'version_scope', `판본 ID는 ${stored.public.classKey}: 로 시작해야 해요.`);
     }
-    const { problems, renames } = renameEditedProblems(pruneProblems(edit.problems).map(storedProblem), edit.meta.versionId, published);
-    const sections = renameProblemReferences(pruneSections(edit.sections), renames);
+    const classKey = stored.public.classKey;
+    const scoped = (problem: DraftProblem): DraftProblem => ({ ...problem,
+      promptContent: scopeTermAnnotations(problem.promptContent, classKey),
+      hints: scopeTermAnnotations(problem.hints, classKey),
+      solution: scopeTermAnnotations(problem.solution, classKey) });
+    const { problems, renames } = renameEditedProblems(pruneProblems(edit.problems).map(scoped).map(storedProblem), edit.meta.versionId, published);
+    const sections = renameProblemReferences(pruneSections(edit.sections), renames)
+      .map((section) => ({ ...section, contentBlocks: scopeTermAnnotations(section.contentBlocks, classKey) }));
     return {
       ...stored,
       public: { ...stored.public, versionId: edit.meta.versionId, title: edit.meta.title, summary: edit.meta.summary,

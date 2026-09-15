@@ -1,6 +1,10 @@
 import type { GlossaryEntry, PublicClass } from '@/shared/api';
+import type { TermScopeKind } from '@/shared/rich-text';
 
-export type PublishedTerm = { termKey: string; skillKey: string; label: string; summary: string; blocks: GlossaryEntry['blocks'] };
+export type PublishedTerm = {
+  termKey: string; scopeKind: TermScopeKind; scopeKey: string;
+  skillKey: string; label: string; summary: string; blocks: GlossaryEntry['blocks'];
+};
 
 /**
  * Decides which term definitions a learner may open while reading. The rule is structural, so it
@@ -29,7 +33,8 @@ export function visibleTerms(input: {
     return !!source && source.order < input.current.order;
   };
   return input.terms.filter((term) => visible(term.skillKey)).map((term) => ({
-    termKey: term.termKey, label: term.label, summary: term.summary, skillKey: term.skillKey,
+    termKey: term.termKey, scopeKind: term.scopeKind, scopeKey: term.scopeKey,
+    label: term.label, summary: term.summary, skillKey: term.skillKey,
     blocks: term.blocks, classKey: taughtIn.get(term.skillKey)?.classKey ?? null,
   }));
 }
