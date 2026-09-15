@@ -9,6 +9,7 @@
 - `ClassVersion.document`: 클래스 섹션, 콘텐츠 블록, 문항, 비공개 채점 규칙·힌트·해설, 숙제 문항 ID를 함께 보관하는 불변 JSON 문서.
 - `DiagnosticVersion`: 진단 이름·설명·예상 시간·발행 시각과 불변 문항 JSON. `diagnosticKey=starting-point`의 최신 발행 판본을 새 진단에 사용한다.
 - `TermVersion`: 용어 키, **용어를 가진 범위**(`scopeKind`·`scopeKey`), 용어가 속한 개념(`skillKey`), 표시 이름, 한 줄 요약, 설명 블록을 담은 불변 판본. 범위별·용어 키별 최신 발행 판본을 사용한다.
+- `ClassSection`·`ContentBlock`: 발행된 클래스의 섹션과, 그 클래스가 가진 모든 블록(섹션 본문과 문항의 지문·힌트·해설)을 행으로 가진 표. 아직 **아무도 읽지 않는다** — 문서가 여전히 원본이고, 두 표현이 같은 말을 하는지 `content:verify`가 대조하는 단계다. 블록의 `fallback`은 문서에 **키가 없는** 것이지 비어 있는 것이 아니므로, 행에서는 NULL로 두고 되돌릴 때 키를 만들지 않는다. null로 되살리면 판본 해시가 달라진다.
 - `PublishedProblem`: 발행된 판본이 가진 문항을 이름으로 찾는 색인. 클래스·진단 문서가 여전히 원본이고, 이 표는 그 문서에서 파생한 사본이다. 초안이 「이 문항이 이미 발행된 적 있는가, 그때 내용은 무엇이었는가」를 물을 때 모든 발행 문서를 읽지 않게 한다. 판본을 쓰는 쪽이 색인도 같이 쓰고, 판본을 지우는 쪽이 색인도 같이 지운다 — `content:verify`가 문서와 색인이 어긋나면 배포를 세운다.
 - `Skill`: 개념 키, 화면에 표시하는 이름, 표시 순서. 이름과 순서는 수정할 수 있다.
 - `Enrollment.classVersionId`, `AssignmentItem.problemSnapshot`, `DiagnosticRun.document`: 수강·과제·진단의 기존 판본을 계속 참조하거나 복사해 보존한다.

@@ -4,7 +4,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { canonicalJson, parseContentBundle, validateReferences } from '@/core/content-bundle';
-import { currentDiagnostic, exportContent, importContent, publishBundle, verifyContent } from '@/server/content-store';
+import { blockOf, currentDiagnostic, exportContent, importContent, indexClassDocument, publishBundle, verifyContent } from '@/server/content-store';
 import initial from './fixtures/initial-content.json';
 import { seedClasses } from './fixtures/content';
 
@@ -260,6 +260,46 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
       await db.publishedProblem.update({ where, data: { document: c.problems[0] as never } });
     }
     expect((await verifyContent(db)).indexedProblems).toBeGreaterThanOrEqual(rows.length);
+  });
+
+  it('stores every section and block of a published class as rows that restore it unchanged', async () => {
+    const c = newClass(), skillKey = `test.${randomUUID()}`;
+    c.public.skillKeys = [skillKey]; c.public.prerequisiteSkillKeys = [];
+    c.problems.forEach(p => { p.skillKeys = [skillKey]; });
+    // Published content has no optional block yet, and a row that restored `fallback` as null
+    // rather than as no key at all would change the version's hash. So this class carries one.
+    c.sections[0].contentBlocks.push({ blockId: `${c.sections[0].sectionId}:optional`, kind: 'core.rich_text',
+      typeVersion: 1, required: false, payload: { text: '되돌아오는지 보려고 둔 블록이에요.' },
+      fallback: '그림을 볼 수 없을 때 읽는 문장이에요.' });
+    await importContent(db, { ...empty(), classes: [c], skills: [{ key: skillKey, label: '블록 표 검사 개념', order: 997 }] });
+
+    const sections = await db.classSection.findMany({ where: { classVersionId: c.public.versionId }, orderBy: { order: 'asc' } });
+    expect(sections.map(section => section.sectionId)).toEqual(c.sections.map(section => section.sectionId));
+    expect(sections.map(section => ({ role: section.role, title: section.title })))
+      .toEqual(c.sections.map(section => ({ role: section.role, title: section.title })));
+
+    const blocksOf = (ownerKind: string, ownerId: string, slot: string) => db.contentBlock.findMany({
+      where: { ownerKind, ownerVersionId: c.public.versionId, ownerId, slot }, orderBy: { order: 'asc' } });
+    const body = await blocksOf('section', c.sections[0].sectionId, 'body');
+    expect(body.map(blockOf)).toEqual(c.sections[0].contentBlocks);
+    // Absent, not null: the restored block has no `fallback` key where the document had none.
+    expect(Object.keys(blockOf(body[0]))).not.toContain('fallback');
+    expect(body[body.length - 1].fallback).toBe('그림을 볼 수 없을 때 읽는 문장이에요.');
+    const problem = c.problems[0];
+    expect((await blocksOf('problem', problem.problemVersionId, 'prompt')).map(blockOf)).toEqual(problem.promptContent);
+    expect((await blocksOf('problem', problem.problemVersionId, 'hint')).map(blockOf)).toEqual(problem.hints);
+    expect((await blocksOf('problem', problem.problemVersionId, 'solution')).map(blockOf)).toEqual(problem.solution);
+
+    // A row the document still holds is a disagreement a deploy has to see, and writing the rows
+    // again repairs it without touching what is already there.
+    try {
+      await db.contentBlock.delete({ where: { ownerKind_ownerVersionId_ownerId_slot_order: { ownerKind: 'section',
+        ownerVersionId: c.public.versionId, ownerId: c.sections[0].sectionId, slot: 'body', order: 0 } } });
+      await expect(verifyContent(db)).rejects.toThrow(/missing rows/);
+    } finally {
+      await indexClassDocument(db, c);
+    }
+    expect((await verifyContent(db)).indexedBlocks).toBeGreaterThanOrEqual(c.sections[0].contentBlocks.length);
   });
 
   it('names published concepts for signed-out visitors and withholds skills without a released class', async () => {
