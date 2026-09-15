@@ -3,6 +3,7 @@ import 'server-only';
 import { z } from 'zod';
 import type { ClassDocument, ClassSection, ContentBlock, GlossaryEntry, PublicClass, PublicProblem } from '@/shared/api';
 import { builderLimits, sequenceLimits } from '@/shared/manipulatives';
+import { isSceneColor, pathPattern, sceneLimits } from '@/shared/scene';
 import { locateTerms, type TermAnnotation } from '@/shared/rich-text';
 
 /** Private content records stay on the server; only toPublicClass crosses the API boundary. */
@@ -38,6 +39,31 @@ const fractionStrip = z.object(fractionStripShape).strict().refine((value) => va
 const carriesMath = (value?: string) => !!value && (value.includes('$') || value.includes('\\('));
 const plainText = (max: number) => z.string().trim().min(1).max(max).refine((value) => !carriesMath(value), 'Accessible text must not contain math markup');
 
+const sceneSize = z.number().min(sceneLimits.minSize).max(sceneLimits.maxSize);
+const coordinate = z.number().min(-sceneLimits.maxSize).max(sceneLimits.maxSize * 2);
+const span = z.number().min(0).max(sceneLimits.maxSize * 2);
+const colour = z.string().refine(isSceneColor, 'Unknown colour name');
+// Shared paint. Colours are palette names or plain hex, never a URL or a reference to anything.
+const painted = {
+  fill: colour.optional(), stroke: colour.optional(),
+  strokeWidth: z.number().min(sceneLimits.minStroke).max(sceneLimits.maxStroke).optional(),
+  dash: z.boolean().optional(), opacity: z.number().min(0).max(1).optional(),
+  rotate: z.number().min(-360).max(360).optional(),
+};
+const point = z.tuple([coordinate, coordinate]);
+const sceneItem = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('rect'), x: coordinate, y: coordinate, width: span, height: span, radius: span.max(200).optional(), ...painted }).strict(),
+  z.object({ kind: z.literal('ellipse'), cx: coordinate, cy: coordinate, rx: span, ry: span, ...painted }).strict(),
+  z.object({ kind: z.literal('line'), x1: coordinate, y1: coordinate, x2: coordinate, y2: coordinate,
+    arrow: z.enum(['none', 'end', 'both']).optional(), ...painted }).strict(),
+  z.object({ kind: z.literal('polygon'), points: z.array(point).min(2).max(sceneLimits.maxPoints), closed: z.boolean().optional(), ...painted }).strict(),
+  // Path data is commands and numbers only; the pattern is what keeps it from being anything else.
+  z.object({ kind: z.literal('path'), d: z.string().trim().min(1).max(sceneLimits.maxPath).regex(pathPattern, 'Path data may only contain commands and numbers'), ...painted }).strict(),
+  z.object({ kind: z.literal('text'), x: coordinate, y: coordinate, text: z.string().trim().min(1).max(sceneLimits.maxText),
+    size: z.number().min(sceneLimits.minFontSize).max(sceneLimits.maxFontSize).optional(),
+    anchor: z.enum(['start', 'middle', 'end']).optional(), weight: z.enum(['regular', 'bold']).optional(), ...painted }).strict(),
+]);
+
 /** New block kinds register a versioned payload schema here and a renderer in the UI. */
 const richText = z.string().min(1).max(20_000);
 const termAnnotation = z.object({
@@ -64,6 +90,14 @@ const blockSchemas = {
   'math.fraction_strip@1': z.object({ ...fractionStripShape, labelAlt: plainText(200).optional() }).strict()
     .refine((value) => value.filled <= value.parts, 'filled must not exceed parts')
     .refine((value) => !carriesMath(value.label) || !!value.labelAlt, 'A label containing math requires labelAlt for the accessible name'),
+  // A drawing given as data. Every value lands in an attribute of an element the renderer creates,
+  // so an author — or later a generator — can describe any picture without describing any markup.
+  'core.scene@1': z.object({
+    alt: plainText(500),
+    caption: z.string().max(500).optional(),
+    width: sceneSize, height: sceneSize,
+    items: z.array(sceneItem).max(sceneLimits.maxItems),
+  }).strict(),
   // Frames of one strip played in order. alt names the whole movement, since a reader following
   // the captions alone would only ever meet the frame that happens to be on screen.
   'math.fraction_sequence@1': z.object({
