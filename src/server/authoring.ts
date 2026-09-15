@@ -6,11 +6,12 @@ import { validateClass, type StoredClass, type StoredProblem } from '@/core/cont
 import { importContent } from './content-store';
 import { AppError } from './errors';
 import type { AnswerSpec } from '@/shared/answer';
+import type { ContentBlock } from '@/shared/api';
 import {
-  mayEditEveryDraft, mayGrantRoles, mayPublish, pruneProblems, pruneSections, renameProblem, renamedProblemVersionId,
-  renameProblemReferences, responseSpecOf, scopeTermAnnotations, suggestVersionId,
+  mayEditEveryDraft, mayGrantRoles, mayPublish, nextTermVersionId, pruneBlock, pruneProblems, pruneSections,
+  renameProblem, renamedProblemVersionId, renameProblemReferences, responseSpecOf, scopeTermAnnotations, suggestVersionId,
   type AccountRole, type AuthoringResponse, type AuthoringRole, type AuthoringWorkspace, type DraftDetail,
-  type DraftEdit, type DraftProblem, type DraftSummary,
+  type DraftEdit, type DraftProblem, type DraftSummary, type EditableTermScope, type TermEdit, type TermSummary,
 } from '@/shared/authoring';
 
 const id = z.string().min(1).max(191);
@@ -62,6 +63,16 @@ export const authoringActionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('account.search'), query: z.string().trim().min(2).max(80) }).strict(),
   z.object({ action: z.literal('role.grant'), userId: id, role: z.enum(['admin', 'author']) }).strict(),
   z.object({ action: z.literal('role.revoke'), userId: id }).strict(),
+  z.object({ action: z.literal('term.list'), scopeKind: z.enum(['global', 'class']), scopeKey: z.string().max(100) }).strict(),
+  z.object({ action: z.literal('term.save'), edit: z.object({
+    termKey: id.max(100).regex(/^[a-zA-Z0-9:._-]+$/),
+    scopeKind: z.enum(['global', 'class']),
+    scopeKey: z.string().max(100),
+    skillKey: id.max(100),
+    label: z.string().trim().min(1).max(191),
+    summary: z.string().trim().min(1).max(500),
+    blocks: blockList.min(1).max(20),
+  }).strict() }).strict(),
 ]);
 
 /**
@@ -211,12 +222,13 @@ export class AuthoringService {
 
   async workspace(userId: string): Promise<AuthoringWorkspace> {
     const role = await authoringRole(this.db, userId);
-    if (!role) return { role: null, drafts: [], classes: [], accounts: [] };
-    const [drafts, versions, accounts] = await Promise.all([
+    if (!role) return { role: null, drafts: [], classes: [], accounts: [], skills: [] };
+    const [drafts, versions, accounts, skills] = await Promise.all([
       this.db.contentDraft.findMany({ where: mayEditEveryDraft(role) ? {} : { authorId: userId },
         orderBy: { updatedAt: 'desc' }, take: 50, include: { author: { select: { displayName: true } } } }),
       this.db.classVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }], select: { id: true, classKey: true, title: true } }),
       this.accounts(userId, role),
+      this.db.skill.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }], select: { key: true, label: true } }),
     ]);
     const openDrafts = new Set(drafts.filter((draft) => draft.status !== 'published').map((draft) => draft.classKey));
     const byKey = new Map<string, { title: string; versions: string[] }>();
@@ -229,6 +241,7 @@ export class AuthoringService {
     return {
       role,
       accounts,
+      skills,
       drafts: (drafts as DraftRow[]).map((row) => this.summary(row, userId)),
       classes: [...byKey.entries()].map(([classKey, entry]) => ({
         classKey, title: entry.title, latestVersionId: entry.versions[entry.versions.length - 1],
@@ -333,6 +346,63 @@ export class AuthoringService {
     else if (targetId === userId) throw new AppError(422, 'role_self', '자기 역할은 여기서 거둘 수 없어요.');
     await this.db.contentAuthor.delete({ where: { userId: targetId } });
     return { workspace: await this.workspace(userId) };
+  }
+
+  /**
+   * The shared dictionary belongs to the operator, so only an administrator writes it. A definition
+   * a class keeps is part of writing that class, which anyone holding a content role may do.
+   */
+  private async requireTermScope(userId: string, scopeKind: EditableTermScope, scopeKey: string): Promise<void> {
+    const role = await this.require(userId);
+    if (scopeKind === 'global') {
+      if (!mayPublish(role)) throw new AppError(403, 'not_a_publisher', '공통 사전은 관리자만 고칠 수 있어요.');
+      if (scopeKey) throw new AppError(422, 'scope_key', '공통 사전에는 소속을 적지 않아요.');
+      return;
+    }
+    if (!scopeKey) throw new AppError(422, 'scope_key', '어느 클래스의 용어인지 골라 주세요.');
+    const owner = await this.db.classVersion.findFirst({ where: { classKey: scopeKey }, select: { id: true } });
+    if (!owner) throw new AppError(404, 'class_missing', '아직 발행된 적 없는 클래스예요.');
+  }
+
+  /** The latest version of each term in one scope: what an author opens and what they change. */
+  async listTerms(userId: string, scopeKind: EditableTermScope, scopeKey: string): Promise<AuthoringResponse> {
+    await this.requireTermScope(userId, scopeKind, scopeKey);
+    const rows = await this.db.termVersion.findMany({ where: { scopeKind, scopeKey }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
+    const seen = new Set<string>();
+    const terms: TermSummary[] = [];
+    for (const row of rows) {
+      if (seen.has(row.termKey)) continue;
+      seen.add(row.termKey);
+      terms.push({ versionId: row.id, termKey: row.termKey, scopeKind, scopeKey, skillKey: row.skillKey,
+        label: row.label, summary: row.summary, blocks: structuredClone(row.document) as unknown as ContentBlock[],
+        publishedAt: row.publishedAt.toISOString() });
+    }
+    terms.sort((left, right) => left.label.localeCompare(right.label, 'ko'));
+    return { workspace: await this.workspace(userId), terms };
+  }
+
+  /**
+   * A definition is published, not drafted: saving writes the next version and every reader sees it
+   * at once. That is the same bargain the rest of the glossary already makes — a definition is
+   * carried by key rather than pinned, so a correction reaches the classes that link it without
+   * republishing any of them. Publishing runs the CLI's own import, so a definition that would
+   * break a reference is refused here for the same reason it would be refused there.
+   */
+  async saveTerm(userId: string, edit: TermEdit): Promise<AuthoringResponse> {
+    await this.requireTermScope(userId, edit.scopeKind, edit.scopeKey);
+    const existing = await this.db.termVersion.findMany({
+      where: { scopeKind: edit.scopeKind, scopeKey: edit.scopeKey, termKey: edit.termKey }, select: { id: true } });
+    const versionId = nextTermVersionId(edit, existing.map((row) => row.id));
+    // Blocks are named after the version that holds them, so the editor never chooses an ID.
+    const blocks = edit.blocks.map(pruneBlock).map((block, index) => ({ ...block, blockId: `${versionId}:b${index + 1}` }));
+    const definition = { versionId, termKey: edit.termKey, scopeKind: edit.scopeKind, scopeKey: edit.scopeKey,
+      skillKey: edit.skillKey, label: edit.label, summary: edit.summary, blocks };
+    try {
+      await importContent(this.db, { schemaVersion: 1, skills: [], classes: [], diagnostics: [], terms: [definition] });
+    } catch (error) {
+      throw new AppError(422, 'term_rejected', describeContentError(error)[0] ?? '용어를 발행하지 못했어요.');
+    }
+    return { ...await this.listTerms(userId, edit.scopeKind, edit.scopeKey), publishedTermVersionId: versionId };
   }
 
   async createDraft(userId: string, classKey: string): Promise<AuthoringResponse> {
@@ -453,6 +523,8 @@ export class AuthoringService {
       case 'account.search': return this.searchAccounts(userId, action.query);
       case 'role.grant': return this.grantRole(userId, action.userId, action.role);
       case 'role.revoke': return this.revokeRole(userId, action.userId);
+      case 'term.list': return this.listTerms(userId, action.scopeKind, action.scopeKey);
+      case 'term.save': return this.saveTerm(userId, action.edit);
     }
   }
 }
