@@ -6,7 +6,7 @@ import { seedClasses } from './fixtures/content';
 import { developmentLoginEnabled, sessionUser } from '@/server/auth';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
-import { indexPublishedProblems } from '@/server/content-store';
+import { indexClassDocument } from '@/server/content-store';
 import type { LearningAction } from '@/shared/api';
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
@@ -30,7 +30,7 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     const contentHash = createHash('sha256').update(serialized).digest('hex');
     const previous = await db.classVersion.findUnique({ where: { id: document.public.versionId } });
     // A fixture publishes the way the application does, the question index included.
-    await indexPublishedProblems(db, 'class', document.public.versionId, document.problems);
+    await indexClassDocument(db, document);
     if (previous) {
       expect(previous.contentHash, `Published fixture ${document.public.versionId} must not change`).toBe(contentHash);
       return previous;

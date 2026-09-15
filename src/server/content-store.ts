@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { Prisma, type PrismaClient, type DiagnosticVersion, type TermVersion } from '@prisma/client';
 import { canonicalJson, ContentError, diagnosticDefinitionSchema, parseContentBundle, termDefinitionSchema, validateReferences, type ContentBundle, type DiagnosticDefinition, type TermDefinition } from '@/core/content-bundle';
 import type { StoredClass } from '@/core/content';
+import type { ContentBlock } from '@/shared/api';
 import { termRefId, type TermRef, type TermScopeKind } from '@/shared/rich-text';
 
 type Db = Prisma.TransactionClient;
@@ -18,6 +19,44 @@ const problemRowsOf = (bundle: ContentBundle) => [
 ];
 const rowKey = (row: { ownerKind: string; ownerVersionId: string; problemVersionId: string }) =>
   `${row.ownerKind}/${row.ownerVersionId}/${row.problemVersionId}`;
+type BlockRow = { ownerKind: string; ownerVersionId: string; ownerId: string; slot: string; order: number;
+  blockId: string; kind: string; typeVersion: number; required: boolean; payload: Prisma.InputJsonValue; fallback: string | null };
+/**
+ * A block as a row. `fallback` is absent from a document rather than empty, so it travels as null
+ * and comes back as no key at all — a row that restored it as null would change the content hash.
+ */
+const blockRows = (ownerKind: 'section' | 'problem', ownerVersionId: string, ownerId: string, slot: string, blocks: ContentBlock[]): BlockRow[] =>
+  blocks.map((block, order) => ({ ownerKind, ownerVersionId, ownerId, slot, order,
+    blockId: block.blockId, kind: block.kind, typeVersion: block.typeVersion, required: block.required,
+    payload: json(block.payload), fallback: block.fallback ?? null }));
+type StoredBlockRow = { blockId: string; kind: string; typeVersion: number; required: boolean; payload: unknown; fallback: string | null };
+export const blockOf = (row: StoredBlockRow): ContentBlock => ({
+  blockId: row.blockId, kind: row.kind, typeVersion: row.typeVersion, required: row.required,
+  payload: row.payload as Record<string, unknown>, ...(row.fallback === null ? {} : { fallback: row.fallback }),
+});
+/** Every section and block a published class holds, in the order the document holds them. */
+const classRows = (record: StoredClass) => ({
+  sections: record.sections.map((section, order) => ({ classVersionId: record.public.versionId,
+    sectionId: section.sectionId, role: section.role, title: section.title, order })),
+  blocks: [
+    ...record.sections.flatMap(section => blockRows('section', record.public.versionId, section.sectionId, 'body', section.contentBlocks)),
+    ...record.problems.flatMap(problem => [
+      ...blockRows('problem', record.public.versionId, problem.problemVersionId, 'prompt', problem.promptContent),
+      ...blockRows('problem', record.public.versionId, problem.problemVersionId, 'hint', problem.hints),
+      ...blockRows('problem', record.public.versionId, problem.problemVersionId, 'solution', problem.solution),
+    ]),
+  ],
+});
+/**
+ * Writes every row derived from a published class document — its sections, its blocks and its
+ * questions by name — beside the document they come from. Whoever publishes a class owes these.
+ */
+export async function indexClassDocument(db: Db, record: StoredClass) {
+  const { sections, blocks } = classRows(record);
+  if (sections.length) await db.classSection.createMany({ data: sections, skipDuplicates: true });
+  if (blocks.length) await db.contentBlock.createMany({ data: blocks, skipDuplicates: true });
+  await indexPublishedProblems(db, 'class', record.public.versionId, record.problems);
+}
 /**
  * Writes the lookup rows a published version owns. Whoever writes a version owes these, and whoever
  * removes one owes their removal; verifyProblemIndex is what says so out loud.
@@ -92,12 +131,41 @@ export async function verifyProblemIndex(db: Db, bundle: ContentBundle) {
   return rows.length;
 }
 
+const sectionKey = (row: { classVersionId: string; sectionId: string }) => `${row.classVersionId}/${row.sectionId}`;
+const blockKey = (row: { ownerKind: string; ownerVersionId: string; ownerId: string; slot: string; order: number }) =>
+  `${row.ownerKind}/${row.ownerVersionId}/${row.ownerId}/${row.slot}/${row.order}`;
+/**
+ * The section and block rows are derived from the class documents, and a later change will read
+ * them instead. Until then the two have to say exactly the same thing, down to the order a section
+ * holds its blocks in, so the check compares the whole row set both ways.
+ */
+export async function verifyClassTables(db: Db, bundle: ContentBundle) {
+  const derived = bundle.classes.map(classRows);
+  const compare = <T>(label: string, expected: Map<string, string>, rows: T[], key: (row: T) => string, value: (row: T) => string) => {
+    for (const row of rows) {
+      const wanted = expected.get(key(row));
+      if (wanted === undefined) throw new ContentError(`A ${label} row belongs to no published class: ${key(row)}`);
+      if (wanted !== value(row)) throw new ContentError(`A ${label} row disagrees with the class document: ${key(row)}`);
+      expected.delete(key(row));
+    }
+    if (expected.size) throw new ContentError(`Published ${label}s are missing rows: ${[...expected.keys()].slice(0, 5).join(', ')}`);
+    return rows.length;
+  };
+  const [sections, blocks] = await Promise.all([db.classSection.findMany(), db.contentBlock.findMany()]);
+  compare('section', new Map(derived.flatMap(rows => rows.sections).map(row =>
+    [sectionKey(row), canonicalJson({ role: row.role, title: row.title, order: row.order })])),
+    sections, sectionKey, row => canonicalJson({ role: row.role, title: row.title, order: row.order }));
+  return compare('block', new Map(derived.flatMap(rows => rows.blocks).map(row => [blockKey(row), canonicalJson(blockOf(row))])),
+    blocks, blockKey, row => canonicalJson(blockOf(row)));
+}
+
 export async function verifyContent(db: Db) {
   const bundle = await exportContent(db);
   validateReferences(bundle);
   if (!bundle.classes.length || !bundle.skills.length || !bundle.diagnostics.some(d => d.diagnosticKey === 'starting-point')) throw new ContentError('Database content is incomplete. Apply database migrations or import a reviewed bundle.');
   const indexedProblems = await verifyProblemIndex(db, bundle);
-  return { classes: bundle.classes.length, classProblems: bundle.classes.reduce((n, c) => n + c.problems.length, 0), indexedProblems,
+  const indexedBlocks = await verifyClassTables(db, bundle);
+  return { classes: bundle.classes.length, classProblems: bundle.classes.reduce((n, c) => n + c.problems.length, 0), indexedProblems, indexedBlocks,
     skills: bundle.skills.length, diagnosticVersions: bundle.diagnostics.length, diagnosticProblems: bundle.diagnostics.reduce((n, d) => n + d.problems.length, 0),
     termVersions: bundle.terms.length, terms: new Set(bundle.terms.map(termRefId)).size };
 }
@@ -145,7 +213,7 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
       title: d.title, description: d.description, estimatedMinutes: d.estimatedMinutes, document: json(d.problems), contentHash: hash(d), publishedAt: publishedAt() } });
     // The index shares the transaction that publishes the version, so a question is never findable
     // by name before the document that holds it exists.
-    for (const c of newClasses) await indexPublishedProblems(db, 'class', c.public.versionId, c.problems);
+    for (const c of newClasses) await indexClassDocument(db, c);
     for (const d of newDiagnostics) await indexPublishedProblems(db, 'diagnostic', d.versionId, d.problems);
     // Term links live inside class JSON with no foreign key, so creation order is free; the merged
     // reference check above already proved every linked term exists.

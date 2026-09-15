@@ -127,6 +127,41 @@ model PublishedProblem {
   @@index([problemVersionId])
 }
 
+/**
+ * A section of a published class, in the order the class shows it, and every content block a
+ * published class holds — a section's body, or a question's prompt, hints and solution. The class
+ * document is still the record these are derived from; nothing reads them yet.
+ */
+model ClassSection {
+  classVersionId String @db.VarChar(191)
+  sectionId      String @db.VarChar(191)
+  role           String @db.VarChar(20)
+  title          String @db.VarChar(500)
+  order          Int
+  @@id([classVersionId, sectionId])
+  @@index([classVersionId, order])
+}
+
+model ContentBlock {
+  ownerKind      String @db.VarChar(20)
+  ownerVersionId String @db.VarChar(191)
+  ownerId        String @db.VarChar(191)
+  slot           String @db.VarChar(20)
+  order          Int
+  blockId        String @db.VarChar(191)
+  kind           String @db.VarChar(100)
+  typeVersion    Int
+  required       Boolean
+  payload        Json
+  /// Absent in the document rather than empty, so a row that restores it as null would change the
+  /// version's content hash. It is written and read back as "no key at all".
+  fallback       String? @db.Text
+  @@id([ownerKind, ownerVersionId, ownerId, slot, order])
+  @@index([ownerVersionId])
+  /// A published version that still uses a block form is the reason that form cannot be removed.
+  @@index([kind, typeVersion])
+}
+
 model Skill {
   key   String @id @db.VarChar(100)
   label String @db.VarChar(191)
