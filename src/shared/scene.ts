@@ -30,8 +30,12 @@ export const cssColor = (value: string | undefined, fallback = 'none') =>
 export const pathPattern = /^[MmLlHhVvCcSsQqTtAaZz0-9,.\-+eE\s]+$/;
 
 export type ScenePoint = [number, number];
-// `id` exists so a frame can name the shape it moves. Only animated drawings need one.
-type Shared = { id?: string; fill?: string; stroke?: string; strokeWidth?: number; dash?: boolean; opacity?: number; rotate?: number };
+// `id` exists so a frame or a task can name the shape it acts on; only those drawings need one.
+// `label` is how a shape says its own name once a learner can pick it up.
+type Shared = {
+  id?: string; label?: string; draggable?: boolean;
+  fill?: string; stroke?: string; strokeWidth?: number; dash?: boolean; opacity?: number; rotate?: number;
+};
 export type SceneItem =
   | ({ kind: 'rect'; x: number; y: number; width: number; height: number; radius?: number } & Shared)
   | ({ kind: 'ellipse'; cx: number; cy: number; rx: number; ry: number } & Shared)
@@ -47,7 +51,11 @@ export type SceneItemKind = SceneItem['kind'];
  *  so an animation cannot smuggle in anything the still drawing was not allowed to contain. */
 export type SceneChange = { id: string; dx?: number; dy?: number; opacity?: number; rotate?: number; fill?: string; hidden?: boolean };
 export type SceneFrame = { caption?: string; changes: SceneChange[] };
-export type Scene = { width: number; height: number; items: SceneItem[]; frames?: SceneFrame[] };
+/** A place a shape can be put. Zones are drawn as outlines and named, so a learner who cannot see
+ *  them can still be told where they are and choose one. */
+export type SceneZone = { id: string; x: number; y: number; width: number; height: number; label: string; accepts?: string[] };
+export type SceneTask = { prompt: string; promptAlt?: string; successText?: string };
+export type Scene = { width: number; height: number; items: SceneItem[]; frames?: SceneFrame[]; zones?: SceneZone[]; task?: SceneTask };
 export const itemIdPattern = /^[A-Za-z0-9_-]{1,40}$/;
 
 export const sceneItemKinds: SceneItemKind[] = ['rect', 'ellipse', 'line', 'polygon', 'path', 'text', 'strip'];
@@ -197,4 +205,63 @@ export function nextFrameIndex(index: number, total: number, loop: boolean): num
 /** Stepping by hand never wraps: back on the first frame and forward on the last stay put. */
 export function stepFrameIndex(index: number, total: number, delta: number): number {
   return Math.min(Math.max(index + delta, 0), Math.max(total - 1, 0));
+}
+
+
+// Putting shapes in places. A drawing with zones is a thing to try, not a thing that is marked:
+// nothing here reaches the server, which is why an interactive drawing stays out of a question.
+
+/** Which zone each shape has been put in. A shape not named here is still where it was drawn. */
+export type ScenePlacement = Record<string, string>;
+
+export const zoneOf = (placement: ScenePlacement, id: string | undefined) => (id ? placement[id] : undefined);
+export const itemInZone = (placement: ScenePlacement, zoneId: string) =>
+  Object.keys(placement).find((itemId) => placement[itemId] === zoneId);
+export const zoneAccepts = (zone: SceneZone, id: string) => !zone.accepts?.length || zone.accepts.includes(id);
+
+/** A zone holds one shape. Putting a second one in sends the first back where it was drawn. */
+export function placeInZone(placement: ScenePlacement, itemId: string, zone: SceneZone): ScenePlacement {
+  if (!zoneAccepts(zone, itemId)) return placement;
+  const next: ScenePlacement = {};
+  for (const [id, zoneId] of Object.entries(placement)) if (id !== itemId && zoneId !== zone.id) next[id] = zoneId;
+  next[itemId] = zone.id;
+  return next;
+}
+
+export function removeFromZone(placement: ScenePlacement, itemId: string): ScenePlacement {
+  if (!(itemId in placement)) return placement;
+  const next = { ...placement };
+  delete next[itemId];
+  return next;
+}
+
+/** The shift that carries a shape from where it was drawn to the middle of a zone. */
+export function placementOffset(item: SceneItem, zone: SceneZone): { dx: number; dy: number } {
+  const bounds = itemBounds(item);
+  return {
+    dx: round(zone.x + zone.width / 2 - (bounds.x + bounds.width / 2)),
+    dy: round(zone.y + zone.height / 2 - (bounds.y + bounds.height / 2)),
+  };
+}
+
+/** The zone a dropped shape landed on: the one its centre is inside, if that zone will take it. */
+export function zoneAt(zones: SceneZone[], point: { x: number; y: number }, itemId: string): SceneZone | undefined {
+  return zones.find((zone) => point.x >= zone.x && point.x <= zone.x + zone.width
+    && point.y >= zone.y && point.y <= zone.y + zone.height && zoneAccepts(zone, itemId));
+}
+
+/** Done when every zone holds a shape it accepts. An empty set of zones is never 'done'. */
+export function taskComplete(zones: SceneZone[], placement: ScenePlacement): boolean {
+  return zones.length > 0 && zones.every((zone) => {
+    const itemId = itemInZone(placement, zone.id);
+    return !!itemId && zoneAccepts(zone, itemId);
+  });
+}
+
+export function createZone(scene: Scene, taken: string[]): SceneZone {
+  const width = Math.max(40, Math.round(scene.width / 5));
+  const height = Math.max(30, Math.round(scene.height / 5));
+  let id = `z${taken.length + 1}`;
+  for (let suffix = 2; taken.includes(id); suffix++) id = `z${taken.length + 1}-${suffix}`;
+  return { id, x: Math.round(scene.width / 2 - width / 2), y: Math.round(scene.height - height - 10), width, height, label: '놓는 자리' };
 }

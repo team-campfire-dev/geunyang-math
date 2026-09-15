@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { validateClass } from '@/core/content';
+import { termContentBlockSchema, validateClass } from '@/core/content';
 import {
   changeFor, createSceneItem, cssColor, emptyScene, isSceneColor, itemBounds, moveItem, nameItem, pathPattern,
-  reorderItem, resizeItem, sceneItemKinds, setChange, type SceneItem,
+  placeInZone, placementOffset, removeFromZone, reorderItem, resizeItem, sceneItemKinds, setChange, taskComplete,
+  zoneAt, type SceneItem, type SceneZone,
 } from '@/shared/scene';
 import { seedClasses } from './fixtures/content';
 
@@ -125,5 +126,78 @@ describe('a drawing that moves', () => {
     expect(moved[0].changes).toEqual([]);
     expect(changeFor(moved[1], named('a'))).toMatchObject({ dx: 20 });
     expect(setChange(moved, 1, 'a', { dx: 0, dy: 0 })[1].changes).toEqual([]);
+  });
+});
+
+describe('a drawing the learner arranges', () => {
+  const piece = (id: string): SceneItem => ({ kind: 'rect', id, label: `${id} 조각`, draggable: true, x: 10, y: 150, width: 40, height: 30 });
+  const zone = (id: string, accepts?: string[]): SceneZone => ({ id, x: 100, y: 20, width: 60, height: 40, label: `${id} 자리`, accepts });
+  const task = { prompt: '조각을 자리에 놓아 보세요.' };
+
+  it('needs a task, a place to put something, and something to put there', () => {
+    expect(() => validateClass(withScene([piece('a')], { zones: [zone('z1')], task }))).not.toThrow();
+    expect(() => validateClass(withScene([piece('a')], { zones: [zone('z1')] }))).toThrow(/needs a task/);
+    expect(() => validateClass(withScene([piece('a')], { task }))).toThrow(/needs at least one zone/);
+    expect(() => validateClass(withScene([{ kind: 'rect', x: 0, y: 0, width: 10, height: 10 }], { zones: [zone('z1')], task })))
+      .toThrow(/needs a shape the learner can move/);
+    expect(() => validateClass(withScene([piece('a')], {}))).toThrow(/needs somewhere to be put/);
+  });
+
+  it('makes a movable shape say its own name', () => {
+    const unnamed: SceneItem = { kind: 'rect', id: 'a', draggable: true, x: 0, y: 0, width: 10, height: 10 };
+    expect(() => validateClass(withScene([unnamed], { zones: [zone('z1')], task }))).toThrow(/spoken label/);
+  });
+
+  it('refuses a zone that waits for a shape nobody can move, and two zones with one name', () => {
+    expect(() => validateClass(withScene([piece('a')], { zones: [zone('z1', ['ghost'])], task }))).toThrow(/accepts a shape that cannot be moved/);
+    expect(() => validateClass(withScene([piece('a')], { zones: [zone('z1'), zone('z1')], task }))).toThrow(/Two zones share one name/);
+  });
+
+  it('keeps a drawing either playing or being played with, never both', () => {
+    const frames = [{ changes: [] }, { changes: [] }];
+    expect(() => validateClass(withScene([piece('a')], { zones: [zone('z1')], task, frames })))
+      .toThrow(/move on its own or be arranged by hand, not both/);
+  });
+
+  it('puts one shape in a zone at a time and sends the displaced one home', () => {
+    const z1 = zone('z1');
+    let placement = placeInZone({}, 'a', z1);
+    expect(placement).toEqual({ a: 'z1' });
+    placement = placeInZone(placement, 'b', z1);
+    expect(placement).toEqual({ b: 'z1' });
+    expect(removeFromZone(placement, 'b')).toEqual({});
+    // A zone that does not accept the shape simply does not take it.
+    expect(placeInZone({}, 'c', zone('z2', ['a']))).toEqual({});
+  });
+
+  it('counts the task done only when every zone holds something it accepts', () => {
+    const zones = [zone('z1', ['a']), zone('z2', ['b'])];
+    expect(taskComplete(zones, { a: 'z1' })).toBe(false);
+    expect(taskComplete(zones, { a: 'z1', b: 'z2' })).toBe(true);
+    expect(taskComplete([], {})).toBe(false);
+  });
+
+  it('carries a dropped shape to the middle of the zone it landed in', () => {
+    const dropped = zoneAt([zone('z1', ['a'])], { x: 120, y: 40 }, 'a');
+    expect(dropped?.id).toBe('z1');
+    expect(zoneAt([zone('z1', ['a'])], { x: 120, y: 40 }, 'b')).toBeUndefined();
+    expect(zoneAt([zone('z1')], { x: 5, y: 5 }, 'a')).toBeUndefined();
+    expect(placementOffset(piece('a'), zone('z1'))).toEqual({ dx: 100, dy: -125 });
+  });
+
+  it('keeps a drawing to arrange out of anything that is marked', () => {
+    const block = {
+      blockId: 'draft:scene:v1', kind: 'core.scene', typeVersion: 1, required: true,
+      payload: { alt: '조각을 놓는 그림', width: 320, height: 200, items: [piece('a')], zones: [zone('z1')], task },
+    };
+    const record = structuredClone(seedClasses[0]);
+    record.problems[0].promptContent.push(block as never);
+    expect(() => validateClass(record)).toThrow(/drawing to arrange is not allowed inside a problem/);
+    expect(() => termContentBlockSchema.parse(block)).toThrow(/drawing to arrange/);
+    // The same drawing without zones is just a picture, and a picture may go anywhere.
+    const still = { ...block, payload: { ...block.payload, zones: undefined, task: undefined, items: [{ kind: 'rect', x: 0, y: 0, width: 10, height: 10 }] } };
+    const illustrated = structuredClone(seedClasses[0]);
+    illustrated.problems[0].promptContent.push(still as never);
+    expect(() => validateClass(illustrated)).not.toThrow();
   });
 });

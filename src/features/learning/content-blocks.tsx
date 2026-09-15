@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useId, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import katex from 'katex';
 import type { ContentBlock, GlossaryEntry, PublicProblem } from '@/shared/api';
 import {
-  changeFor, cssColor, frameLimits, itemBounds, nextFrameIndex, sceneItemKinds, sceneLimits, stepFrameIndex,
-  type SceneFrame, type SceneItem,
+  changeFor, cssColor, frameLimits, itemBounds, itemInZone, nextFrameIndex, placeInZone, placementOffset,
+  removeFromZone, sceneItemKinds, sceneLimits, stepFrameIndex, taskComplete, zoneAt, zoneOf,
+  type ScenePlacement, type SceneFrame, type SceneItem, type SceneTask, type SceneZone,
 } from '@/shared/scene';
 import { locateTerms, splitRichText, type TermAnnotation } from '@/shared/rich-text';
 import { Icon } from './icons';
@@ -118,8 +119,108 @@ export function SceneFigure({ width, height, items, alt, caption, frames, frameM
   </figure>;
 }
 
+/**
+ * A drawing the learner arranges. A shape is picked up by pointer, by tap, or from the keyboard —
+ * choosing a shape and then a zone does the same thing a drag does, so nothing here depends on
+ * dragging. Nothing is reported to the server: this is a thing to try, not a thing that is marked.
+ */
+export function SceneTaskFigure({ width, height, items, zones, task, alt, caption }:
+{ width: number; height: number; items: SceneItem[]; zones: SceneZone[]; task: SceneTask; alt: string; caption?: string }) {
+  const [placement, setPlacement] = useState<ScenePlacement>({});
+  const [held, setHeld] = useState<string | null>(null);
+  const [drag, setDrag] = useState<{ id: string; dx: number; dy: number; fromX: number; fromY: number } | null>(null);
+  const surface = useRef<SVGSVGElement>(null);
+  const done = taskComplete(zones, placement);
+  const movable = items.filter((item) => item.draggable && item.id);
+
+  const at = (event: React.PointerEvent) => {
+    const box = surface.current?.getBoundingClientRect();
+    if (!box) return { x: 0, y: 0 };
+    return { x: ((event.clientX - box.left) / box.width) * width, y: ((event.clientY - box.top) / box.height) * height };
+  };
+  const offsetOf = (item: SceneItem) => {
+    // Only a named shape can be the one being held; an unnamed shape never matches a drag.
+    if (drag && item.id && drag.id === item.id) return { dx: drag.dx, dy: drag.dy };
+    const zone = zones.find((current) => current.id === zoneOf(placement, item.id));
+    return zone ? placementOffset(item, zone) : { dx: 0, dy: 0 };
+  };
+  /** Choosing a zone is the other half of a drag, and the only half a keyboard has. */
+  const putInto = (zone: SceneZone) => {
+    if (!held) return;
+    setPlacement(placeInZone(placement, held, zone));
+    setHeld(null);
+  };
+  const status = done
+    ? task.successText ?? '다 놓았어요.'
+    : held
+      ? `${items.find((item) => item.id === held)?.label ?? '도형'}을 들고 있어요. 놓을 자리를 골라 주세요.`
+      : `${zones.length}곳 중 ${zones.filter((zone) => itemInZone(placement, zone.id)).length}곳을 채웠어요.`;
+
+  return <div className="scene-task" role="group" aria-label={task.promptAlt ?? task.prompt}>
+    <div className="builder-prompt"><RichText text={task.prompt} asCaption /></div>
+    <div className="scene-figure">
+      <svg ref={surface} viewBox={`0 0 ${width} ${height}`} style={{ aspectRatio: `${width} / ${height}` }}
+        onPointerMove={(event) => {
+          if (!drag) return;
+          const point = at(event);
+          setDrag({ ...drag, dx: point.x - drag.fromX, dy: point.y - drag.fromY });
+        }}
+        onPointerUp={(event) => {
+          if (!drag) return;
+          const point = at(event);
+          const zone = zoneAt(zones, point, drag.id);
+          setPlacement(zone ? placeInZone(placement, drag.id, zone) : removeFromZone(placement, drag.id));
+          setDrag(null);
+        }}
+        onPointerCancel={() => setDrag(null)}>
+        {zones.map((zone) => {
+          const filled = itemInZone(placement, zone.id);
+          return <g key={zone.id}>
+            <rect x={zone.x} y={zone.y} width={zone.width} height={zone.height} rx={3}
+              className={`scene-zone${filled ? ' filled' : ''}${held ? ' open' : ''}`} />
+            {/* The zone is a control in its own right, so a tap or the keyboard can choose it. */}
+            <rect x={zone.x} y={zone.y} width={zone.width} height={zone.height} fill="transparent"
+              role="button" tabIndex={0} aria-label={`${zone.label}${filled ? ', 채움' : ', 비어 있음'}`}
+              style={{ cursor: held ? 'pointer' : 'default' }}
+              onClick={() => putInto(zone)}
+              onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); putInto(zone); } }} />
+          </g>;
+        })}
+        <SceneShapes items={items} offsetOf={offsetOf} />
+        {movable.map((item) => {
+          const bounds = itemBounds(item);
+          const shift = offsetOf(item);
+          return <rect key={item.id} x={bounds.x + shift.dx - 2} y={bounds.y + shift.dy - 2}
+            width={Math.max(bounds.width + 4, 8)} height={Math.max(bounds.height + 4, 8)} fill="transparent"
+            role="button" tabIndex={0} aria-pressed={held === item.id}
+            aria-label={`${item.label}${zoneOf(placement, item.id) ? ', 놓음' : ''}`}
+            style={{ cursor: 'grab', touchAction: 'none' }}
+            onPointerDown={(event) => {
+              event.currentTarget.setPointerCapture(event.pointerId);
+              const point = at(event);
+              setHeld(item.id!);
+              setDrag({ id: item.id!, dx: shift.dx, dy: shift.dy, fromX: point.x - shift.dx, fromY: point.y - shift.dy });
+            }}
+            onKeyDown={(event) => {
+              if (event.key !== 'Enter' && event.key !== ' ') return;
+              event.preventDefault();
+              setHeld(held === item.id ? null : item.id!);
+            }} />;
+        })}
+      </svg>
+    </div>
+    <p className={`builder-status ${done ? 'matched' : 'building'}`} aria-live="polite">{status}</p>
+    <div className="builder-actions">
+      <span className="editor-note">{alt}</span>
+      <button type="button" className="text-button" onClick={() => { setPlacement({}); setHeld(null); }}>처음으로</button>
+    </div>
+    {caption && <p className="scene-task-caption"><RichText text={caption} asCaption /></p>}
+  </div>;
+}
+
 /** The shapes alone, so the editor's canvas draws exactly what the learner will see. */
-export function SceneShapes({ items, frame, animated = false }: { items: SceneItem[]; frame?: SceneFrame; animated?: boolean }) {
+export function SceneShapes({ items, frame, animated = false, offsetOf }:
+{ items: SceneItem[]; frame?: SceneFrame; animated?: boolean; offsetOf?: (item: SceneItem) => { dx: number; dy: number } }) {
   const paint = (item: SceneItem) => ({
     fill: cssColor(item.fill), stroke: cssColor(item.stroke), strokeWidth: item.strokeWidth ?? (item.stroke ? 1 : 0),
     strokeDasharray: item.dash ? '4 3' : undefined, opacity: item.opacity, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const,
@@ -130,11 +231,13 @@ export function SceneShapes({ items, frame, animated = false }: { items: SceneIt
       <path d="M0 0 L10 5 L0 10 z" fill="context-stroke" /></marker></defs>
     {items.map((item, index) => {
       const change = changeFor(frame, item);
+      const placed = offsetOf?.(item);
       const painted = change?.fill ? { ...item, fill: change.fill } : item;
       const style = paint(painted);
-      const moved = (shape: ReactNode) => change || animated
+      const shift = placed ?? { dx: change?.dx ?? 0, dy: change?.dy ?? 0 };
+      const moved = (shape: ReactNode) => change || animated || (placed && (placed.dx || placed.dy))
         ? <g key={index} style={{
-            transform: `translate(${change?.dx ?? 0}px, ${change?.dy ?? 0}px)${change?.rotate ? ` rotate(${change.rotate}deg)` : ''}`,
+            transform: `translate(${shift.dx}px, ${shift.dy}px)${change?.rotate ? ` rotate(${change.rotate}deg)` : ''}`,
             transformOrigin: 'center', transformBox: 'fill-box',
             opacity: change?.hidden ? 0 : change?.opacity ?? 1,
             transition: 'transform .45s ease, opacity .45s ease',
@@ -206,7 +309,11 @@ const validScene = (payload: Record<string, unknown>) => typeof payload.alt === 
   && Array.isArray(payload.items) && payload.items.length <= sceneLimits.maxItems
   && payload.items.every((item) => !!item && typeof item === 'object' && sceneItemKinds.includes((item as SceneItem).kind))
   && (payload.frames === undefined || (Array.isArray(payload.frames) && payload.frames.length <= frameLimits.maxFrames
-    && payload.frames.every((frame) => !!frame && typeof frame === 'object' && Array.isArray((frame as SceneFrame).changes))));
+    && payload.frames.every((frame) => !!frame && typeof frame === 'object' && Array.isArray((frame as SceneFrame).changes))))
+  // A drawing to arrange needs both halves: somewhere to put things, and a task that says what for.
+  && (payload.zones === undefined || (Array.isArray(payload.zones)
+    && payload.zones.every((zone) => !!zone && typeof zone === 'object' && typeof (zone as SceneZone).id === 'string' && typeof (zone as SceneZone).label === 'string')
+    && (!payload.zones.length || (!!payload.task && typeof (payload.task as SceneTask).prompt === 'string'))));
 const validTerms = (payload: Record<string, unknown>) => Array.isArray(payload.terms) && payload.terms.every((term) => !!term && typeof term === 'object' && typeof (term as TermAnnotation).termKey === 'string' && typeof (term as TermAnnotation).surface === 'string');
 const registry: Record<string, Renderer> = {
   'core.rich_text@1': {
@@ -234,7 +341,12 @@ const registry: Record<string, Renderer> = {
   },
   'core.scene@1': {
     validate: validScene,
-    render: (block) => <SceneFigure width={Number(block.payload.width)} height={Number(block.payload.height)}
+    render: (block) => Array.isArray(block.payload.zones) && block.payload.zones.length
+      ? <SceneTaskFigure width={Number(block.payload.width)} height={Number(block.payload.height)}
+          items={block.payload.items as SceneItem[]} zones={block.payload.zones as SceneZone[]}
+          task={block.payload.task as SceneTask} alt={block.payload.alt as string}
+          caption={typeof block.payload.caption === 'string' ? block.payload.caption : undefined} />
+      : <SceneFigure width={Number(block.payload.width)} height={Number(block.payload.height)}
       items={block.payload.items as SceneItem[]} alt={block.payload.alt as string}
       caption={typeof block.payload.caption === 'string' ? block.payload.caption : undefined}
       frames={Array.isArray(block.payload.frames) ? block.payload.frames as SceneFrame[] : undefined}
