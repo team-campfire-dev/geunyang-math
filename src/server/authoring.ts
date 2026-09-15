@@ -1,16 +1,28 @@
 import 'server-only';
 import { z } from 'zod';
 import type { PrismaClient } from '@prisma/client';
-import { ContentError } from '@/core/content-bundle';
-import { toPublicClass, validateClass, type StoredClass } from '@/core/content';
+import { canonicalJson, ContentError } from '@/core/content-bundle';
+import { validateClass, type StoredClass, type StoredProblem } from '@/core/content';
 import { importContent } from './content-store';
 import { AppError } from './errors';
+import type { AnswerSpec } from '@/shared/answer';
 import {
-  mayEditEveryDraft, mayPublish, pruneSections, suggestVersionId,
-  type AuthoringResponse, type AuthoringRole, type AuthoringWorkspace, type DraftDetail, type DraftEdit, type DraftSummary,
+  mayEditEveryDraft, mayPublish, pruneProblems, pruneSections, renameProblem, renamedProblemVersionId,
+  renameProblemReferences, responseSpecOf, suggestVersionId,
+  type AuthoringResponse, type AuthoringRole, type AuthoringWorkspace, type DraftDetail, type DraftEdit,
+  type DraftProblem, type DraftSummary,
 } from '@/shared/authoring';
 
 const id = z.string().min(1).max(191);
+const blockList = z.array(z.object({
+  blockId: id,
+  kind: z.string().min(1).max(100),
+  typeVersion: z.number().int().min(1).max(999),
+  required: z.boolean(),
+  payload: z.record(z.string(), z.unknown()),
+  fallback: z.string().max(2_000).optional(),
+}).strict()).max(100);
+const answerNumber = z.number().int().min(Number.MIN_SAFE_INTEGER).max(Number.MAX_SAFE_INTEGER);
 /** Structural only. A draft is saved while it is still wrong; publishing validation is the gate. */
 const editSchema = z.object({
   meta: z.object({
@@ -23,15 +35,22 @@ const editSchema = z.object({
     sectionId: id,
     role: z.enum(['explanation', 'worked_example', 'practice', 'check', 'summary']),
     title: z.string().min(1).max(500),
-    contentBlocks: z.array(z.object({
-      blockId: id,
-      kind: z.string().min(1).max(100),
-      typeVersion: z.number().int().min(1).max(999),
-      required: z.boolean(),
-      payload: z.record(z.string(), z.unknown()),
-      fallback: z.string().max(2_000).optional(),
-    }).strict()).max(100),
+    contentBlocks: blockList,
   }).strict()).min(1).max(50),
+  // An answer says what a question expects; the response format and whether a hint exists follow
+  // from it and from the hints, so the editor never sends either and the two cannot disagree.
+  problems: z.array(z.object({
+    problemVersionId: id,
+    skillKeys: z.array(id).max(50),
+    promptContent: blockList,
+    gradingSpec: z.discriminatedUnion('kind', [
+      z.object({ kind: z.literal('integer'), value: answerNumber }).strict(),
+      z.object({ kind: z.literal('rational'), numerator: answerNumber, denominator: answerNumber,
+        requiredForm: z.literal('reduced_fraction').optional() }).strict(),
+    ]),
+    hints: blockList,
+    solution: blockList,
+  }).strict()).max(200),
 }).strict();
 
 export const authoringActionSchema = z.discriminatedUnion('action', [
@@ -75,6 +94,66 @@ export async function authoringRole(db: PrismaClient, userId: string): Promise<A
   return grant?.role === 'admin' || grant?.role === 'author' ? grant.role : null;
 }
 
+/** A stored question read back for editing; its response format is restated from the answer on save. */
+const draftProblem = (problem: StoredProblem): DraftProblem => ({
+  problemVersionId: problem.problemVersionId,
+  skillKeys: [...problem.skillKeys],
+  promptContent: structuredClone(problem.promptContent),
+  // Checked when the base version was published, and again before this draft may be published.
+  gradingSpec: structuredClone(problem.gradingSpec) as AnswerSpec,
+  hints: structuredClone(problem.hints),
+  solution: structuredClone(problem.solution),
+});
+
+/** The two fields an editor never writes: both follow from the answer and from the hints. */
+const storedProblem = (problem: DraftProblem): StoredProblem => ({
+  problemVersionId: problem.problemVersionId,
+  skillKeys: problem.skillKeys,
+  promptContent: problem.promptContent,
+  responseSpec: responseSpecOf(problem.gradingSpec),
+  hintAvailable: problem.hints.length > 0,
+  gradingSpec: problem.gradingSpec,
+  hints: problem.hints,
+  solution: problem.solution,
+});
+
+/**
+ * Every question a published version already holds, by name. An attempt, a hint use and an
+ * assignment snapshot each record the name a question was answered under, so a published name may
+ * never come to mean a different question.
+ */
+async function publishedProblems(db: PrismaClient): Promise<Map<string, string>> {
+  const [classes, diagnostics] = await Promise.all([
+    db.classVersion.findMany({ select: { document: true } }),
+    db.diagnosticVersion.findMany({ select: { document: true } }),
+  ]);
+  const seen = new Map<string, string>();
+  const record = (problem: StoredProblem) => seen.set(problem.problemVersionId, canonicalJson(problem));
+  for (const row of classes) (row.document as unknown as StoredClass).problems.forEach(record);
+  for (const row of diagnostics) (row.document as unknown as StoredProblem[]).forEach(record);
+  return seen;
+}
+
+/**
+ * A draft may rewrite its own questions freely. A question a published version already holds is
+ * another matter: editing one in place would change what a learner's answer meant, so it becomes a
+ * new question named for the version being written, and the references in this document move with it.
+ */
+function renameEditedProblems(problems: StoredProblem[], versionId: string, published: Map<string, string>) {
+  const taken = new Set(problems.map((problem) => problem.problemVersionId));
+  const renames = new Map<string, string>();
+  const next = problems.map((problem) => {
+    const before = published.get(problem.problemVersionId);
+    if (!before || before === canonicalJson(problem)) return problem;
+    const renamed = renameProblem(problem, renamedProblemVersionId(problem.problemVersionId, versionId,
+      (candidate) => taken.has(candidate) || published.has(candidate)));
+    taken.add(renamed.problemVersionId);
+    renames.set(problem.problemVersionId, renamed.problemVersionId);
+    return renamed;
+  });
+  return { problems: next, renames };
+}
+
 type DraftRow = { id: string; classKey: string; versionId: string; baseVersionId: string | null; title: string;
   document: unknown; status: string; authorId: string; publishedVersionId: string | null; updatedAt: Date;
   author: { displayName: string } };
@@ -96,19 +175,19 @@ export class AuthoringService {
     };
   }
 
-  /** Answers live in the stored document; the editor receives sections and public problems only. */
+  /**
+   * Writing a question means writing its answer, its hints and its solution, so an account that
+   * holds a content role receives all of it. Nothing here is reachable without that role, and the
+   * learning API still sends a learner only the public half.
+   */
   private detail(row: DraftRow, userId: string, issues: string[]): DraftDetail {
     const document = row.document as unknown as StoredClass;
     const edit: DraftEdit = {
       meta: { versionId: document.public.versionId, title: document.public.title, summary: document.public.summary, estimatedMinutes: document.public.estimatedMinutes },
       sections: structuredClone(document.sections),
+      problems: document.problems.map(draftProblem),
     };
-    let problems;
-    try { problems = toPublicClass(document).problems; }
-    // A draft may be mid-edit and fail whole-document validation; its questions are still public.
-    catch { problems = document.problems.map((problem) => ({ problemVersionId: problem.problemVersionId, skillKeys: [...problem.skillKeys],
-      promptContent: structuredClone(problem.promptContent), responseSpec: { ...problem.responseSpec }, hintAvailable: problem.hintAvailable })); }
-    return { ...this.summary(row, userId), edit, problems, issues };
+    return { ...this.summary(row, userId), edit, skillKeys: [...document.public.skillKeys], issues };
   }
 
   private async load(draftId: string, userId: string, role: AuthoringRole): Promise<DraftRow> {
@@ -163,26 +242,30 @@ export class AuthoringService {
     const role = await this.require(userId);
     const row = await this.load(draftId, userId, role);
     if (row.status === 'published') throw new AppError(409, 'draft_published', '이미 발행한 초안이에요. 새 초안을 만들어 주세요.');
-    const document = this.merge(row.document as unknown as StoredClass, edit);
+    const document = this.merge(row.document as unknown as StoredClass, edit, await publishedProblems(this.db));
     const saved = await this.db.contentDraft.update({ where: { id: draftId },
       data: { document: document as never, versionId: document.public.versionId, title: document.public.title },
       include: { author: { select: { displayName: true } } } });
     return { workspace: await this.workspace(userId), draft: this.detail(saved as DraftRow, userId, this.issues(document)) };
   }
 
-  /** Publishing writes the private half; the editor only ever sent sections and class wording. */
-  private merge(stored: StoredClass, edit: DraftEdit): StoredClass {
+  /** Restates what the editor sent as a stored document, renaming the questions an edit changed. */
+  private merge(stored: StoredClass, edit: DraftEdit, published: Map<string, string>): StoredClass {
     // A version belongs to its class. Without this, a draft could claim another class's version ID
     // and publish a record whose name says one class while its content teaches another.
     if (!edit.meta.versionId.startsWith(`${stored.public.classKey}:`)) {
       throw new AppError(422, 'version_scope', `판본 ID는 ${stored.public.classKey}: 로 시작해야 해요.`);
     }
-    const sections = pruneSections(edit.sections);
+    const { problems, renames } = renameEditedProblems(pruneProblems(edit.problems).map(storedProblem), edit.meta.versionId, published);
+    const sections = renameProblemReferences(pruneSections(edit.sections), renames);
     return {
       ...stored,
       public: { ...stored.public, versionId: edit.meta.versionId, title: edit.meta.title, summary: edit.meta.summary,
         estimatedMinutes: edit.meta.estimatedMinutes, sectionCount: sections.length },
       sections: sections as StoredClass['sections'],
+      problems,
+      // Homework names questions without a block of its own, so its references move the same way.
+      homeworkProblemIds: stored.homeworkProblemIds.map((problemId) => renames.get(problemId) ?? problemId),
     };
   }
 

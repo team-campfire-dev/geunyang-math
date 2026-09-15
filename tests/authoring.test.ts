@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { supportedBlockTypes, validateClass } from '@/core/content';
 import {
-  blockForms, blockFormOf, moveBlock, nextBlockId, nextSectionId, pruneBlock, pruneSections, suggestVersionId, writePath,
+  blockForms, blockFormOf, moveBlock, newProblem, nextBlockId, nextProblemBlockId, nextProblemVersionId, nextSectionId,
+  problemsOfBlock, pruneBlock, pruneSections, renameProblem, renameProblemReferences, renamedProblemVersionId,
+  responseSpecOf, suggestVersionId, toPublicProblem, writePath,
 } from '@/shared/authoring';
 import { seedClasses } from './fixtures/content';
 
@@ -65,8 +67,8 @@ describe('what the editor sends is what publishing accepts', () => {
 
   it('starts every new block at a payload the validator already accepts', () => {
     for (const form of blockForms) {
-      // A question group is empty until an author picks questions, and picking is what validates it.
-      if (form.picksProblems) { expect(form.create()).toEqual({ problemVersionIds: [] }); continue; }
+      // A question group is empty until an author writes a question, and writing one validates it.
+      if (form.editsProblems) { expect(form.create()).toEqual({ problemVersionIds: [] }); continue; }
       const record = structuredClone(seedClasses[0]);
       const section = record.sections[0];
       section.contentBlocks.push({ blockId: `draft:${form.kind}:v1`, kind: form.kind, typeVersion: form.typeVersion,
@@ -97,5 +99,70 @@ describe('what the editor sends is what publishing accepts', () => {
     // Pruned, a blank spoken name is absent, and a math caption without one is rejected by name.
     expect(() => validateClass(withBlank(''))).toThrow(/labelAlt/);
     expect(() => validateClass(withBlank('4분의 3'))).not.toThrow();
+  });
+});
+
+describe('naming a question, and keeping an answered one as it was answered', () => {
+  const classKey = 'fraction-meaning';
+  it('names a new question after the activity that holds it', () => {
+    expect(nextProblemVersionId(classKey, 'practice', 'fraction-meaning:v5', [])).toBe('fraction-meaning:practice-1:v5');
+    expect(nextProblemVersionId(classKey, 'practice', 'fraction-meaning:v5', ['fraction-meaning:practice-1:v5']))
+      .toBe('fraction-meaning:practice-2:v5');
+    // A question carried from an earlier version still holds its name, so a new one takes the next.
+    expect(nextProblemVersionId(classKey, 'practice', 'fraction-meaning:v5', ['fraction-meaning:practice-1:v2']))
+      .toBe('fraction-meaning:practice-2:v5');
+    expect(nextProblemBlockId('fraction-meaning:practice-1:v5', 'hint', [])).toBe('fraction-meaning:practice-1:v5:hint');
+    expect(nextProblemBlockId('fraction-meaning:practice-1:v5', 'hint', ['fraction-meaning:practice-1:v5:hint']))
+      .toBe('fraction-meaning:practice-1:v5:hint-2');
+  });
+
+  it('moves an edited question to the version being written, stepping aside for a name in use', () => {
+    expect(renamedProblemVersionId('fraction-meaning:practice-1:v1', 'fraction-meaning:v2', () => false))
+      .toBe('fraction-meaning:practice-1:v2');
+    expect(renamedProblemVersionId('fraction-meaning:practice-1:v1', 'fraction-meaning:v2',
+      (id) => id === 'fraction-meaning:practice-1:v2')).toBe('fraction-meaning:practice-1-2:v2');
+  });
+
+  it('renames the blocks named after a question, and leaves the others where they are', () => {
+    const problem = newProblem('fraction-meaning:practice-1:v1', ['fraction.meaning']);
+    problem.hints.push({ blockId: 'fraction-meaning:shared:hint:v1', kind: 'core.rich_text', typeVersion: 1,
+      required: true, payload: { text: '힌트예요.' } });
+    const renamed = renameProblem(problem, 'fraction-meaning:practice-1:v2');
+    expect(renamed.promptContent[0].blockId).toBe('fraction-meaning:practice-1:v2:prompt');
+    expect(renamed.solution[0].blockId).toBe('fraction-meaning:practice-1:v2:solution');
+    expect(renamed.hints[0].blockId).toBe('fraction-meaning:shared:hint:v1');
+  });
+
+  it('moves every reference an activity holds, and leaves other blocks untouched', () => {
+    const record = structuredClone(seedClasses[0]);
+    const renamed = renameProblemReferences(record.sections, new Map([['fraction-meaning:practice-1:v1', 'fraction-meaning:practice-1:v2']]));
+    const activities = renamed.flatMap((section) => section.contentBlocks).filter((item) => item.kind === 'core.problem_set');
+    expect(activities.flatMap((item) => item.payload.problemVersionIds as string[])).toContain('fraction-meaning:practice-1:v2');
+    expect(activities.flatMap((item) => item.payload.problemVersionIds as string[])).not.toContain('fraction-meaning:practice-1:v1');
+    expect(renamed[0].contentBlocks).toEqual(record.sections[0].contentBlocks);
+    // An activity reads its questions in the order it names them.
+    const practice = renamed.flatMap((section) => section.contentBlocks).find((item) => item.kind === 'core.problem_set')!;
+    const problems = [newProblem('fraction-meaning:practice-2:v1', ['fraction.meaning']), newProblem('fraction-meaning:practice-1:v2', ['fraction.meaning'])];
+    expect(problemsOfBlock(practice, problems).map((item) => item.problemVersionId))
+      .toEqual((practice.payload.problemVersionIds as string[]).filter((id) => problems.some((item) => item.problemVersionId === id)));
+  });
+
+  it('starts a new question at something the publishing validator accepts', () => {
+    const record = structuredClone(seedClasses[0]);
+    const activity = record.sections.flatMap((section) => section.contentBlocks).find((block) => block.kind === 'core.problem_set')!;
+    const created = newProblem(nextProblemVersionId(classKey, 'practice', 'fraction-meaning:v5',
+      record.problems.map((problem) => problem.problemVersionId)), record.problems[0].skillKeys);
+    record.problems.push({ ...created, responseSpec: responseSpecOf(created.gradingSpec), hintAvailable: created.hints.length > 0 });
+    (activity.payload.problemVersionIds as string[]).push(created.problemVersionId);
+    expect(() => validateClass(record)).not.toThrow();
+  });
+
+  it('shows the preview the half of a question a learner may see', () => {
+    const problem = newProblem('fraction-meaning:practice-1:v2', ['fraction.meaning']);
+    expect(toPublicProblem(problem)).toEqual({ problemVersionId: problem.problemVersionId, skillKeys: ['fraction.meaning'],
+      promptContent: problem.promptContent, responseSpec: { kind: 'rational' }, hintAvailable: false });
+    problem.hints.push({ blockId: 'fraction-meaning:practice-1:v2:hint', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '힌트' } });
+    problem.gradingSpec = { kind: 'rational', numerator: 1, denominator: 2, requiredForm: 'reduced_fraction' };
+    expect(toPublicProblem(problem)).toMatchObject({ hintAvailable: true, responseSpec: { kind: 'rational', requiredForm: 'reduced_fraction' } });
   });
 });

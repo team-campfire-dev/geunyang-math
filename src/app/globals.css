@@ -236,10 +236,27 @@
 .editor-rows-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .editor-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)) auto; gap: 10px; align-items: end; padding: 12px 0; border-bottom: 1px dashed #edf0e5; }
 .editor-row-tools { display: flex; gap: 4px; }
-.editor-picker { display: flex; flex-direction: column; gap: 4px; margin-top: 14px; }
-.editor-picker .editor-check { padding: 9px 10px; border: 1px solid var(--line); border-radius: 7px; background: #fbfcf6; align-items: flex-start; }
-.editor-picker strong { display: block; font-size: 11px; font-weight: 500; color: #5f7154; word-break: break-all; }
-.editor-picker small { display: block; font-size: 10px; color: #96a086; margin-top: 3px; }
+/* An activity owns its questions, so a question is written where the activity is: nested, folded
+   away until it is opened, and using the same block cards as the lesson text around it. */
+.editor-problems { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+.editor-problems > .button { align-self: flex-start; font-size: 11px; min-height: 36px; padding: 8px 12px; }
+.editor-problem { border: 1px solid var(--line); border-radius: 9px; background: #fbfcf6; }
+.editor-problem > header { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 11px; }
+.editor-problem-open { display: flex; align-items: center; gap: 9px; flex: 1; min-width: 0; text-align: left; color: #5f7154; }
+.editor-problem-open svg { flex-shrink: 0; transition: transform .15s ease; }
+.editor-problem-open[aria-expanded='true'] svg { transform: rotate(90deg); }
+.editor-problem-open strong { display: block; font-size: 11px; font-weight: 600; }
+.editor-problem-open small { display: block; font-size: 9px; color: #a3ac94; margin-top: 2px; word-break: break-all; }
+.editor-problem-body { display: flex; flex-direction: column; padding: 0 11px 14px; border-top: 1px solid #eef0e7; }
+.editor-problem-part { display: flex; flex-direction: column; gap: 10px; padding-top: 14px; }
+.editor-problem-part > .editor-note { margin: -4px 0 0; }
+.editor-answer { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px 18px; margin-top: 16px; padding-top: 14px; border-top: 1px dashed #e2e7d8; }
+.editor-answer .editor-field { flex: 1 1 210px; margin-top: 0; }
+.editor-answer .editor-check { margin-bottom: 11px; }
+.editor-warn { color: #a8764f; }
+.editor-skills { display: flex; flex-direction: column; gap: 9px; margin-top: 16px; }
+.editor-skill-buttons { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.editor-skill-buttons span { font-size: 11px; color: #6f7d66; word-break: break-all; }
 .editor-add { border: 1px dashed #d5dfc5; border-radius: 10px; padding: 16px 18px; background: #fafbf5; }
 .editor-add-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 11px; }
 .editor-add-buttons .button { font-size: 11px; min-height: 36px; padding: 8px 12px; }

@@ -1,60 +1,7 @@
 import 'server-only';
 import type { GradeResult } from '@/shared/api';
+import { parseAnswer, writtenAsInteger } from '@/shared/answer';
 import type { StoredProblem } from './content';
-
-type Rational = { numerator: bigint; denominator: bigint; fraction: boolean; reduced: boolean };
-
-function gcd(a: bigint, b: bigint): bigint {
-  a = a < 0n ? -a : a;
-  b = b < 0n ? -b : b;
-  while (b !== 0n) [a, b] = [b, a % b];
-  return a;
-}
-
-/**
- * Accepts a fixed LaTeX subset so an equation editor can post its own output unchanged.
- * Purely syntactic rewriting: `\frac{1+1}{2}` keeps its backslashes, fails the checks below,
- * and is reported as invalid. No expression is ever evaluated.
- */
-function stripLatex(input: string): string {
-  let text = input;
-  for (const [open, close] of [['$$', '$$'], ['\\[', '\\]'], ['\\(', '\\)'], ['$', '$']]) {
-    if (text.length > open.length + close.length && text.startsWith(open) && text.endsWith(close)) {
-      text = text.slice(open.length, -close.length).trim();
-      break;
-    }
-  }
-  text = text.replace(/\\[,;:!]|\\ |~/g, '');
-  return text.replace(/^\\[dt]?frac\s*\{\s*([+-]?\d+)\s*\}\s*\{\s*([+-]?\d+)\s*\}$/, '$1/$2').trim();
-}
-
-/** Canonical plain form shared by parsing and the integer-only check. */
-function normalizeAnswer(answer: string): string | null {
-  if (typeof answer !== 'string' || answer.length > 80) return null;
-  return stripLatex(answer.trim()).replaceAll('−', '-').replaceAll('⁄', '/');
-}
-
-function parseAnswer(answer: string): Rational | null {
-  const input = normalizeAnswer(answer);
-  if (input === null) return null;
-  const fraction = /^([+-]?\d+)\s*\/\s*([+-]?\d+)$/.exec(input);
-  if (fraction) {
-    let numerator = BigInt(fraction[1]);
-    let denominator = BigInt(fraction[2]);
-    if (denominator === 0n) return null;
-    const divisor = gcd(numerator, denominator);
-    const reduced = denominator > 0n && divisor === 1n;
-    if (denominator < 0n) { numerator = -numerator; denominator = -denominator; }
-    return { numerator: numerator / divisor, denominator: denominator / divisor, fraction: true, reduced };
-  }
-  if (!/^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(input)) return null;
-  const negative = input.startsWith('-');
-  const [whole, decimal = ''] = input.replace(/^[+-]/, '').split('.');
-  const numerator = BigInt(`${whole || '0'}${decimal}`) * (negative ? -1n : 1n);
-  const denominator = 10n ** BigInt(decimal.length);
-  const divisor = gcd(numerator, denominator);
-  return { numerator: numerator / divisor, denominator: denominator / divisor, fraction: false, reduced: true };
-}
 
 function expectedValue(spec: StoredProblem['gradingSpec']): { numerator: bigint; denominator: bigint } {
   if (spec.kind === 'integer') {
@@ -74,7 +21,7 @@ export function gradeAnswer(answer: string, spec: StoredProblem['gradingSpec'], 
   if (!parsed) {
     return { status: 'invalid', message: '숫자 또는 1/2처럼 분수를 입력해 주세요. 분모에는 0을 쓸 수 없어요.', assisted };
   }
-  if (spec.kind === 'integer' && !/^[+-]?\d+$/.test(normalizeAnswer(answer) ?? '')) {
+  if (spec.kind === 'integer' && !writtenAsInteger(answer)) {
     return { status: 'invalid', message: '이 문제는 정수로 답해 주세요. 예: 3', assisted };
   }
   const equivalent = parsed.numerator * expected.denominator === expected.numerator * parsed.denominator;

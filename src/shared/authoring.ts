@@ -1,6 +1,7 @@
 // Shared by the authoring API and the editor screen. Field descriptions live here so the editor can
 // offer a form for every published block kind without importing the server's validation schemas,
 // and so the server can prune the same optional fields before it validates what the editor sent.
+import type { AnswerSpec } from './answer';
 import type { ClassSection, ContentBlock, PublicProblem } from './api';
 
 /** A role on an account, not a property of one operator: a teacher system grants the same roles. */
@@ -15,11 +16,32 @@ export type DraftSummary = {
 };
 export type DraftMeta = { versionId: string; title: string; summary: string; estimatedMinutes: number };
 /**
- * What an editor may change. Problems, grading rules, hints and solutions are carried from the base
- * version on the server and never travel to the browser, so answers stay where they already live.
+ * A question as the editor holds it. Answers, hints and solutions belong to the draft, so this
+ * reaches a browser only where the account holds a content role. `responseSpec` and `hintAvailable`
+ * follow from the answer and the hints, so an editor never states the same thing twice and the two
+ * halves cannot drift apart.
  */
-export type DraftEdit = { meta: DraftMeta; sections: ClassSection[] };
-export type DraftDetail = DraftSummary & { edit: DraftEdit; problems: PublicProblem[]; issues: string[] };
+export type DraftProblem = {
+  problemVersionId: string;
+  skillKeys: string[];
+  promptContent: ContentBlock[];
+  gradingSpec: AnswerSpec;
+  hints: ContentBlock[];
+  solution: ContentBlock[];
+};
+/** What an editor may change. Published questions are immutable, so the server renames what changed. */
+export type DraftEdit = { meta: DraftMeta; sections: ClassSection[]; problems: DraftProblem[] };
+/** `skillKeys` are the class's own, carried so a question may only claim a concept the class teaches. */
+export type DraftDetail = DraftSummary & { edit: DraftEdit; skillKeys: string[]; issues: string[] };
+
+export const responseSpecOf = (spec: AnswerSpec): PublicProblem['responseSpec'] =>
+  (spec.kind === 'rational' && spec.requiredForm ? { kind: 'rational', requiredForm: spec.requiredForm } : { kind: spec.kind });
+/** The half of a question a learner may see. The preview reads questions the way the lesson will. */
+export const toPublicProblem = (problem: DraftProblem): PublicProblem => ({
+  problemVersionId: problem.problemVersionId, skillKeys: [...problem.skillKeys],
+  promptContent: problem.promptContent, responseSpec: responseSpecOf(problem.gradingSpec),
+  hintAvailable: problem.hints.length > 0,
+});
 export type ClassChoice = { classKey: string; title: string; latestVersionId: string; suggestedVersionId: string; hasDraft: boolean };
 export type AuthoringWorkspace = { role: AuthoringRole | null; drafts: DraftSummary[]; classes: ClassChoice[] };
 export type AuthoringAction =
@@ -31,6 +53,8 @@ export type AuthoringAction =
 export type AuthoringResponse = { workspace: AuthoringWorkspace; draft?: DraftDetail; publishedVersionId?: string };
 
 const versionSuffix = /:v(\d+)$/;
+/** Generated names end in the version they were written for, the way published records read. */
+const suffixOf = (versionId: string) => (versionSuffix.test(versionId) ? versionId.slice(versionId.lastIndexOf(':') + 1) : 'v1');
 /** Published versions are immutable, so every edit becomes the next version of the same class. */
 export function suggestVersionId(classKey: string, existing: string[]): string {
   const numbers = existing.map((id) => versionSuffix.exec(id)).filter((match) => match !== null).map((match) => Number(match[1]));
@@ -41,26 +65,109 @@ export function suggestVersionId(classKey: string, existing: string[]): string {
 export function nextBlockId(classKey: string, sectionId: string, kind: string, versionId: string, taken: string[]): string {
   const role = sectionId.split(':')[1] ?? 'section';
   const name = kind.split('.')[1] ?? 'block';
-  const suffix = versionSuffix.test(versionId) ? versionId.slice(versionId.lastIndexOf(':') + 1) : 'v1';
+  const suffix = suffixOf(versionId);
   for (let index = 1; ; index++) {
     const id = `${classKey}:${role}:${name}${index === 1 ? '' : `-${index}`}:${suffix}`;
     if (!taken.includes(id)) return id;
   }
 }
 
+/** Blocks inside a question are named after it, so reading an ID says which question it belongs to. */
+export function nextProblemBlockId(problemVersionId: string, part: 'prompt' | 'hint' | 'solution', taken: string[]): string {
+  for (let index = 1; ; index++) {
+    const id = `${problemVersionId}:${part}${index === 1 ? '' : `-${index}`}`;
+    if (!taken.includes(id)) return id;
+  }
+}
+
 /** Sections are identified the same way blocks are: readable, and unique inside one document. */
 export function nextSectionId(classKey: string, role: string, versionId: string, taken: string[]): string {
-  const suffix = versionSuffix.test(versionId) ? versionId.slice(versionId.lastIndexOf(':') + 1) : 'v1';
+  const suffix = suffixOf(versionId);
   for (let index = 1; ; index++) {
     const id = `${classKey}:${role}${index === 1 ? '' : `-${index}`}:${suffix}`;
     if (!taken.includes(id)) return id;
   }
 }
 
-export function moveBlock(blocks: ContentBlock[], index: number, delta: number): ContentBlock[] {
+/**
+ * Questions are named after the activity they belong to, the way the published records are. A
+ * question keeps its name as it moves between versions, so a name already in use is in use whatever
+ * version it ends in: a new question takes the next name rather than the same one in a new version.
+ */
+export function nextProblemVersionId(classKey: string, role: string, versionId: string, taken: string[]): string {
+  const suffix = suffixOf(versionId);
+  const names = new Set(taken.map((id) => (versionSuffix.test(id) ? id.slice(0, id.lastIndexOf(':')) : id)));
+  for (let index = 1; ; index++) {
+    const name = `${classKey}:${role}-${index}`;
+    if (!names.has(name)) return `${name}:${suffix}`;
+  }
+}
+
+/**
+ * Renames a question and the blocks named after it. A published question cannot change, so an edit
+ * becomes a new one; its blocks carry the old name in theirs and would otherwise keep pointing at a
+ * version this document no longer holds.
+ */
+export function renameProblem<T extends { problemVersionId: string; promptContent: ContentBlock[]; hints: ContentBlock[]; solution: ContentBlock[] }>(
+  problem: T, problemVersionId: string,
+): T {
+  const rename = (blocks: ContentBlock[]) => blocks.map((block) => (block.blockId.startsWith(problem.problemVersionId)
+    ? { ...block, blockId: `${problemVersionId}${block.blockId.slice(problem.problemVersionId.length)}` }
+    : block));
+  return { ...problem, problemVersionId,
+    promptContent: rename(problem.promptContent), hints: rename(problem.hints), solution: rename(problem.solution) };
+}
+
+/**
+ * The name an edited question takes. It keeps the question's own name and moves to the version being
+ * written, so `practice-1:v1` edited for `:v2` reads as `practice-1:v2`; a name already spoken for
+ * steps aside rather than colliding.
+ */
+export function renamedProblemVersionId(current: string, versionId: string, taken: (id: string) => boolean): string {
+  const base = versionSuffix.test(current) ? current.slice(0, current.lastIndexOf(':')) : current;
+  const suffix = suffixOf(versionId);
+  for (let index = 1; ; index++) {
+    const id = `${base}${index === 1 ? '' : `-${index}`}:${suffix}`;
+    if (!taken(id)) return id;
+  }
+}
+
+/** Every reference to a question, wherever a document may hold one. */
+export function renameProblemReferences(sections: ClassSection[], renames: Map<string, string>): ClassSection[] {
+  if (!renames.size) return sections;
+  return sections.map((section) => ({
+    ...section,
+    contentBlocks: section.contentBlocks.map((block) => (block.kind === 'core.problem_set' && Array.isArray(block.payload.problemVersionIds)
+      ? { ...block, payload: { ...block.payload,
+          problemVersionIds: (block.payload.problemVersionIds as string[]).map((id) => renames.get(id) ?? id) } }
+      : block)),
+  }));
+}
+
+/** The questions one activity holds, in the order that activity names them. */
+export function problemsOfBlock(block: ContentBlock, problems: DraftProblem[]): DraftProblem[] {
+  const ids = Array.isArray(block.payload.problemVersionIds) ? (block.payload.problemVersionIds as string[]) : [];
+  return ids.map((id) => problems.find((problem) => problem.problemVersionId === id)).filter((problem) => problem !== undefined);
+}
+
+/** A question a learner has to answer, so a new one starts with a prompt and an answer of 1/2. */
+export function newProblem(problemVersionId: string, skillKeys: string[]): DraftProblem {
+  return {
+    problemVersionId, skillKeys: [...skillKeys],
+    promptContent: [{ blockId: `${problemVersionId}:prompt`, kind: 'core.rich_text', typeVersion: 1, required: true,
+      payload: { text: '여기에 문제를 씁니다.' } }],
+    gradingSpec: { kind: 'rational', numerator: 1, denominator: 2 },
+    hints: [],
+    solution: [{ blockId: `${problemVersionId}:solution`, kind: 'core.rich_text', typeVersion: 1, required: true,
+      payload: { text: '여기에 풀이를 씁니다.' } }],
+  };
+}
+
+/** Reordering is the same move for blocks, for questions and for the names an activity holds. */
+export function moveBlock<T>(items: T[], index: number, delta: number): T[] {
   const target = index + delta;
-  if (index < 0 || index >= blocks.length || target < 0 || target >= blocks.length) return blocks;
-  const next = [...blocks];
+  if (index < 0 || index >= items.length || target < 0 || target >= items.length) return items;
+  const next = [...items];
   [next[index], next[target]] = [next[target], next[index]];
   return next;
 }
@@ -72,7 +179,7 @@ export type BlockField = {
 export type BlockList = { key: string; label: string; addLabel: string; max: number; fields: BlockField[]; create: () => Record<string, unknown> };
 export type BlockForm = {
   kind: string; typeVersion: number; label: string; hint: string;
-  fields: BlockField[]; list?: BlockList; picksProblems?: boolean; editsScene?: boolean;
+  fields: BlockField[]; list?: BlockList; editsProblems?: boolean; editsScene?: boolean;
   /** Published classes still hold these, so the editor can open one; nothing new is made with them. */
   retired?: boolean;
   create: () => Record<string, unknown>;
@@ -133,9 +240,9 @@ export const blockForms: BlockForm[] = [
     editsScene: true,
   },
   {
-    kind: 'core.problem_set', typeVersion: 1, label: '문항 묶음', hint: '이 판본의 문항 중에서 고릅니다. 한 문항은 한 활동에만 넣을 수 있어요.',
+    kind: 'core.problem_set', typeVersion: 1, label: '문항 묶음', hint: '이 활동에서 풀 문항을 여기에서 쓰고 고칩니다. 한 문항은 한 활동에만 들어가요.',
     create: () => ({ problemVersionIds: [] }),
-    fields: [], picksProblems: true,
+    fields: [], editsProblems: true,
   },
 ];
 export const blockKey = (block: { kind: string; typeVersion: number }) => `${block.kind}@${block.typeVersion}`;
@@ -183,3 +290,11 @@ export function pruneBlock(block: ContentBlock): ContentBlock {
 export function pruneSections(sections: ClassSection[]): ClassSection[] {
   return sections.map((section) => ({ ...section, contentBlocks: section.contentBlocks.map(pruneBlock) }));
 }
+
+export function pruneProblems(problems: DraftProblem[]): DraftProblem[] {
+  return problems.map((problem) => ({ ...problem, promptContent: problem.promptContent.map(pruneBlock),
+    hints: problem.hints.map(pruneBlock), solution: problem.solution.map(pruneBlock) }));
+}
+
+/** A question holds no activity of its own, and a drawing inside one is read rather than arranged. */
+export const problemBlockForms = blockForms.filter((form) => form.kind !== 'core.problem_set');
