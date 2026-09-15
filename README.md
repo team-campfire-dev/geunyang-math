@@ -42,10 +42,16 @@ npm run dev
 | `GOOGLE_CLIENT_ID` | 이 프로젝트 전용 Google OAuth Web application 클라이언트 ID |
 | `GOOGLE_CLIENT_SECRET` | 서버 전용 Google OAuth 클라이언트 비밀값. 공개 번들에 넣지 않음 |
 | `DEV_LOGIN_ENABLED` | `true`일 때 개발용 로그인 허용 조건에 참여 |
+| `CONTENT_ADMIN_SUBJECTS` | 콘텐츠 편집·발행 관리자로 볼 Google `sub` 목록(쉼표 구분). 비우면 `ContentAuthor` 행만으로 권한을 정함 |
+| `CONTENT_OPEN_ACCESS` | `true`면 `/authoring`을 로그인·권한 없이 연다. 아직 사용자가 없는 배포 전용이며 기본값은 꺼짐 |
 | `TEST_DATABASE_URL` | 통합 테스트 전용 DB. 이름이 `_test`로 끝나야 함 |
 | `NEXT_PUBLIC_API_ORIGIN` | 모바일 번들이 호출할 원격 API의 HTTPS origin |
 
 개발용 로그인은 **`NODE_ENV=development` + `DEV_LOGIN_ENABLED=true` + loopback 호스트**에서만 열립니다. 매번 새 학습자를 만드는 로컬 도구이며, 로그아웃·만료 후 그 개발 계정을 복구하는 로그인 방식은 없습니다. production에서는 개발용 신규 로그인과 기존 `gm_session` 사용을 모두 거부합니다.
+
+콘텐츠 편집 화면은 `/authoring`입니다. 권한이 있는 계정만 내용을 볼 수 있고, 아무 권한도 주지 않은 배포에서는 누구에게도 열리지 않습니다. 첫 관리자는 `CONTENT_ADMIN_SUBJECTS`에 Google `sub`를 넣어 지정하고, 나머지 권한은 `ContentAuthor` 행으로 부여합니다(`role`은 `admin` 또는 `author`이며 발행은 `admin`만 가능). 로컬 개발 로그인 계정에는 Google `sub`가 없으므로 `ContentAuthor` 행을 직접 넣어 시험합니다.
+
+`CONTENT_OPEN_ACCESS=true`를 켜면 이 모든 절차 없이 `/authoring`이 로그인 없이 열립니다. 아직 아무도 쓰지 않는 배포에서 혼자 편집할 때를 위한 스위치이고, 켜져 있는 동안에는 **경로를 찾은 누구든 발행·삭제하고 미발행 초안을 볼 수 있습니다.** 이때 저장되는 초안의 작성자는 공용 `open-authoring` 계정입니다. 서비스를 공개하기 전에 끄고, 역할 기반 권한으로 돌아갑니다. 켜진 상태로 첫 요청이 오면 서버 로그에 `content_authoring_open`을 한 번 남깁니다.
 
 Google 로그인은 `GET /api/auth/google/start`에서 시작하고 `GET /api/auth/google/callback`에서 완료합니다. Google Cloud의 **Web application** 클라이언트에 `${APP_ORIGIN}/api/auth/google/callback`을 정확한 승인 리디렉션 URI로 등록한 뒤 세 가지 Google 환경 변수를 설정합니다. 운영 콜백은 `https://geunyang-math.team-campfire.dev/api/auth/google/callback`입니다. 로컬에서 Google 로그인을 시험할 경우 별도로 승인한 loopback 콜백과 그에 맞는 APP_ORIGIN을 사용합니다. `.env.example`의 기본값은 Google 로그인 비활성입니다.
 

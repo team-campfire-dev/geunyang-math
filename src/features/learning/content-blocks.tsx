@@ -1,8 +1,12 @@
 'use client';
 
-import { useId, useState, type ReactNode } from 'react';
+import { useEffect, useId, useState, type ReactNode } from 'react';
 import katex from 'katex';
 import type { ContentBlock, GlossaryEntry, PublicProblem } from '@/shared/api';
+import {
+  builderLimits, builderStatus, createSlots, nextFrameIndex, placedCount, sequenceLimits, setSlot, stepFrameIndex,
+  type BuilderStatus, type StripFrame,
+} from '@/shared/manipulatives';
 import { locateTerms, splitRichText, type TermAnnotation } from '@/shared/rich-text';
 import { Icon } from './icons';
 
@@ -66,18 +70,125 @@ export function RichText({ text, terms = [], glossary = noGlossary, asCaption = 
   </Wrapper>;
 }
 
+/** The cells every strip is drawn from: a still figure, a frame of an animation, and the board a
+ *  learner fills all show the same object, so they share one way of drawing it. */
+function StripCells({ parts, filled, animated = false }: { parts: number; filled: number; animated?: boolean }) {
+  return <div className="fraction-strip" style={{ gridTemplateColumns: `repeat(${parts}, minmax(0, 1fr))`, minWidth: parts > 24 ? `${parts * 7}px` : undefined }} aria-hidden="true">
+    {Array.from({ length: parts }, (_, index) =>
+      // Cells settle one after another so a filling strip reads as a movement, not a jump.
+      <span key={index} className={index < filled ? 'filled' : ''} style={animated ? { transitionDelay: `${Math.min(index, 8) * 45}ms` } : undefined} />)}
+  </div>;
+}
+
 export function FractionStrip({ parts, filled, label, accessibleLabel }: { parts: number; filled: number; label?: string; accessibleLabel?: string }) {
   // KaTeX gives the caption its own MathML; an aria-label would instead be read as raw markup.
   const named = accessibleLabel ?? (label && !label.includes('$') ? label : `${parts}등분 중 ${filled}개`);
   return <figure className="fraction-figure" aria-label={named}>
-    <div className="fraction-strip" style={{ gridTemplateColumns: `repeat(${parts}, minmax(0, 1fr))`, minWidth: parts > 24 ? `${parts * 7}px` : undefined }} aria-hidden="true">{Array.from({ length: parts }, (_, index) => <span key={index} className={index < filled ? 'filled' : ''} />)}</div>
+    <StripCells parts={parts} filled={filled} />
     {label && <figcaption><RichText text={label} asCaption /></figcaption>}
   </figure>;
+}
+
+/**
+ * A strip played as frames. Playback starts stopped unless the author asked for autoplay, and
+ * autoplay yields to a reduced-motion preference; the stepping controls stay either way, so the
+ * whole sequence is reachable without any movement at all.
+ */
+export function FractionSequence({ parts, frames, alt, frameMs = sequenceLimits.defaultMs, loop = false, autoplay = false }:
+{ parts: number; frames: StripFrame[]; alt: string; frameMs?: number; loop?: boolean; autoplay?: boolean }) {
+  const [index, setIndex] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const total = frames.length;
+  const frame = frames[Math.min(index, total - 1)];
+  const atEnd = !loop && index === total - 1;
+  useEffect(() => {
+    if (!autoplay || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    setPlaying(true);
+  }, [autoplay]);
+  useEffect(() => {
+    if (!playing) return;
+    const timer = setTimeout(() => {
+      const next = nextFrameIndex(index, total, loop);
+      if (next === index) setPlaying(false);
+      else setIndex(next);
+    }, frameMs);
+    return () => clearTimeout(timer);
+  }, [playing, index, total, loop, frameMs]);
+  const step = (delta: number) => { setPlaying(false); setIndex(stepFrameIndex(index, total, delta)); };
+  const toggle = () => {
+    if (playing) { setPlaying(false); return; }
+    if (atEnd) setIndex(0);
+    setPlaying(true);
+  };
+  return <figure className="fraction-figure sequence-figure" aria-label={alt}>
+    <StripCells parts={parts} filled={frame.filled} animated />
+    {frame.caption && <figcaption><RichText text={frame.caption} asCaption /></figcaption>}
+    <div className="figure-controls">
+      <button type="button" className="icon-button" aria-label="이전 장면" disabled={index === 0} onClick={() => step(-1)}><Icon name="back" size={16} /></button>
+      <button type="button" className="control-button" onClick={toggle}>
+        <Icon name={playing ? 'pause' : 'play'} size={14} />{playing ? '멈춤' : atEnd ? '다시 보기' : '재생'}
+      </button>
+      <button type="button" className="icon-button" aria-label="다음 장면" disabled={index === total - 1} onClick={() => step(1)}><Icon name="arrow" size={16} /></button>
+      <span className="sequence-count" aria-live="polite">장면 {index + 1} / {total}</span>
+    </div>
+  </figure>;
+}
+
+/**
+ * Pieces the learner places into a strip. Tapping a slot is the interaction that works everywhere;
+ * dragging a piece from the tray is an extra for a mouse, so touch and keyboard never depend on it.
+ * Nothing here is reported to the server: this is a thing to try, not a thing that is marked.
+ */
+export function FractionBuilder({ parts, target, start = 0, prompt, promptAlt, successText }:
+{ parts: number; target: number; start?: number; prompt: string; promptAlt?: string; successText?: string }) {
+  const [slots, setSlots] = useState(() => createSlots(parts, start));
+  const placed = placedCount(slots);
+  const status = builderStatus(placed, target);
+  const messages: Record<BuilderStatus, string> = {
+    empty: '칸을 눌러 조각을 놓아 보세요.',
+    building: `${parts}칸 중 ${placed}칸을 채웠어요.`,
+    matched: successText ?? `${parts}칸 중 ${placed}칸, 목표한 만큼 놓았어요.`,
+    over: `${parts}칸 중 ${placed}칸이라 목표보다 많아요. 하나 빼 볼까요?`,
+  };
+  return <div className="fraction-builder" role="group" aria-label={promptAlt ?? prompt}>
+    <div className="builder-prompt"><RichText text={prompt} asCaption /></div>
+    <div className="builder-board">
+      <div className="builder-strip" style={{ gridTemplateColumns: `repeat(${parts}, minmax(0, 1fr))`, minWidth: parts > 8 ? `${parts * 34}px` : undefined }}>
+        {slots.map((filled, slot) => <button key={slot} type="button" className={`builder-slot${filled ? ' filled' : ''}`}
+          aria-pressed={filled} aria-label={`${slot + 1}번째 칸, ${filled ? '채움' : '비어 있음'}`}
+          onClick={() => setSlots(setSlot(slots, slot, !filled))}
+          onDragOver={(event) => { if (!filled) event.preventDefault(); }}
+          onDrop={(event) => { event.preventDefault(); setSlots(setSlot(slots, slot, true)); }} />)}
+      </div>
+    </div>
+    {/* Dragging is the extra a mouse gets; the tray is hidden on a touch device, where HTML drag
+        does not fire and tapping a slot is the whole interaction. */}
+    <div className="builder-tray">
+      <span className="builder-piece" draggable aria-hidden="true"
+        onDragStart={(event) => event.dataTransfer.setData('text/plain', 'fraction-piece')} />
+      <span className="builder-hint">조각을 끌어다 놓아도 돼요.</span>
+    </div>
+    <p className={`builder-status ${status}`} aria-live="polite">{messages[status]}</p>
+    <div className="builder-actions">
+      <span>지금 <RichText text={`$\\frac{${placed}}{${parts}}$`} asCaption /></span>
+      <button type="button" className="text-button" onClick={() => setSlots(createSlots(parts, start))}>처음으로</button>
+    </div>
+  </div>;
 }
 
 type BlockContext = { problems: PublicProblem[]; renderProblem: (problem: PublicProblem) => ReactNode; glossary: GlossaryContext };
 type Renderer = { validate: (payload: Record<string, unknown>, context: BlockContext) => boolean; render: (block: ContentBlock, context: BlockContext) => ReactNode };
 const validFraction = (payload: Record<string, unknown>) => Number.isInteger(payload.parts) && Number(payload.parts) >= 1 && Number(payload.parts) <= 100 && Number.isInteger(payload.filled) && Number(payload.filled) >= 0 && Number(payload.filled) <= Number(payload.parts);
+const validSequence = (payload: Record<string, unknown>) => Number.isInteger(payload.parts) && Number(payload.parts) >= 1 && Number(payload.parts) <= 100
+  && Array.isArray(payload.frames) && payload.frames.length >= sequenceLimits.minFrames && payload.frames.length <= sequenceLimits.maxFrames
+  && payload.frames.every((frame) => !!frame && typeof frame === 'object' && Number.isInteger((frame as StripFrame).filled)
+    && (frame as StripFrame).filled >= 0 && (frame as StripFrame).filled <= Number(payload.parts))
+  && typeof payload.alt === 'string' && payload.alt.length > 0;
+const validBuilder = (payload: Record<string, unknown>) => Number.isInteger(payload.parts)
+  && Number(payload.parts) >= builderLimits.minParts && Number(payload.parts) <= builderLimits.maxParts
+  && Number.isInteger(payload.target) && Number(payload.target) >= 0 && Number(payload.target) <= Number(payload.parts)
+  && (payload.start === undefined || (Number.isInteger(payload.start) && Number(payload.start) >= 0 && Number(payload.start) <= Number(payload.parts)))
+  && typeof payload.prompt === 'string' && payload.prompt.trim().length > 0;
 const validTerms = (payload: Record<string, unknown>) => Array.isArray(payload.terms) && payload.terms.every((term) => !!term && typeof term === 'object' && typeof (term as TermAnnotation).termKey === 'string' && typeof (term as TermAnnotation).surface === 'string');
 const registry: Record<string, Renderer> = {
   'core.rich_text@1': {
@@ -102,6 +213,20 @@ const registry: Record<string, Renderer> = {
       // role="img" hides descendants, so alt alone names the figure and the caption may carry math.
       return <div role="img" aria-label={block.payload.alt as string}><FractionStrip parts={Number(primitive.parts)} filled={Number(primitive.filled)} label={caption} accessibleLabel={block.payload.alt as string} /></div>;
     },
+  },
+  'math.fraction_sequence@1': {
+    validate: validSequence,
+    render: (block) => <FractionSequence parts={Number(block.payload.parts)} frames={block.payload.frames as StripFrame[]} alt={block.payload.alt as string}
+      frameMs={typeof block.payload.frameMs === 'number' ? block.payload.frameMs : undefined}
+      loop={block.payload.loop === true} autoplay={block.payload.autoplay === true} />,
+  },
+  'math.fraction_builder@1': {
+    validate: validBuilder,
+    render: (block) => <FractionBuilder parts={Number(block.payload.parts)} target={Number(block.payload.target)}
+      start={typeof block.payload.start === 'number' ? block.payload.start : undefined}
+      prompt={block.payload.prompt as string}
+      promptAlt={typeof block.payload.promptAlt === 'string' ? block.payload.promptAlt : undefined}
+      successText={typeof block.payload.successText === 'string' ? block.payload.successText : undefined} />,
   },
   'core.problem_set@1': {
     validate: (payload, context) => Array.isArray(payload.problemVersionIds) && payload.problemVersionIds.length > 0 && payload.problemVersionIds.every((id) => typeof id === 'string' && context.problems.some((problem) => problem.problemVersionId === id)),
