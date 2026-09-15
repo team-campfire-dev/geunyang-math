@@ -7,32 +7,19 @@ export type PublishedTerm = {
 };
 
 /**
- * Decides which term definitions a learner may open while reading. The rule is structural, so it
- * holds before any personal history exists: a concept is explained only once it is behind the
- * learner. Explaining the concept currently being taught or assessed would replace the lesson.
+ * Turns the definitions a document linked into what a learner may open. Linking is the decision:
+ * whoever wrote the lesson chose that word, in that place, to be explainable, so nothing here
+ * second-guesses it from the learner's progress.
  *
- * Hidden terms are omitted from the response rather than flagged, so their text never ships to a
- * client that must not show it, and the renderer needs no rule of its own.
+ * The one thing this adds is where a concept is taught, so a definition can offer the way back to
+ * the class that teaches it.
  */
-export function visibleTerms(input: {
-  terms: PublishedTerm[];
-  classes: PublicClass[];
-  /** The class being read, or the skills an assignment assesses when there is no class context. */
-  current: { classKey: string; skillKeys: string[]; prerequisiteSkillKeys: string[]; order: number } | { assessedSkillKeys: string[] };
-}): GlossaryEntry[] {
+export function glossaryEntries(terms: PublishedTerm[], classes: PublicClass[]): GlossaryEntry[] {
   const taughtIn = new Map<string, PublicClass>();
-  for (const item of [...input.classes].sort((a, b) => a.order - b.order)) {
+  for (const item of [...classes].sort((a, b) => a.order - b.order)) {
     for (const skillKey of item.skillKeys) if (!taughtIn.has(skillKey)) taughtIn.set(skillKey, item);
   }
-  const visible = (skillKey: string) => {
-    if ('assessedSkillKeys' in input.current) return !input.current.assessedSkillKeys.includes(skillKey);
-    if (input.current.skillKeys.includes(skillKey)) return false;
-    if (input.current.prerequisiteSkillKeys.includes(skillKey)) return true;
-    const source = taughtIn.get(skillKey);
-    // A concept from a later class is not review material; leave the text plain until it is taught.
-    return !!source && source.order < input.current.order;
-  };
-  return input.terms.filter((term) => visible(term.skillKey)).map((term) => ({
+  return terms.map((term) => ({
     termKey: term.termKey, scopeKind: term.scopeKind, scopeKey: term.scopeKey,
     label: term.label, summary: term.summary, skillKey: term.skillKey,
     blocks: term.blocks, classKey: taughtIn.get(term.skillKey)?.classKey ?? null,
