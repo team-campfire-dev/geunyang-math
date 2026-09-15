@@ -123,6 +123,9 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 | [Google 로그인 #4](https://github.com/team-campfire-dev/geunyang-math/pull/4) | `4509346` | 161개 테스트, 웹·모바일 빌드, 운영 DB migration·배포 성공. 실제 Google 로그인에서 학습 시간 저장→로그아웃→같은 계정 재로그인 복원 확인. [실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/34805433313) |
 | [규칙 기반 개인화 #5](https://github.com/team-campfire-dev/geunyang-math/pull/5) | `87a1717` | 179개 테스트, 웹·모바일 빌드·운영 배포 성공. 로컬 브라우저 진단 이어하기·추천 변경·직접 선택 검증, 운영 개인화 화면 조회 확인. [실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/34809013344) |
 | [DB 콘텐츠 관리 #6](https://github.com/team-campfire-dev/geunyang-math/pull/6) | `0c5e505` | 190개 테스트, 신규 DB 설치·기존 DB 업그레이드·CLI 검증, 웹·모바일 빌드·Oracle 배포 성공. 공개 클래스 3개·블록·15문항의 이전 내용 일치와 기존 계정 학습 상태 조회 확인. [실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/34811307476) |
+| [카탈로그 문구·수식 표기 #8](https://github.com/team-campfire-dev/geunyang-math/pull/8) | `e6c7e51` | 공개 카탈로그의 개념 이름, 채점의 LaTeX 부분집합, 캡션 수식과 낭독용 이름 분리. 배포 성공. |
+| [용어 풀이 #9](https://github.com/team-campfire-dev/geunyang-math/pull/9) | `00e8ca1` | 용어 판본과 진행도 기반 노출, `core.rich_text@2`. 배포 성공. 이 시점 콘텐츠는 아직 v1이라 화면 변화 없음. |
+| [번들 발행 자동화 #11](https://github.com/team-campfire-dev/geunyang-math/pull/11) | `7282d9a` | 배포가 `content/*.json`을 적용 이력에 따라 한 번만 발행. 이 배포에서 기본 용어 6개가 운영에 등록됨. |
 
 DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVersion과 초기 콘텐츠를 등록한다. 기본 콘텐츠는 클래스 3개(수업·숙제 문항 15개), 진단 1종(6문항), 개념 3개다. 기존 ClassVersion 행의 내용·해시·발행 시각을 덮어쓰지 않는다. 배포용 migrator는 `db:migrate` 후 저장소의 `content/*.json`을 `content:publish`로 발행하고 `content:verify`를 실행한다. `AppliedContentBundle`에 같은 checksum이 있으면 건너뛰므로 내용이 그대로인 배포는 DB를 건드리지 않고, 이미 발행한 판본을 고쳐 커밋하면 배포가 실패한다. 등록 명령과 불변 판본 정책은 [DB 콘텐츠 관리](content-management.md)를 따른다.
 
@@ -130,9 +133,17 @@ DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVer
 
 최근 기능 릴리스에서는 공개 health 정상, 정확한 commit, `googleLogin=true`·`developmentLogin=false`를 확인했다. 공개 API의 클래스 문서에서 비공개 채점 명세가 노출되지 않음을 비교했다. 운영 화면 점검은 기존 계정의 조회만 수행했고 실제 진단·과제 답안을 새로 제출하지 않았다. 기존 DB 업그레이드의 모든 행·해시·시각·snapshot 보존 비교는 별도의 로컬 테스트 DB에서 수행했다.
 
+## 운영 콘텐츠·데이터 작업 기록
+
+2026-09-15에 수식과 용어 주석을 담은 클래스 판본 `fraction-meaning:v4`·`fraction-equivalence:v4`·`fraction-addition:v4`를 운영에 발행했다. migrator 이미지로 `content:import`를 실행했고 `newClasses: 3`, 용어는 이미 등록되어 `unchangedVersions: 6`이었다. 공개 API에서 카탈로그가 v4로 바뀌고 수식·용어 주석·glossary가 내려오는 것을 확인했다. 기존 판본은 그대로 남아 있다.
+
+같은 날 요청에 따라 운영 DB의 계정 데이터를 전부 삭제했다. FK 자식부터 `AssessmentRevision`·`SubmissionItem`·`Attempt`·`Submission`·`AssignmentRecipient`·`AssignmentItem`·`Assignment`·`Enrollment`·`HintUse`·`DiagnosticRun`·`RecommendationHistory`·`Session`·`GoogleIdentity`·`OAuthAttempt`·`Scope`·`User` 순으로 비웠다. 콘텐츠 테이블은 건드리지 않았고 삭제 후 `content:verify`로 클래스 6판본·문항 30·개념 3·진단 1·용어 6이 그대로임을 확인했다. 되돌릴 백업 절차는 아직 없다.
+
+수동 작업 중 확인한 제약이 두 가지 있다. 첫째, `scp`로 올린 번들은 `ubuntu`(uid 1001) 소유 0600이라 `node`(uid 1000)로 도는 컨테이너가 읽지 못한다. `--user 1000:1001`과 그룹 읽기 권한으로 실행한 뒤 권한을 되돌린다. 둘째, `migrate` 서비스만 쓰더라도 Compose는 파일 전체를 해석하므로 `APP_BIND_IP`·`DEPLOY_ENV_FILE`까지 필요하다. 일회성 작업은 같은 환경 파일·CA·호스트 별칭을 주어 `docker run`으로 직접 실행하는 편이 간단하다.
+
 ## 운영 후속 작업
 
-- 백업 생성·복원 훈련과 복구 소요 시간 확인.
+- 백업 생성·복원 훈련과 복구 소요 시간 확인. 계정 데이터를 전체 삭제한 뒤라 되돌릴 수단이 없는 상태가 실제로 확인됐다.
 - 계정 삭제·데이터 보관 절차, 장애 관측과 모니터링 확장.
 - 사용자 결정에 따라 Google 동의 화면의 공유 이름 변경.
 - 인증서 갱신과 DB CA/호스트 변경 시 앱·migrator의 TLS 연결 및 프록시 설정 재검증.
