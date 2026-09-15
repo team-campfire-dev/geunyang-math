@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createDatabase } from '@/server/db';
-import { AuthoringService, authoringRole, openAuthoring, openAuthoringAccount } from '@/server/authoring';
+import { AuthoringService, authoringRole, authoringRoleDetail, openAuthoring, openAuthoringAccount } from '@/server/authoring';
 import { importContent } from '@/server/content-store';
 import type { StoredClass } from '@/core/content';
 import { newProblem, nextProblemVersionId, type DraftEdit, type DraftProblem } from '@/shared/authoring';
@@ -49,7 +49,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     expect(await authoringRole(db, learner.id)).toBeNull();
     expect(await authoringRole(db, author.id)).toBe('author');
     expect(await authoringRole(db, admin.id)).toBe('admin');
-    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], classes: [] });
+    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], classes: [], accounts: [] });
     await expect(service.createDraft(learner.id, classKey)).rejects.toThrow(/권한/);
   });
 
@@ -237,6 +237,96 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     // A question with no hints says so, and its response format restates the answer that was written.
     expect(stored.hintAvailable).toBe(false);
     expect(stored.responseSpec).toEqual({ kind: 'integer' });
+  });
+
+  it('hands content work to another account without touching the deployment', async () => {
+    const admin = await account('admin');
+    const learner = await account();
+    expect(await authoringRole(db, learner.id)).toBeNull();
+    const granted = await service.grantRole(admin.id, learner.id, 'author');
+    expect(await authoringRole(db, learner.id)).toBe('author');
+    expect(granted.workspace.accounts.find((item) => item.userId === learner.id))
+      .toMatchObject({ role: 'author', source: 'granted', me: false });
+    // The account can now open the editor, and sees only what an author may see.
+    expect((await service.workspace(learner.id)).role).toBe('author');
+    expect((await service.workspace(learner.id)).accounts).toEqual([]);
+    // Raising and lowering a role is the same write, so a mistake is corrected in place.
+    await service.grantRole(admin.id, learner.id, 'admin');
+    expect(await authoringRole(db, learner.id)).toBe('admin');
+    await service.revokeRole(admin.id, learner.id);
+    expect(await authoringRole(db, learner.id)).toBeNull();
+  });
+
+  it('refuses to hand out or take back work without the role to do it', async () => {
+    const author = await account('author');
+    const admin = await account('admin');
+    const learner = await account();
+    await expect(service.grantRole(author.id, learner.id, 'author')).rejects.toThrow(/관리자만/);
+    await expect(service.grantRole(learner.id, learner.id, 'admin')).rejects.toThrow(/권한/);
+    await expect(service.grantRole(admin.id, 'no-such-account', 'author')).rejects.toThrow(/찾을 수 없어요/);
+    // The shared account exists because nobody was signed in; there is no person to hand work to.
+    await openAuthoringAccount(db);
+    await expect(service.grantRole(admin.id, 'open-authoring', 'admin')).rejects.toThrow(/공용 편집 계정/);
+    await expect(service.revokeRole(admin.id, learner.id)).rejects.toThrow(/거둘 역할이 없어요/);
+  });
+
+  it('keeps someone able to publish: no removing your own role, and never the last granted administrator', async () => {
+    const admin = await account('admin');
+    // An administrator never stands themselves down, so the list can never empty by revoking alone.
+    await expect(service.revokeRole(admin.id, admin.id)).rejects.toThrow(/자기 관리자 역할/);
+
+    // The last granted administrator is the one that survives a deployment change, so an
+    // environment-named administrator is not allowed to take it away either.
+    const named = await account();
+    const subject = `google-${randomUUID()}`;
+    await db.googleIdentity.create({ data: { subject, userId: named.id } });
+    const others = await db.contentAuthor.findMany({ where: { role: 'admin', userId: { not: admin.id } } });
+    await db.contentAuthor.updateMany({ where: { userId: { in: others.map((row) => row.userId) } }, data: { role: 'author' } });
+    process.env.CONTENT_ADMIN_SUBJECTS = subject;
+    try {
+      await expect(service.revokeRole(named.id, admin.id)).rejects.toThrow(/마지막 관리자/);
+      // Lowering the last administrator to author is the same loss, so it meets the same guard.
+      await expect(service.grantRole(named.id, admin.id, 'author')).rejects.toThrow(/마지막 관리자/);
+      await expect(service.grantRole(admin.id, admin.id, 'author')).rejects.toThrow(/자기 관리자 역할/);
+      // Raising your own role is not a loss, so it is allowed and changes nothing here.
+      await service.grantRole(admin.id, admin.id, 'admin');
+      expect(await authoringRole(db, admin.id)).toBe('admin');
+      // With a second granted administrator standing, the first may be stood down.
+      const deputy = await account('admin');
+      await service.revokeRole(named.id, admin.id);
+      expect(await authoringRole(db, admin.id)).toBeNull();
+      expect(await authoringRole(db, deputy.id)).toBe('admin');
+    } finally {
+      delete process.env.CONTENT_ADMIN_SUBJECTS;
+      for (const row of others) await db.contentAuthor.update({ where: { userId: row.userId }, data: { role: row.role } });
+    }
+  });
+
+  it('shows an environment-named administrator as one the screen cannot take back', async () => {
+    const admin = await account('admin');
+    const named = await account();
+    const subject = `google-${randomUUID()}`;
+    await db.googleIdentity.create({ data: { subject, userId: named.id } });
+    process.env.CONTENT_ADMIN_SUBJECTS = subject;
+    try {
+      expect(await authoringRoleDetail(db, named.id)).toEqual({ role: 'admin', source: 'environment' });
+      const listed = (await service.workspace(admin.id)).accounts.find((item) => item.userId === named.id);
+      expect(listed).toMatchObject({ role: 'admin', source: 'environment', grantedAt: null });
+      // There is no row behind it, so the screen has nothing to delete and says so.
+      await expect(service.revokeRole(admin.id, named.id)).rejects.toThrow(/거둘 역할이 없어요/);
+    } finally { delete process.env.CONTENT_ADMIN_SUBJECTS; }
+  });
+
+  it('finds an account by the name an administrator would know it by', async () => {
+    const admin = await account('admin');
+    const learner = await db.user.create({ data: { displayName: `찾기 ${randomUUID()}`, scopes: { create: { kind: 'personal' } } } });
+    await openAuthoringAccount(db);
+    const { matches } = await service.searchAccounts(admin.id, learner.displayName.slice(0, 12));
+    expect(matches!.map((item) => item.userId)).toContain(learner.id);
+    expect(matches!.find((item) => item.userId === learner.id)).toMatchObject({ role: null, source: 'none' });
+    // The shared editing account is never a search result, since it is not a person.
+    expect((await service.searchAccounts(admin.id, '열린 편집')).matches).toEqual([]);
+    await expect(service.searchAccounts(learner.id, '찾기')).rejects.toThrow(/권한/);
   });
 
   it('refuses to publish an invalid draft, or to publish at all without the role', async () => {

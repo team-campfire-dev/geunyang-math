@@ -8,6 +8,18 @@ import type { ClassSection, ContentBlock, PublicProblem } from './api';
 export type AuthoringRole = 'admin' | 'author';
 export const mayPublish = (role: AuthoringRole | null) => role === 'admin';
 export const mayEditEveryDraft = (role: AuthoringRole | null) => role === 'admin';
+/** Handing content work to another account is the same authority as publishing what it writes. */
+export const mayGrantRoles = (role: AuthoringRole | null) => role === 'admin';
+
+/**
+ * An account as the role panel shows it. `source` says where a role came from: a row an
+ * administrator wrote, or the environment that names a new deployment's first administrators.
+ * An environment-named role is not a row, so this screen can show it but cannot take it back.
+ */
+export type AccountRole = {
+  userId: string; displayName: string; role: AuthoringRole | null;
+  source: 'granted' | 'environment' | 'none'; grantedAt: string | null; me: boolean;
+};
 
 export type DraftSummary = {
   id: string; classKey: string; versionId: string; baseVersionId: string | null; title: string;
@@ -43,14 +55,19 @@ export const toPublicProblem = (problem: DraftProblem): PublicProblem => ({
   hintAvailable: problem.hints.length > 0,
 });
 export type ClassChoice = { classKey: string; title: string; latestVersionId: string; suggestedVersionId: string; hasDraft: boolean };
-export type AuthoringWorkspace = { role: AuthoringRole | null; drafts: DraftSummary[]; classes: ClassChoice[] };
+export type AuthoringWorkspace = { role: AuthoringRole | null; drafts: DraftSummary[]; classes: ClassChoice[]; accounts: AccountRole[] };
 export type AuthoringAction =
   | { action: 'draft.create'; classKey: string }
   | { action: 'draft.save'; draftId: string; edit: DraftEdit }
   | { action: 'draft.validate'; draftId: string }
   | { action: 'draft.publish'; draftId: string }
-  | { action: 'draft.delete'; draftId: string };
-export type AuthoringResponse = { workspace: AuthoringWorkspace; draft?: DraftDetail; publishedVersionId?: string };
+  | { action: 'draft.delete'; draftId: string }
+  | { action: 'account.search'; query: string }
+  | { action: 'role.grant'; userId: string; role: AuthoringRole }
+  | { action: 'role.revoke'; userId: string };
+export type AuthoringResponse = {
+  workspace: AuthoringWorkspace; draft?: DraftDetail; publishedVersionId?: string; matches?: AccountRole[];
+};
 
 const versionSuffix = /:v(\d+)$/;
 /** Generated names end in the version they were written for, the way published records read. */

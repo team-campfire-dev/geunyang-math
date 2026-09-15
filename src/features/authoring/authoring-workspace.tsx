@@ -3,8 +3,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { ClassSection, ContentBlock } from '@/shared/api';
 import {
-  blockFormOf, mayPublish, moveBlock, nextBlockId, nextSectionId, toPublicProblem,
-  type AuthoringWorkspace as Workspace, type DraftDetail, type DraftEdit, type DraftProblem, type DraftSummary,
+  blockFormOf, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId, toPublicProblem,
+  type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail, type DraftEdit,
+  type DraftProblem, type DraftSummary,
 } from '@/shared/authoring';
 import { ApiError, learningApi, type Session } from '@/features/learning/api-client';
 import { ContentBlocks } from '@/features/learning/content-blocks';
@@ -30,6 +31,7 @@ export function AuthoringWorkspace() {
   const [notice, setNotice] = useState<string | null>(null);
   const [confirming, setConfirming] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [matches, setMatches] = useState<AccountRole[] | null>(null);
 
   const dirty = !!draft && !!edit && !sameEdit(draft.edit, edit);
   const open = useCallback((detail: DraftDetail) => {
@@ -92,6 +94,10 @@ export function AuthoringWorkspace() {
       <DraftList workspace={workspace} busy={busy}
         onOpen={(summary) => run(async () => open((await authoringApi.draft(summary.id)).draft))}
         onCreate={(classKey) => act({ action: 'draft.create', classKey })} />
+      {mayGrantRoles(workspace.role) && <RolePanel accounts={workspace.accounts} busy={busy} matches={matches}
+        onSearch={(query) => act({ action: 'account.search', query }, (response) => setMatches(response.matches ?? []))}
+        onGrant={(userId, role) => act({ action: 'role.grant', userId, role }, () => setMatches(null))}
+        onRevoke={(userId) => act({ action: 'role.revoke', userId }, () => setMatches(null))} />}
     </Shell>;
   }
 
@@ -223,6 +229,74 @@ export function AuthoringWorkspace() {
       <ul>{draft.issues.map((issue) => <li key={issue}>{issue}</li>)}</ul>
     </section>}
   </Shell>;
+}
+
+const roleNames: Record<AuthoringRole, string> = { admin: '관리자 · 발행까지', author: '작성자 · 자기 초안' };
+
+/**
+ * Who may write content. An administrator hands the role out here rather than through the
+ * deployment, so adding a person needs no environment change and no restart.
+ */
+function RolePanel({ accounts, matches, busy, onSearch, onGrant, onRevoke }: {
+  accounts: AccountRole[]; matches: AccountRole[] | null; busy: boolean;
+  onSearch: (query: string) => void; onGrant: (userId: string, role: AuthoringRole) => void; onRevoke: (userId: string) => void;
+}) {
+  const [query, setQuery] = useState('');
+  const held = (account: AccountRole) => (account.source === 'environment'
+    ? '배포 설정으로 지정된 관리자예요. 여기서는 거둘 수 없어요.'
+    : `${new Date(account.grantedAt!).toLocaleDateString('ko-KR')}부터`);
+  return <section className="dashboard-section">
+    <div className="section-heading"><div><span className="eyebrow">ROLES</span><h2>편집 권한</h2></div></div>
+    <fieldset className="editor-panel">
+      <legend>권한을 가진 계정</legend>
+      <p className="editor-note">관리자는 모든 초안을 보고 발행까지 하고, 작성자는 자기 초안만 고쳐요. 역할은 바로 반영되고 앱을 다시 띄울 필요가 없어요.</p>
+      <div className="role-list">
+        {accounts.map((account) => <div key={account.userId} className="role-row">
+          <span className="role-who">
+            <strong>{account.displayName}{account.me && <em>나</em>}</strong>
+            <small>{held(account)}</small>
+          </span>
+          {account.source === 'environment'
+            ? <span className="pill">관리자 · 배포 설정</span>
+            : <>
+              <select value={account.role ?? 'author'} disabled={busy || (account.me && account.role === 'admin')}
+                onChange={(event) => onGrant(account.userId, event.target.value as AuthoringRole)}>
+                {(Object.keys(roleNames) as AuthoringRole[]).map((role) => <option key={role} value={role}>{roleNames[role]}</option>)}
+              </select>
+              <button type="button" className="text-button" disabled={busy || account.me}
+                onClick={() => onRevoke(account.userId)}><Icon name="close" size={14} />거두기</button>
+            </>}
+        </div>)}
+      </div>
+    </fieldset>
+
+    <fieldset className="editor-panel">
+      <legend>계정 찾기</legend>
+      <p className="editor-note">이름의 일부로 찾습니다. 로그인한 적이 있는 계정만 나와요.</p>
+      <div className="editor-actions">
+        <label className="editor-field"><span className="editor-label">이름</span>
+          <input value={query} onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={(event) => { if (event.key === 'Enter' && query.trim().length >= 2) onSearch(query.trim()); }} /></label>
+        <button type="button" className="button secondary" disabled={busy || query.trim().length < 2}
+          onClick={() => onSearch(query.trim())}>찾기</button>
+      </div>
+      {matches !== null && (matches.length === 0
+        ? <p className="empty-inline">찾은 계정이 없어요.</p>
+        : <div className="role-list">
+          {matches.map((account) => <div key={account.userId} className="role-row">
+            <span className="role-who">
+              <strong>{account.displayName}{account.me && <em>나</em>}</strong>
+              <small>{account.role ? `지금 ${roleNames[account.role]}` : '권한 없음'}</small>
+            </span>
+            {account.source === 'environment'
+              ? <span className="pill">관리자 · 배포 설정</span>
+              : (Object.keys(roleNames) as AuthoringRole[]).map((role) => <button key={role} type="button" className="button secondary"
+                  disabled={busy || account.role === role} onClick={() => onGrant(account.userId, role)}>
+                  {role === 'admin' ? '관리자로' : '작성자로'}</button>)}
+          </div>)}
+        </div>)}
+    </fieldset>
+  </section>;
 }
 
 function Shell({ role, children }: { role?: string; children: React.ReactNode }) {
