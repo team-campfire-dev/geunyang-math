@@ -2,9 +2,9 @@
 
 import { useRef, useState } from 'react';
 import {
-  changeFor, createSceneItem, emptyFrames, frameLimits, itemBounds, moveItem, nameItem, reorderItem, resizeItem,
-  sceneColors, sceneItemKinds, sceneItemLabels, sceneLimits, setChange, snap,
-  type Scene, type SceneFrame, type SceneItem, type SceneItemKind,
+  changeFor, createSceneItem, createZone, emptyFrames, frameLimits, itemBounds, moveItem, nameItem, reorderItem,
+  resizeItem, sceneColors, sceneItemKinds, sceneItemLabels, sceneLimits, setChange, snap,
+  type Scene, type SceneFrame, type SceneItem, type SceneItemKind, type SceneZone,
 } from '@/shared/scene';
 import { SceneShapes } from '@/features/learning/content-blocks';
 import { Icon } from '@/features/learning/icons';
@@ -17,10 +17,14 @@ const number = (value: unknown, fallback: number) => (typeof value === 'number' 
 function readScene(payload: Record<string, unknown>): Scene {
   const items = Array.isArray(payload.items) ? (payload.items as SceneItem[]).filter((item) => !!item && sceneItemKinds.includes(item?.kind)) : [];
   const frames = Array.isArray(payload.frames) ? (payload.frames as SceneFrame[]).filter((frame) => !!frame && Array.isArray(frame.changes)) : undefined;
-  return { width: number(payload.width, sceneLimits.defaultWidth), height: number(payload.height, sceneLimits.defaultHeight), items, frames };
+  const zones = Array.isArray(payload.zones) ? (payload.zones as SceneZone[]).filter((zone) => !!zone && typeof zone.id === 'string') : undefined;
+  return {
+    width: number(payload.width, sceneLimits.defaultWidth), height: number(payload.height, sceneLimits.defaultHeight),
+    items, frames, zones,
+  };
 }
 
-type Drag = { index: number; mode: 'move' | 'resize'; originX: number; originY: number; item: SceneItem };
+type Drag = { index: number; mode: 'move' | 'resize'; on: 'item' | 'zone'; originX: number; originY: number; item?: SceneItem; zone?: SceneZone };
 
 /**
  * A drawing surface instead of a coordinate form. Shapes are dragged and resized with the pointer,
@@ -29,11 +33,13 @@ type Drag = { index: number; mode: 'move' | 'resize'; originX: number; originY: 
  */
 export function SceneEditor({ payload, onChange }: { payload: Record<string, unknown>; onChange: (next: Record<string, unknown>) => void }) {
   const scene = readScene(payload);
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelected] = useState<{ on: 'item' | 'zone'; index: number } | null>(null);
   const [frameIndex, setFrameIndex] = useState<number | null>(null);
   const [drag, setDrag] = useState<Drag | null>(null);
   const surface = useRef<SVGSVGElement>(null);
   const frames = scene.frames;
+  const zones = scene.zones ?? [];
+  const task = scene.task;
   // While a frame is open the canvas shows that moment, and a drag records the move into it.
   const frame = frames && frameIndex !== null ? frames[Math.min(frameIndex, frames.length - 1)] : undefined;
 
@@ -42,7 +48,10 @@ export function SceneEditor({ payload, onChange }: { payload: Record<string, unk
   const writeFrames = (next: SceneFrame[] | undefined, items: SceneItem[] = scene.items) =>
     onChange({ ...payload, width: scene.width, height: scene.height, items, ...(next ? { frames: next } : {}), ...(next ? {} : { frames: undefined }) });
   const replace = (index: number, item: SceneItem) => write(scene.items.map((current, position) => (position === index ? item : current)));
-  const item = selected !== null ? scene.items[selected] : undefined;
+  const writeZones = (next: SceneZone[] | undefined, extra: Record<string, unknown> = {}) =>
+    onChange({ ...payload, width: scene.width, height: scene.height, items: scene.items, zones: next, ...extra });
+  const item = selected?.on === 'item' ? scene.items[selected.index] : undefined;
+  const zone = selected?.on === 'zone' ? zones[selected.index] : undefined;
 
   /** Pointer position in the drawing's own units, so a resized canvas needs no other arithmetic. */
   const at = (event: React.PointerEvent) => {
@@ -50,18 +59,27 @@ export function SceneEditor({ payload, onChange }: { payload: Record<string, unk
     if (!box) return { x: 0, y: 0 };
     return { x: ((event.clientX - box.left) / box.width) * scene.width, y: ((event.clientY - box.top) / box.height) * scene.height };
   };
-  const start = (event: React.PointerEvent, index: number, mode: Drag['mode']) => {
+  const start = (event: React.PointerEvent, index: number, mode: Drag['mode'], on: Drag['on'] = 'item') => {
     event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
     const point = at(event);
-    setSelected(index);
-    setDrag({ index, mode, originX: point.x, originY: point.y, item: scene.items[index] });
+    setSelected({ on, index });
+    setDrag({ index, mode, on, originX: point.x, originY: point.y, item: on === 'item' ? scene.items[index] : undefined, zone: on === 'zone' ? zones[index] : undefined });
   };
   const track = (event: React.PointerEvent) => {
     if (!drag) return;
     const point = at(event);
     const dx = snap(point.x - drag.originX, step);
     const dy = snap(point.y - drag.originY, step);
+    if (drag.on === 'zone' && drag.zone) {
+      const zone = drag.zone;
+      writeZones(zones.map((current, index) => (index !== drag.index ? current : drag.mode === 'move'
+        ? { ...current, x: zone.x + dx, y: zone.y + dy }
+        : { ...current, width: Math.max(step, zone.width + dx), height: Math.max(step, zone.height + dy) })));
+      return;
+    }
+    if (!drag.item) return;
+    const dragged = drag.item;
     if (frames && frameIndex !== null && drag.mode === 'move') {
       // Inside a frame the drawing itself never moves; the frame remembers where the shape goes.
       const named = nameItem(scene.items, drag.index);
@@ -70,19 +88,19 @@ export function SceneEditor({ payload, onChange }: { payload: Record<string, unk
       setDrag({ ...drag, originX: point.x, originY: point.y });
       return;
     }
-    if (drag.mode === 'move') replace(drag.index, moveItem(drag.item, dx, dy));
+    if (drag.mode === 'move') replace(drag.index, moveItem(dragged, dx, dy));
     else {
-      const bounds = itemBounds(drag.item);
-      replace(drag.index, resizeItem(drag.item, Math.max(step, bounds.width + dx), Math.max(step, bounds.height + dy)));
+      const bounds = itemBounds(dragged);
+      replace(drag.index, resizeItem(dragged, Math.max(step, bounds.width + dx), Math.max(step, bounds.height + dy)));
     }
   };
 
   const add = (kind: SceneItemKind) => {
     if (scene.items.length >= sceneLimits.maxItems) return;
     write([...scene.items, createSceneItem(kind, scene)]);
-    setSelected(scene.items.length);
+    setSelected({ on: 'item', index: scene.items.length });
   };
-  const bounds = item ? itemBounds(item) : null;
+  const bounds = item ? itemBounds(item) : zone ? { x: zone.x, y: zone.y, width: zone.width, height: zone.height } : null;
   const selectedShift = item ? changeFor(frame, item) : undefined;
 
   return <div className="scene-editor">
@@ -109,12 +127,18 @@ export function SceneEditor({ payload, onChange }: { payload: Record<string, unk
           return <rect key={index} x={box.x - 2} y={box.y - 2} width={Math.max(box.width + 4, 6)} height={Math.max(box.height + 4, 6)}
             fill="transparent" style={{ cursor: 'move' }} onPointerDown={(event) => start(event, index, 'move')} />;
         })}
-        {bounds && selected !== null && <g className="scene-selection" transform={`translate(${selectedShift?.dx ?? 0}, ${selectedShift?.dy ?? 0})`}>
+        {/* Zones are drawn as outlines the author can drag and stretch like any other shape. */}
+        {zones.map((current, index) => <g key={current.id}>
+          <rect x={current.x} y={current.y} width={current.width} height={current.height} rx={3} className="scene-zone" />
+          <rect x={current.x} y={current.y} width={current.width} height={current.height} fill="transparent"
+            style={{ cursor: 'move' }} onPointerDown={(event) => start(event, index, 'move', 'zone')} />
+        </g>)}
+        {bounds && selected && <g className="scene-selection" transform={`translate(${selectedShift?.dx ?? 0}, ${selectedShift?.dy ?? 0})`}>
           <rect x={bounds.x - 2} y={bounds.y - 2} width={Math.max(bounds.width + 4, 6)} height={Math.max(bounds.height + 4, 6)}
             fill="none" stroke="var(--green)" strokeWidth="1" strokeDasharray="4 3" pointerEvents="none" />
           <rect x={bounds.x + Math.max(bounds.width, 4) - 3} y={bounds.y + Math.max(bounds.height, 4) - 3} width="7" height="7"
             fill="var(--white)" stroke="var(--green)" strokeWidth="1" style={{ cursor: 'nwse-resize' }}
-            onPointerDown={(event) => start(event, selected, 'resize')} />
+            onPointerDown={(event) => start(event, selected.index, 'resize', selected.on)} />
         </g>}
       </svg>
     </div>
@@ -166,12 +190,85 @@ export function SceneEditor({ payload, onChange }: { payload: Record<string, unk
       </> : <p className="editor-note">움직임을 켜면 같은 그림을 여러 장면으로 이어 보여줍니다.</p>}
     </div>
 
-    {item && selected !== null
-      ? <ItemPanel item={item} index={selected} total={scene.items.length}
-          onChange={(next) => replace(selected, next)}
-          onReorder={(delta) => { write(reorderItem(scene.items, selected, delta)); setSelected(Math.min(Math.max(selected + delta, 0), scene.items.length - 1)); }}
-          onRemove={() => { write(scene.items.filter((_, position) => position !== selected)); setSelected(null); }} />
-      : <p className="editor-note">도형을 클릭하면 색과 위치를 고칠 수 있어요. 빈 곳을 누르면 선택이 풀립니다.</p>}
+    <div className="scene-frames">
+      <div className="scene-frames-head">
+        <span className="editor-label">직접 놓아 보기</span>
+        {zones.length
+          ? <button type="button" className="text-button" onClick={() => { writeZones(undefined, { task: undefined }); setSelected(null); }}>조작 끄기</button>
+          : <button type="button" className="text-button" disabled={!!frames}
+              onClick={() => writeZones([createZone(scene, [])], { task: { prompt: '조각을 알맞은 자리에 놓아 보세요.' } })}>
+              <Icon name="plus" size={13} />놓아 보게 만들기</button>}
+      </div>
+      {zones.length ? <>
+        <p className="editor-note">도형에 「끌 수 있음」을 켜고, 놓는 자리를 만들어 어떤 도형을 받을지 정합니다. 채점하지는 않아요.</p>
+        <label className="editor-field"><span className="editor-label">안내 문장</span>
+          <input value={task?.prompt ?? ''} maxLength={300}
+            onChange={(event) => writeZones(zones, { task: { ...task, prompt: event.target.value } })} /></label>
+        <label className="editor-field"><span className="editor-label">낭독용 안내<em>선택</em></span>
+          <input value={task?.promptAlt ?? ''} maxLength={300}
+            onChange={(event) => writeZones(zones, { task: { ...task, prompt: task?.prompt ?? '', promptAlt: event.target.value || undefined } })} />
+          <small>안내에 수식을 쓸 때 필수예요.</small></label>
+        <label className="editor-field"><span className="editor-label">다 놓았을 때 문구<em>선택</em></span>
+          <input value={task?.successText ?? ''} maxLength={300}
+            onChange={(event) => writeZones(zones, { task: { ...task, prompt: task?.prompt ?? '', successText: event.target.value || undefined } })} /></label>
+        <div className="scene-frame-list">
+          {zones.map((current, index) => <button key={current.id} type="button"
+            className={selected?.on === 'zone' && selected.index === index ? 'active' : ''}
+            onClick={() => setSelected({ on: 'zone', index })}>{current.label || current.id}</button>)}
+          <button type="button" className="text-button"
+            onClick={() => { writeZones([...zones, createZone(scene, zones.map((current) => current.id))], { task }); setSelected({ on: 'zone', index: zones.length }); }}>
+            <Icon name="plus" size={13} />놓는 자리 추가</button>
+        </div>
+      </> : <p className="editor-note">{frames ? '움직이는 그림은 직접 놓아 보게 만들 수 없어요. 한 그림은 스스로 움직이거나 학습자가 옮기거나, 둘 중 하나입니다.' : '학습자가 도형을 끌어다 놓게 하려면 켜세요.'}</p>}
+    </div>
+
+    {zone && selected?.on === 'zone'
+      ? <ZonePanel zone={zone} items={scene.items}
+          onChange={(next) => writeZones(zones.map((current, index) => (index === selected.index ? next : current)), { task })}
+          onRemove={() => { writeZones(zones.filter((_, index) => index !== selected.index), { task }); setSelected(null); }} />
+      : item && selected?.on === 'item'
+        ? <ItemPanel item={item} index={selected.index} total={scene.items.length} arrangeable={zones.length > 0}
+            onChange={(next) => replace(selected.index, next)}
+            onName={() => {
+              const named = nameItem(scene.items, selected.index);
+              write(named.items);
+              return named.id;
+            }}
+            onReorder={(delta) => {
+              write(reorderItem(scene.items, selected.index, delta));
+              setSelected({ on: 'item', index: Math.min(Math.max(selected.index + delta, 0), scene.items.length - 1) });
+            }}
+            onRemove={() => { write(scene.items.filter((_, position) => position !== selected.index)); setSelected(null); }} />
+        : <p className="editor-note">도형을 클릭하면 색과 위치를 고칠 수 있어요. 빈 곳을 누르면 선택이 풀립니다.</p>}
+  </div>;
+}
+
+function ZonePanel({ zone, items, onChange, onRemove }: {
+  zone: SceneZone; items: SceneItem[]; onChange: (next: SceneZone) => void; onRemove: () => void;
+}) {
+  const movable = items.filter((item) => item.draggable && item.id);
+  return <div className="scene-panel">
+    <header>
+      <strong>놓는 자리</strong>
+      <button type="button" className="icon-button" aria-label="이 자리 삭제" onClick={onRemove}><Icon name="close" size={14} /></button>
+    </header>
+    <label className="editor-field"><span className="editor-label">이 자리의 이름</span>
+      <input value={zone.label} maxLength={80} onChange={(event) => onChange({ ...zone, label: event.target.value })} />
+      <small>화면 낭독에서 이 자리를 부르는 이름이에요.</small></label>
+    <div className="editor-picker">
+      <span className="editor-label">받을 도형<em>선택</em></span>
+      {movable.length
+        ? movable.map((item) => {
+          const checked = zone.accepts?.includes(item.id!) ?? false;
+          return <label key={item.id} className="editor-check">
+            <input type="checkbox" checked={checked} onChange={() => onChange({ ...zone,
+              accepts: checked ? zone.accepts?.filter((id) => id !== item.id) : [...(zone.accepts ?? []), item.id!] })} />
+            <span><strong>{item.label || item.id}</strong></span>
+          </label>;
+        })
+        : <p className="editor-note">먼저 도형에 「끌 수 있음」을 켜 주세요.</p>}
+      <small className="editor-note">아무것도 고르지 않으면 어떤 도형이든 받습니다.</small>
+    </div>
   </div>;
 }
 
@@ -182,9 +279,9 @@ function ColorPicker({ label, value, onChange }: { label: string; value: string 
     </select></label>;
 }
 
-function ItemPanel({ item, index, total, onChange, onReorder, onRemove }: {
-  item: SceneItem; index: number; total: number;
-  onChange: (next: SceneItem) => void; onReorder: (delta: number) => void; onRemove: () => void;
+function ItemPanel({ item, index, total, arrangeable, onChange, onName, onReorder, onRemove }: {
+  item: SceneItem; index: number; total: number; arrangeable: boolean;
+  onChange: (next: SceneItem) => void; onName: () => string; onReorder: (delta: number) => void; onRemove: () => void;
 }) {
   const set = (patch: Partial<SceneItem>) => onChange({ ...item, ...patch } as SceneItem);
   return <div className="scene-panel">
@@ -208,6 +305,17 @@ function ItemPanel({ item, index, total, onChange, onReorder, onRemove }: {
       </>}
       <label className="editor-field"><span className="editor-label">회전(°)</span>
         <input type="number" min={-360} max={360} value={item.rotate ?? 0} onChange={(event) => set({ rotate: Number(event.target.value) })} /></label>
+
+      {arrangeable && <>
+        <label className="editor-field editor-check">
+          <input type="checkbox" checked={item.draggable === true}
+            onChange={(event) => set({ draggable: event.target.checked || undefined, id: event.target.checked ? (item.id ?? onName()) : item.id })} />
+          <span className="editor-label">끌 수 있음</span>
+        </label>
+        {item.draggable && <label className="editor-field"><span className="editor-label">이 도형의 이름</span>
+          <input value={item.label ?? ''} maxLength={80} onChange={(event) => set({ label: event.target.value })} />
+          <small>학습자가 이 도형을 집을 때 읽히는 이름이에요.</small></label>}
+      </>}
 
       {item.kind === 'text' && <>
         <label className="editor-field"><span className="editor-label">글자</span>

@@ -45,6 +45,9 @@ const colour = z.string().refine(isSceneColor, 'Unknown colour name');
 // Shared paint. Colours are palette names or plain hex, never a URL or a reference to anything.
 const painted = {
   id: z.string().regex(itemIdPattern, 'A shape name may only contain letters, digits, - and _').optional(),
+  // A shape a learner can pick up says its own name, since the drawing's alt describes the whole.
+  label: plainText(80).optional(),
+  draggable: z.boolean().optional(),
   fill: colour.optional(), stroke: colour.optional(),
   strokeWidth: z.number().min(sceneLimits.minStroke).max(sceneLimits.maxStroke).optional(),
   dash: z.boolean().optional(), opacity: z.number().min(0).max(1).optional(),
@@ -77,6 +80,17 @@ const sceneChange = z.object({
 const sceneFrame = z.object({
   caption: z.string().max(200).optional(),
   changes: z.array(sceneChange).max(sceneLimits.maxItems),
+}).strict();
+const sceneZone = z.object({
+  id: z.string().regex(itemIdPattern),
+  x: coordinate, y: coordinate, width: span, height: span,
+  label: plainText(80),
+  accepts: z.array(z.string().regex(itemIdPattern)).max(sceneLimits.maxItems).optional(),
+}).strict();
+const sceneTask = z.object({
+  prompt: z.string().trim().min(1).max(300),
+  promptAlt: plainText(300).optional(),
+  successText: plainText(300).optional(),
 }).strict();
 
 /** New block kinds register a versioned payload schema here and a renderer in the UI. */
@@ -118,6 +132,10 @@ const blockSchemas = {
     frameMs: z.number().int().min(frameLimits.minMs).max(frameLimits.maxMs).optional(),
     loop: z.boolean().optional(),
     autoplay: z.boolean().optional(),
+    // Zones turn the same drawing into something to arrange by hand. Nothing here is reported, so
+    // the block carries no answer: the task states openly what it is asking for.
+    zones: z.array(sceneZone).max(sceneLimits.maxItems).optional(),
+    task: sceneTask.optional(),
   }).strict().superRefine((payload, ctx) => {
     const named = new Set(payload.items.map((item) => item.id).filter(Boolean));
     for (const frame of payload.frames ?? []) {
@@ -125,8 +143,36 @@ const blockSchemas = {
         if (!named.has(change.id)) ctx.addIssue({ code: 'custom', message: `A frame changes a shape that is not in the drawing: ${change.id}` });
       }
     }
-    const duplicated = payload.items.map((item) => item.id).filter(Boolean).length !== named.size;
-    if (duplicated) ctx.addIssue({ code: 'custom', message: 'Two shapes share one name' });
+    if (payload.items.map((item) => item.id).filter(Boolean).length !== named.size) {
+      ctx.addIssue({ code: 'custom', message: 'Two shapes share one name' });
+    }
+    const zones = payload.zones ?? [];
+    // A drawing is either played or played with. Both at once would have the frames and the learner
+    // moving the same shape, and no way to say which one is right.
+    if (zones.length && payload.frames?.length) {
+      ctx.addIssue({ code: 'custom', message: 'A drawing may move on its own or be arranged by hand, not both' });
+    }
+    if (zones.length && !payload.task) ctx.addIssue({ code: 'custom', message: 'A drawing with zones needs a task that says what to do' });
+    if (payload.task && !zones.length) ctx.addIssue({ code: 'custom', message: 'A task needs at least one zone to put something in' });
+    if (new Set(zones.map((zone) => zone.id)).size !== zones.length) ctx.addIssue({ code: 'custom', message: 'Two zones share one name' });
+    const movable = new Set(payload.items.filter((item) => item.draggable).map((item) => item.id).filter(Boolean));
+    for (const item of payload.items) {
+      if (!item.draggable) continue;
+      if (!item.id) ctx.addIssue({ code: 'custom', message: 'A shape the learner can move needs a name' });
+      if (!item.label) ctx.addIssue({ code: 'custom', message: 'A shape the learner can move needs a spoken label' });
+    }
+    if (zones.length && !movable.size) ctx.addIssue({ code: 'custom', message: 'A drawing with zones needs a shape the learner can move' });
+    for (const zone of zones) {
+      for (const accepted of zone.accepts ?? []) {
+        if (!movable.has(accepted)) ctx.addIssue({ code: 'custom', message: `A zone accepts a shape that cannot be moved: ${accepted}` });
+      }
+    }
+    if (!zones.length && payload.items.some((item) => item.draggable)) {
+      ctx.addIssue({ code: 'custom', message: 'A movable shape needs somewhere to be put' });
+    }
+    if (carriesMath(payload.task?.prompt) && !payload.task?.promptAlt) {
+      ctx.addIssue({ code: 'custom', message: 'A task prompt containing math requires promptAlt for the accessible name' });
+    }
   }),
 } satisfies Record<string, z.ZodType>;
 
@@ -156,10 +202,16 @@ const blockSchema = z.object({
   if (!parsed.success) ctx.addIssue({ code: 'custom', path: ['payload'], message: `Invalid payload for ${key}: ${parsed.error.message}` });
 });
 
+/** A drawing the learner arranges reports nothing, so it stays out of anything that is assessed:
+ *  beside an answer box it would read as the answer itself. */
+const arrangeable = (block: { kind: string; payload: Record<string, unknown> }) =>
+  block.kind === 'core.scene' && Array.isArray(block.payload.zones) && block.payload.zones.length > 0;
+
 // Term definitions are leaves: no problem groups, and no annotations nesting a term inside a term.
+// A definition is read while a problem waits, so it explains rather than asks for an interaction.
 export const termContentBlockSchema = blockSchema.refine(
-  (block) => block.kind !== 'core.problem_set' && !(block.kind === 'core.rich_text' && block.typeVersion === 2),
-  { message: 'Term definitions cannot embed problems or further term annotations' },
+  (block) => block.kind !== 'core.problem_set' && !(block.kind === 'core.rich_text' && block.typeVersion === 2) && !arrangeable(block),
+  { message: 'Term definitions cannot embed problems, further term annotations, or a drawing to arrange' },
 );
 
 const responseSchema = z.object({
@@ -171,6 +223,8 @@ const responseSchema = z.object({
 // including an optional future version, in its prompt, hint, or solution.
 const problemContentBlockSchema = blockSchema.refine((block) => block.kind !== 'core.problem_set', {
   message: 'core.problem_set is not allowed inside a problem',
+}).refine((block) => !arrangeable(block), {
+  message: 'A drawing to arrange is not allowed inside a problem',
 });
 
 const problemShape = {

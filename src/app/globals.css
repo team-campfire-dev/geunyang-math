@@ -300,3 +300,17 @@
 .scene-frame-list > button:not(.text-button) { min-width: 34px; min-height: 30px; padding: 0 9px; border: 1px solid #dbe1cf; border-radius: 6px; background: var(--white); font-size: 11px; color: #6f7d66; }
 .scene-frame-list > button.active { background: #e7eedf; border-color: #b9c7ac; color: #4b6e40; font-weight: 600; }
 .scene-frames .scene-size { margin-top: 10px; }
+
+/* A drawing the learner arranges: zones are places, not decorations, so they read as outlines
+   waiting to be filled and light up while a shape is held. */
+.scene-zone { fill: #f3f6ea; stroke: #bfcdac; stroke-width: 1; stroke-dasharray: 5 4; }
+.scene-zone.open { stroke: var(--green); fill: #eaf0e1; }
+.scene-zone.filled { stroke: #86a364; stroke-dasharray: none; fill: transparent; }
+.scene-task { padding: 22px; background: #f3f6ea; border: 1px solid #e6edd9; border-radius: 8px; }
+.scene-task .builder-prompt { margin-bottom: 16px; }
+.scene-task .scene-figure { padding: 0; background: none; border: 0; }
+.scene-task svg { touch-action: none; }
+.scene-task [role="button"]:focus-visible { outline: 3px solid #b38151; outline-offset: 2px; }
+.scene-task-caption { margin-top: 12px; text-align: center; font-size: 11px; line-height: 1.8; color: #92a17b; }
+.scene-task .builder-actions .editor-note { max-width: 60%; text-align: left; }
+@media (max-width: 520px) { .scene-task { padding: 15px; } }
