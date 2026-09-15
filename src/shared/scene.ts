@@ -30,21 +30,31 @@ export const cssColor = (value: string | undefined, fallback = 'none') =>
 export const pathPattern = /^[MmLlHhVvCcSsQqTtAaZz0-9,.\-+eE\s]+$/;
 
 export type ScenePoint = [number, number];
-type Shared = { fill?: string; stroke?: string; strokeWidth?: number; dash?: boolean; opacity?: number; rotate?: number };
+// `id` exists so a frame can name the shape it moves. Only animated drawings need one.
+type Shared = { id?: string; fill?: string; stroke?: string; strokeWidth?: number; dash?: boolean; opacity?: number; rotate?: number };
 export type SceneItem =
   | ({ kind: 'rect'; x: number; y: number; width: number; height: number; radius?: number } & Shared)
   | ({ kind: 'ellipse'; cx: number; cy: number; rx: number; ry: number } & Shared)
   | ({ kind: 'line'; x1: number; y1: number; x2: number; y2: number; arrow?: 'none' | 'end' | 'both' } & Shared)
   | ({ kind: 'polygon'; points: ScenePoint[]; closed?: boolean } & Shared)
   | ({ kind: 'path'; d: string } & Shared)
-  | ({ kind: 'text'; x: number; y: number; text: string; size?: number; anchor?: 'start' | 'middle' | 'end'; weight?: 'regular' | 'bold' } & Shared);
+  | ({ kind: 'text'; x: number; y: number; text: string; size?: number; anchor?: 'start' | 'middle' | 'end'; weight?: 'regular' | 'bold' } & Shared)
+  // A fraction bar as one shape. It was its own block before; inside a drawing it can sit beside
+  // anything else, which is why the blocks that could only ever draw a bar were retired.
+  | ({ kind: 'strip'; x: number; y: number; width: number; height: number; parts: number; filled: number } & Shared);
 export type SceneItemKind = SceneItem['kind'];
-export type Scene = { width: number; height: number; items: SceneItem[] };
+/** What one frame does to one shape. A change is a difference from the drawing, never a new shape,
+ *  so an animation cannot smuggle in anything the still drawing was not allowed to contain. */
+export type SceneChange = { id: string; dx?: number; dy?: number; opacity?: number; rotate?: number; fill?: string; hidden?: boolean };
+export type SceneFrame = { caption?: string; changes: SceneChange[] };
+export type Scene = { width: number; height: number; items: SceneItem[]; frames?: SceneFrame[] };
+export const itemIdPattern = /^[A-Za-z0-9_-]{1,40}$/;
 
-export const sceneItemKinds: SceneItemKind[] = ['rect', 'ellipse', 'line', 'polygon', 'path', 'text'];
+export const sceneItemKinds: SceneItemKind[] = ['rect', 'ellipse', 'line', 'polygon', 'path', 'text', 'strip'];
 export const sceneItemLabels: Record<SceneItemKind, string> = {
-  rect: '사각형', ellipse: '원', line: '선', polygon: '다각형', path: '자유 곡선', text: '글자',
+  rect: '사각형', ellipse: '원', line: '선', polygon: '다각형', path: '자유 곡선', text: '글자', strip: '분수 막대',
 };
+export const stripLimits = { minParts: 1, maxParts: 100 } as const;
 
 /** A new shape lands in the middle of the canvas at a size that is visible without editing. */
 export function createSceneItem(kind: SceneItemKind, scene: Scene): SceneItem {
@@ -58,17 +68,46 @@ export function createSceneItem(kind: SceneItemKind, scene: Scene): SceneItem {
     case 'polygon': return { kind, points: [[cx, cy - unit], [cx + unit, cy + unit], [cx - unit, cy + unit]], closed: true, fill: 'sand', stroke: 'ink', strokeWidth: 1 };
     case 'path': return { kind, d: `M ${cx - unit} ${cy} Q ${cx} ${cy - unit} ${cx + unit} ${cy}`, fill: 'none', stroke: 'ink', strokeWidth: 1.5 };
     case 'text': return { kind, x: cx, y: cy, text: '설명', size: 14, anchor: 'middle', fill: 'ink' };
+    case 'strip': return { kind, x: cx - unit * 2, y: cy - unit / 2, width: unit * 4, height: unit, parts: 4, filled: 3, fill: 'fill', stroke: 'fill-soft', strokeWidth: 1 };
   }
 }
 
 export const emptyScene = (): Scene => ({ width: sceneLimits.defaultWidth, height: sceneLimits.defaultHeight, items: [] });
+
+/** A shape only needs a name once something refers to it, so ids are handed out on first use. */
+export function nameItem(items: SceneItem[], index: number): { items: SceneItem[]; id: string } {
+  const existing = items[index]?.id;
+  if (existing) return { items, id: existing };
+  const taken = new Set(items.map((item) => item.id).filter(Boolean));
+  let id = `s${index + 1}`;
+  for (let suffix = 2; taken.has(id); suffix++) id = `s${index + 1}-${suffix}`;
+  return { items: items.map((item, position) => (position === index ? { ...item, id } : item)), id };
+}
+
+export const changeFor = (frame: SceneFrame | undefined, item: SceneItem) =>
+  item.id ? frame?.changes.find((change) => change.id === item.id) : undefined;
+
+/** Writes one shape's change into one frame, replacing whatever that frame said about it. */
+export function setChange(frames: SceneFrame[], frameIndex: number, id: string, patch: Partial<Omit<SceneChange, 'id'>>): SceneFrame[] {
+  return frames.map((frame, position) => {
+    if (position !== frameIndex) return frame;
+    const current = frame.changes.find((change) => change.id === id) ?? { id };
+    const next = { ...current, ...patch };
+    const rest = frame.changes.filter((change) => change.id !== id);
+    // A change back to the drawing's own state is no change at all, so it stops being stored.
+    const meaningful = next.dx || next.dy || next.opacity !== undefined || next.rotate !== undefined || next.fill !== undefined || next.hidden;
+    return { ...frame, changes: meaningful ? [...rest, next] : rest };
+  });
+}
+
+export const emptyFrames = (): SceneFrame[] => [{ changes: [] }, { changes: [] }];
 export const snap = (value: number, step = 1) => Math.round(value / step) * step;
 const round = (value: number) => Math.round(value * 100) / 100;
 
 /** The box a shape occupies, used for selection outlines and for keeping a drag on the canvas. */
 export function itemBounds(item: SceneItem): { x: number; y: number; width: number; height: number } {
   switch (item.kind) {
-    case 'rect': return { x: item.x, y: item.y, width: item.width, height: item.height };
+    case 'rect': case 'strip': return { x: item.x, y: item.y, width: item.width, height: item.height };
     case 'ellipse': return { x: item.cx - item.rx, y: item.cy - item.ry, width: item.rx * 2, height: item.ry * 2 };
     case 'line': return { x: Math.min(item.x1, item.x2), y: Math.min(item.y1, item.y2), width: Math.abs(item.x2 - item.x1), height: Math.abs(item.y2 - item.y1) };
     case 'polygon': {
@@ -94,7 +133,7 @@ export function itemBounds(item: SceneItem): { x: number; y: number; width: numb
 export function moveItem(item: SceneItem, dx: number, dy: number): SceneItem {
   const shift = (x: number, y: number) => [round(x + dx), round(y + dy)] as const;
   switch (item.kind) {
-    case 'rect': { const [x, y] = shift(item.x, item.y); return { ...item, x, y }; }
+    case 'rect': case 'strip': { const [x, y] = shift(item.x, item.y); return { ...item, x, y }; }
     case 'ellipse': { const [cx, cy] = shift(item.cx, item.cy); return { ...item, cx, cy }; }
     case 'line': { const [x1, y1] = shift(item.x1, item.y1); const [x2, y2] = shift(item.x2, item.y2); return { ...item, x1, y1, x2, y2 }; }
     case 'polygon': return { ...item, points: item.points.map(([x, y]) => [round(x + dx), round(y + dy)] as ScenePoint) };
@@ -113,7 +152,7 @@ export function resizeItem(item: SceneItem, width: number, height: number): Scen
   const bounds = itemBounds(item);
   const next = { width: Math.max(1, round(width)), height: Math.max(1, round(height)) };
   switch (item.kind) {
-    case 'rect': return { ...item, width: next.width, height: next.height };
+    case 'rect': case 'strip': return { ...item, width: next.width, height: next.height };
     case 'ellipse': return { ...item, rx: round(next.width / 2), ry: round(next.height / 2), cx: round(bounds.x + next.width / 2), cy: round(bounds.y + next.height / 2) };
     case 'line': return { ...item, x2: round(item.x1 + (item.x2 >= item.x1 ? next.width : -next.width)), y2: round(item.y1 + (item.y2 >= item.y1 ? next.height : -next.height)) };
     case 'text': return { ...item, size: Math.min(sceneLimits.maxFontSize, Math.max(sceneLimits.minFontSize, round(next.height))) };
@@ -142,4 +181,20 @@ export function reorderItem(items: SceneItem[], index: number, delta: number): S
   const next = [...items];
   [next[index], next[target]] = [next[target], next[index]];
   return next;
+}
+
+// Frame playback. A drawing that moves is the same drawing under a sequence of changes.
+export const frameLimits = { minFrames: 2, maxFrames: 12, minMs: 400, maxMs: 6000, defaultMs: 1400 } as const;
+/**
+ * Playback stops on the last frame unless the author asked for a loop. The caller compares the
+ * result with the index it passed to notice the end, so stopping never needs a second rule.
+ */
+export function nextFrameIndex(index: number, total: number, loop: boolean): number {
+  if (index + 1 < total) return index + 1;
+  return loop ? 0 : index;
+}
+
+/** Stepping by hand never wraps: back on the first frame and forward on the last stay put. */
+export function stepFrameIndex(index: number, total: number, delta: number): number {
+  return Math.min(Math.max(index + delta, 0), Math.max(total - 1, 0));
 }

@@ -52,6 +52,17 @@ describe('what the editor sends is what publishing accepts', () => {
     for (const form of blockForms) expect(supportedBlockTypes).toContainEqual({ kind: form.kind, typeVersion: form.typeVersion });
   });
 
+  it('keeps a retired format openable without offering it for new content', () => {
+    // Published classes still hold these, so an author must be able to open one and read it.
+    for (const kind of ['core.figure', 'math.fraction_strip']) {
+      expect(blockFormOf({ kind, typeVersion: 1 })?.retired).toBe(true);
+    }
+    const offered = blockForms.filter((form) => !form.retired).map((form) => form.kind);
+    expect(offered).toContain('core.scene');
+    expect(offered).not.toContain('core.figure');
+    expect(offered).not.toContain('math.fraction_strip');
+  });
+
   it('starts every new block at a payload the validator already accepts', () => {
     for (const form of blockForms) {
       // A question group is empty until an author picks questions, and picking is what validates it.
@@ -69,9 +80,8 @@ describe('what the editor sends is what publishing accepts', () => {
     expect(strip.payload).not.toHaveProperty('labelAlt');
     const kept = pruneBlock(block('math.fraction_strip', 1, { parts: 4, filled: 3, label: '$\\frac{3}{4}$', labelAlt: '4분의 3' }));
     expect(kept.payload.labelAlt).toBe('4분의 3');
-    const sequence = pruneBlock(block('math.fraction_sequence', 1, { parts: 4, alt: '장면', frameMs: '', frames: [{ filled: 0, caption: '' }] }));
-    expect(sequence.payload).not.toHaveProperty('frameMs');
-    expect(sequence.payload.frames).toEqual([{ filled: 0 }]);
+    const scene = pruneBlock(block('core.scene', 1, { alt: '그림', caption: '', width: 320, height: 200, items: [] }));
+    expect(scene.payload).not.toHaveProperty('caption');
     const optional = pruneBlock({ ...block('core.rich_text', 1, { text: '본문' }), required: false, fallback: '  ' });
     expect(optional).not.toHaveProperty('fallback');
   });

@@ -163,7 +163,7 @@
 .sequence-figure figcaption { min-height: 2.4em; }
 .figure-controls { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 15px; }
 .figure-controls .icon-button { color: #7e8b73; }
-.control-button { display: inline-flex; align-items: center; gap: 7px; min-height: 34px; padding: 0 13px; border: 1px solid #d7e0c9; border-radius: 6px; background: var(--white); color: #607450; font-size: 11px; }
+.control-button { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; min-height: 34px; padding: 0 13px; border: 1px solid #d7e0c9; border-radius: 6px; background: var(--white); color: #607450; font-size: 11px; }
 .control-button:hover { background: #f0f3e8; }
 .sequence-count { margin-left: 6px; font-size: 10px; color: #8c9a7c; font-variant-numeric: tabular-nums; }
 .fraction-builder { padding: 25px; background: #f3f6ea; border: 1px solid #e6edd9; border-radius: 8px; }
@@ -294,3 +294,9 @@
   .scene-figure { padding: 12px; }
   .scene-fields { grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); }
 }
+.scene-frames { margin-top: 14px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 8px; background: #fbfcf6; }
+.scene-frames-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.scene-frame-list { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+.scene-frame-list > button:not(.text-button) { min-width: 34px; min-height: 30px; padding: 0 9px; border: 1px solid #dbe1cf; border-radius: 6px; background: var(--white); font-size: 11px; color: #6f7d66; }
+.scene-frame-list > button.active { background: #e7eedf; border-color: #b9c7ac; color: #4b6e40; font-weight: 600; }
+.scene-frames .scene-size { margin-top: 10px; }

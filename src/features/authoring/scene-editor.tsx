@@ -2,8 +2,9 @@
 
 import { useRef, useState } from 'react';
 import {
-  createSceneItem, itemBounds, moveItem, reorderItem, resizeItem, sceneColors, sceneItemKinds, sceneItemLabels,
-  sceneLimits, snap, type Scene, type SceneItem, type SceneItemKind,
+  changeFor, createSceneItem, emptyFrames, frameLimits, itemBounds, moveItem, nameItem, reorderItem, resizeItem,
+  sceneColors, sceneItemKinds, sceneItemLabels, sceneLimits, setChange, snap,
+  type Scene, type SceneFrame, type SceneItem, type SceneItemKind,
 } from '@/shared/scene';
 import { SceneShapes } from '@/features/learning/content-blocks';
 import { Icon } from '@/features/learning/icons';
@@ -15,7 +16,8 @@ const number = (value: unknown, fallback: number) => (typeof value === 'number' 
  *  rather than throwing an author out of the editor. */
 function readScene(payload: Record<string, unknown>): Scene {
   const items = Array.isArray(payload.items) ? (payload.items as SceneItem[]).filter((item) => !!item && sceneItemKinds.includes(item?.kind)) : [];
-  return { width: number(payload.width, sceneLimits.defaultWidth), height: number(payload.height, sceneLimits.defaultHeight), items };
+  const frames = Array.isArray(payload.frames) ? (payload.frames as SceneFrame[]).filter((frame) => !!frame && Array.isArray(frame.changes)) : undefined;
+  return { width: number(payload.width, sceneLimits.defaultWidth), height: number(payload.height, sceneLimits.defaultHeight), items, frames };
 }
 
 type Drag = { index: number; mode: 'move' | 'resize'; originX: number; originY: number; item: SceneItem };
@@ -28,11 +30,17 @@ type Drag = { index: number; mode: 'move' | 'resize'; originX: number; originY: 
 export function SceneEditor({ payload, onChange }: { payload: Record<string, unknown>; onChange: (next: Record<string, unknown>) => void }) {
   const scene = readScene(payload);
   const [selected, setSelected] = useState<number | null>(null);
+  const [frameIndex, setFrameIndex] = useState<number | null>(null);
   const [drag, setDrag] = useState<Drag | null>(null);
   const surface = useRef<SVGSVGElement>(null);
+  const frames = scene.frames;
+  // While a frame is open the canvas shows that moment, and a drag records the move into it.
+  const frame = frames && frameIndex !== null ? frames[Math.min(frameIndex, frames.length - 1)] : undefined;
 
   const write = (items: SceneItem[], size?: { width: number; height: number }) =>
     onChange({ ...payload, width: size?.width ?? scene.width, height: size?.height ?? scene.height, items });
+  const writeFrames = (next: SceneFrame[] | undefined, items: SceneItem[] = scene.items) =>
+    onChange({ ...payload, width: scene.width, height: scene.height, items, ...(next ? { frames: next } : {}), ...(next ? {} : { frames: undefined }) });
   const replace = (index: number, item: SceneItem) => write(scene.items.map((current, position) => (position === index ? item : current)));
   const item = selected !== null ? scene.items[selected] : undefined;
 
@@ -54,6 +62,14 @@ export function SceneEditor({ payload, onChange }: { payload: Record<string, unk
     const point = at(event);
     const dx = snap(point.x - drag.originX, step);
     const dy = snap(point.y - drag.originY, step);
+    if (frames && frameIndex !== null && drag.mode === 'move') {
+      // Inside a frame the drawing itself never moves; the frame remembers where the shape goes.
+      const named = nameItem(scene.items, drag.index);
+      const base = changeFor(frames[frameIndex], named.items[drag.index]);
+      writeFrames(setChange(frames, frameIndex, named.id, { dx: (base?.dx ?? 0) + dx, dy: (base?.dy ?? 0) + dy }), named.items);
+      setDrag({ ...drag, originX: point.x, originY: point.y });
+      return;
+    }
     if (drag.mode === 'move') replace(drag.index, moveItem(drag.item, dx, dy));
     else {
       const bounds = itemBounds(drag.item);
@@ -67,6 +83,7 @@ export function SceneEditor({ payload, onChange }: { payload: Record<string, unk
     setSelected(scene.items.length);
   };
   const bounds = item ? itemBounds(item) : null;
+  const selectedShift = item ? changeFor(frame, item) : undefined;
 
   return <div className="scene-editor">
     <div className="scene-tools">
@@ -82,14 +99,17 @@ export function SceneEditor({ payload, onChange }: { payload: Record<string, unk
         <defs><pattern id="scene-grid" width="20" height="20" patternUnits="userSpaceOnUse">
           <path d="M20 0 L0 0 0 20" fill="none" stroke="#dfe4d5" strokeWidth="0.5" /></pattern></defs>
         <rect width={scene.width} height={scene.height} fill="url(#scene-grid)" />
-        <SceneShapes items={scene.items} />
-        {/* A transparent hit area per shape: thin lines and hollow shapes stay easy to grab. */}
+        <SceneShapes items={scene.items} frame={frame} />
+        {/* A transparent hit area per shape: thin lines and hollow shapes stay easy to grab. It follows
+            the shape into the open frame, so a moved shape is grabbed where it is drawn. */}
         {scene.items.map((current, index) => {
-          const box = itemBounds(current);
+          const shift = changeFor(frame, current);
+          const raw = itemBounds(current);
+          const box = { ...raw, x: raw.x + (shift?.dx ?? 0), y: raw.y + (shift?.dy ?? 0) };
           return <rect key={index} x={box.x - 2} y={box.y - 2} width={Math.max(box.width + 4, 6)} height={Math.max(box.height + 4, 6)}
             fill="transparent" style={{ cursor: 'move' }} onPointerDown={(event) => start(event, index, 'move')} />;
         })}
-        {bounds && selected !== null && <g className="scene-selection">
+        {bounds && selected !== null && <g className="scene-selection" transform={`translate(${selectedShift?.dx ?? 0}, ${selectedShift?.dy ?? 0})`}>
           <rect x={bounds.x - 2} y={bounds.y - 2} width={Math.max(bounds.width + 4, 6)} height={Math.max(bounds.height + 4, 6)}
             fill="none" stroke="var(--green)" strokeWidth="1" strokeDasharray="4 3" pointerEvents="none" />
           <rect x={bounds.x + Math.max(bounds.width, 4) - 3} y={bounds.y + Math.max(bounds.height, 4) - 3} width="7" height="7"
@@ -107,6 +127,43 @@ export function SceneEditor({ payload, onChange }: { payload: Record<string, unk
         <input type="number" min={sceneLimits.minSize} max={sceneLimits.maxSize} value={scene.height}
           onChange={(event) => write(scene.items, { width: scene.width, height: Number(event.target.value) })} /></label>
       <span className="editor-note">도형 {scene.items.length} / {sceneLimits.maxItems}</span>
+    </div>
+
+    <div className="scene-frames">
+      <div className="scene-frames-head">
+        <span className="editor-label">장면</span>
+        {frames
+          ? <button type="button" className="text-button" onClick={() => { writeFrames(undefined); setFrameIndex(null); }}>움직임 끄기</button>
+          : <button type="button" className="text-button" onClick={() => { writeFrames(emptyFrames()); setFrameIndex(1); }}>
+              <Icon name="play" size={13} />움직이게 만들기</button>}
+      </div>
+      {frames ? <>
+        <p className="editor-note">장면을 고르고 도형을 끌면 그 장면에서의 위치가 정해져요. 그림 자체는 그대로 남습니다.</p>
+        <div className="scene-frame-list">
+          <button type="button" className={frameIndex === null ? 'active' : ''} onClick={() => setFrameIndex(null)}>기본</button>
+          {frames.map((_, index) => <button key={index} type="button" className={frameIndex === index ? 'active' : ''}
+            onClick={() => setFrameIndex(index)}>{index + 1}</button>)}
+          <button type="button" className="text-button" disabled={frames.length >= frameLimits.maxFrames}
+            onClick={() => { writeFrames([...frames, { changes: [] }]); setFrameIndex(frames.length); }}>
+            <Icon name="plus" size={13} />장면 추가</button>
+          {frameIndex !== null && frames.length > frameLimits.minFrames && <button type="button" className="text-button"
+            onClick={() => { writeFrames(frames.filter((_, index) => index !== frameIndex)); setFrameIndex(null); }}>
+            <Icon name="close" size={13} />이 장면 삭제</button>}
+        </div>
+        {frame && frameIndex !== null && <label className="editor-field"><span className="editor-label">이 장면의 캡션</span>
+          <input value={frame.caption ?? ''} maxLength={200}
+            onChange={(event) => writeFrames(frames.map((current, index) =>
+              (index === frameIndex ? { ...current, caption: event.target.value || undefined } : current)))} /></label>}
+        <div className="scene-size">
+          <label className="editor-field"><span className="editor-label">장면 간격(ms)</span>
+            <input type="number" min={frameLimits.minMs} max={frameLimits.maxMs} value={number(payload.frameMs, frameLimits.defaultMs)}
+              onChange={(event) => onChange({ ...payload, frameMs: Number(event.target.value) })} /></label>
+          <label className="editor-field editor-check"><input type="checkbox" checked={payload.loop === true}
+            onChange={(event) => onChange({ ...payload, loop: event.target.checked })} /><span className="editor-label">반복</span></label>
+          <label className="editor-field editor-check"><input type="checkbox" checked={payload.autoplay === true}
+            onChange={(event) => onChange({ ...payload, autoplay: event.target.checked })} /><span className="editor-label">자동 재생</span></label>
+        </div>
+      </> : <p className="editor-note">움직임을 켜면 같은 그림을 여러 장면으로 이어 보여줍니다.</p>}
     </div>
 
     {item && selected !== null

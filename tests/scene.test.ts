@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { validateClass } from '@/core/content';
 import {
-  createSceneItem, cssColor, emptyScene, isSceneColor, itemBounds, moveItem, pathPattern, reorderItem, resizeItem,
-  sceneItemKinds, type SceneItem,
+  changeFor, createSceneItem, cssColor, emptyScene, isSceneColor, itemBounds, moveItem, nameItem, pathPattern,
+  reorderItem, resizeItem, sceneItemKinds, setChange, type SceneItem,
 } from '@/shared/scene';
 import { seedClasses } from './fixtures/content';
 
@@ -22,6 +22,12 @@ describe('a drawing given as data', () => {
     const items = sceneItemKinds.map((kind) => createSceneItem(kind, scene));
     expect(items.map((item) => item.kind)).toEqual(sceneItemKinds);
     expect(() => validateClass(withScene(items))).not.toThrow();
+  });
+
+  it('draws a fraction bar as one shape, so the bar-only blocks are no longer needed', () => {
+    expect(sceneItemKinds).toContain('strip');
+    expect(() => validateClass(withScene([{ kind: 'strip', x: 10, y: 10, width: 200, height: 40, parts: 4, filled: 3 }]))).not.toThrow();
+    expect(() => validateClass(withScene([{ kind: 'strip', x: 10, y: 10, width: 200, height: 40, parts: 4, filled: 5 }]))).toThrow(/filled must not exceed parts/);
   });
 
   it('refuses anything in path data that is not a command or a number', () => {
@@ -80,5 +86,44 @@ describe('arranging shapes on the canvas', () => {
     expect(reorderItem(items, 0, 1).map((item) => item.kind)).toEqual(['text', 'rect']);
     expect(reorderItem(items, 1, 1)).toBe(items);
     expect(reorderItem(items, 0, -1)).toBe(items);
+  });
+});
+
+describe('a drawing that moves', () => {
+  const named = (id: string): SceneItem => ({ kind: 'rect', id, x: 10, y: 10, width: 40, height: 20 });
+
+  it('animates the shapes that are already there, and refuses to name one that is not', () => {
+    const frames = [{ changes: [] }, { changes: [{ id: 'a', dx: 40, opacity: 0.5 }] }];
+    expect(() => validateClass(withScene([named('a')], { frames }))).not.toThrow();
+    expect(() => validateClass(withScene([named('b')], { frames }))).toThrow(/changes a shape that is not in the drawing/);
+    expect(() => validateClass(withScene([named('a'), named('a')], { frames }))).toThrow(/share one name/);
+  });
+
+  it('asks for at least a pair of frames and bounds how fast they pass', () => {
+    expect(() => validateClass(withScene([named('a')], { frames: [{ changes: [] }] }))).toThrow(/Invalid payload/);
+    expect(() => validateClass(withScene([named('a')], { frames: [{ changes: [] }, { changes: [] }], frameMs: 50 }))).toThrow(/Invalid payload/);
+    expect(() => validateClass(withScene([named('a')], { frames: [{ changes: [] }, { changes: [] }], frameMs: 1200, loop: true, autoplay: true }))).not.toThrow();
+  });
+
+  it('carries the same colour rule into a frame, so movement cannot repaint freely', () => {
+    const frames = [{ changes: [] }, { changes: [{ id: 'a', fill: 'url(#x)' }] }];
+    expect(() => validateClass(withScene([named('a')], { frames }))).toThrow(/Unknown colour/);
+  });
+
+  it('names a shape only when a frame needs it, and keeps the name unique', () => {
+    const items: SceneItem[] = [named('a'), { kind: 'ellipse', cx: 10, cy: 10, rx: 5, ry: 5 }];
+    expect(nameItem(items, 0)).toMatchObject({ id: 'a' });
+    const second = nameItem(items, 1);
+    expect(second.id).toBe('s2');
+    expect(second.items[1].id).toBe('s2');
+  });
+
+  it('records a move into one frame and forgets it when the shape returns home', () => {
+    const frames = [{ changes: [] }, { changes: [] }];
+    const moved = setChange(frames, 1, 'a', { dx: 20, dy: -4 });
+    expect(moved[1].changes).toEqual([{ id: 'a', dx: 20, dy: -4 }]);
+    expect(moved[0].changes).toEqual([]);
+    expect(changeFor(moved[1], named('a'))).toMatchObject({ dx: 20 });
+    expect(setChange(moved, 1, 'a', { dx: 0, dy: 0 })[1].changes).toEqual([]);
   });
 });
