@@ -272,3 +272,52 @@ ln -s -- "$release_dir" "$symlink_temp"
 mv -fT -- "$symlink_temp" "$current_link"
 deployment_committed=1
 log "Deployment verified and committed: ${release_sha}." || true
+
+# The pointer is committed, so reclaiming cannot affect the released version. Every failure here
+# is logged and tolerated: a full disk is a problem, but so is a deployment that fails while tidying.
+phase='Reclaim superseded releases and images'
+retained_shas=("$release_sha")
+if [[ -n "$previous_sha" ]]; then
+  retained_shas+=("$previous_sha")
+fi
+
+is_retained() {
+  local candidate=$1 retained
+  for retained in "${retained_shas[@]}"; do
+    [[ "$candidate" == "$retained" ]] && return 0
+  done
+  return 1
+}
+
+reclaim_images() {
+  local tag suffix
+  while read -r tag; do
+    [[ -n "$tag" ]] || continue
+    suffix=${tag#"${IMAGE_REPOSITORY}:"}
+    # Both the application and migrator image of every retained release stay.
+    is_retained "${suffix%-migrator}" && continue
+    # This run's rollback alias is the escape hatch for the release just committed.
+    [[ "$suffix" == "rollback-${run_id}" ]] && continue
+    docker image rm -- "$tag" >/dev/null 2>&1 || log "Left in place, still in use: ${tag}"
+  done < <(docker image ls --filter "reference=${IMAGE_REPOSITORY}" --format '{{.Repository}}:{{.Tag}}')
+}
+
+reclaim_releases() {
+  local dir sha
+  for dir in "${releases_root}"/*; do
+    [[ -d "$dir" && ! -L "$dir" ]] || continue
+    sha=${dir##*/}
+    [[ "$sha" =~ ^[a-f0-9]{40}$ ]] || continue
+    is_retained "$sha" && continue
+    rm -rf -- "$dir"
+    # The incoming copies hold the same private values as the installed environment files.
+    rm -f -- "${deploy_root}/incoming/${sha}.tar" "${deploy_root}/incoming/${sha}.env" "${deploy_root}/incoming/${sha}.migrate.env"
+  done
+}
+
+# Build cache is shared with the other projects on this VM, so only long-idle entries go.
+if reclaim_images && reclaim_releases && docker builder prune --force --filter until=72h >/dev/null 2>&1; then
+  log "Reclaimed every release outside: ${retained_shas[*]}."
+else
+  log 'Reclaim reported a problem; the committed release is unaffected.' >&2
+fi

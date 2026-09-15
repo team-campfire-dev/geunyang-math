@@ -113,3 +113,73 @@ describe('reviewed content bundles published by the migrator', () => {
     }
   });
 });
+
+function reclaimScenario() {
+  const scratch = realpathSync(mkdtempSync(join(tmpdir(), 'geunyang-deploy-reclaim-')));
+  scratchDirectories.push(scratch);
+  const [current, previous, stale] = ['a', 'b', 'c'].map(letter => letter.repeat(40));
+  const runId = `${current}.20260915T000000Z.1`;
+  for (const sha of [current, previous, stale]) {
+    mkdirSync(join(scratch, 'releases', sha), { recursive: true });
+    mkdirSync(join(scratch, 'incoming'), { recursive: true });
+    for (const suffix of ['.tar', '.env', '.migrate.env']) writeFileSync(join(scratch, 'incoming', `${sha}${suffix}`), 'fixture');
+  }
+  const tags = [current, previous, stale].flatMap(sha => [`geunyang-math:${sha}`, `geunyang-math:${sha}-migrator`])
+    .concat([`geunyang-math:rollback-${runId}`, 'geunyang-math:rollback-old.20260101T000000Z.9']);
+  const reclaim = source.slice(source.indexOf("phase='Reclaim superseded releases and images'"));
+  const harness = join(scratch, 'reclaim-test.sh');
+  writeFileSync(harness, `#!/usr/bin/env bash
+set -Eeuo pipefail
+release_sha=${quote(current)}
+previous_sha=${quote(previous)}
+run_id=${quote(runId)}
+IMAGE_REPOSITORY=geunyang-math
+deploy_root=${quote(scratch)}
+releases_root=${quote(join(scratch, 'releases'))}
+log() { printf '%s\\n' "$*" >>${quote(join(scratch, 'log'))}; }
+docker() {
+  case "$1 $2" in
+    'image ls') printf '%s\\n' ${tags.map(quote).join(' ')} ;;
+    'image rm') shift 2; for tag in "$@"; do [[ "$tag" == '--' ]] || printf '%s\\n' "$tag" >>${quote(join(scratch, 'removed'))}; done ;;
+    'builder prune') printf 'pruned %s\\n' "$*" >>${quote(join(scratch, 'removed'))} ;;
+  esac
+}
+${reclaim}
+`, { mode: 0o700 });
+  const result = spawnSync('bash', [harness], { encoding: 'utf8' });
+  const removed = existsSync(join(scratch, 'removed')) ? readFileSync(join(scratch, 'removed'), 'utf8').trim().split('\n') : [];
+  return { result, scratch, current, previous, stale, runId, removed };
+}
+
+describe('superseded release reclamation', () => {
+  it('keeps the released and rollback versions while removing everything older', () => {
+    const { result, current, previous, stale, runId, removed } = reclaimScenario();
+    expect(result.status, result.stderr).toBe(0);
+    for (const sha of [current, previous]) {
+      expect(removed).not.toContain(`geunyang-math:${sha}`);
+      expect(removed).not.toContain(`geunyang-math:${sha}-migrator`);
+    }
+    expect(removed).toContain(`geunyang-math:${stale}`);
+    expect(removed).toContain(`geunyang-math:${stale}-migrator`);
+    // This deployment's rollback alias survives; the aliases of earlier deployments do not.
+    expect(removed).not.toContain(`geunyang-math:rollback-${runId}`);
+    expect(removed).toContain('geunyang-math:rollback-old.20260101T000000Z.9');
+  });
+
+  it('removes the release directory and the private incoming copies of superseded versions', () => {
+    const { scratch, current, previous, stale } = reclaimScenario();
+    for (const sha of [current, previous]) {
+      expect(existsSync(join(scratch, 'releases', sha)), sha).toBe(true);
+      expect(existsSync(join(scratch, 'incoming', `${sha}.migrate.env`)), sha).toBe(true);
+    }
+    expect(existsSync(join(scratch, 'releases', stale))).toBe(false);
+    for (const suffix of ['.tar', '.env', '.migrate.env']) {
+      expect(existsSync(join(scratch, 'incoming', `${stale}${suffix}`)), suffix).toBe(false);
+    }
+  });
+
+  it('prunes only long-idle build cache, which is shared with other projects on the VM', () => {
+    const { removed } = reclaimScenario();
+    expect(removed.find(line => line.startsWith('pruned'))).toMatch(/--force --filter until=72h/);
+  });
+});
