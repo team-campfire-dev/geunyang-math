@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { locateTerms, splitRichText } from '@/shared/rich-text';
+import { locateTerms, occurrenceAt, splitRichText } from '@/shared/rich-text';
 
 const place = (text: string, terms: Parameters<typeof locateTerms>[1]) => locateTerms(text, terms);
 const marked = (text: string, terms: Parameters<typeof locateTerms>[1]) =>
@@ -50,5 +50,29 @@ describe('term placement', () => {
   it('orders spans by position for rendering', () => {
     const spans = place('통분한 뒤 분자를 더해요.', [{ termKey: 'term.numerator', surface: '분자' }, { termKey: 'term.common', surface: '통분' }]).spans;
     expect(spans.map(s => s.termKey)).toEqual(['term.common', 'term.numerator']);
+  });
+});
+
+describe('which mention the author meant', () => {
+  it('counts mentions the way the renderer resolves them', () => {
+    const text = '분모는 전체를 나눈 수예요. 분모가 4면 네 조각이에요.';
+    expect(occurrenceAt(text, '분모', 0)).toBe(1);
+    expect(occurrenceAt(text, '분모', text.indexOf('분모', 3))).toBe(2);
+    // Past the last mention the next one would be the next ordinal.
+    expect(occurrenceAt(text, '분모', text.length)).toBe(3);
+  });
+
+  it('ignores a word inside a formula, so numbering matches what the reader sees', () => {
+    const text = '$분모$가 아니라 분모를 봅니다.';
+    expect(occurrenceAt(text, '분모', text.lastIndexOf('분모'))).toBe(1);
+    expect(locateTerms(text, [{ termKey: 'term.denominator', surface: '분모' }]).spans[0].start).toBe(text.lastIndexOf('분모'));
+  });
+
+  it('agrees with locateTerms on a repeated word', () => {
+    const text = '분모와 분모와 분모';
+    const position = text.indexOf('분모', text.indexOf('분모') + 1);
+    const occurrence = occurrenceAt(text, '분모', position);
+    expect(occurrence).toBe(2);
+    expect(locateTerms(text, [{ termKey: 'term.denominator', surface: '분모', occurrence }]).spans[0].start).toBe(position);
   });
 });

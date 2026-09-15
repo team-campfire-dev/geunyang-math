@@ -2,7 +2,8 @@
 
 import type { ReactNode } from 'react';
 import type { ContentBlock } from '@/shared/api';
-import { blockForms, blockFormOf, moveBlock, readPath, writePath, type BlockField, type BlockForm } from '@/shared/authoring';
+import { blockForms, blockFormOf, moveBlock, readPath, writePath, type BlockField, type BlockForm, type TermChoice } from '@/shared/authoring';
+import { TermText } from './term-mentions';
 import { Icon } from '@/features/learning/icons';
 import { SceneEditor } from './scene-editor';
 
@@ -63,25 +64,30 @@ function Rows({ form, payload, onChange }: { form: BlockForm; payload: Record<st
   </div>;
 }
 
-export function BlockEditor({ block, problems, arrangingRefusal, onChange }: {
-  block: ContentBlock; problems?: ReactNode; arrangingRefusal?: string; onChange: (next: ContentBlock) => void;
+export function BlockEditor({ block, problems, arrangingRefusal, termChoices, onChange }: {
+  block: ContentBlock; problems?: ReactNode; arrangingRefusal?: string; termChoices?: TermChoice[];
+  onChange: (next: ContentBlock) => void;
 }) {
   const form = blockFormOf(block);
   const setPayload = (payload: Record<string, unknown>) => onChange({ ...block, payload });
   if (!form) {
     return <p className="editor-note">이 앱이 모르는 블록이에요({block.kind}@{block.typeVersion}). 여기서는 고칠 수 없고, 대체 설명만 바꿀 수 있어요.</p>;
   }
+  // A paragraph that may link terms writes its body through the picker instead of a plain field.
+  const writesTerms = form.list?.key === 'terms';
   return <>
-    {form.fields.map((field) => <Field key={field.key} field={field} value={readPath(block.payload, field.key)}
-      onChange={(value) => setPayload(writePath(block.payload, field.key, value))} />)}
+    {form.fields.map((field) => (writesTerms && field.key === 'text'
+      ? <TermText key={field.key} payload={block.payload} terms={termChoices ?? []} onChange={setPayload} />
+      : <Field key={field.key} field={field} value={readPath(block.payload, field.key)}
+          onChange={(value) => setPayload(writePath(block.payload, field.key, value))} />))}
     {form.list && <Rows form={form} payload={block.payload} onChange={setPayload} />}
     {form.editsScene && <SceneEditor payload={block.payload} arrangingRefusal={arrangingRefusal} onChange={setPayload} />}
     {form.editsProblems && problems}
   </>;
 }
 
-export function BlockCard({ block, index, total, problems, arrangingRefusal, onChange, onMove, onRemove }: {
-  block: ContentBlock; index: number; total: number; problems?: ReactNode; arrangingRefusal?: string;
+export function BlockCard({ block, index, total, problems, arrangingRefusal, termChoices, onChange, onMove, onRemove }: {
+  block: ContentBlock; index: number; total: number; problems?: ReactNode; arrangingRefusal?: string; termChoices?: TermChoice[];
   onChange: (next: ContentBlock) => void; onMove: (delta: number) => void; onRemove: () => void;
 }) {
   const form = blockFormOf(block);
@@ -102,7 +108,7 @@ export function BlockCard({ block, index, total, problems, arrangingRefusal, onC
       </div>
     </header>
     {form?.hint && <p className="editor-note">{form.hint}</p>}
-    <BlockEditor block={block} problems={problems} arrangingRefusal={arrangingRefusal} onChange={onChange} />
+    <BlockEditor block={block} problems={problems} arrangingRefusal={arrangingRefusal} termChoices={termChoices} onChange={onChange} />
     {!block.required && <Field field={{ key: 'fallback', label: '대체 설명', kind: 'text', optional: true, hint: '이 블록을 모르는 앱 버전에서 대신 보여줄 문장이에요.' }}
       value={block.fallback} onChange={(value) => onChange({ ...block, fallback: typeof value === 'string' ? value : '' })} />}
   </section>;

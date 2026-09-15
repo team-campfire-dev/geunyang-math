@@ -236,6 +236,19 @@
 .editor-rows-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .editor-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)) auto; gap: 10px; align-items: end; padding: 12px 0; border-bottom: 1px dashed #edf0e5; }
 .editor-row-tools { display: flex; gap: 4px; }
+/* Picking a term while writing: the list sits under the paragraph it will change, close enough to
+   read as part of it rather than as a dialog over it. */
+.term-writing { position: relative; }
+.term-mentions { position: absolute; left: 0; right: 0; top: 100%; z-index: 5; margin: 4px 0 0; padding: 4px; list-style: none;
+  max-height: 224px; overflow-y: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--white);
+  box-shadow: 0 8px 22px rgba(60, 72, 50, .12); }
+.term-mentions button { display: block; width: 100%; padding: 8px 10px; border-radius: 6px; text-align: left; }
+.term-mentions button:hover, .term-mentions button.active { background: #eef3e6; }
+.term-mentions strong { display: block; font-size: 12px; font-weight: 600; color: #5f7154; }
+.term-mentions small { display: block; font-size: 10px; color: #96a086; margin-top: 2px; word-break: break-all; }
+.term-mentions-empty { margin-top: 6px; }
+.term-writing code { font-size: 11px; padding: 1px 4px; border: 1px solid #e0e5d6; border-radius: 3px; background: #f6f8f1; }
+
 /* An activity owns its questions, so a question is written where the activity is: nested, folded
    away until it is opened, and using the same block cards as the lesson text around it. */
 .editor-problems { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }

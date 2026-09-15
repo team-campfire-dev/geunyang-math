@@ -391,6 +391,33 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     expect(await db.termVersion.findUnique({ where: { id: `${classKey}:${termKey}:v1` } })).toBeNull();
   });
 
+  it('offers a draft the terms it may link, and no others', async () => {
+    const admin = await account('admin');
+    const suffix = randomUUID();
+    const skillKey = (await db.classVersion.findUniqueOrThrow({ where: { id: `${classKey}:v1` } })
+      .then(row => (row.document as unknown as StoredClass).public.skillKeys[0]));
+    const define = (termKey: string, scopeKind: 'global' | 'class', scopeKey: string, label: string) =>
+      service.saveTerm(admin.id, { termKey, scopeKind, scopeKey, skillKey, label, summary: `${label} 풀이예요.`,
+        blocks: [{ blockId: 'term:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: label } }] });
+    await define(`term.shared.${suffix}`, 'global', '', '사전 낱말');
+    await define(`term.mine.${suffix}`, 'class', classKey, '이 수업 낱말');
+    // Another class keeps one of its own; this draft must not be offered it.
+    const other = `other-${randomUUID()}`;
+    const record = JSON.parse(JSON.stringify(seedClasses[0]).replaceAll('fraction-meaning', other)) as StoredClass;
+    record.public.order = 3000;
+    await importContent(db, { schemaVersion: 1, skills: [], classes: [record], diagnostics: [], terms: [] });
+    await define(`term.other.${suffix}`, 'class', other, '남의 수업 낱말');
+
+    const { draft } = await service.createDraft(admin.id, classKey);
+    const offered = draft!.terms.map(term => term.termKey);
+    expect(offered).toContain(`term.shared.${suffix}`);
+    expect(offered).toContain(`term.mine.${suffix}`);
+    expect(offered).not.toContain(`term.other.${suffix}`);
+    expect(draft!.terms.find(term => term.termKey === `term.mine.${suffix}`))
+      .toMatchObject({ scopeKind: 'class', scopeKey: classKey, label: '이 수업 낱말' });
+    await service.deleteDraft(admin.id, draft!.id);
+  });
+
   it('refuses to publish an invalid draft, or to publish at all without the role', async () => {
     const admin = await account('admin');
     const author = await account('author');
