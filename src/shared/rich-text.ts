@@ -39,6 +39,23 @@ export function splitRichText(text: string): RichTextSegment[] {
  * surface that also appears inside a formula never shifts the numbering an author sees.
  * Published content carries no issues; renderers draw the spans and ignore the rest.
  */
+/**
+ * Which mention of `surface` a position falls on, counted the way `locateTerms` resolves one: over
+ * prose only, so a word inside a formula never shifts the numbering, and stepping one character at
+ * a time so overlapping mentions agree on both sides.
+ */
+export function occurrenceAt(text: string, surface: string, position: number): number {
+  let count = 0;
+  for (const segment of splitRichText(text)) {
+    if (segment.kind !== 'text') continue;
+    for (let index = segment.value.indexOf(surface); index >= 0; index = segment.value.indexOf(surface, index + 1)) {
+      if (segment.start + index >= position) return count + 1;
+      count += 1;
+    }
+  }
+  return count + 1;
+}
+
 export function locateTerms(text: string, terms: TermAnnotation[]): { spans: TermPlacement[]; issues: string[] } {
   const prose = splitRichText(text).filter((segment) => segment.kind === 'text');
   const spans: TermPlacement[] = [];

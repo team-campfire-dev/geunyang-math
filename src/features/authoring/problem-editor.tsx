@@ -5,7 +5,7 @@ import type { ContentBlock } from '@/shared/api';
 import { answerSpec, answerText, type AnswerSpec } from '@/shared/answer';
 import {
   moveBlock, newProblem, nextProblemBlockId, nextProblemVersionId, problemBlockForms, problemsOfBlock,
-  type DraftProblem,
+  type DraftProblem, type TermChoice,
 } from '@/shared/authoring';
 import { Icon } from '@/features/learning/icons';
 import { AddBlock, BlockCard } from './block-editor';
@@ -53,15 +53,16 @@ function SkillPicker({ skillKeys, chosen, onChange }: { skillKeys: string[]; cho
   </div>;
 }
 
-function ProblemBlocks({ label, hint, part, problem, blocks, taken, onChange }: {
+function ProblemBlocks({ label, hint, part, problem, blocks, taken, termChoices, onChange }: {
   label: string; hint?: string; part: 'prompt' | 'hint' | 'solution'; problem: DraftProblem;
-  blocks: ContentBlock[]; taken: string[]; onChange: (next: ContentBlock[]) => void;
+  blocks: ContentBlock[]; taken: string[]; termChoices: TermChoice[]; onChange: (next: ContentBlock[]) => void;
 }) {
   return <div className="editor-problem-part">
     <span className="editor-label">{label}</span>
     {hint && <p className="editor-note">{hint}</p>}
     {blocks.map((block, index) => <BlockCard key={block.blockId} block={block} index={index} total={blocks.length}
       arrangingRefusal="문항 안에서는 놓아 보게 만들 수 없어요. 놓은 결과는 채점되지 않는데 답 칸 옆에 있으면 답으로 읽혀요."
+      termChoices={termChoices}
       onChange={(next) => onChange(blocks.map((item, position) => (position === index ? next : item)))}
       onMove={(delta) => onChange(moveBlock(blocks, index, delta))}
       onRemove={() => onChange(blocks.filter((_, position) => position !== index))} />)}
@@ -71,8 +72,8 @@ function ProblemBlocks({ label, hint, part, problem, blocks, taken, onChange }: 
   </div>;
 }
 
-function ProblemCard({ problem, index, total, skillKeys, taken, onChange, onMove, onRemove }: {
-  problem: DraftProblem; index: number; total: number; skillKeys: string[]; taken: string[];
+function ProblemCard({ problem, index, total, skillKeys, taken, termChoices, onChange, onMove, onRemove }: {
+  problem: DraftProblem; index: number; total: number; skillKeys: string[]; taken: string[]; termChoices: TermChoice[];
   onChange: (next: DraftProblem) => void; onMove: (delta: number) => void; onRemove: () => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -89,14 +90,14 @@ function ProblemCard({ problem, index, total, skillKeys, taken, onChange, onMove
       </div>
     </header>
     {open && <div className="editor-problem-body">
-      <ProblemBlocks label="문제" part="prompt" problem={problem} blocks={problem.promptContent} taken={taken}
+      <ProblemBlocks label="문제" part="prompt" problem={problem} blocks={problem.promptContent} taken={taken} termChoices={termChoices}
         onChange={(promptContent) => onChange({ ...problem, promptContent })} />
       <AnswerField spec={problem.gradingSpec} onChange={(gradingSpec) => onChange({ ...problem, gradingSpec })} />
       <SkillPicker skillKeys={skillKeys} chosen={problem.skillKeys} onChange={(next) => onChange({ ...problem, skillKeys: next })} />
-      <ProblemBlocks label="힌트" part="hint" problem={problem} blocks={problem.hints} taken={taken}
+      <ProblemBlocks label="힌트" part="hint" problem={problem} blocks={problem.hints} taken={taken} termChoices={termChoices}
         hint="힌트를 하나라도 두면 학습 화면에 힌트 버튼이 생겨요. 힌트를 열고 맞히면 도움을 받은 풀이로 기록합니다."
         onChange={(hints) => onChange({ ...problem, hints })} />
-      <ProblemBlocks label="해설" part="solution" problem={problem} blocks={problem.solution} taken={taken}
+      <ProblemBlocks label="해설" part="solution" problem={problem} blocks={problem.solution} taken={taken} termChoices={termChoices}
         hint="문항을 마친 뒤에만 보여 줍니다. 한 블록 이상 있어야 발행할 수 있어요."
         onChange={(solution) => onChange({ ...problem, solution })} />
     </div>}
@@ -108,9 +109,9 @@ function ProblemCard({ problem, index, total, skillKeys, taken, onChange, onMove
  * question is written, changed and removed; removing one here drops it from the version being
  * written, while every published version keeps the question it was published with.
  */
-export function ProblemSetEditor({ block, problems, skillKeys, classKey, role, versionId, taken, onChange }: {
+export function ProblemSetEditor({ block, problems, skillKeys, classKey, role, versionId, taken, termChoices, onChange }: {
   block: ContentBlock; problems: DraftProblem[]; skillKeys: string[]; classKey: string; role: string; versionId: string;
-  taken: string[]; onChange: (block: ContentBlock, problems: DraftProblem[]) => void;
+  taken: string[]; termChoices: TermChoice[]; onChange: (block: ContentBlock, problems: DraftProblem[]) => void;
 }) {
   const ids = Array.isArray(block.payload.problemVersionIds) ? (block.payload.problemVersionIds as string[]) : [];
   const chosen = problemsOfBlock(block, problems);
@@ -125,7 +126,7 @@ export function ProblemSetEditor({ block, problems, skillKeys, classKey, role, v
   };
   return <div className="editor-problems">
     {chosen.map((problem, index) => <ProblemCard key={problem.problemVersionId} problem={problem} index={index}
-      total={chosen.length} skillKeys={skillKeys} taken={taken}
+      total={chosen.length} skillKeys={skillKeys} taken={taken} termChoices={termChoices}
       onChange={(next) => write(ids, problems.map((item) => (item.problemVersionId === problem.problemVersionId ? next : item)))}
       onMove={(delta) => write(moveBlock(ids, index, delta), problems)}
       onRemove={() => write(ids.filter((item) => item !== problem.problemVersionId),

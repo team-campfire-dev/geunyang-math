@@ -180,9 +180,10 @@ export function AuthoringWorkspace() {
         {section.contentBlocks.map((block, index) => {
           const writeBlock = (next: ContentBlock) => writeBlocks(section.contentBlocks.map((item, position) => (position === index ? next : item)));
           return <BlockCard key={block.blockId} block={block} index={index} total={section.contentBlocks.length}
+            termChoices={draft.terms}
             problems={blockFormOf(block)?.editsProblems && <ProblemSetEditor block={block} problems={edit.problems}
               skillKeys={draft.skillKeys} classKey={draft.classKey} role={section.role} versionId={edit.meta.versionId}
-              taken={blockIds}
+              taken={blockIds} termChoices={draft.terms}
               onChange={(next, problems) => setEdit({ ...edit, sections: writeSectionBlock(index, next), problems })} />}
             onChange={writeBlock}
             onMove={(delta) => writeBlocks(moveBlock(section.contentBlocks, index, delta))}

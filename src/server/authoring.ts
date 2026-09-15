@@ -11,7 +11,7 @@ import {
   mayEditEveryDraft, mayGrantRoles, mayPublish, nextTermVersionId, pruneBlock, pruneProblems, pruneSections,
   renameProblem, renamedProblemVersionId, renameProblemReferences, responseSpecOf, scopeTermAnnotations, suggestVersionId,
   type AccountRole, type AuthoringResponse, type AuthoringRole, type AuthoringWorkspace, type DraftDetail,
-  type DraftEdit, type DraftProblem, type DraftSummary, type EditableTermScope, type TermEdit, type TermSummary,
+  type DraftEdit, type DraftProblem, type DraftSummary, type EditableTermScope, type TermChoice, type TermEdit, type TermSummary,
 } from '@/shared/authoring';
 
 const id = z.string().min(1).max(191);
@@ -203,14 +203,37 @@ export class AuthoringService {
    * holds a content role receives all of it. Nothing here is reachable without that role, and the
    * learning API still sends a learner only the public half.
    */
-  private detail(row: DraftRow, userId: string, issues: string[]): DraftDetail {
+  private async detail(row: DraftRow, userId: string, issues: string[]): Promise<DraftDetail> {
     const document = row.document as unknown as StoredClass;
     const edit: DraftEdit = {
       meta: { versionId: document.public.versionId, title: document.public.title, summary: document.public.summary, estimatedMinutes: document.public.estimatedMinutes },
       sections: structuredClone(document.sections),
       problems: document.problems.map(draftProblem),
     };
-    return { ...this.summary(row, userId), edit, skillKeys: [...document.public.skillKeys], issues };
+    return { ...this.summary(row, userId), edit, skillKeys: [...document.public.skillKeys],
+      terms: await this.termChoices(document.public.classKey), issues };
+  }
+
+  /**
+   * The definitions this class may link while writing: the shared dictionary and the ones the class
+   * keeps. Only what naming a term needs — a definition's own text is read from the term screen.
+   */
+  private async termChoices(classKey: string): Promise<TermChoice[]> {
+    const rows = await this.db.termVersion.findMany({
+      where: { OR: [{ scopeKind: 'global' }, { scopeKind: 'class', scopeKey: classKey }] },
+      orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }],
+      select: { termKey: true, scopeKind: true, scopeKey: true, label: true, skillKey: true },
+    });
+    const seen = new Set<string>();
+    const choices: TermChoice[] = [];
+    for (const row of rows) {
+      const scopeKind = row.scopeKind === 'class' ? 'class' as const : 'global' as const;
+      const ref = `${scopeKind}:${row.scopeKey}:${row.termKey}`;
+      if (seen.has(ref)) continue;
+      seen.add(ref);
+      choices.push({ termKey: row.termKey, scopeKind, scopeKey: row.scopeKey, label: row.label, skillKey: row.skillKey });
+    }
+    return choices.sort((left, right) => left.label.localeCompare(right.label, 'ko'));
   }
 
   private async load(draftId: string, userId: string, role: AuthoringRole): Promise<DraftRow> {
@@ -417,7 +440,7 @@ export class AuthoringService {
         document: document as never, authorId: userId },
       include: { author: { select: { displayName: true } } },
     });
-    return { workspace: await this.workspace(userId), draft: this.detail(row as DraftRow, userId, this.issues(document)) };
+    return { workspace: await this.workspace(userId), draft: await this.detail(row as DraftRow, userId, this.issues(document)) };
   }
 
   async saveDraft(userId: string, draftId: string, edit: DraftEdit): Promise<AuthoringResponse> {
@@ -428,7 +451,7 @@ export class AuthoringService {
     const saved = await this.db.contentDraft.update({ where: { id: draftId },
       data: { document: document as never, versionId: document.public.versionId, title: document.public.title },
       include: { author: { select: { displayName: true } } } });
-    return { workspace: await this.workspace(userId), draft: this.detail(saved as DraftRow, userId, this.issues(document)) };
+    return { workspace: await this.workspace(userId), draft: await this.detail(saved as DraftRow, userId, this.issues(document)) };
   }
 
   /** Restates what the editor sent as a stored document, renaming the questions an edit changed. */
@@ -473,7 +496,7 @@ export class AuthoringService {
       try { await importContent(this.db, this.bundle(document), true); }
       catch (error) { issues.push(...describeContentError(error)); }
     }
-    return { workspace: await this.workspace(userId), draft: this.detail(row, userId, issues) };
+    return { workspace: await this.workspace(userId), draft: await this.detail(row, userId, issues) };
   }
 
   private bundle(document: StoredClass) {
@@ -496,7 +519,7 @@ export class AuthoringService {
     const published = await this.db.contentDraft.update({ where: { id: draftId },
       data: { status: 'published', publishedVersionId: document.public.versionId },
       include: { author: { select: { displayName: true } } } });
-    return { workspace: await this.workspace(userId), draft: this.detail(published as DraftRow, userId, []), publishedVersionId: document.public.versionId };
+    return { workspace: await this.workspace(userId), draft: await this.detail(published as DraftRow, userId, []), publishedVersionId: document.public.versionId };
   }
 
   async deleteDraft(userId: string, draftId: string): Promise<AuthoringResponse> {

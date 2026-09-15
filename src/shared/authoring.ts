@@ -44,7 +44,8 @@ export type DraftProblem = {
 /** What an editor may change. Published questions are immutable, so the server renames what changed. */
 export type DraftEdit = { meta: DraftMeta; sections: ClassSection[]; problems: DraftProblem[] };
 /** `skillKeys` are the class's own, carried so a question may only claim a concept the class teaches. */
-export type DraftDetail = DraftSummary & { edit: DraftEdit; skillKeys: string[]; issues: string[] };
+/** `terms` are the definitions this class may link: the shared dictionary and its own. */
+export type DraftDetail = DraftSummary & { edit: DraftEdit; skillKeys: string[]; terms: TermChoice[]; issues: string[] };
 
 export const responseSpecOf = (spec: AnswerSpec): PublicProblem['responseSpec'] =>
   (spec.kind === 'rational' && spec.requiredForm ? { kind: 'rational', requiredForm: spec.requiredForm } : { kind: spec.kind });
@@ -63,6 +64,8 @@ export type TermEdit = {
   skillKey: string; label: string; summary: string; blocks: ContentBlock[];
 };
 export type TermSummary = TermEdit & { versionId: string; publishedAt: string };
+/** Enough of a term to offer it while writing: what it is called and where it is kept. */
+export type TermChoice = { termKey: string; scopeKind: EditableTermScope; scopeKey: string; label: string; skillKey: string };
 export type SkillChoice = { key: string; label: string };
 export type AuthoringWorkspace = {
   role: AuthoringRole | null; drafts: DraftSummary[]; classes: ClassChoice[];
