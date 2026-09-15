@@ -60,7 +60,7 @@ function ProblemBlocks({ label, hint, part, problem, blocks, taken, onChange }: 
   return <div className="editor-problem-part">
     <span className="editor-label">{label}</span>
     {hint && <p className="editor-note">{hint}</p>}
-    {blocks.map((block, index) => <BlockCard key={block.blockId} block={block} index={index} total={blocks.length}
+    {blocks.map((block, index) => <BlockCard key={block.blockId} block={block} index={index} total={blocks.length} assessed
       onChange={(next) => onChange(blocks.map((item, position) => (position === index ? next : item)))}
       onMove={(delta) => onChange(moveBlock(blocks, index, delta))}
       onRemove={() => onChange(blocks.filter((_, position) => position !== index))} />)}
