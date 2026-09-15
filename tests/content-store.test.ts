@@ -237,9 +237,31 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     } finally {
       // Remove only this test's offer so other suites still start the baseline diagnostic.
       // Runs have their own immutable snapshot, with no FK to the live offer.
+      // The question index belongs to the version, so it goes with it or verification fails.
+      await db.publishedProblem.deleteMany({ where: { ownerKind: 'diagnostic', ownerVersionId: definition.versionId } });
       await db.diagnosticVersion.delete({ where: { id: definition.versionId } });
     }
   });
+  it('indexes every published question by name and refuses an index that drifts from its document', async () => {
+    const c = newClass(), skillKey = `test.${randomUUID()}`;
+    c.public.skillKeys = [skillKey]; c.public.prerequisiteSkillKeys = [];
+    c.problems.forEach(p => { p.skillKeys = [skillKey]; });
+    await importContent(db, { ...empty(), classes: [c], skills: [{ key: skillKey, label: '색인 검사 개념', order: 998 }] });
+    const rows = await db.publishedProblem.findMany({ where: { ownerKind: 'class', ownerVersionId: c.public.versionId } });
+    expect(rows.map(row => row.problemVersionId).sort()).toEqual(c.problems.map(p => p.problemVersionId).sort());
+    expect(rows.find(row => row.problemVersionId === c.problems[0].problemVersionId)?.document).toEqual(c.problems[0]);
+    // The index only repeats what the document holds, so a disagreement is a fault a deploy must see.
+    const where = { ownerKind_ownerVersionId_problemVersionId: { ownerKind: 'class',
+      ownerVersionId: c.public.versionId, problemVersionId: c.problems[0].problemVersionId } };
+    try {
+      await db.publishedProblem.update({ where, data: { document: { ...c.problems[0], skillKeys: ['drifted'] } as never } });
+      await expect(verifyContent(db)).rejects.toThrow(/Question index disagrees/);
+    } finally {
+      await db.publishedProblem.update({ where, data: { document: c.problems[0] as never } });
+    }
+    expect((await verifyContent(db)).indexedProblems).toBeGreaterThanOrEqual(rows.length);
+  });
+
   it('names published concepts for signed-out visitors and withholds skills without a released class', async () => {
     const c = newClass(), taught = `test.taught.${randomUUID()}`, unreleased = `test.unreleased.${randomUUID()}`;
     c.public.skillKeys = [taught]; c.public.prerequisiteSkillKeys = [];

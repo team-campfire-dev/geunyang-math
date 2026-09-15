@@ -4,6 +4,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import * as database from '@/server/db';
 import { hashSessionToken } from '@/server/auth';
 import { seedClasses } from './fixtures/content';
+import { indexPublishedProblems } from '@/server/content-store';
 import { POST } from '@/app/api/v1/learning/route';
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
@@ -25,6 +26,7 @@ describe.skipIf(!testDatabaseUrl)('learning HTTP account binding', () => {
       id: document.public.versionId, classKey: document.public.classKey, title: document.public.title,
       order: document.public.order, document: JSON.parse(serialized) as Prisma.InputJsonValue, contentHash,
     } });
+    await indexPublishedProblems(db, 'class', document.public.versionId, document.problems);
   });
   beforeEach(() => {
     vi.stubEnv('NODE_ENV', 'production');

@@ -8,6 +8,24 @@ import { termRefId, type TermRef, type TermScopeKind } from '@/shared/rich-text'
 type Db = Prisma.TransactionClient;
 const json = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 const hash = (value: unknown) => createHash('sha256').update(canonicalJson(value)).digest('hex');
+type IndexedProblem = { problemVersionId: string };
+/** The lookup rows a published version owns. Derived from its document, never edited on its own. */
+const problemRows = (ownerKind: 'class' | 'diagnostic', ownerVersionId: string, problems: IndexedProblem[]) =>
+  problems.map(problem => ({ ownerKind, ownerVersionId, problemVersionId: problem.problemVersionId, document: json(problem) }));
+const problemRowsOf = (bundle: ContentBundle) => [
+  ...bundle.classes.flatMap(c => problemRows('class', c.public.versionId, c.problems)),
+  ...bundle.diagnostics.flatMap(d => problemRows('diagnostic', d.versionId, d.problems)),
+];
+const rowKey = (row: { ownerKind: string; ownerVersionId: string; problemVersionId: string }) =>
+  `${row.ownerKind}/${row.ownerVersionId}/${row.problemVersionId}`;
+/**
+ * Writes the lookup rows a published version owns. Whoever writes a version owes these, and whoever
+ * removes one owes their removal; verifyProblemIndex is what says so out loud.
+ */
+export async function indexPublishedProblems(db: Db, ownerKind: 'class' | 'diagnostic', ownerVersionId: string, problems: IndexedProblem[]) {
+  const rows = problemRows(ownerKind, ownerVersionId, problems);
+  if (rows.length) await db.publishedProblem.createMany({ data: rows, skipDuplicates: true });
+}
 
 export function diagnosticDefinition(row: DiagnosticVersion): DiagnosticDefinition {
   return diagnosticDefinitionSchema.parse({ versionId: row.id, diagnosticKey: row.diagnosticKey, title: row.title,
@@ -57,11 +75,29 @@ export async function exportContent(db: Db): Promise<ContentBundle> {
     diagnostics: diagnostics.map(diagnosticDefinition), terms: terms.map(termDefinition) });
 }
 
+/**
+ * The question index repeats what the published documents hold, so a disagreement means one of the
+ * two is wrong and a draft would be renaming questions on a false answer. Deploys check it.
+ */
+export async function verifyProblemIndex(db: Db, bundle: ContentBundle) {
+  const expected = new Map(problemRowsOf(bundle).map(row => [rowKey(row), canonicalJson(row.document)]));
+  const rows = await db.publishedProblem.findMany();
+  for (const row of rows) {
+    const document = expected.get(rowKey(row));
+    if (document === undefined) throw new ContentError(`Question index holds a question its version does not: ${rowKey(row)}`);
+    if (document !== canonicalJson(row.document)) throw new ContentError(`Question index disagrees with the published document: ${rowKey(row)}`);
+    expected.delete(rowKey(row));
+  }
+  if (expected.size) throw new ContentError(`Question index is missing published questions: ${[...expected.keys()].slice(0, 5).join(', ')}`);
+  return rows.length;
+}
+
 export async function verifyContent(db: Db) {
   const bundle = await exportContent(db);
   validateReferences(bundle);
   if (!bundle.classes.length || !bundle.skills.length || !bundle.diagnostics.some(d => d.diagnosticKey === 'starting-point')) throw new ContentError('Database content is incomplete. Apply database migrations or import a reviewed bundle.');
-  return { classes: bundle.classes.length, classProblems: bundle.classes.reduce((n, c) => n + c.problems.length, 0),
+  const indexedProblems = await verifyProblemIndex(db, bundle);
+  return { classes: bundle.classes.length, classProblems: bundle.classes.reduce((n, c) => n + c.problems.length, 0), indexedProblems,
     skills: bundle.skills.length, diagnosticVersions: bundle.diagnostics.length, diagnosticProblems: bundle.diagnostics.reduce((n, d) => n + d.problems.length, 0),
     termVersions: bundle.terms.length, terms: new Set(bundle.terms.map(termRefId)).size };
 }
@@ -107,6 +143,10 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
       title: c.public.title, order: c.public.order, document: json(c), contentHash: hash(c), publishedAt: publishedAt() } });
     for (const d of newDiagnostics) await db.diagnosticVersion.create({ data: { id: d.versionId, diagnosticKey: d.diagnosticKey,
       title: d.title, description: d.description, estimatedMinutes: d.estimatedMinutes, document: json(d.problems), contentHash: hash(d), publishedAt: publishedAt() } });
+    // The index shares the transaction that publishes the version, so a question is never findable
+    // by name before the document that holds it exists.
+    for (const c of newClasses) await indexPublishedProblems(db, 'class', c.public.versionId, c.problems);
+    for (const d of newDiagnostics) await indexPublishedProblems(db, 'diagnostic', d.versionId, d.problems);
     // Term links live inside class JSON with no foreign key, so creation order is free; the merged
     // reference check above already proved every linked term exists.
     for (const t of newTerms) await db.termVersion.create({ data: { id: t.versionId, termKey: t.termKey,
