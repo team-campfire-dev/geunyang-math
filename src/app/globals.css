@@ -269,3 +269,28 @@
   .editor-steps { position: static; flex-direction: row; flex-wrap: wrap; }
   .editor-steps > .eyebrow { width: 100%; margin-left: 0; }
 }
+
+/* A drawing described as data. The learner's figure and the editor's canvas draw the same shapes,
+   so arranging a picture here is arranging the picture that ships. */
+.scene-figure { padding: 18px; background: #f7f8f1; border: 1px solid #e6edd9; border-radius: 8px; }
+.scene-figure svg { display: block; width: 100%; max-width: 520px; height: auto; margin: 0 auto; }
+.scene-figure figcaption { font-size: 11px; line-height: 1.8; text-align: center; margin-top: 13px; color: #92a17b; word-break: keep-all; }
+.scene-editor { margin-top: 16px; padding-top: 14px; border-top: 1px dashed #e2e7d8; }
+.scene-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
+.scene-tools .editor-label { width: 100%; }
+.scene-tools .button { font-size: 11px; min-height: 32px; padding: 6px 10px; }
+.scene-canvas { margin-top: 12px; border: 1px solid #dbe1cf; border-radius: 8px; background: var(--white); overflow: hidden; }
+.scene-canvas svg { display: block; width: 100%; height: auto; touch-action: none; }
+.scene-size { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin-top: 12px; }
+.scene-size .editor-field { margin-top: 0; width: 96px; }
+.scene-size .editor-note { margin: 0 0 8px auto; }
+.scene-panel { margin-top: 14px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 8px; background: #fbfcf6; }
+.scene-panel > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.scene-panel > header strong { font-size: 12px; font-weight: 600; color: #5f7154; }
+.scene-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px 14px; }
+.scene-fields .editor-field { margin-top: 10px; }
+.scene-panel textarea { font-family: ui-monospace, monospace; font-size: 11px; }
+@media (max-width: 520px) {
+  .scene-figure { padding: 12px; }
+  .scene-fields { grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); }
+}

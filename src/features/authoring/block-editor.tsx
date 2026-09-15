@@ -7,6 +7,7 @@ import {
 } from '@/shared/authoring';
 import { splitRichText } from '@/shared/rich-text';
 import { Icon } from '@/features/learning/icons';
+import { SceneEditor } from './scene-editor';
 
 const text = (value: unknown) => (typeof value === 'string' ? value : value === undefined || value === null ? '' : String(value));
 /** A number field left empty stays empty rather than becoming 0; validation names what is missing. */
@@ -89,6 +90,7 @@ export function BlockEditor({ block, problems, onChange }: { block: ContentBlock
     {form.fields.map((field) => <Field key={field.key} field={field} value={readPath(block.payload, field.key)}
       onChange={(value) => setPayload(writePath(block.payload, field.key, value))} />)}
     {form.list && <Rows form={form} payload={block.payload} onChange={setPayload} />}
+    {form.editsScene && <SceneEditor payload={block.payload} onChange={setPayload} />}
     {form.picksProblems && <ProblemPicker problems={problems}
       selected={Array.isArray(block.payload.problemVersionIds) ? (block.payload.problemVersionIds as string[]) : []}
       onChange={(next) => setPayload({ ...block.payload, problemVersionIds: next })} />}

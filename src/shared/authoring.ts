@@ -73,7 +73,7 @@ export type BlockField = {
 export type BlockList = { key: string; label: string; addLabel: string; max: number; fields: BlockField[]; create: () => Record<string, unknown> };
 export type BlockForm = {
   kind: string; typeVersion: number; label: string; hint: string;
-  fields: BlockField[]; list?: BlockList; picksProblems?: boolean;
+  fields: BlockField[]; list?: BlockList; picksProblems?: boolean; editsScene?: boolean;
   create: () => Record<string, unknown>;
 };
 
@@ -117,6 +117,17 @@ export const blockForms: BlockForm[] = [
       { key: 'label', label: '캡션', kind: 'text', optional: true },
       { key: 'labelAlt', label: '낭독용 이름', kind: 'text', optional: true, hint: '캡션에 수식을 쓸 때 필수예요.' },
     ],
+  },
+  {
+    kind: 'core.scene', typeVersion: 1, label: '그림 (자유)',
+    hint: '도형을 마우스로 놓고 옮겨 그립니다. 그림 전체의 이름은 평문으로 따로 적어요.',
+    create: () => ({ alt: '설명을 담은 그림', caption: '', width: 320, height: 200,
+      items: [{ kind: 'rect', x: 100, y: 70, width: 120, height: 60, fill: 'fill-soft', stroke: 'fill', strokeWidth: 1, radius: 2 }] }),
+    fields: [
+      { key: 'alt', label: '그림 이름', kind: 'text', hint: altHint },
+      { key: 'caption', label: '캡션', kind: 'text', optional: true },
+    ],
+    editsScene: true,
   },
   {
     kind: 'math.fraction_sequence', typeVersion: 1, label: '움직이는 분수 막대', hint: '같은 막대를 장면으로 이어 보여줘요. 재생·멈춤·앞뒤 버튼은 항상 함께 그립니다.',
