@@ -1,4 +1,5 @@
 // Public HTTP DTOs. Never import server content or grading answers into this module.
+import type { TermScopeKind } from './rich-text';
 export type Goal = 'daily-math' | 'foundation-recovery' | 'algebra-ready';
 export type GradeResult = { status: 'correct' | 'incorrect' | 'invalid'; message: string; assisted: boolean };
 export type ContentBlock = {
@@ -38,7 +39,8 @@ export type PublicClass = {
  * so a definition for the concept currently being taught or assessed never reaches the client.
  */
 export type GlossaryEntry = {
-  termKey: string; label: string; summary: string; skillKey: string;
+  termKey: string; scopeKind: TermScopeKind; scopeKey: string;
+  label: string; summary: string; skillKey: string;
   blocks: ContentBlock[];
   // The class that teaches this concept, when one is published.
   classKey: string | null;

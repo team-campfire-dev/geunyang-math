@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { blockTermKeys, getActivityProblemIds, supportedBlockTypes, termContentBlockSchema, termReferences, toPublicClass, validateClass } from '@/core/content';
+import { blockTermRefs, getActivityProblemIds, supportedBlockTypes, termContentBlockSchema, termReferences, toPublicClass, validateClass } from '@/core/content';
 import { seedClasses, skillLabels } from './fixtures/content';
 
 describe('versioned class content', () => {
@@ -263,6 +263,6 @@ describe('glossary term annotations in class text', () => {
     problem.hints[0] = { ...problem.hints[0], typeVersion: 2, payload: { text: problem.hints[0].payload.text, terms: [] } };
     expect(() => validateClass(record)).not.toThrow();
     expect(termReferences(record)).toEqual([{ termKey: 'term.denominator', blockId: record.sections[0].contentBlocks[0].blockId, problemSkillKeys: null }]);
-    expect(blockTermKeys(record.sections[0].contentBlocks)).toEqual(['term.denominator']);
+    expect(blockTermRefs(record.sections[0].contentBlocks)).toEqual([{ termKey: 'term.denominator', scopeKind: undefined, scopeKey: undefined }]);
   });
 });

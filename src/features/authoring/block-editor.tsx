@@ -18,6 +18,15 @@ function Field({ field, value, onChange }: { field: BlockField; value: unknown; 
       {label}{field.hint && <small>{field.hint}</small>}
     </label>;
   }
+  if (field.kind === 'select') {
+    return <label className="editor-field">
+      {label}
+      <select value={text(value)} onChange={(event) => onChange(event.target.value)}>
+        {field.options?.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+      </select>
+      {field.hint && <small>{field.hint}</small>}
+    </label>;
+  }
   return <label className="editor-field">
     {label}
     {field.kind === 'multiline'

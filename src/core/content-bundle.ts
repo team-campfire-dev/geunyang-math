@@ -1,6 +1,7 @@
 import 'server-only';
 import { z } from 'zod';
 import { diagnosticProblemSchema, termContentBlockSchema, termReferences, validateClass, type StoredClass } from './content';
+import { termRefId } from '@/shared/rich-text';
 
 const id = z.string().min(1).max(191).regex(/^[a-zA-Z0-9:._-]+$/);
 export const skillSchema = z.object({ key: id.max(100), label: z.string().trim().min(1).max(191), order: z.number().int().min(0).max(1_000_000) }).strict();
@@ -11,10 +12,15 @@ export const diagnosticDefinitionSchema = z.object({
 }).strict();
 export type DiagnosticDefinition = z.infer<typeof diagnosticDefinitionSchema>;
 export const termDefinitionSchema = z.object({
-  versionId: id, termKey: id.max(100), skillKey: id.max(100),
+  versionId: id, termKey: id.max(100),
+  // A bundle written before scopes existed carries neither field and imports as the shared dictionary.
+  scopeKind: z.enum(['global', 'organization', 'course', 'class']).optional().default('global'),
+  scopeKey: id.max(100).or(z.literal('')).optional().default(''),
+  skillKey: id.max(100),
   label: z.string().trim().min(1).max(191), summary: z.string().trim().min(1).max(500),
   blocks: z.array(termContentBlockSchema).min(1).max(20),
-}).strict();
+}).strict().refine((term) => (term.scopeKind === 'global' ? term.scopeKey === '' : term.scopeKey !== ''),
+  { message: 'A scoped term must name the scope it belongs to, and a global one must not' });
 export type TermDefinition = z.infer<typeof termDefinitionSchema>;
 export type ContentBundle = { schemaVersion: 1; skills: z.infer<typeof skillSchema>[]; classes: StoredClass[]; diagnostics: DiagnosticDefinition[]; terms: TermDefinition[] };
 export class ContentError extends Error {}
@@ -68,7 +74,10 @@ export function validateReferences(bundle: ContentBundle) {
   consistentCase(bundle.diagnostics.map(d => d.versionId));
   consistentCase(bundle.diagnostics.map(d => d.diagnosticKey));
   consistentCase(bundle.terms.map(t => t.versionId));
-  consistentCase(bundle.terms.map(t => t.termKey));
+  // Keys only have to stay unambiguous inside their own scope; a class may reuse a dictionary word.
+  for (const scope of new Set(bundle.terms.map(t => `${t.scopeKind}:${t.scopeKey}`))) {
+    consistentCase(bundle.terms.filter(t => `${t.scopeKind}:${t.scopeKey}` === scope).map(t => t.termKey));
+  }
   consistentCase([...bundle.classes.flatMap(c => c.problems), ...bundle.diagnostics.flatMap(d => d.problems)].map(p => p.problemVersionId));
   const skills = new Set(bundle.skills.map(s => s.key));
   const problems = new Map<string, string>();
@@ -80,13 +89,19 @@ export function validateReferences(bundle: ContentBundle) {
   const termSkills = new Map<string, string>();
   for (const t of bundle.terms) {
     assertSkill(t.skillKey);
-    const concept = termSkills.get(t.termKey);
+    const ref = termRefId(t);
+    const concept = termSkills.get(ref);
     // Visibility follows the concept a term belongs to, so it must not move between versions.
     if (concept && concept !== t.skillKey) throw new ContentError(`Term concept cannot change across versions: ${t.termKey}`);
-    termSkills.set(t.termKey, t.skillKey);
+    termSkills.set(ref, t.skillKey);
   }
   for (const c of bundle.classes) for (const reference of termReferences(c)) {
-    const concept = termSkills.get(reference.termKey);
+    // A class-scoped term belongs to the class that keeps it. Reaching into another class's terms
+    // would make one class's wording depend on a document its author cannot see.
+    if (reference.scopeKind === 'class' && reference.scopeKey !== c.public.classKey) {
+      throw new ContentError(`A class can only link its own terms: ${reference.termKey} (${reference.blockId})`);
+    }
+    const concept = termSkills.get(termRefId(reference));
     if (!concept) throw new ContentError(`Missing term: ${reference.termKey} (${reference.blockId})`);
     // A definition of the very concept under assessment would answer the question.
     if (reference.problemSkillKeys?.includes(concept)) throw new ContentError(`A problem cannot explain the concept it assesses: ${reference.termKey} (${reference.blockId})`);

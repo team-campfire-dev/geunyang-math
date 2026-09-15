@@ -8,7 +8,7 @@ import {
   removeFromZone, sceneItemKinds, sceneLimits, stepFrameIndex, taskComplete, zoneAt, zoneOf,
   type ScenePlacement, type SceneFrame, type SceneItem, type SceneTask, type SceneZone,
 } from '@/shared/scene';
-import { locateTerms, splitRichText, type TermAnnotation } from '@/shared/rich-text';
+import { locateTerms, splitRichText, termRefId, type TermAnnotation } from '@/shared/rich-text';
 import { Icon } from './icons';
 
 /**
@@ -25,11 +25,12 @@ export type GlossaryContext = {
 const noGlossary: GlossaryContext = { entries: [] };
 
 export function RichText({ text, terms = [], glossary = noGlossary, asCaption = false }: { text: string; terms?: TermAnnotation[]; glossary?: GlossaryContext; asCaption?: boolean }) {
+  // Holds the scoped reference, not the bare key: two scopes may use the same key.
   const [openTerm, setOpenTerm] = useState<string | null>(null);
   const panelId = useId();
-  const entryOf = (termKey: string) => glossary.entries.find((entry) => entry.termKey === termKey);
+  const entryOf = (ref: string) => glossary.entries.find((entry) => termRefId(entry) === ref);
   // A caption renders inline inside figcaption, where an expanding panel has nowhere to open.
-  const spans = asCaption ? [] : locateTerms(text, terms.filter((term) => entryOf(term.termKey))).spans;
+  const spans = asCaption ? [] : locateTerms(text, terms.filter((term) => entryOf(termRefId(term)))).spans;
   const open = openTerm ? entryOf(openTerm) : undefined;
   // Only the math renderer creates HTML. Text and authored content remain React text nodes.
   const nodes: ReactNode[] = [];
@@ -46,12 +47,12 @@ export function RichText({ text, terms = [], glossary = noGlossary, asCaption = 
     let cursor = segment.start;
     for (const span of spans) {
       if (span.start < cursor || span.end > segmentEnd) continue;
-      const entry = entryOf(span.termKey)!;
-      const expanded = openTerm === span.termKey;
+      const entry = entryOf(span.ref)!;
+      const expanded = openTerm === span.ref;
       pushText(text.slice(cursor, span.start), cursor);
       nodes.push(<button key={span.start} type="button" aria-expanded={expanded} aria-controls={expanded ? panelId : undefined}
         className={`term-mark${glossary.reviewSkillKeys?.includes(entry.skillKey) ? ' needs-review' : ''}${expanded ? ' open' : ''}`}
-        onClick={() => setOpenTerm(expanded ? null : span.termKey)}>{text.slice(span.start, span.end)}</button>);
+        onClick={() => setOpenTerm(expanded ? null : span.ref)}>{text.slice(span.start, span.end)}</button>);
       cursor = span.end;
     }
     pushText(text.slice(cursor, segmentEnd), cursor);

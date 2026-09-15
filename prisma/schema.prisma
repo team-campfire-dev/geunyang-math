@@ -127,9 +127,14 @@ model AppliedContentBundle {
   appliedAt DateTime @default(now())
 }
 
+/// A definition, kept by whoever owns that part of the catalogue. `global` is the operator's shared
+/// dictionary; the others belong to an organisation, a course or one class. A class names the scope
+/// when it links a term, so a definition is resolved without knowing who is reading.
 model TermVersion {
   id          String @id @db.VarChar(191)
   termKey     String @db.VarChar(100)
+  scopeKind   String @default("global") @db.VarChar(20)
+  scopeKey    String @default("") @db.VarChar(100)
   skillKey    String @db.VarChar(100)
   skill       Skill @relation(fields: [skillKey], references: [key])
   label       String @db.VarChar(191)
@@ -138,6 +143,7 @@ model TermVersion {
   contentHash String @db.VarChar(64)
   publishedAt DateTime @default(now())
   @@index([termKey, publishedAt])
+  @@index([scopeKind, scopeKey, termKey])
 }
 
 model DiagnosticVersion {

@@ -190,8 +190,10 @@ export function moveBlock<T>(items: T[], index: number, delta: number): T[] {
 }
 
 export type BlockField = {
-  key: string; label: string; kind: 'text' | 'multiline' | 'number' | 'boolean';
+  key: string; label: string; kind: 'text' | 'multiline' | 'number' | 'boolean' | 'select';
   optional?: boolean; min?: number; max?: number; hint?: string;
+  /** Required for `select`. An empty value means the field is unset and is pruned before publishing. */
+  options?: { value: string; label: string }[];
 };
 export type BlockList = { key: string; label: string; addLabel: string; max: number; fields: BlockField[]; create: () => Record<string, unknown> };
 export type BlockForm = {
@@ -219,6 +221,9 @@ export const blockForms: BlockForm[] = [
       fields: [
         { key: 'termKey', label: '용어 키', kind: 'text', hint: '발행된 TermVersion의 termKey' },
         { key: 'surface', label: '본문의 낱말', kind: 'text' },
+        { key: 'scopeKind', label: '어디 용어', kind: 'select', optional: true,
+          options: [{ value: '', label: '공통 사전' }, { value: 'class', label: '이 클래스' }],
+          hint: '공통 사전은 운영자가 발행한 용어예요. 이 클래스의 용어는 같은 키라도 따로 셉니다.' },
         { key: 'occurrence', label: '몇 번째', kind: 'number', optional: true, min: 1, max: 100 },
       ],
     },
@@ -306,6 +311,24 @@ export function pruneBlock(block: ContentBlock): ContentBlock {
 
 export function pruneSections(sections: ClassSection[]): ClassSection[] {
   return sections.map((section) => ({ ...section, contentBlocks: section.contentBlocks.map(pruneBlock) }));
+}
+
+/**
+ * Fills in which class keeps a term. The editor only asks what kind of term it is; which class owns
+ * it follows from the document the block sits in, and writing it down here is what lets a
+ * definition be resolved later without knowing who is reading.
+ */
+export function scopeTermAnnotations(blocks: ContentBlock[], classKey: string): ContentBlock[] {
+  return blocks.map((block) => {
+    if (block.kind !== 'core.rich_text' || block.typeVersion !== 2 || !Array.isArray(block.payload.terms)) return block;
+    const terms = (block.payload.terms as Record<string, unknown>[]).map((term) => {
+      const next = { ...term };
+      if (next.scopeKind === 'class') next.scopeKey = classKey;
+      else { delete next.scopeKind; delete next.scopeKey; }
+      return next;
+    });
+    return { ...block, payload: { ...block.payload, terms } };
+  });
 }
 
 export function pruneProblems(problems: DraftProblem[]): DraftProblem[] {

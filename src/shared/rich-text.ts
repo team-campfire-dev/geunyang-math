@@ -3,8 +3,18 @@
 export type RichTextSegment =
   | { kind: 'text'; value: string; start: number }
   | { kind: 'math'; value: string; start: number; equation: string; display: boolean };
-export type TermAnnotation = { termKey: string; surface: string; occurrence?: number };
-export type TermPlacement = { termKey: string; start: number; end: number };
+/**
+ * Where a term is kept. A global definition is the operator's shared dictionary; the others
+ * belong to whoever owns that part of the catalogue. A class names the scope when it links a term,
+ * so reading a definition never needs to know which class, course or organisation is being read.
+ */
+export type TermScopeKind = 'global' | 'organization' | 'course' | 'class';
+export type TermRef = { termKey: string; scopeKind?: TermScopeKind; scopeKey?: string };
+/** One string that names a term across every scope, so matching compares one value, not three. */
+export const termRefId = (term: TermRef): string =>
+  (!term.scopeKind || term.scopeKind === 'global' ? `global::${term.termKey}` : `${term.scopeKind}:${term.scopeKey ?? ''}:${term.termKey}`);
+export type TermAnnotation = TermRef & { surface: string; occurrence?: number };
+export type TermPlacement = { ref: string; termKey: string; start: number; end: number };
 
 const mathPattern = /\$\$[\s\S]+?\$\$|\\\([\s\S]+?\\\)|\$[^$\n]+?\$/g;
 
@@ -35,8 +45,9 @@ export function locateTerms(text: string, terms: TermAnnotation[]): { spans: Ter
   const issues: string[] = [];
   const seen = new Set<string>();
   for (const term of terms) {
-    if (seen.has(term.termKey)) { issues.push(`Term is annotated twice in one block: ${term.termKey}`); continue; }
-    seen.add(term.termKey);
+    const ref = termRefId(term);
+    if (seen.has(ref)) { issues.push(`Term is annotated twice in one block: ${term.termKey}`); continue; }
+    seen.add(ref);
     const occurrence = term.occurrence ?? 1;
     if (!Number.isInteger(occurrence) || occurrence < 1) { issues.push(`Occurrence must be a positive integer: ${term.termKey}`); continue; }
     let remaining = occurrence;
@@ -44,7 +55,7 @@ export function locateTerms(text: string, terms: TermAnnotation[]): { spans: Ter
     for (const segment of prose) {
       for (let index = segment.value.indexOf(term.surface); index >= 0; index = segment.value.indexOf(term.surface, index + 1)) {
         if (--remaining > 0) continue;
-        placement = { termKey: term.termKey, start: segment.start + index, end: segment.start + index + term.surface.length };
+        placement = { ref, termKey: term.termKey, start: segment.start + index, end: segment.start + index + term.surface.length };
         break;
       }
       if (placement) break;

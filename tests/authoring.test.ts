@@ -3,7 +3,7 @@ import { supportedBlockTypes, validateClass } from '@/core/content';
 import {
   blockForms, blockFormOf, moveBlock, newProblem, nextBlockId, nextProblemBlockId, nextProblemVersionId, nextSectionId,
   problemsOfBlock, pruneBlock, pruneSections, renameProblem, renameProblemReferences, renamedProblemVersionId,
-  responseSpecOf, suggestVersionId, toPublicProblem, writePath,
+  responseSpecOf, scopeTermAnnotations, suggestVersionId, toPublicProblem, writePath,
 } from '@/shared/authoring';
 import { seedClasses } from './fixtures/content';
 
@@ -164,5 +164,46 @@ describe('naming a question, and keeping an answered one as it was answered', ()
     problem.hints.push({ blockId: 'fraction-meaning:practice-1:v2:hint', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '힌트' } });
     problem.gradingSpec = { kind: 'rational', numerator: 1, denominator: 2, requiredForm: 'reduced_fraction' };
     expect(toPublicProblem(problem)).toMatchObject({ hintAvailable: true, responseSpec: { kind: 'rational', requiredForm: 'reduced_fraction' } });
+  });
+});
+
+describe('which class keeps a linked term', () => {
+  const linked = (terms: Record<string, unknown>[]) => ([{
+    blockId: 'fraction-meaning:explanation:text:v5', kind: 'core.rich_text', typeVersion: 2, required: true,
+    payload: { text: '분모는 전체를 나눈 조각 수예요.', terms },
+  }]);
+
+  it('writes the owning class onto a term the class keeps, and leaves a dictionary term bare', () => {
+    const scoped = scopeTermAnnotations(linked([{ termKey: 'term.denominator', surface: '분모', scopeKind: 'class' }]), 'fraction-meaning');
+    expect(scoped[0].payload.terms).toEqual([{ termKey: 'term.denominator', surface: '분모', scopeKind: 'class', scopeKey: 'fraction-meaning' }]);
+    // The shared dictionary is the absence of a scope, so nothing is written for it.
+    const shared = scopeTermAnnotations(linked([{ termKey: 'term.denominator', surface: '분모' }]), 'fraction-meaning');
+    expect(shared[0].payload.terms).toEqual([{ termKey: 'term.denominator', surface: '분모' }]);
+  });
+
+  it('never lets an annotation keep a scope the editor did not choose', () => {
+    // An author who switches back to the dictionary must not leave the old class behind.
+    const switched = scopeTermAnnotations(linked([{ termKey: 'term.denominator', surface: '분모', scopeKey: 'other-class' }]), 'fraction-meaning');
+    expect(switched[0].payload.terms).toEqual([{ termKey: 'term.denominator', surface: '분모' }]);
+    // And a class may only ever write its own name, whatever the payload said.
+    const borrowed = scopeTermAnnotations(linked([{ termKey: 'term.denominator', surface: '분모', scopeKind: 'class', scopeKey: 'other-class' }]), 'fraction-meaning');
+    expect(borrowed[0].payload.terms).toEqual([{ termKey: 'term.denominator', surface: '분모', scopeKind: 'class', scopeKey: 'fraction-meaning' }]);
+  });
+
+  it('leaves blocks that carry no term links untouched', () => {
+    const plain = [{ blockId: 'b1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '본문' } }];
+    // Returned as-is, so a document with no term links is not rewritten on every save.
+    expect(scopeTermAnnotations(plain, 'fraction-meaning')[0]).toBe(plain[0]);
+  });
+
+  it('offers the scope as a choice the publishing schema accepts', () => {
+    const form = blockFormOf({ kind: 'core.rich_text', typeVersion: 2 })!;
+    const field = form.list!.fields.find((item) => item.key === 'scopeKind')!;
+    expect(field.kind).toBe('select');
+    expect(field.options!.map((option) => option.value)).toEqual(['', 'class']);
+    // An unchosen scope is an empty string, which pruning drops before validation ever sees it.
+    const pruned = pruneBlock({ blockId: 'b1', kind: 'core.rich_text', typeVersion: 2, required: true,
+      payload: { text: '분모는 전체를 나눈 조각 수예요.', terms: [{ termKey: 'term.denominator', surface: '분모', scopeKind: '' }] } });
+    expect(pruned.payload.terms).toEqual([{ termKey: 'term.denominator', surface: '분모' }]);
   });
 });

@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { Prisma, type PrismaClient, type DiagnosticVersion, type TermVersion } from '@prisma/client';
 import { canonicalJson, ContentError, diagnosticDefinitionSchema, parseContentBundle, termDefinitionSchema, validateReferences, type ContentBundle, type DiagnosticDefinition, type TermDefinition } from '@/core/content-bundle';
 import type { StoredClass } from '@/core/content';
+import { termRefId, type TermRef, type TermScopeKind } from '@/shared/rich-text';
 
 type Db = Prisma.TransactionClient;
 const json = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
@@ -13,15 +14,29 @@ export function diagnosticDefinition(row: DiagnosticVersion): DiagnosticDefiniti
     description: row.description, estimatedMinutes: row.estimatedMinutes, problems: row.document });
 }
 export function termDefinition(row: TermVersion): TermDefinition {
-  return termDefinitionSchema.parse({ versionId: row.id, termKey: row.termKey, skillKey: row.skillKey,
+  return termDefinitionSchema.parse({ versionId: row.id, termKey: row.termKey,
+    scopeKind: row.scopeKind, scopeKey: row.scopeKey, skillKey: row.skillKey,
     label: row.label, summary: row.summary, blocks: row.document });
 }
-/** Latest published definition per term key. Classes link by key, so a reworded term needs no republish. */
-export async function currentTerms(db: Db, termKeys: string[]): Promise<TermDefinition[]> {
-  if (!termKeys.length) return [];
-  const rows = await db.termVersion.findMany({ where: { termKey: { in: [...new Set(termKeys)] } }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
+const rowRef = (row: { termKey: string; scopeKind: string; scopeKey: string }) =>
+  termRefId({ termKey: row.termKey, scopeKind: row.scopeKind as TermScopeKind, scopeKey: row.scopeKey });
+/**
+ * Latest published definition for each term a document asked for. A reference names its scope, so a
+ * class-scoped term and a dictionary term may share a key without either one answering for the
+ * other. Only the version is late-bound: a reworded definition needs no class republished.
+ */
+export async function currentTerms(db: Db, refs: TermRef[]): Promise<TermDefinition[]> {
+  if (!refs.length) return [];
+  const wanted = new Set(refs.map(termRefId));
+  const rows = await db.termVersion.findMany({ where: { termKey: { in: [...new Set(refs.map(ref => ref.termKey))] } },
+    orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
   const seen = new Set<string>();
-  return rows.filter(row => { if (seen.has(row.termKey)) return false; seen.add(row.termKey); return true; }).map(termDefinition);
+  return rows.filter(row => {
+    const ref = rowRef(row);
+    if (!wanted.has(ref) || seen.has(ref)) return false;
+    seen.add(ref);
+    return true;
+  }).map(termDefinition);
 }
 export async function currentDiagnostic(db: Db) {
   const row = await db.diagnosticVersion.findFirst({ where: { diagnosticKey: 'starting-point' }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
@@ -48,7 +63,7 @@ export async function verifyContent(db: Db) {
   if (!bundle.classes.length || !bundle.skills.length || !bundle.diagnostics.some(d => d.diagnosticKey === 'starting-point')) throw new ContentError('Database content is incomplete. Apply database migrations or import a reviewed bundle.');
   return { classes: bundle.classes.length, classProblems: bundle.classes.reduce((n, c) => n + c.problems.length, 0),
     skills: bundle.skills.length, diagnosticVersions: bundle.diagnostics.length, diagnosticProblems: bundle.diagnostics.reduce((n, d) => n + d.problems.length, 0),
-    termVersions: bundle.terms.length, terms: new Set(bundle.terms.map(t => t.termKey)).size };
+    termVersions: bundle.terms.length, terms: new Set(bundle.terms.map(termRefId)).size };
 }
 
 type Ledger = { name: string; checksum: string };
@@ -94,7 +109,8 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
       title: d.title, description: d.description, estimatedMinutes: d.estimatedMinutes, document: json(d.problems), contentHash: hash(d), publishedAt: publishedAt() } });
     // Term links live inside class JSON with no foreign key, so creation order is free; the merged
     // reference check above already proved every linked term exists.
-    for (const t of newTerms) await db.termVersion.create({ data: { id: t.versionId, termKey: t.termKey, skillKey: t.skillKey,
+    for (const t of newTerms) await db.termVersion.create({ data: { id: t.versionId, termKey: t.termKey,
+      scopeKind: t.scopeKind, scopeKey: t.scopeKey, skillKey: t.skillKey,
       label: t.label, summary: t.summary, document: json(t.blocks), contentHash: hash(t), publishedAt: publishedAt() } });
     // The ledger entry shares this transaction: a file counts as applied only if its content landed.
     if (ledger) await db.appliedContentBundle.upsert({ where: { name: ledger.name }, create: { ...ledger },
