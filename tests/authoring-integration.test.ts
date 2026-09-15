@@ -49,7 +49,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     expect(await authoringRole(db, learner.id)).toBeNull();
     expect(await authoringRole(db, author.id)).toBe('author');
     expect(await authoringRole(db, admin.id)).toBe('admin');
-    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], classes: [], accounts: [] });
+    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], classes: [], accounts: [], skills: [] });
     await expect(service.createDraft(learner.id, classKey)).rejects.toThrow(/권한/);
   });
 
@@ -327,6 +327,68 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     // The shared editing account is never a search result, since it is not a person.
     expect((await service.searchAccounts(admin.id, '열린 편집')).matches).toEqual([]);
     await expect(service.searchAccounts(learner.id, '찾기')).rejects.toThrow(/권한/);
+  });
+
+  it('writes a definition the class keeps, and rewrites it as the next version', async () => {
+    const admin = await account('admin');
+    const termKey = `term.class.${randomUUID()}`;
+    const skillKey = (await db.classVersion.findUniqueOrThrow({ where: { id: `${classKey}:v1` } })
+      .then(row => (row.document as unknown as StoredClass).public.skillKeys[0]));
+    const published = await service.saveTerm(admin.id, { termKey, scopeKind: 'class', scopeKey: classKey, skillKey,
+      label: '이 수업의 용어', summary: '이 수업에서만 쓰는 풀이예요.',
+      blocks: [{ blockId: 'term:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '뜻을 풀어 썼어요.' } }] });
+    expect(published.publishedTermVersionId).toBe(`${classKey}:${termKey}:v1`);
+    // Blocks are named after the version that holds them, so the editor never chose the ID.
+    const row = await db.termVersion.findUniqueOrThrow({ where: { id: `${classKey}:${termKey}:v1` } });
+    expect((row.document as { blockId: string }[])[0].blockId).toBe(`${classKey}:${termKey}:v1:b1`);
+    expect(row.scopeKind).toBe('class');
+    expect(row.scopeKey).toBe(classKey);
+
+    const listed = published.terms!.find(term => term.termKey === termKey)!;
+    expect(listed).toMatchObject({ label: '이 수업의 용어', versionId: `${classKey}:${termKey}:v1` });
+    // Saving again publishes the next version and the list shows the new one. This goes through the
+    // action the screen posts, so the shape the editor sends is the shape the server accepts.
+    const again = await service.act(admin.id, { action: 'term.save', edit: {
+      termKey: listed.termKey, scopeKind: listed.scopeKind, scopeKey: listed.scopeKey, skillKey: listed.skillKey,
+      label: listed.label, summary: '설명을 고쳐 썼어요.', blocks: listed.blocks } });
+    expect(again.publishedTermVersionId).toBe(`${classKey}:${termKey}:v2`);
+    expect(again.terms!.find(term => term.termKey === termKey)!.summary).toBe('설명을 고쳐 썼어요.');
+    // The earlier version stays where it was; nothing is rewritten in place.
+    expect((await db.termVersion.findUniqueOrThrow({ where: { id: `${classKey}:${termKey}:v1` } })).summary)
+      .toBe('이 수업에서만 쓰는 풀이예요.');
+  });
+
+  it('keeps the shared dictionary to administrators and asks a class term which class it belongs to', async () => {
+    const admin = await account('admin');
+    const author = await account('author');
+    const learner = await account();
+    const termKey = `term.scope.${randomUUID()}`;
+    const skillKey = (await db.classVersion.findUniqueOrThrow({ where: { id: `${classKey}:v1` } })
+      .then(row => (row.document as unknown as StoredClass).public.skillKeys[0]));
+    const edit = { termKey, scopeKind: 'global' as const, scopeKey: '', skillKey, label: '사전 용어', summary: '사전이 쓴 풀이예요.',
+      blocks: [{ blockId: 'term:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '사전 정의' } }] };
+    await expect(service.saveTerm(author.id, edit)).rejects.toThrow(/공통 사전은 관리자만/);
+    await expect(service.listTerms(learner.id, 'global', '')).rejects.toThrow(/권한/);
+    // A class term is part of writing that class, so an author may write one.
+    await expect(service.saveTerm(author.id, { ...edit, scopeKind: 'class', scopeKey: classKey })).resolves.toBeTruthy();
+
+    await expect(service.saveTerm(admin.id, { ...edit, scopeKey: classKey })).rejects.toThrow(/소속을 적지 않아요/);
+    await expect(service.saveTerm(admin.id, { ...edit, scopeKind: 'class', scopeKey: '' })).rejects.toThrow(/어느 클래스의 용어인지/);
+    await expect(service.saveTerm(admin.id, { ...edit, scopeKind: 'class', scopeKey: 'no-such-class' })).rejects.toThrow(/발행된 적 없는/);
+    // The dictionary and the class keep their own lists, even for the same key.
+    await service.saveTerm(admin.id, edit);
+    expect((await service.listTerms(admin.id, 'global', '')).terms!.some(term => term.termKey === termKey)).toBe(true);
+    const mine = (await service.listTerms(admin.id, 'class', classKey)).terms!.find(term => term.termKey === termKey)!;
+    expect(mine.versionId).toBe(`${classKey}:${termKey}:v1`);
+  });
+
+  it('refuses a definition the publishing rules would not accept', async () => {
+    const admin = await account('admin');
+    const termKey = `term.bad.${randomUUID()}`;
+    const base = { termKey, scopeKind: 'class' as const, scopeKey: classKey, label: '나쁜 용어', summary: '설명이에요.',
+      blocks: [{ blockId: 'term:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '정의' } }] };
+    await expect(service.saveTerm(admin.id, { ...base, skillKey: 'no.such.skill' })).rejects.toThrow(/Missing skill/);
+    expect(await db.termVersion.findUnique({ where: { id: `${classKey}:${termKey}:v1` } })).toBeNull();
   });
 
   it('refuses to publish an invalid draft, or to publish at all without the role', async () => {

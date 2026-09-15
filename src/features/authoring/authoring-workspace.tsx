@@ -5,7 +5,7 @@ import type { ClassSection, ContentBlock } from '@/shared/api';
 import {
   blockFormOf, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId, toPublicProblem,
   type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail, type DraftEdit,
-  type DraftProblem, type DraftSummary,
+  type DraftProblem, type DraftSummary, type TermSummary,
 } from '@/shared/authoring';
 import { ApiError, learningApi, type Session } from '@/features/learning/api-client';
 import { ContentBlocks } from '@/features/learning/content-blocks';
@@ -13,6 +13,7 @@ import { Icon } from '@/features/learning/icons';
 import { authoringApi } from './api-client';
 import { AddBlock, BlockCard } from './block-editor';
 import { ProblemSetEditor } from './problem-editor';
+import { TermPanel } from './term-editor';
 
 const roleLabels: Record<ClassSection['role'], string> = {
   explanation: '설명', worked_example: '예시', practice: '연습', check: '확인', summary: '정리',
@@ -32,6 +33,7 @@ export function AuthoringWorkspace() {
   const [confirming, setConfirming] = useState(false);
   const [loading, setLoading] = useState(true);
   const [matches, setMatches] = useState<AccountRole[] | null>(null);
+  const [terms, setTerms] = useState<TermSummary[] | null>(null);
 
   const dirty = !!draft && !!edit && !sameEdit(draft.edit, edit);
   const open = useCallback((detail: DraftDetail) => {
@@ -91,9 +93,17 @@ export function AuthoringWorkspace() {
   if (!draft || !edit) {
     return <Shell role={workspace.role}>
       {error && <p className="error-banner" role="alert">{error}</p>}
+      {notice && <p className="notice-banner">{notice}</p>}
       <DraftList workspace={workspace} busy={busy}
         onOpen={(summary) => run(async () => open((await authoringApi.draft(summary.id)).draft))}
         onCreate={(classKey) => act({ action: 'draft.create', classKey })} />
+      <TermPanel classes={workspace.classes} skills={workspace.skills} terms={terms} busy={busy}
+        mayEditDictionary={mayPublish(workspace.role)}
+        onList={(scopeKind, scopeKey) => act({ action: 'term.list', scopeKind, scopeKey }, (response) => setTerms(response.terms ?? []))}
+        onSave={(edit) => act({ action: 'term.save', edit }, (response) => {
+          setTerms(response.terms ?? []);
+          setNotice(`${response.publishedTermVersionId} 판본을 발행했어요.`);
+        })} />
       {mayGrantRoles(workspace.role) && <RolePanel accounts={workspace.accounts} busy={busy} matches={matches}
         onSearch={(query) => act({ action: 'account.search', query }, (response) => setMatches(response.matches ?? []))}
         onGrant={(userId, role) => act({ action: 'role.grant', userId, role }, () => setMatches(null))}
