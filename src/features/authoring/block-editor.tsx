@@ -54,7 +54,9 @@ function Rows({ form, payload, onChange }: { form: BlockForm; payload: Record<st
   </div>;
 }
 
-export function BlockEditor({ block, problems, onChange }: { block: ContentBlock; problems?: ReactNode; onChange: (next: ContentBlock) => void }) {
+export function BlockEditor({ block, problems, assessed, onChange }: {
+  block: ContentBlock; problems?: ReactNode; assessed?: boolean; onChange: (next: ContentBlock) => void;
+}) {
   const form = blockFormOf(block);
   const setPayload = (payload: Record<string, unknown>) => onChange({ ...block, payload });
   if (!form) {
@@ -64,13 +66,13 @@ export function BlockEditor({ block, problems, onChange }: { block: ContentBlock
     {form.fields.map((field) => <Field key={field.key} field={field} value={readPath(block.payload, field.key)}
       onChange={(value) => setPayload(writePath(block.payload, field.key, value))} />)}
     {form.list && <Rows form={form} payload={block.payload} onChange={setPayload} />}
-    {form.editsScene && <SceneEditor payload={block.payload} onChange={setPayload} />}
+    {form.editsScene && <SceneEditor payload={block.payload} assessed={assessed} onChange={setPayload} />}
     {form.editsProblems && problems}
   </>;
 }
 
-export function BlockCard({ block, index, total, problems, onChange, onMove, onRemove }: {
-  block: ContentBlock; index: number; total: number; problems?: ReactNode;
+export function BlockCard({ block, index, total, problems, assessed, onChange, onMove, onRemove }: {
+  block: ContentBlock; index: number; total: number; problems?: ReactNode; assessed?: boolean;
   onChange: (next: ContentBlock) => void; onMove: (delta: number) => void; onRemove: () => void;
 }) {
   const form = blockFormOf(block);
@@ -91,7 +93,7 @@ export function BlockCard({ block, index, total, problems, onChange, onMove, onR
       </div>
     </header>
     {form?.hint && <p className="editor-note">{form.hint}</p>}
-    <BlockEditor block={block} problems={problems} onChange={onChange} />
+    <BlockEditor block={block} problems={problems} assessed={assessed} onChange={onChange} />
     {!block.required && <Field field={{ key: 'fallback', label: '대체 설명', kind: 'text', optional: true, hint: '이 블록을 모르는 앱 버전에서 대신 보여줄 문장이에요.' }}
       value={block.fallback} onChange={(value) => onChange({ ...block, fallback: typeof value === 'string' ? value : '' })} />}
   </section>;
