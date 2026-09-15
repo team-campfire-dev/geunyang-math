@@ -4,7 +4,7 @@ import { createDatabase } from '@/server/db';
 import { AuthoringService, authoringRole, openAuthoring, openAuthoringAccount } from '@/server/authoring';
 import { importContent } from '@/server/content-store';
 import type { StoredClass } from '@/core/content';
-import type { DraftEdit } from '@/shared/authoring';
+import { newProblem, nextProblemVersionId, type DraftEdit, type DraftProblem } from '@/shared/authoring';
 import { seedClasses } from './fixtures/content';
 
 const url = process.env.TEST_DATABASE_URL;
@@ -81,7 +81,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     finally { delete process.env.CONTENT_ADMIN_SUBJECTS; }
   });
 
-  it('starts a draft at the next version of the published class and keeps answers on the server', async () => {
+  it('starts a draft at the next version of the published class and opens its questions', async () => {
     const admin = await account('admin');
     const { draft, workspace } = await service.createDraft(admin.id, classKey);
     expect(workspace.classes.find((item) => item.classKey === classKey)).toMatchObject({ hasDraft: true });
@@ -89,12 +89,13 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     expect(draft!.baseVersionId).toBe(`${classKey}:v1`);
     expect(draft!.edit.sections).toHaveLength(5);
     expect(draft!.issues).toEqual([]);
-    // What the editor receives carries questions, but never their answers, hints or solutions.
+    // Writing a question means writing its answer, so an account holding the role receives all of it.
+    for (const problem of draft!.edit.problems) expect(Object.keys(problem).sort())
+      .toEqual(['gradingSpec', 'hints', 'problemVersionId', 'promptContent', 'skillKeys', 'solution']);
+    // The two fields that follow from the rest are never sent, so they cannot come back disagreeing.
     const serialized = JSON.stringify(draft);
-    expect(serialized).not.toContain('gradingSpec');
-    expect(serialized).not.toContain('"solution"');
-    for (const problem of draft!.problems) expect(Object.keys(problem).sort())
-      .toEqual(['hintAvailable', 'problemVersionId', 'promptContent', 'responseSpec', 'skillKeys']);
+    expect(serialized).not.toContain('responseSpec');
+    expect(serialized).not.toContain('hintAvailable');
   });
 
   it('saves work in progress and reports what still blocks publishing', async () => {
@@ -128,10 +129,114 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const row = await db.classVersion.findUniqueOrThrow({ where: { id: versionId } });
     const document = row.document as unknown as StoredClass;
     expect(document.sections[0].contentBlocks.at(-1)!.kind).toBe('core.scene');
-    // The published class still carries the private half the editor never saw.
-    expect(document.problems[0].gradingSpec).toBeDefined();
+    // The published class carries the halves that follow from the answer, restated when it was saved.
+    expect(document.problems[0].responseSpec.kind).toBe(document.problems[0].gradingSpec.kind);
+    expect(document.problems[0].hintAvailable).toBe(document.problems[0].hints.length > 0);
     expect(await db.classVersion.findUniqueOrThrow({ where: { id: `${classKey}:v1` } })).toEqual(before);
     await expect(service.saveDraft(admin.id, draftId, created.draft!.edit)).rejects.toThrow(/이미 발행/);
+  });
+
+  const rewritten = (edit: DraftEdit, problemVersionId: string, change: (problem: DraftProblem) => void): DraftEdit => {
+    const next = structuredClone(edit);
+    change(next.problems.find((problem) => problem.problemVersionId === problemVersionId)!);
+    return next;
+  };
+  // Earlier tests in this file publish versions of their own, so a draft's version is never assumed.
+  const suffixOf = (versionId: string) => versionId.slice(versionId.lastIndexOf(':') + 1);
+  const activityOf = (edit: DraftEdit, problemVersionId: string) => edit.sections.flatMap((section) => section.contentBlocks)
+    .find((block) => block.kind === 'core.problem_set' && (block.payload.problemVersionIds as string[]).includes(problemVersionId));
+
+  it('renames a question an edit changed and moves every reference with it', async () => {
+    const admin = await account('admin');
+    const created = await service.createDraft(admin.id, classKey);
+    const draftId = created.draft!.id;
+    const answered = `${classKey}:practice-1:v1`;
+    const saved = await service.saveDraft(admin.id, draftId, rewritten(created.draft!.edit, answered,
+      (problem) => { problem.promptContent[0].payload.text = '고쳐 쓴 문제예요.'; }));
+    const renamed = `${classKey}:practice-1:${suffixOf(created.draft!.versionId)}`;
+    const names = saved.draft!.edit.problems.map((problem) => problem.problemVersionId);
+    expect(names).toContain(renamed);
+    expect(names).not.toContain(answered);
+    // The activity that held the question now names the new one, and nothing still names the old.
+    expect(activityOf(saved.draft!.edit, renamed)).toBeDefined();
+    expect(activityOf(saved.draft!.edit, answered)).toBeUndefined();
+    // Blocks are named after the question they belong to, so they move to the new name as well.
+    const moved = saved.draft!.edit.problems.find((problem) => problem.problemVersionId === renamed)!;
+    expect(moved.promptContent[0].blockId.startsWith(`${renamed}:`)).toBe(true);
+    expect(saved.draft!.issues).toEqual([]);
+    // Saving again renames nothing: the new question is this draft's own until it is published.
+    const again = await service.saveDraft(admin.id, draftId, saved.draft!.edit);
+    expect(again.draft!.edit.problems.map((problem) => problem.problemVersionId)).toEqual(names);
+    await service.deleteDraft(admin.id, draftId);
+  });
+
+  it('leaves a question alone when an edit did not touch it', async () => {
+    const admin = await account('admin');
+    const created = await service.createDraft(admin.id, classKey);
+    const before = created.draft!.edit.problems.map((problem) => problem.problemVersionId);
+    const saved = await service.saveDraft(admin.id, created.draft!.id, created.draft!.edit);
+    expect(saved.draft!.edit.problems.map((problem) => problem.problemVersionId)).toEqual(before);
+    expect(saved.draft!.issues).toEqual([]);
+    await service.deleteDraft(admin.id, created.draft!.id);
+  });
+
+  it('moves a homework reference too, since homework names questions without a block', async () => {
+    const admin = await account('admin');
+    const created = await service.createDraft(admin.id, classKey);
+    const draftId = created.draft!.id;
+    const answered = `${classKey}:homework-1:v1`;
+    await service.saveDraft(admin.id, draftId, rewritten(created.draft!.edit, answered,
+      (problem) => { problem.solution[0].payload.text = '풀이를 다시 썼어요.'; }));
+    const row = await db.contentDraft.findUniqueOrThrow({ where: { id: draftId } });
+    const document = row.document as unknown as StoredClass;
+    expect(document.homeworkProblemIds).toContain(`${classKey}:homework-1:${suffixOf(created.draft!.versionId)}`);
+    expect(document.homeworkProblemIds).not.toContain(answered);
+    await service.deleteDraft(admin.id, draftId);
+  });
+
+  it('publishes an edited question as a new one and leaves the answered one as it was', async () => {
+    const admin = await account('admin');
+    const created = await service.createDraft(admin.id, classKey);
+    const draftId = created.draft!.id;
+    const versionId = created.draft!.versionId;
+    const answered = `${classKey}:check-1:v1`;
+    const before = await db.classVersion.findUniqueOrThrow({ where: { id: `${classKey}:v1` } });
+    await service.saveDraft(admin.id, draftId, rewritten(created.draft!.edit, answered, (problem) => {
+      problem.promptContent[0].payload.text = '답이 달라진 문제예요.';
+      problem.gradingSpec = { kind: 'rational', numerator: 2, denominator: 3 };
+    }));
+    await service.publishDraft(admin.id, draftId);
+    const document = (await db.classVersion.findUniqueOrThrow({ where: { id: versionId } })).document as unknown as StoredClass;
+    const written = document.problems.find((problem) => problem.problemVersionId === `${classKey}:check-1:${suffixOf(versionId)}`)!;
+    expect(written.gradingSpec).toEqual({ kind: 'rational', numerator: 2, denominator: 3 });
+    expect(document.problems.some((problem) => problem.problemVersionId === answered)).toBe(false);
+    // The version a learner may be part-way through still holds the question they answered.
+    expect(await db.classVersion.findUniqueOrThrow({ where: { id: `${classKey}:v1` } })).toEqual(before);
+  });
+
+  it('publishes a question written in the editor as part of the activity that holds it', async () => {
+    const admin = await account('admin');
+    const created = await service.createDraft(admin.id, classKey);
+    const draftId = created.draft!.id;
+    const versionId = created.draft!.versionId;
+    const edit = structuredClone(created.draft!.edit);
+    const written = newProblem(nextProblemVersionId(classKey, 'practice', versionId,
+      edit.problems.map((problem) => problem.problemVersionId)), edit.problems[0].skillKeys);
+    written.promptContent[0].payload.text = '새로 쓴 문제예요. 답은 3입니다.';
+    written.gradingSpec = { kind: 'integer', value: 3 };
+    edit.problems.push(written);
+    const activity = edit.sections.flatMap((section) => section.contentBlocks)
+      .find((block) => block.kind === 'core.problem_set')!;
+    (activity.payload.problemVersionIds as string[]).push(written.problemVersionId);
+    const saved = await service.saveDraft(admin.id, draftId, edit);
+    expect(saved.draft!.issues).toEqual([]);
+    expect(saved.draft!.edit.problems.map((problem) => problem.problemVersionId)).toContain(written.problemVersionId);
+    await service.publishDraft(admin.id, draftId);
+    const document = (await db.classVersion.findUniqueOrThrow({ where: { id: versionId } })).document as unknown as StoredClass;
+    const stored = document.problems.find((problem) => problem.problemVersionId === written.problemVersionId)!;
+    // A question with no hints says so, and its response format restates the answer that was written.
+    expect(stored.hintAvailable).toBe(false);
+    expect(stored.responseSpec).toEqual({ kind: 'integer' });
   });
 
   it('refuses to publish an invalid draft, or to publish at all without the role', async () => {

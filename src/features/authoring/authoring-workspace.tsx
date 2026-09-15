@@ -3,14 +3,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { ClassSection, ContentBlock } from '@/shared/api';
 import {
-  mayPublish, moveBlock, nextSectionId,
-  type AuthoringWorkspace as Workspace, type DraftDetail, type DraftEdit, type DraftSummary,
+  blockFormOf, mayPublish, moveBlock, nextBlockId, nextSectionId, toPublicProblem,
+  type AuthoringWorkspace as Workspace, type DraftDetail, type DraftEdit, type DraftProblem, type DraftSummary,
 } from '@/shared/authoring';
 import { ApiError, learningApi, type Session } from '@/features/learning/api-client';
 import { ContentBlocks } from '@/features/learning/content-blocks';
 import { Icon } from '@/features/learning/icons';
 import { authoringApi } from './api-client';
 import { AddBlock, BlockCard } from './block-editor';
+import { ProblemSetEditor } from './problem-editor';
 
 const roleLabels: Record<ClassSection['role'], string> = {
   explanation: '설명', worked_example: '예시', practice: '연습', check: '확인', summary: '정리',
@@ -95,10 +96,19 @@ export function AuthoringWorkspace() {
   }
 
   const section = edit.sections[Math.min(sectionIndex, edit.sections.length - 1)];
-  const blockIds = edit.sections.flatMap((item) => item.contentBlocks.map((block) => block.blockId));
+  // Block IDs are unique across the whole document, questions included, so a new one avoids them all.
+  const blockIds = [
+    ...edit.sections.flatMap((item) => item.contentBlocks.map((block) => block.blockId)),
+    ...edit.problems.flatMap((problem) => [...problem.promptContent, ...problem.hints, ...problem.solution].map((block) => block.blockId)),
+  ];
   const published = draft.status === 'published';
   const writeSection = (next: ClassSection) => setEdit({ ...edit, sections: edit.sections.map((item, index) => (index === sectionIndex ? next : item)) });
   const writeBlocks = (blocks: ContentBlock[]) => writeSection({ ...section, contentBlocks: blocks });
+  const writeSectionBlock = (index: number, block: ContentBlock) =>
+    edit.sections.map((item, position) => (position === sectionIndex
+      ? { ...item, contentBlocks: item.contentBlocks.map((existing, place) => (place === index ? block : existing)) }
+      : item));
+  const previewProblems = edit.problems.map(toPublicProblem);
 
   return <Shell role={workspace.role}>
     <div className="editor-bar">
@@ -151,13 +161,19 @@ export function AuthoringWorkspace() {
           }}><Icon name="close" size={14} />이 단계 삭제</button>}
         </fieldset>
 
-        {section.contentBlocks.map((block, index) => <BlockCard key={block.blockId} block={block} index={index}
-          total={section.contentBlocks.length} problems={draft.problems}
-          onChange={(next) => writeBlocks(section.contentBlocks.map((item, position) => (position === index ? next : item)))}
-          onMove={(delta) => writeBlocks(moveBlock(section.contentBlocks, index, delta))}
-          onRemove={() => writeBlocks(section.contentBlocks.filter((_, position) => position !== index))} />)}
+        {section.contentBlocks.map((block, index) => {
+          const writeBlock = (next: ContentBlock) => writeBlocks(section.contentBlocks.map((item, position) => (position === index ? next : item)));
+          return <BlockCard key={block.blockId} block={block} index={index} total={section.contentBlocks.length}
+            problems={blockFormOf(block)?.editsProblems && <ProblemSetEditor block={block} problems={edit.problems}
+              skillKeys={draft.skillKeys} classKey={draft.classKey} role={section.role} versionId={edit.meta.versionId}
+              taken={blockIds}
+              onChange={(next, problems) => setEdit({ ...edit, sections: writeSectionBlock(index, next), problems })} />}
+            onChange={writeBlock}
+            onMove={(delta) => writeBlocks(moveBlock(section.contentBlocks, index, delta))}
+            onRemove={() => writeBlocks(section.contentBlocks.filter((_, position) => position !== index))} />;
+        })}
 
-        {!published && <AddBlock classKey={draft.classKey} sectionId={section.sectionId} versionId={edit.meta.versionId} taken={blockIds}
+        {!published && <AddBlock blockId={(kind) => nextBlockId(draft.classKey, section.sectionId, kind, edit.meta.versionId, blockIds)}
           onAdd={(block) => writeBlocks([...section.contentBlocks, block])} />}
       </div>
 
@@ -167,7 +183,7 @@ export function AuthoringWorkspace() {
           <div className="lesson-step-label">{String(sectionIndex + 1).padStart(2, '0')}<i />{roleLabels[section.role]}</div>
           <h2>{section.title}</h2>
           {/* The learner's renderer, so an unsupported or malformed block looks here as it will there. */}
-          <ContentBlocks blocks={section.contentBlocks} problems={draft.problems}
+          <ContentBlocks blocks={section.contentBlocks} problems={previewProblems}
             renderProblem={(problem) => <div className="problem-card">
               <div className="problem-kicker"><Icon name="pencil" size={14} />문항 미리보기<span>{problem.problemVersionId}</span></div>
               <ContentBlocks blocks={problem.promptContent} />

@@ -1,11 +1,8 @@
 'use client';
 
-import type { ContentBlock, PublicProblem } from '@/shared/api';
-import {
-  blockForms, blockFormOf, moveBlock, nextBlockId, readPath, writePath,
-  type BlockField, type BlockForm,
-} from '@/shared/authoring';
-import { splitRichText } from '@/shared/rich-text';
+import type { ReactNode } from 'react';
+import type { ContentBlock } from '@/shared/api';
+import { blockForms, blockFormOf, moveBlock, readPath, writePath, type BlockField, type BlockForm } from '@/shared/authoring';
 import { Icon } from '@/features/learning/icons';
 import { SceneEditor } from './scene-editor';
 
@@ -34,29 +31,6 @@ function Field({ field, value, onChange }: { field: BlockField; value: unknown; 
   </label>;
 }
 
-/** One line of a question, so an author choosing questions recognises them without opening each. */
-function problemLine(problem: PublicProblem) {
-  const first = problem.promptContent.find((block) => typeof block.payload.text === 'string');
-  const raw = typeof first?.payload.text === 'string' ? first.payload.text : '';
-  const plain = splitRichText(raw).map((segment) => (segment.kind === 'math' ? '(수식)' : segment.value)).join('').trim();
-  return plain.length > 60 ? `${plain.slice(0, 60)}…` : plain || '(본문 없음)';
-}
-
-function ProblemPicker({ selected, problems, onChange }: { selected: string[]; problems: PublicProblem[]; onChange: (next: string[]) => void }) {
-  if (!problems.length) return <p className="editor-note">이 판본에는 문항이 없어요.</p>;
-  return <div className="editor-picker">
-    {problems.map((problem) => {
-      const checked = selected.includes(problem.problemVersionId);
-      return <label key={problem.problemVersionId} className="editor-check">
-        <input type="checkbox" checked={checked} onChange={() => onChange(checked
-          ? selected.filter((id) => id !== problem.problemVersionId)
-          : [...selected, problem.problemVersionId])} />
-        <span><strong>{problem.problemVersionId}</strong><small>{problemLine(problem)}</small></span>
-      </label>;
-    })}
-  </div>;
-}
-
 function Rows({ form, payload, onChange }: { form: BlockForm; payload: Record<string, unknown>; onChange: (next: Record<string, unknown>) => void }) {
   const list = form.list!;
   const rows = Array.isArray(payload[list.key]) ? (payload[list.key] as Record<string, unknown>[]) : [];
@@ -80,7 +54,7 @@ function Rows({ form, payload, onChange }: { form: BlockForm; payload: Record<st
   </div>;
 }
 
-export function BlockEditor({ block, problems, onChange }: { block: ContentBlock; problems: PublicProblem[]; onChange: (next: ContentBlock) => void }) {
+export function BlockEditor({ block, problems, onChange }: { block: ContentBlock; problems?: ReactNode; onChange: (next: ContentBlock) => void }) {
   const form = blockFormOf(block);
   const setPayload = (payload: Record<string, unknown>) => onChange({ ...block, payload });
   if (!form) {
@@ -91,14 +65,12 @@ export function BlockEditor({ block, problems, onChange }: { block: ContentBlock
       onChange={(value) => setPayload(writePath(block.payload, field.key, value))} />)}
     {form.list && <Rows form={form} payload={block.payload} onChange={setPayload} />}
     {form.editsScene && <SceneEditor payload={block.payload} onChange={setPayload} />}
-    {form.picksProblems && <ProblemPicker problems={problems}
-      selected={Array.isArray(block.payload.problemVersionIds) ? (block.payload.problemVersionIds as string[]) : []}
-      onChange={(next) => setPayload({ ...block.payload, problemVersionIds: next })} />}
+    {form.editsProblems && problems}
   </>;
 }
 
 export function BlockCard({ block, index, total, problems, onChange, onMove, onRemove }: {
-  block: ContentBlock; index: number; total: number; problems: PublicProblem[];
+  block: ContentBlock; index: number; total: number; problems?: ReactNode;
   onChange: (next: ContentBlock) => void; onMove: (delta: number) => void; onRemove: () => void;
 }) {
   const form = blockFormOf(block);
@@ -125,14 +97,15 @@ export function BlockCard({ block, index, total, problems, onChange, onMove, onR
   </section>;
 }
 
-export function AddBlock({ classKey, sectionId, versionId, taken, onAdd }: {
-  classKey: string; sectionId: string; versionId: string; taken: string[]; onAdd: (block: ContentBlock) => void;
+/** The caller names the new block, since where a block lands decides what its name should read as. */
+export function AddBlock({ label = '블록 추가', forms = blockForms, blockId, onAdd }: {
+  label?: string; forms?: BlockForm[]; blockId: (kind: string) => string; onAdd: (block: ContentBlock) => void;
 }) {
   return <div className="editor-add">
-    <span className="editor-label">블록 추가</span>
+    <span className="editor-label">{label}</span>
     <div className="editor-add-buttons">
-      {blockForms.filter((form) => !form.retired).map((form) => <button key={`${form.kind}@${form.typeVersion}`} type="button" className="button secondary"
-        onClick={() => onAdd({ blockId: nextBlockId(classKey, sectionId, form.kind, versionId, taken), kind: form.kind,
+      {forms.filter((form) => !form.retired).map((form) => <button key={`${form.kind}@${form.typeVersion}`} type="button" className="button secondary"
+        onClick={() => onAdd({ blockId: blockId(form.kind), kind: form.kind,
           typeVersion: form.typeVersion, required: true, payload: form.create() })}>
         <Icon name="plus" size={14} />{form.label}</button>)}
     </div>
