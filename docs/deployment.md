@@ -127,6 +127,25 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 | [용어 풀이 #9](https://github.com/team-campfire-dev/geunyang-math/pull/9) | `00e8ca1` | 용어 판본과 진행도 기반 노출, `core.rich_text@2`. 배포 성공. 이 시점 콘텐츠는 아직 v1이라 화면 변화 없음. |
 | [번들 발행 자동화 #11](https://github.com/team-campfire-dev/geunyang-math/pull/11) | `7282d9a` | 배포가 `content/*.json`을 적용 이력에 따라 한 번만 발행. 이 배포에서 기본 용어 6개가 운영에 등록됨. |
 
+2026-09-15 릴리스는 콘텐츠 블록 재편과 편집 화면이 이어진 묶음이다.
+
+| 릴리스 | commit | 검증·운영 결과 |
+|---|---|---|
+| [릴리스 회수 #12](https://github.com/team-campfire-dev/geunyang-math/pull/12) | `438d5f4` | 배포가 끝난 뒤 이전 릴리스 디렉터리와 이미지를 정리. 배포 성공. |
+| [편집 화면과 조작 블록 #14](https://github.com/team-campfire-dev/geunyang-math/pull/14) | `ccc123b` | `/authoring` 첫 화면, 장면을 이어 보여주는 막대와 직접 놓는 조각. 배포 성공. |
+| [자유 그림 블록 #15](https://github.com/team-campfire-dev/geunyang-math/pull/15) | `edb205f` | `core.scene@1`로 좌표 위에 도형을 놓아 그린다. 배포 성공. |
+| [블록 정리·장면 애니메이션 #16](https://github.com/team-campfire-dev/geunyang-math/pull/16) | `2af9b0a` | 팔레트를 네 개로 줄이고 `frames`로 같은 그림을 이어 보여준다. 발행된 판본이 쓰는 블록은 검증·렌더러를 남기고 팔레트에서만 뺐다. 배포 성공. |
+| [그림 안 조작 #17](https://github.com/team-campfire-dev/geunyang-math/pull/17) | `597a826` | `zones`·`task`로 도형을 끌어다 놓는다. 채점하지 않으므로 문항·용어 풀이에서는 거부. 배포 성공. |
+| [문항 편집 #18](https://github.com/team-campfire-dev/geunyang-math/pull/18) | `f0e03e3` | 「문항 묶음」이 문항을 직접 갖고 본문·정답·개념·힌트·해설을 화면에서 쓴다. 발행된 문항을 고치면 새 `problemVersionId`로 개명하고 활동·숙제 참조를 함께 옮긴다. 배포 성공. |
+| [편집 권한 화면 #19](https://github.com/team-campfire-dev/geunyang-math/pull/19) | `b857796` | 관리자가 화면에서 역할을 주고 거둔다. 자기 관리자 역할과 마지막 관리자 행은 지킨다. 배포 성공. 이 시점까지 운영에는 권한을 가진 계정이 없었고, 같은 날 소유자 계정에 `admin` 행을 넣어 풀었다. |
+| [문항 안 조작 금지 안내 #20](https://github.com/team-campfire-dev/geunyang-math/pull/20) | `a740fb2` | 발행 단계에서만 거부하던 것을 편집 시점에 이유와 함께 막는다. 배포 성공. |
+| [용어 범위 #21](https://github.com/team-campfire-dev/geunyang-math/pull/21) | `e81f8c7` | `TermVersion`에 `scopeKind`·`scopeKey` 추가. 기존 용어 6개는 기본값으로 공통 사전이 되어 재발행이 필요 없었다. 배포 성공. |
+| [용어 편집 화면 #23](https://github.com/team-campfire-dev/geunyang-math/pull/23) | `3551f86` | 공통 사전과 클래스 용어를 화면에서 쓰고 고친다. 저장이 곧 다음 판본의 발행. 배포 성공. |
+| [본문에서 `@`로 걸기 #24](https://github.com/team-campfire-dev/geunyang-math/pull/24) | `7f98fe6` | 저장 형식은 그대로 두고 거는 방법만 바꿨다. 몇 번째 낱말인지는 적은 자리가 정한다. 배포 성공. |
+| [노출 판단을 작성자에게 #25](https://github.com/team-campfire-dev/geunyang-math/pull/25) | `5a83905` | 서버가 진도로 용어를 숨기던 규칙을 걷어냈다. 발행된 v4 판본은 자기 개념에 주석을 달지 않아 배포 직후 보이는 용어가 늘지는 않는다. 배포 성공. |
+
+#22는 base가 `feat/scoped-terms`였던 스택 PR이라 머지 결과가 main에 닿지 않았고, 같은 내용을 #23으로 다시 올렸다.
+
 DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVersion과 초기 콘텐츠를 등록한다. 기본 콘텐츠는 클래스 3개(수업·숙제 문항 15개), 진단 1종(6문항), 개념 3개다. 기존 ClassVersion 행의 내용·해시·발행 시각을 덮어쓰지 않는다. 배포용 migrator는 `db:migrate` 후 저장소의 `content/*.json`을 `content:publish`로 발행하고 `content:verify`를 실행한다. `AppliedContentBundle`에 같은 checksum이 있으면 건너뛰므로 내용이 그대로인 배포는 DB를 건드리지 않고, 이미 발행한 판본을 고쳐 커밋하면 배포가 실패한다. 등록 명령과 불변 판본 정책은 [DB 콘텐츠 관리](content-management.md)를 따른다.
 
 초기 인프라 점검에서는 앱 VM·포트·DNS·와일드카드 인증서, ARM64 non-root 이미지·revision·health, DB TLS 연결과 잘못된 CA/호스트 이름 거부, 앱 계정의 DB 한정 DML·호스트 제한·REQUIRE SSL을 확인했다. NPM Proxy Hosts 등록과 Google HTTPS callback 로그 제외, 배포 시크릿 6개와 자동 배포 활성화도 완료했다. 이 기록은 이후 인증서·권한·프록시 변경을 자동 검증한다는 뜻은 아니다.
