@@ -2,7 +2,6 @@
 // offer a form for every published block kind without importing the server's validation schemas,
 // and so the server can prune the same optional fields before it validates what the editor sent.
 import type { ClassSection, ContentBlock, PublicProblem } from './api';
-import { builderLimits, sequenceLimits } from './manipulatives';
 
 /** A role on an account, not a property of one operator: a teacher system grants the same roles. */
 export type AuthoringRole = 'admin' | 'author';
@@ -74,6 +73,8 @@ export type BlockList = { key: string; label: string; addLabel: string; max: num
 export type BlockForm = {
   kind: string; typeVersion: number; label: string; hint: string;
   fields: BlockField[]; list?: BlockList; picksProblems?: boolean; editsScene?: boolean;
+  /** Published classes still hold these, so the editor can open one; nothing new is made with them. */
+  retired?: boolean;
   create: () => Record<string, unknown>;
 };
 
@@ -99,7 +100,8 @@ export const blockForms: BlockForm[] = [
     },
   },
   {
-    kind: 'core.figure', typeVersion: 1, label: '그림', hint: '캡션에는 수식을 써도 되고, 그림 전체의 이름은 alt가 맡아요.',
+    kind: 'core.figure', typeVersion: 1, label: '그림 (옛 분수 막대)', retired: true,
+    hint: '이전 판본이 쓰던 형식이에요. 새로 만들 때는 「그림」 블록 안의 분수 막대를 씁니다.',
     create: () => ({ alt: '4등분한 막대 중 3칸을 채운 그림', caption: '', primitive: { kind: 'fraction_strip', parts: 4, filled: 3 } }),
     fields: [
       { key: 'alt', label: '그림 이름', kind: 'text', hint: altHint },
@@ -109,7 +111,8 @@ export const blockForms: BlockForm[] = [
     ],
   },
   {
-    kind: 'math.fraction_strip', typeVersion: 1, label: '분수 막대', hint: '캡션에 수식을 쓰면 평문 낭독용 이름을 함께 넣어야 해요.',
+    kind: 'math.fraction_strip', typeVersion: 1, label: '분수 막대 (옛 형식)', retired: true,
+    hint: '이전 판본이 쓰던 형식이에요. 새로 만들 때는 「그림」 블록 안의 분수 막대를 씁니다.',
     create: () => ({ parts: 4, filled: 3, label: '' }),
     fields: [
       { key: 'parts', label: '전체 칸 수', kind: 'number', min: 1, max: 100 },
@@ -119,7 +122,7 @@ export const blockForms: BlockForm[] = [
     ],
   },
   {
-    kind: 'core.scene', typeVersion: 1, label: '그림 (자유)',
+    kind: 'core.scene', typeVersion: 1, label: '그림',
     hint: '도형을 마우스로 놓고 옮겨 그립니다. 그림 전체의 이름은 평문으로 따로 적어요.',
     create: () => ({ alt: '설명을 담은 그림', caption: '', width: 320, height: 200,
       items: [{ kind: 'rect', x: 100, y: 70, width: 120, height: 60, fill: 'fill-soft', stroke: 'fill', strokeWidth: 1, radius: 2 }] }),
@@ -128,37 +131,6 @@ export const blockForms: BlockForm[] = [
       { key: 'caption', label: '캡션', kind: 'text', optional: true },
     ],
     editsScene: true,
-  },
-  {
-    kind: 'math.fraction_sequence', typeVersion: 1, label: '움직이는 분수 막대', hint: '같은 막대를 장면으로 이어 보여줘요. 재생·멈춤·앞뒤 버튼은 항상 함께 그립니다.',
-    create: () => ({ parts: 4, alt: '4등분한 막대가 세 칸까지 채워지는 장면', frames: [{ filled: 0 }, { filled: 3 }] }),
-    fields: [
-      { key: 'parts', label: '전체 칸 수', kind: 'number', min: 1, max: 100 },
-      { key: 'alt', label: '장면 전체의 이름', kind: 'text', hint: altHint },
-      { key: 'frameMs', label: '장면 간격(ms)', kind: 'number', optional: true, min: sequenceLimits.minMs, max: sequenceLimits.maxMs },
-      { key: 'loop', label: '반복 재생', kind: 'boolean', optional: true },
-      { key: 'autoplay', label: '자동 재생', kind: 'boolean', optional: true, hint: '동작 줄이기를 켠 기기에서는 자동으로 재생하지 않아요.' },
-    ],
-    list: {
-      key: 'frames', label: `장면 (${sequenceLimits.minFrames}~${sequenceLimits.maxFrames}개)`, addLabel: '장면 추가', max: sequenceLimits.maxFrames,
-      create: () => ({ filled: 0 }),
-      fields: [
-        { key: 'filled', label: '채운 칸 수', kind: 'number', min: 0, max: 100 },
-        { key: 'caption', label: '캡션', kind: 'text', optional: true },
-      ],
-    },
-  },
-  {
-    kind: 'math.fraction_builder', typeVersion: 1, label: '직접 놓는 조각', hint: '학습자가 칸을 눌러 조각을 놓아요. 채점하지 않으며 문항 안에는 넣을 수 없어요.',
-    create: () => ({ parts: 6, target: 4, prompt: '6칸 중 4칸을 채워 보세요.' }),
-    fields: [
-      { key: 'parts', label: '전체 칸 수', kind: 'number', min: builderLimits.minParts, max: builderLimits.maxParts, hint: '손가락으로 누를 수 있도록 최대 12칸이에요.' },
-      { key: 'target', label: '목표 칸 수', kind: 'number', min: 0, max: builderLimits.maxParts },
-      { key: 'start', label: '미리 놓인 조각', kind: 'number', optional: true, min: 0, max: builderLimits.maxParts },
-      { key: 'prompt', label: '안내 문장', kind: 'text' },
-      { key: 'promptAlt', label: '낭독용 안내', kind: 'text', optional: true, hint: '안내에 수식을 쓸 때 필수예요.' },
-      { key: 'successText', label: '맞췄을 때 문구', kind: 'text', optional: true },
-    ],
   },
   {
     kind: 'core.problem_set', typeVersion: 1, label: '문항 묶음', hint: '이 판본의 문항 중에서 고릅니다. 한 문항은 한 활동에만 넣을 수 있어요.',

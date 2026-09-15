@@ -131,7 +131,7 @@ export function AddBlock({ classKey, sectionId, versionId, taken, onAdd }: {
   return <div className="editor-add">
     <span className="editor-label">블록 추가</span>
     <div className="editor-add-buttons">
-      {blockForms.map((form) => <button key={`${form.kind}@${form.typeVersion}`} type="button" className="button secondary"
+      {blockForms.filter((form) => !form.retired).map((form) => <button key={`${form.kind}@${form.typeVersion}`} type="button" className="button secondary"
         onClick={() => onAdd({ blockId: nextBlockId(classKey, sectionId, form.kind, versionId, taken), kind: form.kind,
           typeVersion: form.typeVersion, required: true, payload: form.create() })}>
         <Icon name="plus" size={14} />{form.label}</button>)}

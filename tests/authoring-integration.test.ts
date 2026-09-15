@@ -36,9 +36,10 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     change(next.sections);
     return next;
   };
-  const animation = (blockId: string) => ({
-    blockId, kind: 'math.fraction_sequence', typeVersion: 1, required: true,
-    payload: { parts: 4, alt: '4등분한 막대가 세 칸까지 채워지는 장면', frames: [{ filled: 0 }, { filled: 3 }] },
+  const drawing = (blockId: string) => ({
+    blockId, kind: 'core.scene', typeVersion: 1, required: true,
+    payload: { alt: '4등분한 막대 중 세 칸을 채운 그림', width: 320, height: 200,
+      items: [{ kind: 'strip', x: 20, y: 80, width: 280, height: 40, parts: 4, filled: 3 }] },
   });
 
   it('grants content work by role, and treats an account without one as a learner', async () => {
@@ -101,11 +102,12 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const created = await service.createDraft(admin.id, classKey);
     const draftId = created.draft!.id;
     const broken = edited(created.draft!.edit, (sections) => {
-      sections[0].contentBlocks.push({ ...animation(`${classKey}:explanation:sequence:v2`), payload: { parts: 4, alt: '장면', frames: [{ filled: 9 }, { filled: 3 }] } });
+      sections[0].contentBlocks.push({ ...drawing(`${classKey}:explanation:scene:v2`),
+        payload: { alt: '그림', width: 320, height: 200, items: [{ kind: 'strip', x: 20, y: 80, width: 280, height: 40, parts: 4, filled: 9 }] } });
     });
     const saved = await service.saveDraft(admin.id, draftId, broken);
     expect(saved.draft!.issues.join(' ')).toMatch(/filled must not exceed parts/);
-    const fixed = edited(created.draft!.edit, (sections) => { sections[0].contentBlocks.push(animation(`${classKey}:explanation:sequence:v2`)); });
+    const fixed = edited(created.draft!.edit, (sections) => { sections[0].contentBlocks.push(drawing(`${classKey}:explanation:scene:v2`)); });
     const good = await service.saveDraft(admin.id, draftId, fixed);
     expect(good.draft!.issues).toEqual([]);
     expect((await service.validateDraft(admin.id, draftId)).draft!.issues).toEqual([]);
@@ -118,14 +120,14 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const versionId = created.draft!.versionId;
     const before = await db.classVersion.findUniqueOrThrow({ where: { id: `${classKey}:v1` } });
     await service.saveDraft(admin.id, draftId, edited(created.draft!.edit, (sections) => {
-      sections[0].contentBlocks.push(animation(`${classKey}:explanation:sequence:${versionId.split(':').at(-1)}`));
+      sections[0].contentBlocks.push(drawing(`${classKey}:explanation:scene:${versionId.split(':').at(-1)}`));
     }));
     const published = await service.publishDraft(admin.id, draftId);
     expect(published.publishedVersionId).toBe(versionId);
     expect(published.draft!.status).toBe('published');
     const row = await db.classVersion.findUniqueOrThrow({ where: { id: versionId } });
     const document = row.document as unknown as StoredClass;
-    expect(document.sections[0].contentBlocks.at(-1)!.kind).toBe('math.fraction_sequence');
+    expect(document.sections[0].contentBlocks.at(-1)!.kind).toBe('core.scene');
     // The published class still carries the private half the editor never saw.
     expect(document.problems[0].gradingSpec).toBeDefined();
     expect(await db.classVersion.findUniqueOrThrow({ where: { id: `${classKey}:v1` } })).toEqual(before);

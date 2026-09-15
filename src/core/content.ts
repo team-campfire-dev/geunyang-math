@@ -2,8 +2,7 @@ import 'server-only';
 
 import { z } from 'zod';
 import type { ClassDocument, ClassSection, ContentBlock, GlossaryEntry, PublicClass, PublicProblem } from '@/shared/api';
-import { builderLimits, sequenceLimits } from '@/shared/manipulatives';
-import { isSceneColor, pathPattern, sceneLimits } from '@/shared/scene';
+import { frameLimits, isSceneColor, itemIdPattern, pathPattern, sceneLimits, stripLimits } from '@/shared/scene';
 import { locateTerms, type TermAnnotation } from '@/shared/rich-text';
 
 /** Private content records stay on the server; only toPublicClass crosses the API boundary. */
@@ -45,6 +44,7 @@ const span = z.number().min(0).max(sceneLimits.maxSize * 2);
 const colour = z.string().refine(isSceneColor, 'Unknown colour name');
 // Shared paint. Colours are palette names or plain hex, never a URL or a reference to anything.
 const painted = {
+  id: z.string().regex(itemIdPattern, 'A shape name may only contain letters, digits, - and _').optional(),
   fill: colour.optional(), stroke: colour.optional(),
   strokeWidth: z.number().min(sceneLimits.minStroke).max(sceneLimits.maxStroke).optional(),
   dash: z.boolean().optional(), opacity: z.number().min(0).max(1).optional(),
@@ -59,10 +59,25 @@ const sceneItem = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('polygon'), points: z.array(point).min(2).max(sceneLimits.maxPoints), closed: z.boolean().optional(), ...painted }).strict(),
   // Path data is commands and numbers only; the pattern is what keeps it from being anything else.
   z.object({ kind: z.literal('path'), d: z.string().trim().min(1).max(sceneLimits.maxPath).regex(pathPattern, 'Path data may only contain commands and numbers'), ...painted }).strict(),
+  z.object({ kind: z.literal('strip'), x: coordinate, y: coordinate, width: span, height: span,
+    parts: z.number().int().min(stripLimits.minParts).max(stripLimits.maxParts),
+    filled: z.number().int().min(0).max(stripLimits.maxParts), ...painted }).strict()
+    .refine((value) => value.filled <= value.parts, 'filled must not exceed parts'),
   z.object({ kind: z.literal('text'), x: coordinate, y: coordinate, text: z.string().trim().min(1).max(sceneLimits.maxText),
     size: z.number().min(sceneLimits.minFontSize).max(sceneLimits.maxFontSize).optional(),
     anchor: z.enum(['start', 'middle', 'end']).optional(), weight: z.enum(['regular', 'bold']).optional(), ...painted }).strict(),
 ]);
+
+const sceneChange = z.object({
+  id: z.string().regex(itemIdPattern),
+  dx: coordinate.optional(), dy: coordinate.optional(),
+  opacity: z.number().min(0).max(1).optional(), rotate: z.number().min(-360).max(360).optional(),
+  fill: colour.optional(), hidden: z.boolean().optional(),
+}).strict();
+const sceneFrame = z.object({
+  caption: z.string().max(200).optional(),
+  changes: z.array(sceneChange).max(sceneLimits.maxItems),
+}).strict();
 
 /** New block kinds register a versioned payload schema here and a renderer in the UI. */
 const richText = z.string().min(1).max(20_000);
@@ -97,38 +112,24 @@ const blockSchemas = {
     caption: z.string().max(500).optional(),
     width: sceneSize, height: sceneSize,
     items: z.array(sceneItem).max(sceneLimits.maxItems),
-  }).strict(),
-  // Frames of one strip played in order. alt names the whole movement, since a reader following
-  // the captions alone would only ever meet the frame that happens to be on screen.
-  'math.fraction_sequence@1': z.object({
-    parts: z.number().int().min(1).max(100),
-    frames: z.array(z.object({ filled: z.number().int().min(0).max(100), caption: z.string().max(200).optional() }).strict())
-      .min(sequenceLimits.minFrames).max(sequenceLimits.maxFrames),
-    alt: plainText(500),
-    frameMs: z.number().int().min(sequenceLimits.minMs).max(sequenceLimits.maxMs).optional(),
+    // Frames move the shapes that are already there. A frame adds nothing and removes nothing, so a
+    // drawing that is safe to show is safe to animate.
+    frames: z.array(sceneFrame).min(frameLimits.minFrames).max(frameLimits.maxFrames).optional(),
+    frameMs: z.number().int().min(frameLimits.minMs).max(frameLimits.maxMs).optional(),
     loop: z.boolean().optional(),
-    // Movement that starts on its own still stops on request, and never starts under reduced motion.
     autoplay: z.boolean().optional(),
-  }).strict().refine((value) => value.frames.every((frame) => frame.filled <= value.parts), 'filled must not exceed parts'),
-  // Pieces the learner places by hand. Nothing here is graded, so the target is asked for openly
-  // rather than hidden as an answer, and the block carries no response or grading specification.
-  'math.fraction_builder@1': z.object({
-    parts: z.number().int().min(builderLimits.minParts).max(builderLimits.maxParts),
-    target: z.number().int().min(0).max(builderLimits.maxParts),
-    start: z.number().int().min(0).max(builderLimits.maxParts).optional(),
-    prompt: z.string().trim().min(1).max(300),
-    promptAlt: plainText(300).optional(),
-    successText: plainText(300).optional(),
-  }).strict()
-    .refine((value) => value.target <= value.parts, 'target must not exceed parts')
-    .refine((value) => (value.start ?? 0) <= value.parts, 'start must not exceed parts')
-    .refine((value) => value.target !== (value.start ?? 0), 'target must differ from the pieces already placed')
-    .refine((value) => !carriesMath(value.prompt) || !!value.promptAlt, 'A prompt containing math requires promptAlt for the accessible name'),
+  }).strict().superRefine((payload, ctx) => {
+    const named = new Set(payload.items.map((item) => item.id).filter(Boolean));
+    for (const frame of payload.frames ?? []) {
+      for (const change of frame.changes) {
+        if (!named.has(change.id)) ctx.addIssue({ code: 'custom', message: `A frame changes a shape that is not in the drawing: ${change.id}` });
+      }
+    }
+    const duplicated = payload.items.map((item) => item.id).filter(Boolean).length !== named.size;
+    if (duplicated) ctx.addIssue({ code: 'custom', message: 'Two shapes share one name' });
+  }),
 } satisfies Record<string, z.ZodType>;
 
-/** Blocks the learner acts on. They report nothing to the server, so they stay out of anything
- *  that is assessed: beside an answer box a manipulative reads as the answer itself. */
-const interactiveKinds = new Set(['math.fraction_builder']);
 
 export const supportedBlockTypes = Object.keys(blockSchemas).map((key) => {
   const [kind, version] = key.split('@');
@@ -156,10 +157,9 @@ const blockSchema = z.object({
 });
 
 // Term definitions are leaves: no problem groups, and no annotations nesting a term inside a term.
-// A definition is read while a problem waits, so it explains rather than asks for an interaction.
 export const termContentBlockSchema = blockSchema.refine(
-  (block) => block.kind !== 'core.problem_set' && !(block.kind === 'core.rich_text' && block.typeVersion === 2) && !interactiveKinds.has(block.kind),
-  { message: 'Term definitions cannot embed problems, further term annotations, or an interactive block' },
+  (block) => block.kind !== 'core.problem_set' && !(block.kind === 'core.rich_text' && block.typeVersion === 2),
+  { message: 'Term definitions cannot embed problems or further term annotations' },
 );
 
 const responseSchema = z.object({
@@ -171,8 +171,6 @@ const responseSchema = z.object({
 // including an optional future version, in its prompt, hint, or solution.
 const problemContentBlockSchema = blockSchema.refine((block) => block.kind !== 'core.problem_set', {
   message: 'core.problem_set is not allowed inside a problem',
-}).refine((block) => !interactiveKinds.has(block.kind), {
-  message: 'An interactive block is not allowed inside a problem',
 });
 
 const problemShape = {

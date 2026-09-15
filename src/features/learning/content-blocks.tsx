@@ -4,10 +4,9 @@ import { useEffect, useId, useState, type ReactNode } from 'react';
 import katex from 'katex';
 import type { ContentBlock, GlossaryEntry, PublicProblem } from '@/shared/api';
 import {
-  builderLimits, builderStatus, createSlots, nextFrameIndex, placedCount, sequenceLimits, setSlot, stepFrameIndex,
-  type BuilderStatus, type StripFrame,
-} from '@/shared/manipulatives';
-import { cssColor, itemBounds, sceneItemKinds, sceneLimits, type SceneItem } from '@/shared/scene';
+  changeFor, cssColor, frameLimits, itemBounds, nextFrameIndex, sceneItemKinds, sceneLimits, stepFrameIndex,
+  type SceneFrame, type SceneItem,
+} from '@/shared/scene';
 import { locateTerms, splitRichText, type TermAnnotation } from '@/shared/rich-text';
 import { Icon } from './icons';
 
@@ -76,18 +75,51 @@ export function RichText({ text, terms = [], glossary = noGlossary, asCaption = 
  * markup ever reaches the document — so an arbitrary drawing stays as safe as a fixed one. The
  * figure carries the accessible name and the shapes themselves are hidden from a reader.
  */
-export function SceneFigure({ width, height, items, alt, caption }:
-{ width: number; height: number; items: SceneItem[]; alt: string; caption?: string }) {
-  return <figure className="scene-figure" role="img" aria-label={alt}>
+export function SceneFigure({ width, height, items, alt, caption, frames, frameMs = frameLimits.defaultMs, loop = false, autoplay = false }:
+{ width: number; height: number; items: SceneItem[]; alt: string; caption?: string; frames?: SceneFrame[]; frameMs?: number; loop?: boolean; autoplay?: boolean }) {
+  const [index, setIndex] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const total = frames?.length ?? 0;
+  const frame = total ? frames![Math.min(index, total - 1)] : undefined;
+  const atEnd = !loop && index === total - 1;
+  useEffect(() => {
+    if (!autoplay || !total || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    setPlaying(true);
+  }, [autoplay, total]);
+  useEffect(() => {
+    if (!playing || !total) return;
+    const timer = setTimeout(() => {
+      const next = nextFrameIndex(index, total, loop);
+      if (next === index) setPlaying(false);
+      else setIndex(next);
+    }, frameMs);
+    return () => clearTimeout(timer);
+  }, [playing, index, total, loop, frameMs]);
+  const step = (delta: number) => { setPlaying(false); setIndex(stepFrameIndex(index, total, delta)); };
+  const toggle = () => {
+    if (playing) { setPlaying(false); return; }
+    if (atEnd) setIndex(0);
+    setPlaying(true);
+  };
+  // A drawing that moves is still one picture: alt names the whole movement, as it named the still.
+  return <figure className="scene-figure" role={total ? undefined : 'img'} aria-label={alt}>
     <svg viewBox={`0 0 ${width} ${height}`} style={{ aspectRatio: `${width} / ${height}` }} aria-hidden="true" focusable="false">
-      <SceneShapes items={items} />
+      <SceneShapes items={items} frame={frame} animated={!!total} />
     </svg>
-    {caption && <figcaption><RichText text={caption} asCaption /></figcaption>}
+    {(caption || frame?.caption) && <figcaption><RichText text={frame?.caption || caption || ''} asCaption /></figcaption>}
+    {total > 1 && <div className="figure-controls">
+      <button type="button" className="icon-button" aria-label="이전 장면" disabled={index === 0} onClick={() => step(-1)}><Icon name="back" size={16} /></button>
+      <button type="button" className="control-button" onClick={toggle}>
+        <Icon name={playing ? 'pause' : 'play'} size={14} />{playing ? '멈춤' : atEnd ? '다시 보기' : '재생'}
+      </button>
+      <button type="button" className="icon-button" aria-label="다음 장면" disabled={index === total - 1} onClick={() => step(1)}><Icon name="arrow" size={16} /></button>
+      <span className="sequence-count" aria-live="polite">장면 {index + 1} / {total}</span>
+    </div>}
   </figure>;
 }
 
 /** The shapes alone, so the editor's canvas draws exactly what the learner will see. */
-export function SceneShapes({ items }: { items: SceneItem[] }) {
+export function SceneShapes({ items, frame, animated = false }: { items: SceneItem[]; frame?: SceneFrame; animated?: boolean }) {
   const paint = (item: SceneItem) => ({
     fill: cssColor(item.fill), stroke: cssColor(item.stroke), strokeWidth: item.strokeWidth ?? (item.stroke ? 1 : 0),
     strokeDasharray: item.dash ? '4 3' : undefined, opacity: item.opacity, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const,
@@ -97,7 +129,22 @@ export function SceneShapes({ items }: { items: SceneItem[] }) {
     <defs><marker id="scene-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
       <path d="M0 0 L10 5 L0 10 z" fill="context-stroke" /></marker></defs>
     {items.map((item, index) => {
-        const style = paint(item);
+      const change = changeFor(frame, item);
+      const painted = change?.fill ? { ...item, fill: change.fill } : item;
+      const style = paint(painted);
+      const moved = (shape: ReactNode) => change || animated
+        ? <g key={index} style={{
+            transform: `translate(${change?.dx ?? 0}px, ${change?.dy ?? 0}px)${change?.rotate ? ` rotate(${change.rotate}deg)` : ''}`,
+            transformOrigin: 'center', transformBox: 'fill-box',
+            opacity: change?.hidden ? 0 : change?.opacity ?? 1,
+            transition: 'transform .45s ease, opacity .45s ease',
+          }}>{shape}</g>
+        : shape;
+      return moved(renderShape(painted, style, index));
+    })}
+  </>;
+
+  function renderShape(item: SceneItem, style: ReturnType<typeof paint>, index: number) {
         if (item.kind === 'rect') return <rect key={index} x={item.x} y={item.y} width={item.width} height={item.height} rx={item.radius} {...style} />;
         if (item.kind === 'ellipse') return <ellipse key={index} cx={item.cx} cy={item.cy} rx={item.rx} ry={item.ry} {...style} />;
         if (item.kind === 'line') return <line key={index} x1={item.x1} y1={item.y1} x2={item.x2} y2={item.y2} {...style}
@@ -110,10 +157,20 @@ export function SceneShapes({ items }: { items: SceneItem[] }) {
             : <polygon key={index} points={points} {...style} />;
         }
         if (item.kind === 'path') return <path key={index} d={item.d} {...style} />;
-        return <text key={index} x={item.x} y={item.y} textAnchor={item.anchor ?? 'start'} fontSize={item.size ?? 14}
-          fontWeight={item.weight === 'bold' ? 600 : 400} {...style} stroke="none" fill={cssColor(item.fill, 'var(--ink)')}>{item.text}</text>;
-    })}
-  </>;
+        if (item.kind === 'strip') {
+          // A fraction bar: `fill` paints the filled cells, `stroke` draws every cell's border.
+          const gap = Math.min(2, item.width / Math.max(item.parts * 8, 1));
+          const cell = (item.width - gap * (item.parts - 1)) / item.parts;
+          return <g key={index} transform={style.transform} opacity={item.opacity}>
+            {Array.from({ length: item.parts }, (_, cellIndex) => <rect key={cellIndex}
+              x={item.x + cellIndex * (cell + gap)} y={item.y} width={Math.max(cell, 0)} height={item.height} rx={1}
+              fill={cellIndex < item.filled ? cssColor(item.fill, '#8daa69') : '#e5ecd7'}
+              stroke={cssColor(item.stroke, '#dce5c9')} strokeWidth={item.strokeWidth ?? 0.5} />)}
+          </g>;
+        }
+    return <text key={index} x={item.x} y={item.y} textAnchor={item.anchor ?? 'start'} fontSize={item.size ?? 14}
+      fontWeight={item.weight === 'bold' ? 600 : 400} {...style} stroke="none" fill={cssColor(item.fill, 'var(--ink)')}>{item.text}</text>;
+  }
 }
 const rotateAround = (item: SceneItem) => {
   const bounds = itemBounds(item);
@@ -139,93 +196,6 @@ export function FractionStrip({ parts, filled, label, accessibleLabel }: { parts
   </figure>;
 }
 
-/**
- * A strip played as frames. Playback starts stopped unless the author asked for autoplay, and
- * autoplay yields to a reduced-motion preference; the stepping controls stay either way, so the
- * whole sequence is reachable without any movement at all.
- */
-export function FractionSequence({ parts, frames, alt, frameMs = sequenceLimits.defaultMs, loop = false, autoplay = false }:
-{ parts: number; frames: StripFrame[]; alt: string; frameMs?: number; loop?: boolean; autoplay?: boolean }) {
-  const [index, setIndex] = useState(0);
-  const [playing, setPlaying] = useState(false);
-  const total = frames.length;
-  const frame = frames[Math.min(index, total - 1)];
-  const atEnd = !loop && index === total - 1;
-  useEffect(() => {
-    if (!autoplay || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    setPlaying(true);
-  }, [autoplay]);
-  useEffect(() => {
-    if (!playing) return;
-    const timer = setTimeout(() => {
-      const next = nextFrameIndex(index, total, loop);
-      if (next === index) setPlaying(false);
-      else setIndex(next);
-    }, frameMs);
-    return () => clearTimeout(timer);
-  }, [playing, index, total, loop, frameMs]);
-  const step = (delta: number) => { setPlaying(false); setIndex(stepFrameIndex(index, total, delta)); };
-  const toggle = () => {
-    if (playing) { setPlaying(false); return; }
-    if (atEnd) setIndex(0);
-    setPlaying(true);
-  };
-  return <figure className="fraction-figure sequence-figure" aria-label={alt}>
-    <StripCells parts={parts} filled={frame.filled} animated />
-    {frame.caption && <figcaption><RichText text={frame.caption} asCaption /></figcaption>}
-    <div className="figure-controls">
-      <button type="button" className="icon-button" aria-label="이전 장면" disabled={index === 0} onClick={() => step(-1)}><Icon name="back" size={16} /></button>
-      <button type="button" className="control-button" onClick={toggle}>
-        <Icon name={playing ? 'pause' : 'play'} size={14} />{playing ? '멈춤' : atEnd ? '다시 보기' : '재생'}
-      </button>
-      <button type="button" className="icon-button" aria-label="다음 장면" disabled={index === total - 1} onClick={() => step(1)}><Icon name="arrow" size={16} /></button>
-      <span className="sequence-count" aria-live="polite">장면 {index + 1} / {total}</span>
-    </div>
-  </figure>;
-}
-
-/**
- * Pieces the learner places into a strip. Tapping a slot is the interaction that works everywhere;
- * dragging a piece from the tray is an extra for a mouse, so touch and keyboard never depend on it.
- * Nothing here is reported to the server: this is a thing to try, not a thing that is marked.
- */
-export function FractionBuilder({ parts, target, start = 0, prompt, promptAlt, successText }:
-{ parts: number; target: number; start?: number; prompt: string; promptAlt?: string; successText?: string }) {
-  const [slots, setSlots] = useState(() => createSlots(parts, start));
-  const placed = placedCount(slots);
-  const status = builderStatus(placed, target);
-  const messages: Record<BuilderStatus, string> = {
-    empty: '칸을 눌러 조각을 놓아 보세요.',
-    building: `${parts}칸 중 ${placed}칸을 채웠어요.`,
-    matched: successText ?? `${parts}칸 중 ${placed}칸, 목표한 만큼 놓았어요.`,
-    over: `${parts}칸 중 ${placed}칸이라 목표보다 많아요. 하나 빼 볼까요?`,
-  };
-  return <div className="fraction-builder" role="group" aria-label={promptAlt ?? prompt}>
-    <div className="builder-prompt"><RichText text={prompt} asCaption /></div>
-    <div className="builder-board">
-      <div className="builder-strip" style={{ gridTemplateColumns: `repeat(${parts}, minmax(0, 1fr))`, minWidth: parts > 8 ? `${parts * 34}px` : undefined }}>
-        {slots.map((filled, slot) => <button key={slot} type="button" className={`builder-slot${filled ? ' filled' : ''}`}
-          aria-pressed={filled} aria-label={`${slot + 1}번째 칸, ${filled ? '채움' : '비어 있음'}`}
-          onClick={() => setSlots(setSlot(slots, slot, !filled))}
-          onDragOver={(event) => { if (!filled) event.preventDefault(); }}
-          onDrop={(event) => { event.preventDefault(); setSlots(setSlot(slots, slot, true)); }} />)}
-      </div>
-    </div>
-    {/* Dragging is the extra a mouse gets; the tray is hidden on a touch device, where HTML drag
-        does not fire and tapping a slot is the whole interaction. */}
-    <div className="builder-tray">
-      <span className="builder-piece" draggable aria-hidden="true"
-        onDragStart={(event) => event.dataTransfer.setData('text/plain', 'fraction-piece')} />
-      <span className="builder-hint">조각을 끌어다 놓아도 돼요.</span>
-    </div>
-    <p className={`builder-status ${status}`} aria-live="polite">{messages[status]}</p>
-    <div className="builder-actions">
-      <span>지금 <RichText text={`$\\frac{${placed}}{${parts}}$`} asCaption /></span>
-      <button type="button" className="text-button" onClick={() => setSlots(createSlots(parts, start))}>처음으로</button>
-    </div>
-  </div>;
-}
-
 type BlockContext = { problems: PublicProblem[]; renderProblem: (problem: PublicProblem) => ReactNode; glossary: GlossaryContext };
 type Renderer = { validate: (payload: Record<string, unknown>, context: BlockContext) => boolean; render: (block: ContentBlock, context: BlockContext) => ReactNode };
 const validFraction = (payload: Record<string, unknown>) => Number.isInteger(payload.parts) && Number(payload.parts) >= 1 && Number(payload.parts) <= 100 && Number.isInteger(payload.filled) && Number(payload.filled) >= 0 && Number(payload.filled) <= Number(payload.parts);
@@ -234,17 +204,9 @@ const validFraction = (payload: Record<string, unknown>) => Number.isInteger(pay
 const validScene = (payload: Record<string, unknown>) => typeof payload.alt === 'string' && payload.alt.length > 0
   && Number.isFinite(payload.width) && Number.isFinite(payload.height) && Number(payload.width) > 0 && Number(payload.height) > 0
   && Array.isArray(payload.items) && payload.items.length <= sceneLimits.maxItems
-  && payload.items.every((item) => !!item && typeof item === 'object' && sceneItemKinds.includes((item as SceneItem).kind));
-const validSequence = (payload: Record<string, unknown>) => Number.isInteger(payload.parts) && Number(payload.parts) >= 1 && Number(payload.parts) <= 100
-  && Array.isArray(payload.frames) && payload.frames.length >= sequenceLimits.minFrames && payload.frames.length <= sequenceLimits.maxFrames
-  && payload.frames.every((frame) => !!frame && typeof frame === 'object' && Number.isInteger((frame as StripFrame).filled)
-    && (frame as StripFrame).filled >= 0 && (frame as StripFrame).filled <= Number(payload.parts))
-  && typeof payload.alt === 'string' && payload.alt.length > 0;
-const validBuilder = (payload: Record<string, unknown>) => Number.isInteger(payload.parts)
-  && Number(payload.parts) >= builderLimits.minParts && Number(payload.parts) <= builderLimits.maxParts
-  && Number.isInteger(payload.target) && Number(payload.target) >= 0 && Number(payload.target) <= Number(payload.parts)
-  && (payload.start === undefined || (Number.isInteger(payload.start) && Number(payload.start) >= 0 && Number(payload.start) <= Number(payload.parts)))
-  && typeof payload.prompt === 'string' && payload.prompt.trim().length > 0;
+  && payload.items.every((item) => !!item && typeof item === 'object' && sceneItemKinds.includes((item as SceneItem).kind))
+  && (payload.frames === undefined || (Array.isArray(payload.frames) && payload.frames.length <= frameLimits.maxFrames
+    && payload.frames.every((frame) => !!frame && typeof frame === 'object' && Array.isArray((frame as SceneFrame).changes))));
 const validTerms = (payload: Record<string, unknown>) => Array.isArray(payload.terms) && payload.terms.every((term) => !!term && typeof term === 'object' && typeof (term as TermAnnotation).termKey === 'string' && typeof (term as TermAnnotation).surface === 'string');
 const registry: Record<string, Renderer> = {
   'core.rich_text@1': {
@@ -274,21 +236,10 @@ const registry: Record<string, Renderer> = {
     validate: validScene,
     render: (block) => <SceneFigure width={Number(block.payload.width)} height={Number(block.payload.height)}
       items={block.payload.items as SceneItem[]} alt={block.payload.alt as string}
-      caption={typeof block.payload.caption === 'string' ? block.payload.caption : undefined} />,
-  },
-  'math.fraction_sequence@1': {
-    validate: validSequence,
-    render: (block) => <FractionSequence parts={Number(block.payload.parts)} frames={block.payload.frames as StripFrame[]} alt={block.payload.alt as string}
+      caption={typeof block.payload.caption === 'string' ? block.payload.caption : undefined}
+      frames={Array.isArray(block.payload.frames) ? block.payload.frames as SceneFrame[] : undefined}
       frameMs={typeof block.payload.frameMs === 'number' ? block.payload.frameMs : undefined}
       loop={block.payload.loop === true} autoplay={block.payload.autoplay === true} />,
-  },
-  'math.fraction_builder@1': {
-    validate: validBuilder,
-    render: (block) => <FractionBuilder parts={Number(block.payload.parts)} target={Number(block.payload.target)}
-      start={typeof block.payload.start === 'number' ? block.payload.start : undefined}
-      prompt={block.payload.prompt as string}
-      promptAlt={typeof block.payload.promptAlt === 'string' ? block.payload.promptAlt : undefined}
-      successText={typeof block.payload.successText === 'string' ? block.payload.successText : undefined} />,
   },
   'core.problem_set@1': {
     validate: (payload, context) => Array.isArray(payload.problemVersionIds) && payload.problemVersionIds.length > 0 && payload.problemVersionIds.every((id) => typeof id === 'string' && context.problems.some((problem) => problem.problemVersionId === id)),
