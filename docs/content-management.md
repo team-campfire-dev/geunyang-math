@@ -309,4 +309,6 @@ npm run content:import -- --file content/glossary-v1.json
 
 ## 검증
 
-`tests/content-store.test.ts`에서 MySQL 초기 데이터, 내보내기 재등록, dry run, DB만으로 새 클래스·개념·진단 제공, 불변 판본·문항 보호, 과제와 진단 snapshot 보존을 검사한다. 용어는 발행·불변 판본·없는 참조 거부와, 클래스를 재발행하지 않고 정의를 고쳐 쓰는 경로를 함께 검사한다. 노출 규칙은 `tests/glossary.test.ts`, 본문 표시 위치 계산은 `tests/rich-text.test.ts`, 클래스·과제 응답에서의 실제 노출은 `tests/learning-integration.test.ts`에서 확인한다. 기존 채점·개인화·인증 테스트도 함께 실행한다. 전체 236개 테스트·타입 검사·웹/모바일 빌드를 통과했다. 로컬에서 이전 릴리스의 DB와 학습 기록을 생성한 뒤 새 migration을 적용해 기존 모든 행과 해시·시각·snapshot이 동일함을 확인했다. 운영에서도 migration·배포 성공과 공개 클래스 3개·블록·15문항의 이전 내용 일치를 확인했다. 이 검증은 수학 콘텐츠의 전문가 검수를 대신하지 않는다.
+`tests/content-store.test.ts`에서 MySQL 초기 데이터, 내보내기 재등록, dry run, DB만으로 새 클래스·개념·진단 제공, 불변 판본·문항 보호, 과제와 진단 snapshot 보존을 검사한다. 용어는 발행·불변 판본·없는 참조 거부와, 클래스를 재발행하지 않고 정의를 고쳐 쓰는 경로를 함께 검사한다. 범위가 생긴 뒤로는 같은 키를 가진 사전 용어와 클래스 용어가 서로를 대신하지 않는 것, 각 범위가 자기 개념 이력을 지키는 것, 다른 클래스의 용어를 가리키면 거부하는 것도 같은 파일에서 본다.
+
+편집 화면 쪽은 `tests/authoring.test.ts`(블록 폼·이름 짓기·정답 읽기·범위 채우기)와 `tests/authoring-integration.test.ts`(MySQL에서 초안·문항 개명·역할 부여·용어 발행)가 맡는다. `@`로 용어를 거는 계산은 `tests/term-mentions.test.ts`가 보고, 그 결과를 다시 `locateTerms`에 넣어 같은 자리를 가리키는지까지 확인한다. 본문 표시 위치 계산은 `tests/rich-text.test.ts`, 클래스·과제 응답에 실제로 실리는 용어는 `tests/learning-integration.test.ts`에서 본다. 기존 채점·개인화·인증 테스트도 함께 실행한다. 전체 320개 테스트·타입 검사·웹/모바일 빌드를 통과했다. 로컬에서 이전 릴리스의 DB와 학습 기록을 생성한 뒤 새 migration을 적용해 기존 모든 행과 해시·시각·snapshot이 동일함을 확인했다. 운영에서도 migration·배포 성공과 공개 클래스 3개·블록·15문항의 이전 내용 일치를 확인했다. 이 검증은 수학 콘텐츠의 전문가 검수를 대신하지 않는다.
