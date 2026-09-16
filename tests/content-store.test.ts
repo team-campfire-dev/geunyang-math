@@ -290,16 +290,38 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     expect((await blocksOf('problem', problem.problemVersionId, 'hint')).map(blockOf)).toEqual(problem.hints);
     expect((await blocksOf('problem', problem.problemVersionId, 'solution')).map(blockOf)).toEqual(problem.solution);
 
-    // A row the document still holds is a disagreement a deploy has to see, and writing the rows
-    // again repairs it without touching what is already there.
+    // A block the rows lost is a class that no longer reads back as what was published, and that is
+    // what a deploy has to see. Writing the rows again repairs it without touching what is there.
     try {
       await db.contentBlock.delete({ where: { ownerKind_ownerVersionId_ownerId_slot_order: { ownerKind: 'section',
         ownerVersionId: c.public.versionId, ownerId: c.sections[0].sectionId, slot: 'body', order: 0 } } });
-      await expect(verifyContent(db)).rejects.toThrow(/missing rows/);
+      await expect(verifyContent(db)).rejects.toThrow(/rows and the document disagree/);
     } finally {
       await indexClassDocument(db, c);
     }
     expect((await verifyContent(db)).indexedBlocks).toBeGreaterThanOrEqual(c.sections[0].contentBlocks.length);
+  });
+
+  it('serves a class from its rows, not from the document it was published as', async () => {
+    const c = newClass(), skillKey = `test.${randomUUID()}`;
+    c.public.skillKeys = [skillKey]; c.public.prerequisiteSkillKeys = [];
+    c.problems.forEach(p => { p.skillKeys = [skillKey]; });
+    await importContent(db, { ...empty(), classes: [c], skills: [{ key: skillKey, label: '행에서 읽는 개념', order: 996 }] });
+    const published = await service.classDocument(c.public.classKey);
+    expect(published.sections.map(section => section.title)).toEqual(c.sections.map(section => section.title));
+    expect(published.problems.map(problem => problem.problemVersionId)).toEqual(c.problems.map(problem => problem.problemVersionId));
+
+    // Changing a row changes what a learner is served, which is what reading from rows means. The
+    // document is untouched, so verification sees the two disagree and says so.
+    const where = { classVersionId_sectionId: { classVersionId: c.public.versionId, sectionId: c.sections[0].sectionId } };
+    try {
+      await db.classSection.update({ where, data: { title: '행에서 고친 제목' } });
+      expect((await service.classDocument(c.public.classKey)).sections[0].title).toBe('행에서 고친 제목');
+      await expect(verifyContent(db)).rejects.toThrow(/rows and the document disagree/);
+    } finally {
+      await db.classSection.update({ where, data: { title: c.sections[0].title } });
+    }
+    expect((await service.classDocument(c.public.classKey)).sections[0].title).toBe(c.sections[0].title);
   });
 
   it('names published concepts for signed-out visitors and withholds skills without a released class', async () => {

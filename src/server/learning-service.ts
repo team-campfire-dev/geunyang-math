@@ -1,13 +1,13 @@
 import 'server-only';
 import { createHash } from 'node:crypto';
-import { currentDiagnostic, currentTerms } from './content-store';
+import { classRecord, classRecords, currentDiagnostic, currentTerms } from './content-store';
 import { recommend, reviewSelection, skillReadiness, type Evidence } from '@/core/personalization';
 import { glossaryEntries } from '@/core/glossary';
 import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
 import { blockTermRefs, getActivityProblemIds, termReferences, toPublicClass, validateClass, type StoredClass, type StoredProblem } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
-import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicCatalog, PublicProblem, DiagnosticAnswer, Recommendation } from '@/shared/api';
+import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicCatalog, PublicClass, PublicProblem, DiagnosticAnswer, Recommendation } from '@/shared/api';
 import { AppError } from './errors';
 
 const id = z.string().min(1).max(191);
@@ -28,7 +28,6 @@ type Tx = Prisma.TransactionClient;
 const asJson = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 const notFound = () => new AppError(404, 'not_found', '학습 기록을 찾을 수 없어요.');
 const conflict = (message: string) => new AppError(409, 'conflict', message);
-function stored(value: unknown): StoredClass { validateClass(value); return value; }
 function publicProblem(p: StoredProblem): PublicProblem {
   return { problemVersionId: p.problemVersionId, skillKeys: p.skillKeys, promptContent: p.promptContent, responseSpec: p.responseSpec, hintAvailable: p.hintAvailable };
 }
@@ -40,10 +39,11 @@ export class LearningService {
   constructor(private readonly db: PrismaClient) {}
 
   async catalog(db: Tx = this.db) {
-    const rows = await db.classVersion.findMany({ orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
+    const rows = await db.classVersion.findMany({ orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }],
+      select: { classKey: true, metadata: true } });
     const seen = new Set<string>();
     return rows.filter(row => { if (seen.has(row.classKey)) return false; seen.add(row.classKey); return true; })
-      .map(row => stored(row.document).public).sort((a, b) => a.order - b.order);
+      .map(row => (row.metadata as { public: PublicClass }).public).sort((a, b) => a.order - b.order);
   }
 
   // Signed-out screens name the concepts the published catalogue teaches. A skill without a
@@ -56,10 +56,12 @@ export class LearningService {
   }
 
   async classDocument(classKey: string, userId?: string) {
-    const enrollment = userId ? await this.db.enrollment.findFirst({ where: { userId, classVersion: { classKey } }, include: { classVersion: true } }) : null;
-    const row = enrollment?.classVersion ?? await this.db.classVersion.findFirst({ where: { classKey }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
-    if (!row) throw notFound();
-    const record = stored(row.document);
+    const enrollment = userId ? await this.db.enrollment.findFirst({ where: { userId, classVersion: { classKey } }, select: { classVersionId: true } }) : null;
+    const versionId = enrollment?.classVersionId
+      ?? (await this.db.classVersion.findFirst({ where: { classKey }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }], select: { id: true } }))?.id;
+    if (!versionId) throw notFound();
+    const record = await classRecord(this.db, versionId);
+    if (!record) throw notFound();
     // Definitions resolve at delivery so a reworded term reaches an in-progress class version too.
     const [terms, classes] = await Promise.all([
       currentTerms(this.db, termReferences(record)), this.catalog(),
@@ -70,7 +72,8 @@ export class LearningService {
   async state(userId: string, db: Tx = this.db): Promise<LearningState> {
     const [user, classes, enrollments, recipients, diagnostic, history, skillRows, offering] = await Promise.all([
       db.user.findUnique({ where: { id: userId } }), this.catalog(db),
-      db.enrollment.findMany({ where: { userId }, include: { classVersion: true, attempts: { orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] } }, orderBy: { createdAt: 'asc' } }),
+      db.enrollment.findMany({ where: { userId }, include: { classVersion: { select: { id: true, classKey: true } },
+        attempts: { orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] } }, orderBy: { createdAt: 'asc' } }),
       db.assignmentRecipient.findMany({ where: { learnerUserId: userId }, include: {
         assignment: { include: { items: { orderBy: { position: 'asc' } } } },
         submissions: { orderBy: { submissionIndex: 'desc' }, include: { items: { include: { selectedAttempt: true } }, attempts: { orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] } } },
@@ -85,8 +88,10 @@ export class LearningService {
     const firstEvidence = new Map<string, { result: GradeResult; date: Date; skillKeys: string[]; delayed: boolean }>();
     const evidence: Evidence[] = [];
     const observedIds = new Set<string>();
+    const records = await classRecords(db, enrollments.map(e => e.classVersionId));
     for (const e of enrollments) {
-      const record = stored(e.classVersion.document);
+      const record = records.get(e.classVersionId);
+      if (!record) throw notFound();
       const checks = new Set(record.sections.filter(s => s.role === 'check').flatMap(s => getActivityProblemIds(record, s.sectionId)));
       for (const a of e.attempts) {
         const result = a.result as GradeResult;
@@ -164,9 +169,12 @@ export class LearningService {
   }
 
   private async ownedEnrollment(tx: Tx, userId: string, enrollmentId: string) {
-    const enrollment = await tx.enrollment.findFirst({ where: { id: enrollmentId, userId, scope: { ownerUserId: userId, kind: 'personal' } }, include: { classVersion: true } });
+    const enrollment = await tx.enrollment.findFirst({ where: { id: enrollmentId, userId, scope: { ownerUserId: userId, kind: 'personal' } },
+      include: { classVersion: { select: { id: true, classKey: true } } } });
     if (!enrollment) throw notFound();
-    return { enrollment, record: stored(enrollment.classVersion.document) };
+    const record = await classRecord(tx, enrollment.classVersionId);
+    if (!record) throw notFound();
+    return { enrollment, record };
   }
 
   private async activity(tx: Tx, userId: string, kind: 'class' | 'assignment', contextId: string, problemId: string) {
