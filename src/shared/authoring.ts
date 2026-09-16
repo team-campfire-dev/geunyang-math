@@ -34,8 +34,8 @@ export type DraftSummary = {
 export const draftStatusLabels: Record<DraftSummary['status'], string> = {
   draft: '작성 중', review: '검토 요청', published: '발행함',
 };
-/** `skillKeys` are the concepts this lesson says it teaches; a question may only claim one of them. */
-export type DraftMeta = { versionId: string; title: string; summary: string; estimatedMinutes: number; skillKeys: string[] };
+/** `conceptKeys` are the concepts this lesson says it teaches; a question may only claim one of them. */
+export type DraftMeta = { versionId: string; title: string; summary: string; estimatedMinutes: number; conceptKeys: string[] };
 /** What each step of a lesson is for, in the words the learner's outline uses for it too. */
 export const sectionRoleLabels: Record<LessonSection['role'], string> = {
   explanation: '설명', worked_example: '예시', practice: '연습', check: '확인', summary: '정리',
@@ -49,7 +49,7 @@ export const sectionRoles = Object.keys(sectionRoleLabels) as LessonSection['rol
  */
 export type DraftProblem = {
   problemVersionId: string;
-  skillKeys: string[];
+  conceptKeys: string[];
   promptContent: ContentBlock[];
   gradingSpec: AnswerSpec;
   hints: ContentBlock[];
@@ -57,7 +57,7 @@ export type DraftProblem = {
 };
 /** What an editor may change. Published questions are immutable, so the server renames what changed. */
 export type DraftEdit = { meta: DraftMeta; sections: LessonSection[]; problems: DraftProblem[] };
-/** `terms` are the definitions this lesson may link: the shared dictionary and its own. */
+/** `definitions` are the definitions this lesson may link: the shared dictionary and its own. */
 /**
  * Something that stops a draft from publishing, and where in the draft it is. The rules speak in
  * English because they are the same rules the import command enforces, but where they apply is the
@@ -79,7 +79,7 @@ export type DraftIssue = {
  * they are, because those are held by something no section shows.
  */
 export type DraftDetail = DraftSummary & {
-  edit: DraftEdit; terms: TermChoice[]; issues: DraftIssue[]; homeworkProblemIds: string[];
+  edit: DraftEdit; definitions: DefinitionChoice[]; issues: DraftIssue[]; homeworkProblemIds: string[];
 };
 
 /**
@@ -102,7 +102,7 @@ export const responseSpecOf = (spec: AnswerSpec): PublicProblem['responseSpec'] 
   (spec.kind === 'rational' && spec.requiredForm ? { kind: 'rational', requiredForm: spec.requiredForm } : { kind: spec.kind });
 /** The half of a question a learner may see. The preview reads questions the way the lesson will. */
 export const toPublicProblem = (problem: DraftProblem): PublicProblem => ({
-  problemVersionId: problem.problemVersionId, skillKeys: [...problem.skillKeys],
+  problemVersionId: problem.problemVersionId, conceptKeys: [...problem.conceptKeys],
   promptContent: problem.promptContent, responseSpec: responseSpecOf(problem.gradingSpec),
   hintAvailable: problem.hints.length > 0,
 });
@@ -110,19 +110,26 @@ export type LessonChoice = { lessonKey: string; courseKey: string; title: string
 /** A course a new lesson may be started in. Every lesson has one from its first draft. */
 export type CourseChoice = { key: string; title: string };
 /** The scopes this screen writes. The catalogue's other levels exist in the model, not yet here. */
-export type EditableTermScope = 'global' | 'lesson';
-/** A definition as the editor holds it. Publishing turns it into the next version of that term. */
-export type TermEdit = {
-  termKey: string; scopeKind: EditableTermScope; scopeKey: string;
-  skillKey: string; label: string; summary: string; blocks: ContentBlock[];
+export type EditableConceptScope = 'global' | 'lesson';
+/**
+ * A definition as the editor holds it: how one scope calls and explains a concept. Saving writes it
+ * in place — a definition decides nothing, so it has no versions and no draft. An empty label means
+ * the concept's own name. A concept nobody has named yet is made with the definition (`newConcept`),
+ * not assessable: whether a question may assess it is the operator's decision.
+ */
+export type DefinitionEdit = {
+  conceptKey: string; scopeKind: EditableConceptScope; scopeKey: string;
+  label: string; summary: string; blocks: ContentBlock[];
+  newConcept?: { label: string };
 };
-export type TermSummary = TermEdit & { versionId: string; publishedAt: string };
-/** Enough of a term to offer it while writing: what it is called and where it is kept. */
-export type TermChoice = { termKey: string; scopeKind: EditableTermScope; scopeKey: string; label: string; skillKey: string };
-export type SkillChoice = { key: string; label: string };
+export type DefinitionSummary = Omit<DefinitionEdit, 'newConcept'> & { conceptLabel: string; updatedAt: string };
+/** Enough of a definition to offer it while writing: what it is called and where it is kept. */
+export type DefinitionChoice = { conceptKey: string; scopeKind: EditableConceptScope; scopeKey: string; label: string };
+/** A concept as the pickers list it. Only an assessable one may be what a lesson teaches or a question asks. */
+export type ConceptChoice = { key: string; label: string; assessable: boolean };
 export type AuthoringWorkspace = {
   role: AuthoringRole | null; drafts: DraftSummary[]; courses: CourseChoice[]; lessons: LessonChoice[];
-  accounts: AccountRole[]; skills: SkillChoice[];
+  accounts: AccountRole[]; concepts: ConceptChoice[];
   /**
    * Whether this account reads the editor as someone who also operates the service. It decides what
    * the screen shows, never what it may do: identifiers, the compatibility switches and the
@@ -136,7 +143,7 @@ export const lessonKeyPattern = /^[a-z0-9][a-z0-9-]{1,63}$/;
 export type AuthoringAction =
   | { action: 'draft.create'; lessonKey: string }
   /** A lesson nobody has published yet. It belongs to a course from this moment and starts as a draft. */
-  | { action: 'lesson.create'; courseKey: string; lessonKey: string; title: string; skillKeys: string[] }
+  | { action: 'lesson.create'; courseKey: string; lessonKey: string; title: string; conceptKeys: string[] }
   | { action: 'draft.review'; draftId: string; asking: boolean }
   | { action: 'draft.save'; draftId: string; edit: DraftEdit }
   | { action: 'draft.validate'; draftId: string }
@@ -145,8 +152,8 @@ export type AuthoringAction =
   | { action: 'account.search'; query: string }
   | { action: 'role.grant'; userId: string; role: AuthoringRole }
   | { action: 'role.revoke'; userId: string }
-  | { action: 'term.list'; scopeKind: EditableTermScope; scopeKey: string }
-  | { action: 'term.save'; edit: TermEdit }
+  | { action: 'definition.list'; scopeKind: EditableConceptScope; scopeKey: string }
+  | { action: 'definition.save'; edit: DefinitionEdit }
   | { action: 'editor.expertMode'; on: boolean }
   /**
    * Answering a question of the draft the way a learner would. Nothing is recorded: no attempt, no
@@ -157,9 +164,11 @@ export type AuthoringAction =
   | { action: 'draft.openHint'; draftId: string; problemVersionId: string };
 export type AuthoringResponse = {
   workspace: AuthoringWorkspace; draft?: DraftDetail; publishedVersionId?: string;
-  matches?: AccountRole[]; terms?: TermSummary[]; publishedTermVersionId?: string;
+  matches?: AccountRole[]; definitions?: DefinitionSummary[];
   /** What the grader said about an answer tried in the editor, and the hint a question carries. */
   tried?: GradeResult; hint?: ContentBlock[];
+  /** The definition a save wrote, so the screen can say so. */
+  savedDefinition?: { conceptKey: string };
 };
 
 const versionSuffix = /:v(\d+)$/;
@@ -227,20 +236,10 @@ export function nextSectionId(lessonKey: string, role: string, versionId: string
  * question keeps its name as it moves between versions, so a name already in use is in use whatever
  * version it ends in: a new question takes the next name rather than the same one in a new version.
  */
-/**
- * The next version of a term. A definition kept by a lesson carries the lesson in its name, so two
- * scopes that share a key never collide, and reading an ID says which one it is.
- */
-export function nextTermVersionId(term: { termKey: string; scopeKind: EditableTermScope; scopeKey: string }, existing: string[]): string {
-  const base = term.scopeKind === 'lesson' ? `${term.scopeKey}:${term.termKey}` : term.termKey;
-  const numbers = existing.map((id) => (id.startsWith(`${base}:v`) ? Number(id.slice(base.length + 2)) : NaN)).filter(Number.isInteger);
-  return `${base}:v${Math.max(0, ...numbers) + 1}`;
-}
-
 /** A definition starts as one paragraph, which is what most of them stay. */
-export function newTerm(scopeKind: EditableTermScope, scopeKey: string, skillKey: string): TermEdit {
-  return { termKey: '', scopeKind, scopeKey, skillKey, label: '', summary: '',
-    blocks: [{ blockId: 'term:block:1', kind: 'core.rich_text', typeVersion: 1, required: true,
+export function newDefinition(scopeKind: EditableConceptScope, scopeKey: string): DefinitionEdit {
+  return { conceptKey: '', scopeKind, scopeKey, label: '', summary: '',
+    blocks: [{ blockId: 'definition:block:1', kind: 'core.rich_text', typeVersion: 1, required: true,
       payload: { text: '여기에 뜻을 풀어 씁니다.' } }] };
 }
 
@@ -326,15 +325,15 @@ export function problemsOfBlock(block: ContentBlock, problems: DraftProblem[]): 
 }
 
 /** A question a learner has to answer, so a new one starts with a prompt and an answer of 1/2. */
-export function newProblem(problemVersionId: string, skillKeys: string[]): DraftProblem {
+export function newProblem(problemVersionId: string, conceptKeys: string[]): DraftProblem {
   return {
-    problemVersionId, skillKeys: [...skillKeys],
-    promptContent: [{ blockId: `${problemVersionId}:prompt`, kind: 'core.rich_text', typeVersion: 2, required: true,
-      payload: { text: '여기에 문제를 씁니다.', terms: [] } }],
+    problemVersionId, conceptKeys: [...conceptKeys],
+    promptContent: [{ blockId: `${problemVersionId}:prompt`, kind: 'core.rich_text', typeVersion: 3, required: true,
+      payload: { text: '여기에 문제를 씁니다.', definitions: [] } }],
     gradingSpec: { kind: 'rational', numerator: 1, denominator: 2 },
     hints: [],
-    solution: [{ blockId: `${problemVersionId}:solution`, kind: 'core.rich_text', typeVersion: 2, required: true,
-      payload: { text: '여기에 풀이를 씁니다.', terms: [] } }],
+    solution: [{ blockId: `${problemVersionId}:solution`, kind: 'core.rich_text', typeVersion: 3, required: true,
+      payload: { text: '여기에 풀이를 씁니다.', definitions: [] } }],
   };
 }
 
@@ -427,19 +426,19 @@ export const blockForms: BlockForm[] = [
     fields: [{ key: 'text', label: '글', kind: 'multiline' }],
   },
   {
-    kind: 'core.rich_text', typeVersion: 2, label: '글',
-    hint: '$...$ 안에 수식을 넣을 수 있어요. @를 치면 본문의 낱말에 용어 풀이를 걸 수 있고, 지금 배우는 개념의 용어는 알아서 숨겨집니다.',
-    create: () => ({ text: '여기에 설명을 씁니다.', terms: [] }),
+    kind: 'core.rich_text', typeVersion: 3, label: '글',
+    hint: '$...$ 안에 수식을 넣을 수 있어요. @를 치면 본문의 낱말에 개념의 뜻풀이를 걸 수 있습니다.',
+    create: () => ({ text: '여기에 설명을 씁니다.', definitions: [] }),
     fields: [{ key: 'text', label: '글', kind: 'multiline' }],
     list: {
-      key: 'terms', label: '연결할 용어', addLabel: '용어 연결 추가', max: 20,
-      create: () => ({ termKey: '', surface: '' }),
+      key: 'definitions', label: '연결한 뜻풀이', addLabel: '뜻풀이 연결 추가', max: 20,
+      create: () => ({ conceptKey: '', surface: '' }),
       fields: [
-        { key: 'termKey', label: '용어 키', kind: 'text', hint: '발행된 TermVersion의 termKey' },
+        { key: 'conceptKey', label: '개념 키', kind: 'text', hint: '뜻풀이가 있는 개념의 키' },
         { key: 'surface', label: '본문의 낱말', kind: 'text' },
-        { key: 'scopeKind', label: '어디 용어', kind: 'select', optional: true,
+        { key: 'scopeKind', label: '어디 뜻풀이', kind: 'select', optional: true,
           options: [{ value: '', label: '공통 사전' }, { value: 'lesson', label: '이 수업' }],
-          hint: '공통 사전은 운영자가 발행한 용어예요. 이 수업의 용어는 같은 키라도 따로 셉니다.' },
+          hint: '공통 사전은 운영자가 쓴 뜻풀이예요. 이 수업의 뜻풀이는 같은 개념이라도 따로 있어요.' },
         { key: 'occurrence', label: '몇 번째', kind: 'number', optional: true, min: 1, max: 100 },
       ],
     },
@@ -549,20 +548,20 @@ export function pruneSections(sections: LessonSection[]): LessonSection[] {
 }
 
 /**
- * Fills in which lesson keeps a term. The editor only asks what kind of term it is; which lesson owns
+ * Fills in which lesson keeps a definition. The editor only asks what kind of definition it is; which lesson owns
  * it follows from the document the block sits in, and writing it down here is what lets a
  * definition be resolved later without knowing who is reading.
  */
-export function scopeTermAnnotations(blocks: ContentBlock[], lessonKey: string): ContentBlock[] {
+export function scopeDefinitionLinks(blocks: ContentBlock[], lessonKey: string): ContentBlock[] {
   return blocks.map((block) => {
-    if (block.kind !== 'core.rich_text' || block.typeVersion !== 2 || !Array.isArray(block.payload.terms)) return block;
-    const terms = (block.payload.terms as Record<string, unknown>[]).map((term) => {
-      const next = { ...term };
+    if (block.kind !== 'core.rich_text' || block.typeVersion !== 3 || !Array.isArray(block.payload.definitions)) return block;
+    const definitions = (block.payload.definitions as Record<string, unknown>[]).map((definition) => {
+      const next = { ...definition };
       if (next.scopeKind === 'lesson') next.scopeKey = lessonKey;
       else { delete next.scopeKind; delete next.scopeKey; }
       return next;
     });
-    return { ...block, payload: { ...block.payload, terms } };
+    return { ...block, payload: { ...block.payload, definitions } };
   });
 }
 
@@ -574,15 +573,15 @@ export function pruneProblems(problems: DraftProblem[]): DraftProblem[] {
 /**
  * An author writes one kind of paragraph, not two. Both versions of it are called 글 and both open
  * for editing, because published lessons hold each; which one a palette offers follows from where
- * the block will sit, so nobody is asked to pick a schema version to get a term link.
+ * the block will sit, so nobody is asked to pick a schema version to get a definition link.
  */
 const paragraph = (form: BlockForm, typeVersion: number) => form.kind === 'core.rich_text' && form.typeVersion === typeVersion;
-/** A lesson's own blocks. Its paragraph is the one that can carry term links. */
+/** A lesson's own blocks. Its paragraph is the one that can carry definition links. */
 export const lessonBlockForms = blockForms.filter((form) => !paragraph(form, 1));
 /** A question holds no activity of its own, and a drawing inside one is read rather than arranged. */
 export const problemBlockForms = lessonBlockForms.filter((form) => form.kind !== 'core.problem_set');
 /**
- * Only the definition's own blocks: a definition never embeds a question, and never a term inside a
- * term, so its paragraph is the one that carries no links.
+ * Only the definition's own blocks: a definition never embeds a question, and never a definition inside a
+ * definition, so its paragraph is the one that carries no links.
  */
-export const termBlockForms = blockForms.filter((form) => form.kind !== 'core.problem_set' && !paragraph(form, 2));
+export const definitionBlockForms = blockForms.filter((form) => form.kind !== 'core.problem_set' && !paragraph(form, 3));

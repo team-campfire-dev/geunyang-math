@@ -3,7 +3,7 @@ import 'server-only';
 import { z } from 'zod';
 import type { LessonDocument, LessonSection, ContentBlock, GlossaryEntry, PublicLesson, PublicProblem } from '@/shared/api';
 import { frameLimits, isSceneColor, itemIdPattern, pathPattern, sceneLimits, stripLimits } from '@/shared/scene';
-import { locateTerms, termRefId, type TermAnnotation, type TermRef } from '@/shared/rich-text';
+import { locateTerms, definitionRefId, type DefinitionLink, type DefinitionRef } from '@/shared/rich-text';
 
 /** Private content records stay on the server; only toPublicLesson crosses the API boundary. */
 export type StoredProblem = PublicProblem & {
@@ -98,22 +98,22 @@ const sceneTask = z.object({
 
 /** New block kinds register a versioned payload schema here and a renderer in the UI. */
 const richText = z.string().min(1).max(20_000);
-const termAnnotation = z.object({
-  termKey: id.max(100),
+const definitionLink = z.object({
+  conceptKey: id.max(100),
   // Absent means the operator's shared dictionary. Naming the scope here is what lets a definition
   // be resolved without knowing which lesson, course or organisation the reader is inside.
   scopeKind: z.enum(['global', 'organization', 'course', 'lesson']).optional(),
   scopeKey: id.max(100).optional(),
   surface: z.string().min(1).max(100),
-  // Terms repeat in a paragraph; the author picks which mention carries the definition.
+  // Definitions repeat in a paragraph; the author picks which mention carries the definition.
   occurrence: z.number().int().min(1).max(100).optional(),
-}).strict().refine((term) => (term.scopeKind ?? 'global') === 'global' ? !term.scopeKey : !!term.scopeKey,
-  { message: 'A scoped term must name the scope it belongs to, and a global one must not' });
+}).strict().refine((definition) => (definition.scopeKind ?? 'global') === 'global' ? !definition.scopeKey : !!definition.scopeKey,
+  { message: 'A scoped definition must name the scope it belongs to, and a global one must not' });
 const blockSchemas = {
   'core.rich_text@1': z.object({ text: richText }).strict(),
-  'core.rich_text@2': z.object({ text: richText, terms: z.array(termAnnotation).max(20) }).strict()
+  'core.rich_text@3': z.object({ text: richText, definitions: z.array(definitionLink).max(20) }).strict()
     .superRefine((payload, ctx) => {
-      for (const issue of locateTerms(payload.text, payload.terms).issues) ctx.addIssue({ code: 'custom', message: issue });
+      for (const issue of locateTerms(payload.text, payload.definitions).issues) ctx.addIssue({ code: 'custom', message: issue });
     }),
   'core.problem_set@1': z.object({ problemVersionIds: z.array(id).min(1).max(50) }).strict(),
   // caption may carry math: the wrapping role="img" takes its accessible name from alt.
@@ -223,11 +223,11 @@ const blockSchema = z.object({
 const arrangeable = (block: { kind: string; payload: Record<string, unknown> }) =>
   block.kind === 'core.scene' && Array.isArray(block.payload.zones) && block.payload.zones.length > 0;
 
-// Term definitions are leaves: no problem groups, and no annotations nesting a term inside a term.
+// Definitions are leaves: no problem groups, and no links nesting a definition inside a definition.
 // A definition is read while a problem waits, so it explains rather than asks for an interaction.
-export const termContentBlockSchema = blockSchema.refine(
-  (block) => block.kind !== 'core.problem_set' && !(block.kind === 'core.rich_text' && block.typeVersion === 2) && !arrangeable(block),
-  { message: 'Term definitions cannot embed problems, further term annotations, or a drawing to arrange' },
+export const definitionBlockSchema = blockSchema.refine(
+  (block) => block.kind !== 'core.problem_set' && !(block.kind === 'core.rich_text' && block.typeVersion === 3) && !arrangeable(block),
+  { message: 'Definitions cannot embed problems, further definition links, or a drawing to arrange' },
 );
 
 const responseSchema = z.object({
@@ -245,7 +245,7 @@ const problemContentBlockSchema = blockSchema.refine((block) => block.kind !== '
 
 const problemShape = {
   problemVersionId: id,
-  skillKeys: z.array(id).min(1).max(50),
+  conceptKeys: z.array(id).min(1).max(50),
   promptContent: z.array(problemContentBlockSchema).min(1).max(100, 'At most 100 blocks per content array'),
   responseSpec: responseSchema,
   hintAvailable: z.boolean(),
@@ -282,8 +282,8 @@ const storedLessonSchema = z.object({
     title: shortText,
     summary: shortText,
     estimatedMinutes: z.number().int().min(1).max(240),
-    skillKeys: z.array(id).min(1).max(50),
-    prerequisiteSkillKeys: z.array(id).max(50),
+    conceptKeys: z.array(id).min(1).max(50),
+    prerequisiteConceptKeys: z.array(id).max(50),
     sectionCount: z.number().int().min(1).max(50),
   }).strict(),
   sections: z.array(z.object({
@@ -306,11 +306,11 @@ export function validateLesson(record: unknown): asserts record is StoredLesson 
   requireUnique(parsed.sections.map((section) => section.sectionId), 'section IDs');
   requireUnique(parsed.problems.map((problem) => problem.problemVersionId), 'problem version IDs');
   requireUnique(parsed.homeworkProblemIds, 'homework problem IDs');
-  requireUnique(parsed.public.skillKeys, 'lesson skill keys');
-  requireUnique(parsed.public.prerequisiteSkillKeys, 'prerequisite skill keys');
-  for (const prerequisite of parsed.public.prerequisiteSkillKeys) {
-    if (parsed.public.skillKeys.includes(prerequisite)) {
-      throw new Error(`Lesson cannot require its own skill as a prerequisite: ${prerequisite}`);
+  requireUnique(parsed.public.conceptKeys, 'lesson concept keys');
+  requireUnique(parsed.public.prerequisiteConceptKeys, 'prerequisite concept keys');
+  for (const prerequisite of parsed.public.prerequisiteConceptKeys) {
+    if (parsed.public.conceptKeys.includes(prerequisite)) {
+      throw new Error(`Lesson cannot require its own concept as a prerequisite: ${prerequisite}`);
     }
   }
   const problems = new Set(parsed.problems.map((problem) => problem.problemVersionId));
@@ -339,8 +339,8 @@ export function validateLesson(record: unknown): asserts record is StoredLesson 
   }
   for (const problem of parsed.problems) {
     if (!referenceOwners.has(problem.problemVersionId)) throw new Error(`Unreferenced problem version: ${problem.problemVersionId}`);
-    for (const skill of problem.skillKeys) {
-      if (!parsed.public.skillKeys.includes(skill)) throw new Error(`Problem skill is absent from lesson skills: ${skill}`);
+    for (const concept of problem.conceptKeys) {
+      if (!parsed.public.conceptKeys.includes(concept)) throw new Error(`Problem concept is absent from lesson concepts: ${concept}`);
     }
   }
 }
@@ -348,7 +348,7 @@ export function validateLesson(record: unknown): asserts record is StoredLesson 
 function publicProblem(problem: StoredProblem): PublicProblem {
   return {
     problemVersionId: problem.problemVersionId,
-    skillKeys: [...problem.skillKeys],
+    conceptKeys: [...problem.conceptKeys],
     promptContent: structuredClone(problem.promptContent),
     responseSpec: { ...problem.responseSpec },
     hintAvailable: problem.hintAvailable,
@@ -365,30 +365,30 @@ export function toPublicLesson(record: StoredLesson, courseKey: string, glossary
   };
 }
 
-const blockAnnotations = (block: ContentBlock): TermAnnotation[] =>
-  block.kind === 'core.rich_text' && block.typeVersion === 2 ? (block.payload.terms as TermAnnotation[]) : [];
+const blockLinks = (block: ContentBlock): DefinitionLink[] =>
+  block.kind === 'core.rich_text' && block.typeVersion === 3 ? (block.payload.definitions as DefinitionLink[]) : [];
 
-/** Terms linked from any of these blocks, for resolving definitions before delivery. */
-export function blockTermRefs(blocks: ContentBlock[]): TermRef[] {
-  const seen = new Map<string, TermRef>();
-  for (const block of blocks) for (const term of blockAnnotations(block)) {
-    seen.set(termRefId(term), { termKey: term.termKey, scopeKind: term.scopeKind, scopeKey: term.scopeKey });
+/** Definitions linked from any of these blocks, for resolving definitions before delivery. */
+export function blockDefinitionRefs(blocks: ContentBlock[]): DefinitionRef[] {
+  const seen = new Map<string, DefinitionRef>();
+  for (const block of blocks) for (const definition of blockLinks(block)) {
+    seen.set(definitionRefId(definition), { conceptKey: definition.conceptKey, scopeKind: definition.scopeKind, scopeKey: definition.scopeKey });
   }
   return [...seen.values()];
 }
 
 /**
- * Term annotations name a published term by key; the definition itself lives in its own version so
- * that rewording it does not republish every lesson. Callers resolve the keys against TermVersion.
+ * Links name a concept and the scope whose definition explains it; the definition is its own row, so
+ * rewording it republishes no lesson. Callers resolve the references against ConceptDefinition.
  */
-export function termReferences(record: StoredLesson): (TermRef & { blockId: string; problemSkillKeys: string[] | null })[] {
-  const annotations = (block: ContentBlock, problemSkillKeys: string[] | null) =>
-    blockAnnotations(block).map((term) => ({ termKey: term.termKey, scopeKind: term.scopeKind, scopeKey: term.scopeKey,
-      blockId: block.blockId, problemSkillKeys }));
+export function definitionReferences(record: StoredLesson): (DefinitionRef & { blockId: string; problemConceptKeys: string[] | null })[] {
+  const annotations = (block: ContentBlock, problemConceptKeys: string[] | null) =>
+    blockLinks(block).map((definition) => ({ conceptKey: definition.conceptKey, scopeKind: definition.scopeKind, scopeKey: definition.scopeKey,
+      blockId: block.blockId, problemConceptKeys }));
   return [
     ...record.sections.flatMap((section) => section.contentBlocks.flatMap((block) => annotations(block, null))),
     ...record.problems.flatMap((problem) => [...problem.promptContent, ...problem.hints, ...problem.solution]
-      .flatMap((block) => annotations(block, problem.skillKeys))),
+      .flatMap((block) => annotations(block, problem.conceptKeys))),
   ];
 }
 

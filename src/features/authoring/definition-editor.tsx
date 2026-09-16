@@ -1,0 +1,149 @@
+'use client';
+
+import { useState } from 'react';
+import type { ContentBlock } from '@/shared/api';
+import {
+  moveBlock, newDefinition, definitionBlockForms,
+  type ConceptChoice, type DefinitionEdit, type DefinitionSummary, type EditableConceptScope, type LessonChoice,
+} from '@/shared/authoring';
+import { Icon } from '@/features/learning/icons';
+import { AddBlock, BlockCard } from './block-editor';
+import { useExpertMode } from './expert-mode';
+
+const refusal = '뜻풀이 안에는 놓아 보는 그림을 둘 수 없어요. 뜻풀이는 문제가 기다리는 동안 읽는 설명이라 조작을 요구하지 않아요.';
+const conceptKeyPattern = /^[a-z0-9][a-z0-9.-]{0,99}$/;
+
+/**
+ * How one scope calls and explains a concept. The concept is picked from the ones that exist, or
+ * named here for the first time — that is how a concept comes to be: a teacher writes a lesson that
+ * teaches something no lesson taught before, and the operator merges duplicates afterwards.
+ */
+function DefinitionForm({ edit, concepts, busy, existing, onChange, onSave, onClose }: {
+  edit: DefinitionEdit; concepts: ConceptChoice[]; busy: boolean; existing: DefinitionSummary | null;
+  onChange: (next: DefinitionEdit) => void; onSave: () => void; onClose: () => void;
+}) {
+  const expert = useExpertMode();
+  const taken = edit.blocks.map((block) => block.blockId);
+  const writeBlocks = (blocks: ContentBlock[]) => onChange({ ...edit, blocks });
+  const known = concepts.find((concept) => concept.key === edit.conceptKey);
+  const making = !existing && !known && !!edit.conceptKey;
+  const conceptOk = !!known || (making && conceptKeyPattern.test(edit.conceptKey) && !!edit.newConcept?.label.trim());
+  const ready = conceptOk && (!!edit.summary.trim() || edit.blocks.length > 0 || !!edit.label.trim());
+  return <fieldset className="editor-panel">
+    <legend>{existing ? `${existing.label || existing.conceptLabel} 고치기` : '새 뜻풀이'}</legend>
+    <p className="editor-note">
+      {existing
+        ? '저장하면 이 뜻풀이를 건 모든 수업에 바로 반영돼요. 뜻풀이는 판본이 없어서 저장이 곧 최신입니다.'
+        : '개념을 고르거나, 아직 없는 개념이면 키와 이름을 새로 적어요. 새 개념은 문제가 평가하는 개념이 아니라 설명만 있는 개념으로 생깁니다.'}
+    </p>
+    {existing
+      ? <p className="editor-note"><strong>{existing.conceptLabel}</strong>{expert ? ` · ${existing.conceptKey}` : ''}</p>
+      : <>
+        <label className="editor-field"><span className="editor-label">개념</span>
+          <select value={known ? edit.conceptKey : ''} onChange={(event) => onChange({ ...edit, conceptKey: event.target.value, newConcept: undefined })}>
+            <option value="">새 개념…</option>
+            {concepts.map((concept) => <option key={concept.key} value={concept.key}>
+              {concept.label}{concept.assessable ? '' : ' (설명만)'}{expert ? ` · ${concept.key}` : ''}</option>)}
+          </select></label>
+        {!known && <>
+          <label className="editor-field"><span className="editor-label">새 개념 키</span>
+            <input value={edit.conceptKey} placeholder="denominator" spellCheck={false}
+              onChange={(event) => onChange({ ...edit, conceptKey: event.target.value.trim().toLowerCase(), newConcept: edit.newConcept ?? { label: '' } })} />
+            <small>영문 소문자·숫자·점·하이픈. 한 번 저장하면 바꿀 수 없고, 코스를 건너 같은 개념을 가리키는 이름이에요.</small></label>
+          <label className="editor-field"><span className="editor-label">새 개념 이름</span>
+            <input value={edit.newConcept?.label ?? ''} maxLength={191} placeholder="분모"
+              onChange={(event) => onChange({ ...edit, newConcept: { label: event.target.value } })} /></label>
+        </>}
+      </>}
+    <label className="editor-field"><span className="editor-label">이 범위에서 부르는 이름</span>
+      <input value={edit.label} maxLength={191} placeholder={existing?.conceptLabel ?? edit.newConcept?.label ?? known?.label ?? ''}
+        onChange={(event) => onChange({ ...edit, label: event.target.value })} />
+      <small>비워 두면 개념의 이름을 그대로 써요. 「통분」을 이 수업에서만 「분모 맞추기」라고 부르고 싶을 때 적습니다.</small></label>
+    <label className="editor-field"><span className="editor-label">한 줄 요약</span>
+      <input value={edit.summary} maxLength={500} onChange={(event) => onChange({ ...edit, summary: event.target.value })} /></label>
+
+    <div className="editor-problem-part">
+      <span className="editor-label">설명</span>
+      {edit.blocks.map((block, index) => <BlockCard key={block.blockId} block={block} index={index} total={edit.blocks.length}
+        arrangingRefusal={refusal}
+        onChange={(next) => writeBlocks(edit.blocks.map((item, position) => (position === index ? next : item)))}
+        onMove={(delta) => writeBlocks(moveBlock(edit.blocks, index, delta))}
+        onRemove={() => writeBlocks(edit.blocks.filter((_, position) => position !== index))} />)}
+      <AddBlock label="설명 블록 추가" forms={definitionBlockForms}
+        blockId={() => { for (let index = 1; ; index++) { const id = `definition:block:${index}`; if (!taken.includes(id)) return id; } }}
+        onAdd={(block) => writeBlocks([...edit.blocks, block])} />
+      <small className="editor-note">설명이 없으면 본문에서 걸 수 없고, 이 범위에서 부르는 이름만 남아요.</small>
+    </div>
+
+    <div className="editor-actions">
+      <button type="button" className="button primary" disabled={busy || !ready} onClick={onSave}>
+        저장<Icon name="arrow" size={16} /></button>
+      <button type="button" className="text-button" disabled={busy} onClick={onClose}>닫기</button>
+      {!ready && <span className="editor-note">개념을 고르거나 새로 적고, 이름·요약·설명 중 하나는 있어야 저장할 수 있어요.</span>}
+    </div>
+  </fieldset>;
+}
+
+/**
+ * Definitions are written in place, not drafted: saving is the latest and every reader sees it at
+ * once. That is the bargain the glossary makes — a lesson links a concept by key, so a correction
+ * reaches every lesson that links it without republishing any of them.
+ */
+export function DefinitionPanel({ lessons, concepts, definitions, busy, mayEditDictionary, onList, onSave }: {
+  lessons: LessonChoice[]; concepts: ConceptChoice[]; definitions: DefinitionSummary[] | null; busy: boolean; mayEditDictionary: boolean;
+  onList: (scopeKind: EditableConceptScope, scopeKey: string) => void; onSave: (edit: DefinitionEdit) => void;
+}) {
+  const [scopeKind, setScopeKind] = useState<EditableConceptScope>(mayEditDictionary ? 'global' : 'lesson');
+  const [scopeKey, setScopeKey] = useState(lessons[0]?.lessonKey ?? '');
+  const [edit, setEdit] = useState<DefinitionEdit | null>(null);
+  const [existing, setExisting] = useState<DefinitionSummary | null>(null);
+  const expert = useExpertMode();
+  const scope = { scopeKind, scopeKey: scopeKind === 'lesson' ? scopeKey : '' };
+  const open = (definition: DefinitionSummary | null) => {
+    setExisting(definition);
+    // Only what may be written: the concept's own name and the time belong to the record, not to the edit.
+    setEdit(definition
+      ? { conceptKey: definition.conceptKey, scopeKind: definition.scopeKind, scopeKey: definition.scopeKey,
+          label: definition.label, summary: definition.summary, blocks: structuredClone(definition.blocks) }
+      : newDefinition(scope.scopeKind, scope.scopeKey));
+  };
+  const pick = (kind: EditableConceptScope, key: string) => { setScopeKind(kind); setScopeKey(key); setEdit(null); setExisting(null); };
+
+  return <section className="dashboard-section">
+    <div className="section-heading"><div><span className="eyebrow">CONCEPTS</span><h2>개념과 뜻풀이</h2></div></div>
+    <fieldset className="editor-panel">
+      <legend>어디 뜻풀이</legend>
+      <p className="editor-note">개념은 전역이고, 뜻풀이는 범위마다 따로 있어요. 공통 사전은 운영자가 모아 두는 뜻풀이이고, 수업 뜻풀이는 그 수업 안에서만 쓰는 설명입니다. 같은 개념이라도 다르게 부르고 다르게 설명할 수 있어요.</p>
+      <div className="editor-actions">
+        <label className="editor-field"><span className="editor-label">범위</span>
+          <select value={scopeKind} onChange={(event) => pick(event.target.value as EditableConceptScope, scopeKey)}>
+            {mayEditDictionary && <option value="global">공통 사전</option>}
+            <option value="lesson">수업 뜻풀이</option>
+          </select></label>
+        {scopeKind === 'lesson' && <label className="editor-field"><span className="editor-label">수업</span>
+          <select value={scopeKey} onChange={(event) => pick('lesson', event.target.value)}>
+            {lessons.map((item) => <option key={item.lessonKey} value={item.lessonKey}>{item.title}</option>)}
+          </select></label>}
+        <button type="button" className="button secondary" disabled={busy || (scopeKind === 'lesson' && !scopeKey)}
+          onClick={() => onList(scope.scopeKind, scope.scopeKey)}>불러오기</button>
+      </div>
+
+      {definitions !== null && (definitions.length === 0
+        ? <p className="empty-inline">아직 이 범위에 뜻풀이가 없어요.</p>
+        : <div className="role-list">
+          {definitions.map((definition) => <div key={`${definition.scopeKind}:${definition.scopeKey}:${definition.conceptKey}`} className="role-row">
+            <span className="role-who">
+              <strong>{definition.label || definition.conceptLabel}</strong>
+              <small>{expert ? `${definition.conceptKey}${definition.label ? ` · ${definition.conceptLabel}` : ''}` : definition.summary || (definition.blocks.length ? '' : '이름만 있어요')}</small>
+            </span>
+            <button type="button" className="button secondary" disabled={busy} onClick={() => open(definition)}>고치기</button>
+          </div>)}
+        </div>)}
+      {definitions !== null && <button type="button" className="text-button" disabled={busy}
+        onClick={() => open(null)}><Icon name="plus" size={14} />새 뜻풀이</button>}
+    </fieldset>
+
+    {edit && <DefinitionForm edit={edit} concepts={concepts} busy={busy} existing={existing}
+      onChange={setEdit} onSave={() => onSave(edit)} onClose={() => { setEdit(null); setExisting(null); }} />}
+  </section>;
+}

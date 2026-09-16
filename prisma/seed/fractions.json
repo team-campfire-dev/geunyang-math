@@ -24,21 +24,21 @@
       ]
     }
   ],
-  "skills": [
+  "concepts": [
     {
       "key": "fraction.meaning",
       "label": "분수의 의미",
-      "order": 0
+      "assessable": true
     },
     {
       "key": "fraction.equivalence",
       "label": "동치분수와 약분",
-      "order": 1
+      "assessable": true
     },
     {
       "key": "fraction.addition",
       "label": "분수의 덧셈",
-      "order": 2
+      "assessable": true
     }
   ],
   "lessons": [
@@ -49,10 +49,10 @@
         "title": "분수, 전체와 조각의 관계",
         "summary": "일상의 나누기에서 시작해 분자와 분모의 뜻을 다시 익혀요.",
         "estimatedMinutes": 12,
-        "skillKeys": [
+        "conceptKeys": [
           "fraction.meaning"
         ],
-        "prerequisiteSkillKeys": [],
+        "prerequisiteConceptKeys": [],
         "sectionCount": 5
       },
       "sections": [
@@ -172,7 +172,7 @@
       "problems": [
         {
           "problemVersionId": "fraction-meaning:practice-1:v1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.meaning"
           ],
           "promptContent": [
@@ -220,7 +220,7 @@
         },
         {
           "problemVersionId": "fraction-meaning:practice-2:v1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.meaning"
           ],
           "promptContent": [
@@ -267,7 +267,7 @@
         },
         {
           "problemVersionId": "fraction-meaning:check-1:v1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.meaning"
           ],
           "promptContent": [
@@ -315,7 +315,7 @@
         },
         {
           "problemVersionId": "fraction-meaning:homework-1:v1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.meaning"
           ],
           "promptContent": [
@@ -363,7 +363,7 @@
         },
         {
           "problemVersionId": "fraction-meaning:homework-2:v1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.meaning"
           ],
           "promptContent": [
@@ -422,10 +422,10 @@
         "title": "모양이 달라도 같은 분수",
         "summary": "동치분수와 약분을 익히고, 같은 양을 다른 조각으로 표현해요.",
         "estimatedMinutes": 15,
-        "skillKeys": [
+        "conceptKeys": [
           "fraction.equivalence"
         ],
-        "prerequisiteSkillKeys": [
+        "prerequisiteConceptKeys": [
           "fraction.meaning"
         ],
         "sectionCount": 5
@@ -553,7 +553,7 @@
       "problems": [
         {
           "problemVersionId": "fraction-equivalence:practice-1:v1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.equivalence"
           ],
           "promptContent": [
@@ -600,7 +600,7 @@
         },
         {
           "problemVersionId": "fraction-equivalence:practice-2:v1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.equivalence"
           ],
           "promptContent": [
@@ -650,7 +650,7 @@
         },
         {
           "problemVersionId": "fraction-equivalence:check-1:v1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.equivalence"
           ],
           "promptContent": [
@@ -700,7 +700,7 @@
         },
         {
           "problemVersionId": "fraction-equivalence:homework-1:v1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.equivalence"
           ],
           "promptContent": [
@@ -747,7 +747,7 @@
         },
         {
           "problemVersionId": "fraction-equivalence:homework-2:v1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.equivalence"
           ],
           "promptContent": [
@@ -808,10 +808,10 @@
         "title": "분수 더하기, 조각 크기 맞추기",
         "summary": "동치분수로 분모를 맞추고, 일상의 양을 더해 봐요.",
         "estimatedMinutes": 18,
-        "skillKeys": [
+        "conceptKeys": [
           "fraction.addition"
         ],
-        "prerequisiteSkillKeys": [
+        "prerequisiteConceptKeys": [
           "fraction.meaning",
           "fraction.equivalence"
         ],
@@ -929,7 +929,7 @@
       "problems": [
         {
           "problemVersionId": "fraction-addition:practice-1:v1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.addition"
           ],
           "promptContent": [
@@ -977,7 +977,7 @@
         },
         {
           "problemVersionId": "fraction-addition:practice-2:v1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.addition"
           ],
           "promptContent": [
@@ -1025,7 +1025,7 @@
         },
         {
           "problemVersionId": "fraction-addition:check-1:v1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.addition"
           ],
           "promptContent": [
@@ -1075,7 +1075,7 @@
         },
         {
           "problemVersionId": "fraction-addition:homework-1:v1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.addition"
           ],
           "promptContent": [
@@ -1125,7 +1125,7 @@
         },
         {
           "problemVersionId": "fraction-addition:homework-2:v1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.addition"
           ],
           "promptContent": [
@@ -1190,7 +1190,7 @@
       "problems": [
         {
           "problemVersionId": "fraction-placement-v1:meaning-1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.meaning"
           ],
           "promptContent": [
@@ -1218,7 +1218,7 @@
         },
         {
           "problemVersionId": "fraction-placement-v1:meaning-2",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.meaning"
           ],
           "promptContent": [
@@ -1245,7 +1245,7 @@
         },
         {
           "problemVersionId": "fraction-placement-v1:equivalence-1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.equivalence"
           ],
           "promptContent": [
@@ -1272,7 +1272,7 @@
         },
         {
           "problemVersionId": "fraction-placement-v1:equivalence-2",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.equivalence"
           ],
           "promptContent": [
@@ -1302,7 +1302,7 @@
         },
         {
           "problemVersionId": "fraction-placement-v1:addition-1",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.addition"
           ],
           "promptContent": [
@@ -1330,7 +1330,7 @@
         },
         {
           "problemVersionId": "fraction-placement-v1:addition-2",
-          "skillKeys": [
+          "conceptKeys": [
             "fraction.addition"
           ],
           "promptContent": [
@@ -1361,5 +1361,5 @@
       ]
     }
   ],
-  "terms": []
+  "definitions": []
 }

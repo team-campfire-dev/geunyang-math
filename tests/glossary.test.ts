@@ -1,50 +1,47 @@
 import { describe, expect, it } from 'vitest';
-import { glossaryEntries, type PublishedTerm } from '@/core/glossary';
+import { glossaryEntries, type PublishedDefinition } from '@/core/glossary';
 import { seedLessons } from './fixtures/content';
 import type { PublicLesson } from '@/shared/api';
 
 const lessons: PublicLesson[] = seedLessons.map(c => ({ ...c.public, courseKey: 'fractions' }));
 const meaning = lessons[0], equivalence = lessons[1];
-const term = (termKey: string, skillKey: string, scope?: { scopeKind: PublishedTerm['scopeKind']; scopeKey: string }): PublishedTerm => ({
-  termKey, scopeKind: scope?.scopeKind ?? 'global', scopeKey: scope?.scopeKey ?? '',
-  skillKey, label: termKey, summary: `${termKey} 설명`,
-  blocks: [{ blockId: `${termKey}-b1`, kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '정의' } }],
+const definition = (conceptKey: string, scope?: { scopeKind: PublishedDefinition['scopeKind']; scopeKey: string }): PublishedDefinition => ({
+  conceptKey, scopeKind: scope?.scopeKind ?? 'global', scopeKey: scope?.scopeKey ?? '',
+  label: conceptKey, summary: `${conceptKey} 설명`,
+  blocks: [{ blockId: `${conceptKey}-b1`, kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '정의' } }],
 });
-const terms = [
-  term('term.denominator', 'fraction.meaning'),
-  term('term.equivalent', 'fraction.equivalence'),
-  term('term.common-denominator', 'fraction.addition'),
-];
+// Two explain concepts the lessons teach; one explains a concept no question assesses.
+const definitions = [definition('fraction.meaning'), definition('fraction.equivalence'), definition('common-denominator')];
 
 describe('the definitions a lesson linked', () => {
   it('sends every one of them, because linking is the decision', () => {
     // Whoever wrote the lesson chose that word in that place; progress does not overrule it.
-    expect(glossaryEntries(terms, lessons).map(entry => entry.termKey))
-      .toEqual(['term.denominator', 'term.equivalent', 'term.common-denominator']);
+    expect(glossaryEntries(definitions, lessons).map(entry => entry.conceptKey))
+      .toEqual(['fraction.meaning', 'fraction.equivalence', 'common-denominator']);
     // Including the concept the lesson being read teaches, which used to be withheld.
-    expect(glossaryEntries([term('term.denominator', 'fraction.meaning')], lessons)).toHaveLength(1);
+    expect(glossaryEntries([definition('fraction.meaning')], lessons)).toHaveLength(1);
   });
 
   it('points each definition at the lesson that teaches its concept', () => {
-    const entries = glossaryEntries(terms, lessons);
-    expect(entries.find(entry => entry.termKey === 'term.equivalent'))
-      .toMatchObject({ lessonKey: equivalence.lessonKey, skillKey: 'fraction.equivalence', summary: 'term.equivalent 설명' });
-    expect(entries.find(entry => entry.termKey === 'term.denominator')).toMatchObject({ lessonKey: meaning.lessonKey });
+    const entries = glossaryEntries(definitions, lessons);
+    expect(entries.find(entry => entry.conceptKey === 'fraction.equivalence'))
+      .toMatchObject({ lessonKey: equivalence.lessonKey, summary: 'fraction.equivalence 설명' });
+    expect(entries.find(entry => entry.conceptKey === 'fraction.meaning')).toMatchObject({ lessonKey: meaning.lessonKey });
   });
 
   it('offers no lesson link for a concept no published lesson teaches', () => {
-    const [entry] = glossaryEntries([term('term.decimal', 'decimal.meaning')], lessons);
-    expect(entry).toMatchObject({ termKey: 'term.decimal', lessonKey: null });
+    const [entry] = glossaryEntries([definition('common-denominator')], lessons);
+    expect(entry).toMatchObject({ conceptKey: 'common-denominator', lessonKey: null });
   });
 
-  it('carries the scope through, so a lesson term and a dictionary term stay apart', () => {
-    const scoped = term('term.denominator', 'fraction.meaning', { scopeKind: 'lesson', scopeKey: meaning.lessonKey });
-    const entries = glossaryEntries([terms[0], scoped], lessons);
+  it('carries the scope through, so a lesson definition and a dictionary definition stay apart', () => {
+    const scoped = definition('fraction.meaning', { scopeKind: 'lesson', scopeKey: meaning.lessonKey });
+    const entries = glossaryEntries([definitions[0], scoped], lessons);
     expect(entries.map(entry => `${entry.scopeKind}:${entry.scopeKey}`)).toEqual(['global:', `lesson:${meaning.lessonKey}`]);
   });
 
   it('keeps the order the document asked for them in', () => {
-    expect(glossaryEntries([terms[2], terms[0]], lessons).map(entry => entry.termKey))
-      .toEqual(['term.common-denominator', 'term.denominator']);
+    expect(glossaryEntries([definitions[2], definitions[0]], lessons).map(entry => entry.conceptKey))
+      .toEqual(['common-denominator', 'fraction.meaning']);
   });
 });

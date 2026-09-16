@@ -8,7 +8,7 @@ import { ensureLesson } from './fixtures/identity';
 import { developmentLoginEnabled, sessionUser } from '@/server/auth';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
-import { lessonMetadata, lessonRecord, indexLessonDocument, indexTermDocument } from '@/server/content-store';
+import { lessonMetadata, lessonRecord, indexLessonDocument, indexDefinitionBlocks } from '@/server/content-store';
 import type { LearningAction } from '@/shared/api';
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
@@ -263,7 +263,7 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     }
     const firstItem = recipient.assignment.items[0];
     const practicing = await service.state(learner.userId);
-    expect(practicing.skills.filter(skill => problemById(firstItem.problemVersionId).skillKeys.includes(skill.key)))
+    expect(practicing.concepts.filter(concept => problemById(firstItem.problemVersionId).conceptKeys.includes(concept.key)))
       .toEqual(expect.arrayContaining([expect.objectContaining({ state: 'practicing' })]));
     const validAttempt = await db.attempt.findFirstOrThrow({ where: {
       userId: learner.userId, submissionId: recipient.submissions[0].id, assignmentItemId: firstItem.id,
@@ -309,47 +309,43 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     expect(await lessonRecord(db, first.public.versionId)).toEqual(first);
   });
 
-  it('explains every term a lesson linked, wherever the author linked it', async () => {
+  it('explains every definition a lesson linked, wherever the author linked it', async () => {
     const learner = await newLearner();
     const suffix = randomUUID();
     const lessonKey = `integration-glossary-${suffix}`;
     const [earlier, primary, secondary] = ['earlier', 'primary', 'secondary'].map(name => `test.${name}.${suffix}`);
-    await db.skill.createMany({ data: [earlier, primary, secondary].map((key, order) => ({ key, label: key, order: 2000 + order })) });
-    // A fixture publishes the way the application does: the definition is read back from its rows.
-    const publishTerm = async (skillKey: string) => {
-      const blocks = [{ blockId: `term.${skillKey}:v1:b1`, kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: `${skillKey} 정의` } }];
-      await db.termVersion.create({ data: {
-        id: `term.${skillKey}:v1`, termKey: `term.${skillKey}`, skillKey, label: skillKey, summary: `${skillKey} 한 줄 설명`,
-        contentHash: createHash('sha256').update(skillKey).digest('hex'),
-      } });
-      await indexTermDocument(db, `term.${skillKey}:v1`, blocks);
+    await db.concept.createMany({ data: [earlier, primary, secondary].map((key) => ({ key, label: key, assessable: true })) });
+    // A fixture writes a definition the way the application does: the row, then the blocks it owns.
+    const publishDefinition = async (conceptKey: string) => {
+      const row = await db.conceptDefinition.create({ data: { conceptKey, scopeKind: 'global', scopeKey: '', summary: `${conceptKey} 한 줄 설명` } });
+      await indexDefinitionBlocks(db, row.id, [{ blockId: `${conceptKey}:b1`, kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: `${conceptKey} 정의` } }]);
     };
-    for (const skillKey of [earlier, primary, secondary]) await publishTerm(skillKey);
+    for (const conceptKey of [earlier, primary, secondary]) await publishDefinition(conceptKey);
 
     // Fresh question IDs: a published problem version is immutable across every lesson in the database.
     const custom = JSON.parse(JSON.stringify(record).replaceAll(record.public.lessonKey, lessonKey)) as StoredLesson;
-    custom.public = { ...custom.public, skillKeys: [primary, secondary], prerequisiteSkillKeys: [earlier] };
-    for (const problem of custom.problems) problem.skillKeys = [primary];
+    custom.public = { ...custom.public, conceptKeys: [primary, secondary], prerequisiteConceptKeys: [earlier] };
+    for (const problem of custom.problems) problem.conceptKeys = [primary];
     const [firstHomework, secondHomework] = custom.homeworkProblemIds.map(id => custom.problems.find(p => p.problemVersionId === id)!);
-    secondHomework.skillKeys = [secondary];
-    const link = (termKey: string, surface: string) => ({ termKey, surface });
+    secondHomework.conceptKeys = [secondary];
+    const link = (conceptKey: string, surface: string) => ({ conceptKey, surface });
     const section = custom.sections[0];
-    section.contentBlocks[0] = { ...section.contentBlocks[0], typeVersion: 2, payload: {
+    section.contentBlocks[0] = { ...section.contentBlocks[0], typeVersion: 3, payload: {
       text: '앞선 개념 위에서 지금 개념을 배워요.',
-      terms: [link(`term.${earlier}`, '앞선 개념'), link(`term.${primary}`, '지금 개념')] } };
+      definitions: [link(earlier, '앞선 개념'), link(primary, '지금 개념')] } };
     // A question may carry links too; what it explains is the author's decision, not the server's.
-    firstHomework.promptContent[0] = { ...firstHomework.promptContent[0], typeVersion: 2, payload: {
+    firstHomework.promptContent[0] = { ...firstHomework.promptContent[0], typeVersion: 3, payload: {
       text: '앞선 개념을 떠올리고 다른 개념도 확인해요.',
-      terms: [link(`term.${earlier}`, '앞선 개념'), link(`term.${secondary}`, '다른 개념')] } };
+      definitions: [link(earlier, '앞선 개념'), link(secondary, '다른 개념')] } };
     await publishImmutable(custom);
 
     const document = await service.lessonDocument(lessonKey);
     // Every word any of the document's blocks linked is explained — its sections and its questions
     // alike — including the concept this very lesson teaches, which used to be withheld.
-    expect(document.glossary.map(entry => entry.termKey).sort())
-      .toEqual([`term.${earlier}`, `term.${primary}`, `term.${secondary}`].sort());
-    expect(document.glossary.find(entry => entry.termKey === `term.${earlier}`))
-      .toMatchObject({ skillKey: earlier, lessonKey: null, summary: `${earlier} 한 줄 설명` });
+    expect(document.glossary.map(entry => entry.conceptKey).sort())
+      .toEqual([earlier, primary, secondary].sort());
+    expect(document.glossary.find(entry => entry.conceptKey === earlier))
+      .toMatchObject({ label: earlier, lessonKey: null, summary: `${earlier} 한 줄 설명` });
 
     const enrollmentId = await enroll(learner.userId, lessonKey);
     for (const item of custom.sections) {
@@ -364,7 +360,7 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     expect(assignment.items.map(item => item.problem.problemVersionId).sort()).toEqual([...custom.homeworkProblemIds].sort());
     // The review carries what its own questions linked, and only that: the section's link to the
     // primary concept is not part of this assignment, so its definition is not sent here.
-    expect(assignment.glossary.map(entry => entry.termKey).sort()).toEqual([`term.${earlier}`, `term.${secondary}`].sort());
+    expect(assignment.glossary.map(entry => entry.conceptKey).sort()).toEqual([earlier, secondary].sort());
     expect(JSON.stringify(assignment)).not.toContain(`${primary} 정의`);
   });
 });

@@ -4,13 +4,13 @@ import { useEffect, useRef, type ReactNode, type RefObject } from 'react';
 import type { AttemptView, ContentBlock, LessonSection } from '@/shared/api';
 import {
   blockFormOf, sectionRoleLabels, toPublicProblem,
-  type DraftIssue, type DraftMeta, type DraftProblem, type TermChoice,
+  type DraftIssue, type DraftMeta, type DraftProblem, type DefinitionChoice,
 } from '@/shared/authoring';
 import { ContentBlocks } from '@/features/learning/content-blocks';
 import { ProblemCard, type ProblemActions } from '@/features/learning/problem-card';
 import { Icon } from '@/features/learning/icons';
 import { useExpertMode } from './expert-mode';
-import { useTermMentions } from './term-mentions';
+import { useDefinitionMentions } from './definition-mentions';
 
 /**
  * A text box the height of what it holds. A paragraph opened for writing then takes the room the
@@ -39,7 +39,7 @@ function InlineText({ value, label, placeholder, className, maxLength, onChange 
 /**
  * Moves the caret into a paragraph the moment it is chosen, so picking one and writing in it are a
  * single move. It lands at the end: what is on screen is the source, and mapping a click on drawn
- * text back to a position in that source is not something a formula or a term link survives.
+ * text back to a position in that source is not something a formula or a definition link survives.
  */
 function useWritingFocus(area: RefObject<HTMLTextAreaElement | null>, writing: boolean) {
   useEffect(() => {
@@ -59,10 +59,10 @@ function PlainParagraph({ block, focus, onChange }: { block: ContentBlock; focus
     onChange={(event) => onChange({ ...block, payload: { ...block.payload, text: event.target.value } })} />;
 }
 
-function MentionParagraph({ block, terms, focus, onChange }: {
-  block: ContentBlock; terms: TermChoice[]; focus: boolean; onChange: (next: ContentBlock) => void;
+function MentionParagraph({ block, definitions, focus, onChange }: {
+  block: ContentBlock; definitions: DefinitionChoice[]; focus: boolean; onChange: (next: ContentBlock) => void;
 }) {
-  const { bind, picker } = useTermMentions({ payload: block.payload, terms,
+  const { bind, picker } = useDefinitionMentions({ payload: block.payload, definitions,
     onChange: (payload) => onChange({ ...block, payload }) });
   useAutoHeight(bind.ref, bind.value);
   useWritingFocus(bind.ref, focus);
@@ -73,11 +73,11 @@ function MentionParagraph({ block, terms, focus, onChange }: {
 }
 
 /** A paragraph opened for writing, wherever it sits: a lesson's own text or a question's prompt. */
-function Paragraph({ block, terms, focus, onChange }: {
-  block: ContentBlock; terms: TermChoice[]; focus: boolean; onChange: (next: ContentBlock) => void;
+function Paragraph({ block, definitions, focus, onChange }: {
+  block: ContentBlock; definitions: DefinitionChoice[]; focus: boolean; onChange: (next: ContentBlock) => void;
 }) {
-  return block.typeVersion === 2
-    ? <MentionParagraph block={block} terms={terms} focus={focus} onChange={onChange} />
+  return block.typeVersion === 3
+    ? <MentionParagraph block={block} definitions={definitions} focus={focus} onChange={onChange} />
     : <PlainParagraph block={block} focus={focus} onChange={onChange} />;
 }
 
@@ -90,8 +90,8 @@ export type Picked = { kind: 'block'; index: number } | { kind: 'problem'; id: s
  * puts a frame around each so it can be picked. A paragraph is the exception — chosen, it becomes
  * the text it is made of, because a paragraph is written by typing into it.
  */
-export function LessonSheet({ meta, section, index, problems, terms, selected, published, issues, trying, onMeta, onSection, onBlocks, onProblem, onSelect, add }: {
-  meta: DraftMeta; section: LessonSection; index: number; problems: DraftProblem[]; terms: TermChoice[];
+export function LessonSheet({ meta, section, index, problems, definitions, selected, published, issues, trying, onMeta, onSection, onBlocks, onProblem, onSelect, add }: {
+  meta: DraftMeta; section: LessonSection; index: number; problems: DraftProblem[]; definitions: DefinitionChoice[];
   selected: Picked | null; published: boolean;
   /** What publishing refused, so the lesson can show where rather than list it somewhere else. */
   issues: DraftIssue[];
@@ -161,7 +161,7 @@ export function LessonSheet({ meta, section, index, problems, terms, selected, p
               <ContentBlocks blocks={problem.promptContent}
                 wrap={(block, position, drawn, className) => (chosen && !published && held && block.kind === 'core.rich_text'
                   ? <div key={block.blockId} className={className}>
-                    <Paragraph block={block} terms={terms} focus={position === first} onChange={(next) => writeProblem(position, next)} />
+                    <Paragraph block={block} definitions={definitions} focus={position === first} onChange={(next) => writeProblem(position, next)} />
                   </div>
                   : <div key={block.blockId} className={className}>{drawn}</div>)} />
             </div>
@@ -180,7 +180,7 @@ export function LessonSheet({ meta, section, index, problems, terms, selected, p
               onClick={(event) => { event.stopPropagation(); onSelect(chosen ? null : { kind: 'block', index: position }); }}>{label}</button>
             <div className={className}>
               {writing
-                ? <Paragraph block={block} terms={terms} focus onChange={(next) => write(position, next)} />
+                ? <Paragraph block={block} definitions={definitions} focus onChange={(next) => write(position, next)} />
                 : drawn}
             </div>
           </div>;

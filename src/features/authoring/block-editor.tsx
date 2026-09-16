@@ -2,9 +2,9 @@
 
 import type { ReactNode } from 'react';
 import type { ContentBlock } from '@/shared/api';
-import { lessonBlockForms, blockFormOf, moveBlock, readPath, writePath, type BlockField, type BlockForm, type TermChoice } from '@/shared/authoring';
-import type { TermAnnotation } from '@/shared/rich-text';
-import { TermText } from './term-mentions';
+import { lessonBlockForms, blockFormOf, moveBlock, readPath, writePath, type BlockField, type BlockForm, type DefinitionChoice } from '@/shared/authoring';
+import type { DefinitionLink } from '@/shared/rich-text';
+import { TermText } from './definition-mentions';
 import { useRemovalNotice } from './edit-history';
 import { useExpertMode } from './expert-mode';
 import { Icon } from '@/features/learning/icons';
@@ -69,29 +69,29 @@ function Rows({ form, payload, onChange }: { form: BlockForm; payload: Record<st
 }
 
 /**
- * The term links a paragraph carries, shown as the words they sit on. They are put there by typing
+ * The definition links a paragraph carries, shown as the words they sit on. They are put there by typing
  * `@` in the text above, which is also what decides which occurrence of a word is meant, so this is
  * only where one is taken back off.
  */
 function TermLinks({ payload, onChange }: { payload: Record<string, unknown>; onChange: (next: Record<string, unknown>) => void }) {
   const notifyRemoval = useRemovalNotice();
-  const terms = Array.isArray(payload.terms) ? (payload.terms as TermAnnotation[]) : [];
-  if (!terms.length) return null;
+  const definitions = Array.isArray(payload.definitions) ? (payload.definitions as DefinitionLink[]) : [];
+  if (!definitions.length) return null;
   return <div className="editor-links">
-    <span className="editor-label">연결한 용어</span>
+    <span className="editor-label">연결한 뜻풀이</span>
     <div className="editor-link-list">
-      {terms.map((term, index) => <span key={`${term.termKey}:${term.surface}:${index}`} className="editor-link">
-        {term.surface}
-        <button type="button" className="icon-button" aria-label={`${term.surface} 용어 연결 끊기`}
-          onClick={() => { onChange({ ...payload, terms: terms.filter((_, position) => position !== index) }); notifyRemoval('용어 연결'); }}>
+      {definitions.map((definition, index) => <span key={`${definition.conceptKey}:${definition.surface}:${index}`} className="editor-link">
+        {definition.surface}
+        <button type="button" className="icon-button" aria-label={`${definition.surface} 뜻풀이 연결 끊기`}
+          onClick={() => { onChange({ ...payload, definitions: definitions.filter((_, position) => position !== index) }); notifyRemoval('용어 연결'); }}>
           <Icon name="close" size={12} /></button>
       </span>)}
     </div>
   </div>;
 }
 
-export function BlockEditor({ block, problems, arrangingRefusal, termChoices, omit, onChange }: {
-  block: ContentBlock; problems?: ReactNode; arrangingRefusal?: string; termChoices?: TermChoice[];
+export function BlockEditor({ block, problems, arrangingRefusal, definitionChoices, omit, onChange }: {
+  block: ContentBlock; problems?: ReactNode; arrangingRefusal?: string; definitionChoices?: DefinitionChoice[];
   /** Fields the caller writes somewhere else — a paragraph's body is typed where it will be read. */
   omit?: string[];
   onChange: (next: ContentBlock) => void;
@@ -102,15 +102,15 @@ export function BlockEditor({ block, problems, arrangingRefusal, termChoices, om
   if (!form) {
     return <p className="editor-note">이 앱이 모르는 블록이에요({block.kind}@{block.typeVersion}). 여기서는 고칠 수 없고, 대체 설명만 바꿀 수 있어요.</p>;
   }
-  // A paragraph that may link terms writes its body through the picker instead of a plain field.
-  const writesTerms = form.list?.key === 'terms';
+  // A paragraph that may link definitions writes its body through the picker instead of a plain field.
+  const writesTerms = form.list?.key === 'definitions';
   return <>
     {form.fields.filter((field) => !omit?.includes(field.key)).map((field) => (writesTerms && field.key === 'text'
-      ? <TermText key={field.key} payload={block.payload} terms={termChoices ?? []} onChange={setPayload} />
+      ? <TermText key={field.key} payload={block.payload} definitions={definitionChoices ?? []} onChange={setPayload} />
       : <Field key={field.key} field={field} value={readPath(block.payload, field.key)}
           onChange={(value) => setPayload(writePath(block.payload, field.key, value))} />))}
     {form.list && (writesTerms && !expert
-      // The picker above writes these. Its table names a term by key and counts which occurrence it
+      // The picker above writes these. Its table names a definition by key and counts which occurrence it
       // meant, which is the app's bookkeeping, not a decision anyone makes while writing a lesson.
       ? <TermLinks payload={block.payload} onChange={setPayload} />
       : <Rows form={form} payload={block.payload} onChange={setPayload} />)}
@@ -119,8 +119,8 @@ export function BlockEditor({ block, problems, arrangingRefusal, termChoices, om
   </>;
 }
 
-export function BlockCard({ block, index, total, problems, arrangingRefusal, termChoices, omit, onChange, onMove, onCopy, onRemove }: {
-  block: ContentBlock; index: number; total: number; problems?: ReactNode; arrangingRefusal?: string; termChoices?: TermChoice[];
+export function BlockCard({ block, index, total, problems, arrangingRefusal, definitionChoices, omit, onChange, onMove, onCopy, onRemove }: {
+  block: ContentBlock; index: number; total: number; problems?: ReactNode; arrangingRefusal?: string; definitionChoices?: DefinitionChoice[];
   omit?: string[];
   onChange: (next: ContentBlock) => void; onMove: (delta: number) => void; onCopy?: () => void; onRemove: () => void;
 }) {
@@ -149,7 +149,7 @@ export function BlockCard({ block, index, total, problems, arrangingRefusal, ter
       </div>
     </header>
     {form?.hint && <p className="editor-note">{form.hint}</p>}
-    <BlockEditor block={block} problems={problems} arrangingRefusal={arrangingRefusal} termChoices={termChoices}
+    <BlockEditor block={block} problems={problems} arrangingRefusal={arrangingRefusal} definitionChoices={definitionChoices}
       omit={omit} onChange={onChange} />
     {expert && !block.required && <Field field={{ key: 'fallback', label: '대체 설명', kind: 'text', optional: true, hint: '이 블록을 모르는 앱 버전에서 대신 보여줄 문장이에요.' }}
       value={block.fallback} onChange={(value) => onChange({ ...block, fallback: typeof value === 'string' ? value : '' })} />}
