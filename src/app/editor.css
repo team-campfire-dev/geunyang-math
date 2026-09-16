@@ -42,6 +42,7 @@
    questions — what this account may do, and how much of the machinery it wants to see. */
 .expert-toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--editor-help); cursor: pointer; }
 .expert-toggle input { width: 18px; height: 18px; accent-color: var(--green); }
+.expert-toggle span { white-space: nowrap; }
 .authoring-page .eyebrow { font-size: 10px; }
 .authoring-page .icon-button { min-width: var(--editor-control); min-height: var(--editor-control); font-size: 14px; }
 .authoring-page .text-button { font-size: 12px; }
@@ -59,16 +60,57 @@
 .editor-toast > span { flex: 1; min-width: 0; }
 .editor-toast .text-button { flex-shrink: 0; font-size: 13px; }
 
-.editor-layout { display: grid; grid-template-columns: 200px minmax(0, 1fr) minmax(0, 0.95fr); gap: 22px; align-items: start; }
+/* The steps of the lesson, the lesson itself, and what the chosen thing is made of. The middle is
+   the lesson as a learner will read it — there is no preview beside it, because it is the preview. */
+.editor-layout { display: grid; grid-template-columns: 200px minmax(0, 1fr) 460px; gap: 26px; align-items: start; }
 .editor-steps { position: sticky; top: 20px; display: flex; flex-direction: column; gap: 6px; }
 .editor-steps > .eyebrow { margin: 0 0 10px 12px; }
-.editor-steps > button:not(.text-button) { display: flex; flex-direction: column; gap: 4px; padding: 12px 13px;
-  border-radius: 7px; text-align: left; font-size: var(--editor-label-size); color: var(--editor-label); line-height: 1.5; }
-.editor-steps > button.active { background: var(--editor-active-bg); color: var(--editor-active-text); font-weight: 600; }
-.editor-steps small { font-size: 11px; color: var(--editor-help); }
+.editor-step { border-radius: 7px; }
+.editor-step.active { background: var(--editor-active-bg); }
+.editor-step-open { display: flex; flex-direction: column; gap: 4px; width: 100%; padding: 12px 13px; border-radius: 7px;
+  text-align: left; font-size: var(--editor-label-size); color: var(--editor-label); line-height: 1.5; }
+.editor-step.active .editor-step-open { color: var(--editor-active-text); font-weight: 600; }
+.editor-step small { font-size: 11px; color: var(--editor-help); }
+.editor-step.active small { color: var(--editor-active-text); }
+.editor-step-tools { display: flex; gap: 4px; padding: 0 9px 8px; }
 .editor-steps .text-button { margin-top: 8px; padding-left: 13px; }
 
-.editor-main { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+/* The lesson, written where it is read. Headings and paragraphs are the real thing with a text box
+   behind them, so nothing here is a field that stands for something drawn somewhere else. */
+.editor-sheet { min-width: 0; }
+.editor-sheet .sheet-header { margin-bottom: 18px; }
+.sheet-inline { display: block; width: calc(100% + 16px); margin: 0 -8px; padding: 2px 8px; border: 0; border-radius: 7px;
+  background: transparent; color: inherit; font: inherit; letter-spacing: inherit; resize: none; overflow: hidden; }
+.sheet-inline::placeholder { color: #9fae88; }
+.sheet-inline:hover, .sheet-inline:focus { background: #f2f6ea; }
+.sheet-class-title { font-size: 29px; font-weight: 600; letter-spacing: -1px; line-height: 1.6; margin: 9px -8px 0; }
+.sheet-section-title { font-size: 24px; font-weight: 500; letter-spacing: -.7px; line-height: 1.5; margin: 12px -8px 30px;
+  word-break: keep-all; }
+
+/* Every block wears a frame so it can be picked. The frame is drawn outside the block rather than
+   around it, so choosing one never moves the lesson by a pixel. */
+.sheet-block { position: relative; border-radius: 8px; }
+.sheet-block:hover { outline: 1px solid #d3ddc2; outline-offset: 8px; }
+.sheet-block.chosen { outline: 2px solid var(--green); outline-offset: 8px; }
+/* A paragraph being written already shows it: the text box has its own ground and its own ring. */
+.sheet-block.chosen.writing { outline: none; }
+.sheet-block-pick { position: absolute; top: -13px; left: -6px; z-index: 2; padding: 3px 9px; border-radius: 999px;
+  background: var(--editor-active-bg); color: var(--editor-active-text); font-size: 11px; font-weight: 600;
+  opacity: 0; transition: opacity .12s ease; }
+.sheet-block:hover .sheet-block-pick, .sheet-block.chosen .sheet-block-pick, .sheet-block-pick:focus-visible { opacity: 1; }
+
+/* A paragraph being written is the paragraph: same face, same size, same leading as the drawn one. */
+.sheet-writing { position: relative; }
+.sheet-paragraph { display: block; width: calc(100% + 16px); margin: 0 -8px; padding: 0 8px; border: 0; border-radius: 7px;
+  background: #f2f6ea; color: #68775d; font-family: inherit; font-size: 14px; line-height: 2.1; letter-spacing: inherit;
+  resize: none; overflow: hidden; overflow-wrap: anywhere; word-break: keep-all; }
+.sheet-add { margin-top: 30px; padding-top: 20px; border-top: 1px dashed var(--editor-rule); }
+.sheet-add .editor-add { border: 0; background: none; padding: 0; }
+
+.editor-inspector { position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto; min-width: 0; }
+/* A published version cannot be changed, so the chosen block is shown rather than offered. */
+.editor-inspector-block { border: 0; margin: 0; padding: 0; min-width: 0; }
+.editor-inspector-part { margin-top: 22px; padding-top: 16px; border-top: 1px dashed var(--editor-rule); }
 .editor-panel { border: 1px solid var(--line); border-radius: 10px; background: var(--white); padding: 20px 22px 22px; min-width: 0; }
 .editor-panel legend { padding: 0 7px; font-size: var(--editor-label-size); font-weight: 600; color: var(--editor-label); }
 .editor-panel[disabled] { opacity: .65; }
@@ -160,10 +202,6 @@
 .role-row select { width: auto; min-height: var(--editor-control); padding: 8px 11px; border: 1px solid var(--editor-field-line);
   border-radius: 6px; background: var(--editor-field-bg); color: var(--editor-ink); font-size: var(--editor-label-size); }
 
-.editor-preview { position: sticky; top: 20px; min-width: 0; }
-.editor-preview > .eyebrow { display: block; margin-bottom: 10px; }
-.editor-preview .lesson-sheet { padding: 24px; min-height: 0; }
-.editor-preview .lesson-sheet > h2 { font-size: 20px; margin: 10px 0 22px; }
 .editor-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 22px; }
 .editor-confirm { margin-top: 18px; padding: 20px 22px; border: 1px solid #cdd8bd; border-radius: 10px; background: #f1f5e9; }
 .editor-confirm strong { font-size: 15px; color: var(--editor-active-text); }
@@ -208,13 +246,16 @@
 .scene-frames .scene-size { margin-top: 10px; }
 
 @media (max-width: 1180px) {
-  /* The preview drops below the editor, so nothing may stay pinned over the row it lands in. */
+  /* The inspector drops below the lesson, so nothing may stay pinned over the row it lands in. */
   .editor-layout { grid-template-columns: 180px minmax(0, 1fr); }
-  .editor-steps, .editor-preview { position: static; }
-  .editor-preview { grid-column: 1 / -1; margin-top: 8px; }
+  .editor-steps, .editor-inspector { position: static; max-height: none; }
+  .editor-inspector { grid-column: 1 / -1; margin-top: 8px; }
 }
 @media (max-width: 740px) {
   .authoring-page { padding: calc(22px + env(safe-area-inset-top)) 20px 30px; }
+  /* The head carries a title, a switch, a role and a way out; on a phone they take two rows. */
+  .authoring-head { flex-wrap: wrap; align-items: center; }
+  .authoring-head-side { flex-wrap: wrap; gap: 10px 12px; }
   .editor-layout { grid-template-columns: minmax(0, 1fr); }
   .editor-steps { position: static; flex-direction: row; flex-wrap: wrap; }
   .editor-steps > .eyebrow { width: 100%; margin-left: 0; }

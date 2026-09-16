@@ -90,8 +90,10 @@ function TermLinks({ payload, onChange }: { payload: Record<string, unknown>; on
   </div>;
 }
 
-export function BlockEditor({ block, problems, arrangingRefusal, termChoices, onChange }: {
+export function BlockEditor({ block, problems, arrangingRefusal, termChoices, omit, onChange }: {
   block: ContentBlock; problems?: ReactNode; arrangingRefusal?: string; termChoices?: TermChoice[];
+  /** Fields the caller writes somewhere else — a paragraph's body is typed where it will be read. */
+  omit?: string[];
   onChange: (next: ContentBlock) => void;
 }) {
   const form = blockFormOf(block);
@@ -103,7 +105,7 @@ export function BlockEditor({ block, problems, arrangingRefusal, termChoices, on
   // A paragraph that may link terms writes its body through the picker instead of a plain field.
   const writesTerms = form.list?.key === 'terms';
   return <>
-    {form.fields.map((field) => (writesTerms && field.key === 'text'
+    {form.fields.filter((field) => !omit?.includes(field.key)).map((field) => (writesTerms && field.key === 'text'
       ? <TermText key={field.key} payload={block.payload} terms={termChoices ?? []} onChange={setPayload} />
       : <Field key={field.key} field={field} value={readPath(block.payload, field.key)}
           onChange={(value) => setPayload(writePath(block.payload, field.key, value))} />))}
@@ -117,8 +119,9 @@ export function BlockEditor({ block, problems, arrangingRefusal, termChoices, on
   </>;
 }
 
-export function BlockCard({ block, index, total, problems, arrangingRefusal, termChoices, onChange, onMove, onRemove }: {
+export function BlockCard({ block, index, total, problems, arrangingRefusal, termChoices, omit, onChange, onMove, onRemove }: {
   block: ContentBlock; index: number; total: number; problems?: ReactNode; arrangingRefusal?: string; termChoices?: TermChoice[];
+  omit?: string[];
   onChange: (next: ContentBlock) => void; onMove: (delta: number) => void; onRemove: () => void;
 }) {
   const form = blockFormOf(block);
@@ -144,7 +147,8 @@ export function BlockCard({ block, index, total, problems, arrangingRefusal, ter
       </div>
     </header>
     {form?.hint && <p className="editor-note">{form.hint}</p>}
-    <BlockEditor block={block} problems={problems} arrangingRefusal={arrangingRefusal} termChoices={termChoices} onChange={onChange} />
+    <BlockEditor block={block} problems={problems} arrangingRefusal={arrangingRefusal} termChoices={termChoices}
+      omit={omit} onChange={onChange} />
     {expert && !block.required && <Field field={{ key: 'fallback', label: '대체 설명', kind: 'text', optional: true, hint: '이 블록을 모르는 앱 버전에서 대신 보여줄 문장이에요.' }}
       value={block.fallback} onChange={(value) => onChange({ ...block, fallback: typeof value === 'string' ? value : '' })} />}
   </section>;

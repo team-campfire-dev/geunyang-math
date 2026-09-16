@@ -27,6 +27,11 @@ export type DraftSummary = {
   authorName: string; mine: boolean;
 };
 export type DraftMeta = { versionId: string; title: string; summary: string; estimatedMinutes: number };
+/** What each step of a lesson is for, in the words the learner's outline uses for it too. */
+export const sectionRoleLabels: Record<ClassSection['role'], string> = {
+  explanation: '설명', worked_example: '예시', practice: '연습', check: '확인', summary: '정리',
+};
+export const sectionRoles = Object.keys(sectionRoleLabels) as ClassSection['role'][];
 /**
  * A question as the editor holds it. Answers, hints and solutions belong to the draft, so this
  * reaches a browser only where the account holds a content role. `responseSpec` and `hintAvailable`

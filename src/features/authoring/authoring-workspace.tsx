@@ -3,24 +3,20 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ClassSection, ContentBlock } from '@/shared/api';
 import {
-  blockFormOf, editShape, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId, toPublicProblem, versionLabel,
-  type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail, type DraftEdit,
-  type DraftProblem, type DraftSummary, type SkillChoice, type TermSummary,
+  blockFormOf, editShape, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId, sectionRoleLabels, sectionRoles,
+  versionLabel, type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail,
+  type DraftEdit, type DraftProblem, type DraftSummary, type SkillChoice, type TermSummary,
 } from '@/shared/authoring';
 import { ApiError, learningApi, type Session } from '@/features/learning/api-client';
-import { ContentBlocks } from '@/features/learning/content-blocks';
 import { Icon } from '@/features/learning/icons';
 import { authoringApi } from './api-client';
 import { RemovalNotice, useEditHistory } from './edit-history';
 import { ExpertMode, useExpertMode } from './expert-mode';
 import { AddBlock, BlockCard } from './block-editor';
+import { LessonSheet } from './lesson-sheet';
 import { ProblemSetEditor } from './problem-editor';
 import { TermPanel } from './term-editor';
 
-const roleLabels: Record<ClassSection['role'], string> = {
-  explanation: '설명', worked_example: '예시', practice: '연습', check: '확인', summary: '정리',
-};
-const roles = Object.keys(roleLabels) as ClassSection['role'][];
 /** How long the editor waits after the last keystroke before it writes what is on screen. */
 const autosaveMs = 1500;
 /** A failed save is tried once more before the editor leaves it to the banner and the author. */
@@ -32,6 +28,8 @@ export function AuthoringWorkspace() {
   const [draft, setDraft] = useState<DraftDetail | null>(null);
   const { value: edit, write: setEdit, replace, open: openEdit, undo, redo, canUndo, canRedo } = useEditHistory<DraftEdit>(editShape);
   const [sectionIndex, setSectionIndex] = useState(0);
+  /** Which block of the step is being worked on, or none, which means the lesson itself is. */
+  const [selected, setSelected] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -66,8 +64,18 @@ export function AuthoringWorkspace() {
     markSaved(latest.current);
     setSaving('idle');
     setSectionIndex((current) => Math.min(current, Math.max(detail.edit.sections.length - 1, 0)));
+    setSelected(null);
     setConfirming(false);
   }, [openEdit, markSaved]);
+  /**
+   * Moving to another step starts at the top of it. The page is a lesson long, and keeping the old
+   * scroll position drops an author into the middle of something they did not ask to see.
+   */
+  const goToSection = useCallback((index: number) => {
+    setSectionIndex(index);
+    setSelected(null);
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, []);
   const closeDraft = useCallback(() => {
     setDraft(null); openEdit(null); latest.current = ''; markSaved(''); setSaving('idle'); setRemoved(null);
   }, [openEdit, markSaved]);
@@ -243,7 +251,11 @@ export function AuthoringWorkspace() {
     edit.sections.map((item, position) => (position === sectionIndex
       ? { ...item, contentBlocks: item.contentBlocks.map((existing, place) => (place === index ? block : existing)) }
       : item));
-  const previewProblems = edit.problems.map(toPublicProblem);
+  const chosen = selected === null ? undefined : section.contentBlocks[selected];
+  const moveSection = (delta: number) => {
+    setEdit({ ...edit, sections: moveBlock(edit.sections, sectionIndex, delta) });
+    goToSection(Math.min(Math.max(sectionIndex + delta, 0), edit.sections.length - 1));
+  };
   // A question may only claim a concept this class teaches, and it names them the way a catalogue does.
   const draftSkills: SkillChoice[] = draft.skillKeys.map((key) =>
     workspace.skills.find((skill) => skill.key === key) ?? { key, label: key });
@@ -273,80 +285,80 @@ export function AuthoringWorkspace() {
     <div className="editor-layout">
       <aside className="editor-steps">
         <span className="eyebrow">SECTIONS</span>
-        {edit.sections.map((item, index) => <button key={item.sectionId} type="button" className={index === sectionIndex ? 'active' : ''}
-          onClick={() => setSectionIndex(index)}><small>{roleLabels[item.role]}</small>{item.title}</button>)}
+        {edit.sections.map((item, index) => <div key={item.sectionId} className={`editor-step${index === sectionIndex ? ' active' : ''}`}>
+          <button type="button" className="editor-step-open" aria-current={index === sectionIndex ? 'step' : undefined}
+            onClick={() => goToSection(index)}><small>{sectionRoleLabels[item.role]}</small>{item.title}</button>
+          {index === sectionIndex && !published && edit.sections.length > 1 && <div className="editor-step-tools">
+            <button type="button" className="icon-button" aria-label="이 단계 위로" disabled={index === 0}
+              onClick={() => moveSection(-1)}>↑</button>
+            <button type="button" className="icon-button" aria-label="이 단계 아래로" disabled={index === edit.sections.length - 1}
+              onClick={() => moveSection(1)}>↓</button>
+          </div>}
+        </div>)}
         <button type="button" className="text-button" disabled={published || edit.sections.length >= 50} onClick={() => {
           const role: ClassSection['role'] = 'explanation';
           const sectionId = nextSectionId(draft.classKey, role, edit.meta.versionId, edit.sections.map((item) => item.sectionId));
           setEdit({ ...edit, sections: [...edit.sections, { sectionId, role, title: '새 단계', contentBlocks: [] }] });
-          setSectionIndex(edit.sections.length);
+          goToSection(edit.sections.length);
         }}><Icon name="plus" size={14} />단계 추가</button>
       </aside>
 
-      <div className="editor-main">
-        <fieldset className="editor-panel" disabled={published}>
-          <legend>클래스 정보</legend>
-          {/* The name of the version being written. The server suggests it and nothing here needs to
-              be told it, so only an operator is shown the field. */}
-          {expert
-            ? <label className="editor-field"><span className="editor-label">새 판본 ID</span>
-              <input value={edit.meta.versionId} onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, versionId: event.target.value } })} />
-              <small>발행한 판본은 고칠 수 없어서, 수정은 늘 새 판본이 돼요. 기준 판본: {draft.baseVersionId ?? '없음'}</small></label>
-            : <p className="editor-note">발행하면 {versionLabel(edit.meta.versionId)}이 돼요. 이미 발행한 판은 고칠 수 없어서,
-              수정은 늘 새 판이 됩니다. 수강 중인 사람은 시작한 판을 끝까지 봅니다.</p>}
-          <label className="editor-field"><span className="editor-label">제목</span>
-            <input value={edit.meta.title} onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, title: event.target.value } })} /></label>
-          <label className="editor-field"><span className="editor-label">한 줄 소개</span>
-            <input value={edit.meta.summary} onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, summary: event.target.value } })} /></label>
-          <label className="editor-field"><span className="editor-label">예상 시간(분)</span>
-            <input type="number" min={1} max={240} value={edit.meta.estimatedMinutes}
-              onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, estimatedMinutes: Number(event.target.value) } })} /></label>
-        </fieldset>
+      <LessonSheet meta={edit.meta} section={section} index={sectionIndex} problems={edit.problems} terms={draft.terms}
+        selected={selected} published={published}
+        onMeta={(meta) => setEdit({ ...edit, meta })} onSection={writeSection} onBlocks={writeBlocks} onSelect={setSelected}
+        add={<AddBlock blockId={(kind) => nextBlockId(draft.classKey, section.sectionId, kind, edit.meta.versionId, blockIds)}
+          onAdd={(block) => { writeBlocks([...section.contentBlocks, block]); setSelected(section.contentBlocks.length); }} />} />
 
-        <fieldset className="editor-panel" disabled={published}>
-          <legend>단계</legend>
-          <label className="editor-field"><span className="editor-label">단계 제목</span>
-            <input value={section.title} onChange={(event) => writeSection({ ...section, title: event.target.value })} /></label>
-          <label className="editor-field"><span className="editor-label">역할</span>
-            <select value={section.role} onChange={(event) => writeSection({ ...section, role: event.target.value as ClassSection['role'] })}>
-              {roles.map((role) => <option key={role} value={role}>{roleLabels[role]}</option>)}
-            </select></label>
-          {edit.sections.length > 1 && <button type="button" className="text-button" onClick={() => {
-            setEdit({ ...edit, sections: edit.sections.filter((_, index) => index !== sectionIndex) });
-            setSectionIndex(Math.max(sectionIndex - 1, 0));
-            notifyRemoval('단계');
-          }}><Icon name="close" size={14} />이 단계 삭제</button>}
-        </fieldset>
+      {/* What the chosen thing is made of. With nothing chosen, the lesson itself is what is chosen. */}
+      <aside className="editor-inspector" aria-label="고른 것">
+        {chosen !== undefined && selected !== null
+          ? <fieldset className="editor-inspector-block" disabled={published}>
+            <BlockCard block={chosen} index={selected} total={section.contentBlocks.length}
+              termChoices={draft.terms}
+              // A paragraph is written in the sheet, so the form does not ask for its body again.
+              omit={chosen.kind === 'core.rich_text' ? ['text'] : undefined}
+              problems={blockFormOf(chosen)?.editsProblems && <ProblemSetEditor block={chosen} problems={edit.problems}
+                skills={draftSkills} classKey={draft.classKey} role={section.role} versionId={edit.meta.versionId}
+                taken={blockIds} termChoices={draft.terms}
+                onChange={(next, problems) => setEdit({ ...edit, sections: writeSectionBlock(selected, next), problems })} />}
+              onChange={(next) => writeBlocks(section.contentBlocks.map((item, position) => (position === selected ? next : item)))}
+              onMove={(delta) => {
+                writeBlocks(moveBlock(section.contentBlocks, selected, delta));
+                setSelected(Math.min(Math.max(selected + delta, 0), section.contentBlocks.length - 1));
+              }}
+              onRemove={() => { writeBlocks(section.contentBlocks.filter((_, position) => position !== selected)); setSelected(null); }} />
+          </fieldset>
+          : <fieldset className="editor-panel" disabled={published}>
+            <legend>이 수업</legend>
+            {/* The name of the version being written. The server suggests it and nothing here needs
+                to be told it, so only an operator is shown the field. */}
+            {expert
+              ? <label className="editor-field"><span className="editor-label">새 판본 ID</span>
+                <input value={edit.meta.versionId} onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, versionId: event.target.value } })} />
+                <small>발행한 판본은 고칠 수 없어서, 수정은 늘 새 판본이 돼요. 기준 판본: {draft.baseVersionId ?? '없음'}</small></label>
+              : <p className="editor-note">발행하면 {versionLabel(edit.meta.versionId)}이 돼요. 이미 발행한 판은 고칠 수 없어서,
+                수정은 늘 새 판이 됩니다. 수강 중인 사람은 시작한 판을 끝까지 봅니다.</p>}
+            <label className="editor-field"><span className="editor-label">한 줄 소개</span>
+              <input value={edit.meta.summary} onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, summary: event.target.value } })} />
+              <small>수업을 고르는 화면에서 제목 아래에 보여요.</small></label>
+            <label className="editor-field"><span className="editor-label">예상 시간(분)</span>
+              <input type="number" min={1} max={240} value={edit.meta.estimatedMinutes}
+                onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, estimatedMinutes: Number(event.target.value) } })} /></label>
 
-        {section.contentBlocks.map((block, index) => {
-          const writeBlock = (next: ContentBlock) => writeBlocks(section.contentBlocks.map((item, position) => (position === index ? next : item)));
-          return <BlockCard key={block.blockId} block={block} index={index} total={section.contentBlocks.length}
-            termChoices={draft.terms}
-            problems={blockFormOf(block)?.editsProblems && <ProblemSetEditor block={block} problems={edit.problems}
-              skills={draftSkills} classKey={draft.classKey} role={section.role} versionId={edit.meta.versionId}
-              taken={blockIds} termChoices={draft.terms}
-              onChange={(next, problems) => setEdit({ ...edit, sections: writeSectionBlock(index, next), problems })} />}
-            onChange={writeBlock}
-            onMove={(delta) => writeBlocks(moveBlock(section.contentBlocks, index, delta))}
-            onRemove={() => writeBlocks(section.contentBlocks.filter((_, position) => position !== index))} />;
-        })}
-
-        {!published && <AddBlock blockId={(kind) => nextBlockId(draft.classKey, section.sectionId, kind, edit.meta.versionId, blockIds)}
-          onAdd={(block) => writeBlocks([...section.contentBlocks, block])} />}
-      </div>
-
-      <aside className="editor-preview">
-        <span className="eyebrow">PREVIEW</span>
-        <article className="lesson-sheet">
-          <div className="lesson-step-label">{String(sectionIndex + 1).padStart(2, '0')}<i />{roleLabels[section.role]}</div>
-          <h2>{section.title}</h2>
-          {/* The learner's renderer, so an unsupported or malformed block looks here as it will there. */}
-          <ContentBlocks blocks={section.contentBlocks} problems={previewProblems}
-            renderProblem={(problem) => <div className="problem-card">
-              <div className="problem-kicker"><Icon name="pencil" size={14} />문항 미리보기{expert && <span>{problem.problemVersionId}</span>}</div>
-              <ContentBlocks blocks={problem.promptContent} />
-            </div>} />
-        </article>
+            <div className="editor-inspector-part">
+              <span className="editor-label">이 단계</span>
+              <label className="editor-field"><span className="editor-label">역할</span>
+                <select value={section.role} onChange={(event) => writeSection({ ...section, role: event.target.value as ClassSection['role'] })}>
+                  {sectionRoles.map((role) => <option key={role} value={role}>{sectionRoleLabels[role]}</option>)}
+                </select>
+                <small>학습 화면의 단계 목록과 시트 머리에 이 이름으로 나와요.</small></label>
+              {edit.sections.length > 1 && <button type="button" className="text-button" onClick={() => {
+                setEdit({ ...edit, sections: edit.sections.filter((_, index) => index !== sectionIndex) });
+                goToSection(Math.max(sectionIndex - 1, 0));
+                notifyRemoval('단계');
+              }}><Icon name="close" size={14} />이 단계 삭제</button>}
+            </div>
+          </fieldset>}
       </aside>
     </div>
 
