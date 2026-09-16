@@ -18,8 +18,11 @@ export type StoredProblem = PublicProblem & {
   solution: ContentBlock[];
 };
 
+/** What a lesson version says about itself. Which course keeps it, and where, is the identity's, not the version's. */
+export type LessonMetadata = Omit<PublicLesson, 'courseKey'>;
+
 export type StoredLesson = {
-  public: PublicLesson;
+  public: LessonMetadata;
   sections: LessonSection[];
   problems: StoredProblem[];
   homeworkProblemIds: string[];
@@ -282,7 +285,6 @@ const storedLessonSchema = z.object({
     skillKeys: z.array(id).min(1).max(50),
     prerequisiteSkillKeys: z.array(id).max(50),
     sectionCount: z.number().int().min(1).max(50),
-    order: z.number().int().min(0),
   }).strict(),
   sections: z.array(z.object({
     sectionId: id,
@@ -353,10 +355,10 @@ function publicProblem(problem: StoredProblem): PublicProblem {
   };
 }
 
-export function toPublicLesson(record: StoredLesson, glossary: GlossaryEntry[] = []): LessonDocument {
+export function toPublicLesson(record: StoredLesson, courseKey: string, glossary: GlossaryEntry[] = []): LessonDocument {
   validateLesson(record);
   return {
-    ...structuredClone(record.public),
+    ...structuredClone(record.public), courseKey,
     sections: structuredClone(record.sections),
     problems: record.problems.map(publicProblem),
     glossary: structuredClone(glossary),

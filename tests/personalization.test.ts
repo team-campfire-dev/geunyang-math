@@ -5,7 +5,7 @@ import { seedLessons, skillLabels } from './fixtures/content';
 import { gradeAnswer } from '@/core/grading';
 import type { DiagnosticAnswer, Goal } from '@/shared/api';
 
-const lessons = seedLessons.map(c => c.public);
+const lessons = seedLessons.map(c => ({ ...c.public, courseKey: 'fractions' }));
 const answers = ['4/9', '12', '10', '3/4', '7/11', '5/12'];
 const bank = diagnosticProblems;
 const diagnostic = (responses: (string | null)[]) => ({ problems: bank, answers: bank.map((p, i) => ({ problemVersionId: p.problemVersionId, answer: responses[i], status: responses[i] === null ? 'skipped' : gradeAnswer(responses[i]!, p.gradingSpec, false).status })) as DiagnosticAnswer[] });

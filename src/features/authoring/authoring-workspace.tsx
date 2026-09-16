@@ -263,7 +263,7 @@ export function AuthoringWorkspace() {
       <DraftList workspace={workspace} busy={busy}
         onOpen={(summary) => run(async () => open((await authoringApi.draft(summary.id)).draft))}
         onCreate={(lessonKey) => act({ action: 'draft.create', lessonKey })}
-        onCreateLesson={(lessonKey, title, skillKeys) => act({ action: 'lesson.create', lessonKey, title, skillKeys })} />
+        onCreateLesson={(courseKey, lessonKey, title, skillKeys) => act({ action: 'lesson.create', courseKey, lessonKey, title, skillKeys })} />
       <TermPanel lessons={workspace.lessons} skills={workspace.skills} terms={terms} busy={busy}
         mayEditDictionary={mayPublish(workspace.role)}
         onList={(scopeKind, scopeKey) => act({ action: 'term.list', scopeKind, scopeKey }, (response) => setTerms(response.terms ?? []))}
@@ -716,18 +716,18 @@ function Shell({ role, expert = false, busy, onExpert, children }: {
 
 function DraftList({ workspace, busy, onOpen, onCreate, onCreateLesson }: {
   workspace: Workspace; busy: boolean; onOpen: (draft: DraftSummary) => void; onCreate: (lessonKey: string) => void;
-  onCreateLesson: (lessonKey: string, title: string, skillKeys: string[]) => void;
+  onCreateLesson: (courseKey: string, lessonKey: string, title: string, skillKeys: string[]) => void;
 }) {
   const [lessonKey, setLessonKey] = useState(workspace.lessons[0]?.lessonKey ?? '');
   const [query, setQuery] = useState('');
-  const [made, setMade] = useState({ key: '', title: '', skillKeys: [] as string[] });
+  const [made, setMade] = useState({ courseKey: workspace.courses[0]?.key ?? '', key: '', title: '', skillKeys: [] as string[] });
   const expert = useExpertMode();
   const chosen = workspace.lessons.find((item) => item.lessonKey === lessonKey);
   const found = workspace.drafts.filter((item) => {
     const words = query.trim().toLowerCase();
     return !words || [item.title, item.authorName, item.versionId].some((value) => value.toLowerCase().includes(words));
   });
-  const readyToMake = lessonKeyPattern.test(made.key) && !!made.title.trim() && made.skillKeys.length > 0;
+  const readyToMake = !!made.courseKey && lessonKeyPattern.test(made.key) && !!made.title.trim() && made.skillKeys.length > 0;
 
   return <>
     <fieldset className="editor-panel">
@@ -749,7 +749,11 @@ function DraftList({ workspace, busy, onOpen, onCreate, onCreateLesson }: {
 
     <fieldset className="editor-panel">
       <legend>새 수업</legend>
-      <p className="editor-note">아직 아무도 발행한 적 없는 수업을 처음부터 시작해요. 단계 하나만 있는 초안이 생기고, 나머지는 편집 화면에서 씁니다.</p>
+      <p className="editor-note">아직 아무도 발행한 적 없는 수업을 처음부터 시작해요. 수업은 코스 하나에 속하고, 그 코스의 마지막 자리에 놓여요. 단계 하나만 있는 초안이 생기고, 나머지는 편집 화면에서 씁니다.</p>
+      <label className="editor-field"><span className="editor-label">코스</span>
+        <select value={made.courseKey} onChange={(event) => setMade({ ...made, courseKey: event.target.value })}>
+          {workspace.courses.map((course) => <option key={course.key} value={course.key}>{course.title}{expert ? ` · ${course.key}` : ''}</option>)}
+        </select></label>
       <label className="editor-field"><span className="editor-label">수업 이름</span>
         <input value={made.title} maxLength={191} placeholder="예: 소수, 자리와 크기"
           onChange={(event) => setMade({ ...made, title: event.target.value })} /></label>
@@ -763,8 +767,8 @@ function DraftList({ workspace, busy, onOpen, onCreate, onCreateLesson }: {
         onChange={(skillKeys) => setMade({ ...made, skillKeys })} />
       <div className="editor-actions">
         <button type="button" className="button primary" disabled={busy || !readyToMake}
-          onClick={() => onCreateLesson(made.key, made.title.trim(), made.skillKeys)}>수업 만들기</button>
-        {!readyToMake && <span className="editor-note">이름·키·개념이 모두 있어야 만들 수 있어요.</span>}
+          onClick={() => onCreateLesson(made.courseKey, made.key, made.title.trim(), made.skillKeys)}>수업 만들기</button>
+        {!readyToMake && <span className="editor-note">코스·이름·키·개념이 모두 있어야 만들 수 있어요.</span>}
       </div>
     </fieldset>
 

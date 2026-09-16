@@ -32,7 +32,8 @@ export type PublicLesson = {
   skillKeys: string[];
   prerequisiteSkillKeys: string[];
   sectionCount: number;
-  order: number;
+  // The course that keeps this lesson. Read from the lesson's identity, never from the version.
+  courseKey: string;
 };
 /**
  * A term the learner may review while reading. Only terms the server decided to reveal are sent,
@@ -48,7 +49,9 @@ export type GlossaryEntry = {
 export type LessonDocument = PublicLesson & { sections: LessonSection[]; problems: PublicProblem[]; glossary: GlossaryEntry[] };
 // Display-only concept names for the signed-out catalogue. Never carries answers or grading rules.
 export type PublicSkill = { key: string; label: string };
-export type PublicCatalog = { lessons: PublicLesson[]; skills: PublicSkill[] };
+// A course as the catalogue lists it. Lessons arrive in the order the course gives them.
+export type PublicCourse = { key: string; title: string; summary: string };
+export type PublicCatalog = { courses: PublicCourse[]; lessons: PublicLesson[]; skills: PublicSkill[] };
 export type AttemptView = {
   id: string; problemVersionId: string; answer: string; result: GradeResult; hintUsed: boolean;
 };

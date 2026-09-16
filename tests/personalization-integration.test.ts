@@ -6,6 +6,7 @@ import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { diagnosticProblems } from './fixtures/content';
 import { seedLessons } from './fixtures/content';
+import { ensureLesson } from './fixtures/identity';
 import { getActivityProblemIds } from '@/core/content';
 import { lessonMetadata, indexLessonDocument } from '@/server/content-store';
 import type { DiagnosticView, LearningState } from '@/shared/api';
@@ -24,8 +25,9 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     db = createDatabase(url!); service = new LearningService(db);
     existing = await existingRows(db);
     for (const record of seedLessons) {
+      await ensureLesson(db, record.public.lessonKey);
       await db.lessonVersion.upsert({ where: { id: record.public.versionId }, update: {}, create: {
-        id: record.public.versionId, lessonKey: record.public.lessonKey, title: record.public.title, order: record.public.order,
+        id: record.public.versionId, lessonKey: record.public.lessonKey, title: record.public.title,
         metadata: json(lessonMetadata(record)),
         contentHash: createHash('sha256').update(JSON.stringify(record)).digest('hex'),
       } });

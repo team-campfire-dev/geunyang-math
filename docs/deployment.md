@@ -184,6 +184,8 @@ DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVer
 
 `20260917000000_lesson_and_learning_scope`는 [용어 사전](glossary.md)의 이름을 표에 옮긴다. `ClassVersion`·`ClassSection`·`Scope`를 `LessonVersion`·`LessonSection`·`LearningScope`로, `classKey`·`classVersionId`·`sourceClassVersionId`·`preferredClassKey` 칸과 그 인덕스·제약 이름을 새 이름으로 바꾸고, `ownerKind`·`scopeKind`·`contextKind`의 값 `class`와 문서 JSON 안의 `public.classKey`·용어 주석의 `scopeKind`를 `lesson`으로 고친다. 행은 그대로 옮겨지지만 옮겨진 판본의 `contentHash`는 옛 문서 기준으로 남아 있다(이미 영구 대조에 쓰지 않는다). `RENAME TABLE`이 옛 이름에 `DROP`을 요구하므로 migrator 계정에 `DROP`이 있어야 하고, 이전 앱 이미지는 이 표 이름을 읽지 못하므로 앱만 되돌릴 수 없다. 그다음 단계들은 [변경안](schema-change-plan.md)의 순서를 따른다.
 
+`20260917010000_course_and_identity`는 코스와 정체 표(`Course`·`Lesson`·`Diagnostic`)를 만들고, 발행된 수업 3개와 진단 1개를 코스 `fractions` 하나로 묶는다. `LessonVersion.order`와 문서의 `public.order`는 `Lesson.order`로 옮겨 가며 지워진다(옮겨진 판본의 `contentHash`는 다시 옛 문서 기준으로 남는다). 행이 적어 SQL로 옮겼고 지우지 않았다. 이 배포부터 migrator는 `db:migrate` 뒤에 `db:seed`를 실행한다.
+
 사본이 있는 동안 `content:verify`는 배포마다 행과 `document`를 대조했다 — 처음에는 문항 색인을, 그다음에는 블록을, 세 번째 단계부터는 행을 도로 맞춘 결과 전체를 한 글자도 다르지 않은지 봤다. 네 번의 배포(#27·#29·#30·#31)가 모두 같음을 확인한 뒤에 사본을 지웠다. 지금 `content:verify`가 보고하는 수는 운영 기준으로 `indexedProblems: 36`, `indexedBlocks: 148`이고, 어긋나면 배포가 그 자리에서 멈춘다.
 
 초기 인프라 점검에서는 앱 VM·포트·DNS·와일드카드 인증서, ARM64 non-root 이미지·revision·health, DB TLS 연결과 잘못된 CA/호스트 이름 거부, 앱 계정의 DB 한정 DML·호스트 제한·REQUIRE SSL을 확인했다. NPM Proxy Hosts 등록과 Google HTTPS callback 로그 제외, 배포 시크릿 6개와 자동 배포 활성화도 완료했다. 이 기록은 이후 인증서·권한·프록시 변경을 자동 검증한다는 뜻은 아니다.

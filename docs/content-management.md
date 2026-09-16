@@ -8,9 +8,15 @@
 
 ## 저장 구조
 
+판본이 아닌 **정체**가 먼저 있다. 수업·진단은 반드시 코스 하나에 속하고([용어 사전](glossary.md)), 그 소속은 판본이 아니라 정체의 것이다.
+
+- `Course`: 코스. 키·이름·한 줄 소개. 얼리지 않으므로 고치면 곧 반영된다. 지금은 플랫폼의 `fractions` 하나다.
+- `Lesson`: 수업의 정체. 어느 코스에 속하는지와 **코스 안 순서**(`order`)를 든다. 첫 초안을 만들 때 생기므로 판본이 없는 수업은 「아직 발행되지 않은 수업」이고, 카탈로그와 health는 판본이 있는 것만 센다. 초안이 하나뿐인 수업의 초안을 지우면 정체도 함께 사라진다.
+- `Diagnostic`: 진단의 정체. 어느 코스에 속하는지.
+
 판본을 식별하고 목록에 세우는 것은 판본 표의 칸이고, 판본의 **내용**은 세 표에 나뉘어 있다.
 
-- `LessonVersion`: 수업 판본. `metadata`가 수업 자신에 대한 것(`public`과 숙제 문항 ID)을 담는다.
+- `LessonVersion`: 수업 판본. `metadata`가 수업 자신에 대한 것(`public`과 숙제 문항 ID)을 담는다. 순서는 여기 없다 — `Lesson.order`가 코스 안 자리다.
 - `DiagnosticVersion`: 진단 이름·설명·예상 시간·발행 시각. `diagnosticKey=starting-point`의 최신 발행 판본을 새 진단에 사용한다.
 - `TermVersion`: 용어 키, **용어를 가진 범위**(`scopeKind`·`scopeKey`), 용어가 속한 개념(`skillKey`), 표시 이름, 한 줄 요약. 범위별·용어 키별 최신 발행 판본을 사용한다.
 - `Skill`: 개념 키, 화면에 표시하는 이름, 표시 순서. 이름과 순서는 수정할 수 있다.
@@ -43,7 +49,7 @@ rich text는 `$...$`, `$$...$$`, `\(...\)` 안에 LaTeX를 담고, 도형 캡션
 
 `20260914030000_database_content` migration이 기본 3개 수업(문항 15개), 진단 1개(문항 6개), 개념 3개를 한 번 등록한다. 수업 판본이 이미 있으면 내용, 해시, 발행 시각을 그대로 둔다. 이 migration은 당시 형식대로 판본을 JSON 문서로 심고, 뒤따르는 [저장 구조 migration](deployment.md#저장-구조-migration)이 그것을 행으로 옮긴 뒤 문서 칸을 지운다 — 새 DB에서도 `db:migrate` 한 번에 그 순서가 그대로 돈다. 기존 진단 실행과 과제 snapshot을 변경하지 않는다. 테이블 및 UTF-8 SQL 문자열 비교에 기존과 동일한 `utf8mb4_unicode_ci`를 명시한다.
 
-배포는 `db:migrate → content:publish → content:verify` 순서다. migration의 초기 데이터와 이미 적용한 번들은 다시 등록하지 않는다. `db:seed`는 이전 명령 호환용 읽기 전용 검증 별칭이다. migration SQL의 초기 데이터와 `tests/fixtures/initial-content.json`은 역사적 이전 자료·테스트 fixture이므로 운영 콘텐츠를 수정하는 곳이 아니다.
+배포는 `db:migrate → db:seed → content:publish → content:verify` 순서다. **`db:seed`는 플랫폼의 기본 콘텐츠를 심는 진짜 씨앗이다**(2026-09-17부터). `prisma/seed/fractions.json` — 분수 코스, 수업 3개, 진단 1개, 개념 3개 — 를 다른 번들과 같은 `importContent`로 등록하므로, 이미 있는 판본은 바뀌지 않은 것으로 지나가고 배포마다 실행해도 안전하다. 판형이 바뀐 migration이 콘텐츠 표를 비운 뒤에는 이 명령이 콘텐츠를 다시 채운다. 이 파일에는 정답이 들어 있다 — 처음 콘텐츠를 심은 hex migration이 그랬듯, 플랫폼 기본 콘텐츠는 저장소가 원본이다. 테스트 fixture도 같은 파일을 읽는다. migration SQL 안의 초기 데이터는 역사적 이전 자료이며 운영 콘텐츠를 수정하는 곳이 아니다.
 
 ## 저장소 번들의 발행
 
@@ -59,7 +65,7 @@ npm run content:publish
 npm run content:publish -- --dir /secure/path/reviewed
 ```
 
-정답·채점 규칙·힌트·해설이 들어가는 수업과 진단 번들은 이 디렉터리에 두지 않는다. 아래 수동 등록 경로를 쓴다.
+정답·채점 규칙·힌트·해설이 들어가는 수업과 진단 번들은 이 디렉터리에 두지 않는다. 아래 수동 등록 경로를 쓴다. 예외는 플랫폼의 기본 콘텐츠 하나로, `prisma/seed/fractions.json`에서 `db:seed`가 심는다.
 
 ## 자유롭게 그리는 그림
 

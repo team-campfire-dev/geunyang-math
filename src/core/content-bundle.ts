@@ -22,24 +22,42 @@ export const termDefinitionSchema = z.object({
 }).strict().refine((term) => (term.scopeKind === 'global' ? term.scopeKey === '' : term.scopeKey !== ''),
   { message: 'A scoped term must name the scope it belongs to, and a global one must not' });
 export type TermDefinition = z.infer<typeof termDefinitionSchema>;
-export type ContentBundle = { schemaVersion: 1; skills: z.infer<typeof skillSchema>[]; lessons: StoredLesson[]; diagnostics: DiagnosticDefinition[]; terms: TermDefinition[] };
+/**
+ * A course and the identities it keeps. Nothing here is a version: a course changes in place, and a
+ * lesson's place in it is the course's to move. A bundle that names a course merges into the one
+ * already published — title and summary replace, lessons and diagnostics are added — so a partial
+ * bundle can add one lesson to a course without restating the rest.
+ */
+export const courseSchema = z.object({
+  key: id.max(100), title: z.string().trim().min(1).max(191), summary: z.string().trim().max(500).optional(),
+  lessons: z.array(z.object({ key: id.max(100), order: z.number().int().min(0).max(1_000_000) }).strict()).max(500),
+  diagnostics: z.array(id.max(100)).max(50),
+}).strict();
+export type CourseDefinition = z.infer<typeof courseSchema>;
+export type ContentBundle = { schemaVersion: 1; courses: CourseDefinition[]; skills: z.infer<typeof skillSchema>[]; lessons: StoredLesson[]; diagnostics: DiagnosticDefinition[]; terms: TermDefinition[] };
 export class ContentError extends Error {}
 function unique(values: string[], label: string) {
   if (new Set(values).size !== values.length) throw new ContentError(`Duplicate ${label}.`);
 }
 export function parseContentBundle(input: unknown): ContentBundle {
   // Terms are additive: a bundle exported before glossary support still imports unchanged.
-  const parsed = z.object({ schemaVersion: z.literal(1), skills: z.array(skillSchema).max(1000),
+  // Courses too: a bundle written before courses existed names none, and may still add terms.
+  const parsed = z.object({ schemaVersion: z.literal(1), courses: z.array(courseSchema).max(200).optional().default([]),
+    skills: z.array(skillSchema).max(1000),
     lessons: z.array(z.unknown()).max(1000), diagnostics: z.array(diagnosticDefinitionSchema).max(100),
     terms: z.array(termDefinitionSchema).max(2000).optional().default([]),
   }).strict().parse(input);
+  unique(parsed.courses.map(c => c.key), 'course keys');
+  // A lesson or a diagnostic belongs to exactly one course, so one bundle may not place it in two.
+  unique(parsed.courses.flatMap(c => c.lessons.map(l => l.key)), 'lesson keys across courses');
+  unique(parsed.courses.flatMap(c => c.diagnostics), 'diagnostic keys across courses');
   unique(parsed.skills.map(s => s.key), 'skill keys');
   unique(parsed.diagnostics.map(d => d.versionId), 'diagnostic version IDs');
   unique(parsed.terms.map(t => t.versionId), 'term version IDs');
   unique(parsed.terms.flatMap(t => t.blocks.map(b => b.blockId)), 'term block IDs');
   for (const record of parsed.lessons) {
     validateLesson(record);
-    if (record.public.lessonKey.length > 100 || record.public.title.length > 191 || record.public.order > 2_147_483_647) throw new ContentError('Lesson metadata exceeds database limits.');
+    if (record.public.lessonKey.length > 100 || record.public.title.length > 191) throw new ContentError('Lesson metadata exceeds database limits.');
   }
   const lessons = parsed.lessons as StoredLesson[];
   unique(lessons.map(c => c.public.versionId), 'lesson version IDs');
@@ -48,7 +66,7 @@ export function parseContentBundle(input: unknown): ContentBundle {
     unique(d.problems.flatMap(p => p.promptContent.map(b => b.blockId)), 'diagnostic block IDs');
     for (const p of d.problems) unique(p.skillKeys, 'diagnostic problem skill keys');
   }
-  return { schemaVersion: 1, skills: parsed.skills, lessons, diagnostics: parsed.diagnostics, terms: parsed.terms };
+  return { schemaVersion: 1, courses: parsed.courses, skills: parsed.skills, lessons, diagnostics: parsed.diagnostics, terms: parsed.terms };
 }
 
 // Object order in MySQL JSON differs from source files. Compare semantic content, not serialization order.
@@ -68,6 +86,8 @@ export function validateReferences(bundle: ContentBundle) {
       exact.set(key, value);
     }
   }
+  consistentCase(bundle.courses.map(c => c.key));
+  consistentCase(bundle.courses.flatMap(c => c.lessons.map(l => l.key)));
   consistentCase(bundle.skills.map(s => s.key));
   consistentCase(bundle.lessons.map(c => c.public.versionId));
   consistentCase(bundle.lessons.map(c => c.public.lessonKey));
@@ -83,6 +103,15 @@ export function validateReferences(bundle: ContentBundle) {
     consistentCase(bundle.terms.filter(t => `${t.scopeKind}:${t.scopeKey}` === scope).map(t => t.termKey));
   }
   consistentCase([...bundle.lessons.flatMap(c => c.problems), ...bundle.diagnostics.flatMap(d => d.problems)].map(p => p.problemVersionId));
+  // Nothing floats outside a course: every published lesson and diagnostic is kept by exactly one.
+  const lessonCourses = new Set(bundle.courses.flatMap(c => c.lessons.map(l => l.key)));
+  const diagnosticCourses = new Set(bundle.courses.flatMap(c => c.diagnostics));
+  for (const c of bundle.lessons) {
+    if (!lessonCourses.has(c.public.lessonKey)) throw new ContentError(`Lesson belongs to no course: ${c.public.lessonKey}`);
+  }
+  for (const d of bundle.diagnostics) {
+    if (!diagnosticCourses.has(d.diagnosticKey)) throw new ContentError(`Diagnostic belongs to no course: ${d.diagnosticKey}`);
+  }
   const skills = new Set(bundle.skills.map(s => s.key));
   const problems = new Map<string, string>();
   const lessonProblems = new Set(bundle.lessons.flatMap(c => c.problems.map(p => p.problemVersionId)));

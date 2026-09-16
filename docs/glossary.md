@@ -119,7 +119,7 @@
 
 ## 옛 이름과의 대응
 
-지금 코드에 있는 이름이다. 옮기기 전까지는 양쪽이 같이 보인다. 옮기는 순서는 [스키마 변경안](schema-change-plan.md)에 있고, 2026-09-17에 `Class*` → `Lesson*`, `Scope` → `LearningScope`, 범위 값 `class` → `lesson`이 먼저 반영됐다(A 단계).
+지금 코드에 있는 이름이다. 옮기기 전까지는 양쪽이 같이 보인다. 옮기는 순서는 [스키마 변경안](schema-change-plan.md)에 있고, 2026-09-17에 `Class*` → `Lesson*`, `Scope` → `LearningScope`, 범위 값 `class` → `lesson`이 먼저 반영됐고(A 단계), 코스와 `(코스, 수업)` 순서가 `Course`·`Lesson.order`로 들어갔다(B 단계).
 
 | 옛 이름 | 새 이름 | 비고 |
 |---|---|---|

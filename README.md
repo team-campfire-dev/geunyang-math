@@ -28,6 +28,7 @@ cp .env.example .env
 docker compose up -d --wait db
 npm run db:generate
 npm run db:migrate
+npm run db:seed
 npm run content:verify
 npm run dev
 ```
@@ -83,6 +84,7 @@ GRANT ALL PRIVILEGES ON geunyang_math_test.* TO 'geunyang'@'%';
 SQL
 
 DATABASE_URL=mysql://geunyang:local-development-only@127.0.0.1:3317/geunyang_math_test npm run db:migrate
+DATABASE_URL=mysql://geunyang:local-development-only@127.0.0.1:3317/geunyang_math_test npm run db:seed
 TEST_DATABASE_URL=mysql://geunyang:local-development-only@127.0.0.1:3317/geunyang_math_test npm test
 ```
 

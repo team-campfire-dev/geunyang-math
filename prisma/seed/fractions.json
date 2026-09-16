@@ -1,5 +1,29 @@
 {
   "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "fractions",
+      "title": "분수",
+      "summary": "분수가 무엇인지에서 시작해 크기를 맞추고 더하는 것까지 이어지는 기초 과정이에요.",
+      "lessons": [
+        {
+          "key": "fraction-meaning",
+          "order": 1
+        },
+        {
+          "key": "fraction-equivalence",
+          "order": 2
+        },
+        {
+          "key": "fraction-addition",
+          "order": 3
+        }
+      ],
+      "diagnostics": [
+        "starting-point"
+      ]
+    }
+  ],
   "skills": [
     {
       "key": "fraction.meaning",
@@ -29,8 +53,7 @@
           "fraction.meaning"
         ],
         "prerequisiteSkillKeys": [],
-        "sectionCount": 5,
-        "order": 1
+        "sectionCount": 5
       },
       "sections": [
         {
@@ -405,8 +428,7 @@
         "prerequisiteSkillKeys": [
           "fraction.meaning"
         ],
-        "sectionCount": 5,
-        "order": 2
+        "sectionCount": 5
       },
       "sections": [
         {
@@ -793,8 +815,7 @@
           "fraction.meaning",
           "fraction.equivalence"
         ],
-        "sectionCount": 5,
-        "order": 3
+        "sectionCount": 5
       },
       "sections": [
         {
@@ -1339,5 +1360,6 @@
         }
       ]
     }
-  ]
+  ],
+  "terms": []
 }

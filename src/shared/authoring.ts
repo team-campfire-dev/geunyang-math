@@ -106,7 +106,9 @@ export const toPublicProblem = (problem: DraftProblem): PublicProblem => ({
   promptContent: problem.promptContent, responseSpec: responseSpecOf(problem.gradingSpec),
   hintAvailable: problem.hints.length > 0,
 });
-export type LessonChoice = { lessonKey: string; title: string; latestVersionId: string; suggestedVersionId: string; hasDraft: boolean };
+export type LessonChoice = { lessonKey: string; courseKey: string; title: string; latestVersionId: string; suggestedVersionId: string; hasDraft: boolean };
+/** A course a new lesson may be started in. Every lesson has one from its first draft. */
+export type CourseChoice = { key: string; title: string };
 /** The scopes this screen writes. The catalogue's other levels exist in the model, not yet here. */
 export type EditableTermScope = 'global' | 'lesson';
 /** A definition as the editor holds it. Publishing turns it into the next version of that term. */
@@ -119,7 +121,7 @@ export type TermSummary = TermEdit & { versionId: string; publishedAt: string };
 export type TermChoice = { termKey: string; scopeKind: EditableTermScope; scopeKey: string; label: string; skillKey: string };
 export type SkillChoice = { key: string; label: string };
 export type AuthoringWorkspace = {
-  role: AuthoringRole | null; drafts: DraftSummary[]; lessons: LessonChoice[];
+  role: AuthoringRole | null; drafts: DraftSummary[]; courses: CourseChoice[]; lessons: LessonChoice[];
   accounts: AccountRole[]; skills: SkillChoice[];
   /**
    * Whether this account reads the editor as someone who also operates the service. It decides what
@@ -133,8 +135,8 @@ export type AuthoringWorkspace = {
 export const lessonKeyPattern = /^[a-z0-9][a-z0-9-]{1,63}$/;
 export type AuthoringAction =
   | { action: 'draft.create'; lessonKey: string }
-  /** A lesson nobody has published yet. It starts as a draft like any other, with one step in it. */
-  | { action: 'lesson.create'; lessonKey: string; title: string; skillKeys: string[] }
+  /** A lesson nobody has published yet. It belongs to a course from this moment and starts as a draft. */
+  | { action: 'lesson.create'; courseKey: string; lessonKey: string; title: string; skillKeys: string[] }
   | { action: 'draft.review'; draftId: string; asking: boolean }
   | { action: 'draft.save'; draftId: string; edit: DraftEdit }
   | { action: 'draft.validate'; draftId: string }

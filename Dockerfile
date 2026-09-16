@@ -31,8 +31,9 @@ COPY --chown=node:node src/shared ./src/shared
 # Reviewed bundles carry no answer keys, so they ship with the image and publish on deployment.
 COPY --chown=node:node content ./content
 USER node
-# Bundles publish like migrations: an already-applied file is skipped, a changed one is republished.
-CMD ["sh", "-c", "npm run db:migrate && npm run content:publish && exec npm run content:verify"]
+# The platform's own content seeds first, then reviewed bundles publish like migrations: an
+# already-applied file is skipped, a changed one is republished.
+CMD ["sh", "-c", "npm run db:migrate && npm run db:seed && npm run content:publish && exec npm run content:verify"]
 
 FROM dependencies AS builder
 ARG BUILD_COMMIT

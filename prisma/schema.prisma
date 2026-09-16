@@ -104,12 +104,48 @@ model Session {
   @@index([expiresAt])
 }
 
+/// A course is the bundle a lesson, a problem set or a diagnostic belongs to — nothing floats
+/// outside one. It is not frozen: its title and the order of its lessons change in place.
+model Course {
+  id          String   @id @default(cuid()) @db.VarChar(191)
+  key         String   @unique @db.VarChar(100)
+  title       String   @db.VarChar(191)
+  summary     String   @default("") @db.VarChar(500)
+  /// Who keeps the course. Null is the platform's own; organisations have no model yet.
+  ownerUserId String?  @db.VarChar(191)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  lessons     Lesson[]
+  diagnostics Diagnostic[]
+}
+
+/// The identity of a lesson, apart from any version of it: which course keeps it and where it
+/// stands in that course. A row exists from the first draft, so a lesson has a course before it
+/// has a version; a lesson with no version is one nobody has published yet.
+model Lesson {
+  key       String   @id @db.VarChar(100)
+  courseId  String   @db.VarChar(191)
+  course    Course   @relation(fields: [courseId], references: [id])
+  order     Int
+  createdAt DateTime @default(now())
+  versions  LessonVersion[]
+  @@index([courseId, order])
+}
+
+/// The identity of a diagnostic: which course keeps it. Versions hang off it as they do a lesson.
+model Diagnostic {
+  key      String @id @db.VarChar(100)
+  courseId String @db.VarChar(191)
+  course   Course @relation(fields: [courseId], references: [id])
+  versions DiagnosticVersion[]
+}
+
 model LessonVersion {
   id          String @id @db.VarChar(191)
-  lessonKey    String @db.VarChar(100)
+  lessonKey   String @db.VarChar(100)
+  lesson      Lesson @relation(fields: [lessonKey], references: [key])
   title       String @db.VarChar(191)
-  order       Int
-  /// Everything a class says about itself that is not a section, a block or a question — `public`
+  /// Everything a lesson says about itself that is not a section, a block or a question — `public`
   /// and `homeworkProblemIds`. The rest is in LessonSection, ContentBlock and PublishedProblem.
   metadata    Json
   contentHash String @db.VarChar(64)
@@ -212,6 +248,7 @@ model TermVersion {
 model DiagnosticVersion {
   id               String @id @db.VarChar(191)
   diagnosticKey    String @db.VarChar(100)
+  diagnostic       Diagnostic @relation(fields: [diagnosticKey], references: [key])
   title            String @db.VarChar(191)
   description      String @db.Text
   estimatedMinutes Int

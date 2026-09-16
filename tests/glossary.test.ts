@@ -3,7 +3,7 @@ import { glossaryEntries, type PublishedTerm } from '@/core/glossary';
 import { seedLessons } from './fixtures/content';
 import type { PublicLesson } from '@/shared/api';
 
-const lessons: PublicLesson[] = seedLessons.map(c => c.public);
+const lessons: PublicLesson[] = seedLessons.map(c => ({ ...c.public, courseKey: 'fractions' }));
 const meaning = lessons[0], equivalence = lessons[1];
 const term = (termKey: string, skillKey: string, scope?: { scopeKind: PublishedTerm['scopeKind']; scopeKey: string }): PublishedTerm => ({
   termKey, scopeKind: scope?.scopeKind ?? 'global', scopeKey: scope?.scopeKey ?? '',

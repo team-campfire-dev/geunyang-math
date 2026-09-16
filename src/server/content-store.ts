@@ -1,7 +1,7 @@
 import 'server-only';
 import { createHash } from 'node:crypto';
 import { Prisma, type PrismaClient, type DiagnosticVersion, type TermVersion } from '@prisma/client';
-import { canonicalJson, ContentError, diagnosticDefinitionSchema, parseContentBundle, termDefinitionSchema, validateReferences, type ContentBundle, type DiagnosticDefinition, type TermDefinition } from '@/core/content-bundle';
+import { canonicalJson, ContentError, diagnosticDefinitionSchema, parseContentBundle, termDefinitionSchema, validateReferences, type ContentBundle, type CourseDefinition, type DiagnosticDefinition, type TermDefinition } from '@/core/content-bundle';
 import type { StoredLesson, StoredProblem } from '@/core/content';
 import type { ContentBlock } from '@/shared/api';
 import { termRefId, type TermRef, type ConceptScope } from '@/shared/rich-text';
@@ -191,11 +191,21 @@ export async function currentDiagnostic(db: Db) {
   const row = await db.diagnosticVersion.findFirst({ where: { diagnosticKey: 'starting-point' }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
   return row ? (await diagnosticDefinitions(db, [row]))[0] : null;
 }
+/** Courses with the identities they keep, in the order the course gives them. */
+async function courseDefinitions(db: Db): Promise<CourseDefinition[]> {
+  const courses = await db.course.findMany({ orderBy: [{ createdAt: 'asc' }, { key: 'asc' }], include: {
+    lessons: { orderBy: [{ order: 'asc' }, { key: 'asc' }], select: { key: true, order: true } },
+    diagnostics: { orderBy: { key: 'asc' }, select: { key: true } },
+  } });
+  return courses.map(course => ({ key: course.key, title: course.title, summary: course.summary,
+    lessons: course.lessons, diagnostics: course.diagnostics.map(row => row.key) }));
+}
 export async function exportContent(db: Db): Promise<ContentBundle> {
-  const [skills, lessons, diagnostics, terms] = await Promise.all([
+  const [courses, skills, lessons, diagnostics, terms] = await Promise.all([
+    courseDefinitions(db),
     db.skill.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }] }),
     db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }],
-      select: { id: true, lessonKey: true, title: true, order: true } }),
+      select: { id: true, lessonKey: true, title: true } }),
     db.diagnosticVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }] }),
     db.termVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }] }),
   ]);
@@ -203,10 +213,47 @@ export async function exportContent(db: Db): Promise<ContentBundle> {
   for (const row of lessons) {
     const record = records.get(row.id);
     if (!record) throw new ContentError(`Published lesson has no rows to read it from: ${row.id}`);
-    if (row.id !== record.public?.versionId || row.lessonKey !== record.public?.lessonKey || row.title !== record.public?.title || row.order !== record.public?.order) throw new ContentError(`Lesson metadata mismatch: ${row.id}`);
+    if (row.id !== record.public?.versionId || row.lessonKey !== record.public?.lessonKey || row.title !== record.public?.title) throw new ContentError(`Lesson metadata mismatch: ${row.id}`);
   }
-  return parseContentBundle({ schemaVersion: 1, skills, lessons: lessons.map(row => records.get(row.id)),
+  return parseContentBundle({ schemaVersion: 1, courses, skills, lessons: lessons.map(row => records.get(row.id)),
     diagnostics: await diagnosticDefinitions(db, diagnostics), terms: await termDefinitions(db, terms) });
+}
+
+/**
+ * A course named again is the same course: what the bundle says replaces the title and summary, and
+ * the lessons and diagnostics it names join the ones already there. A lesson never moves between
+ * courses, so naming it under another one is refused rather than obeyed.
+ */
+function mergeCourses(existing: CourseDefinition[], incoming: CourseDefinition[]): CourseDefinition[] {
+  const merged = new Map(existing.map(course => [course.key, structuredClone(course)]));
+  const homes = new Map(existing.flatMap(course => course.lessons.map(lesson => [lesson.key, course.key] as const)));
+  for (const course of incoming) {
+    for (const lesson of course.lessons) {
+      const home = homes.get(lesson.key);
+      if (home && home !== course.key) throw new ContentError(`Lesson already belongs to another course: ${lesson.key} (${home})`);
+    }
+    const old = merged.get(course.key);
+    if (!old) { merged.set(course.key, { ...structuredClone(course), summary: course.summary ?? '' }); continue; }
+    const lessons = new Map(old.lessons.map(lesson => [lesson.key, lesson]));
+    for (const lesson of course.lessons) lessons.set(lesson.key, lesson);
+    merged.set(course.key, { key: course.key, title: course.title, summary: course.summary ?? old.summary,
+      lessons: [...lessons.values()].sort((a, b) => a.order - b.order || a.key.localeCompare(b.key)),
+      diagnostics: [...new Set([...old.diagnostics, ...course.diagnostics])] });
+  }
+  return [...merged.values()];
+}
+/** Writes what a bundle says about a course: the course itself, then the identities it keeps. */
+async function writeCourse(db: Db, course: CourseDefinition) {
+  const row = await db.course.upsert({ where: { key: course.key },
+    create: { key: course.key, title: course.title, summary: course.summary ?? '' },
+    update: { title: course.title, ...(course.summary === undefined ? {} : { summary: course.summary }) } });
+  for (const lesson of course.lessons) {
+    await db.lesson.upsert({ where: { key: lesson.key }, create: { key: lesson.key, courseId: row.id, order: lesson.order },
+      update: { order: lesson.order } });
+  }
+  for (const key of course.diagnostics) {
+    await db.diagnostic.upsert({ where: { key }, create: { key, courseId: row.id }, update: {} });
+  }
 }
 
 /**
@@ -268,9 +315,12 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
     if (old && old.key !== s.key) throw new ContentError('Skill keys cannot differ only by letter case.');
     skills.set(s.key, s);
   }
-  validateReferences({ schemaVersion: 1, skills: [...skills.values()], lessons: [...existing.lessons, ...newLessons],
+  const courses = mergeCourses(existing.courses, incoming.courses);
+  validateReferences({ schemaVersion: 1, courses, skills: [...skills.values()], lessons: [...existing.lessons, ...newLessons],
     diagnostics: [...existing.diagnostics, ...newDiagnostics], terms: [...existing.terms, ...newTerms] });
   if (!dryRun) {
+    // A version hangs off the identity that keeps it, so the course and its lessons come first.
+    for (const course of incoming.courses) await writeCourse(db, course);
     // Bundle order is publication order. Millisecond ties must not select an arbitrary version.
     const [lastLesson, lastDiagnostic, lastTerm] = await Promise.all([
       db.lessonVersion.findFirst({ orderBy: { publishedAt: 'desc' }, select: { publishedAt: true } }),
@@ -281,7 +331,7 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
     const publishedAt = () => new Date(publishedTime++);
     for (const s of incoming.skills) await db.skill.upsert({ where: { key: s.key }, create: s, update: { label: s.label, order: s.order } });
     for (const c of newLessons) await db.lessonVersion.create({ data: { id: c.public.versionId, lessonKey: c.public.lessonKey,
-      title: c.public.title, order: c.public.order, metadata: json(lessonMetadata(c)),
+      title: c.public.title, metadata: json(lessonMetadata(c)),
       contentHash: hash(c), publishedAt: publishedAt() } });
     for (const d of newDiagnostics) await db.diagnosticVersion.create({ data: { id: d.versionId, diagnosticKey: d.diagnosticKey,
       title: d.title, description: d.description, estimatedMinutes: d.estimatedMinutes, contentHash: hash(d), publishedAt: publishedAt() } });

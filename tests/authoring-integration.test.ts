@@ -24,8 +24,8 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     // A lesson of this suite's own, so drafts here never publish a version of a shared fixture.
     lessonKey = `authoring-${randomUUID()}`;
     const base = JSON.parse(JSON.stringify(seedLessons[0]).replaceAll('fraction-meaning', lessonKey)) as StoredLesson;
-    base.public.order = 2000;
-    await importContent(db, { schemaVersion: 1, skills: [], lessons: [base], diagnostics: [], terms: [] });
+
+    await importContent(db, { schemaVersion: 1, courses: [{ key: `course-${base.public.lessonKey}`, title: '검사 코스', lessons: [{ key: base.public.lessonKey, order: 1 }], diagnostics: [] }], skills: [], lessons: [base], diagnostics: [], terms: [] });
   });
   afterAll(async () => {
     // A shared database keeps whatever a run leaves behind, so this run leaves nothing.
@@ -56,7 +56,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     expect(await authoringRole(db, learner.id)).toBeNull();
     expect(await authoringRole(db, author.id)).toBe('author');
     expect(await authoringRole(db, admin.id)).toBe('admin');
-    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], lessons: [], accounts: [], skills: [], expertMode: false });
+    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], courses: [], lessons: [], accounts: [], skills: [], expertMode: false });
     await expect(service.createDraft(learner.id, lessonKey)).rejects.toThrow(/권한/);
   });
 
@@ -109,7 +109,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const admin = await account('admin');
     const key = `fresh-${randomUUID()}`.toLowerCase().slice(0, 40);
     const skillKey = (await lessonRecord(db, `${lessonKey}:v1`))!.public.skillKeys[0];
-    const created = await service.createLesson(admin.id, key, '처음부터 만든 수업', [skillKey]);
+    const created = await service.createLesson(admin.id, 'fractions', key, '처음부터 만든 수업', [skillKey]);
 
     expect(created.draft!.versionId).toBe(`${key}:v1`);
     // Nothing to carry over: there is no earlier version of this lesson to be the next one of.
@@ -122,9 +122,9 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     // What it starts as is already a document publishing would take.
     expect(created.draft!.issues).toEqual([]);
 
-    await expect(service.createLesson(admin.id, key, '같은 키', [skillKey])).rejects.toThrow(/수업 키/);
-    await expect(service.createLesson(admin.id, lessonKey, '발행된 키', [skillKey])).rejects.toThrow(/수업 키/);
-    await expect(service.createLesson(admin.id, `other-${key}`, '없는 개념', ['no-such-skill'])).rejects.toThrow(/개념/);
+    await expect(service.createLesson(admin.id, 'fractions', key, '같은 키', [skillKey])).rejects.toThrow(/수업 키/);
+    await expect(service.createLesson(admin.id, 'fractions', lessonKey, '발행된 키', [skillKey])).rejects.toThrow(/수업 키/);
+    await expect(service.createLesson(admin.id, 'fractions', `other-${key}`, '없는 개념', ['no-such-skill'])).rejects.toThrow(/개념/);
     await service.deleteDraft(admin.id, created.draft!.id);
   });
 
@@ -568,8 +568,8 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     // Another lesson keeps one of its own; this draft must not be offered it.
     const other = `other-${randomUUID()}`;
     const record = JSON.parse(JSON.stringify(seedLessons[0]).replaceAll('fraction-meaning', other)) as StoredLesson;
-    record.public.order = 3000;
-    await importContent(db, { schemaVersion: 1, skills: [], lessons: [record], diagnostics: [], terms: [] });
+
+    await importContent(db, { schemaVersion: 1, courses: [{ key: `course-${record.public.lessonKey}`, title: '검사 코스', lessons: [{ key: record.public.lessonKey, order: 1 }], diagnostics: [] }], skills: [], lessons: [record], diagnostics: [], terms: [] });
     await define(`term.other.${suffix}`, 'lesson', other, '남의 수업 낱말');
 
     const { draft } = await service.createDraft(admin.id, lessonKey);
