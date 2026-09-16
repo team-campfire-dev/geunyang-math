@@ -1,8 +1,8 @@
-import type { GlossaryEntry, PublicClass } from '@/shared/api';
-import type { TermScopeKind } from '@/shared/rich-text';
+import type { GlossaryEntry, PublicLesson } from '@/shared/api';
+import type { ConceptScope } from '@/shared/rich-text';
 
 export type PublishedTerm = {
-  termKey: string; scopeKind: TermScopeKind; scopeKey: string;
+  termKey: string; scopeKind: ConceptScope; scopeKey: string;
   skillKey: string; label: string; summary: string; blocks: GlossaryEntry['blocks'];
 };
 
@@ -12,16 +12,16 @@ export type PublishedTerm = {
  * second-guesses it from the learner's progress.
  *
  * The one thing this adds is where a concept is taught, so a definition can offer the way back to
- * the class that teaches it.
+ * the lesson that teaches it.
  */
-export function glossaryEntries(terms: PublishedTerm[], classes: PublicClass[]): GlossaryEntry[] {
-  const taughtIn = new Map<string, PublicClass>();
-  for (const item of [...classes].sort((a, b) => a.order - b.order)) {
+export function glossaryEntries(terms: PublishedTerm[], lessons: PublicLesson[]): GlossaryEntry[] {
+  const taughtIn = new Map<string, PublicLesson>();
+  for (const item of [...lessons].sort((a, b) => a.order - b.order)) {
     for (const skillKey of item.skillKeys) if (!taughtIn.has(skillKey)) taughtIn.set(skillKey, item);
   }
   return terms.map((term) => ({
     termKey: term.termKey, scopeKind: term.scopeKind, scopeKey: term.scopeKey,
     label: term.label, summary: term.summary, skillKey: term.skillKey,
-    blocks: term.blocks, classKey: taughtIn.get(term.skillKey)?.classKey ?? null,
+    blocks: term.blocks, lessonKey: taughtIn.get(term.skillKey)?.lessonKey ?? null,
   }));
 }

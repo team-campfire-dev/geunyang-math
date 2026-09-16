@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { gradeAnswer } from '@/core/grading';
-import { seedClasses } from './fixtures/content';
+import { seedLessons } from './fixtures/content';
 
 const half = { kind: 'rational' as const, numerator: 1, denominator: 2 };
 
@@ -76,7 +76,7 @@ describe('exact arithmetic grading', () => {
   });
 
   it('can grade the canonical answer for every published sample question', () => {
-    for (const record of seedClasses) for (const problem of record.problems) {
+    for (const record of seedLessons) for (const problem of record.problems) {
       const spec = problem.gradingSpec;
       const answer = spec.kind === 'integer' ? String(spec.value) : `${spec.numerator}/${spec.denominator}`;
       expect(gradeAnswer(answer, spec).status, problem.problemVersionId).toBe('correct');

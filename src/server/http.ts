@@ -4,7 +4,7 @@ import { AppError } from './errors';
 export function json(body: unknown, status = 200, headers?: HeadersInit) {
   return Response.json(body, { status, headers: { 'Cache-Control': 'no-store', ...headers } });
 }
-/** Learning requests are short; an authored class document is not, so the caller states its bound. */
+/** Learning requests are short; an authored lesson document is not, so the caller states its bound. */
 export async function readJson(request: Request, limit = 8192) {
   if (!request.headers.get('content-type')?.includes('application/json')) throw new AppError(415, 'content_type', 'JSON 요청이 필요합니다.');
   if (Number(request.headers.get('content-length') || 0) > limit) throw new AppError(413, 'too_large', '입력이 너무 깁니다.');

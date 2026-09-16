@@ -5,11 +5,11 @@ export type RichTextSegment =
   | { kind: 'math'; value: string; start: number; equation: string; display: boolean };
 /**
  * Where a term is kept. A global definition is the operator's shared dictionary; the others
- * belong to whoever owns that part of the catalogue. A class names the scope when it links a term,
- * so reading a definition never needs to know which class, course or organisation is being read.
+ * belong to whoever owns that part of the catalogue. A lesson names the scope when it links a term,
+ * so reading a definition never needs to know which lesson, course or organisation is being read.
  */
-export type TermScopeKind = 'global' | 'organization' | 'course' | 'class';
-export type TermRef = { termKey: string; scopeKind?: TermScopeKind; scopeKey?: string };
+export type ConceptScope = 'global' | 'organization' | 'course' | 'lesson';
+export type TermRef = { termKey: string; scopeKind?: ConceptScope; scopeKey?: string };
 /** One string that names a term across every scope, so matching compares one value, not three. */
 export const termRefId = (term: TermRef): string =>
   (!term.scopeKind || term.scopeKind === 'global' ? `global::${term.termKey}` : `${term.scopeKind}:${term.scopeKey ?? ''}:${term.termKey}`);

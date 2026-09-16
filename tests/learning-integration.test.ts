@@ -2,16 +2,16 @@ import { createHash, randomUUID } from 'node:crypto';
 import { Prisma } from '@prisma/client';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
-import { getActivityProblemIds, validateClass, type StoredClass, type StoredProblem } from '@/core/content';
-import { seedClasses } from './fixtures/content';
+import { getActivityProblemIds, validateLesson, type StoredLesson, type StoredProblem } from '@/core/content';
+import { seedLessons } from './fixtures/content';
 import { developmentLoginEnabled, sessionUser } from '@/server/auth';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
-import { classMetadata, classRecord, indexClassDocument, indexTermDocument } from '@/server/content-store';
+import { lessonMetadata, lessonRecord, indexLessonDocument, indexTermDocument } from '@/server/content-store';
 import type { LearningAction } from '@/shared/api';
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
-const record = seedClasses[0];
+const record = seedLessons[0];
 const asJson = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 const requestId = () => randomUUID();
 const problemById = (id: string) => record.problems.find(problem => problem.problemVersionId === id)!;
@@ -26,21 +26,22 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
   let existing: Existing;
   let service: LearningService;
 
-  async function publishImmutable(document: StoredClass, publishedAt?: Date) {
-    validateClass(document);
+  async function publishImmutable(document: StoredLesson, publishedAt?: Date) {
+    validateLesson(document);
     const serialized = JSON.stringify(document);
     const contentHash = createHash('sha256').update(serialized).digest('hex');
-    const previous = await db.classVersion.findUnique({ where: { id: document.public.versionId } });
+    const previous = await db.lessonVersion.findUnique({ where: { id: document.public.versionId } });
     // A fixture publishes the way the application does, the question index included.
-    await indexClassDocument(db, document);
+    await indexLessonDocument(db, document);
     if (previous) {
-      expect(previous.contentHash, `Published fixture ${document.public.versionId} must not change`).toBe(contentHash);
+      // A migration renamed the seeded rows in place, so the stored hash is historical; the content must still read back whole.
+      expect(await lessonRecord(db, document.public.versionId), `Published fixture ${document.public.versionId} must not change`).toEqual(document);
       return previous;
     }
-    return db.classVersion.create({ data: {
-      id: document.public.versionId, classKey: document.public.classKey,
+    return db.lessonVersion.create({ data: {
+      id: document.public.versionId, lessonKey: document.public.lessonKey,
       title: document.public.title, order: document.public.order,
-      metadata: asJson(classMetadata(document)), contentHash, ...(publishedAt ? { publishedAt } : {}),
+      metadata: asJson(lessonMetadata(document)), contentHash, ...(publishedAt ? { publishedAt } : {}),
     } });
   }
 
@@ -53,7 +54,7 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     existing = await existingRows(db);
     service = new LearningService(db);
     // Migrations are performed by the caller/CI. Never truncate, drop, or reset an existing DB.
-    for (const seed of seedClasses) await publishImmutable(seed);
+    for (const seed of seedLessons) await publishImmutable(seed);
   }, 30_000);
 
   afterAll(async () => {
@@ -65,13 +66,13 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
   async function newLearner() {
     const user = await db.user.create({ data: {
       displayName: `integration ${randomUUID().slice(0, 8)}`,
-      scopes: { create: { kind: 'personal' } },
-    }, include: { scopes: true } });
-    return { userId: user.id, scopeId: user.scopes[0].id };
+      learningScopes: { create: { kind: 'personal' } },
+    }, include: { learningScopes: true } });
+    return { userId: user.id, scopeId: user.learningScopes[0].id };
   }
 
-  async function enroll(userId: string, classKey = record.public.classKey) {
-    const response = await service.act(userId, { action: 'enrollment.start', classKey });
+  async function enroll(userId: string, lessonKey = record.public.lessonKey) {
+    const response = await service.act(userId, { action: 'enrollment.start', lessonKey });
     expect(response.enrollmentId).toBeTruthy();
     return response.enrollmentId!;
   }
@@ -90,7 +91,7 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
   async function finishSections(userId: string, enrollmentId: string) {
     for (const section of record.sections) {
       for (const problemVersionId of getActivityProblemIds(record, section.sectionId)) {
-        await service.act(userId, { action: 'attempt.submit', context: 'class', contextId: enrollmentId,
+        await service.act(userId, { action: 'attempt.submit', context: 'lesson', contextId: enrollmentId,
           problemVersionId, answer: fixtureAnswer(problemById(problemVersionId)), requestId: requestId() });
       }
       await service.act(userId, { action: 'section.complete', enrollmentId, sectionId: section.sectionId });
@@ -110,7 +111,7 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     const recipient = await standaloneAssignment(owner);
     const foreignActions: LearningAction[] = [
       { action: 'section.complete', enrollmentId, sectionId: section.sectionId },
-      { action: 'attempt.submit', context: 'class', contextId: enrollmentId, problemVersionId: problem.problemVersionId, answer: fixtureAnswer(problem), requestId: requestId() },
+      { action: 'attempt.submit', context: 'lesson', contextId: enrollmentId, problemVersionId: problem.problemVersionId, answer: fixtureAnswer(problem), requestId: requestId() },
       { action: 'hint.open', context: 'assignment', contextId: recipient.id, problemVersionId: recipient.assignment.items[0].problemVersionId },
       { action: 'attempt.submit', context: 'assignment', contextId: recipient.id, problemVersionId: recipient.assignment.items[0].problemVersionId, answer: '1', requestId: requestId() },
       { action: 'assignment.submit', recipientId: recipient.id, requestId: requestId() },
@@ -122,42 +123,42 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     expect(await db.attempt.count({ where: { userId: other.userId } })).toBe(0);
   });
 
-  it('accepts only problem versions assigned to the selected class or assignment context', async () => {
+  it('accepts only problem versions assigned to the selected lesson or assignment context', async () => {
     const learner = await newLearner();
     const { enrollmentId, problem } = await openPractice(learner.userId);
     const recipient = await standaloneAssignment(learner);
-    await expect(service.act(learner.userId, { action: 'attempt.submit', context: 'class', contextId: enrollmentId,
+    await expect(service.act(learner.userId, { action: 'attempt.submit', context: 'lesson', contextId: enrollmentId,
       problemVersionId: record.homeworkProblemIds[0], answer: '1', requestId: requestId() })).rejects.toMatchObject({ status: 404 });
-    await expect(service.act(learner.userId, { action: 'attempt.submit', context: 'class', contextId: enrollmentId,
-      problemVersionId: seedClasses[1].problems[0].problemVersionId, answer: '1', requestId: requestId() })).rejects.toMatchObject({ status: 404 });
+    await expect(service.act(learner.userId, { action: 'attempt.submit', context: 'lesson', contextId: enrollmentId,
+      problemVersionId: seedLessons[1].problems[0].problemVersionId, answer: '1', requestId: requestId() })).rejects.toMatchObject({ status: 404 });
     await expect(service.act(learner.userId, { action: 'attempt.submit', context: 'assignment', contextId: recipient.id,
       problemVersionId: problem.problemVersionId, answer: fixtureAnswer(problem), requestId: requestId() })).rejects.toMatchObject({ status: 404 });
     expect(await db.attempt.count({ where: { userId: learner.userId } })).toBe(0);
   });
 
-  it('rejects skipped sections, locked questions, invalid-only completion, and early class completion', async () => {
+  it('rejects skipped sections, locked questions, invalid-only completion, and early lesson completion', async () => {
     const learner = await newLearner();
     const enrollmentId = await enroll(learner.userId);
     const section = record.sections.find(item => item.role === 'practice')!;
     const problemVersionId = getActivityProblemIds(record, section.sectionId)[0];
     await expect(service.act(learner.userId, { action: 'section.complete', enrollmentId, sectionId: section.sectionId })).rejects.toMatchObject({ status: 409 });
-    await expect(service.act(learner.userId, { action: 'attempt.submit', context: 'class', contextId: enrollmentId,
+    await expect(service.act(learner.userId, { action: 'attempt.submit', context: 'lesson', contextId: enrollmentId,
       problemVersionId, answer: '1', requestId: requestId() })).rejects.toMatchObject({ status: 409 });
     for (const preceding of record.sections.slice(0, record.sections.indexOf(section))) {
       await service.act(learner.userId, { action: 'section.complete', enrollmentId, sectionId: preceding.sectionId });
     }
-    const invalid = await service.act(learner.userId, { action: 'attempt.submit', context: 'class', contextId: enrollmentId,
+    const invalid = await service.act(learner.userId, { action: 'attempt.submit', context: 'lesson', contextId: enrollmentId,
       problemVersionId, answer: '1/0', requestId: requestId() });
     expect(invalid.result?.status).toBe('invalid');
     await expect(service.act(learner.userId, { action: 'section.complete', enrollmentId, sectionId: section.sectionId })).rejects.toMatchObject({ status: 409 });
-    await expect(service.act(learner.userId, { action: 'class.complete', enrollmentId })).rejects.toMatchObject({ status: 409 });
+    await expect(service.act(learner.userId, { action: 'lesson.complete', enrollmentId })).rejects.toMatchObject({ status: 409 });
     expect(await db.assignmentRecipient.count({ where: { learnerUserId: learner.userId } })).toBe(0);
   });
 
   it('deduplicates concurrent attempts and rejects changed answers under the same request ID', async () => {
     const learner = await newLearner();
     const { enrollmentId, problem } = await openPractice(learner.userId);
-    const action: LearningAction = { action: 'attempt.submit', context: 'class', contextId: enrollmentId,
+    const action: LearningAction = { action: 'attempt.submit', context: 'lesson', contextId: enrollmentId,
       problemVersionId: problem.problemVersionId, answer: fixtureAnswer(problem), requestId: requestId() };
     const results = await Promise.all([service.act(learner.userId, action), service.act(learner.userId, action)]);
     expect(results[0].result).toEqual(results[1].result);
@@ -167,12 +168,12 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     expect(await db.attempt.count({ where: { userId: learner.userId } })).toBe(1);
   }, 30_000);
 
-  it('completes a class once and atomically creates one next-day assignment, recipient, and draft submission', async () => {
+  it('completes a lesson once and atomically creates one next-day assignment, recipient, and draft submission', async () => {
     const learner = await newLearner();
     const enrollmentId = await enroll(learner.userId);
     await finishSections(learner.userId, enrollmentId);
     const beforeCompletion = Date.now();
-    const action = { action: 'class.complete', enrollmentId };
+    const action = { action: 'lesson.complete', enrollmentId };
     await Promise.all([service.act(learner.userId, action), service.act(learner.userId, action)]);
     const enrollment = await db.enrollment.findUniqueOrThrow({ where: { id: enrollmentId } });
     expect(enrollment.status).toBe('completed');
@@ -185,7 +186,7 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     const recipient = recipients[0];
     expect(recipient.sourceEnrollmentId).toBe(enrollmentId);
     expect(recipient.recommendedAt.getTime()).toBeGreaterThanOrEqual(beforeCompletion + 86_400_000);
-    expect(recipient.assignment.sourceClassVersionId).toBe(record.public.versionId);
+    expect(recipient.assignment.sourceLessonVersionId).toBe(record.public.versionId);
     expect(recipient.assignment.items.map(item => item.problemVersionId).sort()).toEqual([...record.homeworkProblemIds].sort());
     expect(recipient.submissions).toHaveLength(1);
     expect(recipient.submissions[0]).toMatchObject({ status: 'draft', submissionIndex: 1, finalizedAt: null });
@@ -194,12 +195,12 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
   it('records hint assistance only for attempts made after the hint was opened', async () => {
     const learner = await newLearner();
     const { enrollmentId, problem } = await openPractice(learner.userId);
-    const base = { action: 'attempt.submit', context: 'class', contextId: enrollmentId,
+    const base = { action: 'attempt.submit', context: 'lesson', contextId: enrollmentId,
       problemVersionId: problem.problemVersionId, answer: fixtureAnswer(problem) };
     const unassistedRequestId = requestId();
     const first = await service.act(learner.userId, { ...base, requestId: unassistedRequestId });
     expect(first.result).toMatchObject({ status: 'correct', assisted: false });
-    const hint = await service.act(learner.userId, { action: 'hint.open', context: 'class', contextId: enrollmentId, problemVersionId: problem.problemVersionId });
+    const hint = await service.act(learner.userId, { action: 'hint.open', context: 'lesson', contextId: enrollmentId, problemVersionId: problem.problemVersionId });
     expect(hint.hint).toEqual(problem.hints);
     const second = await service.act(learner.userId, { ...base, requestId: requestId() });
     expect(second.result).toMatchObject({ status: 'correct', assisted: true });
@@ -243,7 +244,7 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     expect(recipient.assignment.items[0].problemSnapshot).toEqual(problemById(recipient.assignment.items[0].problemVersionId));
     const state = await service.state(learner.userId);
     expect(state.assignments).toHaveLength(1);
-    expect(state.assignments[0]).toMatchObject({ recipientId: recipient.id, classKey: null, status: 'assigned' });
+    expect(state.assignments[0]).toMatchObject({ recipientId: recipient.id, lessonKey: null, status: 'assigned' });
     expect(JSON.stringify(state.assignments)).not.toContain('gradingSpec');
     const firstItem = state.assignments[0].items[0];
     const result = await service.act(learner.userId, { action: 'attempt.submit', context: 'assignment', contextId: recipient.id,
@@ -288,28 +289,28 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
   it('pins an existing enrollment to v1 after v2 is published while new learners receive v2', async () => {
     const learner = await newLearner();
     const nextLearner = await newLearner();
-    const classKey = `integration-pin-${randomUUID()}`;
+    const lessonKey = `integration-pin-${randomUUID()}`;
     const first = structuredClone(record);
-    first.public = { ...first.public, classKey, versionId: `${classKey}:v1` };
+    first.public = { ...first.public, lessonKey, versionId: `${lessonKey}:v1` };
     await publishImmutable(first, new Date(Date.now() - 10_000));
-    const enrollmentId = await enroll(learner.userId, classKey);
+    const enrollmentId = await enroll(learner.userId, lessonKey);
     const second = structuredClone(first);
-    second.public = { ...second.public, versionId: `${classKey}:v2`, title: `${second.public.title} · 두 번째 판본` };
+    second.public = { ...second.public, versionId: `${lessonKey}:v2`, title: `${second.public.title} · 두 번째 판본` };
     await publishImmutable(second, new Date());
-    expect((await service.classDocument(classKey, learner.userId)).versionId).toBe(first.public.versionId);
-    expect((await service.catalog()).find(item => item.classKey === classKey)?.versionId).toBe(second.public.versionId);
-    expect(await enroll(learner.userId, classKey)).toBe(enrollmentId);
-    const nextEnrollmentId = await enroll(nextLearner.userId, classKey);
+    expect((await service.lessonDocument(lessonKey, learner.userId)).versionId).toBe(first.public.versionId);
+    expect((await service.catalog()).find(item => item.lessonKey === lessonKey)?.versionId).toBe(second.public.versionId);
+    expect(await enroll(learner.userId, lessonKey)).toBe(enrollmentId);
+    const nextEnrollmentId = await enroll(nextLearner.userId, lessonKey);
     const nextEnrollment = await db.enrollment.findUniqueOrThrow({ where: { id: nextEnrollmentId } });
-    expect(nextEnrollment.classVersionId).toBe(second.public.versionId);
+    expect(nextEnrollment.lessonVersionId).toBe(second.public.versionId);
     // The version a learner started stays exactly what it was published as.
-    expect(await classRecord(db, first.public.versionId)).toEqual(first);
+    expect(await lessonRecord(db, first.public.versionId)).toEqual(first);
   });
 
   it('explains every term a lesson linked, wherever the author linked it', async () => {
     const learner = await newLearner();
     const suffix = randomUUID();
-    const classKey = `integration-glossary-${suffix}`;
+    const lessonKey = `integration-glossary-${suffix}`;
     const [earlier, primary, secondary] = ['earlier', 'primary', 'secondary'].map(name => `test.${name}.${suffix}`);
     await db.skill.createMany({ data: [earlier, primary, secondary].map((key, order) => ({ key, label: key, order: 2000 + order })) });
     // A fixture publishes the way the application does: the definition is read back from its rows.
@@ -323,8 +324,8 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     };
     for (const skillKey of [earlier, primary, secondary]) await publishTerm(skillKey);
 
-    // Fresh question IDs: a published problem version is immutable across every class in the database.
-    const custom = JSON.parse(JSON.stringify(record).replaceAll(record.public.classKey, classKey)) as StoredClass;
+    // Fresh question IDs: a published problem version is immutable across every lesson in the database.
+    const custom = JSON.parse(JSON.stringify(record).replaceAll(record.public.lessonKey, lessonKey)) as StoredLesson;
     custom.public = { ...custom.public, skillKeys: [primary, secondary], prerequisiteSkillKeys: [earlier] };
     for (const problem of custom.problems) problem.skillKeys = [primary];
     const [firstHomework, secondHomework] = custom.homeworkProblemIds.map(id => custom.problems.find(p => p.problemVersionId === id)!);
@@ -340,24 +341,24 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
       terms: [link(`term.${earlier}`, '앞선 개념'), link(`term.${secondary}`, '다른 개념')] } };
     await publishImmutable(custom);
 
-    const document = await service.classDocument(classKey);
+    const document = await service.lessonDocument(lessonKey);
     // Every word any of the document's blocks linked is explained — its sections and its questions
-    // alike — including the concept this very class teaches, which used to be withheld.
+    // alike — including the concept this very lesson teaches, which used to be withheld.
     expect(document.glossary.map(entry => entry.termKey).sort())
       .toEqual([`term.${earlier}`, `term.${primary}`, `term.${secondary}`].sort());
     expect(document.glossary.find(entry => entry.termKey === `term.${earlier}`))
-      .toMatchObject({ skillKey: earlier, classKey: null, summary: `${earlier} 한 줄 설명` });
+      .toMatchObject({ skillKey: earlier, lessonKey: null, summary: `${earlier} 한 줄 설명` });
 
-    const enrollmentId = await enroll(learner.userId, classKey);
+    const enrollmentId = await enroll(learner.userId, lessonKey);
     for (const item of custom.sections) {
       for (const problemVersionId of getActivityProblemIds(custom, item.sectionId)) {
-        await service.act(learner.userId, { action: 'attempt.submit', context: 'class', contextId: enrollmentId,
+        await service.act(learner.userId, { action: 'attempt.submit', context: 'lesson', contextId: enrollmentId,
           problemVersionId, answer: fixtureAnswer(custom.problems.find(p => p.problemVersionId === problemVersionId)!), requestId: requestId() });
       }
       await service.act(learner.userId, { action: 'section.complete', enrollmentId, sectionId: item.sectionId });
     }
-    const state = (await service.act(learner.userId, { action: 'class.complete', enrollmentId })).state;
-    const assignment = state.assignments.find(item => item.classKey === classKey)!;
+    const state = (await service.act(learner.userId, { action: 'lesson.complete', enrollmentId })).state;
+    const assignment = state.assignments.find(item => item.lessonKey === lessonKey)!;
     expect(assignment.items.map(item => item.problem.problemVersionId).sort()).toEqual([...custom.homeworkProblemIds].sort());
     // The review carries what its own questions linked, and only that: the section's link to the
     // primary concept is not part of this assignment, so its definition is not sent here.

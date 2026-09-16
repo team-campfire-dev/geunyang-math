@@ -1,4 +1,4 @@
-import type { AssignmentView, DiagnosticAnswer, Goal, GradeResult, PersonalPlan, PublicClass, Recommendation, SkillReadiness } from '@/shared/api';
+import type { AssignmentView, DiagnosticAnswer, Goal, GradeResult, PersonalPlan, PublicLesson, Recommendation, SkillReadiness } from '@/shared/api';
 
 export const personalizationVersion = 'rules-v1';
 export type Evidence = { problemVersionId: string; skillKeys: string[]; result: GradeResult; date: Date; responseKind?: string; check: boolean; assessmentId?: string };
@@ -21,44 +21,44 @@ export function skillReadiness(labels: Record<string, string>, diagnostic: { ans
 }
 
 export function recommend(input: {
-  classes: PublicClass[]; enrollments: { classKey: string; status: string }[];
+  lessons: PublicLesson[]; enrollments: { lessonKey: string; status: string }[];
   assignments: Pick<AssignmentView, 'recipientId' | 'recommendedAt' | 'status'>[];
-  readiness: SkillReadiness[]; dailyMinutes: number; goal: Goal; now: Date; preferredClassKey?: string | null;
+  readiness: SkillReadiness[]; dailyMinutes: number; goal: Goal; now: Date; preferredLessonKey?: string | null;
 }): { recommendations: Recommendation[]; plan: PersonalPlan } {
-  const { classes, enrollments, readiness, dailyMinutes, goal } = input;
+  const { lessons, enrollments, readiness, dailyMinutes, goal } = input;
   const ready = (key: string) => readiness.some(s => s.key === key && s.readiness === 'ready');
-  const known = (c: PublicClass) => c.skillKeys.every(ready);
-  const prerequisitesMet = (c: PublicClass) => c.prerequisiteSkillKeys.every(ready);
-  const active = classes.find(c => enrollments.some(e => e.classKey === c.classKey && e.status === 'active'));
-  const weak = classes.filter(c => !known(c));
+  const known = (c: PublicLesson) => c.skillKeys.every(ready);
+  const prerequisitesMet = (c: PublicLesson) => c.prerequisiteSkillKeys.every(ready);
+  const active = lessons.find(c => enrollments.some(e => e.lessonKey === c.lessonKey && e.status === 'active'));
+  const weak = lessons.filter(c => !known(c));
   const remedial = weak.filter(prerequisitesMet);
-  // An unfinished chosen class remains available, but unknown prerequisites are recommended first.
-  let target: PublicClass | undefined = active && prerequisitesMet(active) ? active : remedial[0];
+  // An unfinished chosen lesson remains available, but unknown prerequisites are recommended first.
+  let target: PublicLesson | undefined = active && prerequisitesMet(active) ? active : remedial[0];
   if (!target && active) target = active;
   if (!target) {
-    // All available skills are provisionally ready: choose a goal-relevant consolidation class.
-    target = goal === 'algebra-ready' ? classes.at(-1) : classes[0];
+    // All available skills are provisionally ready: choose a goal-relevant consolidation lesson.
+    target = goal === 'algebra-ready' ? lessons.at(-1) : lessons[0];
   }
-  const chosen = classes.find(c => c.classKey === input.preferredClassKey);
+  const chosen = lessons.find(c => c.lessonKey === input.preferredLessonKey);
   if (chosen) target = chosen;
   const recommendations: Recommendation[] = [];
   if (target) {
-    const enrollment = enrollments.find(e => e.classKey === target.classKey);
+    const enrollment = enrollments.find(e => e.lessonKey === target.lessonKey);
     const kind = enrollment?.status === 'completed' ? 'revisit' : enrollment ? 'continue' : 'start';
     const focus = readiness.find(s => target.skillKeys.includes(s.key) && s.readiness !== 'ready');
     const reason = chosen ? `직접 고른 수업이에요.${prerequisitesMet(chosen) ? ' 나의 속도로 이어가 보세요.' : ' 아직 확인하지 않은 선수 개념이 있어요. 어려우면 자동 추천으로 돌아갈 수 있어요.'}`
-      : active && active.classKey !== target.classKey
+      : active && active.lessonKey !== target.lessonKey
       ? `이어가던 수업에 필요한 ${focus?.label ?? target.title}부터 확인해요. 원래 수업도 직접 선택할 수 있어요.`
       : kind === 'continue' ? '진행 중인 수업을 이어가요. 새 풀이 기록으로 다음 추천을 조정해요.'
       : focus?.readiness === 'needs-practice' ? `${focus.label}에서 다시 연습할 부분을 찾았어요. 설명과 예제로 한 번 더 확인해요.`
       : focus ? `${focus.label} 개념을 아직 충분히 확인하지 않았어요. 이 수업부터 시작해 보세요.`
       : goal === 'algebra-ready' ? '확인한 기초를 바탕으로 분수 계산을 다져 대수 학습을 준비해요.'
       : '확인한 기초를 일상의 예제에 적용해요. 이미 아는 수업은 목록에서 자유롭게 바꿀 수 있어요.';
-    recommendations.push({ classKey: target.classKey, kind, reason, suggestedMinutes: Math.min(dailyMinutes, target.estimatedMinutes) });
+    recommendations.push({ lessonKey: target.lessonKey, kind, reason, suggestedMinutes: Math.min(dailyMinutes, target.estimatedMinutes) });
   }
   const due = [...input.assignments].filter(a => a.status === 'assigned' && new Date(a.recommendedAt) <= input.now)
     .sort((a, b) => a.recommendedAt.localeCompare(b.recommendedAt))[0];
-  return { recommendations, plan: { version: personalizationVersion, readiness, sessionMinutes: dailyMinutes, preferredClassKey: chosen?.classKey ?? null,
+  return { recommendations, plan: { version: personalizationVersion, readiness, sessionMinutes: dailyMinutes, preferredLessonKey: chosen?.lessonKey ?? null,
     review: due ? { recipientId: due.recipientId, reason: '권장 복습 시점이 되었어요. 새 수업 전에 배운 내용을 다시 떠올려 보세요. 늦게 풀어도 괜찮아요.' } : null } };
 }
 

@@ -2,7 +2,7 @@
 // offer a form for every published block kind without importing the server's validation schemas,
 // and so the server can prune the same optional fields before it validates what the editor sent.
 import type { AnswerSpec } from './answer';
-import type { ClassSection, ContentBlock, GradeResult, PublicProblem } from './api';
+import type { LessonSection, ContentBlock, GradeResult, PublicProblem } from './api';
 
 /** A role on an account, not a property of one operator: a teacher system grants the same roles. */
 export type AuthoringRole = 'admin' | 'author';
@@ -22,7 +22,7 @@ export type AccountRole = {
 };
 
 export type DraftSummary = {
-  id: string; classKey: string; versionId: string; baseVersionId: string | null; title: string;
+  id: string; lessonKey: string; versionId: string; baseVersionId: string | null; title: string;
   /**
    * Where the draft is. `review` is a writer saying they are done and asking the administrator who
    * may publish to look — it locks nothing, because being asked to look at something is not a
@@ -34,13 +34,13 @@ export type DraftSummary = {
 export const draftStatusLabels: Record<DraftSummary['status'], string> = {
   draft: '작성 중', review: '검토 요청', published: '발행함',
 };
-/** `skillKeys` are the concepts this class says it teaches; a question may only claim one of them. */
+/** `skillKeys` are the concepts this lesson says it teaches; a question may only claim one of them. */
 export type DraftMeta = { versionId: string; title: string; summary: string; estimatedMinutes: number; skillKeys: string[] };
 /** What each step of a lesson is for, in the words the learner's outline uses for it too. */
-export const sectionRoleLabels: Record<ClassSection['role'], string> = {
+export const sectionRoleLabels: Record<LessonSection['role'], string> = {
   explanation: '설명', worked_example: '예시', practice: '연습', check: '확인', summary: '정리',
 };
-export const sectionRoles = Object.keys(sectionRoleLabels) as ClassSection['role'][];
+export const sectionRoles = Object.keys(sectionRoleLabels) as LessonSection['role'][];
 /**
  * A question as the editor holds it. Answers, hints and solutions belong to the draft, so this
  * reaches a browser only where the account holds a content role. `responseSpec` and `hintAvailable`
@@ -56,8 +56,8 @@ export type DraftProblem = {
   solution: ContentBlock[];
 };
 /** What an editor may change. Published questions are immutable, so the server renames what changed. */
-export type DraftEdit = { meta: DraftMeta; sections: ClassSection[]; problems: DraftProblem[] };
-/** `terms` are the definitions this class may link: the shared dictionary and its own. */
+export type DraftEdit = { meta: DraftMeta; sections: LessonSection[]; problems: DraftProblem[] };
+/** `terms` are the definitions this lesson may link: the shared dictionary and its own. */
 /**
  * Something that stops a draft from publishing, and where in the draft it is. The rules speak in
  * English because they are the same rules the import command enforces, but where they apply is the
@@ -74,7 +74,7 @@ export type DraftIssue = {
   field?: string;
 };
 /**
- * `homeworkProblemIds` are the questions the class sets as homework. They are not a lesson's to
+ * `homeworkProblemIds` are the questions the lesson sets as homework. They are not a lesson's to
  * write or to take away — this screen does not edit them yet — but it has to know which questions
  * they are, because those are held by something no section shows.
  */
@@ -106,9 +106,9 @@ export const toPublicProblem = (problem: DraftProblem): PublicProblem => ({
   promptContent: problem.promptContent, responseSpec: responseSpecOf(problem.gradingSpec),
   hintAvailable: problem.hints.length > 0,
 });
-export type ClassChoice = { classKey: string; title: string; latestVersionId: string; suggestedVersionId: string; hasDraft: boolean };
+export type LessonChoice = { lessonKey: string; title: string; latestVersionId: string; suggestedVersionId: string; hasDraft: boolean };
 /** The scopes this screen writes. The catalogue's other levels exist in the model, not yet here. */
-export type EditableTermScope = 'global' | 'class';
+export type EditableTermScope = 'global' | 'lesson';
 /** A definition as the editor holds it. Publishing turns it into the next version of that term. */
 export type TermEdit = {
   termKey: string; scopeKind: EditableTermScope; scopeKey: string;
@@ -119,7 +119,7 @@ export type TermSummary = TermEdit & { versionId: string; publishedAt: string };
 export type TermChoice = { termKey: string; scopeKind: EditableTermScope; scopeKey: string; label: string; skillKey: string };
 export type SkillChoice = { key: string; label: string };
 export type AuthoringWorkspace = {
-  role: AuthoringRole | null; drafts: DraftSummary[]; classes: ClassChoice[];
+  role: AuthoringRole | null; drafts: DraftSummary[]; lessons: LessonChoice[];
   accounts: AccountRole[]; skills: SkillChoice[];
   /**
    * Whether this account reads the editor as someone who also operates the service. It decides what
@@ -129,12 +129,12 @@ export type AuthoringWorkspace = {
    */
   expertMode: boolean;
 };
-/** A key is what every name in a class is built from, so it stays to the letters a name may hold. */
-export const classKeyPattern = /^[a-z0-9][a-z0-9-]{1,63}$/;
+/** A key is what every name in a lesson is built from, so it stays to the letters a name may hold. */
+export const lessonKeyPattern = /^[a-z0-9][a-z0-9-]{1,63}$/;
 export type AuthoringAction =
-  | { action: 'draft.create'; classKey: string }
-  /** A class nobody has published yet. It starts as a draft like any other, with one step in it. */
-  | { action: 'class.create'; classKey: string; title: string; skillKeys: string[] }
+  | { action: 'draft.create'; lessonKey: string }
+  /** A lesson nobody has published yet. It starts as a draft like any other, with one step in it. */
+  | { action: 'lesson.create'; lessonKey: string; title: string; skillKeys: string[] }
   | { action: 'draft.review'; draftId: string; asking: boolean }
   | { action: 'draft.save'; draftId: string; edit: DraftEdit }
   | { action: 'draft.validate'; draftId: string }
@@ -186,19 +186,19 @@ export function problemGist(problem: DraftProblem, limit = 42): string {
 
 /** Generated names end in the version they were written for, the way published records read. */
 const suffixOf = (versionId: string) => (versionSuffix.test(versionId) ? versionId.slice(versionId.lastIndexOf(':') + 1) : 'v1');
-/** Published versions are immutable, so every edit becomes the next version of the same class. */
-export function suggestVersionId(classKey: string, existing: string[]): string {
+/** Published versions are immutable, so every edit becomes the next version of the same lesson. */
+export function suggestVersionId(lessonKey: string, existing: string[]): string {
   const numbers = existing.map((id) => versionSuffix.exec(id)).filter((match) => match !== null).map((match) => Number(match[1]));
-  return `${classKey}:v${Math.max(0, ...numbers) + 1}`;
+  return `${lessonKey}:v${Math.max(0, ...numbers) + 1}`;
 }
 
 /** Block IDs only need to be unique inside one document; the shape follows the published records. */
-export function nextBlockId(classKey: string, sectionId: string, kind: string, versionId: string, taken: string[]): string {
+export function nextBlockId(lessonKey: string, sectionId: string, kind: string, versionId: string, taken: string[]): string {
   const role = sectionId.split(':')[1] ?? 'section';
   const name = kind.split('.')[1] ?? 'block';
   const suffix = suffixOf(versionId);
   for (let index = 1; ; index++) {
-    const id = `${classKey}:${role}:${name}${index === 1 ? '' : `-${index}`}:${suffix}`;
+    const id = `${lessonKey}:${role}:${name}${index === 1 ? '' : `-${index}`}:${suffix}`;
     if (!taken.includes(id)) return id;
   }
 }
@@ -212,10 +212,10 @@ export function nextProblemBlockId(problemVersionId: string, part: 'prompt' | 'h
 }
 
 /** Sections are identified the same way blocks are: readable, and unique inside one document. */
-export function nextSectionId(classKey: string, role: string, versionId: string, taken: string[]): string {
+export function nextSectionId(lessonKey: string, role: string, versionId: string, taken: string[]): string {
   const suffix = suffixOf(versionId);
   for (let index = 1; ; index++) {
-    const id = `${classKey}:${role}${index === 1 ? '' : `-${index}`}:${suffix}`;
+    const id = `${lessonKey}:${role}${index === 1 ? '' : `-${index}`}:${suffix}`;
     if (!taken.includes(id)) return id;
   }
 }
@@ -226,11 +226,11 @@ export function nextSectionId(classKey: string, role: string, versionId: string,
  * version it ends in: a new question takes the next name rather than the same one in a new version.
  */
 /**
- * The next version of a term. A definition kept by a class carries the class in its name, so two
+ * The next version of a term. A definition kept by a lesson carries the lesson in its name, so two
  * scopes that share a key never collide, and reading an ID says which one it is.
  */
 export function nextTermVersionId(term: { termKey: string; scopeKind: EditableTermScope; scopeKey: string }, existing: string[]): string {
-  const base = term.scopeKind === 'class' ? `${term.scopeKey}:${term.termKey}` : term.termKey;
+  const base = term.scopeKind === 'lesson' ? `${term.scopeKey}:${term.termKey}` : term.termKey;
   const numbers = existing.map((id) => (id.startsWith(`${base}:v`) ? Number(id.slice(base.length + 2)) : NaN)).filter(Number.isInteger);
   return `${base}:v${Math.max(0, ...numbers) + 1}`;
 }
@@ -242,11 +242,11 @@ export function newTerm(scopeKind: EditableTermScope, scopeKey: string, skillKey
       payload: { text: '여기에 뜻을 풀어 씁니다.' } }] };
 }
 
-export function nextProblemVersionId(classKey: string, role: string, versionId: string, taken: string[]): string {
+export function nextProblemVersionId(lessonKey: string, role: string, versionId: string, taken: string[]): string {
   const suffix = suffixOf(versionId);
   const names = new Set(taken.map((id) => (versionSuffix.test(id) ? id.slice(0, id.lastIndexOf(':')) : id)));
   for (let index = 1; ; index++) {
-    const name = `${classKey}:${role}-${index}`;
+    const name = `${lessonKey}:${role}-${index}`;
     if (!names.has(name)) return `${name}:${suffix}`;
   }
 }
@@ -281,7 +281,7 @@ export function renamedProblemVersionId(current: string, versionId: string, take
 }
 
 /** Every reference to a question, wherever a document may hold one. */
-export function renameProblemReferences(sections: ClassSection[], renames: Map<string, string>): ClassSection[] {
+export function renameProblemReferences(sections: LessonSection[], renames: Map<string, string>): LessonSection[] {
   if (!renames.size) return sections;
   return sections.map((section) => ({
     ...section,
@@ -299,9 +299,9 @@ export const problemIdsIn = (blocks: ContentBlock[]): string[] =>
     : []));
 
 /**
- * The questions nothing in the class holds any more. A question belongs to exactly one activity, so
+ * The questions nothing in the lesson holds any more. A question belongs to exactly one activity, so
  * taking an activity out of a lesson leaves its questions held by nothing, and publishing refuses a
- * class that carries one. Homework holds questions too, and those are held whether or not any
+ * lesson that carries one. Homework holds questions too, and those are held whether or not any
  * section shows them.
  */
 export function looseProblems(edit: DraftEdit, homework: string[]): DraftProblem[] {
@@ -343,16 +343,16 @@ export function newProblem(problemVersionId: string, skillKeys: string[]): Draft
  */
 export function copyBlock(input: {
   block: ContentBlock; problems: DraftProblem[];
-  classKey: string; sectionId: string; role: string; versionId: string;
+  lessonKey: string; sectionId: string; role: string; versionId: string;
   blockIds: string[]; problemIds: string[];
 }): { block: ContentBlock; problems: DraftProblem[] } {
   const copied = structuredClone(input.block);
-  copied.blockId = nextBlockId(input.classKey, input.sectionId, copied.kind, input.versionId, input.blockIds);
+  copied.blockId = nextBlockId(input.lessonKey, input.sectionId, copied.kind, input.versionId, input.blockIds);
   if (copied.kind !== 'core.problem_set') return { block: copied, problems: [] };
   const held = problemsOfBlock(input.block, input.problems);
   const problemIds = [...input.problemIds];
   const problems = held.map((problem) => {
-    const made = copyProblem(problem, input.classKey, input.role, input.versionId, problemIds);
+    const made = copyProblem(problem, input.lessonKey, input.role, input.versionId, problemIds);
     problemIds.push(made.problemVersionId);
     return made;
   });
@@ -361,8 +361,8 @@ export function copyBlock(input: {
 }
 
 /** A copy of a question, named after the activity it will sit in, with its own blocks renamed too. */
-export function copyProblem(problem: DraftProblem, classKey: string, role: string, versionId: string, taken: string[]): DraftProblem {
-  return renameProblem(structuredClone(problem), nextProblemVersionId(classKey, role, versionId, taken));
+export function copyProblem(problem: DraftProblem, lessonKey: string, role: string, versionId: string, taken: string[]): DraftProblem {
+  return renameProblem(structuredClone(problem), nextProblemVersionId(lessonKey, role, versionId, taken));
 }
 
 /**
@@ -370,15 +370,15 @@ export function copyProblem(problem: DraftProblem, classKey: string, role: strin
  * new questions for every activity it holds.
  */
 export function copySection(input: {
-  section: ClassSection; problems: DraftProblem[];
-  classKey: string; versionId: string; sectionIds: string[]; blockIds: string[]; problemIds: string[];
-}): { section: ClassSection; problems: DraftProblem[] } {
-  const sectionId = nextSectionId(input.classKey, input.section.role, input.versionId, input.sectionIds);
+  section: LessonSection; problems: DraftProblem[];
+  lessonKey: string; versionId: string; sectionIds: string[]; blockIds: string[]; problemIds: string[];
+}): { section: LessonSection; problems: DraftProblem[] } {
+  const sectionId = nextSectionId(input.lessonKey, input.section.role, input.versionId, input.sectionIds);
   const blockIds = [...input.blockIds];
   const problemIds = [...input.problemIds];
   const problems: DraftProblem[] = [];
   const contentBlocks = input.section.contentBlocks.map((block) => {
-    const made = copyBlock({ block, problems: input.problems, classKey: input.classKey, sectionId,
+    const made = copyBlock({ block, problems: input.problems, lessonKey: input.lessonKey, sectionId,
       role: input.section.role, versionId: input.versionId, blockIds, problemIds });
     blockIds.push(made.block.blockId);
     for (const problem of made.problems) problemIds.push(problem.problemVersionId);
@@ -412,7 +412,7 @@ export type BlockList = { key: string; label: string; addLabel: string; max: num
 export type BlockForm = {
   kind: string; typeVersion: number; label: string; hint: string;
   fields: BlockField[]; list?: BlockList; editsProblems?: boolean; editsScene?: boolean;
-  /** Published classes still hold these, so the editor can open one; nothing new is made with them. */
+  /** Published lessons still hold these, so the editor can open one; nothing new is made with them. */
   retired?: boolean;
   create: () => Record<string, unknown>;
 };
@@ -436,8 +436,8 @@ export const blockForms: BlockForm[] = [
         { key: 'termKey', label: '용어 키', kind: 'text', hint: '발행된 TermVersion의 termKey' },
         { key: 'surface', label: '본문의 낱말', kind: 'text' },
         { key: 'scopeKind', label: '어디 용어', kind: 'select', optional: true,
-          options: [{ value: '', label: '공통 사전' }, { value: 'class', label: '이 클래스' }],
-          hint: '공통 사전은 운영자가 발행한 용어예요. 이 클래스의 용어는 같은 키라도 따로 셉니다.' },
+          options: [{ value: '', label: '공통 사전' }, { value: 'lesson', label: '이 수업' }],
+          hint: '공통 사전은 운영자가 발행한 용어예요. 이 수업의 용어는 같은 키라도 따로 셉니다.' },
         { key: 'occurrence', label: '몇 번째', kind: 'number', optional: true, min: 1, max: 100 },
       ],
     },
@@ -542,21 +542,21 @@ export function pruneBlock(block: ContentBlock): ContentBlock {
   return pruned;
 }
 
-export function pruneSections(sections: ClassSection[]): ClassSection[] {
+export function pruneSections(sections: LessonSection[]): LessonSection[] {
   return sections.map((section) => ({ ...section, contentBlocks: section.contentBlocks.map(pruneBlock) }));
 }
 
 /**
- * Fills in which class keeps a term. The editor only asks what kind of term it is; which class owns
+ * Fills in which lesson keeps a term. The editor only asks what kind of term it is; which lesson owns
  * it follows from the document the block sits in, and writing it down here is what lets a
  * definition be resolved later without knowing who is reading.
  */
-export function scopeTermAnnotations(blocks: ContentBlock[], classKey: string): ContentBlock[] {
+export function scopeTermAnnotations(blocks: ContentBlock[], lessonKey: string): ContentBlock[] {
   return blocks.map((block) => {
     if (block.kind !== 'core.rich_text' || block.typeVersion !== 2 || !Array.isArray(block.payload.terms)) return block;
     const terms = (block.payload.terms as Record<string, unknown>[]).map((term) => {
       const next = { ...term };
-      if (next.scopeKind === 'class') next.scopeKey = classKey;
+      if (next.scopeKind === 'lesson') next.scopeKey = lessonKey;
       else { delete next.scopeKind; delete next.scopeKey; }
       return next;
     });
@@ -571,14 +571,14 @@ export function pruneProblems(problems: DraftProblem[]): DraftProblem[] {
 
 /**
  * An author writes one kind of paragraph, not two. Both versions of it are called 글 and both open
- * for editing, because published classes hold each; which one a palette offers follows from where
+ * for editing, because published lessons hold each; which one a palette offers follows from where
  * the block will sit, so nobody is asked to pick a schema version to get a term link.
  */
 const paragraph = (form: BlockForm, typeVersion: number) => form.kind === 'core.rich_text' && form.typeVersion === typeVersion;
 /** A lesson's own blocks. Its paragraph is the one that can carry term links. */
-export const classBlockForms = blockForms.filter((form) => !paragraph(form, 1));
+export const lessonBlockForms = blockForms.filter((form) => !paragraph(form, 1));
 /** A question holds no activity of its own, and a drawing inside one is read rather than arranged. */
-export const problemBlockForms = classBlockForms.filter((form) => form.kind !== 'core.problem_set');
+export const problemBlockForms = lessonBlockForms.filter((form) => form.kind !== 'core.problem_set');
 /**
  * Only the definition's own blocks: a definition never embeds a question, and never a term inside a
  * term, so its paragraph is the one that carries no links.

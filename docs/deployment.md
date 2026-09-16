@@ -18,7 +18,7 @@
 
 DB 서버의 `partial_revokes=OFF`에서는 DB 권한 이름의 `_`가 와일드카드다. 두 계정 모두 `geunyang\_math`로 escape한 DB scope만 부여해 비슷한 이름의 다른 DB로 권한이 넓어지지 않도록 했다.
 
-비로그인 사용자는 클래스 카탈로그와 수업 설명을 열람할 수 있다. Google 로그인 후에는 개인 진도·답안·과제·진단·추천 이력을 저장하고 같은 계정으로 복원한다. Google 운영 로그인·설정 복원과 DB 콘텐츠 전환 후 기존 학습 상태 조회를 확인했다. 개발용 계정 생성과 기존 개발 세션 사용은 운영에서 거부한다.
+비로그인 사용자는 수업 카탈로그와 수업 설명을 열람할 수 있다. Google 로그인 후에는 개인 진도·답안·과제·진단·추천 이력을 저장하고 같은 계정으로 복원한다. Google 운영 로그인·설정 복원과 DB 콘텐츠 전환 후 기존 학습 상태 조회를 확인했다. 개발용 계정 생성과 기존 개발 세션 사용은 운영에서 거부한다.
 
 ## Cooo에서 참고한 부분
 
@@ -71,13 +71,13 @@ Google 설정은 앱 환경 파일에만 필요하고 migration 환경 파일에
 
 로그인 진입점은 `GET /api/auth/google/start`, callback은 `GET /api/auth/google/callback`이다. 요청 scope는 `openid email profile`만이며 offline 접근을 요청하지 않는다. 일회용 DB `OAuthAttempt`의 state·브라우저 바인딩·PKCE·nonce를 검증하고, 공식 Google 라이브러리로 ID 토큰의 서명·issuer·audience·시각을 확인한다. verified email, nonce, authorized party, 엄격한 만료도 검사한다. Google 네트워크 요청은 10초 취소 신호와 자동 재시도 금지를 적용한다.
 
-Google `sub`를 대소문자까지 구분해 `GoogleIdentity`에 연결한다. 같은 Google 계정으로 다시 로그인하면 같은 User·개인 Scope·수강·과제를 읽는다. 이메일이나 이름이 같아도 다른 Google 계정 또는 개발 계정을 자동 연결하지 않는다. 운영 세션은 7일의 `__Host-gm_session` Secure·HttpOnly·SameSite=Lax host-only cookie이고, 재로그인 시 기존 브라우저 세션을 회전한다. 로그아웃은 동일 origin을 확인한 후 서버 세션과 cookie를 폐기한다. 기존 `gm_session`과 `authMethod=development` 세션은 production에서 계속 거부한다.
+Google `sub`를 대소문자까지 구분해 `GoogleIdentity`에 연결한다. 같은 Google 계정으로 다시 로그인하면 같은 User·개인 LearningScope·수강·과제를 읽는다. 이메일이나 이름이 같아도 다른 Google 계정 또는 개발 계정을 자동 연결하지 않는다. 운영 세션은 7일의 `__Host-gm_session` Secure·HttpOnly·SameSite=Lax host-only cookie이고, 재로그인 시 기존 브라우저 세션을 회전한다. 로그아웃은 동일 origin을 확인한 후 서버 세션과 cookie를 폐기한다. 기존 `gm_session`과 `authMethod=development` 세션은 production에서 계속 거부한다.
 
 `20260914010000_google_auth` migration은 Session의 `authMethod`를 기본값 `development`로 추가하고 GoogleIdentity·OAuthAttempt 테이블을 만든다. 기존 데이터나 baseline migration을 수정·삭제하지 않으며, 현재 migration 계정의 CREATE·ALTER·INDEX·REFERENCES 권한으로 적용한다. rollback 시 앱만 복구하고 이미 적용한 schema는 유지한다.
 
 인증 코드, ID/access/refresh token, 세션 cookie, client secret, 원문 provider 오류를 Git·브라우저 저장소·배포 출력·앱 로그·crash report에 남기지 않는다. 앱은 Google access/refresh token을 영속 저장하지 않고 callback 실패를 `cancelled`, `expired`, `unavailable`, `failed` 중 하나로만 돌려준다. NPM 호스트 #9에는 `/api/auth/google/callback` custom location을 추가하고 `access_log off; error_log /dev/null crit;`를 적용했다. 정상 HTTPS 콜백의 인증 query는 NPM 로그에서 제외하며 upstream에는 그대로 전달한다. HTTP→HTTPS 리디렉션 로그나 Cloudflare 내부 로그의 수집 여부까지 보증하지 않는다. 전체 `$request`·`$request_uri`나 URL query를 수집하는 로깅·APM 설정은 이 경로에서 제거하거나 마스킹한다. 앱 로그 보호만으로 NPM·Cloudflare 로그 설정까지 검증한 것으로 간주하지 않는다.
 
-배포 후에는 health/version과 함께 session의 `googleLogin=true`, Google 승인 화면과 정확한 callback, 취소·만료의 안전한 복귀, 정상 로그인, 클래스 학습 저장, 로그아웃 후 접근 차단, 같은 Google 계정으로 재로그인한 기록 복원을 확인한다. Google 계정을 바꿔 다른 사람의 학습 기록이 보이지 않는지도 확인한다. 실제 계정의 동의·로그인 결과는 자동 테스트와 구분해 기록한다. 네이티브 인증은 별도 구현이며 현재 웹 흐름을 WebView에 그대로 적용하지 않는다.
+배포 후에는 health/version과 함께 session의 `googleLogin=true`, Google 승인 화면과 정확한 callback, 취소·만료의 안전한 복귀, 정상 로그인, 수업 학습 저장, 로그아웃 후 접근 차단, 같은 Google 계정으로 재로그인한 기록 복원을 확인한다. Google 계정을 바꿔 다른 사람의 학습 기록이 보이지 않는지도 확인한다. 실제 계정의 동의·로그인 결과는 자동 테스트와 구분해 기록한다. 네이티브 인증은 별도 구현이며 현재 웹 흐름을 WebView에 그대로 적용하지 않는다.
 
 ## HTTPS 프록시
 
@@ -110,7 +110,7 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 
 릴리스 포인터를 새로 커밋한 뒤에는 현재와 직전 릴리스만 남기고 이전 릴리스 디렉터리, 그 SHA의 앱·migrator 이미지, 지난 배포의 롤백 태그, `incoming/`에 남아 있던 비공개 환경 파일 사본을 지운다. 배포마다 이미지 두 개(앱 468MB, migrator 1.6GB)가 쌓여 디스크를 채우던 문제를 막고, 오래된 환경 파일 사본도 함께 정리하기 위해서다. 빌드 캐시는 이 VM의 다른 프로젝트와 공유하므로 72시간 이상 쓰이지 않은 항목만 지운다. 이 단계는 커밋 이후에 실행하며, 실패해도 기록만 남기고 배포 결과를 바꾸지 않는다.
 
-이전 릴리스와 해당 환경 파일은 복구를 위해 보존한다. 실패하면 이전 앱 이미지와 환경으로 복귀한다. 앱 복귀는 이미 적용한 DB migration을 되돌리지 않으므로 후속 migration은 이전 앱과 호환되도록 작성해야 한다. 자동화는 운영 DB의 DROP이나 데이터 삭제 권한을 새로 부여하지 않는다.
+이전 릴리스와 해당 환경 파일은 복구를 위해 보존한다. 실패하면 이전 앱 이미지와 환경으로 복귀한다. 앱 복귀는 이미 적용한 DB migration을 되돌리지 않는다. 2026-09-16까지는 후속 migration을 이전 앱과 호환되도록 작성했으나, [용어 사전을 반영하는 스키마 변경](schema-change-plan.md)이 진행되는 동안은 이 호환을 내려놓는다 — 아직 실사용 서비스가 아니고 데이터를 보존하지 않기로 했으므로, 되돌리기는 앞으로 고쳐 나가는 것으로 한다. 자동화는 운영 DB의 데이터 삭제 권한을 새로 부여하지 않는다. `DROP`은 표 이름을 바꾸는 데 필요해 2026-09-17에 migrator 계정에 한 번 부여한다.
 
 독립 앱 서비스만 교체하므로 같은 VM의 Cooo·서랍·Constella 등은 재시작하지 않는다. 새 배포가 진행 중인 운영 workflow를 자동 취소하지 않으며, 원격에서도 프로젝트별 잠금을 사용한다.
 
@@ -122,7 +122,7 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 |---|---|---|
 | [Google 로그인 #4](https://github.com/team-campfire-dev/geunyang-math/pull/4) | `4509346` | 161개 테스트, 웹·모바일 빌드, 운영 DB migration·배포 성공. 실제 Google 로그인에서 학습 시간 저장→로그아웃→같은 계정 재로그인 복원 확인. [실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/34805433313) |
 | [규칙 기반 개인화 #5](https://github.com/team-campfire-dev/geunyang-math/pull/5) | `87a1717` | 179개 테스트, 웹·모바일 빌드·운영 배포 성공. 로컬 브라우저 진단 이어하기·추천 변경·직접 선택 검증, 운영 개인화 화면 조회 확인. [실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/34809013344) |
-| [DB 콘텐츠 관리 #6](https://github.com/team-campfire-dev/geunyang-math/pull/6) | `0c5e505` | 190개 테스트, 신규 DB 설치·기존 DB 업그레이드·CLI 검증, 웹·모바일 빌드·Oracle 배포 성공. 공개 클래스 3개·블록·15문항의 이전 내용 일치와 기존 계정 학습 상태 조회 확인. [실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/34811307476) |
+| [DB 콘텐츠 관리 #6](https://github.com/team-campfire-dev/geunyang-math/pull/6) | `0c5e505` | 190개 테스트, 신규 DB 설치·기존 DB 업그레이드·CLI 검증, 웹·모바일 빌드·Oracle 배포 성공. 공개 수업 3개·블록·15문항의 이전 내용 일치와 기존 계정 학습 상태 조회 확인. [실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/34811307476) |
 | [카탈로그 문구·수식 표기 #8](https://github.com/team-campfire-dev/geunyang-math/pull/8) | `e6c7e51` | 공개 카탈로그의 개념 이름, 채점의 LaTeX 부분집합, 캡션 수식과 낭독용 이름 분리. 배포 성공. |
 | [용어 풀이 #9](https://github.com/team-campfire-dev/geunyang-math/pull/9) | `00e8ca1` | 용어 판본과 진행도 기반 노출, `core.rich_text@2`. 배포 성공. 이 시점 콘텐츠는 아직 v1이라 화면 변화 없음. |
 | [번들 발행 자동화 #11](https://github.com/team-campfire-dev/geunyang-math/pull/11) | `7282d9a` | 배포가 `content/*.json`을 적용 이력에 따라 한 번만 발행. 이 배포에서 기본 용어 6개가 운영에 등록됨. |
@@ -140,7 +140,7 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 | [편집 권한 화면 #19](https://github.com/team-campfire-dev/geunyang-math/pull/19) | `b857796` | 관리자가 화면에서 역할을 주고 거둔다. 자기 관리자 역할과 마지막 관리자 행은 지킨다. 배포 성공. 이 시점까지 운영에는 권한을 가진 계정이 없었고, 같은 날 소유자 계정에 `admin` 행을 넣어 풀었다. |
 | [문항 안 조작 금지 안내 #20](https://github.com/team-campfire-dev/geunyang-math/pull/20) | `a740fb2` | 발행 단계에서만 거부하던 것을 편집 시점에 이유와 함께 막는다. 배포 성공. |
 | [용어 범위 #21](https://github.com/team-campfire-dev/geunyang-math/pull/21) | `e81f8c7` | `TermVersion`에 `scopeKind`·`scopeKey` 추가. 기존 용어 6개는 기본값으로 공통 사전이 되어 재발행이 필요 없었다. 배포 성공. |
-| [용어 편집 화면 #23](https://github.com/team-campfire-dev/geunyang-math/pull/23) | `3551f86` | 공통 사전과 클래스 용어를 화면에서 쓰고 고친다. 저장이 곧 다음 판본의 발행. 배포 성공. |
+| [용어 편집 화면 #23](https://github.com/team-campfire-dev/geunyang-math/pull/23) | `3551f86` | 공통 사전과 수업 용어를 화면에서 쓰고 고친다. 저장이 곧 다음 판본의 발행. 배포 성공. |
 | [본문에서 `@`로 걸기 #24](https://github.com/team-campfire-dev/geunyang-math/pull/24) | `7f98fe6` | 저장 형식은 그대로 두고 거는 방법만 바꿨다. 몇 번째 낱말인지는 적은 자리가 정한다. 배포 성공. |
 | [노출 판단을 작성자에게 #25](https://github.com/team-campfire-dev/geunyang-math/pull/25) | `5a83905` | 서버가 진도로 용어를 숨기던 규칙을 걷어냈다. 발행된 v4 판본은 자기 개념에 주석을 달지 않아 배포 직후 보이는 용어가 늘지는 않는다. 배포 성공. |
 
@@ -150,7 +150,7 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 
 | 릴리스 | commit | 검증·운영 결과 |
 |---|---|---|
-| [문항 이름 색인 #27](https://github.com/team-campfire-dev/geunyang-math/pull/27) | `3147539` | 초안 저장이 발행 문서를 전부 읽던 것을 색인 조회로 바꿨다. 배포 후 `indexedProblems: 36`(클래스 30 · 진단 6). 배포 성공. |
+| [문항 이름 색인 #27](https://github.com/team-campfire-dev/geunyang-math/pull/27) | `3147539` | 초안 저장이 발행 문서를 전부 읽던 것을 색인 조회로 바꿨다. 배포 후 `indexedProblems: 36`(수업 30 · 진단 6). 배포 성공. |
 | [섹션·블록 표 #29](https://github.com/team-campfire-dev/geunyang-math/pull/29) | `d389777` | 표를 만들고 문서에서 채우기만 한다. 배포 후 `indexedBlocks: 134`(본문 44 · 지문 30 · 힌트 30 · 해설 30). 배포 성공. |
 | [행에서 읽기 #30](https://github.com/team-campfire-dev/geunyang-math/pull/30) | `93f323d` | 카탈로그·수업 화면·학습 상태·초안 만들기가 행에서 읽는다. 판본 6개가 행에서 문서와 동일하게 되돌아옴을 확인. 배포 성공. |
 | [진단·용어 블록 #31](https://github.com/team-campfire-dev/geunyang-math/pull/31) | `ad7024f` | 남은 블록을 같은 표로 옮겼다. 배포 후 `indexedBlocks: 148`(진단 지문 6 · 정의 8 추가). `fallback`을 가진 정의 블록 둘이 되돌리기 검사를 통과. 배포 성공. |
@@ -166,7 +166,7 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 
 이 릴리스의 `20260916030000_editor_expert_mode`는 `User`에 `editorExpertMode`(기본 꺼짐) 한 칸을 더하는 **추가 전용** migration이라 되돌리려면 이전 이미지를 다시 띄우면 된다. 초안 상태에 더한 `review`는 `status`가 이미 문자열 칸이라 migration이 없다.
 
-DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVersion과 초기 콘텐츠를 등록한다. 기본 콘텐츠는 클래스 3개(수업·숙제 문항 15개), 진단 1종(6문항), 개념 3개다. 기존 ClassVersion 행의 내용·해시·발행 시각을 덮어쓰지 않는다. 배포용 migrator는 `db:migrate` 후 저장소의 `content/*.json`을 `content:publish`로 발행하고 `content:verify`를 실행한다. `AppliedContentBundle`에 같은 checksum이 있으면 건너뛰므로 내용이 그대로인 배포는 DB를 건드리지 않고, 이미 발행한 판본을 고쳐 커밋하면 배포가 실패한다. 등록 명령과 불변 판본 정책은 [DB 콘텐츠 관리](content-management.md)를 따른다.
+DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVersion과 초기 콘텐츠를 등록한다. 기본 콘텐츠는 수업 3개(수업·숙제 문항 15개), 진단 1종(6문항), 개념 3개다. 기존 LessonVersion 행의 내용·해시·발행 시각을 덮어쓰지 않는다. 배포용 migrator는 `db:migrate` 후 저장소의 `content/*.json`을 `content:publish`로 발행하고 `content:verify`를 실행한다. `AppliedContentBundle`에 같은 checksum이 있으면 건너뛰므로 내용이 그대로인 배포는 DB를 건드리지 않고, 이미 발행한 판본을 고쳐 커밋하면 배포가 실패한다. 등록 명령과 불변 판본 정책은 [DB 콘텐츠 관리](content-management.md)를 따른다.
 
 ### 저장 구조 migration
 
@@ -176,21 +176,25 @@ DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVer
 |---|---|---|
 | `20260915020000_published_problem_index` | 문항 이름 색인 `PublishedProblem`을 만들고 발행된 문서에서 채운다 | 이미지만 되돌리면 된다. 표를 남겨 두어도 앱은 영향받지 않는다 |
 | `20260915030000_class_section_blocks` | 섹션·블록 표를 만들고 같은 방식으로 채운다. 아직 아무도 읽지 않는다 | 〃 |
-| `20260916000000_read_class_from_rows` | `ClassVersion.metadata`와 `PublishedProblem`의 문항 칸을 채운다. **여기서부터 앱이 클래스를 행에서 읽는다** | 이전 이미지는 `document`를 읽고 그 칸은 그대로 기록되므로 학습 화면은 돈다. 다만 **되돌린 상태에서 새 콘텐츠를 발행하면 실패한다** — 옛 코드가 새 필수 칸을 채우지 않는다 |
+| `20260916000000_read_class_from_rows` | `LessonVersion.metadata`와 `PublishedProblem`의 문항 칸을 채운다. **여기서부터 앱이 수업을 행에서 읽는다** | 이전 이미지는 `document`를 읽고 그 칸은 그대로 기록되므로 학습 화면은 돈다. 다만 **되돌린 상태에서 새 콘텐츠를 발행하면 실패한다** — 옛 코드가 새 필수 칸을 채우지 않는다 |
 | `20260916010000_diagnostic_and_term_blocks` | 남아 있던 블록(진단 문항의 지문, 용어 정의의 본문)을 같은 표로 옮긴다 | 〃 |
 | `20260916020000_drop_published_documents` | 발행된 판본의 `document` 칸 네 개를 지운다 | **되돌릴 수 없다.** 이전 이미지는 그 칸을 읽으므로 DB도 함께 되돌려야 한다 |
+
+### 이름 migration
+
+`20260917000000_lesson_and_learning_scope`는 [용어 사전](glossary.md)의 이름을 표에 옮긴다. `ClassVersion`·`ClassSection`·`Scope`를 `LessonVersion`·`LessonSection`·`LearningScope`로, `classKey`·`classVersionId`·`sourceClassVersionId`·`preferredClassKey` 칸과 그 인덕스·제약 이름을 새 이름으로 바꾸고, `ownerKind`·`scopeKind`·`contextKind`의 값 `class`와 문서 JSON 안의 `public.classKey`·용어 주석의 `scopeKind`를 `lesson`으로 고친다. 행은 그대로 옮겨지지만 옮겨진 판본의 `contentHash`는 옛 문서 기준으로 남아 있다(이미 영구 대조에 쓰지 않는다). `RENAME TABLE`이 옛 이름에 `DROP`을 요구하므로 migrator 계정에 `DROP`이 있어야 하고, 이전 앱 이미지는 이 표 이름을 읽지 못하므로 앱만 되돌릴 수 없다. 그다음 단계들은 [변경안](schema-change-plan.md)의 순서를 따른다.
 
 사본이 있는 동안 `content:verify`는 배포마다 행과 `document`를 대조했다 — 처음에는 문항 색인을, 그다음에는 블록을, 세 번째 단계부터는 행을 도로 맞춘 결과 전체를 한 글자도 다르지 않은지 봤다. 네 번의 배포(#27·#29·#30·#31)가 모두 같음을 확인한 뒤에 사본을 지웠다. 지금 `content:verify`가 보고하는 수는 운영 기준으로 `indexedProblems: 36`, `indexedBlocks: 148`이고, 어긋나면 배포가 그 자리에서 멈춘다.
 
 초기 인프라 점검에서는 앱 VM·포트·DNS·와일드카드 인증서, ARM64 non-root 이미지·revision·health, DB TLS 연결과 잘못된 CA/호스트 이름 거부, 앱 계정의 DB 한정 DML·호스트 제한·REQUIRE SSL을 확인했다. NPM Proxy Hosts 등록과 Google HTTPS callback 로그 제외, 배포 시크릿 6개와 자동 배포 활성화도 완료했다. 이 기록은 이후 인증서·권한·프록시 변경을 자동 검증한다는 뜻은 아니다.
 
-최근 기능 릴리스에서는 공개 health 정상, 정확한 commit, `googleLogin=true`·`developmentLogin=false`를 확인했다. 공개 API의 클래스 문서에서 비공개 채점 명세가 노출되지 않음을 비교했다. 운영 화면 점검은 기존 계정의 조회만 수행했고 실제 진단·과제 답안을 새로 제출하지 않았다. 기존 DB 업그레이드의 모든 행·해시·시각·snapshot 보존 비교는 별도의 로컬 테스트 DB에서 수행했다.
+최근 기능 릴리스에서는 공개 health 정상, 정확한 commit, `googleLogin=true`·`developmentLogin=false`를 확인했다. 공개 API의 수업 문서에서 비공개 채점 명세가 노출되지 않음을 비교했다. 운영 화면 점검은 기존 계정의 조회만 수행했고 실제 진단·과제 답안을 새로 제출하지 않았다. 기존 DB 업그레이드의 모든 행·해시·시각·snapshot 보존 비교는 별도의 로컬 테스트 DB에서 수행했다.
 
 ## 운영 콘텐츠·데이터 작업 기록
 
-2026-09-15에 수식과 용어 주석을 담은 클래스 판본 `fraction-meaning:v4`·`fraction-equivalence:v4`·`fraction-addition:v4`를 운영에 발행했다. migrator 이미지로 `content:import`를 실행했고 `newClasses: 3`, 용어는 이미 등록되어 `unchangedVersions: 6`이었다. 공개 API에서 카탈로그가 v4로 바뀌고 수식·용어 주석·glossary가 내려오는 것을 확인했다. 기존 판본은 그대로 남아 있다.
+2026-09-15에 수식과 용어 주석을 담은 수업 판본 `fraction-meaning:v4`·`fraction-equivalence:v4`·`fraction-addition:v4`를 운영에 발행했다. migrator 이미지로 `content:import`를 실행했고 `newClasses: 3`, 용어는 이미 등록되어 `unchangedVersions: 6`이었다. 공개 API에서 카탈로그가 v4로 바뀌고 수식·용어 주석·glossary가 내려오는 것을 확인했다. 기존 판본은 그대로 남아 있다.
 
-같은 날 요청에 따라 운영 DB의 계정 데이터를 전부 삭제했다. FK 자식부터 `AssessmentRevision`·`SubmissionItem`·`Attempt`·`Submission`·`AssignmentRecipient`·`AssignmentItem`·`Assignment`·`Enrollment`·`HintUse`·`DiagnosticRun`·`RecommendationHistory`·`Session`·`GoogleIdentity`·`OAuthAttempt`·`Scope`·`User` 순으로 비웠다. 콘텐츠 테이블은 건드리지 않았고 삭제 후 `content:verify`로 클래스 6판본·문항 30·개념 3·진단 1·용어 6이 그대로임을 확인했다. 되돌릴 백업 절차는 아직 없다.
+같은 날 요청에 따라 운영 DB의 계정 데이터를 전부 삭제했다. FK 자식부터 `AssessmentRevision`·`SubmissionItem`·`Attempt`·`Submission`·`AssignmentRecipient`·`AssignmentItem`·`Assignment`·`Enrollment`·`HintUse`·`DiagnosticRun`·`RecommendationHistory`·`Session`·`GoogleIdentity`·`OAuthAttempt`·`LearningScope`·`User` 순으로 비웠다. 콘텐츠 테이블은 건드리지 않았고 삭제 후 `content:verify`로 수업 6판본·문항 30·개념 3·진단 1·용어 6이 그대로임을 확인했다. 되돌릴 백업 절차는 아직 없다.
 
 수동 작업 중 확인한 제약이 두 가지 있다. 첫째, `scp`로 올린 번들은 `ubuntu`(uid 1001) 소유 0600이라 `node`(uid 1000)로 도는 컨테이너가 읽지 못한다. `--user 1000:1001`과 그룹 읽기 권한으로 실행한 뒤 권한을 되돌린다. 둘째, `migrate` 서비스만 쓰더라도 Compose는 파일 전체를 해석하므로 `APP_BIND_IP`·`DEPLOY_ENV_FILE`까지 필요하다. 일회성 작업은 같은 환경 파일·CA·호스트 별칭을 주어 `docker run`으로 직접 실행하는 편이 간단하다.
 

@@ -1,5 +1,5 @@
 // Public HTTP DTOs. Never import server content or grading answers into this module.
-import type { TermScopeKind } from './rich-text';
+import type { ConceptScope } from './rich-text';
 export type Goal = 'daily-math' | 'foundation-recovery' | 'algebra-ready';
 export type GradeResult = { status: 'correct' | 'incorrect' | 'invalid'; message: string; assisted: boolean };
 export type ContentBlock = {
@@ -17,14 +17,14 @@ export type PublicProblem = {
   responseSpec: { kind: 'integer' | 'rational'; requiredForm?: string };
   hintAvailable: boolean;
 };
-export type ClassSection = {
+export type LessonSection = {
   sectionId: string;
   role: 'explanation' | 'worked_example' | 'practice' | 'check' | 'summary';
   title: string;
   contentBlocks: ContentBlock[];
 };
-export type PublicClass = {
-  classKey: string;
+export type PublicLesson = {
+  lessonKey: string;
   versionId: string;
   title: string;
   summary: string;
@@ -39,25 +39,25 @@ export type PublicClass = {
  * so a definition for the concept currently being taught or assessed never reaches the client.
  */
 export type GlossaryEntry = {
-  termKey: string; scopeKind: TermScopeKind; scopeKey: string;
+  termKey: string; scopeKind: ConceptScope; scopeKey: string;
   label: string; summary: string; skillKey: string;
   blocks: ContentBlock[];
-  // The class that teaches this concept, when one is published.
-  classKey: string | null;
+  // The lesson that teaches this concept, when one is published.
+  lessonKey: string | null;
 };
-export type ClassDocument = PublicClass & { sections: ClassSection[]; problems: PublicProblem[]; glossary: GlossaryEntry[] };
+export type LessonDocument = PublicLesson & { sections: LessonSection[]; problems: PublicProblem[]; glossary: GlossaryEntry[] };
 // Display-only concept names for the signed-out catalogue. Never carries answers or grading rules.
 export type PublicSkill = { key: string; label: string };
-export type PublicCatalog = { classes: PublicClass[]; skills: PublicSkill[] };
+export type PublicCatalog = { lessons: PublicLesson[]; skills: PublicSkill[] };
 export type AttemptView = {
   id: string; problemVersionId: string; answer: string; result: GradeResult; hintUsed: boolean;
 };
 export type EnrollmentView = {
-  id: string; classKey: string; classVersionId: string; completedSectionIds: string[];
+  id: string; lessonKey: string; lessonVersionId: string; completedSectionIds: string[];
   status: 'active' | 'completed'; attempts: AttemptView[];
 };
 export type AssignmentView = {
-  id: string; recipientId: string; title: string; classKey: string | null;
+  id: string; recipientId: string; title: string; lessonKey: string | null;
   recommendedAt: string; policy: 'adaptive' | 'fixed'; status: 'assigned' | 'submitted';
   items: { id: string; problem: PublicProblem; attempt: AttemptView | null }[];
   submissionId: string;
@@ -73,18 +73,18 @@ export type DiagnosticView = {
   results: DiagnosticAnswer[];
 };
 export type SkillReadiness = { key: string; label: string; readiness: 'unknown' | 'needs-practice' | 'ready'; source: 'none' | 'diagnostic' | 'learning' };
-export type Recommendation = { classKey: string; reason: string; kind: 'start' | 'continue' | 'revisit'; suggestedMinutes: number };
+export type Recommendation = { lessonKey: string; reason: string; kind: 'start' | 'continue' | 'revisit'; suggestedMinutes: number };
 export type PersonalPlan = {
   version: string;
   readiness: SkillReadiness[];
   review: { recipientId: string; reason: string } | null;
   sessionMinutes: number;
-  preferredClassKey: string | null;
+  preferredLessonKey: string | null;
 };
 export type RecommendationHistoryView = { id: string; createdAt: string; trigger: string; recommendations: Recommendation[] };
 export type LearningState = {
   user: { id: string; displayName: string; goal: Goal; dailyMinutes: number };
-  classes: PublicClass[];
+  lessons: PublicLesson[];
   enrollments: EnrollmentView[];
   assignments: AssignmentView[];
   recommendations: Recommendation[];
@@ -95,14 +95,14 @@ export type LearningState = {
   skills: { key: string; label: string; state: 'unknown' | 'practicing' | 'independent' | 'retained' }[];
 };
 export type LearningAction =
-  | { action: 'recommendation.choose'; classKey: string | null }
+  | { action: 'recommendation.choose'; lessonKey: string | null }
   | { action: 'diagnostic.start' }
   | { action: 'diagnostic.answer'; diagnosticId: string; problemVersionId: string; answer: string | null }
   | { action: 'profile.update'; goal: Goal; dailyMinutes: number }
-  | { action: 'enrollment.start'; classKey: string }
+  | { action: 'enrollment.start'; lessonKey: string }
   | { action: 'section.complete'; enrollmentId: string; sectionId: string }
-  | { action: 'attempt.submit'; context: 'class' | 'assignment'; contextId: string; problemVersionId: string; answer: string; requestId: string }
-  | { action: 'hint.open'; context: 'class' | 'assignment'; contextId: string; problemVersionId: string }
-  | { action: 'class.complete'; enrollmentId: string }
+  | { action: 'attempt.submit'; context: 'lesson' | 'assignment'; contextId: string; problemVersionId: string; answer: string; requestId: string }
+  | { action: 'hint.open'; context: 'lesson' | 'assignment'; contextId: string; problemVersionId: string }
+  | { action: 'lesson.complete'; enrollmentId: string }
   | { action: 'assignment.submit'; recipientId: string; requestId: string };
 export type ActionResponse = { state: LearningState; result?: GradeResult; hint?: ContentBlock[]; enrollmentId?: string };

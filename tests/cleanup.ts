@@ -2,8 +2,8 @@ import type { PrismaClient } from '@prisma/client';
 
 /**
  * Integration suites share one database and publish into it, and nothing published is ever removed
- * by the application — an immutable version is meant to stay. A run that leaves its classes behind
- * therefore adds to the database forever, and once more than a thousand class versions have piled
+ * by the application — an immutable version is meant to stay. A run that leaves its lessons behind
+ * therefore adds to the database forever, and once more than a thousand lesson versions have piled
  * up the content bundle refuses to load at all, which is how this first showed itself.
  *
  * So a suite takes note of what is already there and, when it is done, removes what it added: the
@@ -16,15 +16,15 @@ export type Existing = Awaited<ReturnType<typeof existingRows>>;
 const ids = <T, K extends keyof T>(rows: T[], key: K) => new Set(rows.map(row => String(row[key])));
 
 export async function existingRows(db: PrismaClient) {
-  const [users, classes, diagnostics, terms, skills, bundles] = await Promise.all([
+  const [users, lessons, diagnostics, terms, skills, bundles] = await Promise.all([
     db.user.findMany({ select: { id: true } }),
-    db.classVersion.findMany({ select: { id: true } }),
+    db.lessonVersion.findMany({ select: { id: true } }),
     db.diagnosticVersion.findMany({ select: { id: true } }),
     db.termVersion.findMany({ select: { id: true } }),
     db.skill.findMany({ select: { key: true } }),
     db.appliedContentBundle.findMany({ select: { name: true } }),
   ]);
-  return { users: ids(users, 'id'), classes: ids(classes, 'id'), diagnostics: ids(diagnostics, 'id'),
+  return { users: ids(users, 'id'), lessons: ids(lessons, 'id'), diagnostics: ids(diagnostics, 'id'),
     terms: ids(terms, 'id'), skills: ids(skills, 'key'), bundles: ids(bundles, 'name') };
 }
 
@@ -33,18 +33,18 @@ export async function removeRowsAddedSince(db: PrismaClient, before: Existing) {
   const now = await existingRows(db);
   const added = (after: Set<string>, seen: Set<string>) => [...after].filter(id => !seen.has(id));
   const users = added(now.users, before.users);
-  const classes = added(now.classes, before.classes);
+  const lessons = added(now.lessons, before.lessons);
   const diagnostics = added(now.diagnostics, before.diagnostics);
   const terms = added(now.terms, before.terms);
   const skills = added(now.skills, before.skills);
   const bundles = added(now.bundles, before.bundles);
-  const versions = [...classes, ...diagnostics, ...terms];
+  const versions = [...lessons, ...diagnostics, ...terms];
   if (!users.length && !versions.length && !skills.length && !bundles.length) return;
 
   const collect = async <T extends { id: string }>(rows: Promise<T[]>) => (await rows).map(row => row.id);
-  const scopes = await collect(db.scope.findMany({ where: { ownerUserId: { in: users } }, select: { id: true } }));
-  const enrollments = await collect(db.enrollment.findMany({ where: { OR: [{ userId: { in: users } }, { classVersionId: { in: classes } }] }, select: { id: true } }));
-  const assignments = await collect(db.assignment.findMany({ where: { OR: [{ ownerScopeId: { in: scopes } }, { sourceClassVersionId: { in: classes } }] }, select: { id: true } }));
+  const scopes = await collect(db.learningScope.findMany({ where: { ownerUserId: { in: users } }, select: { id: true } }));
+  const enrollments = await collect(db.enrollment.findMany({ where: { OR: [{ userId: { in: users } }, { lessonVersionId: { in: lessons } }] }, select: { id: true } }));
+  const assignments = await collect(db.assignment.findMany({ where: { OR: [{ ownerScopeId: { in: scopes } }, { sourceLessonVersionId: { in: lessons } }] }, select: { id: true } }));
   const recipients = await collect(db.assignmentRecipient.findMany({ where: { OR: [{ assignmentId: { in: assignments } }, { learnerUserId: { in: users } }, { sourceEnrollmentId: { in: enrollments } }] }, select: { id: true } }));
   const submissions = await collect(db.submission.findMany({ where: { recipientId: { in: recipients } }, select: { id: true } }));
   const items = await collect(db.assignmentItem.findMany({ where: { assignmentId: { in: assignments } }, select: { id: true } }));
@@ -65,17 +65,17 @@ export async function removeRowsAddedSince(db: PrismaClient, before: Existing) {
   await db.contentAuthor.deleteMany({ where: { userId: { in: users } } });
   await db.session.deleteMany({ where: { userId: { in: users } } });
   await db.googleIdentity.deleteMany({ where: { userId: { in: users } } });
-  await db.scope.deleteMany({ where: { id: { in: scopes } } });
+  await db.learningScope.deleteMany({ where: { id: { in: scopes } } });
   await db.user.deleteMany({ where: { id: { in: users } } });
 
   // A published version is its rows, so the rows go with it.
   await db.contentBlock.deleteMany({ where: { ownerVersionId: { in: versions } } });
-  await db.classSection.deleteMany({ where: { classVersionId: { in: classes } } });
-  await db.publishedProblem.deleteMany({ where: { ownerVersionId: { in: [...classes, ...diagnostics] } } });
-  await db.classVersion.deleteMany({ where: { id: { in: classes } } });
+  await db.lessonSection.deleteMany({ where: { lessonVersionId: { in: lessons } } });
+  await db.publishedProblem.deleteMany({ where: { ownerVersionId: { in: [...lessons, ...diagnostics] } } });
+  await db.lessonVersion.deleteMany({ where: { id: { in: lessons } } });
   await db.diagnosticVersion.deleteMany({ where: { id: { in: diagnostics } } });
   await db.termVersion.deleteMany({ where: { id: { in: terms } } });
-  // A skill is named by the terms and classes that use it, so it goes last.
+  // A skill is named by the terms and lessons that use it, so it goes last.
   await db.skill.deleteMany({ where: { key: { in: skills } } });
   // The ledger would otherwise claim a bundle is applied whose content has just been removed.
   await db.appliedContentBundle.deleteMany({ where: { name: { in: bundles } } });

@@ -109,7 +109,7 @@ export class GoogleLoginService {
         const user = await this.db.$transaction(async tx => {
           let account = await tx.googleIdentity.findUnique({ where: { subject: identity.subject }, include: { user: true } });
           if (!account) account = await tx.googleIdentity.create({ data: { subject: identity.subject,
-            user: { create: { displayName: identity.displayName, scopes: { create: { kind: 'personal' } } } },
+            user: { create: { displayName: identity.displayName, learningScopes: { create: { kind: 'personal' } } } },
           }, include: { user: true } });
           if (validToken(previousToken)) await tx.session.deleteMany({ where: { tokenHash: hashSessionToken(previousToken), authMethod: 'google' } });
           await tx.session.create({ data: { userId: account.userId, tokenHash: hashSessionToken(token), authMethod: 'google', expiresAt: new Date(Date.now() + sessionLifetimeMs) } });

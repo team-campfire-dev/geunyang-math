@@ -4,8 +4,8 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import * as database from '@/server/db';
 import { hashSessionToken } from '@/server/auth';
-import { seedClasses } from './fixtures/content';
-import { classMetadata, indexClassDocument } from '@/server/content-store';
+import { seedLessons } from './fixtures/content';
+import { lessonMetadata, lessonRecord, indexLessonDocument } from '@/server/content-store';
 import { POST } from '@/app/api/v1/learning/route';
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
@@ -20,17 +20,18 @@ describe.skipIf(!testDatabaseUrl)('learning HTTP account binding', () => {
     if (parsed.protocol !== 'mysql:' || !decodeURIComponent(parsed.pathname.slice(1)).endsWith('_test')) throw new Error('Learning route integration requires a MySQL database ending in _test.');
     db = database.createDatabase(testDatabaseUrl!);
     existing = await existingRows(db);
-    const document = seedClasses[0];
+    const document = seedLessons[0];
     const serialized = JSON.stringify(document);
     const contentHash = createHash('sha256').update(serialized).digest('hex');
-    const previous = await db.classVersion.findUnique({ where: { id: document.public.versionId } });
-    if (previous) expect(previous.contentHash).toBe(contentHash);
-    else await db.classVersion.create({ data: {
-      id: document.public.versionId, classKey: document.public.classKey, title: document.public.title,
+    const previous = await db.lessonVersion.findUnique({ where: { id: document.public.versionId } });
+    // The seeded rows were renamed in place by a migration, so their stored hash is historical; the content is what must hold.
+    if (previous) expect(await lessonRecord(db, document.public.versionId)).toEqual(document);
+    else await db.lessonVersion.create({ data: {
+      id: document.public.versionId, lessonKey: document.public.lessonKey, title: document.public.title,
       order: document.public.order,
-      metadata: JSON.parse(JSON.stringify(classMetadata(document))) as Prisma.InputJsonValue, contentHash,
+      metadata: JSON.parse(JSON.stringify(lessonMetadata(document))) as Prisma.InputJsonValue, contentHash,
     } });
-    await indexClassDocument(db, document);
+    await indexLessonDocument(db, document);
   });
   beforeEach(() => {
     vi.stubEnv('NODE_ENV', 'production');
@@ -50,7 +51,7 @@ describe.skipIf(!testDatabaseUrl)('learning HTTP account binding', () => {
   async function learner() {
     const token = randomBytes(32).toString('hex');
     const user = await db.user.create({ data: {
-      displayName: `route ${randomUUID()}`, scopes: { create: { kind: 'personal' } },
+      displayName: `route ${randomUUID()}`, learningScopes: { create: { kind: 'personal' } },
       sessions: { create: { tokenHash: hashSessionToken(token), authMethod: 'google', expiresAt: new Date(Date.now() + 60000) } },
     } });
     return { user, cookie: `__Host-gm_session=${token}` };
@@ -72,9 +73,9 @@ describe.skipIf(!testDatabaseUrl)('learning HTTP account binding', () => {
     for (const owner of [a, b]) expect(await db.user.findUniqueOrThrow({ where: { id: owner.user.id } })).toMatchObject({ goal: 'foundation-recovery', dailyMinutes: 10 });
   });
 
-  it('does not start a class for B from A’s stale screen', async () => {
+  it('does not start a lesson for B from A’s stale screen', async () => {
     const a = await learner(); const b = await learner();
-    await expectAccountChanged(await POST(post(b.cookie, a.user.id, { action: 'enrollment.start', classKey: seedClasses[0].public.classKey })));
+    await expectAccountChanged(await POST(post(b.cookie, a.user.id, { action: 'enrollment.start', lessonKey: seedLessons[0].public.lessonKey })));
     expect(await db.enrollment.count({ where: { userId: { in: [a.user.id, b.user.id] } } })).toBe(0);
   });
 

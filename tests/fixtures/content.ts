@@ -10,7 +10,7 @@ function deepFreeze<T>(value: T): T {
   }
   return value;
 }
-export const seedClasses = deepFreeze(bundle.classes);
+export const seedLessons = deepFreeze(bundle.lessons);
 export const skillLabels = deepFreeze(Object.fromEntries(bundle.skills.map(s => [s.key, s.label])));
 export const diagnosticProblems = deepFreeze(bundle.diagnostics[0].problems);
 export const diagnosticVersion = bundle.diagnostics[0].versionId;

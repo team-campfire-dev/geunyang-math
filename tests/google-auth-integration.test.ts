@@ -128,13 +128,13 @@ describe.skipIf(!testDatabaseUrl)('MySQL Google login identity, one-use state, a
     expect(ids.size).toBe(1);
     const account = await db.googleIdentity.findUniqueOrThrow({ where: { subject } });
     expect(await db.user.count({ where: { displayName } })).toBe(1);
-    expect(await db.scope.count({ where: { ownerUserId: account.userId, kind: 'personal' } })).toBe(1);
+    expect(await db.learningScope.count({ where: { ownerUserId: account.userId, kind: 'personal' } })).toBe(1);
     expect(await db.session.count({ where: { userId: account.userId, authMethod: 'google' } })).toBe(4);
   });
 
   it('matches subjects case-sensitively and never attaches an unrelated development account', async () => {
     const name = `same name ${randomUUID()}`;
-    const development = await db.user.create({ data: { displayName: name, scopes: { create: { kind: 'personal' } } } });
+    const development = await db.user.create({ data: { displayName: name, learningScopes: { create: { kind: 'personal' } } } });
     const upper = service(`CASE-${randomUUID()}`, name);
     const lower = service(upper.subject.toLowerCase(), name);
     const first = await upper.login.complete((await begin(upper.login)).callback());

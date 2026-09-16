@@ -10,14 +10,14 @@ model User {
   id           String   @id @default(cuid()) @db.VarChar(191)
   displayName  String   @db.VarChar(80)
   goal         String   @default("foundation-recovery") @db.VarChar(40)
-  preferredClassKey String? @db.VarChar(100)
+  preferredLessonKey String? @db.VarChar(100)
   dailyMinutes Int      @default(10)
   timezone     String   @default("Asia/Seoul") @db.VarChar(80)
   /// Whether the content editor shows the names the system uses — block and version IDs, the
   /// compatibility switches — rather than only what a lesson is made of.
   editorExpertMode Boolean @default(false)
   createdAt    DateTime @default(now())
-  scopes       Scope[]
+  learningScopes LearningScope[]
   sessions     Session[]
   googleIdentity GoogleIdentity?
   enrollments  Enrollment[]
@@ -41,10 +41,10 @@ model ContentAuthor {
 }
 
 /// A working copy of a class document. Published versions stay immutable, so publishing copies the
-/// draft into a new ClassVersion; a draft is never the record a learner reads.
+/// draft into a new LessonVersion; a draft is never the record a learner reads.
 model ContentDraft {
   id                 String @id @default(cuid()) @db.VarChar(191)
-  classKey           String @db.VarChar(100)
+  lessonKey           String @db.VarChar(100)
   versionId          String @db.VarChar(191)
   baseVersionId      String? @db.VarChar(191)
   title              String @db.VarChar(191)
@@ -55,7 +55,7 @@ model ContentDraft {
   publishedVersionId String? @db.VarChar(191)
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
-  @@index([classKey])
+  @@index([lessonKey])
   @@index([authorId, updatedAt])
 }
 
@@ -83,7 +83,7 @@ model RecommendationHistory {
   @@index([userId, createdAt])
 }
 
-model Scope {
+model LearningScope {
   id          String @id @default(cuid()) @db.VarChar(191)
   kind        String @db.VarChar(20)
   ownerUserId String? @unique @db.VarChar(191)
@@ -104,18 +104,18 @@ model Session {
   @@index([expiresAt])
 }
 
-model ClassVersion {
+model LessonVersion {
   id          String @id @db.VarChar(191)
-  classKey    String @db.VarChar(100)
+  lessonKey    String @db.VarChar(100)
   title       String @db.VarChar(191)
   order       Int
   /// Everything a class says about itself that is not a section, a block or a question — `public`
-  /// and `homeworkProblemIds`. The rest is in ClassSection, ContentBlock and PublishedProblem.
+  /// and `homeworkProblemIds`. The rest is in LessonSection, ContentBlock and PublishedProblem.
   metadata    Json
   contentHash String @db.VarChar(64)
   publishedAt DateTime @default(now())
   enrollments Enrollment[]
-  @@index([classKey])
+  @@index([lessonKey])
 }
 
 /**
@@ -146,14 +146,14 @@ model PublishedProblem {
  * published class holds — a section's body, or a question's prompt, hints and solution. The class
  * document is still the record these are derived from; nothing reads them yet.
  */
-model ClassSection {
-  classVersionId String @db.VarChar(191)
+model LessonSection {
+  lessonVersionId String @db.VarChar(191)
   sectionId      String @db.VarChar(191)
   role           String @db.VarChar(20)
   title          String @db.VarChar(500)
   order          Int
-  @@id([classVersionId, sectionId])
-  @@index([classVersionId, order])
+  @@id([lessonVersionId, sectionId])
+  @@index([lessonVersionId, order])
 }
 
 model ContentBlock {
@@ -226,25 +226,25 @@ model Enrollment {
   userId              String @db.VarChar(191)
   user                User @relation(fields: [userId], references: [id])
   scopeId             String @db.VarChar(191)
-  scope               Scope @relation(fields: [scopeId], references: [id])
-  classVersionId      String @db.VarChar(191)
-  classVersion        ClassVersion @relation(fields: [classVersionId], references: [id])
+  learningScope               LearningScope @relation(fields: [scopeId], references: [id])
+  lessonVersionId      String @db.VarChar(191)
+  lessonVersion        LessonVersion @relation(fields: [lessonVersionId], references: [id])
   completedSectionIds Json
   status              String @default("active") @db.VarChar(20)
   createdAt           DateTime @default(now())
   completedAt         DateTime?
   attempts            Attempt[]
   sourceRecipients    AssignmentRecipient[]
-  @@unique([userId, classVersionId])
+  @@unique([userId, lessonVersionId])
 }
 
 model Assignment {
   id                   String @id @default(cuid()) @db.VarChar(191)
   ownerScopeId         String @db.VarChar(191)
-  scope                Scope @relation(fields: [ownerScopeId], references: [id])
+  learningScope                LearningScope @relation(fields: [ownerScopeId], references: [id])
   title                String @db.VarChar(191)
   issuerType           String @default("system") @db.VarChar(20)
-  sourceClassVersionId String? @db.VarChar(191)
+  sourceLessonVersionId String? @db.VarChar(191)
   policySnapshot       Json
   issuedAt             DateTime @default(now())
   items                AssignmentItem[]
@@ -297,7 +297,7 @@ model Attempt {
   userId           String @db.VarChar(191)
   user             User @relation(fields: [userId], references: [id])
   scopeId          String @db.VarChar(191)
-  scope            Scope @relation(fields: [scopeId], references: [id])
+  learningScope            LearningScope @relation(fields: [scopeId], references: [id])
   enrollmentId     String? @db.VarChar(191)
   enrollment       Enrollment? @relation(fields: [enrollmentId], references: [id])
   submissionId     String? @db.VarChar(191)

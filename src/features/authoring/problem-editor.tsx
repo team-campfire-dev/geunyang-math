@@ -41,7 +41,7 @@ function AnswerField({ spec, onChange }: { spec: AnswerSpec; onChange: (next: An
   </div>;
 }
 
-/** The concepts this class teaches, named the way the catalogue names them rather than by key. */
+/** The concepts this lesson teaches, named the way the catalogue names them rather than by key. */
 export function SkillPicker({ skills, chosen, onChange, label = '다루는 개념' }: {
   skills: SkillChoice[]; chosen: string[]; onChange: (next: string[]) => void; label?: string;
 }) {
@@ -124,8 +124,8 @@ export function ProblemPanel({ problem, number, total, skills, taken, termChoice
  * question is written, changed and removed; removing one here drops it from the version being
  * written, while every published version keeps the question it was published with.
  */
-export function ProblemSetEditor({ block, problems, classKey, role, versionId, skills, onPick, onChange }: {
-  block: ContentBlock; problems: DraftProblem[]; classKey: string; role: string; versionId: string;
+export function ProblemSetEditor({ block, problems, lessonKey, role, versionId, skills, onPick, onChange }: {
+  block: ContentBlock; problems: DraftProblem[]; lessonKey: string; role: string; versionId: string;
   skills: SkillChoice[]; onPick: (problemVersionId: string) => void;
   onChange: (block: ContentBlock, problems: DraftProblem[]) => void;
 }) {
@@ -137,13 +137,13 @@ export function ProblemSetEditor({ block, problems, classKey, role, versionId, s
   const write = (nextIds: string[], nextProblems: DraftProblem[]) =>
     onChange({ ...block, payload: { ...block.payload, problemVersionIds: nextIds } }, nextProblems);
   const add = () => {
-    const created = newProblem(nextProblemVersionId(classKey, role, versionId, problems.map((item) => item.problemVersionId)),
+    const created = newProblem(nextProblemVersionId(lessonKey, role, versionId, problems.map((item) => item.problemVersionId)),
       chosen[0]?.skillKeys ?? problems[0]?.skillKeys ?? skills.slice(0, 1).map((skill) => skill.key));
     write([...ids, created.problemVersionId], [...problems, created]);
     onPick(created.problemVersionId);
   };
   const copy = (problem: DraftProblem, at: number) => {
-    const made = copyProblem(problem, classKey, role, versionId, problems.map((item) => item.problemVersionId));
+    const made = copyProblem(problem, lessonKey, role, versionId, problems.map((item) => item.problemVersionId));
     write(insertAfter(ids, at, made.problemVersionId), [...problems, made]);
     onPick(made.problemVersionId);
   };

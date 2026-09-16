@@ -2,9 +2,9 @@ import 'server-only';
 import { createHash } from 'node:crypto';
 import { Prisma, type PrismaClient, type DiagnosticVersion, type TermVersion } from '@prisma/client';
 import { canonicalJson, ContentError, diagnosticDefinitionSchema, parseContentBundle, termDefinitionSchema, validateReferences, type ContentBundle, type DiagnosticDefinition, type TermDefinition } from '@/core/content-bundle';
-import type { StoredClass, StoredProblem } from '@/core/content';
+import type { StoredLesson, StoredProblem } from '@/core/content';
 import type { ContentBlock } from '@/shared/api';
-import { termRefId, type TermRef, type TermScopeKind } from '@/shared/rich-text';
+import { termRefId, type TermRef, type ConceptScope } from '@/shared/rich-text';
 
 type Db = Prisma.TransactionClient;
 const json = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
@@ -14,7 +14,7 @@ type IndexedProblem = StoredProblem | DiagnosticDefinition['problems'][number];
  * A published question as a row: what it is apart from its blocks. The blocks are rows of their own,
  * so reading a question back joins the two.
  */
-const problemRows = (ownerKind: 'class' | 'diagnostic', ownerVersionId: string, problems: IndexedProblem[]) =>
+const problemRows = (ownerKind: 'lesson' | 'diagnostic', ownerVersionId: string, problems: IndexedProblem[]) =>
   problems.map((problem, order) => ({ ownerKind, ownerVersionId, problemVersionId: problem.problemVersionId,
     order, skillKeys: json(problem.skillKeys), responseSpec: json(problem.responseSpec),
     gradingSpec: json(problem.gradingSpec), hintAvailable: problem.hintAvailable }));
@@ -33,11 +33,11 @@ export const blockOf = (row: StoredBlockRow): ContentBlock => ({
   blockId: row.blockId, kind: row.kind, typeVersion: row.typeVersion, required: row.required,
   payload: row.payload as Record<string, unknown>, ...(row.fallback === null ? {} : { fallback: row.fallback }),
 });
-/** Everything a class says about itself that is not a section, a block or a question. */
-export const classMetadata = (record: StoredClass) => ({ public: record.public, homeworkProblemIds: record.homeworkProblemIds });
-/** Every section and block a published class holds, in the order the document holds them. */
-const classRows = (record: StoredClass) => ({
-  sections: record.sections.map((section, order) => ({ classVersionId: record.public.versionId,
+/** Everything a lesson says about itself that is not a section, a block or a question. */
+export const lessonMetadata = (record: StoredLesson) => ({ public: record.public, homeworkProblemIds: record.homeworkProblemIds });
+/** Every section and block a published lesson holds, in the order the document holds them. */
+const lessonRows = (record: StoredLesson) => ({
+  sections: record.sections.map((section, order) => ({ lessonVersionId: record.public.versionId,
     sectionId: section.sectionId, role: section.role, title: section.title, order })),
   blocks: [
     ...record.sections.flatMap(section => blockRows('section', record.public.versionId, section.sectionId, 'body', section.contentBlocks)),
@@ -49,20 +49,20 @@ const classRows = (record: StoredClass) => ({
   ],
 });
 /**
- * Writes every row a published class is read from — what it says about itself, its sections, its
- * blocks and its questions. Whoever publishes a class owes these.
+ * Writes every row a published lesson is read from — what it says about itself, its sections, its
+ * blocks and its questions. Whoever publishes a lesson owes these.
  */
-export async function indexClassDocument(db: Db, record: StoredClass) {
-  const { sections, blocks } = classRows(record);
-  if (sections.length) await db.classSection.createMany({ data: sections, skipDuplicates: true });
+export async function indexLessonDocument(db: Db, record: StoredLesson) {
+  const { sections, blocks } = lessonRows(record);
+  if (sections.length) await db.lessonSection.createMany({ data: sections, skipDuplicates: true });
   if (blocks.length) await db.contentBlock.createMany({ data: blocks, skipDuplicates: true });
-  await indexPublishedProblems(db, 'class', record.public.versionId, record.problems);
+  await indexPublishedProblems(db, 'lesson', record.public.versionId, record.problems);
 }
 /**
  * Writes the question rows a published version owns. Whoever writes a version owes these, and
  * whoever removes one owes their removal; verifyProblemIndex is what says so out loud.
  */
-export async function indexPublishedProblems(db: Db, ownerKind: 'class' | 'diagnostic', ownerVersionId: string, problems: IndexedProblem[]) {
+export async function indexPublishedProblems(db: Db, ownerKind: 'lesson' | 'diagnostic', ownerVersionId: string, problems: IndexedProblem[]) {
   const rows = problemRows(ownerKind, ownerVersionId, problems);
   if (rows.length) await db.publishedProblem.createMany({ data: rows, skipDuplicates: true });
 }
@@ -117,22 +117,22 @@ async function blockIndex(db: Db, versionIds: string[]): Promise<BlockIndex> {
   }
   return (versionId, ownerKind, ownerId, slot) => held.get(`${versionId}/${ownerKind}/${ownerId}/${slot}`) ?? [];
 }
-/** A published class, put back together out of the rows that are now all there is of it. */
-export async function classRecords(db: Db, versionIds: string[]): Promise<Map<string, StoredClass>> {
+/** A published lesson, put back together out of the rows that are now all there is of it. */
+export async function lessonRecords(db: Db, versionIds: string[]): Promise<Map<string, StoredLesson>> {
   const wanted = [...new Set(versionIds)];
   if (!wanted.length) return new Map();
   const [versions, sections, blocksOf, problems] = await Promise.all([
-    db.classVersion.findMany({ where: { id: { in: wanted } }, select: { id: true, metadata: true } }),
-    db.classSection.findMany({ where: { classVersionId: { in: wanted } }, orderBy: { order: 'asc' } }),
+    db.lessonVersion.findMany({ where: { id: { in: wanted } }, select: { id: true, metadata: true } }),
+    db.lessonSection.findMany({ where: { lessonVersionId: { in: wanted } }, orderBy: { order: 'asc' } }),
     blockIndex(db, wanted),
-    db.publishedProblem.findMany({ where: { ownerKind: 'class', ownerVersionId: { in: wanted } }, orderBy: { order: 'asc' } }),
+    db.publishedProblem.findMany({ where: { ownerKind: 'lesson', ownerVersionId: { in: wanted } }, orderBy: { order: 'asc' } }),
   ]);
   return new Map(versions.map(version => {
-    const metadata = version.metadata as { public: StoredClass['public']; homeworkProblemIds: string[] };
+    const metadata = version.metadata as { public: StoredLesson['public']; homeworkProblemIds: string[] };
     return [version.id, {
       public: metadata.public,
-      sections: sections.filter(section => section.classVersionId === version.id).map(section => ({
-        sectionId: section.sectionId, role: section.role as StoredClass['sections'][number]['role'],
+      sections: sections.filter(section => section.lessonVersionId === version.id).map(section => ({
+        sectionId: section.sectionId, role: section.role as StoredLesson['sections'][number]['role'],
         title: section.title, contentBlocks: blocksOf(version.id, 'section', section.sectionId, 'body'),
       })),
       problems: problems.filter(problem => problem.ownerVersionId === version.id).map(problem =>
@@ -141,8 +141,8 @@ export async function classRecords(db: Db, versionIds: string[]): Promise<Map<st
     }];
   }));
 }
-export async function classRecord(db: Db, versionId: string): Promise<StoredClass | null> {
-  return (await classRecords(db, [versionId])).get(versionId) ?? null;
+export async function lessonRecord(db: Db, versionId: string): Promise<StoredLesson | null> {
+  return (await lessonRecords(db, [versionId])).get(versionId) ?? null;
 }
 
 /** A diagnostic is its own columns and the questions the rows hold for it, in their order. */
@@ -167,11 +167,11 @@ export async function termDefinitions(db: Db, rows: TermVersion[]): Promise<Term
     label: row.label, summary: row.summary, blocks: blocksOf(row.id, 'term', row.id, 'body') }));
 }
 const rowRef = (row: { termKey: string; scopeKind: string; scopeKey: string }) =>
-  termRefId({ termKey: row.termKey, scopeKind: row.scopeKind as TermScopeKind, scopeKey: row.scopeKey });
+  termRefId({ termKey: row.termKey, scopeKind: row.scopeKind as ConceptScope, scopeKey: row.scopeKey });
 /**
  * Latest published definition for each term a document asked for. A reference names its scope, so a
- * class-scoped term and a dictionary term may share a key without either one answering for the
- * other. Only the version is late-bound: a reworded definition needs no class republished.
+ * lesson-scoped term and a dictionary term may share a key without either one answering for the
+ * other. Only the version is late-bound: a reworded definition needs no lesson republished.
  */
 export async function currentTerms(db: Db, refs: TermRef[]): Promise<TermDefinition[]> {
   if (!refs.length) return [];
@@ -192,20 +192,20 @@ export async function currentDiagnostic(db: Db) {
   return row ? (await diagnosticDefinitions(db, [row]))[0] : null;
 }
 export async function exportContent(db: Db): Promise<ContentBundle> {
-  const [skills, classes, diagnostics, terms] = await Promise.all([
+  const [skills, lessons, diagnostics, terms] = await Promise.all([
     db.skill.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }] }),
-    db.classVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }],
-      select: { id: true, classKey: true, title: true, order: true } }),
+    db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }],
+      select: { id: true, lessonKey: true, title: true, order: true } }),
     db.diagnosticVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }] }),
     db.termVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }] }),
   ]);
-  const records = await classRecords(db, classes.map(row => row.id));
-  for (const row of classes) {
+  const records = await lessonRecords(db, lessons.map(row => row.id));
+  for (const row of lessons) {
     const record = records.get(row.id);
-    if (!record) throw new ContentError(`Published class has no rows to read it from: ${row.id}`);
-    if (row.id !== record.public?.versionId || row.classKey !== record.public?.classKey || row.title !== record.public?.title || row.order !== record.public?.order) throw new ContentError(`Class metadata mismatch: ${row.id}`);
+    if (!record) throw new ContentError(`Published lesson has no rows to read it from: ${row.id}`);
+    if (row.id !== record.public?.versionId || row.lessonKey !== record.public?.lessonKey || row.title !== record.public?.title || row.order !== record.public?.order) throw new ContentError(`Lesson metadata mismatch: ${row.id}`);
   }
-  return parseContentBundle({ schemaVersion: 1, skills, classes: classes.map(row => records.get(row.id)),
+  return parseContentBundle({ schemaVersion: 1, skills, lessons: lessons.map(row => records.get(row.id)),
     diagnostics: await diagnosticDefinitions(db, diagnostics), terms: await termDefinitions(db, terms) });
 }
 
@@ -216,16 +216,16 @@ export async function exportContent(db: Db): Promise<ContentBundle> {
  * none of them, which is a matter of counting.
  */
 export async function verifyRowsBelongToVersions(db: Db, bundle: ContentBundle) {
-  const expected = bundle.classes.reduce((totals, record) => {
-    const rows = classRows(record);
+  const expected = bundle.lessons.reduce((totals, record) => {
+    const rows = lessonRows(record);
     return { sections: totals.sections + rows.sections.length, blocks: totals.blocks + rows.blocks.length,
       problems: totals.problems + record.problems.length };
   }, { sections: 0, blocks: 0, problems: 0 });
   expected.blocks += bundle.diagnostics.reduce((n, d) => n + d.problems.reduce((m, p) => m + p.promptContent.length, 0), 0);
   expected.blocks += bundle.terms.reduce((n, t) => n + t.blocks.length, 0);
   expected.problems += bundle.diagnostics.reduce((n, d) => n + d.problems.length, 0);
-  const [sections, blocks, problems] = await Promise.all([db.classSection.count(), db.contentBlock.count(), db.publishedProblem.count()]);
-  if (sections !== expected.sections) throw new ContentError(`Section rows belong to no published class: ${sections - expected.sections} extra.`);
+  const [sections, blocks, problems] = await Promise.all([db.lessonSection.count(), db.contentBlock.count(), db.publishedProblem.count()]);
+  if (sections !== expected.sections) throw new ContentError(`Section rows belong to no published lesson: ${sections - expected.sections} extra.`);
   if (blocks !== expected.blocks) throw new ContentError(`Block rows belong to no published version: ${blocks - expected.blocks} extra.`);
   if (problems !== expected.problems) throw new ContentError(`Question rows belong to no published version: ${problems - expected.problems} extra.`);
   return { blocks, problems };
@@ -234,9 +234,9 @@ export async function verifyRowsBelongToVersions(db: Db, bundle: ContentBundle) 
 export async function verifyContent(db: Db) {
   const bundle = await exportContent(db);
   validateReferences(bundle);
-  if (!bundle.classes.length || !bundle.skills.length || !bundle.diagnostics.some(d => d.diagnosticKey === 'starting-point')) throw new ContentError('Database content is incomplete. Apply database migrations or import a reviewed bundle.');
+  if (!bundle.lessons.length || !bundle.skills.length || !bundle.diagnostics.some(d => d.diagnosticKey === 'starting-point')) throw new ContentError('Database content is incomplete. Apply database migrations or import a reviewed bundle.');
   const { blocks: indexedBlocks, problems: indexedProblems } = await verifyRowsBelongToVersions(db, bundle);
-  return { classes: bundle.classes.length, classProblems: bundle.classes.reduce((n, c) => n + c.problems.length, 0), indexedProblems, indexedBlocks,
+  return { lessons: bundle.lessons.length, lessonProblems: bundle.lessons.reduce((n, c) => n + c.problems.length, 0), indexedProblems, indexedBlocks,
     skills: bundle.skills.length, diagnosticVersions: bundle.diagnostics.length, diagnosticProblems: bundle.diagnostics.reduce((n, d) => n + d.problems.length, 0),
     termVersions: bundle.terms.length, terms: new Set(bundle.terms.map(termRefId)).size };
 }
@@ -244,11 +244,11 @@ export async function verifyContent(db: Db) {
 type Ledger = { name: string; checksum: string };
 async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: boolean, ledger?: Ledger) {
   const existing = await exportContent(db);
-  const newClasses: StoredClass[] = [], newDiagnostics: DiagnosticDefinition[] = [], newTerms: TermDefinition[] = [];
-  for (const c of incoming.classes) {
-    const old = await classRecord(db, c.public.versionId);
-    if (old && canonicalJson(old) !== canonicalJson(c)) throw new ContentError(`Published class is immutable: ${c.public.versionId}. Use a new version ID.`);
-    if (!old) newClasses.push(c);
+  const newLessons: StoredLesson[] = [], newDiagnostics: DiagnosticDefinition[] = [], newTerms: TermDefinition[] = [];
+  for (const c of incoming.lessons) {
+    const old = await lessonRecord(db, c.public.versionId);
+    if (old && canonicalJson(old) !== canonicalJson(c)) throw new ContentError(`Published lesson is immutable: ${c.public.versionId}. Use a new version ID.`);
+    if (!old) newLessons.push(c);
   }
   for (const d of incoming.diagnostics) {
     const old = await db.diagnosticVersion.findUnique({ where: { id: d.versionId } });
@@ -268,28 +268,28 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
     if (old && old.key !== s.key) throw new ContentError('Skill keys cannot differ only by letter case.');
     skills.set(s.key, s);
   }
-  validateReferences({ schemaVersion: 1, skills: [...skills.values()], classes: [...existing.classes, ...newClasses],
+  validateReferences({ schemaVersion: 1, skills: [...skills.values()], lessons: [...existing.lessons, ...newLessons],
     diagnostics: [...existing.diagnostics, ...newDiagnostics], terms: [...existing.terms, ...newTerms] });
   if (!dryRun) {
     // Bundle order is publication order. Millisecond ties must not select an arbitrary version.
-    const [lastClass, lastDiagnostic, lastTerm] = await Promise.all([
-      db.classVersion.findFirst({ orderBy: { publishedAt: 'desc' }, select: { publishedAt: true } }),
+    const [lastLesson, lastDiagnostic, lastTerm] = await Promise.all([
+      db.lessonVersion.findFirst({ orderBy: { publishedAt: 'desc' }, select: { publishedAt: true } }),
       db.diagnosticVersion.findFirst({ orderBy: { publishedAt: 'desc' }, select: { publishedAt: true } }),
       db.termVersion.findFirst({ orderBy: { publishedAt: 'desc' }, select: { publishedAt: true } }),
     ]);
-    let publishedTime = Math.max(Date.now(), (lastClass?.publishedAt.getTime() ?? 0) + 1, (lastDiagnostic?.publishedAt.getTime() ?? 0) + 1, (lastTerm?.publishedAt.getTime() ?? 0) + 1);
+    let publishedTime = Math.max(Date.now(), (lastLesson?.publishedAt.getTime() ?? 0) + 1, (lastDiagnostic?.publishedAt.getTime() ?? 0) + 1, (lastTerm?.publishedAt.getTime() ?? 0) + 1);
     const publishedAt = () => new Date(publishedTime++);
     for (const s of incoming.skills) await db.skill.upsert({ where: { key: s.key }, create: s, update: { label: s.label, order: s.order } });
-    for (const c of newClasses) await db.classVersion.create({ data: { id: c.public.versionId, classKey: c.public.classKey,
-      title: c.public.title, order: c.public.order, metadata: json(classMetadata(c)),
+    for (const c of newLessons) await db.lessonVersion.create({ data: { id: c.public.versionId, lessonKey: c.public.lessonKey,
+      title: c.public.title, order: c.public.order, metadata: json(lessonMetadata(c)),
       contentHash: hash(c), publishedAt: publishedAt() } });
     for (const d of newDiagnostics) await db.diagnosticVersion.create({ data: { id: d.versionId, diagnosticKey: d.diagnosticKey,
       title: d.title, description: d.description, estimatedMinutes: d.estimatedMinutes, contentHash: hash(d), publishedAt: publishedAt() } });
     // The index shares the transaction that publishes the version, so a question is never findable
     // by name before the document that holds it exists.
-    for (const c of newClasses) await indexClassDocument(db, c);
+    for (const c of newLessons) await indexLessonDocument(db, c);
     for (const d of newDiagnostics) await indexDiagnosticDocument(db, d);
-    // Term links live inside class JSON with no foreign key, so creation order is free; the merged
+    // Term links live inside lesson JSON with no foreign key, so creation order is free; the merged
     // reference check above already proved every linked term exists.
     for (const t of newTerms) await db.termVersion.create({ data: { id: t.versionId, termKey: t.termKey,
       scopeKind: t.scopeKind, scopeKey: t.scopeKey, skillKey: t.skillKey,
@@ -299,8 +299,8 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
     if (ledger) await db.appliedContentBundle.upsert({ where: { name: ledger.name }, create: { ...ledger },
       update: { checksum: ledger.checksum, appliedAt: new Date() } });
   }
-  return { dryRun, newClasses: newClasses.length, newDiagnostics: newDiagnostics.length, newTerms: newTerms.length, skills: incoming.skills.length,
-    unchangedVersions: incoming.classes.length + incoming.diagnostics.length + incoming.terms.length - newClasses.length - newDiagnostics.length - newTerms.length };
+  return { dryRun, newLessons: newLessons.length, newDiagnostics: newDiagnostics.length, newTerms: newTerms.length, skills: incoming.skills.length,
+    unchangedVersions: incoming.lessons.length + incoming.diagnostics.length + incoming.terms.length - newLessons.length - newDiagnostics.length - newTerms.length };
 }
 export async function importContent(db: PrismaClient, input: unknown, dryRun = false, ledger?: Ledger) {
   const incoming = parseContentBundle(input);

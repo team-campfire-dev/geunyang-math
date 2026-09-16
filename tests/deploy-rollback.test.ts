@@ -107,7 +107,7 @@ describe('reviewed content bundles published by the migrator', () => {
       const raw = readFileSync(resolve('content', name), 'utf8');
       expect(raw, name).not.toMatch(/"(?:gradingSpec|solution|hints|problems)"/);
       const bundle = parseContentBundle(JSON.parse(raw));
-      expect(bundle.classes, name).toHaveLength(0);
+      expect(bundle.lessons, name).toHaveLength(0);
       expect(bundle.diagnostics, name).toHaveLength(0);
       expect(bundle.terms.length, name).toBeGreaterThan(0);
     }

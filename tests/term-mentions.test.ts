@@ -4,7 +4,7 @@ import { locateTerms, type TermAnnotation } from '@/shared/rich-text';
 import type { TermChoice } from '@/shared/authoring';
 
 const shared: TermChoice = { termKey: 'term.denominator', scopeKind: 'global', scopeKey: '', label: '분모', skillKey: 'fraction.meaning' };
-const mine: TermChoice = { termKey: 'term.denominator', scopeKind: 'class', scopeKey: 'fraction-meaning', label: '분모', skillKey: 'fraction.meaning' };
+const mine: TermChoice = { termKey: 'term.denominator', scopeKind: 'lesson', scopeKey: 'fraction-meaning', label: '분모', skillKey: 'fraction.meaning' };
 
 describe('typing @ to reach for a term', () => {
   it('reads the mention being typed, and only that one', () => {
@@ -41,7 +41,7 @@ describe('typing @ to reach for a term', () => {
 
   it('carries the scope of the term that was chosen', () => {
     const { terms } = linkTerm('@분', { from: 0, query: '분' }, mine, []);
-    expect(terms[0]).toEqual({ termKey: 'term.denominator', surface: '분모', scopeKind: 'class', scopeKey: 'fraction-meaning' });
+    expect(terms[0]).toEqual({ termKey: 'term.denominator', surface: '분모', scopeKind: 'lesson', scopeKey: 'fraction-meaning' });
   });
 
   it('moves an existing link rather than adding a second one the validator would reject', () => {
@@ -51,7 +51,7 @@ describe('typing @ to reach for a term', () => {
     expect(terms).toHaveLength(1);
     expect(terms[0]).toMatchObject({ occurrence: 2 });
     expect(locateTerms(text, terms).issues).toEqual([]);
-    // A term kept by the class is a different term, so it links alongside the shared one.
+    // A term kept by the lesson is a different term, so it links alongside the shared one.
     const both = linkTerm(text, { from: text.length, query: '' }, mine, terms);
     expect(both.terms).toHaveLength(2);
   });
