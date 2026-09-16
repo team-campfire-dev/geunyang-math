@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { coalesceMs, emptyHistory, historyLimit, historyReducer, type HistoryState } from '@/features/authoring/edit-history';
 import { editShape, type DraftEdit } from '@/shared/authoring';
-import type { ClassSection, ContentBlock } from '@/shared/api';
+import type { LessonSection, ContentBlock } from '@/shared/api';
 
 type Doc = { shape: string; text: string };
 const signature = (value: Doc) => value.shape;
@@ -96,9 +96,9 @@ describe('taking back what the editor did', () => {
 
 const block = (blockId: string, kind = 'core.rich_text', payload: Record<string, unknown> = { text: '글' }): ContentBlock =>
   ({ blockId, kind, typeVersion: 1, required: true, payload });
-const section = (sectionId: string, contentBlocks: ContentBlock[]): ClassSection =>
+const section = (sectionId: string, contentBlocks: ContentBlock[]): LessonSection =>
   ({ sectionId, role: 'explanation', title: '단계', contentBlocks });
-const draft = (sections: ClassSection[], problems: DraftEdit['problems'] = []): DraftEdit =>
+const draft = (sections: LessonSection[], problems: DraftEdit['problems'] = []): DraftEdit =>
   ({ meta: { versionId: 'fractions:v2', title: '수업', summary: '한 줄', estimatedMinutes: 12, skillKeys: ['fraction.meaning'] }, sections, problems });
 
 describe('what counts as the same shape while writing', () => {

@@ -68,7 +68,7 @@ export function developmentLoginEnabled(request: Request) {
 export async function createDevelopmentSession(displayName: string) {
   const token = randomBytes(32).toString('hex');
   const user = await getDatabase().user.create({ data: {
-    displayName, scopes: { create: { kind: 'personal' } },
+    displayName, learningScopes: { create: { kind: 'personal' } },
     sessions: { create: { tokenHash: hashSessionToken(token), authMethod: 'development', expiresAt: new Date(Date.now() + 7 * 86400000) } },
   } });
   return { user, cookie: authCookie('gm_session', token, 604800) };

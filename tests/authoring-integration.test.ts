@@ -3,17 +3,17 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { createDatabase } from '@/server/db';
 import { AuthoringService, authoringRole, authoringRoleDetail, openAuthoring, openAuthoringAccount } from '@/server/authoring';
-import { classRecord, importContent, termDefinitions } from '@/server/content-store';
-import type { StoredClass } from '@/core/content';
+import { lessonRecord, importContent, termDefinitions } from '@/server/content-store';
+import type { StoredLesson } from '@/core/content';
 import { newProblem, nextProblemVersionId, type DraftEdit, type DraftProblem } from '@/shared/authoring';
-import { seedClasses } from './fixtures/content';
+import { seedLessons } from './fixtures/content';
 
 const url = process.env.TEST_DATABASE_URL;
 describe.skipIf(!url)('content authoring on MySQL', () => {
   let db: ReturnType<typeof createDatabase>;
   let existing: Existing;
   let service: AuthoringService;
-  let classKey: string;
+  let lessonKey: string;
 
   beforeAll(async () => {
     const parsed = new URL(url!);
@@ -21,11 +21,11 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     db = createDatabase(url!);
     existing = await existingRows(db);
     service = new AuthoringService(db);
-    // A class of this suite's own, so drafts here never publish a version of a shared fixture.
-    classKey = `authoring-${randomUUID()}`;
-    const base = JSON.parse(JSON.stringify(seedClasses[0]).replaceAll('fraction-meaning', classKey)) as StoredClass;
+    // A lesson of this suite's own, so drafts here never publish a version of a shared fixture.
+    lessonKey = `authoring-${randomUUID()}`;
+    const base = JSON.parse(JSON.stringify(seedLessons[0]).replaceAll('fraction-meaning', lessonKey)) as StoredLesson;
     base.public.order = 2000;
-    await importContent(db, { schemaVersion: 1, skills: [], classes: [base], diagnostics: [], terms: [] });
+    await importContent(db, { schemaVersion: 1, skills: [], lessons: [base], diagnostics: [], terms: [] });
   });
   afterAll(async () => {
     // A shared database keeps whatever a run leaves behind, so this run leaves nothing.
@@ -34,7 +34,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
   });
 
   const account = async (role?: 'admin' | 'author') => {
-    const user = await db.user.create({ data: { displayName: `author ${randomUUID()}`, scopes: { create: { kind: 'personal' } } } });
+    const user = await db.user.create({ data: { displayName: `author ${randomUUID()}`, learningScopes: { create: { kind: 'personal' } } } });
     if (role) await db.contentAuthor.create({ data: { userId: user.id, role } });
     return user;
   };
@@ -56,8 +56,8 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     expect(await authoringRole(db, learner.id)).toBeNull();
     expect(await authoringRole(db, author.id)).toBe('author');
     expect(await authoringRole(db, admin.id)).toBe('admin');
-    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], classes: [], accounts: [], skills: [], expertMode: false });
-    await expect(service.createDraft(learner.id, classKey)).rejects.toThrow(/권한/);
+    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], lessons: [], accounts: [], skills: [], expertMode: false });
+    await expect(service.createDraft(learner.id, lessonKey)).rejects.toThrow(/권한/);
   });
 
   it('remembers how much of the editor an account wants to see, and lets it change nothing else', async () => {
@@ -74,7 +74,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
 
   it('judges an answer tried against a draft the way the lesson will, and keeps nothing', async () => {
     const admin = await account('admin');
-    const created = await service.createDraft(admin.id, classKey);
+    const created = await service.createDraft(admin.id, lessonKey);
     const draftId = created.draft!.id;
     const problem = created.draft!.edit.problems[0];
     const written = problem.gradingSpec.kind === 'integer'
@@ -105,14 +105,14 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     await service.deleteDraft(admin.id, draftId);
   });
 
-  it('starts a class nobody has published, and refuses a key already spoken for', async () => {
+  it('starts a lesson nobody has published, and refuses a key already spoken for', async () => {
     const admin = await account('admin');
     const key = `fresh-${randomUUID()}`.toLowerCase().slice(0, 40);
-    const skillKey = (await classRecord(db, `${classKey}:v1`))!.public.skillKeys[0];
-    const created = await service.createClass(admin.id, key, '처음부터 만든 수업', [skillKey]);
+    const skillKey = (await lessonRecord(db, `${lessonKey}:v1`))!.public.skillKeys[0];
+    const created = await service.createLesson(admin.id, key, '처음부터 만든 수업', [skillKey]);
 
     expect(created.draft!.versionId).toBe(`${key}:v1`);
-    // Nothing to carry over: there is no earlier version of this class to be the next one of.
+    // Nothing to carry over: there is no earlier version of this lesson to be the next one of.
     expect(created.draft!.baseVersionId).toBeNull();
     expect(created.draft!.edit.meta.skillKeys).toEqual([skillKey]);
     // It explains and then asks, which is the smallest thing publishing would accept.
@@ -122,15 +122,15 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     // What it starts as is already a document publishing would take.
     expect(created.draft!.issues).toEqual([]);
 
-    await expect(service.createClass(admin.id, key, '같은 키', [skillKey])).rejects.toThrow(/클래스 키/);
-    await expect(service.createClass(admin.id, classKey, '발행된 키', [skillKey])).rejects.toThrow(/클래스 키/);
-    await expect(service.createClass(admin.id, `other-${key}`, '없는 개념', ['no-such-skill'])).rejects.toThrow(/개념/);
+    await expect(service.createLesson(admin.id, key, '같은 키', [skillKey])).rejects.toThrow(/수업 키/);
+    await expect(service.createLesson(admin.id, lessonKey, '발행된 키', [skillKey])).rejects.toThrow(/수업 키/);
+    await expect(service.createLesson(admin.id, `other-${key}`, '없는 개념', ['no-such-skill'])).rejects.toThrow(/개념/);
     await service.deleteDraft(admin.id, created.draft!.id);
   });
 
-  it('carries the concepts a class teaches through an edit, since a question may only claim one', async () => {
+  it('carries the concepts a lesson teaches through an edit, since a question may only claim one', async () => {
     const admin = await account('admin');
-    const created = await service.createDraft(admin.id, classKey);
+    const created = await service.createDraft(admin.id, lessonKey);
     const draftId = created.draft!.id;
     const before = created.draft!.edit.meta.skillKeys;
     expect(before.length).toBeGreaterThan(0);
@@ -140,7 +140,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const saved = await service.saveDraft(admin.id, draftId, widened);
     expect(saved.draft!.edit.meta.skillKeys).toEqual(widened.meta.skillKeys);
     expect(saved.draft!.issues).toEqual([]);
-    // A class has to teach something, and what the editor may send is where that is enforced.
+    // A lesson has to teach something, and what the editor may send is where that is enforced.
     const emptied = structuredClone(created.draft!.edit);
     emptied.meta.skillKeys = [];
     await expect(service.act(admin.id, { action: 'draft.save', draftId, edit: emptied })).rejects.toThrow();
@@ -149,7 +149,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
 
   it('tells the editor which questions homework holds, since no section shows them', async () => {
     const admin = await account('admin');
-    const created = await service.createDraft(admin.id, classKey);
+    const created = await service.createDraft(admin.id, lessonKey);
     const homework = created.draft!.homeworkProblemIds;
     expect(homework.length).toBeGreaterThan(0);
     // They are questions of the draft, held by something the lesson does not show.
@@ -164,7 +164,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
   it('lets a writer hand work on without locking it, and lets it be handed back', async () => {
     const author = await account('author');
     const admin = await account('admin');
-    const created = await service.createDraft(author.id, classKey);
+    const created = await service.createDraft(author.id, lessonKey);
     const draftId = created.draft!.id;
     expect(created.draft!.status).toBe('draft');
 
@@ -194,13 +194,13 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
       expect(await authoringRole(db, stranger.id)).toBe('admin');
       const shared = await openAuthoringAccount(db);
       expect(shared.id).toBe('open-authoring');
-      const created = await service.createDraft(shared.id, classKey);
+      const created = await service.createDraft(shared.id, lessonKey);
       expect(created.draft!.authorName).toBe('열린 편집');
       await service.deleteDraft(shared.id, created.draft!.id);
     } finally { delete process.env.CONTENT_OPEN_ACCESS; }
     // Turning it off closes the door again, including for drafts written while it was open.
     expect(await authoringRole(db, stranger.id)).toBeNull();
-    await expect(service.createDraft(stranger.id, classKey)).rejects.toThrow(/권한/);
+    await expect(service.createDraft(stranger.id, lessonKey)).rejects.toThrow(/권한/);
   });
 
   it('names the first administrators from the environment so a new deployment has one', async () => {
@@ -213,12 +213,12 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     finally { delete process.env.CONTENT_ADMIN_SUBJECTS; }
   });
 
-  it('starts a draft at the next version of the published class and opens its questions', async () => {
+  it('starts a draft at the next version of the published lesson and opens its questions', async () => {
     const admin = await account('admin');
-    const { draft, workspace } = await service.createDraft(admin.id, classKey);
-    expect(workspace.classes.find((item) => item.classKey === classKey)).toMatchObject({ hasDraft: true });
-    expect(draft!.versionId).toBe(`${classKey}:v2`);
-    expect(draft!.baseVersionId).toBe(`${classKey}:v1`);
+    const { draft, workspace } = await service.createDraft(admin.id, lessonKey);
+    expect(workspace.lessons.find((item) => item.lessonKey === lessonKey)).toMatchObject({ hasDraft: true });
+    expect(draft!.versionId).toBe(`${lessonKey}:v2`);
+    expect(draft!.baseVersionId).toBe(`${lessonKey}:v1`);
     expect(draft!.edit.sections).toHaveLength(5);
     expect(draft!.issues).toEqual([]);
     // Writing a question means writing its answer, so an account holding the role receives all of it.
@@ -232,10 +232,10 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
 
   it('saves work in progress and reports what still blocks publishing', async () => {
     const admin = await account('admin');
-    const created = await service.createDraft(admin.id, classKey);
+    const created = await service.createDraft(admin.id, lessonKey);
     const draftId = created.draft!.id;
     const broken = edited(created.draft!.edit, (sections) => {
-      sections[0].contentBlocks.push({ ...drawing(`${classKey}:explanation:scene:v2`),
+      sections[0].contentBlocks.push({ ...drawing(`${lessonKey}:explanation:scene:v2`),
         payload: { alt: '그림', width: 320, height: 200, items: [{ kind: 'strip', x: 20, y: 80, width: 280, height: 40, parts: 4, filled: 9 }] } });
     });
     const saved = await service.saveDraft(admin.id, draftId, broken);
@@ -243,10 +243,10 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     // A rule says what it refused; the editor is told where, so it can take an author to the block.
     expect(saved.draft!.issues[0]).toMatchObject({
       sectionId: created.draft!.edit.sections[0].sectionId,
-      blockId: `${classKey}:explanation:scene:v2`,
+      blockId: `${lessonKey}:explanation:scene:v2`,
     });
     expect(saved.draft!.issues[0].path).toContain('sections.0.contentBlocks.');
-    const fixed = edited(created.draft!.edit, (sections) => { sections[0].contentBlocks.push(drawing(`${classKey}:explanation:scene:v2`)); });
+    const fixed = edited(created.draft!.edit, (sections) => { sections[0].contentBlocks.push(drawing(`${lessonKey}:explanation:scene:v2`)); });
     const good = await service.saveDraft(admin.id, draftId, fixed);
     expect(good.draft!.issues).toEqual([]);
     expect((await service.validateDraft(admin.id, draftId)).draft!.issues).toEqual([]);
@@ -254,7 +254,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
 
   it('points a refusal at the question it is about, wherever the rule found it', async () => {
     const admin = await account('admin');
-    const created = await service.createDraft(admin.id, classKey);
+    const created = await service.createDraft(admin.id, lessonKey);
     const draftId = created.draft!.id;
     const problem = created.draft!.edit.problems[0];
 
@@ -284,22 +284,22 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
 
   it('publishes the draft as a new immutable version and leaves the base version untouched', async () => {
     const admin = await account('admin');
-    const created = await service.createDraft(admin.id, classKey);
+    const created = await service.createDraft(admin.id, lessonKey);
     const draftId = created.draft!.id;
     const versionId = created.draft!.versionId;
-    const before = await db.classVersion.findUniqueOrThrow({ where: { id: `${classKey}:v1` } });
+    const before = await db.lessonVersion.findUniqueOrThrow({ where: { id: `${lessonKey}:v1` } });
     await service.saveDraft(admin.id, draftId, edited(created.draft!.edit, (sections) => {
-      sections[0].contentBlocks.push(drawing(`${classKey}:explanation:scene:${versionId.split(':').at(-1)}`));
+      sections[0].contentBlocks.push(drawing(`${lessonKey}:explanation:scene:${versionId.split(':').at(-1)}`));
     }));
     const published = await service.publishDraft(admin.id, draftId);
     expect(published.publishedVersionId).toBe(versionId);
     expect(published.draft!.status).toBe('published');
-    const document = await classRecord(db, versionId) as StoredClass;
+    const document = await lessonRecord(db, versionId) as StoredLesson;
     expect(document.sections[0].contentBlocks.at(-1)!.kind).toBe('core.scene');
-    // The published class carries the halves that follow from the answer, restated when it was saved.
+    // The published lesson carries the halves that follow from the answer, restated when it was saved.
     expect(document.problems[0].responseSpec.kind).toBe(document.problems[0].gradingSpec.kind);
     expect(document.problems[0].hintAvailable).toBe(document.problems[0].hints.length > 0);
-    expect(await db.classVersion.findUniqueOrThrow({ where: { id: `${classKey}:v1` } })).toEqual(before);
+    expect(await db.lessonVersion.findUniqueOrThrow({ where: { id: `${lessonKey}:v1` } })).toEqual(before);
     await expect(service.saveDraft(admin.id, draftId, created.draft!.edit)).rejects.toThrow(/이미 발행/);
   });
 
@@ -315,12 +315,12 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
 
   it('renames a question an edit changed and moves every reference with it', async () => {
     const admin = await account('admin');
-    const created = await service.createDraft(admin.id, classKey);
+    const created = await service.createDraft(admin.id, lessonKey);
     const draftId = created.draft!.id;
-    const answered = `${classKey}:practice-1:v1`;
+    const answered = `${lessonKey}:practice-1:v1`;
     const saved = await service.saveDraft(admin.id, draftId, rewritten(created.draft!.edit, answered,
       (problem) => { problem.promptContent[0].payload.text = '고쳐 쓴 문제예요.'; }));
-    const renamed = `${classKey}:practice-1:${suffixOf(created.draft!.versionId)}`;
+    const renamed = `${lessonKey}:practice-1:${suffixOf(created.draft!.versionId)}`;
     const names = saved.draft!.edit.problems.map((problem) => problem.problemVersionId);
     expect(names).toContain(renamed);
     expect(names).not.toContain(answered);
@@ -339,7 +339,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
 
   it('leaves a question alone when an edit did not touch it', async () => {
     const admin = await account('admin');
-    const created = await service.createDraft(admin.id, classKey);
+    const created = await service.createDraft(admin.id, lessonKey);
     const before = created.draft!.edit.problems.map((problem) => problem.problemVersionId);
     const saved = await service.saveDraft(admin.id, created.draft!.id, created.draft!.edit);
     expect(saved.draft!.edit.problems.map((problem) => problem.problemVersionId)).toEqual(before);
@@ -349,45 +349,45 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
 
   it('moves a homework reference too, since homework names questions without a block', async () => {
     const admin = await account('admin');
-    const created = await service.createDraft(admin.id, classKey);
+    const created = await service.createDraft(admin.id, lessonKey);
     const draftId = created.draft!.id;
-    const answered = `${classKey}:homework-1:v1`;
+    const answered = `${lessonKey}:homework-1:v1`;
     await service.saveDraft(admin.id, draftId, rewritten(created.draft!.edit, answered,
       (problem) => { problem.solution[0].payload.text = '풀이를 다시 썼어요.'; }));
     const row = await db.contentDraft.findUniqueOrThrow({ where: { id: draftId } });
-    const document = row.document as unknown as StoredClass;
-    expect(document.homeworkProblemIds).toContain(`${classKey}:homework-1:${suffixOf(created.draft!.versionId)}`);
+    const document = row.document as unknown as StoredLesson;
+    expect(document.homeworkProblemIds).toContain(`${lessonKey}:homework-1:${suffixOf(created.draft!.versionId)}`);
     expect(document.homeworkProblemIds).not.toContain(answered);
     await service.deleteDraft(admin.id, draftId);
   });
 
   it('publishes an edited question as a new one and leaves the answered one as it was', async () => {
     const admin = await account('admin');
-    const created = await service.createDraft(admin.id, classKey);
+    const created = await service.createDraft(admin.id, lessonKey);
     const draftId = created.draft!.id;
     const versionId = created.draft!.versionId;
-    const answered = `${classKey}:check-1:v1`;
-    const before = await db.classVersion.findUniqueOrThrow({ where: { id: `${classKey}:v1` } });
+    const answered = `${lessonKey}:check-1:v1`;
+    const before = await db.lessonVersion.findUniqueOrThrow({ where: { id: `${lessonKey}:v1` } });
     await service.saveDraft(admin.id, draftId, rewritten(created.draft!.edit, answered, (problem) => {
       problem.promptContent[0].payload.text = '답이 달라진 문제예요.';
       problem.gradingSpec = { kind: 'rational', numerator: 2, denominator: 3 };
     }));
     await service.publishDraft(admin.id, draftId);
-    const document = await classRecord(db, versionId) as StoredClass;
-    const written = document.problems.find((problem) => problem.problemVersionId === `${classKey}:check-1:${suffixOf(versionId)}`)!;
+    const document = await lessonRecord(db, versionId) as StoredLesson;
+    const written = document.problems.find((problem) => problem.problemVersionId === `${lessonKey}:check-1:${suffixOf(versionId)}`)!;
     expect(written.gradingSpec).toEqual({ kind: 'rational', numerator: 2, denominator: 3 });
     expect(document.problems.some((problem) => problem.problemVersionId === answered)).toBe(false);
     // The version a learner may be part-way through still holds the question they answered.
-    expect(await db.classVersion.findUniqueOrThrow({ where: { id: `${classKey}:v1` } })).toEqual(before);
+    expect(await db.lessonVersion.findUniqueOrThrow({ where: { id: `${lessonKey}:v1` } })).toEqual(before);
   });
 
   it('publishes a question written in the editor as part of the activity that holds it', async () => {
     const admin = await account('admin');
-    const created = await service.createDraft(admin.id, classKey);
+    const created = await service.createDraft(admin.id, lessonKey);
     const draftId = created.draft!.id;
     const versionId = created.draft!.versionId;
     const edit = structuredClone(created.draft!.edit);
-    const written = newProblem(nextProblemVersionId(classKey, 'practice', versionId,
+    const written = newProblem(nextProblemVersionId(lessonKey, 'practice', versionId,
       edit.problems.map((problem) => problem.problemVersionId)), edit.problems[0].skillKeys);
     written.promptContent[0].payload.text = '새로 쓴 문제예요. 답은 3입니다.';
     written.gradingSpec = { kind: 'integer', value: 3 };
@@ -399,7 +399,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     expect(saved.draft!.issues).toEqual([]);
     expect(saved.draft!.edit.problems.map((problem) => problem.problemVersionId)).toContain(written.problemVersionId);
     await service.publishDraft(admin.id, draftId);
-    const document = await classRecord(db, versionId) as StoredClass;
+    const document = await lessonRecord(db, versionId) as StoredLesson;
     const stored = document.problems.find((problem) => problem.problemVersionId === written.problemVersionId)!;
     // A question with no hints says so, and its response format restates the answer that was written.
     expect(stored.hintAvailable).toBe(false);
@@ -486,7 +486,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
 
   it('finds an account by the name an administrator would know it by', async () => {
     const admin = await account('admin');
-    const learner = await db.user.create({ data: { displayName: `찾기 ${randomUUID()}`, scopes: { create: { kind: 'personal' } } } });
+    const learner = await db.user.create({ data: { displayName: `찾기 ${randomUUID()}`, learningScopes: { create: { kind: 'personal' } } } });
     await openAuthoringAccount(db);
     const { matches } = await service.searchAccounts(admin.id, learner.displayName.slice(0, 12));
     expect(matches!.map((item) => item.userId)).toContain(learner.id);
@@ -496,115 +496,115 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     await expect(service.searchAccounts(learner.id, '찾기')).rejects.toThrow(/권한/);
   });
 
-  it('writes a definition the class keeps, and rewrites it as the next version', async () => {
+  it('writes a definition the lesson keeps, and rewrites it as the next version', async () => {
     const admin = await account('admin');
-    const termKey = `term.class.${randomUUID()}`;
-    const skillKey = (await classRecord(db, `${classKey}:v1`))!.public.skillKeys[0];
-    const published = await service.saveTerm(admin.id, { termKey, scopeKind: 'class', scopeKey: classKey, skillKey,
+    const termKey = `term.lesson.${randomUUID()}`;
+    const skillKey = (await lessonRecord(db, `${lessonKey}:v1`))!.public.skillKeys[0];
+    const published = await service.saveTerm(admin.id, { termKey, scopeKind: 'lesson', scopeKey: lessonKey, skillKey,
       label: '이 수업의 용어', summary: '이 수업에서만 쓰는 풀이예요.',
       blocks: [{ blockId: 'term:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '뜻을 풀어 썼어요.' } }] });
-    expect(published.publishedTermVersionId).toBe(`${classKey}:${termKey}:v1`);
+    expect(published.publishedTermVersionId).toBe(`${lessonKey}:${termKey}:v1`);
     // Blocks are named after the version that holds them, so the editor never chose the ID.
-    const row = await db.termVersion.findUniqueOrThrow({ where: { id: `${classKey}:${termKey}:v1` } });
-    expect((await termDefinitions(db, [row]))[0].blocks[0].blockId).toBe(`${classKey}:${termKey}:v1:b1`);
-    expect(row.scopeKind).toBe('class');
-    expect(row.scopeKey).toBe(classKey);
+    const row = await db.termVersion.findUniqueOrThrow({ where: { id: `${lessonKey}:${termKey}:v1` } });
+    expect((await termDefinitions(db, [row]))[0].blocks[0].blockId).toBe(`${lessonKey}:${termKey}:v1:b1`);
+    expect(row.scopeKind).toBe('lesson');
+    expect(row.scopeKey).toBe(lessonKey);
 
     const listed = published.terms!.find(term => term.termKey === termKey)!;
-    expect(listed).toMatchObject({ label: '이 수업의 용어', versionId: `${classKey}:${termKey}:v1` });
+    expect(listed).toMatchObject({ label: '이 수업의 용어', versionId: `${lessonKey}:${termKey}:v1` });
     // Saving again publishes the next version and the list shows the new one. This goes through the
     // action the screen posts, so the shape the editor sends is the shape the server accepts.
     const again = await service.act(admin.id, { action: 'term.save', edit: {
       termKey: listed.termKey, scopeKind: listed.scopeKind, scopeKey: listed.scopeKey, skillKey: listed.skillKey,
       label: listed.label, summary: '설명을 고쳐 썼어요.', blocks: listed.blocks } });
-    expect(again.publishedTermVersionId).toBe(`${classKey}:${termKey}:v2`);
+    expect(again.publishedTermVersionId).toBe(`${lessonKey}:${termKey}:v2`);
     expect(again.terms!.find(term => term.termKey === termKey)!.summary).toBe('설명을 고쳐 썼어요.');
     // The earlier version stays where it was; nothing is rewritten in place.
-    expect((await db.termVersion.findUniqueOrThrow({ where: { id: `${classKey}:${termKey}:v1` } })).summary)
+    expect((await db.termVersion.findUniqueOrThrow({ where: { id: `${lessonKey}:${termKey}:v1` } })).summary)
       .toBe('이 수업에서만 쓰는 풀이예요.');
   });
 
-  it('keeps the shared dictionary to administrators and asks a class term which class it belongs to', async () => {
+  it('keeps the shared dictionary to administrators and asks a lesson term which lesson it belongs to', async () => {
     const admin = await account('admin');
     const author = await account('author');
     const learner = await account();
     const termKey = `term.scope.${randomUUID()}`;
-    const skillKey = (await classRecord(db, `${classKey}:v1`))!.public.skillKeys[0];
+    const skillKey = (await lessonRecord(db, `${lessonKey}:v1`))!.public.skillKeys[0];
     const edit = { termKey, scopeKind: 'global' as const, scopeKey: '', skillKey, label: '사전 용어', summary: '사전이 쓴 풀이예요.',
       blocks: [{ blockId: 'term:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '사전 정의' } }] };
     await expect(service.saveTerm(author.id, edit)).rejects.toThrow(/공통 사전은 관리자만/);
     await expect(service.listTerms(learner.id, 'global', '')).rejects.toThrow(/권한/);
-    // A class term is part of writing that class, so an author may write one.
-    await expect(service.saveTerm(author.id, { ...edit, scopeKind: 'class', scopeKey: classKey })).resolves.toBeTruthy();
+    // A lesson term is part of writing that lesson, so an author may write one.
+    await expect(service.saveTerm(author.id, { ...edit, scopeKind: 'lesson', scopeKey: lessonKey })).resolves.toBeTruthy();
 
-    await expect(service.saveTerm(admin.id, { ...edit, scopeKey: classKey })).rejects.toThrow(/소속을 적지 않아요/);
-    await expect(service.saveTerm(admin.id, { ...edit, scopeKind: 'class', scopeKey: '' })).rejects.toThrow(/어느 클래스의 용어인지/);
-    await expect(service.saveTerm(admin.id, { ...edit, scopeKind: 'class', scopeKey: 'no-such-class' })).rejects.toThrow(/발행된 적 없는/);
-    // The dictionary and the class keep their own lists, even for the same key.
+    await expect(service.saveTerm(admin.id, { ...edit, scopeKey: lessonKey })).rejects.toThrow(/소속을 적지 않아요/);
+    await expect(service.saveTerm(admin.id, { ...edit, scopeKind: 'lesson', scopeKey: '' })).rejects.toThrow(/어느 수업의 용어인지/);
+    await expect(service.saveTerm(admin.id, { ...edit, scopeKind: 'lesson', scopeKey: 'no-such-lesson' })).rejects.toThrow(/발행된 적 없는/);
+    // The dictionary and the lesson keep their own lists, even for the same key.
     await service.saveTerm(admin.id, edit);
     expect((await service.listTerms(admin.id, 'global', '')).terms!.some(term => term.termKey === termKey)).toBe(true);
-    const mine = (await service.listTerms(admin.id, 'class', classKey)).terms!.find(term => term.termKey === termKey)!;
-    expect(mine.versionId).toBe(`${classKey}:${termKey}:v1`);
+    const mine = (await service.listTerms(admin.id, 'lesson', lessonKey)).terms!.find(term => term.termKey === termKey)!;
+    expect(mine.versionId).toBe(`${lessonKey}:${termKey}:v1`);
   });
 
   it('refuses a definition the publishing rules would not accept', async () => {
     const admin = await account('admin');
     const termKey = `term.bad.${randomUUID()}`;
-    const base = { termKey, scopeKind: 'class' as const, scopeKey: classKey, label: '나쁜 용어', summary: '설명이에요.',
+    const base = { termKey, scopeKind: 'lesson' as const, scopeKey: lessonKey, label: '나쁜 용어', summary: '설명이에요.',
       blocks: [{ blockId: 'term:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '정의' } }] };
     await expect(service.saveTerm(admin.id, { ...base, skillKey: 'no.such.skill' })).rejects.toThrow(/Missing skill/);
-    expect(await db.termVersion.findUnique({ where: { id: `${classKey}:${termKey}:v1` } })).toBeNull();
+    expect(await db.termVersion.findUnique({ where: { id: `${lessonKey}:${termKey}:v1` } })).toBeNull();
   });
 
   it('offers a draft the terms it may link, and no others', async () => {
     const admin = await account('admin');
     const suffix = randomUUID();
-    const skillKey = (await classRecord(db, `${classKey}:v1`))!.public.skillKeys[0];
-    const define = (termKey: string, scopeKind: 'global' | 'class', scopeKey: string, label: string) =>
+    const skillKey = (await lessonRecord(db, `${lessonKey}:v1`))!.public.skillKeys[0];
+    const define = (termKey: string, scopeKind: 'global' | 'lesson', scopeKey: string, label: string) =>
       service.saveTerm(admin.id, { termKey, scopeKind, scopeKey, skillKey, label, summary: `${label} 풀이예요.`,
         blocks: [{ blockId: 'term:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: label } }] });
     await define(`term.shared.${suffix}`, 'global', '', '사전 낱말');
-    await define(`term.mine.${suffix}`, 'class', classKey, '이 수업 낱말');
-    // Another class keeps one of its own; this draft must not be offered it.
+    await define(`term.mine.${suffix}`, 'lesson', lessonKey, '이 수업 낱말');
+    // Another lesson keeps one of its own; this draft must not be offered it.
     const other = `other-${randomUUID()}`;
-    const record = JSON.parse(JSON.stringify(seedClasses[0]).replaceAll('fraction-meaning', other)) as StoredClass;
+    const record = JSON.parse(JSON.stringify(seedLessons[0]).replaceAll('fraction-meaning', other)) as StoredLesson;
     record.public.order = 3000;
-    await importContent(db, { schemaVersion: 1, skills: [], classes: [record], diagnostics: [], terms: [] });
-    await define(`term.other.${suffix}`, 'class', other, '남의 수업 낱말');
+    await importContent(db, { schemaVersion: 1, skills: [], lessons: [record], diagnostics: [], terms: [] });
+    await define(`term.other.${suffix}`, 'lesson', other, '남의 수업 낱말');
 
-    const { draft } = await service.createDraft(admin.id, classKey);
+    const { draft } = await service.createDraft(admin.id, lessonKey);
     const offered = draft!.terms.map(term => term.termKey);
     expect(offered).toContain(`term.shared.${suffix}`);
     expect(offered).toContain(`term.mine.${suffix}`);
     expect(offered).not.toContain(`term.other.${suffix}`);
     expect(draft!.terms.find(term => term.termKey === `term.mine.${suffix}`))
-      .toMatchObject({ scopeKind: 'class', scopeKey: classKey, label: '이 수업 낱말' });
+      .toMatchObject({ scopeKind: 'lesson', scopeKey: lessonKey, label: '이 수업 낱말' });
     await service.deleteDraft(admin.id, draft!.id);
   });
 
   it('refuses to publish an invalid draft, or to publish at all without the role', async () => {
     const admin = await account('admin');
     const author = await account('author');
-    const created = await service.createDraft(author.id, classKey);
+    const created = await service.createDraft(author.id, lessonKey);
     const draftId = created.draft!.id;
     await service.saveDraft(author.id, draftId, edited(created.draft!.edit, (sections) => { sections[0].contentBlocks = []; }));
     await expect(service.publishDraft(author.id, draftId)).rejects.toThrow(/관리자만/);
     await expect(service.publishDraft(admin.id, draftId)).rejects.toThrow(/고칠 곳/);
-    expect(await db.classVersion.findUnique({ where: { id: created.draft!.versionId } })).toBeNull();
+    expect(await db.lessonVersion.findUnique({ where: { id: created.draft!.versionId } })).toBeNull();
   });
 
-  it('keeps a draft inside its own class when the version ID is edited by hand', async () => {
+  it('keeps a draft inside its own lesson when the version ID is edited by hand', async () => {
     const admin = await account('admin');
-    const created = await service.createDraft(admin.id, classKey);
+    const created = await service.createDraft(admin.id, lessonKey);
     const stray = { ...created.draft!.edit, meta: { ...created.draft!.edit.meta, versionId: 'fraction-addition:v9' } };
     await expect(service.saveDraft(admin.id, created.draft!.id, stray)).rejects.toThrow(/판본 ID는/);
-    expect(await db.classVersion.findUnique({ where: { id: 'fraction-addition:v9' } })).toBeNull();
+    expect(await db.lessonVersion.findUnique({ where: { id: 'fraction-addition:v9' } })).toBeNull();
   });
 
   it('rejects a version ID that is already published instead of rewriting it', async () => {
     const admin = await account('admin');
-    const created = await service.createDraft(admin.id, classKey);
-    const taken = { ...created.draft!.edit, meta: { ...created.draft!.edit.meta, versionId: `${classKey}:v1` } };
+    const created = await service.createDraft(admin.id, lessonKey);
+    const taken = { ...created.draft!.edit, meta: { ...created.draft!.edit.meta, versionId: `${lessonKey}:v1` } };
     await service.saveDraft(admin.id, created.draft!.id, taken);
     await expect(service.publishDraft(admin.id, created.draft!.id)).rejects.toThrow(/immutable/);
   });
@@ -613,7 +613,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const first = await account('author');
     const second = await account('author');
     const admin = await account('admin');
-    const created = await service.createDraft(first.id, classKey);
+    const created = await service.createDraft(first.id, lessonKey);
     await expect(service.draft(second.id, created.draft!.id)).rejects.toThrow(/다른 사람/);
     expect((await service.workspace(second.id)).drafts.find((item) => item.id === created.draft!.id)).toBeUndefined();
     const seen = (await service.workspace(admin.id)).drafts.find((item) => item.id === created.draft!.id);

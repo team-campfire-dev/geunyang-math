@@ -1,11 +1,11 @@
 import 'server-only';
 
 import { z } from 'zod';
-import type { ClassDocument, ClassSection, ContentBlock, GlossaryEntry, PublicClass, PublicProblem } from '@/shared/api';
+import type { LessonDocument, LessonSection, ContentBlock, GlossaryEntry, PublicLesson, PublicProblem } from '@/shared/api';
 import { frameLimits, isSceneColor, itemIdPattern, pathPattern, sceneLimits, stripLimits } from '@/shared/scene';
 import { locateTerms, termRefId, type TermAnnotation, type TermRef } from '@/shared/rich-text';
 
-/** Private content records stay on the server; only toPublicClass crosses the API boundary. */
+/** Private content records stay on the server; only toPublicLesson crosses the API boundary. */
 export type StoredProblem = PublicProblem & {
   gradingSpec: {
     kind: 'integer' | 'rational';
@@ -18,9 +18,9 @@ export type StoredProblem = PublicProblem & {
   solution: ContentBlock[];
 };
 
-export type StoredClass = {
-  public: PublicClass;
-  sections: ClassSection[];
+export type StoredLesson = {
+  public: PublicLesson;
+  sections: LessonSection[];
   problems: StoredProblem[];
   homeworkProblemIds: string[];
 };
@@ -98,8 +98,8 @@ const richText = z.string().min(1).max(20_000);
 const termAnnotation = z.object({
   termKey: id.max(100),
   // Absent means the operator's shared dictionary. Naming the scope here is what lets a definition
-  // be resolved without knowing which class, course or organisation the reader is inside.
-  scopeKind: z.enum(['global', 'organization', 'course', 'class']).optional(),
+  // be resolved without knowing which lesson, course or organisation the reader is inside.
+  scopeKind: z.enum(['global', 'organization', 'course', 'lesson']).optional(),
   scopeKey: id.max(100).optional(),
   surface: z.string().min(1).max(100),
   // Terms repeat in a paragraph; the author picks which mention carries the definition.
@@ -232,7 +232,7 @@ const responseSchema = z.object({
   requiredForm: z.literal('reduced_fraction').optional(),
 }).strict();
 
-// Problem groups belong to class sections. A problem cannot embed another problem group,
+// Problem groups belong to lesson sections. A problem cannot embed another problem group,
 // including an optional future version, in its prompt, hint, or solution.
 const problemContentBlockSchema = blockSchema.refine((block) => block.kind !== 'core.problem_set', {
   message: 'core.problem_set is not allowed inside a problem',
@@ -272,9 +272,9 @@ export const diagnosticProblemSchema = z.object({ ...problemShape,
   solution: z.array(problemContentBlockSchema).max(0),
 }).strict().superRefine(validateProblemFields);
 
-const storedClassSchema = z.object({
+const storedLessonSchema = z.object({
   public: z.object({
-    classKey: id,
+    lessonKey: id,
     versionId: id,
     title: shortText,
     summary: shortText,
@@ -289,8 +289,8 @@ const storedClassSchema = z.object({
     role: z.enum(['explanation', 'worked_example', 'practice', 'check', 'summary']),
     title: shortText,
     contentBlocks: z.array(blockSchema).min(1).max(100, 'At most 100 blocks per content array'),
-  }).strict()).min(1).max(50, 'At most 50 sections per class'),
-  problems: z.array(problemSchema).min(1).max(200, 'At most 200 problems per class'),
+  }).strict()).min(1).max(50, 'At most 50 sections per lesson'),
+  problems: z.array(problemSchema).min(1).max(200, 'At most 200 problems per lesson'),
   homeworkProblemIds: z.array(id).max(200),
 }).strict();
 
@@ -298,17 +298,17 @@ function requireUnique(values: string[], label: string): void {
   if (new Set(values).size !== values.length) throw new Error(`Duplicate ${label}`);
 }
 
-export function validateClass(record: unknown): asserts record is StoredClass {
-  const parsed = storedClassSchema.parse(record);
+export function validateLesson(record: unknown): asserts record is StoredLesson {
+  const parsed = storedLessonSchema.parse(record);
   if (parsed.public.sectionCount !== parsed.sections.length) throw new Error('sectionCount does not match sections');
   requireUnique(parsed.sections.map((section) => section.sectionId), 'section IDs');
   requireUnique(parsed.problems.map((problem) => problem.problemVersionId), 'problem version IDs');
   requireUnique(parsed.homeworkProblemIds, 'homework problem IDs');
-  requireUnique(parsed.public.skillKeys, 'class skill keys');
+  requireUnique(parsed.public.skillKeys, 'lesson skill keys');
   requireUnique(parsed.public.prerequisiteSkillKeys, 'prerequisite skill keys');
   for (const prerequisite of parsed.public.prerequisiteSkillKeys) {
     if (parsed.public.skillKeys.includes(prerequisite)) {
-      throw new Error(`Class cannot require its own skill as a prerequisite: ${prerequisite}`);
+      throw new Error(`Lesson cannot require its own skill as a prerequisite: ${prerequisite}`);
     }
   }
   const problems = new Set(parsed.problems.map((problem) => problem.problemVersionId));
@@ -338,7 +338,7 @@ export function validateClass(record: unknown): asserts record is StoredClass {
   for (const problem of parsed.problems) {
     if (!referenceOwners.has(problem.problemVersionId)) throw new Error(`Unreferenced problem version: ${problem.problemVersionId}`);
     for (const skill of problem.skillKeys) {
-      if (!parsed.public.skillKeys.includes(skill)) throw new Error(`Problem skill is absent from class skills: ${skill}`);
+      if (!parsed.public.skillKeys.includes(skill)) throw new Error(`Problem skill is absent from lesson skills: ${skill}`);
     }
   }
 }
@@ -353,8 +353,8 @@ function publicProblem(problem: StoredProblem): PublicProblem {
   };
 }
 
-export function toPublicClass(record: StoredClass, glossary: GlossaryEntry[] = []): ClassDocument {
-  validateClass(record);
+export function toPublicLesson(record: StoredLesson, glossary: GlossaryEntry[] = []): LessonDocument {
+  validateLesson(record);
   return {
     ...structuredClone(record.public),
     sections: structuredClone(record.sections),
@@ -377,9 +377,9 @@ export function blockTermRefs(blocks: ContentBlock[]): TermRef[] {
 
 /**
  * Term annotations name a published term by key; the definition itself lives in its own version so
- * that rewording it does not republish every class. Callers resolve the keys against TermVersion.
+ * that rewording it does not republish every lesson. Callers resolve the keys against TermVersion.
  */
-export function termReferences(record: StoredClass): (TermRef & { blockId: string; problemSkillKeys: string[] | null })[] {
+export function termReferences(record: StoredLesson): (TermRef & { blockId: string; problemSkillKeys: string[] | null })[] {
   const annotations = (block: ContentBlock, problemSkillKeys: string[] | null) =>
     blockAnnotations(block).map((term) => ({ termKey: term.termKey, scopeKind: term.scopeKind, scopeKey: term.scopeKey,
       blockId: block.blockId, problemSkillKeys }));
@@ -390,7 +390,7 @@ export function termReferences(record: StoredClass): (TermRef & { blockId: strin
   ];
 }
 
-export function getActivityProblemIds(record: StoredClass, sectionId: string): string[] {
+export function getActivityProblemIds(record: StoredLesson, sectionId: string): string[] {
   const section = record.sections.find((item) => item.sectionId === sectionId);
   if (!section) throw new Error(`Unknown section: ${sectionId}`);
   return [...new Set(section.contentBlocks.flatMap((block) =>

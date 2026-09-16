@@ -1,27 +1,27 @@
 import 'server-only';
 import { createHash } from 'node:crypto';
-import { classRecord, classRecords, currentDiagnostic, currentTerms } from './content-store';
+import { lessonRecord, lessonRecords, currentDiagnostic, currentTerms } from './content-store';
 import { recommend, reviewSelection, skillReadiness, type Evidence } from '@/core/personalization';
 import { glossaryEntries } from '@/core/glossary';
 import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
-import { blockTermRefs, getActivityProblemIds, termReferences, toPublicClass, validateClass, type StoredClass, type StoredProblem } from '@/core/content';
+import { blockTermRefs, getActivityProblemIds, termReferences, toPublicLesson, validateLesson, type StoredLesson, type StoredProblem } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
-import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicCatalog, PublicClass, PublicProblem, DiagnosticAnswer, Recommendation } from '@/shared/api';
+import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicCatalog, PublicLesson, PublicProblem, DiagnosticAnswer, Recommendation } from '@/shared/api';
 import { AppError } from './errors';
 
 const id = z.string().min(1).max(191);
-const context = z.enum(['class', 'assignment']);
+const context = z.enum(['lesson', 'assignment']);
 export const actionSchema = z.discriminatedUnion('action', [
-  z.object({ action: z.literal('recommendation.choose'), classKey: z.string().min(1).max(100).nullable() }).strict(),
+  z.object({ action: z.literal('recommendation.choose'), lessonKey: z.string().min(1).max(100).nullable() }).strict(),
   z.object({ action: z.literal('diagnostic.start') }).strict(),
   z.object({ action: z.literal('diagnostic.answer'), diagnosticId: id, problemVersionId: id, answer: z.string().trim().min(1).max(128).nullable() }).strict(),
   z.object({ action: z.literal('profile.update'), goal: z.enum(['daily-math', 'foundation-recovery', 'algebra-ready']), dailyMinutes: z.union([z.literal(5), z.literal(10), z.literal(20)]) }).strict(),
-  z.object({ action: z.literal('enrollment.start'), classKey: id }).strict(),
+  z.object({ action: z.literal('enrollment.start'), lessonKey: id }).strict(),
   z.object({ action: z.literal('section.complete'), enrollmentId: id, sectionId: id }).strict(),
   z.object({ action: z.literal('attempt.submit'), context, contextId: id, problemVersionId: id, answer: z.string().max(128), requestId: z.string().min(8).max(100) }).strict(),
   z.object({ action: z.literal('hint.open'), context, contextId: id, problemVersionId: id }).strict(),
-  z.object({ action: z.literal('class.complete'), enrollmentId: id }).strict(),
+  z.object({ action: z.literal('lesson.complete'), enrollmentId: id }).strict(),
   z.object({ action: z.literal('assignment.submit'), recipientId: id, requestId: z.string().min(8).max(100) }).strict(),
 ]);
 type Tx = Prisma.TransactionClient;
@@ -39,40 +39,40 @@ export class LearningService {
   constructor(private readonly db: PrismaClient) {}
 
   async catalog(db: Tx = this.db) {
-    const rows = await db.classVersion.findMany({ orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }],
-      select: { classKey: true, metadata: true } });
+    const rows = await db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }],
+      select: { lessonKey: true, metadata: true } });
     const seen = new Set<string>();
-    return rows.filter(row => { if (seen.has(row.classKey)) return false; seen.add(row.classKey); return true; })
-      .map(row => (row.metadata as { public: PublicClass }).public).sort((a, b) => a.order - b.order);
+    return rows.filter(row => { if (seen.has(row.lessonKey)) return false; seen.add(row.lessonKey); return true; })
+      .map(row => (row.metadata as { public: PublicLesson }).public).sort((a, b) => a.order - b.order);
   }
 
   // Signed-out screens name the concepts the published catalogue teaches. A skill without a
-  // published class stays out of the public response until its class is released.
+  // published lesson stays out of the public response until its lesson is released.
   async publicCatalog(db: Tx = this.db): Promise<PublicCatalog> {
-    const classes = await this.catalog(db);
-    const taught = new Set(classes.flatMap(item => item.skillKeys));
+    const lessons = await this.catalog(db);
+    const taught = new Set(lessons.flatMap(item => item.skillKeys));
     const rows = await db.skill.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }] });
-    return { classes, skills: rows.filter(row => taught.has(row.key)).map(row => ({ key: row.key, label: row.label })) };
+    return { lessons, skills: rows.filter(row => taught.has(row.key)).map(row => ({ key: row.key, label: row.label })) };
   }
 
-  async classDocument(classKey: string, userId?: string) {
-    const enrollment = userId ? await this.db.enrollment.findFirst({ where: { userId, classVersion: { classKey } }, select: { classVersionId: true } }) : null;
-    const versionId = enrollment?.classVersionId
-      ?? (await this.db.classVersion.findFirst({ where: { classKey }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }], select: { id: true } }))?.id;
+  async lessonDocument(lessonKey: string, userId?: string) {
+    const enrollment = userId ? await this.db.enrollment.findFirst({ where: { userId, lessonVersion: { lessonKey } }, select: { lessonVersionId: true } }) : null;
+    const versionId = enrollment?.lessonVersionId
+      ?? (await this.db.lessonVersion.findFirst({ where: { lessonKey }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }], select: { id: true } }))?.id;
     if (!versionId) throw notFound();
-    const record = await classRecord(this.db, versionId);
+    const record = await lessonRecord(this.db, versionId);
     if (!record) throw notFound();
-    // Definitions resolve at delivery so a reworded term reaches an in-progress class version too.
-    const [terms, classes] = await Promise.all([
+    // Definitions resolve at delivery so a reworded term reaches an in-progress lesson version too.
+    const [terms, lessons] = await Promise.all([
       currentTerms(this.db, termReferences(record)), this.catalog(),
     ]);
-    return toPublicClass(record, glossaryEntries(terms, classes));
+    return toPublicLesson(record, glossaryEntries(terms, lessons));
   }
 
   async state(userId: string, db: Tx = this.db): Promise<LearningState> {
-    const [user, classes, enrollments, recipients, diagnostic, history, skillRows, offering] = await Promise.all([
+    const [user, lessons, enrollments, recipients, diagnostic, history, skillRows, offering] = await Promise.all([
       db.user.findUnique({ where: { id: userId } }), this.catalog(db),
-      db.enrollment.findMany({ where: { userId }, include: { classVersion: { select: { id: true, classKey: true } },
+      db.enrollment.findMany({ where: { userId }, include: { lessonVersion: { select: { id: true, lessonKey: true } },
         attempts: { orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] } }, orderBy: { createdAt: 'asc' } }),
       db.assignmentRecipient.findMany({ where: { learnerUserId: userId }, include: {
         assignment: { include: { items: { orderBy: { position: 'asc' } } } },
@@ -88,9 +88,9 @@ export class LearningService {
     const firstEvidence = new Map<string, { result: GradeResult; date: Date; skillKeys: string[]; delayed: boolean }>();
     const evidence: Evidence[] = [];
     const observedIds = new Set<string>();
-    const records = await classRecords(db, enrollments.map(e => e.classVersionId));
+    const records = await lessonRecords(db, enrollments.map(e => e.lessonVersionId));
     for (const e of enrollments) {
-      const record = records.get(e.classVersionId);
+      const record = records.get(e.lessonVersionId);
       if (!record) throw notFound();
       const checks = new Set(record.sections.filter(s => s.role === 'check').flatMap(s => getActivityProblemIds(record, s.sectionId)));
       for (const a of e.attempts) {
@@ -111,7 +111,7 @@ export class LearningService {
     const assignments: AssignmentView[] = recipients.map(r => {
       const submission = r.submissions[0];
       if (!submission) throw new Error('Missing initial submission');
-      const classKey = enrollments.find(e => e.id === r.sourceEnrollmentId)?.classVersion.classKey ?? null;
+      const lessonKey = enrollments.find(e => e.id === r.sourceEnrollmentId)?.lessonVersion.lessonKey ?? null;
       const items = r.assignment.items.map(item => {
         const p = item.problemSnapshot as unknown as StoredProblem;
         const matching = submission.attempts.filter(a => a.assignmentItemId === item.id);
@@ -135,10 +135,10 @@ export class LearningService {
           : matching[matching.length - 1];
         return { id: item.id, problem: publicProblem(p), attempt: visibleAttempt ? attemptView(visibleAttempt) : null };
       });
-      return { id: r.assignmentId, recipientId: r.id, title: r.assignment.title, classKey,
+      return { id: r.assignmentId, recipientId: r.id, title: r.assignment.title, lessonKey,
         recommendedAt: r.recommendedAt.toISOString(), policy: r.assignmentPolicy as 'adaptive' | 'fixed',
         status: r.status as 'assigned' | 'submitted', items, submissionId: submission.id,
-        glossary: glossaryEntries(assignmentTerms, classes),
+        glossary: glossaryEntries(assignmentTerms, lessons),
         reason: typeof (r.assignment.policySnapshot as { reviewReason?: string }).reviewReason === 'string' ? (r.assignment.policySnapshot as { reviewReason: string }).reviewReason : undefined };
     });
     for (const skill of skills) {
@@ -150,11 +150,11 @@ export class LearningService {
     const diagnosticAnswers = (diagnostic?.answers ?? []) as unknown as DiagnosticAnswer[];
     const completedDiagnostic = diagnostic?.status === 'completed';
     const readiness = skillReadiness(skillLabels, completedDiagnostic && diagnosticBank ? { answers: diagnosticAnswers, problems: diagnosticBank } : null, evidence);
-    const { recommendations, plan } = recommend({ classes, enrollments: enrollments.map(e => ({ classKey: e.classVersion.classKey, status: e.status })),
-      assignments, readiness, dailyMinutes: user.dailyMinutes, goal: user.goal as LearningState['user']['goal'], now: new Date(), preferredClassKey: user.preferredClassKey });
+    const { recommendations, plan } = recommend({ lessons, enrollments: enrollments.map(e => ({ lessonKey: e.lessonVersion.lessonKey, status: e.status })),
+      assignments, readiness, dailyMinutes: user.dailyMinutes, goal: user.goal as LearningState['user']['goal'], now: new Date(), preferredLessonKey: user.preferredLessonKey });
     return {
       user: { id: user.id, displayName: user.displayName, goal: user.goal as LearningState['user']['goal'], dailyMinutes: user.dailyMinutes },
-      classes, assignments, recommendations, skills, plan,
+      lessons, assignments, recommendations, skills, plan,
       diagnosticOffering: offering ? { version: offering.versionId, title: offering.title, description: offering.description,
         total: offering.problems.length, estimatedMinutes: offering.estimatedMinutes } : null,
       diagnostic: diagnostic && diagnosticBank ? { id: diagnostic.id, version: diagnostic.version, status: diagnostic.status as 'active' | 'completed',
@@ -163,22 +163,22 @@ export class LearningService {
         results: completedDiagnostic ? diagnosticAnswers : [] } : null,
       recommendationHistory: history.map(h => ({ id: h.id, createdAt: h.createdAt.toISOString(), trigger: h.trigger,
         recommendations: (h.snapshot as unknown as { recommendations: Recommendation[] }).recommendations })),
-      enrollments: enrollments.map(e => ({ id: e.id, classKey: e.classVersion.classKey, classVersionId: e.classVersionId,
+      enrollments: enrollments.map(e => ({ id: e.id, lessonKey: e.lessonVersion.lessonKey, lessonVersionId: e.lessonVersionId,
         completedSectionIds: e.completedSectionIds as string[], status: e.status as 'active' | 'completed', attempts: e.attempts.map(attemptView) })),
     };
   }
 
   private async ownedEnrollment(tx: Tx, userId: string, enrollmentId: string) {
-    const enrollment = await tx.enrollment.findFirst({ where: { id: enrollmentId, userId, scope: { ownerUserId: userId, kind: 'personal' } },
-      include: { classVersion: { select: { id: true, classKey: true } } } });
+    const enrollment = await tx.enrollment.findFirst({ where: { id: enrollmentId, userId, learningScope: { ownerUserId: userId, kind: 'personal' } },
+      include: { lessonVersion: { select: { id: true, lessonKey: true } } } });
     if (!enrollment) throw notFound();
-    const record = await classRecord(tx, enrollment.classVersionId);
+    const record = await lessonRecord(tx, enrollment.lessonVersionId);
     if (!record) throw notFound();
     return { enrollment, record };
   }
 
-  private async activity(tx: Tx, userId: string, kind: 'class' | 'assignment', contextId: string, problemId: string) {
-    if (kind === 'class') {
+  private async activity(tx: Tx, userId: string, kind: 'lesson' | 'assignment', contextId: string, problemId: string) {
+    if (kind === 'lesson') {
       const { enrollment, record } = await this.ownedEnrollment(tx, userId, contextId);
       if (enrollment.status !== 'active') throw conflict('완료한 수업의 기록은 바꿀 수 없어요. 복습 과제를 이용해 주세요.');
       const section = record.sections.find(s => getActivityProblemIds(record, s.sectionId).includes(problemId));
@@ -188,7 +188,7 @@ export class LearningService {
       if ((enrollment.completedSectionIds as string[]).includes(section.sectionId)) throw conflict('완료한 단계의 시도는 바꿀 수 없어요.');
       return { problem: record.problems.find(p => p.problemVersionId === problemId)!, scopeId: enrollment.scopeId, enrollmentId: enrollment.id, submissionId: undefined, assignmentItemId: undefined };
     }
-    const recipient = await tx.assignmentRecipient.findFirst({ where: { id: contextId, learnerUserId: userId, assignment: { scope: { ownerUserId: userId, kind: 'personal' } } }, include: { assignment: { include: { items: true } }, submissions: { orderBy: { submissionIndex: 'desc' } } } });
+    const recipient = await tx.assignmentRecipient.findFirst({ where: { id: contextId, learnerUserId: userId, assignment: { learningScope: { ownerUserId: userId, kind: 'personal' } } }, include: { assignment: { include: { items: true } }, submissions: { orderBy: { submissionIndex: 'desc' } } } });
     if (!recipient) throw notFound();
     const submission = recipient.submissions[0];
     if (!submission || submission.status !== 'draft') throw conflict('제출이 완료된 과제는 수정할 수 없어요.');
@@ -203,13 +203,13 @@ export class LearningService {
     for (let retry = 0; retry < 4; retry++) {
       try {
         extra = await this.db.$transaction(async tx => {
-          const scope = await tx.scope.findUnique({ where: { ownerUserId: userId } });
+          const scope = await tx.learningScope.findUnique({ where: { ownerUserId: userId } });
           if (!scope || scope.kind !== 'personal') throw notFound();
           const outcome = await (async (): Promise<Omit<ActionResponse, 'state'>> => {
           switch (action.action) {
             case 'recommendation.choose': {
-              if (action.classKey && !await tx.classVersion.findFirst({ where: { classKey: action.classKey } })) throw notFound();
-              await tx.user.update({ where: { id: userId }, data: { preferredClassKey: action.classKey } });
+              if (action.lessonKey && !await tx.lessonVersion.findFirst({ where: { lessonKey: action.lessonKey } })) throw notFound();
+              await tx.user.update({ where: { id: userId }, data: { preferredLessonKey: action.lessonKey } });
               return {};
             }
             case 'diagnostic.start': {
@@ -245,11 +245,11 @@ export class LearningService {
             case 'profile.update':
               await tx.user.update({ where: { id: userId }, data: { goal: action.goal, dailyMinutes: action.dailyMinutes } }); return {};
             case 'enrollment.start': {
-              const version = await tx.classVersion.findFirst({ where: { classKey: action.classKey }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
+              const version = await tx.lessonVersion.findFirst({ where: { lessonKey: action.lessonKey }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
               if (!version) throw notFound();
-              const existing = await tx.enrollment.findFirst({ where: { userId, classVersion: { classKey: action.classKey } } });
+              const existing = await tx.enrollment.findFirst({ where: { userId, lessonVersion: { lessonKey: action.lessonKey } } });
               if (existing) return { enrollmentId: existing.id };
-              const enrollment = await tx.enrollment.create({ data: { userId, scopeId: scope.id, classVersionId: version.id, completedSectionIds: [] } });
+              const enrollment = await tx.enrollment.create({ data: { userId, scopeId: scope.id, lessonVersionId: version.id, completedSectionIds: [] } });
               return { enrollmentId: enrollment.id };
             }
             case 'section.complete': {
@@ -277,7 +277,7 @@ export class LearningService {
               const previous = await tx.attempt.findUnique({ where: { userId_requestId: { userId, requestId: action.requestId } }, include: { submission: true } });
               if (previous) {
                 const previousContextId = previous.enrollmentId ?? previous.submission?.recipientId;
-                const previousKind = previous.enrollmentId ? 'class' : 'assignment';
+                const previousKind = previous.enrollmentId ? 'lesson' : 'assignment';
                 if (previousContextId !== action.contextId || previousKind !== action.context || previous.answer !== action.answer || previous.problemVersionId !== action.problemVersionId) throw conflict('동일 요청 ID로 다른 답안을 보낼 수 없어요.');
                 return { result: previous.result as GradeResult };
               }
@@ -288,13 +288,13 @@ export class LearningService {
                 problemVersionId: action.problemVersionId, answer: action.answer, result: asJson(result), hintUsed: Boolean(hint), requestId: action.requestId } });
               return { result };
             }
-            case 'class.complete': {
+            case 'lesson.complete': {
               const { enrollment, record } = await this.ownedEnrollment(tx, userId, action.enrollmentId);
               if (enrollment.status === 'completed') return {};
               if (record.sections.some(s => !(enrollment.completedSectionIds as string[]).includes(s.sectionId))) throw conflict('남은 학습 단계를 마무리해 주세요.');
               await tx.enrollment.update({ where: { id: enrollment.id }, data: { status: 'completed', completedAt: new Date() } });
               await this.createPersonalAssignment(tx, userId, scope.id, record, enrollment.id);
-              await tx.user.updateMany({ where: { id: userId, preferredClassKey: record.public.classKey }, data: { preferredClassKey: null } });
+              await tx.user.updateMany({ where: { id: userId, preferredLessonKey: record.public.lessonKey }, data: { preferredLessonKey: null } });
               return {};
             }
             case 'assignment.submit': {
@@ -329,9 +329,9 @@ export class LearningService {
   }
 
   // Independent assignment boundary. The web API currently calls this only for self-study.
-  async createPersonalAssignment(tx: Tx, userId: string, scopeId: string, record: StoredClass, sourceEnrollmentId?: string) {
-    validateClass(record);
-    const scope = await tx.scope.findFirst({ where: { id: scopeId, ownerUserId: userId, kind: 'personal' } });
+  async createPersonalAssignment(tx: Tx, userId: string, scopeId: string, record: StoredLesson, sourceEnrollmentId?: string) {
+    validateLesson(record);
+    const scope = await tx.learningScope.findFirst({ where: { id: scopeId, ownerUserId: userId, kind: 'personal' } });
     if (!scope) throw notFound();
     const user = await tx.user.findUniqueOrThrow({ where: { id: userId } });
     const attempts = sourceEnrollmentId ? await tx.attempt.findMany({ where: { userId, enrollmentId: sourceEnrollmentId }, orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] }) : [];
@@ -347,7 +347,7 @@ export class LearningService {
     }
     const selection = reviewSelection(record.homeworkProblemIds.map(id => record.problems.find(p => p.problemVersionId === id)!), evidence, user.dailyMinutes);
     return tx.assignment.create({ data: {
-      ownerScopeId: scopeId, title: `${record.public.title} · 다시 풀기`, sourceClassVersionId: record.public.versionId,
+      ownerScopeId: scopeId, title: `${record.public.title} · 다시 풀기`, sourceLessonVersionId: record.public.versionId,
       policySnapshot: { version: 1, audience: 'self-study', hints: 'on-request-assisted', results: 'after-item-attempt', solutions: 'not-exposed', reviewVersion: selection.version, reviewReason: selection.reason, dailyMinutes: user.dailyMinutes, intervalDays: selection.intervalDays },
       items: { create: selection.items.map((problem, position) => ({ problemVersionId: problem.problemVersionId, position, problemSnapshot: asJson(problem) })) },
       recipients: { create: { learnerUserId: userId, sourceEnrollmentId, recommendedAt: new Date(Date.now() + selection.intervalDays * 86400000),

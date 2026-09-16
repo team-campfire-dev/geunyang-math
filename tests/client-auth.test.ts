@@ -51,30 +51,30 @@ describe('safe OAuth callback messages', () => {
   });
 });
 
-describe('optional class return metadata', () => {
+describe('optional lesson return metadata', () => {
   const now = 1_000_000_000;
 
-  it('retains only a class key and timestamp, never credential-shaped extra values', () => {
-    const result = parseAuthReturn(JSON.stringify({ classKey: 'fraction-meaning', createdAt: now, accessToken: 'not-to-be-retained' }), now);
-    expect(result).toEqual({ classKey: 'fraction-meaning', createdAt: now });
+  it('retains only a lesson key and timestamp, never credential-shaped extra values', () => {
+    const result = parseAuthReturn(JSON.stringify({ lessonKey: 'fraction-meaning', createdAt: now, accessToken: 'not-to-be-retained' }), now);
+    expect(result).toEqual({ lessonKey: 'fraction-meaning', createdAt: now });
   });
 
-  it.each(['https://evil.example', '//evil.example', '../class', 'fraction?redirect=evil', '<script>'])('rejects URL-like or invalid class return values: %s', (classKey) => {
-    expect(parseAuthReturn(JSON.stringify({ classKey, createdAt: now }), now)).toBeNull();
+  it.each(['https://evil.example', '//evil.example', '../lesson', 'fraction?redirect=evil', '<script>'])('rejects URL-like or invalid lesson return values: %s', (lessonKey) => {
+    expect(parseAuthReturn(JSON.stringify({ lessonKey, createdAt: now }), now)).toBeNull();
   });
 
   it('expires abandoned login navigation and rejects malformed or future entries', () => {
     expect(parseAuthReturn('{broken', now)).toBeNull();
-    expect(parseAuthReturn(JSON.stringify({ classKey: 'fraction-meaning', createdAt: now - AUTH_RETURN_MAX_AGE_MS - 1 }), now)).toBeNull();
-    expect(parseAuthReturn(JSON.stringify({ classKey: 'fraction-meaning', createdAt: now + 1 }), now)).toBeNull();
+    expect(parseAuthReturn(JSON.stringify({ lessonKey: 'fraction-meaning', createdAt: now - AUTH_RETURN_MAX_AGE_MS - 1 }), now)).toBeNull();
+    expect(parseAuthReturn(JSON.stringify({ lessonKey: 'fraction-meaning', createdAt: now + 1 }), now)).toBeNull();
   });
 
   it('stores only this app’s navigation entry and clears it on logout', () => {
     const data = new Map<string, string>([['another-app', 'preserve']]);
     const storage = { getItem: (key: string) => data.get(key) ?? null, setItem: (key: string, value: string) => { data.set(key, value); }, removeItem: (key: string) => { data.delete(key); } };
     saveAuthReturn(storage, 'fraction-meaning', now);
-    expect(readAuthReturn(storage, now)).toEqual({ classKey: 'fraction-meaning', createdAt: now });
-    expect(data.get(AUTH_RETURN_STORAGE_KEY)).toBe(JSON.stringify({ classKey: 'fraction-meaning', createdAt: now }));
+    expect(readAuthReturn(storage, now)).toEqual({ lessonKey: 'fraction-meaning', createdAt: now });
+    expect(data.get(AUTH_RETURN_STORAGE_KEY)).toBe(JSON.stringify({ lessonKey: 'fraction-meaning', createdAt: now }));
     clearAuthReturn(storage);
     expect(data.has(AUTH_RETURN_STORAGE_KEY)).toBe(false);
     expect(data.get('another-app')).toBe('preserve');

@@ -29,7 +29,7 @@ export function linkTerm(text: string, mention: { from: number; query: string },
   const occurrence = occurrenceAt(next, surface, mention.from);
   const annotation: TermAnnotation = {
     termKey: choice.termKey, surface,
-    ...(choice.scopeKind === 'class' ? { scopeKind: 'class' as const, scopeKey: choice.scopeKey } : {}),
+    ...(choice.scopeKind === 'lesson' ? { scopeKind: 'lesson' as const, scopeKey: choice.scopeKey } : {}),
     ...(occurrence > 1 ? { occurrence } : {}),
   };
   return { text: next, terms: [...annotations.filter((item) => termRefId(item) !== termRefId(choice)), annotation] };
@@ -92,7 +92,7 @@ export function useTermMentions({ payload, terms, onChange }: {
         <button type="button" className={index === at ? 'active' : ''}
           onMouseDown={(event) => event.preventDefault()} onClick={() => pick(term)}>
           <strong>{term.label}</strong>
-          <small>{expert && `${term.termKey} · `}{term.scopeKind === 'class' ? '이 클래스' : '공통 사전'}</small>
+          <small>{expert && `${term.termKey} · `}{term.scopeKind === 'lesson' ? '이 수업' : '공통 사전'}</small>
         </button>
       </li>)}
     </ul>

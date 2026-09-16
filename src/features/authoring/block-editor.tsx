@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 import type { ContentBlock } from '@/shared/api';
-import { classBlockForms, blockFormOf, moveBlock, readPath, writePath, type BlockField, type BlockForm, type TermChoice } from '@/shared/authoring';
+import { lessonBlockForms, blockFormOf, moveBlock, readPath, writePath, type BlockField, type BlockForm, type TermChoice } from '@/shared/authoring';
 import type { TermAnnotation } from '@/shared/rich-text';
 import { TermText } from './term-mentions';
 import { useRemovalNotice } from './edit-history';
@@ -157,7 +157,7 @@ export function BlockCard({ block, index, total, problems, arrangingRefusal, ter
 }
 
 /** The caller names the new block, since where a block lands decides what its name should read as. */
-export function AddBlock({ label = '블록 추가', forms = classBlockForms, blockId, onAdd }: {
+export function AddBlock({ label = '블록 추가', forms = lessonBlockForms, blockId, onAdd }: {
   label?: string; forms?: BlockForm[]; blockId: (kind: string) => string; onAdd: (block: ContentBlock) => void;
 }) {
   return <div className="editor-add">

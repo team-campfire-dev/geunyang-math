@@ -1,9 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { AttemptView, ClassSection, ContentBlock } from '@/shared/api';
+import type { AttemptView, LessonSection, ContentBlock } from '@/shared/api';
 import {
-  blockFormOf, classKeyPattern, copyBlock, copyProblem, copySection, draftStatusLabels, dropLooseProblems, editShape,
+  blockFormOf, lessonKeyPattern, copyBlock, copyProblem, copySection, draftStatusLabels, dropLooseProblems, editShape,
   insertAfter, issueText, looseProblems, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId,
   problemGist, sectionRoleLabels, sectionRoles, versionLabel,
   type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail,
@@ -262,9 +262,9 @@ export function AuthoringWorkspace() {
       {notice && <p className="notice-banner">{notice}</p>}
       <DraftList workspace={workspace} busy={busy}
         onOpen={(summary) => run(async () => open((await authoringApi.draft(summary.id)).draft))}
-        onCreate={(classKey) => act({ action: 'draft.create', classKey })}
-        onCreateClass={(classKey, title, skillKeys) => act({ action: 'class.create', classKey, title, skillKeys })} />
-      <TermPanel classes={workspace.classes} skills={workspace.skills} terms={terms} busy={busy}
+        onCreate={(lessonKey) => act({ action: 'draft.create', lessonKey })}
+        onCreateLesson={(lessonKey, title, skillKeys) => act({ action: 'lesson.create', lessonKey, title, skillKeys })} />
+      <TermPanel lessons={workspace.lessons} skills={workspace.skills} terms={terms} busy={busy}
         mayEditDictionary={mayPublish(workspace.role)}
         onList={(scopeKind, scopeKey) => act({ action: 'term.list', scopeKind, scopeKey }, (response) => setTerms(response.terms ?? []))}
         onSave={(edit) => act({ action: 'term.save', edit }, (response) => {
@@ -285,7 +285,7 @@ export function AuthoringWorkspace() {
     ...edit.problems.flatMap((problem) => [...problem.promptContent, ...problem.hints, ...problem.solution].map((block) => block.blockId)),
   ];
   const published = draft.status === 'published';
-  const writeSection = (next: ClassSection) => setEdit({ ...edit, sections: edit.sections.map((item, index) => (index === sectionIndex ? next : item)) });
+  const writeSection = (next: LessonSection) => setEdit({ ...edit, sections: edit.sections.map((item, index) => (index === sectionIndex ? next : item)) });
   const writeBlocks = (blocks: ContentBlock[]) => writeSection({ ...section, contentBlocks: blocks });
   const writeSectionBlock = (index: number, block: ContentBlock) =>
     edit.sections.map((item, position) => (position === sectionIndex
@@ -323,7 +323,7 @@ export function AuthoringWorkspace() {
     draft.issues.filter((issue) => issue.problemVersionId === problemVersionId);
   /** Takes the screen to what a rule refused, rather than leaving an author to find it by its path. */
   const goToIssue = (issue: DraftIssue) => {
-    const holds = (item: ClassSection) => (issue.sectionId ? item.sectionId === issue.sectionId : false)
+    const holds = (item: LessonSection) => (issue.sectionId ? item.sectionId === issue.sectionId : false)
       || (issue.blockId ? item.contentBlocks.some((block) => block.blockId === issue.blockId) : false)
       || (issue.problemVersionId ? item.contentBlocks.some((block) => Array.isArray(block.payload.problemVersionIds)
         && (block.payload.problemVersionIds as string[]).includes(issue.problemVersionId!)) : false);
@@ -340,7 +340,7 @@ export function AuthoringWorkspace() {
 
   /** A copy sits beside what it was copied from, and is what the screen turns to next. */
   const copyThisBlock = (index: number) => {
-    const made = copyBlock({ block: section.contentBlocks[index], problems: edit.problems, classKey: draft.classKey,
+    const made = copyBlock({ block: section.contentBlocks[index], problems: edit.problems, lessonKey: draft.lessonKey,
       sectionId: section.sectionId, role: section.role, versionId: edit.meta.versionId, blockIds, problemIds });
     setEdit({ ...edit,
       sections: edit.sections.map((item, position) => (position === sectionIndex
@@ -349,7 +349,7 @@ export function AuthoringWorkspace() {
     setSelected({ kind: 'block', index: index + 1 });
   };
   const copyThisSection = () => {
-    const made = copySection({ section, problems: edit.problems, classKey: draft.classKey, versionId: edit.meta.versionId,
+    const made = copySection({ section, problems: edit.problems, lessonKey: draft.lessonKey, versionId: edit.meta.versionId,
       sectionIds: edit.sections.map((item) => item.sectionId), blockIds, problemIds });
     setEdit({ ...edit, sections: insertAfter(edit.sections, sectionIndex, made.section),
       problems: [...edit.problems, ...made.problems] });
@@ -387,7 +387,7 @@ export function AuthoringWorkspace() {
     setEdit({ ...edit, sections: moveBlock(edit.sections, sectionIndex, delta) });
     goToSection(Math.min(Math.max(sectionIndex + delta, 0), edit.sections.length - 1));
   };
-  // A question may only claim a concept this class teaches, and it names them the way a catalogue does.
+  // A question may only claim a concept this lesson teaches, and it names them the way a catalogue does.
   const draftSkills: SkillChoice[] = edit.meta.skillKeys.map((key) =>
     workspace.skills.find((skill) => skill.key === key) ?? { key, label: key });
 
@@ -440,8 +440,8 @@ export function AuthoringWorkspace() {
           </div>}
         </div>)}
         {!trying && <button type="button" className="text-button" disabled={published || edit.sections.length >= 50} onClick={() => {
-          const role: ClassSection['role'] = 'explanation';
-          const sectionId = nextSectionId(draft.classKey, role, edit.meta.versionId, edit.sections.map((item) => item.sectionId));
+          const role: LessonSection['role'] = 'explanation';
+          const sectionId = nextSectionId(draft.lessonKey, role, edit.meta.versionId, edit.sections.map((item) => item.sectionId));
           setEdit({ ...edit, sections: [...edit.sections, { sectionId, role, title: '새 단계', contentBlocks: [] }] });
           goToSection(edit.sections.length);
         }}><Icon name="plus" size={14} />단계 추가</button>}
@@ -452,7 +452,7 @@ export function AuthoringWorkspace() {
         trying={trying ? { actions: tryActions, attempts, busy: tryBusy } : undefined}
         onMeta={(meta) => setEdit({ ...edit, meta })} onSection={writeSection} onBlocks={writeBlocks}
         onProblem={writeProblem} onSelect={setSelected}
-        add={<AddBlock blockId={(kind) => nextBlockId(draft.classKey, section.sectionId, kind, edit.meta.versionId, blockIds)}
+        add={<AddBlock blockId={(kind) => nextBlockId(draft.lessonKey, section.sectionId, kind, edit.meta.versionId, blockIds)}
           onAdd={(block) => { writeBlocks([...section.contentBlocks, block]); setSelected({ kind: 'block', index: section.contentBlocks.length }); }} />} />
 
       {/* What the chosen thing is made of. With nothing chosen, the lesson itself is what is chosen. */}
@@ -465,7 +465,7 @@ export function AuthoringWorkspace() {
               onChange={writeProblem}
               onMove={(delta) => writeHolder(moveBlock(holderIds, problemAt, delta), edit.problems)}
               onCopy={() => {
-                const made = copyProblem(chosenProblem, draft.classKey, section.role, edit.meta.versionId, problemIds);
+                const made = copyProblem(chosenProblem, draft.lessonKey, section.role, edit.meta.versionId, problemIds);
                 writeHolder(insertAfter(holderIds, problemAt, made.problemVersionId), [...edit.problems, made]);
                 setSelected({ kind: 'problem', id: made.problemVersionId });
               }}
@@ -483,7 +483,7 @@ export function AuthoringWorkspace() {
               // A paragraph is written in the sheet, so the form does not ask for its body again.
               omit={chosenBlock.kind === 'core.rich_text' ? ['text'] : undefined}
               problems={blockFormOf(chosenBlock)?.editsProblems && <ProblemSetEditor block={chosenBlock} problems={edit.problems}
-                skills={draftSkills} classKey={draft.classKey} role={section.role} versionId={edit.meta.versionId}
+                skills={draftSkills} lessonKey={draft.lessonKey} role={section.role} versionId={edit.meta.versionId}
                 onPick={(id) => setSelected({ kind: 'problem', id })}
                 onChange={(next, problems) => setEdit({ ...edit, sections: writeSectionBlock(selected.index, next), problems })} />}
               onChange={(next) => writeBlocks(section.contentBlocks.map((item, position) => (position === selected.index ? next : item)))}
@@ -494,7 +494,7 @@ export function AuthoringWorkspace() {
               onCopy={() => copyThisBlock(selected.index)}
               onRemove={() => {
                 // An activity holds its questions, so they leave with it. Left behind, nothing in the
-                // class would hold them and publishing refuses a class that carries one.
+                // lesson would hold them and publishing refuses a lesson that carries one.
                 setEdit(dropLooseProblems({ ...edit, sections: edit.sections.map((item, position) => (position === sectionIndex
                   ? { ...item, contentBlocks: item.contentBlocks.filter((_, place) => place !== selected.index) } : item)) },
                 draft.homeworkProblemIds));
@@ -542,7 +542,7 @@ export function AuthoringWorkspace() {
             <div className="editor-inspector-part">
               <span className="editor-label">이 단계</span>
               <label className="editor-field"><span className="editor-label">역할</span>
-                <select value={section.role} onChange={(event) => writeSection({ ...section, role: event.target.value as ClassSection['role'] })}>
+                <select value={section.role} onChange={(event) => writeSection({ ...section, role: event.target.value as LessonSection['role'] })}>
                   {sectionRoles.map((role) => <option key={role} value={role}>{sectionRoleLabels[role]}</option>)}
                 </select>
                 <small>학습 화면의 단계 목록과 시트 머리에 이 이름으로 나와요.</small></label>
@@ -714,37 +714,37 @@ function Shell({ role, expert = false, busy, onExpert, children }: {
   </main></ExpertMode.Provider>;
 }
 
-function DraftList({ workspace, busy, onOpen, onCreate, onCreateClass }: {
-  workspace: Workspace; busy: boolean; onOpen: (draft: DraftSummary) => void; onCreate: (classKey: string) => void;
-  onCreateClass: (classKey: string, title: string, skillKeys: string[]) => void;
+function DraftList({ workspace, busy, onOpen, onCreate, onCreateLesson }: {
+  workspace: Workspace; busy: boolean; onOpen: (draft: DraftSummary) => void; onCreate: (lessonKey: string) => void;
+  onCreateLesson: (lessonKey: string, title: string, skillKeys: string[]) => void;
 }) {
-  const [classKey, setClassKey] = useState(workspace.classes[0]?.classKey ?? '');
+  const [lessonKey, setLessonKey] = useState(workspace.lessons[0]?.lessonKey ?? '');
   const [query, setQuery] = useState('');
   const [made, setMade] = useState({ key: '', title: '', skillKeys: [] as string[] });
   const expert = useExpertMode();
-  const chosen = workspace.classes.find((item) => item.classKey === classKey);
+  const chosen = workspace.lessons.find((item) => item.lessonKey === lessonKey);
   const found = workspace.drafts.filter((item) => {
     const words = query.trim().toLowerCase();
     return !words || [item.title, item.authorName, item.versionId].some((value) => value.toLowerCase().includes(words));
   });
-  const readyToMake = classKeyPattern.test(made.key) && !!made.title.trim() && made.skillKeys.length > 0;
+  const readyToMake = lessonKeyPattern.test(made.key) && !!made.title.trim() && made.skillKeys.length > 0;
 
   return <>
     <fieldset className="editor-panel">
       <legend>새 초안</legend>
-      <p className="editor-note">발행된 클래스를 기준으로 다음 판본의 초안을 만듭니다. 문항과 채점 규칙은 기준 판본에서 그대로 이어받고, 이 화면에서는 단계와 블록을 고쳐요.</p>
+      <p className="editor-note">발행된 수업을 기준으로 다음 판본의 초안을 만듭니다. 문항과 채점 규칙은 기준 판본에서 그대로 이어받고, 이 화면에서는 단계와 블록을 고쳐요.</p>
       <div className="editor-actions">
-        <label className="editor-field"><span className="editor-label">클래스</span>
-          <select value={classKey} onChange={(event) => setClassKey(event.target.value)}>
-            {workspace.classes.map((item) => <option key={item.classKey} value={item.classKey}>
+        <label className="editor-field"><span className="editor-label">수업</span>
+          <select value={lessonKey} onChange={(event) => setLessonKey(event.target.value)}>
+            {workspace.lessons.map((item) => <option key={item.lessonKey} value={item.lessonKey}>
               {item.title} · {expert ? item.latestVersionId : versionLabel(item.latestVersionId)} →{' '}
               {expert ? item.suggestedVersionId : versionLabel(item.suggestedVersionId)}{item.hasDraft ? ' (초안 있음)' : ''}</option>)}
           </select></label>
-        <button type="button" className="button primary" disabled={busy || !classKey} onClick={() => onCreate(classKey)}>초안 만들기</button>
+        <button type="button" className="button primary" disabled={busy || !lessonKey} onClick={() => onCreate(lessonKey)}>초안 만들기</button>
       </div>
-      {/* Two open drafts of one class both aim at the same next version, and only one of them can have it. */}
+      {/* Two open drafts of one lesson both aim at the same next version, and only one of them can have it. */}
       {chosen?.hasDraft && <p className="editor-note editor-warn">
-        이 클래스에는 이미 작성 중인 초안이 있어요. 새로 만들면 둘 다 같은 판을 노리게 되고, 먼저 발행한 쪽이 그 판을 가집니다.</p>}
+        이 수업에는 이미 작성 중인 초안이 있어요. 새로 만들면 둘 다 같은 판을 노리게 되고, 먼저 발행한 쪽이 그 판을 가집니다.</p>}
     </fieldset>
 
     <fieldset className="editor-panel">
@@ -756,14 +756,14 @@ function DraftList({ workspace, busy, onOpen, onCreate, onCreateClass }: {
       <label className="editor-field"><span className="editor-label">수업 키</span>
         <input value={made.key} maxLength={64} placeholder="decimal-place-value" spellCheck={false}
           onChange={(event) => setMade({ ...made, key: event.target.value.trim().toLowerCase() })} />
-        {made.key && !classKeyPattern.test(made.key)
+        {made.key && !lessonKeyPattern.test(made.key)
           ? <small className="editor-warn">영문 소문자·숫자·하이픈만 쓸 수 있고, 두 글자 이상이어야 해요.</small>
           : <small>이 수업 안의 모든 이름이 여기서 만들어져요. 발행한 뒤에는 바꿀 수 없어요.</small>}</label>
       <SkillPicker skills={workspace.skills} chosen={made.skillKeys} label="이 수업이 가르치는 개념"
         onChange={(skillKeys) => setMade({ ...made, skillKeys })} />
       <div className="editor-actions">
         <button type="button" className="button primary" disabled={busy || !readyToMake}
-          onClick={() => onCreateClass(made.key, made.title.trim(), made.skillKeys)}>수업 만들기</button>
+          onClick={() => onCreateLesson(made.key, made.title.trim(), made.skillKeys)}>수업 만들기</button>
         {!readyToMake && <span className="editor-note">이름·키·개념이 모두 있어야 만들 수 있어요.</span>}
       </div>
     </fieldset>

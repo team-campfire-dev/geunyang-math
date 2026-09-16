@@ -5,9 +5,9 @@ import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { diagnosticProblems } from './fixtures/content';
-import { seedClasses } from './fixtures/content';
+import { seedLessons } from './fixtures/content';
 import { getActivityProblemIds } from '@/core/content';
-import { classMetadata, indexClassDocument } from '@/server/content-store';
+import { lessonMetadata, indexLessonDocument } from '@/server/content-store';
 import type { DiagnosticView, LearningState } from '@/shared/api';
 
 const url = process.env.TEST_DATABASE_URL;
@@ -23,13 +23,13 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     if (parsed.protocol !== 'mysql:' || !parsed.pathname.endsWith('_test')) throw new Error('Use an isolated _test database.');
     db = createDatabase(url!); service = new LearningService(db);
     existing = await existingRows(db);
-    for (const record of seedClasses) {
-      await db.classVersion.upsert({ where: { id: record.public.versionId }, update: {}, create: {
-        id: record.public.versionId, classKey: record.public.classKey, title: record.public.title, order: record.public.order,
-        metadata: json(classMetadata(record)),
+    for (const record of seedLessons) {
+      await db.lessonVersion.upsert({ where: { id: record.public.versionId }, update: {}, create: {
+        id: record.public.versionId, lessonKey: record.public.lessonKey, title: record.public.title, order: record.public.order,
+        metadata: json(lessonMetadata(record)),
         contentHash: createHash('sha256').update(JSON.stringify(record)).digest('hex'),
       } });
-      await indexClassDocument(db, record);
+      await indexLessonDocument(db, record);
     }
   });
   afterAll(async () => {
@@ -38,7 +38,7 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     await db?.$disconnect();
   });
   async function learner(minutes = 10) {
-    return db.user.create({ data: { displayName: `placement ${randomUUID().slice(0, 8)}`, dailyMinutes: minutes, scopes: { create: { kind: 'personal' } } } });
+    return db.user.create({ data: { displayName: `placement ${randomUUID().slice(0, 8)}`, dailyMinutes: minutes, learningScopes: { create: { kind: 'personal' } } } });
   }
   async function place(userId: string, values: (string | null)[]) {
     let state = (await service.act(userId, { action: 'diagnostic.start' })).state;
@@ -84,7 +84,7 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
   it('selects the next unknown skill and retains a reason/history across reconnects without GET writes', async () => {
     const user = await learner();
     const state = await place(user.id, [...answers.slice(0, 4), null, null]);
-    const target = state.classes.find(c => c.classKey === state.recommendations[0].classKey)!;
+    const target = state.lessons.find(c => c.lessonKey === state.recommendations[0].lessonKey)!;
     expect(target.skillKeys).toContain('fraction.addition');
     expect(state.plan.readiness[0]).toMatchObject({ readiness: 'ready', source: 'diagnostic' });
     const before = await db.recommendationHistory.count({ where: { userId: user.id } });
@@ -100,36 +100,36 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
   });
   it('persists explicit choices per account, validates the catalogue, and can return to automatic recommendations', async () => {
     const a = await learner(), b = await learner();
-    await expect(service.act(a.id, { action: 'recommendation.choose', classKey: 'missing-class' })).rejects.toMatchObject({ status: 404 });
-    const chosen = await service.act(a.id, { action: 'recommendation.choose', classKey: 'fraction-addition' });
-    expect(chosen.state.recommendations[0].classKey).toBe('fraction-addition');
-    expect((await service.state(a.id)).plan.preferredClassKey).toBe('fraction-addition');
-    expect((await service.state(b.id)).plan.preferredClassKey).toBeNull();
-    const automatic = await service.act(a.id, { action: 'recommendation.choose', classKey: null });
-    expect(automatic.state.plan.preferredClassKey).toBeNull();
-    expect(automatic.state.classes.find(c => c.classKey === automatic.state.recommendations[0].classKey)!.skillKeys).toContain('fraction.meaning');
+    await expect(service.act(a.id, { action: 'recommendation.choose', lessonKey: 'missing-lesson' })).rejects.toMatchObject({ status: 404 });
+    const chosen = await service.act(a.id, { action: 'recommendation.choose', lessonKey: 'fraction-addition' });
+    expect(chosen.state.recommendations[0].lessonKey).toBe('fraction-addition');
+    expect((await service.state(a.id)).plan.preferredLessonKey).toBe('fraction-addition');
+    expect((await service.state(b.id)).plan.preferredLessonKey).toBeNull();
+    const automatic = await service.act(a.id, { action: 'recommendation.choose', lessonKey: null });
+    expect(automatic.state.plan.preferredLessonKey).toBeNull();
+    expect(automatic.state.lessons.find(c => c.lessonKey === automatic.state.recommendations[0].lessonKey)!.skillKeys).toContain('fraction.meaning');
   });
-  async function finishClass(userId: string, incorrectFirst = false) {
-    const record = seedClasses[0];
-    const enrollmentId = (await service.act(userId, { action: 'enrollment.start', classKey: record.public.classKey })).enrollmentId!;
+  async function finishLesson(userId: string, incorrectFirst = false) {
+    const record = seedLessons[0];
+    const enrollmentId = (await service.act(userId, { action: 'enrollment.start', lessonKey: record.public.lessonKey })).enrollmentId!;
     for (const section of record.sections) {
       for (const problemVersionId of getActivityProblemIds(record, section.sectionId)) {
         const spec = record.problems.find(p => p.problemVersionId === problemVersionId)!.gradingSpec;
         const correct = spec.kind === 'integer' ? String(spec.value) : `${spec.numerator}/${spec.denominator}`;
-        const action = { action: 'attempt.submit', context: 'class', contextId: enrollmentId, problemVersionId, answer: correct, requestId: randomUUID() };
+        const action = { action: 'attempt.submit', context: 'lesson', contextId: enrollmentId, problemVersionId, answer: correct, requestId: randomUUID() };
         if (incorrectFirst) await service.act(userId, { ...action, answer: '999', requestId: randomUUID() });
         await service.act(userId, action);
       }
       await service.act(userId, { action: 'section.complete', enrollmentId, sectionId: section.sectionId });
     }
-    return (await service.act(userId, { action: 'class.complete', enrollmentId })).state;
+    return (await service.act(userId, { action: 'lesson.complete', enrollmentId })).state;
   }
   it('adapts new homework and preserves issued snapshots after profile changes; retries do not inflate evidence', async () => {
     const strong = await learner(10), needsPractice = await learner(5);
-    await service.act(strong.id, { action: 'recommendation.choose', classKey: 'fraction-meaning' });
-    const strongState = await finishClass(strong.id);
-    expect(strongState.plan.preferredClassKey).toBeNull();
-    const weakState = await finishClass(needsPractice.id, true);
+    await service.act(strong.id, { action: 'recommendation.choose', lessonKey: 'fraction-meaning' });
+    const strongState = await finishLesson(strong.id);
+    expect(strongState.plan.preferredLessonKey).toBeNull();
+    const weakState = await finishLesson(needsPractice.id, true);
     const strongAssignment = strongState.assignments[0], weakAssignment = weakState.assignments[0];
     expect(strongAssignment.items).toHaveLength(2);
     expect(weakAssignment.items).toHaveLength(1);
@@ -143,8 +143,8 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
   it('does not use draft homework as assessment; submitted difficulty supersedes diagnostic success', async () => {
     const user = await learner();
     await place(user.id, answers);
-    const scope = await db.scope.findUniqueOrThrow({ where: { ownerUserId: user.id } });
-    const assignment = await db.$transaction(tx => service.createPersonalAssignment(tx, user.id, scope.id, seedClasses[0]));
+    const scope = await db.learningScope.findUniqueOrThrow({ where: { ownerUserId: user.id } });
+    const assignment = await db.$transaction(tx => service.createPersonalAssignment(tx, user.id, scope.id, seedLessons[0]));
     let state: LearningState = await service.state(user.id);
     const recipient = state.assignments.find(a => a.id === assignment.id)!;
     for (const item of recipient.items) state = (await service.act(user.id, { action: 'attempt.submit', context: 'assignment', contextId: recipient.recipientId,

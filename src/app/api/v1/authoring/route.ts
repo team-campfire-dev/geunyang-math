@@ -6,7 +6,7 @@ import { AppError } from '@/server/errors';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-/** A class document is far longer than a learning action, but still a bounded form submission. */
+/** A lesson document is far longer than a learning action, but still a bounded form submission. */
 const bodyLimit = 256 * 1024;
 
 /** With the editor open, a visitor writes as the shared account; otherwise sign-in decides. */

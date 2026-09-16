@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { recommend, reviewSelection, skillReadiness, type Evidence } from '@/core/personalization';
 import { diagnosticProblems } from './fixtures/content';
-import { seedClasses, skillLabels } from './fixtures/content';
+import { seedLessons, skillLabels } from './fixtures/content';
 import { gradeAnswer } from '@/core/grading';
 import type { DiagnosticAnswer, Goal } from '@/shared/api';
 
-const classes = seedClasses.map(c => c.public);
+const lessons = seedLessons.map(c => c.public);
 const answers = ['4/9', '12', '10', '3/4', '7/11', '5/12'];
 const bank = diagnosticProblems;
 const diagnostic = (responses: (string | null)[]) => ({ problems: bank, answers: bank.map((p, i) => ({ problemVersionId: p.problemVersionId, answer: responses[i], status: responses[i] === null ? 'skipped' : gradeAnswer(responses[i]!, p.gradingSpec, false).status })) as DiagnosticAnswer[] });
@@ -14,31 +14,31 @@ const evidence = (status: 'correct' | 'incorrect' | 'invalid', overrides: Partia
   problemVersionId: 'new-check', skillKeys: ['fraction.meaning'], result: { status, assisted: false, message: 'fixture' }, date: now, check: true, ...overrides,
 });
 function plan(responses: (string | null)[], goal: Goal = 'foundation-recovery') {
-  return recommend({ classes, enrollments: [], assignments: [], readiness: skillReadiness(skillLabels, diagnostic(responses), []), dailyMinutes: 10, goal, now });
+  return recommend({ lessons, enrollments: [], assignments: [], readiness: skillReadiness(skillLabels, diagnostic(responses), []), dailyMinutes: 10, goal, now });
 }
 
 describe('placement and prerequisite recommendations', () => {
   it('has separate diagnostic questions and a checked answer key', () => {
     expect(bank).toHaveLength(6);
     expect(bank.map((p, i) => gradeAnswer(answers[i], p.gradingSpec, false).status)).toEqual(Array(6).fill('correct'));
-    const existing = seedClasses.flatMap(c => c.problems.map(p => p.problemVersionId));
+    const existing = seedLessons.flatMap(c => c.problems.map(p => p.problemVersionId));
     expect(bank.some(p => existing.includes(p.problemVersionId))).toBe(false);
   });
   it('distinguishes skipping from wrong answers and starts unknown learners at foundations', () => {
     const unknown = plan(Array(6).fill(null));
     expect(unknown.plan.readiness.every(s => s.readiness === 'unknown')).toBe(true);
-    expect(unknown.recommendations[0].classKey).toBe('fraction-meaning');
+    expect(unknown.recommendations[0].lessonKey).toBe('fraction-meaning');
     expect(plan(['0', null, null, null, null, null]).plan.readiness[0].readiness).toBe('needs-practice');
   });
-  it('recommends a later class after two independent placement answers confirm each prerequisite', () => {
-    expect(plan([...answers.slice(0, 2), null, null, null, null]).recommendations[0].classKey).toBe('fraction-equivalence');
-    expect(plan([...answers.slice(0, 4), '0', null]).recommendations[0].classKey).toBe('fraction-addition');
-    expect(plan([answers[0], null, ...answers.slice(2)]).recommendations[0].classKey).toBe('fraction-meaning');
+  it('recommends a later lesson after two independent placement answers confirm each prerequisite', () => {
+    expect(plan([...answers.slice(0, 2), null, null, null, null]).recommendations[0].lessonKey).toBe('fraction-equivalence');
+    expect(plan([...answers.slice(0, 4), '0', null]).recommendations[0].lessonKey).toBe('fraction-addition');
+    expect(plan([answers[0], null, ...answers.slice(2)]).recommendations[0].lessonKey).toBe('fraction-meaning');
   });
   it('uses goals for consolidation without bypassing missing prerequisites', () => {
-    expect(plan(answers, 'daily-math').recommendations[0].classKey).toBe('fraction-meaning');
-    expect(plan(answers, 'algebra-ready').recommendations[0].classKey).toBe('fraction-addition');
-    expect(plan(['0', ...answers.slice(1)], 'algebra-ready').recommendations[0].classKey).toBe('fraction-meaning');
+    expect(plan(answers, 'daily-math').recommendations[0].lessonKey).toBe('fraction-meaning');
+    expect(plan(answers, 'algebra-ready').recommendations[0].lessonKey).toBe('fraction-addition');
+    expect(plan(['0', ...answers.slice(1)], 'algebra-ready').recommendations[0].lessonKey).toBe('fraction-meaning');
   });
   it('prioritizes subsequent learning over provisional placement and does not treat assistance as readiness', () => {
     expect(skillReadiness(skillLabels, diagnostic(answers), [evidence('incorrect')])[0]).toMatchObject({ source: 'learning', readiness: 'needs-practice' });
@@ -47,26 +47,26 @@ describe('placement and prerequisite recommendations', () => {
     expect(skillReadiness(skillLabels, diagnostic(Array(6).fill(null)), [evidence('correct')])[0].readiness).toBe('ready');
   });
   it('requires all first answers in the latest submitted assessment for readiness', () => {
-    const earlier = evidence('correct', { date: new Date(now.getTime() - 1000), assessmentId: 'class' });
+    const earlier = evidence('correct', { date: new Date(now.getTime() - 1000), assessmentId: 'lesson' });
     const incorrect = evidence('incorrect', { assessmentId: 'homework' });
     const correct = evidence('correct', { date: new Date(now.getTime() + 1000), assessmentId: 'homework', problemVersionId: 'another-item' });
     expect(skillReadiness(skillLabels, null, [earlier, incorrect, correct])[0].readiness).toBe('needs-practice');
   });
-  it('offers a prerequisite without preventing a learner from continuing a chosen class', () => {
-    const output = recommend({ classes, enrollments: [{ classKey: 'fraction-addition', status: 'active' }], assignments: [],
+  it('offers a prerequisite without preventing a learner from continuing a chosen lesson', () => {
+    const output = recommend({ lessons, enrollments: [{ lessonKey: 'fraction-addition', status: 'active' }], assignments: [],
       readiness: skillReadiness(skillLabels, null, []), dailyMinutes: 5, goal: 'foundation-recovery', now });
-    expect(output.recommendations[0]).toMatchObject({ classKey: 'fraction-meaning', suggestedMinutes: 5 });
+    expect(output.recommendations[0]).toMatchObject({ lessonKey: 'fraction-meaning', suggestedMinutes: 5 });
     expect(output.recommendations[0].reason).toContain('직접 선택');
   });
-  it('honors an explicit class choice and returns to prerequisite rules when cleared', () => {
-    const input = { classes, enrollments: [], assignments: [], readiness: skillReadiness(skillLabels, null, []), dailyMinutes: 10, goal: 'foundation-recovery' as const, now };
-    const chosen = recommend({ ...input, preferredClassKey: 'fraction-addition' });
-    expect(chosen.recommendations[0].classKey).toBe('fraction-addition');
+  it('honors an explicit lesson choice and returns to prerequisite rules when cleared', () => {
+    const input = { lessons, enrollments: [], assignments: [], readiness: skillReadiness(skillLabels, null, []), dailyMinutes: 10, goal: 'foundation-recovery' as const, now };
+    const chosen = recommend({ ...input, preferredLessonKey: 'fraction-addition' });
+    expect(chosen.recommendations[0].lessonKey).toBe('fraction-addition');
     expect(chosen.recommendations[0].reason).toContain('선수 개념');
-    expect(recommend({ ...input, preferredClassKey: null }).recommendations[0].classKey).toBe('fraction-meaning');
+    expect(recommend({ ...input, preferredLessonKey: null }).recommendations[0].lessonKey).toBe('fraction-meaning');
   });
   it('prioritizes only due unfinished reviews without treating future or missing work as wrong', () => {
-    const output = recommend({ classes, enrollments: [], readiness: skillReadiness(skillLabels, null, []), dailyMinutes: 10, goal: 'foundation-recovery', now,
+    const output = recommend({ lessons, enrollments: [], readiness: skillReadiness(skillLabels, null, []), dailyMinutes: 10, goal: 'foundation-recovery', now,
       assignments: [{ recipientId: 'future', status: 'assigned', recommendedAt: '2026-09-17T12:00:00Z' }, { recipientId: 'done', status: 'submitted', recommendedAt: '2026-09-10T12:00:00Z' }, { recipientId: 'due', status: 'assigned', recommendedAt: now.toISOString() }] });
     expect(output.plan.review?.recipientId).toBe('due');
     expect(output.plan.readiness.every(s => s.readiness === 'unknown')).toBe(true);
@@ -74,7 +74,7 @@ describe('placement and prerequisite recommendations', () => {
 });
 
 describe('immutable adaptive review decisions', () => {
-  const record = seedClasses[1];
+  const record = seedLessons[1];
   const candidates = record.homeworkProblemIds.map(id => record.problems.find(p => p.problemVersionId === id)!);
   it('uses one question at five minutes and at most the available pool for longer sessions', () => {
     expect(reviewSelection(candidates, [], 5).items).toHaveLength(1);

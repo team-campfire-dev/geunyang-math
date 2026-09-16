@@ -11,8 +11,8 @@ export function GET(request: Request) {
     const service = new LearningService(getDatabase());
     const params = new URL(request.url).searchParams;
     if (params.get('catalog') === '1') return json(await service.publicCatalog());
-    const classKey = params.get('classKey');
-    if (classKey) return json(await service.classDocument(classKey, (await sessionUser(request))?.id));
+    const lessonKey = params.get('lessonKey');
+    if (lessonKey) return json(await service.lessonDocument(lessonKey, (await sessionUser(request))?.id));
     return json(await service.state((await requireUser(request)).id));
   });
 }

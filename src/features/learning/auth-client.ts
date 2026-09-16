@@ -32,16 +32,16 @@ export function canUseWebAuthentication(apiOrigin: string, browserOrigin: string
   } catch { return false; }
 }
 
-export type AuthReturn = { classKey: string; createdAt: number };
+export type AuthReturn = { lessonKey: string; createdAt: number };
 export function parseAuthReturn(value: string | null, now: number): AuthReturn | null {
   if (!value) return null;
   try {
     const parsed: unknown = JSON.parse(value);
     if (!parsed || typeof parsed !== 'object') return null;
     const entry = parsed as Record<string, unknown>;
-    if (typeof entry.classKey !== 'string' || !/^[a-z0-9][a-z0-9._:-]{0,190}$/i.test(entry.classKey)) return null;
+    if (typeof entry.lessonKey !== 'string' || !/^[a-z0-9][a-z0-9._:-]{0,190}$/i.test(entry.lessonKey)) return null;
     if (typeof entry.createdAt !== 'number' || !Number.isFinite(entry.createdAt) || entry.createdAt > now || now - entry.createdAt > AUTH_RETURN_MAX_AGE_MS) return null;
-    return { classKey: entry.classKey, createdAt: entry.createdAt };
+    return { lessonKey: entry.lessonKey, createdAt: entry.createdAt };
   } catch { return null; }
 }
 
@@ -57,9 +57,9 @@ export function clearAuthReturn(storage: Pick<Storage, 'removeItem'>): void {
   try { storage.removeItem(AUTH_RETURN_STORAGE_KEY); } catch { /* Storage restrictions must not block authentication. */ }
 }
 
-export function saveAuthReturn(storage: Pick<Storage, 'setItem' | 'removeItem'>, classKey: string | null, now = Date.now()): void {
+export function saveAuthReturn(storage: Pick<Storage, 'setItem' | 'removeItem'>, lessonKey: string | null, now = Date.now()): void {
   try {
-    const entry = classKey ? parseAuthReturn(JSON.stringify({ classKey, createdAt: now }), now) : null;
+    const entry = lessonKey ? parseAuthReturn(JSON.stringify({ lessonKey, createdAt: now }), now) : null;
     if (entry) storage.setItem(AUTH_RETURN_STORAGE_KEY, JSON.stringify(entry));
     else storage.removeItem(AUTH_RETURN_STORAGE_KEY);
   } catch { /* Returning to the dashboard is safe when browser storage is unavailable. */ }

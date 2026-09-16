@@ -42,7 +42,7 @@ export async function runContentCommand(args: string[]) {
       const bundle = await db.$transaction(tx => exportContent(tx), { isolationLevel: 'RepeatableRead', timeout: 30_000 });
       // Exports include private answer keys. Never overwrite a file or print its content.
       writeFileSync(flags[1], JSON.stringify(bundle, null, 2) + '\n', { mode: 0o600, flag: 'wx' });
-      console.log(`Exported ${bundle.classes.length} class versions and ${bundle.diagnostics.length} diagnostic versions.`);
+      console.log(`Exported ${bundle.lessons.length} lesson versions and ${bundle.diagnostics.length} diagnostic versions.`);
     }
   } finally { await db.$disconnect(); }
 }

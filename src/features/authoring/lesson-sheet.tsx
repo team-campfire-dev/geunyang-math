@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, type ReactNode, type RefObject } from 'react';
-import type { AttemptView, ContentBlock, ClassSection } from '@/shared/api';
+import type { AttemptView, ContentBlock, LessonSection } from '@/shared/api';
 import {
   blockFormOf, sectionRoleLabels, toPublicProblem,
   type DraftIssue, type DraftMeta, type DraftProblem, type TermChoice,
@@ -91,7 +91,7 @@ export type Picked = { kind: 'block'; index: number } | { kind: 'problem'; id: s
  * the text it is made of, because a paragraph is written by typing into it.
  */
 export function LessonSheet({ meta, section, index, problems, terms, selected, published, issues, trying, onMeta, onSection, onBlocks, onProblem, onSelect, add }: {
-  meta: DraftMeta; section: ClassSection; index: number; problems: DraftProblem[]; terms: TermChoice[];
+  meta: DraftMeta; section: LessonSection; index: number; problems: DraftProblem[]; terms: TermChoice[];
   selected: Picked | null; published: boolean;
   /** What publishing refused, so the lesson can show where rather than list it somewhere else. */
   issues: DraftIssue[];
@@ -101,7 +101,7 @@ export function LessonSheet({ meta, section, index, problems, terms, selected, p
    * exactly the screen a learner meets, with no handles on it.
    */
   trying?: { actions: (problemVersionId: string) => ProblemActions; attempts: Record<string, AttemptView>; busy: boolean };
-  onMeta: (next: DraftMeta) => void; onSection: (next: ClassSection) => void;
+  onMeta: (next: DraftMeta) => void; onSection: (next: LessonSection) => void;
   onBlocks: (blocks: ContentBlock[]) => void; onProblem: (next: DraftProblem) => void;
   onSelect: (next: Picked | null) => void; add: ReactNode;
 }) {
@@ -123,7 +123,7 @@ export function LessonSheet({ meta, section, index, problems, terms, selected, p
   return <div className="editor-sheet">
     <div className="lesson-header sheet-header">
       <div>
-        <span className="eyebrow">기초 수학 · {meta.estimatedMinutes}분 클래스</span>
+        <span className="eyebrow">기초 수학 · {meta.estimatedMinutes}분 수업</span>
         {fixed
           ? <h1>{meta.title}</h1>
           : <InlineText className="sheet-class-title" label="수업 제목" value={meta.title} maxLength={191}

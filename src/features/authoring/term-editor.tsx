@@ -4,7 +4,7 @@ import { useState } from 'react';
 import type { ContentBlock } from '@/shared/api';
 import {
   moveBlock, newTerm, termBlockForms,
-  type ClassChoice, type EditableTermScope, type SkillChoice, type TermEdit, type TermSummary,
+  type LessonChoice, type EditableTermScope, type SkillChoice, type TermEdit, type TermSummary,
 } from '@/shared/authoring';
 import { Icon } from '@/features/learning/icons';
 import { AddBlock, BlockCard } from './block-editor';
@@ -64,20 +64,20 @@ function TermForm({ edit, skills, busy, existing, onChange, onPublish, onClose }
 
 /**
  * Definitions are published, not drafted: saving writes the next version and every reader sees it
- * at once. That is the bargain the glossary already makes — a class links a term by key, so a
- * correction reaches every class that links it without republishing any of them.
+ * at once. That is the bargain the glossary already makes — a lesson links a term by key, so a
+ * correction reaches every lesson that links it without republishing any of them.
  */
-export function TermPanel({ classes, skills, terms, busy, mayEditDictionary, onList, onSave }: {
-  classes: ClassChoice[]; skills: SkillChoice[]; terms: TermSummary[] | null; busy: boolean; mayEditDictionary: boolean;
+export function TermPanel({ lessons, skills, terms, busy, mayEditDictionary, onList, onSave }: {
+  lessons: LessonChoice[]; skills: SkillChoice[]; terms: TermSummary[] | null; busy: boolean; mayEditDictionary: boolean;
   onList: (scopeKind: EditableTermScope, scopeKey: string) => void; onSave: (edit: TermEdit) => void;
 }) {
-  const [scopeKind, setScopeKind] = useState<EditableTermScope>(mayEditDictionary ? 'global' : 'class');
-  const [scopeKey, setScopeKey] = useState(classes[0]?.classKey ?? '');
+  const [scopeKind, setScopeKind] = useState<EditableTermScope>(mayEditDictionary ? 'global' : 'lesson');
+  const [scopeKey, setScopeKey] = useState(lessons[0]?.lessonKey ?? '');
   const [edit, setEdit] = useState<TermEdit | null>(null);
   const [existing, setExisting] = useState<TermSummary | null>(null);
   const expert = useExpertMode();
   const skillLabel = (key: string) => skills.find((skill) => skill.key === key)?.label ?? key;
-  const scope = { scopeKind, scopeKey: scopeKind === 'class' ? scopeKey : '' };
+  const scope = { scopeKind, scopeKey: scopeKind === 'lesson' ? scopeKey : '' };
   const open = (term: TermSummary | null) => {
     setExisting(term);
     // Only what may be written: the version and its date belong to the record, not to the edit.
@@ -92,18 +92,18 @@ export function TermPanel({ classes, skills, terms, busy, mayEditDictionary, onL
     <div className="section-heading"><div><span className="eyebrow">GLOSSARY</span><h2>용어 풀이</h2></div></div>
     <fieldset className="editor-panel">
       <legend>어디 용어</legend>
-      <p className="editor-note">공통 사전은 운영자가 모아 두는 용어이고, 클래스 용어는 그 수업 안에서만 쓰는 풀이예요. 같은 키라도 서로 다른 용어입니다.</p>
+      <p className="editor-note">공통 사전은 운영자가 모아 두는 용어이고, 수업 용어는 그 수업 안에서만 쓰는 풀이예요. 같은 키라도 서로 다른 용어입니다.</p>
       <div className="editor-actions">
         <label className="editor-field"><span className="editor-label">범위</span>
           <select value={scopeKind} onChange={(event) => pick(event.target.value as EditableTermScope, scopeKey)}>
             {mayEditDictionary && <option value="global">공통 사전</option>}
-            <option value="class">클래스 용어</option>
+            <option value="lesson">수업 용어</option>
           </select></label>
-        {scopeKind === 'class' && <label className="editor-field"><span className="editor-label">클래스</span>
-          <select value={scopeKey} onChange={(event) => pick('class', event.target.value)}>
-            {classes.map((item) => <option key={item.classKey} value={item.classKey}>{item.title}</option>)}
+        {scopeKind === 'lesson' && <label className="editor-field"><span className="editor-label">수업</span>
+          <select value={scopeKey} onChange={(event) => pick('lesson', event.target.value)}>
+            {lessons.map((item) => <option key={item.lessonKey} value={item.lessonKey}>{item.title}</option>)}
           </select></label>}
-        <button type="button" className="button secondary" disabled={busy || (scopeKind === 'class' && !scopeKey)}
+        <button type="button" className="button secondary" disabled={busy || (scopeKind === 'lesson' && !scopeKey)}
           onClick={() => onList(scope.scopeKind, scope.scopeKey)}>불러오기</button>
       </div>
 

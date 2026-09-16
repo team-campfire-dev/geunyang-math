@@ -19,8 +19,8 @@ export type GlossaryContext = {
   entries: GlossaryEntry[];
   /** Concepts the learner is still practising; their terms get a stronger hint that help is there. */
   reviewSkillKeys?: string[];
-  currentClassKey?: string;
-  onOpenClass?: (classKey: string) => void;
+  currentLessonKey?: string;
+  onOpenLesson?: (lessonKey: string) => void;
 };
 const noGlossary: GlossaryContext = { entries: [] };
 
@@ -66,8 +66,8 @@ export function RichText({ text, terms = [], glossary = noGlossary, asCaption = 
       <p className="term-summary">{open.summary}</p>
       {/* Definitions never nest: the inner blocks render without a glossary of their own. */}
       <ContentBlocks blocks={open.blocks} />
-      {open.classKey && open.classKey !== glossary.currentClassKey && glossary.onOpenClass &&
-        <button type="button" className="text-button" onClick={() => glossary.onOpenClass!(open.classKey!)}>이 개념 다시 배우기<Icon name="arrow" size={15} /></button>}
+      {open.lessonKey && open.lessonKey !== glossary.currentLessonKey && glossary.onOpenLesson &&
+        <button type="button" className="text-button" onClick={() => glossary.onOpenLesson!(open.lessonKey!)}>이 개념 다시 배우기<Icon name="arrow" size={15} /></button>}
     </aside>}
   </Wrapper>;
 }

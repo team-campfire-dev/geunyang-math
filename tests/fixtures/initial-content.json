@@ -17,10 +17,10 @@
       "order": 2
     }
   ],
-  "classes": [
+  "lessons": [
     {
       "public": {
-        "classKey": "fraction-meaning",
+        "lessonKey": "fraction-meaning",
         "versionId": "fraction-meaning:v1",
         "title": "분수, 전체와 조각의 관계",
         "summary": "일상의 나누기에서 시작해 분자와 분모의 뜻을 다시 익혀요.",
@@ -394,7 +394,7 @@
     },
     {
       "public": {
-        "classKey": "fraction-equivalence",
+        "lessonKey": "fraction-equivalence",
         "versionId": "fraction-equivalence:v1",
         "title": "모양이 달라도 같은 분수",
         "summary": "동치분수와 약분을 익히고, 같은 양을 다른 조각으로 표현해요.",
@@ -781,7 +781,7 @@
     },
     {
       "public": {
-        "classKey": "fraction-addition",
+        "lessonKey": "fraction-addition",
         "versionId": "fraction-addition:v1",
         "title": "분수 더하기, 조각 크기 맞추기",
         "summary": "동치분수로 분모를 맞추고, 일상의 양을 더해 봐요.",

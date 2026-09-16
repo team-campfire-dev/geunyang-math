@@ -1,20 +1,20 @@
 import { describe, expect, it } from 'vitest';
-import { supportedBlockTypes, termContentBlockSchema, validateClass } from '@/core/content';
+import { supportedBlockTypes, termContentBlockSchema, validateLesson } from '@/core/content';
 import {
-  blockForms, blockFormOf, classBlockForms, copyBlock, copyProblem, copySection, dropLooseProblems, insertAfter,
+  blockForms, blockFormOf, lessonBlockForms, copyBlock, copyProblem, copySection, dropLooseProblems, insertAfter,
   looseProblems, moveBlock, newProblem,
   nextBlockId, nextProblemBlockId, nextProblemVersionId,
   nextSectionId, problemBlockForms, problemGist, problemsOfBlock, pruneBlock, pruneSections, renameProblem,
   renameProblemReferences, renamedProblemVersionId, nextTermVersionId, responseSpecOf, scopeTermAnnotations,
   issueText, suggestVersionId, termBlockForms, toPublicProblem, versionLabel, writePath,
 } from '@/shared/authoring';
-import { seedClasses } from './fixtures/content';
+import { seedLessons } from './fixtures/content';
 
 const block = (kind: string, typeVersion: number, payload: Record<string, unknown>) =>
   ({ blockId: 'draft:block:v1', kind, typeVersion, required: true, payload });
 
 describe('naming a new version and its parts', () => {
-  it('suggests the next version of the class, not a copy of the published one', () => {
+  it('suggests the next version of the lesson, not a copy of the published one', () => {
     expect(suggestVersionId('fraction-meaning', ['fraction-meaning:v1', 'fraction-meaning:v4'])).toBe('fraction-meaning:v5');
     expect(suggestVersionId('decimals', [])).toBe('decimals:v1');
     expect(suggestVersionId('decimals', ['decimals:draft'])).toBe('decimals:v1');
@@ -29,11 +29,11 @@ describe('naming a new version and its parts', () => {
       .toBe('fraction-meaning:practice-2:v5');
   });
   it('generates IDs the publishing validator accepts', () => {
-    const record = structuredClone(seedClasses[0]);
+    const record = structuredClone(seedLessons[0]);
     const section = record.sections[0];
     section.contentBlocks.push({ ...block('core.rich_text', 1, { text: '새 문단이에요.' }),
-      blockId: nextBlockId(record.public.classKey, section.sectionId, 'core.rich_text', 'fraction-meaning:v5', []) });
-    expect(() => validateClass(record)).not.toThrow();
+      blockId: nextBlockId(record.public.lessonKey, section.sectionId, 'core.rich_text', 'fraction-meaning:v5', []) });
+    expect(() => validateLesson(record)).not.toThrow();
   });
 });
 
@@ -58,7 +58,7 @@ describe('what the editor sends is what publishing accepts', () => {
   });
 
   it('keeps a retired format openable without offering it for new content', () => {
-    // Published classes still hold these, so an author must be able to open one and read it.
+    // Published lessons still hold these, so an author must be able to open one and read it.
     for (const kind of ['core.figure', 'math.fraction_strip']) {
       expect(blockFormOf({ kind, typeVersion: 1 })?.retired).toBe(true);
     }
@@ -72,12 +72,12 @@ describe('what the editor sends is what publishing accepts', () => {
     const paragraphs = (forms: typeof blockForms) =>
       forms.filter((form) => !form.retired && form.kind === 'core.rich_text');
     // A lesson's paragraph is the one that can carry term links; a definition's is the one that cannot.
-    expect(paragraphs(classBlockForms).map((form) => form.typeVersion)).toEqual([2]);
+    expect(paragraphs(lessonBlockForms).map((form) => form.typeVersion)).toEqual([2]);
     expect(paragraphs(problemBlockForms).map((form) => form.typeVersion)).toEqual([2]);
     expect(paragraphs(termBlockForms).map((form) => form.typeVersion)).toEqual([1]);
     // Both are called the same thing, because to whoever is writing they are the same thing.
     expect([...new Set(paragraphs(blockForms).map((form) => form.label))]).toEqual(['글']);
-    // The older one still opens, so a class published with it can be read and edited.
+    // The older one still opens, so a lesson published with it can be read and edited.
     expect(blockFormOf({ kind: 'core.rich_text', typeVersion: 1 })).toBeDefined();
   });
 
@@ -85,11 +85,11 @@ describe('what the editor sends is what publishing accepts', () => {
     for (const form of blockForms) {
       // A question group is empty until an author writes a question, and writing one validates it.
       if (form.editsProblems) { expect(form.create()).toEqual({ problemVersionIds: [] }); continue; }
-      const record = structuredClone(seedClasses[0]);
+      const record = structuredClone(seedLessons[0]);
       const section = record.sections[0];
       section.contentBlocks.push({ blockId: `draft:${form.kind}:v1`, kind: form.kind, typeVersion: form.typeVersion,
         required: true, payload: form.create() } as never);
-      expect(() => validateClass(record), `${form.kind}@${form.typeVersion}`).not.toThrow();
+      expect(() => validateLesson(record), `${form.kind}@${form.typeVersion}`).not.toThrow();
     }
   });
 
@@ -105,7 +105,7 @@ describe('what the editor sends is what publishing accepts', () => {
   });
 
   it('tells a blank optional field apart from a missing one when publishing', () => {
-    const record = structuredClone(seedClasses[0]);
+    const record = structuredClone(seedLessons[0]);
     const withBlank = (labelAlt: string) => {
       const draft = structuredClone(record);
       draft.sections[0].contentBlocks.push(block('math.fraction_strip', 1,
@@ -113,19 +113,19 @@ describe('what the editor sends is what publishing accepts', () => {
       return { ...draft, sections: pruneSections(draft.sections) as typeof draft.sections };
     };
     // Pruned, a blank spoken name is absent, and a math caption without one is rejected by name.
-    expect(() => validateClass(withBlank(''))).toThrow(/labelAlt/);
-    expect(() => validateClass(withBlank('4분의 3'))).not.toThrow();
+    expect(() => validateLesson(withBlank(''))).toThrow(/labelAlt/);
+    expect(() => validateLesson(withBlank('4분의 3'))).not.toThrow();
   });
 });
 
 describe('naming a question, and keeping an answered one as it was answered', () => {
-  const classKey = 'fraction-meaning';
+  const lessonKey = 'fraction-meaning';
   it('names a new question after the activity that holds it', () => {
-    expect(nextProblemVersionId(classKey, 'practice', 'fraction-meaning:v5', [])).toBe('fraction-meaning:practice-1:v5');
-    expect(nextProblemVersionId(classKey, 'practice', 'fraction-meaning:v5', ['fraction-meaning:practice-1:v5']))
+    expect(nextProblemVersionId(lessonKey, 'practice', 'fraction-meaning:v5', [])).toBe('fraction-meaning:practice-1:v5');
+    expect(nextProblemVersionId(lessonKey, 'practice', 'fraction-meaning:v5', ['fraction-meaning:practice-1:v5']))
       .toBe('fraction-meaning:practice-2:v5');
     // A question carried from an earlier version still holds its name, so a new one takes the next.
-    expect(nextProblemVersionId(classKey, 'practice', 'fraction-meaning:v5', ['fraction-meaning:practice-1:v2']))
+    expect(nextProblemVersionId(lessonKey, 'practice', 'fraction-meaning:v5', ['fraction-meaning:practice-1:v2']))
       .toBe('fraction-meaning:practice-2:v5');
     expect(nextProblemBlockId('fraction-meaning:practice-1:v5', 'hint', [])).toBe('fraction-meaning:practice-1:v5:hint');
     expect(nextProblemBlockId('fraction-meaning:practice-1:v5', 'hint', ['fraction-meaning:practice-1:v5:hint']))
@@ -150,7 +150,7 @@ describe('naming a question, and keeping an answered one as it was answered', ()
   });
 
   it('moves every reference an activity holds, and leaves other blocks untouched', () => {
-    const record = structuredClone(seedClasses[0]);
+    const record = structuredClone(seedLessons[0]);
     const renamed = renameProblemReferences(record.sections, new Map([['fraction-meaning:practice-1:v1', 'fraction-meaning:practice-1:v2']]));
     const activities = renamed.flatMap((section) => section.contentBlocks).filter((item) => item.kind === 'core.problem_set');
     expect(activities.flatMap((item) => item.payload.problemVersionIds as string[])).toContain('fraction-meaning:practice-1:v2');
@@ -164,13 +164,13 @@ describe('naming a question, and keeping an answered one as it was answered', ()
   });
 
   it('starts a new question at something the publishing validator accepts', () => {
-    const record = structuredClone(seedClasses[0]);
+    const record = structuredClone(seedLessons[0]);
     const activity = record.sections.flatMap((section) => section.contentBlocks).find((block) => block.kind === 'core.problem_set')!;
-    const created = newProblem(nextProblemVersionId(classKey, 'practice', 'fraction-meaning:v5',
+    const created = newProblem(nextProblemVersionId(lessonKey, 'practice', 'fraction-meaning:v5',
       record.problems.map((problem) => problem.problemVersionId)), record.problems[0].skillKeys);
     record.problems.push({ ...created, responseSpec: responseSpecOf(created.gradingSpec), hintAvailable: created.hints.length > 0 });
     (activity.payload.problemVersionIds as string[]).push(created.problemVersionId);
-    expect(() => validateClass(record)).not.toThrow();
+    expect(() => validateLesson(record)).not.toThrow();
   });
 
   it('shows the preview the half of a question a learner may see', () => {
@@ -183,27 +183,27 @@ describe('naming a question, and keeping an answered one as it was answered', ()
   });
 });
 
-describe('which class keeps a linked term', () => {
+describe('which lesson keeps a linked term', () => {
   const linked = (terms: Record<string, unknown>[]) => ([{
     blockId: 'fraction-meaning:explanation:text:v5', kind: 'core.rich_text', typeVersion: 2, required: true,
     payload: { text: '분모는 전체를 나눈 조각 수예요.', terms },
   }]);
 
-  it('writes the owning class onto a term the class keeps, and leaves a dictionary term bare', () => {
-    const scoped = scopeTermAnnotations(linked([{ termKey: 'term.denominator', surface: '분모', scopeKind: 'class' }]), 'fraction-meaning');
-    expect(scoped[0].payload.terms).toEqual([{ termKey: 'term.denominator', surface: '분모', scopeKind: 'class', scopeKey: 'fraction-meaning' }]);
+  it('writes the owning lesson onto a term the lesson keeps, and leaves a dictionary term bare', () => {
+    const scoped = scopeTermAnnotations(linked([{ termKey: 'term.denominator', surface: '분모', scopeKind: 'lesson' }]), 'fraction-meaning');
+    expect(scoped[0].payload.terms).toEqual([{ termKey: 'term.denominator', surface: '분모', scopeKind: 'lesson', scopeKey: 'fraction-meaning' }]);
     // The shared dictionary is the absence of a scope, so nothing is written for it.
     const shared = scopeTermAnnotations(linked([{ termKey: 'term.denominator', surface: '분모' }]), 'fraction-meaning');
     expect(shared[0].payload.terms).toEqual([{ termKey: 'term.denominator', surface: '분모' }]);
   });
 
   it('never lets an annotation keep a scope the editor did not choose', () => {
-    // An author who switches back to the dictionary must not leave the old class behind.
-    const switched = scopeTermAnnotations(linked([{ termKey: 'term.denominator', surface: '분모', scopeKey: 'other-class' }]), 'fraction-meaning');
+    // An author who switches back to the dictionary must not leave the old lesson behind.
+    const switched = scopeTermAnnotations(linked([{ termKey: 'term.denominator', surface: '분모', scopeKey: 'other-lesson' }]), 'fraction-meaning');
     expect(switched[0].payload.terms).toEqual([{ termKey: 'term.denominator', surface: '분모' }]);
-    // And a class may only ever write its own name, whatever the payload said.
-    const borrowed = scopeTermAnnotations(linked([{ termKey: 'term.denominator', surface: '분모', scopeKind: 'class', scopeKey: 'other-class' }]), 'fraction-meaning');
-    expect(borrowed[0].payload.terms).toEqual([{ termKey: 'term.denominator', surface: '분모', scopeKind: 'class', scopeKey: 'fraction-meaning' }]);
+    // And a lesson may only ever write its own name, whatever the payload said.
+    const borrowed = scopeTermAnnotations(linked([{ termKey: 'term.denominator', surface: '분모', scopeKind: 'lesson', scopeKey: 'other-lesson' }]), 'fraction-meaning');
+    expect(borrowed[0].payload.terms).toEqual([{ termKey: 'term.denominator', surface: '분모', scopeKind: 'lesson', scopeKey: 'fraction-meaning' }]);
   });
 
   it('leaves blocks that carry no term links untouched', () => {
@@ -216,7 +216,7 @@ describe('which class keeps a linked term', () => {
     const form = blockFormOf({ kind: 'core.rich_text', typeVersion: 2 })!;
     const field = form.list!.fields.find((item) => item.key === 'scopeKind')!;
     expect(field.kind).toBe('select');
-    expect(field.options!.map((option) => option.value)).toEqual(['', 'class']);
+    expect(field.options!.map((option) => option.value)).toEqual(['', 'lesson']);
     // An unchosen scope is an empty string, which pruning drops before validation ever sees it.
     const pruned = pruneBlock({ blockId: 'b1', kind: 'core.rich_text', typeVersion: 2, required: true,
       payload: { text: '분모는 전체를 나눈 조각 수예요.', terms: [{ termKey: 'term.denominator', surface: '분모', scopeKind: '' }] } });
@@ -229,9 +229,9 @@ describe('writing a definition', () => {
     const shared = { termKey: 'term.denominator', scopeKind: 'global' as const, scopeKey: '' };
     expect(nextTermVersionId(shared, [])).toBe('term.denominator:v1');
     expect(nextTermVersionId(shared, ['term.denominator:v1', 'term.denominator:v2'])).toBe('term.denominator:v3');
-    const mine = { termKey: 'term.denominator', scopeKind: 'class' as const, scopeKey: 'fraction-meaning' };
+    const mine = { termKey: 'term.denominator', scopeKind: 'lesson' as const, scopeKey: 'fraction-meaning' };
     expect(nextTermVersionId(mine, [])).toBe('fraction-meaning:term.denominator:v1');
-    // The two scopes count separately, so one class's versions never push the dictionary along.
+    // The two scopes count separately, so one lesson's versions never push the dictionary along.
     expect(nextTermVersionId(mine, ['fraction-meaning:term.denominator:v1'])).toBe('fraction-meaning:term.denominator:v2');
     expect(nextTermVersionId(shared, ['fraction-meaning:term.denominator:v7'])).toBe('term.denominator:v1');
   });
@@ -278,15 +278,15 @@ describe('naming a version and a question for whoever is writing', () => {
 });
 
 describe('copying what is already written', () => {
-  const draftOf = (record: (typeof seedClasses)[number]) => ({
-    classKey: record.public.classKey, versionId: `${record.public.classKey}:v9`,
+  const draftOf = (record: (typeof seedLessons)[number]) => ({
+    lessonKey: record.public.lessonKey, versionId: `${record.public.lessonKey}:v9`,
     sectionIds: record.sections.map((section) => section.sectionId),
     blockIds: record.sections.flatMap((section) => section.contentBlocks.map((block) => block.blockId)),
     problemIds: record.problems.map((problem) => problem.problemVersionId),
   });
 
   it('gives a copied block its own name and leaves what it says alone', () => {
-    const record = structuredClone(seedClasses[0]);
+    const record = structuredClone(seedLessons[0]);
     const section = record.sections[0];
     const original = section.contentBlocks[0];
     const { block: made, problems } = copyBlock({ block: original, problems: [], role: section.role,
@@ -298,7 +298,7 @@ describe('copying what is already written', () => {
   });
 
   it('copies the questions an activity holds, because a question belongs to one activity', () => {
-    const record = structuredClone(seedClasses[0]);
+    const record = structuredClone(seedLessons[0]);
     const section = record.sections.find((item) => item.contentBlocks.some((block) => block.kind === 'core.problem_set'))!;
     const activity = section.contentBlocks.find((block) => block.kind === 'core.problem_set')!;
     const held = problemsOfBlock(activity, record.problems as never);
@@ -321,7 +321,7 @@ describe('copying what is already written', () => {
   });
 
   it('copies a step whole, and the result is a document publishing accepts', () => {
-    const record = structuredClone(seedClasses[0]);
+    const record = structuredClone(seedLessons[0]);
     const section = record.sections.find((item) => item.contentBlocks.some((block) => block.kind === 'core.problem_set'))!;
     const index = record.sections.indexOf(section);
     const made = copySection({ section, problems: record.problems as never, ...draftOf(record) });
@@ -335,11 +335,11 @@ describe('copying what is already written', () => {
     record.sections = insertAfter(record.sections, index, made.section) as never;
     record.problems = [...record.problems, ...made.problems] as never;
     record.public.sectionCount = record.sections.length;
-    expect(() => validateClass(record)).not.toThrow();
+    expect(() => validateLesson(record)).not.toThrow();
   });
 
   it('keeps every copy out of the names already spoken for, however many are made', () => {
-    const record = structuredClone(seedClasses[0]);
+    const record = structuredClone(seedLessons[0]);
     const section = record.sections[0];
     const original = section.contentBlocks[0];
     const blockIds = draftOf(record).blockIds;
@@ -419,7 +419,7 @@ describe('what an activity holds leaves with it', () => {
   });
 
   it('leaves a lesson publishing accepts after an activity is taken out', () => {
-    const record = structuredClone(seedClasses[0]);
+    const record = structuredClone(seedLessons[0]);
     const section = record.sections.find((item) => item.contentBlocks.some((block) => block.kind === 'core.problem_set'))!;
     const edit = {
       meta: { versionId: record.public.versionId, title: record.public.title, summary: record.public.summary,
@@ -428,12 +428,12 @@ describe('what an activity holds leaves with it', () => {
       problems: structuredClone(record.problems) as never,
     };
     const without = { ...edit, sections: edit.sections.filter((item) => item.sectionId !== section.sectionId) };
-    // Left as it is, the class carries questions nothing holds and publishing says so.
+    // Left as it is, the lesson carries questions nothing holds and publishing says so.
     record.sections = without.sections;
     record.public.sectionCount = record.sections.length;
-    expect(() => validateClass(record)).toThrow(/Unreferenced problem version/);
-    // The questions leave with the step, and what is left is a class publishing takes.
+    expect(() => validateLesson(record)).toThrow(/Unreferenced problem version/);
+    // The questions leave with the step, and what is left is a lesson publishing takes.
     record.problems = dropLooseProblems(without, record.homeworkProblemIds).problems as never;
-    expect(() => validateClass(record)).not.toThrow();
+    expect(() => validateLesson(record)).not.toThrow();
   });
 });
