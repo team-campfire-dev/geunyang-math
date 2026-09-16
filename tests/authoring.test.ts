@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { supportedBlockTypes, termContentBlockSchema, validateClass } from '@/core/content';
 import {
-  blockForms, blockFormOf, classBlockForms, copyBlock, copyProblem, copySection, insertAfter, moveBlock, newProblem,
+  blockForms, blockFormOf, classBlockForms, copyBlock, copyProblem, copySection, dropLooseProblems, insertAfter,
+  looseProblems, moveBlock, newProblem,
   nextBlockId, nextProblemBlockId, nextProblemVersionId,
   nextSectionId, problemBlockForms, problemGist, problemsOfBlock, pruneBlock, pruneSections, renameProblem,
   renameProblemReferences, renamedProblemVersionId, nextTermVersionId, responseSpecOf, scopeTermAnnotations,
@@ -389,5 +390,50 @@ describe('saying what a rule refused', () => {
   it('says the rule alone when it was not about a field of the block', () => {
     expect(issueText({ message: 'Missing term: term.denominator' }, paragraph)).toBe('Missing term: term.denominator');
     expect(issueText({ message: 'Duplicate block id.', field: 'nothing' }, paragraph)).toBe('Duplicate block id.');
+  });
+});
+
+describe('what an activity holds leaves with it', () => {
+  const activity = (blockId: string, ids: string[]) =>
+    ({ blockId, kind: 'core.problem_set', typeVersion: 1, required: true, payload: { problemVersionIds: ids } });
+  const lesson = (blocks: ReturnType<typeof activity>[], problems: string[]) => ({
+    meta: { versionId: 'c:v2', title: '수업', summary: '한 줄', estimatedMinutes: 10, skillKeys: ['s'] },
+    sections: [{ sectionId: 'c:practice:v2', role: 'practice' as const, title: '연습', contentBlocks: blocks }],
+    problems: problems.map((id) => newProblem(id, ['s'])),
+  });
+
+  it('calls a question loose when no activity in the lesson holds it', () => {
+    const edit = lesson([activity('c:set:v2', ['p1'])], ['p1', 'p2']);
+    expect(looseProblems(edit, []).map((problem) => problem.problemVersionId)).toEqual(['p2']);
+    // Homework holds questions no section shows, so those are held all the same.
+    expect(looseProblems(edit, ['p2'])).toEqual([]);
+  });
+
+  it('drops what nothing holds, and leaves the edit alone when everything is held', () => {
+    const edit = lesson([activity('c:set:v2', ['p1'])], ['p1', 'p2']);
+    expect(dropLooseProblems(edit, []).problems.map((problem) => problem.problemVersionId)).toEqual(['p1']);
+    // Nothing to drop means the very same value, so nothing downstream reads it as a change.
+    const whole = lesson([activity('c:set:v2', ['p1'])], ['p1']);
+    expect(dropLooseProblems(whole, [])).toBe(whole);
+    expect(dropLooseProblems(edit, ['p2'])).toBe(edit);
+  });
+
+  it('leaves a lesson publishing accepts after an activity is taken out', () => {
+    const record = structuredClone(seedClasses[0]);
+    const section = record.sections.find((item) => item.contentBlocks.some((block) => block.kind === 'core.problem_set'))!;
+    const edit = {
+      meta: { versionId: record.public.versionId, title: record.public.title, summary: record.public.summary,
+        estimatedMinutes: record.public.estimatedMinutes, skillKeys: [...record.public.skillKeys] },
+      sections: structuredClone(record.sections),
+      problems: structuredClone(record.problems) as never,
+    };
+    const without = { ...edit, sections: edit.sections.filter((item) => item.sectionId !== section.sectionId) };
+    // Left as it is, the class carries questions nothing holds and publishing says so.
+    record.sections = without.sections;
+    record.public.sectionCount = record.sections.length;
+    expect(() => validateClass(record)).toThrow(/Unreferenced problem version/);
+    // The questions leave with the step, and what is left is a class publishing takes.
+    record.problems = dropLooseProblems(without, record.homeworkProblemIds).problems as never;
+    expect(() => validateClass(record)).not.toThrow();
   });
 });

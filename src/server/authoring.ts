@@ -223,7 +223,8 @@ export class AuthoringService {
       sections: structuredClone(document.sections),
       problems: document.problems.map(draftProblem),
     };
-    return { ...this.summary(row, userId), edit, terms: await this.termChoices(document.public.classKey), issues };
+    return { ...this.summary(row, userId), edit, terms: await this.termChoices(document.public.classKey), issues,
+      homeworkProblemIds: [...document.homeworkProblemIds] };
   }
 
   /**

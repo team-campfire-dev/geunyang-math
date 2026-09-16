@@ -73,7 +73,14 @@ export type DraftIssue = {
   /** The field inside a block's payload, so the editor can name it the way that block's form does. */
   field?: string;
 };
-export type DraftDetail = DraftSummary & { edit: DraftEdit; terms: TermChoice[]; issues: DraftIssue[] };
+/**
+ * `homeworkProblemIds` are the questions the class sets as homework. They are not a lesson's to
+ * write or to take away — this screen does not edit them yet — but it has to know which questions
+ * they are, because those are held by something no section shows.
+ */
+export type DraftDetail = DraftSummary & {
+  edit: DraftEdit; terms: TermChoice[]; issues: DraftIssue[]; homeworkProblemIds: string[];
+};
 
 /**
  * The shape of a draft: the steps it holds, the blocks in each, the questions the document keeps and
@@ -283,6 +290,31 @@ export function renameProblemReferences(sections: ClassSection[], renames: Map<s
           problemVersionIds: (block.payload.problemVersionIds as string[]).map((id) => renames.get(id) ?? id) } }
       : block)),
   }));
+}
+
+/** Every question the activities in these blocks name, in the order they name them. */
+export const problemIdsIn = (blocks: ContentBlock[]): string[] =>
+  blocks.flatMap((block) => (block.kind === 'core.problem_set' && Array.isArray(block.payload.problemVersionIds)
+    ? (block.payload.problemVersionIds as string[])
+    : []));
+
+/**
+ * The questions nothing in the class holds any more. A question belongs to exactly one activity, so
+ * taking an activity out of a lesson leaves its questions held by nothing, and publishing refuses a
+ * class that carries one. Homework holds questions too, and those are held whether or not any
+ * section shows them.
+ */
+export function looseProblems(edit: DraftEdit, homework: string[]): DraftProblem[] {
+  const held = new Set([...problemIdsIn(edit.sections.flatMap((section) => section.contentBlocks)), ...homework]);
+  return edit.problems.filter((problem) => !held.has(problem.problemVersionId));
+}
+
+/** The same edit with those questions gone: what an activity held leaves with the activity. */
+export function dropLooseProblems(edit: DraftEdit, homework: string[]): DraftEdit {
+  const loose = looseProblems(edit, homework);
+  if (!loose.length) return edit;
+  const gone = new Set(loose.map((problem) => problem.problemVersionId));
+  return { ...edit, problems: edit.problems.filter((problem) => !gone.has(problem.problemVersionId)) };
 }
 
 /** The questions one activity holds, in the order that activity names them. */

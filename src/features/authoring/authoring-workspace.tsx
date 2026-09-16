@@ -3,8 +3,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { AttemptView, ClassSection, ContentBlock } from '@/shared/api';
 import {
-  blockFormOf, classKeyPattern, copyBlock, copyProblem, copySection, draftStatusLabels, editShape, insertAfter,
-  issueText, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId, sectionRoleLabels, sectionRoles, versionLabel,
+  blockFormOf, classKeyPattern, copyBlock, copyProblem, copySection, draftStatusLabels, dropLooseProblems, editShape,
+  insertAfter, issueText, looseProblems, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId,
+  problemGist, sectionRoleLabels, sectionRoles, versionLabel,
   type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail,
   type DraftEdit, type DraftIssue, type DraftProblem, type DraftSummary, type SkillChoice, type TermSummary,
 } from '@/shared/authoring';
@@ -291,6 +292,8 @@ export function AuthoringWorkspace() {
       ? { ...item, contentBlocks: item.contentBlocks.map((existing, place) => (place === index ? block : existing)) }
       : item));
   const problemIds = edit.problems.map((problem) => problem.problemVersionId);
+  /** Questions no activity in the lesson holds. Homework holds some without any section showing them. */
+  const loose = looseProblems(edit, draft.homeworkProblemIds);
   const chosenBlock = selected?.kind === 'block' ? section.contentBlocks[selected.index] : undefined;
   const chosenProblem = selected?.kind === 'problem'
     ? edit.problems.find((problem) => problem.problemVersionId === selected.id) : undefined;
@@ -489,7 +492,14 @@ export function AuthoringWorkspace() {
                 setSelected({ kind: 'block', index: Math.min(Math.max(selected.index + delta, 0), section.contentBlocks.length - 1) });
               }}
               onCopy={() => copyThisBlock(selected.index)}
-              onRemove={() => { writeBlocks(section.contentBlocks.filter((_, position) => position !== selected.index)); setSelected(null); }} />
+              onRemove={() => {
+                // An activity holds its questions, so they leave with it. Left behind, nothing in the
+                // class would hold them and publishing refuses a class that carries one.
+                setEdit(dropLooseProblems({ ...edit, sections: edit.sections.map((item, position) => (position === sectionIndex
+                  ? { ...item, contentBlocks: item.contentBlocks.filter((_, place) => place !== selected.index) } : item)) },
+                draft.homeworkProblemIds));
+                setSelected(null);
+              }} />
           </fieldset>
           : <fieldset className="editor-panel" disabled={published}>
             <legend>이 수업</legend>
@@ -511,6 +521,24 @@ export function AuthoringWorkspace() {
               onChange={(skillKeys) => setEdit({ ...edit, meta: { ...edit.meta, skillKeys } })} />
             <p className="editor-note">문항은 여기 고른 개념 중에서만 고를 수 있어요. 하나 이상 있어야 발행할 수 있습니다.</p>
 
+            {!!loose.length && <div className="editor-inspector-part">
+              <span className="editor-label">어디에도 속하지 않은 문항</span>
+              <p className="editor-note editor-warn">활동이 지워지면서 남은 문항이에요. 아무 단계에도 들어 있지 않아 이대로는 발행할 수 없어요.</p>
+              <div className="editor-problems">
+                {loose.map((problem) => <div key={problem.problemVersionId} className="editor-problem-row">
+                  <span className="editor-problem-open">
+                    <strong>{expert ? problem.problemVersionId : '문항'}</strong>
+                    <small>{problemGist(problem) || '아직 비어 있어요'}</small>
+                  </span>
+                  <button type="button" className="icon-button" aria-label="이 문항 지우기"
+                    onClick={() => {
+                      setEdit({ ...edit, problems: edit.problems.filter((item) => item.problemVersionId !== problem.problemVersionId) });
+                      notifyRemoval('문항');
+                    }}><Icon name="close" size={14} /></button>
+                </div>)}
+              </div>
+            </div>}
+
             <div className="editor-inspector-part">
               <span className="editor-label">이 단계</span>
               <label className="editor-field"><span className="editor-label">역할</span>
@@ -522,7 +550,8 @@ export function AuthoringWorkspace() {
                 <button type="button" className="text-button" disabled={edit.sections.length >= 50}
                   onClick={copyThisSection}><Icon name="copy" size={14} />이 단계 복제</button>
                 {edit.sections.length > 1 && <button type="button" className="text-button" onClick={() => {
-                  setEdit({ ...edit, sections: edit.sections.filter((_, index) => index !== sectionIndex) });
+                  setEdit(dropLooseProblems({ ...edit, sections: edit.sections.filter((_, index) => index !== sectionIndex) },
+                    draft.homeworkProblemIds));
                   goToSection(Math.max(sectionIndex - 1, 0));
                   notifyRemoval('단계');
                 }}><Icon name="close" size={14} />이 단계 삭제</button>}

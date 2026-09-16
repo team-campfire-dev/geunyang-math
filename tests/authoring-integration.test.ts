@@ -147,6 +147,20 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     await service.deleteDraft(admin.id, draftId);
   });
 
+  it('tells the editor which questions homework holds, since no section shows them', async () => {
+    const admin = await account('admin');
+    const created = await service.createDraft(admin.id, classKey);
+    const homework = created.draft!.homeworkProblemIds;
+    expect(homework.length).toBeGreaterThan(0);
+    // They are questions of the draft, held by something the lesson does not show.
+    for (const id of homework) {
+      expect(created.draft!.edit.problems.some((problem) => problem.problemVersionId === id)).toBe(true);
+      expect(created.draft!.edit.sections.some((section) => section.contentBlocks.some((block) =>
+        Array.isArray(block.payload.problemVersionIds) && (block.payload.problemVersionIds as string[]).includes(id)))).toBe(false);
+    }
+    await service.deleteDraft(admin.id, created.draft!.id);
+  });
+
   it('lets a writer hand work on without locking it, and lets it be handed back', async () => {
     const author = await account('author');
     const admin = await account('admin');
