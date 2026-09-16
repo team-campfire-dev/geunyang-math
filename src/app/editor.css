@@ -103,6 +103,12 @@
 .sheet-block.chosen { outline: 2px solid var(--green); outline-offset: 8px; }
 /* A paragraph being written already shows it: the text box has its own ground and its own ring. */
 .sheet-block.chosen.writing { outline: none; }
+/* A question sits inside an activity, so its frame hugs it rather than standing as far off as a
+   block's does — two frames the same distance apart would read as one. */
+.sheet-problem { border-radius: 9px; }
+.sheet-problem:hover { outline-offset: 3px; }
+.sheet-problem.chosen { outline-offset: 3px; }
+.sheet-problem .sheet-block-pick { top: -11px; left: 10px; }
 .sheet-block-pick { position: absolute; top: -13px; left: -6px; z-index: 2; padding: 3px 9px; border-radius: 999px;
   background: var(--editor-active-bg); color: var(--editor-active-text); font-size: 11px; font-weight: 600;
   opacity: 0; transition: opacity .12s ease; }
@@ -173,17 +179,17 @@
 
 /* An activity owns its questions, so a question is written where the activity is: nested, folded
    away until it is opened, and using the same block cards as the lesson text around it. */
-.editor-problems { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
-.editor-problems > .button { align-self: flex-start; }
-.editor-problem { border: 1px solid var(--line); border-radius: 9px; background: var(--editor-sunken); }
-.editor-problem > header { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; }
-.editor-problem-open { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; min-height: var(--editor-control);
-  text-align: left; color: var(--editor-label); }
-.editor-problem-open svg { flex-shrink: 0; transition: transform .15s ease; }
-.editor-problem-open[aria-expanded='true'] svg { transform: rotate(90deg); }
+/* What an activity holds, as a list of what each question asks. A question itself is opened from
+   the lesson, where it can be read; this is only for putting them in order and adding more. */
+.editor-problems { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.editor-problems > .button { align-self: flex-start; margin-top: 4px; }
+.editor-problem-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 9px 11px;
+  border: 1px solid var(--line); border-radius: 9px; background: var(--editor-sunken); }
+.editor-problem-open { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0;
+  min-height: var(--editor-control); justify-content: center; text-align: left; color: var(--editor-label); }
 .editor-problem-open strong { display: block; font-size: 13px; font-weight: 600; }
-.editor-problem-open small { display: block; font-size: 11px; color: var(--editor-help); margin-top: 3px; word-break: break-all; }
-.editor-problem-body { display: flex; flex-direction: column; padding: 0 12px 14px; border-top: 1px solid var(--editor-panel-line); }
+.editor-problem-open small { display: block; font-size: 11px; color: var(--editor-help); line-height: 1.6;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .editor-problem-part { display: flex; flex-direction: column; gap: 10px; padding-top: 14px; }
 .editor-problem-part > .editor-note { margin: -4px 0 0; }
 .editor-answer { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px 18px; margin-top: 16px;

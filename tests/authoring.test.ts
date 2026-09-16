@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { supportedBlockTypes, termContentBlockSchema, validateClass } from '@/core/content';
 import {
-  blockForms, blockFormOf, classBlockForms, moveBlock, newProblem, nextBlockId, nextProblemBlockId, nextProblemVersionId,
+  blockForms, blockFormOf, classBlockForms, copyBlock, copyProblem, copySection, insertAfter, moveBlock, newProblem,
+  nextBlockId, nextProblemBlockId, nextProblemVersionId,
   nextSectionId, problemBlockForms, problemGist, problemsOfBlock, pruneBlock, pruneSections, renameProblem,
   renameProblemReferences, renamedProblemVersionId, nextTermVersionId, responseSpecOf, scopeTermAnnotations,
   suggestVersionId, termBlockForms, toPublicProblem, versionLabel, writePath,
@@ -272,5 +273,97 @@ describe('naming a version and a question for whoever is writing', () => {
     expect(problemGist(math)).toBe('[식]에서 분모는 어떤 수인가요?');
     // A question whose prompt is only a drawing has no words to show, and says nothing rather than guessing.
     expect(problemGist({ ...problem, promptContent: [] })).toBe('');
+  });
+});
+
+describe('copying what is already written', () => {
+  const draftOf = (record: (typeof seedClasses)[number]) => ({
+    classKey: record.public.classKey, versionId: `${record.public.classKey}:v9`,
+    sectionIds: record.sections.map((section) => section.sectionId),
+    blockIds: record.sections.flatMap((section) => section.contentBlocks.map((block) => block.blockId)),
+    problemIds: record.problems.map((problem) => problem.problemVersionId),
+  });
+
+  it('gives a copied block its own name and leaves what it says alone', () => {
+    const record = structuredClone(seedClasses[0]);
+    const section = record.sections[0];
+    const original = section.contentBlocks[0];
+    const { block: made, problems } = copyBlock({ block: original, problems: [], role: section.role,
+      sectionId: section.sectionId, ...draftOf(record) });
+    expect(made.blockId).not.toBe(original.blockId);
+    expect(draftOf(record).blockIds).not.toContain(made.blockId);
+    expect(made.payload).toEqual(original.payload);
+    expect(problems).toEqual([]);
+  });
+
+  it('copies the questions an activity holds, because a question belongs to one activity', () => {
+    const record = structuredClone(seedClasses[0]);
+    const section = record.sections.find((item) => item.contentBlocks.some((block) => block.kind === 'core.problem_set'))!;
+    const activity = section.contentBlocks.find((block) => block.kind === 'core.problem_set')!;
+    const held = problemsOfBlock(activity, record.problems as never);
+    expect(held.length).toBeGreaterThan(0);
+
+    const { block: made, problems } = copyBlock({ block: activity, problems: record.problems as never,
+      role: section.role, sectionId: section.sectionId, ...draftOf(record) });
+    expect(problems).toHaveLength(held.length);
+    // The copy names its own questions, and no question is named by two activities.
+    expect(made.payload.problemVersionIds).toEqual(problems.map((problem) => problem.problemVersionId));
+    for (const problem of problems) expect(record.problems.map((item) => item.problemVersionId)).not.toContain(problem.problemVersionId);
+    // The blocks inside a question carry its name, so they move with it.
+    for (const problem of problems) {
+      for (const block of [...problem.promptContent, ...problem.hints, ...problem.solution]) {
+        expect(block.blockId.startsWith(problem.problemVersionId), block.blockId).toBe(true);
+      }
+    }
+    // What the copy asks and accepts is what the original asked and accepted.
+    expect(problems.map((problem) => problem.gradingSpec)).toEqual(held.map((problem) => problem.gradingSpec));
+  });
+
+  it('copies a step whole, and the result is a document publishing accepts', () => {
+    const record = structuredClone(seedClasses[0]);
+    const section = record.sections.find((item) => item.contentBlocks.some((block) => block.kind === 'core.problem_set'))!;
+    const index = record.sections.indexOf(section);
+    const made = copySection({ section, problems: record.problems as never, ...draftOf(record) });
+
+    expect(made.section.sectionId).not.toBe(section.sectionId);
+    expect(made.section.title).toBe(`${section.title} 사본`);
+    const names = made.section.contentBlocks.map((block) => block.blockId);
+    expect(new Set(names).size).toBe(names.length);
+    for (const name of names) expect(draftOf(record).blockIds).not.toContain(name);
+
+    record.sections = insertAfter(record.sections, index, made.section) as never;
+    record.problems = [...record.problems, ...made.problems] as never;
+    record.public.sectionCount = record.sections.length;
+    expect(() => validateClass(record)).not.toThrow();
+  });
+
+  it('keeps every copy out of the names already spoken for, however many are made', () => {
+    const record = structuredClone(seedClasses[0]);
+    const section = record.sections[0];
+    const original = section.contentBlocks[0];
+    const blockIds = draftOf(record).blockIds;
+    const made: string[] = [];
+    for (let round = 0; round < 4; round++) {
+      const copy = copyBlock({ block: original, problems: [], role: section.role, sectionId: section.sectionId,
+        ...draftOf(record), blockIds: [...blockIds, ...made] });
+      expect(made).not.toContain(copy.block.blockId);
+      made.push(copy.block.blockId);
+    }
+    expect(new Set(made).size).toBe(4);
+  });
+
+  it('names a copied question after the activity it will sit in', () => {
+    const problem = newProblem('fraction-meaning:practice-1:v2', ['fraction.meaning']);
+    const made = copyProblem(problem, 'fraction-meaning', 'practice', 'fraction-meaning:v2', [problem.problemVersionId]);
+    expect(made.problemVersionId).not.toBe(problem.problemVersionId);
+    expect(made.problemVersionId.endsWith(':v2')).toBe(true);
+    expect(made.promptContent[0].blockId.startsWith(made.problemVersionId)).toBe(true);
+    // The original is untouched by the copying.
+    expect(problem.problemVersionId).toBe('fraction-meaning:practice-1:v2');
+  });
+
+  it('puts a copy right after what it was copied from', () => {
+    expect(insertAfter(['a', 'b', 'c'], 1, 'b2')).toEqual(['a', 'b', 'b2', 'c']);
+    expect(insertAfter(['a'], 0, 'a2')).toEqual(['a', 'a2']);
   });
 });

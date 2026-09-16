@@ -276,6 +276,63 @@ export function newProblem(problemVersionId: string, skillKeys: string[]): Draft
   };
 }
 
+/**
+ * A copy of a block placed beside the original. Everything the document names once takes a new name:
+ * the block, and — when the block is an activity — every question it holds, because a question
+ * belongs to exactly one activity and two activities may not name the same one.
+ */
+export function copyBlock(input: {
+  block: ContentBlock; problems: DraftProblem[];
+  classKey: string; sectionId: string; role: string; versionId: string;
+  blockIds: string[]; problemIds: string[];
+}): { block: ContentBlock; problems: DraftProblem[] } {
+  const copied = structuredClone(input.block);
+  copied.blockId = nextBlockId(input.classKey, input.sectionId, copied.kind, input.versionId, input.blockIds);
+  if (copied.kind !== 'core.problem_set') return { block: copied, problems: [] };
+  const held = problemsOfBlock(input.block, input.problems);
+  const problemIds = [...input.problemIds];
+  const problems = held.map((problem) => {
+    const made = copyProblem(problem, input.classKey, input.role, input.versionId, problemIds);
+    problemIds.push(made.problemVersionId);
+    return made;
+  });
+  copied.payload = { ...copied.payload, problemVersionIds: problems.map((problem) => problem.problemVersionId) };
+  return { block: copied, problems };
+}
+
+/** A copy of a question, named after the activity it will sit in, with its own blocks renamed too. */
+export function copyProblem(problem: DraftProblem, classKey: string, role: string, versionId: string, taken: string[]): DraftProblem {
+  return renameProblem(structuredClone(problem), nextProblemVersionId(classKey, role, versionId, taken));
+}
+
+/**
+ * A copy of a step placed beside the original: its own name, new names for every block in it, and
+ * new questions for every activity it holds.
+ */
+export function copySection(input: {
+  section: ClassSection; problems: DraftProblem[];
+  classKey: string; versionId: string; sectionIds: string[]; blockIds: string[]; problemIds: string[];
+}): { section: ClassSection; problems: DraftProblem[] } {
+  const sectionId = nextSectionId(input.classKey, input.section.role, input.versionId, input.sectionIds);
+  const blockIds = [...input.blockIds];
+  const problemIds = [...input.problemIds];
+  const problems: DraftProblem[] = [];
+  const contentBlocks = input.section.contentBlocks.map((block) => {
+    const made = copyBlock({ block, problems: input.problems, classKey: input.classKey, sectionId,
+      role: input.section.role, versionId: input.versionId, blockIds, problemIds });
+    blockIds.push(made.block.blockId);
+    for (const problem of made.problems) problemIds.push(problem.problemVersionId);
+    problems.push(...made.problems);
+    return made.block;
+  });
+  return { section: { ...input.section, sectionId, title: `${input.section.title} 사본`, contentBlocks }, problems };
+}
+
+/** Puts a copy right after what it was copied from, which is where someone looks for it. */
+export function insertAfter<T>(items: T[], index: number, made: T): T[] {
+  return [...items.slice(0, index + 1), made, ...items.slice(index + 1)];
+}
+
 /** Reordering is the same move for blocks, for questions and for the names an activity holds. */
 export function moveBlock<T>(items: T[], index: number, delta: number): T[] {
   const target = index + delta;

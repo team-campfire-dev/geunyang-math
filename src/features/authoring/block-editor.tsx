@@ -119,10 +119,10 @@ export function BlockEditor({ block, problems, arrangingRefusal, termChoices, om
   </>;
 }
 
-export function BlockCard({ block, index, total, problems, arrangingRefusal, termChoices, omit, onChange, onMove, onRemove }: {
+export function BlockCard({ block, index, total, problems, arrangingRefusal, termChoices, omit, onChange, onMove, onCopy, onRemove }: {
   block: ContentBlock; index: number; total: number; problems?: ReactNode; arrangingRefusal?: string; termChoices?: TermChoice[];
   omit?: string[];
-  onChange: (next: ContentBlock) => void; onMove: (delta: number) => void; onRemove: () => void;
+  onChange: (next: ContentBlock) => void; onMove: (delta: number) => void; onCopy?: () => void; onRemove: () => void;
 }) {
   const form = blockFormOf(block);
   const expert = useExpertMode();
@@ -140,6 +140,8 @@ export function BlockCard({ block, index, total, problems, arrangingRefusal, ter
           <input type="checkbox" checked={block.required} onChange={(event) => onChange({ ...block, required: event.target.checked })} />
           <span className="editor-label">필수</span>
         </label>}
+        {onCopy && <button type="button" className="icon-button" aria-label="블록 복제" title="블록 복제"
+          onClick={onCopy}><Icon name="copy" size={15} /></button>}
         <button type="button" className="icon-button" aria-label="위로" disabled={index === 0} onClick={() => onMove(-1)}>↑</button>
         <button type="button" className="icon-button" aria-label="아래로" disabled={index === total - 1} onClick={() => onMove(1)}>↓</button>
         <button type="button" className="icon-button" aria-label="블록 삭제"

@@ -3,8 +3,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { AttemptView, ClassSection, ContentBlock } from '@/shared/api';
 import {
-  blockFormOf, editShape, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId, sectionRoleLabels, sectionRoles,
-  versionLabel, type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail,
+  blockFormOf, copyBlock, copyProblem, copySection, editShape, insertAfter, mayGrantRoles, mayPublish, moveBlock,
+  nextBlockId, nextSectionId, sectionRoleLabels, sectionRoles, versionLabel,
+  type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail,
   type DraftEdit, type DraftProblem, type DraftSummary, type SkillChoice, type TermSummary,
 } from '@/shared/authoring';
 import { ApiError, learningApi, type Session } from '@/features/learning/api-client';
@@ -14,8 +15,8 @@ import { authoringApi } from './api-client';
 import { RemovalNotice, useEditHistory } from './edit-history';
 import { ExpertMode, useExpertMode } from './expert-mode';
 import { AddBlock, BlockCard } from './block-editor';
-import { LessonSheet } from './lesson-sheet';
-import { ProblemSetEditor } from './problem-editor';
+import { LessonSheet, type Picked } from './lesson-sheet';
+import { ProblemPanel, ProblemSetEditor } from './problem-editor';
 import { TermPanel } from './term-editor';
 
 /** How long the editor waits after the last keystroke before it writes what is on screen. */
@@ -29,8 +30,8 @@ export function AuthoringWorkspace() {
   const [draft, setDraft] = useState<DraftDetail | null>(null);
   const { value: edit, write: setEdit, replace, open: openEdit, undo, redo, canUndo, canRedo } = useEditHistory<DraftEdit>(editShape);
   const [sectionIndex, setSectionIndex] = useState(0);
-  /** Which block of the step is being worked on, or none, which means the lesson itself is. */
-  const [selected, setSelected] = useState<number | null>(null);
+  /** What is being worked on — a block or a question — or nothing, which means the lesson itself. */
+  const [selected, setSelected] = useState<Picked | null>(null);
   /**
    * Trying the lesson rather than writing it. What happens here is not learning and is kept nowhere:
    * the answers live until the mode is left, which is why they are held on this screen and not sent
@@ -199,6 +200,18 @@ export function AuthoringWorkspace() {
     return () => window.clearTimeout(timer);
   }, [removed]);
 
+  /**
+   * Checking a draft without disturbing it. It reads rather than writes, so the working copy and
+   * every step taken to reach it stay as they are — running a check is not a reason to lose the
+   * ability to take back what was checked.
+   */
+  const validateNow = () => run(async () => {
+    const response = await authoringApi.act({ action: 'draft.validate', draftId: draft!.id }, session?.user?.id ?? '');
+    setWorkspace(response.workspace);
+    if (response.draft) setDraft(response.draft);
+    setNotice(response.draft?.issues.length ? null : '발행 검증을 통과했어요.');
+  });
+
   /** Leaving saves first. A draft list reached by losing an afternoon's writing is not worth reaching. */
   const leave = async () => {
     const waiting = '저장하는 중이에요. 잠시 뒤에 다시 눌러 주세요.';
@@ -265,7 +278,41 @@ export function AuthoringWorkspace() {
     edit.sections.map((item, position) => (position === sectionIndex
       ? { ...item, contentBlocks: item.contentBlocks.map((existing, place) => (place === index ? block : existing)) }
       : item));
-  const chosen = selected === null ? undefined : section.contentBlocks[selected];
+  const problemIds = edit.problems.map((problem) => problem.problemVersionId);
+  const chosenBlock = selected?.kind === 'block' ? section.contentBlocks[selected.index] : undefined;
+  const chosenProblem = selected?.kind === 'problem'
+    ? edit.problems.find((problem) => problem.problemVersionId === selected.id) : undefined;
+  // A question is held by exactly one activity, and that activity is what says where it sits.
+  const holderIndex = chosenProblem
+    ? section.contentBlocks.findIndex((block) => Array.isArray(block.payload.problemVersionIds)
+      && (block.payload.problemVersionIds as string[]).includes(chosenProblem.problemVersionId))
+    : -1;
+  const holder = holderIndex >= 0 ? section.contentBlocks[holderIndex] : undefined;
+  const holderIds = holder && Array.isArray(holder.payload.problemVersionIds) ? holder.payload.problemVersionIds as string[] : [];
+  const problemAt = chosenProblem ? holderIds.indexOf(chosenProblem.problemVersionId) : -1;
+  const writeHolder = (ids: string[], problems: DraftProblem[]) => setEdit({ ...edit,
+    sections: writeSectionBlock(holderIndex, { ...holder!, payload: { ...holder!.payload, problemVersionIds: ids } }),
+    problems });
+  const writeProblem = (next: DraftProblem) => setEdit({ ...edit,
+    problems: edit.problems.map((item) => (item.problemVersionId === next.problemVersionId ? next : item)) });
+
+  /** A copy sits beside what it was copied from, and is what the screen turns to next. */
+  const copyThisBlock = (index: number) => {
+    const made = copyBlock({ block: section.contentBlocks[index], problems: edit.problems, classKey: draft.classKey,
+      sectionId: section.sectionId, role: section.role, versionId: edit.meta.versionId, blockIds, problemIds });
+    setEdit({ ...edit,
+      sections: edit.sections.map((item, position) => (position === sectionIndex
+        ? { ...item, contentBlocks: insertAfter(item.contentBlocks, index, made.block) } : item)),
+      problems: [...edit.problems, ...made.problems] });
+    setSelected({ kind: 'block', index: index + 1 });
+  };
+  const copyThisSection = () => {
+    const made = copySection({ section, problems: edit.problems, classKey: draft.classKey, versionId: edit.meta.versionId,
+      sectionIds: edit.sections.map((item) => item.sectionId), blockIds, problemIds });
+    setEdit({ ...edit, sections: insertAfter(edit.sections, sectionIndex, made.section),
+      problems: [...edit.problems, ...made.problems] });
+    goToSection(sectionIndex + 1);
+  };
   /**
    * Answering a question of this draft. Every try goes through the server, which holds the answer
    * and the grader; the editor knows the answer too, but grading here would be a second grader to
@@ -360,28 +407,47 @@ export function AuthoringWorkspace() {
       <LessonSheet meta={edit.meta} section={section} index={sectionIndex} problems={edit.problems} terms={draft.terms}
         selected={selected} published={published}
         trying={trying ? { actions: tryActions, attempts, busy: tryBusy } : undefined}
-        onMeta={(meta) => setEdit({ ...edit, meta })} onSection={writeSection} onBlocks={writeBlocks} onSelect={setSelected}
+        onMeta={(meta) => setEdit({ ...edit, meta })} onSection={writeSection} onBlocks={writeBlocks}
+        onProblem={writeProblem} onSelect={setSelected}
         add={<AddBlock blockId={(kind) => nextBlockId(draft.classKey, section.sectionId, kind, edit.meta.versionId, blockIds)}
-          onAdd={(block) => { writeBlocks([...section.contentBlocks, block]); setSelected(section.contentBlocks.length); }} />} />
+          onAdd={(block) => { writeBlocks([...section.contentBlocks, block]); setSelected({ kind: 'block', index: section.contentBlocks.length }); }} />} />
 
       {/* What the chosen thing is made of. With nothing chosen, the lesson itself is what is chosen. */}
       {!trying && <aside className="editor-inspector" aria-label="고른 것">
-        {chosen !== undefined && selected !== null
+        {chosenProblem && holder
           ? <fieldset className="editor-inspector-block" disabled={published}>
-            <BlockCard block={chosen} index={selected} total={section.contentBlocks.length}
+            <ProblemPanel problem={chosenProblem} number={problemAt + 1} total={holderIds.length}
+              skills={draftSkills} taken={blockIds} termChoices={draft.terms}
+              onChange={writeProblem}
+              onMove={(delta) => writeHolder(moveBlock(holderIds, problemAt, delta), edit.problems)}
+              onCopy={() => {
+                const made = copyProblem(chosenProblem, draft.classKey, section.role, edit.meta.versionId, problemIds);
+                writeHolder(insertAfter(holderIds, problemAt, made.problemVersionId), [...edit.problems, made]);
+                setSelected({ kind: 'problem', id: made.problemVersionId });
+              }}
+              onRemove={() => {
+                writeHolder(holderIds.filter((id) => id !== chosenProblem.problemVersionId),
+                  edit.problems.filter((item) => item.problemVersionId !== chosenProblem.problemVersionId));
+                setSelected(null);
+              }} />
+          </fieldset>
+          : chosenBlock !== undefined && selected?.kind === 'block'
+          ? <fieldset className="editor-inspector-block" disabled={published}>
+            <BlockCard block={chosenBlock} index={selected.index} total={section.contentBlocks.length}
               termChoices={draft.terms}
               // A paragraph is written in the sheet, so the form does not ask for its body again.
-              omit={chosen.kind === 'core.rich_text' ? ['text'] : undefined}
-              problems={blockFormOf(chosen)?.editsProblems && <ProblemSetEditor block={chosen} problems={edit.problems}
+              omit={chosenBlock.kind === 'core.rich_text' ? ['text'] : undefined}
+              problems={blockFormOf(chosenBlock)?.editsProblems && <ProblemSetEditor block={chosenBlock} problems={edit.problems}
                 skills={draftSkills} classKey={draft.classKey} role={section.role} versionId={edit.meta.versionId}
-                taken={blockIds} termChoices={draft.terms}
-                onChange={(next, problems) => setEdit({ ...edit, sections: writeSectionBlock(selected, next), problems })} />}
-              onChange={(next) => writeBlocks(section.contentBlocks.map((item, position) => (position === selected ? next : item)))}
+                onPick={(id) => setSelected({ kind: 'problem', id })}
+                onChange={(next, problems) => setEdit({ ...edit, sections: writeSectionBlock(selected.index, next), problems })} />}
+              onChange={(next) => writeBlocks(section.contentBlocks.map((item, position) => (position === selected.index ? next : item)))}
               onMove={(delta) => {
-                writeBlocks(moveBlock(section.contentBlocks, selected, delta));
-                setSelected(Math.min(Math.max(selected + delta, 0), section.contentBlocks.length - 1));
+                writeBlocks(moveBlock(section.contentBlocks, selected.index, delta));
+                setSelected({ kind: 'block', index: Math.min(Math.max(selected.index + delta, 0), section.contentBlocks.length - 1) });
               }}
-              onRemove={() => { writeBlocks(section.contentBlocks.filter((_, position) => position !== selected)); setSelected(null); }} />
+              onCopy={() => copyThisBlock(selected.index)}
+              onRemove={() => { writeBlocks(section.contentBlocks.filter((_, position) => position !== selected.index)); setSelected(null); }} />
           </fieldset>
           : <fieldset className="editor-panel" disabled={published}>
             <legend>이 수업</legend>
@@ -407,11 +473,15 @@ export function AuthoringWorkspace() {
                   {sectionRoles.map((role) => <option key={role} value={role}>{sectionRoleLabels[role]}</option>)}
                 </select>
                 <small>학습 화면의 단계 목록과 시트 머리에 이 이름으로 나와요.</small></label>
-              {edit.sections.length > 1 && <button type="button" className="text-button" onClick={() => {
-                setEdit({ ...edit, sections: edit.sections.filter((_, index) => index !== sectionIndex) });
-                goToSection(Math.max(sectionIndex - 1, 0));
-                notifyRemoval('단계');
-              }}><Icon name="close" size={14} />이 단계 삭제</button>}
+              <div className="editor-actions">
+                <button type="button" className="text-button" disabled={edit.sections.length >= 50}
+                  onClick={copyThisSection}><Icon name="copy" size={14} />이 단계 복제</button>
+                {edit.sections.length > 1 && <button type="button" className="text-button" onClick={() => {
+                  setEdit({ ...edit, sections: edit.sections.filter((_, index) => index !== sectionIndex) });
+                  goToSection(Math.max(sectionIndex - 1, 0));
+                  notifyRemoval('단계');
+                }}><Icon name="close" size={14} />이 단계 삭제</button>}
+              </div>
             </div>
           </fieldset>}
       </aside>}
@@ -420,9 +490,7 @@ export function AuthoringWorkspace() {
     <div className="editor-actions">
       <button type="button" className="button secondary" disabled={busy || published || !dirty || saving === 'saving'}
         onClick={() => void saveNow()}>지금 저장</button>
-      <button type="button" className="button secondary" disabled={busy || dirty}
-        onClick={() => act({ action: 'draft.validate', draftId: draft.id }, (response) =>
-          setNotice(response.draft?.issues.length ? null : '발행 검증을 통과했어요.'))}>검증</button>
+      <button type="button" className="button secondary" disabled={busy || dirty} onClick={() => void validateNow()}>검증</button>
       {mayPublish(workspace.role) && !published && <button type="button" className="button primary" disabled={busy || dirty || !!draft.issues.length}
         onClick={() => setConfirming(true)}>발행<Icon name="arrow" size={16} /></button>}
       <button type="button" className="text-button" disabled={busy}

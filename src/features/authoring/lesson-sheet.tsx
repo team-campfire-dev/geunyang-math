@@ -47,27 +47,39 @@ function useWritingFocus(area: RefObject<HTMLTextAreaElement | null>, writing: b
   }, [area, writing]);
 }
 
-function PlainParagraph({ block, onChange }: { block: ContentBlock; onChange: (next: ContentBlock) => void }) {
+function PlainParagraph({ block, focus, onChange }: { block: ContentBlock; focus: boolean; onChange: (next: ContentBlock) => void }) {
   const area = useRef<HTMLTextAreaElement>(null);
   const text = typeof block.payload.text === 'string' ? block.payload.text : '';
   useAutoHeight(area, text);
-  useWritingFocus(area, true);
+  useWritingFocus(area, focus);
   return <textarea ref={area} rows={1} className="sheet-paragraph" value={text} aria-label="글" spellCheck={false}
     onChange={(event) => onChange({ ...block, payload: { ...block.payload, text: event.target.value } })} />;
 }
 
-function MentionParagraph({ block, terms, onChange }: {
-  block: ContentBlock; terms: TermChoice[]; onChange: (next: ContentBlock) => void;
+function MentionParagraph({ block, terms, focus, onChange }: {
+  block: ContentBlock; terms: TermChoice[]; focus: boolean; onChange: (next: ContentBlock) => void;
 }) {
   const { bind, picker } = useTermMentions({ payload: block.payload, terms,
     onChange: (payload) => onChange({ ...block, payload }) });
   useAutoHeight(bind.ref, bind.value);
-  useWritingFocus(bind.ref, true);
+  useWritingFocus(bind.ref, focus);
   return <div className="sheet-writing">
     <textarea {...bind} rows={1} className="sheet-paragraph" aria-label="글" spellCheck={false} />
     {picker}
   </div>;
 }
+
+/** A paragraph opened for writing, wherever it sits: a lesson's own text or a question's prompt. */
+function Paragraph({ block, terms, focus, onChange }: {
+  block: ContentBlock; terms: TermChoice[]; focus: boolean; onChange: (next: ContentBlock) => void;
+}) {
+  return block.typeVersion === 2
+    ? <MentionParagraph block={block} terms={terms} focus={focus} onChange={onChange} />
+    : <PlainParagraph block={block} focus={focus} onChange={onChange} />;
+}
+
+/** What the sheet is being asked about: one block of the step, or one question inside an activity. */
+export type Picked = { kind: 'block'; index: number } | { kind: 'problem'; id: string };
 
 /**
  * The lesson as the learner will read it, and the place it is written. There is no second rendering
@@ -75,9 +87,9 @@ function MentionParagraph({ block, terms, onChange }: {
  * puts a frame around each so it can be picked. A paragraph is the exception — chosen, it becomes
  * the text it is made of, because a paragraph is written by typing into it.
  */
-export function LessonSheet({ meta, section, index, problems, terms, selected, published, trying, onMeta, onSection, onBlocks, onSelect, add }: {
+export function LessonSheet({ meta, section, index, problems, terms, selected, published, trying, onMeta, onSection, onBlocks, onProblem, onSelect, add }: {
   meta: DraftMeta; section: ClassSection; index: number; problems: DraftProblem[]; terms: TermChoice[];
-  selected: number | null; published: boolean;
+  selected: Picked | null; published: boolean;
   /**
    * Set while the lesson is being tried rather than written. Questions are answered for real, and
    * nothing on the page may be picked or typed into — an author trying their own lesson should meet
@@ -85,13 +97,23 @@ export function LessonSheet({ meta, section, index, problems, terms, selected, p
    */
   trying?: { actions: (problemVersionId: string) => ProblemActions; attempts: Record<string, AttemptView>; busy: boolean };
   onMeta: (next: DraftMeta) => void; onSection: (next: ClassSection) => void;
-  onBlocks: (blocks: ContentBlock[]) => void; onSelect: (index: number | null) => void; add: ReactNode;
+  onBlocks: (blocks: ContentBlock[]) => void; onProblem: (next: DraftProblem) => void;
+  onSelect: (next: Picked | null) => void; add: ReactNode;
 }) {
   const expert = useExpertMode();
   const publicProblems = problems.map(toPublicProblem);
   const fixed = published || !!trying;
   const write = (position: number, next: ContentBlock) =>
     onBlocks(section.contentBlocks.map((item, at) => (at === position ? next : item)));
+  /** Where a question sits in the activity that holds it, which is what it is called on the page. */
+  const numberOf = (problemVersionId: string) => {
+    for (const block of section.contentBlocks) {
+      const ids = Array.isArray(block.payload.problemVersionIds) ? (block.payload.problemVersionIds as string[]) : [];
+      const at = ids.indexOf(problemVersionId);
+      if (at >= 0) return at + 1;
+    }
+    return 0;
+  };
 
   return <div className="editor-sheet">
     <div className="lesson-header sheet-header">
@@ -113,28 +135,45 @@ export function LessonSheet({ meta, section, index, problems, terms, selected, p
             placeholder="단계 제목" onChange={(title) => onSection({ ...section, title })} />}
 
       <ContentBlocks blocks={section.contentBlocks} problems={publicProblems}
-        renderProblem={(problem) => (trying
-          ? <ProblemCard key={problem.problemVersionId} problem={problem} attempt={trying.attempts[problem.problemVersionId]}
-              actions={trying.actions(problem.problemVersionId)} busy={trying.busy} submitLabel="정답 확인" />
-          : <div className="problem-card">
-            <div className="problem-kicker"><Icon name="pencil" size={14} />문항 미리보기{expert && <span>{problem.problemVersionId}</span>}</div>
-            <ContentBlocks blocks={problem.promptContent} />
-          </div>)}
+        renderProblem={(problem) => {
+          if (trying) return <ProblemCard key={problem.problemVersionId} problem={problem} attempt={trying.attempts[problem.problemVersionId]}
+            actions={trying.actions(problem.problemVersionId)} busy={trying.busy} submitLabel="정답 확인" />;
+          // A question is picked and written the way a block is: it is a thing on the page, not a
+          // row in a list that happens to appear somewhere else.
+          const held = problems.find((item) => item.problemVersionId === problem.problemVersionId);
+          const chosen = selected?.kind === 'problem' && selected.id === problem.problemVersionId;
+          const writeProblem = (position: number, next: ContentBlock) => held && onProblem({ ...held,
+            promptContent: held.promptContent.map((item, at) => (at === position ? next : item)) });
+          const first = held?.promptContent.findIndex((item) => item.kind === 'core.rich_text') ?? -1;
+          return <div key={problem.problemVersionId} className={`sheet-block sheet-problem${chosen ? ' chosen' : ''}`}
+            onClick={(event) => { event.stopPropagation(); onSelect({ kind: 'problem', id: problem.problemVersionId }); }}>
+            <button type="button" className="sheet-block-pick" aria-pressed={chosen}
+              onClick={(event) => { event.stopPropagation(); onSelect(chosen ? null : { kind: 'problem', id: problem.problemVersionId }); }}>
+              {numberOf(problem.problemVersionId)}번 문항</button>
+            <div className="problem-card">
+              <div className="problem-kicker"><Icon name="pencil" size={14} />문항 미리보기{expert && <span>{problem.problemVersionId}</span>}</div>
+              <ContentBlocks blocks={problem.promptContent}
+                wrap={(block, position, drawn, className) => (chosen && !published && held && block.kind === 'core.rich_text'
+                  ? <div key={block.blockId} className={className}>
+                    <Paragraph block={block} terms={terms} focus={position === first} onChange={(next) => writeProblem(position, next)} />
+                  </div>
+                  : <div key={block.blockId} className={className}>{drawn}</div>)} />
+            </div>
+          </div>;
+        }}
         wrap={(block, position, drawn, className) => {
           if (trying) return <div key={block.blockId} className={className}>{drawn}</div>;
-          const chosen = position === selected;
+          const chosen = selected?.kind === 'block' && selected.index === position;
           const writing = chosen && !published && block.kind === 'core.rich_text';
           const label = blockFormOf(block)?.label ?? `${block.kind}@${block.typeVersion}`;
           return <div key={block.blockId} className={`sheet-block${chosen ? ' chosen' : ''}${writing ? ' writing' : ''}`}
-            onClick={(event) => { event.stopPropagation(); onSelect(position); }}>
+            onClick={(event) => { event.stopPropagation(); onSelect({ kind: 'block', index: position }); }}>
             {/* The frame's own handle, so a block can be chosen and named without a pointer. */}
             <button type="button" className="sheet-block-pick" aria-pressed={chosen}
-              onClick={(event) => { event.stopPropagation(); onSelect(chosen ? null : position); }}>{label}</button>
+              onClick={(event) => { event.stopPropagation(); onSelect(chosen ? null : { kind: 'block', index: position }); }}>{label}</button>
             <div className={className}>
               {writing
-                ? (block.typeVersion === 2
-                  ? <MentionParagraph block={block} terms={terms} onChange={(next) => write(position, next)} />
-                  : <PlainParagraph block={block} onChange={(next) => write(position, next)} />)
+                ? <Paragraph block={block} terms={terms} focus onChange={(next) => write(position, next)} />
                 : drawn}
             </div>
           </div>;
