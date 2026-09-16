@@ -146,11 +146,33 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 
 #22는 base가 `feat/scoped-terms`였던 스택 PR이라 머지 결과가 main에 닿지 않았고, 같은 내용을 #23으로 다시 올렸다.
 
-DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVersion과 초기 콘텐츠를 등록한다. 기본 콘텐츠는 클래스 3개(수업·숙제 문항 15개), 진단 1종(6문항), 개념 3개다. 기존 ClassVersion 행의 내용·해시·발행 시각을 덮어쓰지 않는다. 배포용 migrator는 `db:migrate` 후 저장소의 `content/*.json`을 `content:publish`로 발행하고 `content:verify`를 실행한다. `AppliedContentBundle`에 같은 checksum이 있으면 건너뛰므로 내용이 그대로인 배포는 DB를 건드리지 않고, 이미 발행한 판본을 고쳐 커밋하면 배포가 실패한다. 등록 명령과 불변 판본 정책은 [DB 콘텐츠 관리](content-management.md)를 따른다. `20260915020000_published_problem_index`는 문항 이름 색인 `PublishedProblem`을 만들고 이미 발행된 문서에서 한 번 채운다. 발행된 내용은 건드리지 않으므로 되돌릴 때는 이전 이미지를 다시 띄우면 되고, 표를 남겨 두어도 앱은 영향을 받지 않는다. `20260915030000_class_section_blocks`는 섹션과 블록 표를 만들고 같은 방식으로 채운다. 운영 기준으로 판본 6개에서 섹션 30개·블록 134개가 나오므로, 배포 후 `content:verify`가 `indexedBlocks: 134`, `indexedProblems: 36`을 보고해야 한다. 어긋나면 배포가 그 자리에서 멈춘다. `20260916000000_read_class_from_rows`부터 앱이 클래스를 **행에서 읽는다**. `ClassVersion.metadata`와 `PublishedProblem`의 문항 칸들을 채우고, `content:verify`는 행을 도로 맞춘 결과가 `document`와 같은지 대조한다.
+2026-09-15~16 릴리스는 발행된 판본의 저장 구조를 옮긴 묶음이다. 운영 결과는 배포마다 migrator로 `content:verify`를 실행해 확인했다.
 
-되돌리기: 이전 이미지는 `document`를 읽고 그 칸은 그대로 기록되므로 학습 화면은 그대로 돈다. 다만 **되돌린 상태에서 새 콘텐츠를 발행하면 실패한다** — 옛 코드는 새로 생긴 필수 칸을 채우지 않는다. 되돌린 동안에는 발행을 하지 않는다. `20260916010000_diagnostic_and_term_blocks`는 남아 있던 블록 — 진단 문항의 지문과 용어 정의의 본문 — 을 같은 표로 옮긴다. 운영 기준으로 블록이 134개에서 148개(지문 6 · 정의 8)가 되고, 그중 둘은 `fallback`을 가진 블록이라 되돌리기 검사가 실제로 그 경로를 지난다.
+| 릴리스 | commit | 검증·운영 결과 |
+|---|---|---|
+| [문항 이름 색인 #27](https://github.com/team-campfire-dev/geunyang-math/pull/27) | `3147539` | 초안 저장이 발행 문서를 전부 읽던 것을 색인 조회로 바꿨다. 배포 후 `indexedProblems: 36`(클래스 30 · 진단 6). 배포 성공. |
+| [섹션·블록 표 #29](https://github.com/team-campfire-dev/geunyang-math/pull/29) | `d389777` | 표를 만들고 문서에서 채우기만 한다. 배포 후 `indexedBlocks: 134`(본문 44 · 지문 30 · 힌트 30 · 해설 30). 배포 성공. |
+| [행에서 읽기 #30](https://github.com/team-campfire-dev/geunyang-math/pull/30) | `93f323d` | 카탈로그·수업 화면·학습 상태·초안 만들기가 행에서 읽는다. 판본 6개가 행에서 문서와 동일하게 되돌아옴을 확인. 배포 성공. |
+| [진단·용어 블록 #31](https://github.com/team-campfire-dev/geunyang-math/pull/31) | `ad7024f` | 남은 블록을 같은 표로 옮겼다. 배포 후 `indexedBlocks: 148`(진단 지문 6 · 정의 8 추가). `fallback`을 가진 정의 블록 둘이 되돌리기 검사를 통과. 배포 성공. |
+| [문서 사본 제거 #32](https://github.com/team-campfire-dev/geunyang-math/pull/32) | `9c0940c` | 발행된 판본의 `document` 칸 네 개를 지웠다. 문서 없이 같은 수(`36`·`148`)를 보고. 남은 `document` 칸은 `ContentDraft`와 `DiagnosticRun` 둘뿐임을 운영 DB에서 확인. 배포 성공. |
 
-`20260916020000_drop_published_documents`는 **되돌릴 수 없는 단계다.** 발행된 판본의 `document` 칸 네 개(`ClassVersion`·`DiagnosticVersion`·`TermVersion`·`PublishedProblem`)를 지운다. 이전 이미지는 그 칸을 읽으므로, 이 migration이 돌고 나면 이미지를 되돌려도 학습 화면이 열리지 않는다. 되돌려야 하면 DB를 함께 되돌려야 한다. 그 전 세 번의 배포가 매번 행과 문서를 대조해 같음을 확인했고, 마지막 확인은 판본 6개·블록 148개였다.
+#28은 base가 `feat/published-problem-index`였던 스택 PR이라 머지 결과가 main에 닿지 않았고, 같은 내용을 #29로 다시 올렸다. 아래쪽 PR이 먼저 머지되어도 base 브랜치가 남아 있으면 GitHub이 재조준하지 않는다.
+
+DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVersion과 초기 콘텐츠를 등록한다. 기본 콘텐츠는 클래스 3개(수업·숙제 문항 15개), 진단 1종(6문항), 개념 3개다. 기존 ClassVersion 행의 내용·해시·발행 시각을 덮어쓰지 않는다. 배포용 migrator는 `db:migrate` 후 저장소의 `content/*.json`을 `content:publish`로 발행하고 `content:verify`를 실행한다. `AppliedContentBundle`에 같은 checksum이 있으면 건너뛰므로 내용이 그대로인 배포는 DB를 건드리지 않고, 이미 발행한 판본을 고쳐 커밋하면 배포가 실패한다. 등록 명령과 불변 판본 정책은 [DB 콘텐츠 관리](content-management.md)를 따른다.
+
+### 저장 구조 migration
+
+발행된 판본을 JSON 한 덩이에서 행으로 옮긴 다섯 단계다. 앞의 네 단계는 **추가 전용**이라 발행된 내용을 바꾸지 않고, 되돌리려면 이전 이미지를 다시 띄우면 된다. 마지막 단계만 되돌릴 수 없다.
+
+| migration | 하는 일 | 되돌리기 |
+|---|---|---|
+| `20260915020000_published_problem_index` | 문항 이름 색인 `PublishedProblem`을 만들고 발행된 문서에서 채운다 | 이미지만 되돌리면 된다. 표를 남겨 두어도 앱은 영향받지 않는다 |
+| `20260915030000_class_section_blocks` | 섹션·블록 표를 만들고 같은 방식으로 채운다. 아직 아무도 읽지 않는다 | 〃 |
+| `20260916000000_read_class_from_rows` | `ClassVersion.metadata`와 `PublishedProblem`의 문항 칸을 채운다. **여기서부터 앱이 클래스를 행에서 읽는다** | 이전 이미지는 `document`를 읽고 그 칸은 그대로 기록되므로 학습 화면은 돈다. 다만 **되돌린 상태에서 새 콘텐츠를 발행하면 실패한다** — 옛 코드가 새 필수 칸을 채우지 않는다 |
+| `20260916010000_diagnostic_and_term_blocks` | 남아 있던 블록(진단 문항의 지문, 용어 정의의 본문)을 같은 표로 옮긴다 | 〃 |
+| `20260916020000_drop_published_documents` | 발행된 판본의 `document` 칸 네 개를 지운다 | **되돌릴 수 없다.** 이전 이미지는 그 칸을 읽으므로 DB도 함께 되돌려야 한다 |
+
+사본이 있는 동안 `content:verify`는 배포마다 행과 `document`를 대조했다 — 처음에는 문항 색인을, 그다음에는 블록을, 세 번째 단계부터는 행을 도로 맞춘 결과 전체를 한 글자도 다르지 않은지 봤다. 네 번의 배포(#27·#29·#30·#31)가 모두 같음을 확인한 뒤에 사본을 지웠다. 지금 `content:verify`가 보고하는 수는 운영 기준으로 `indexedProblems: 36`, `indexedBlocks: 148`이고, 어긋나면 배포가 그 자리에서 멈춘다.
 
 초기 인프라 점검에서는 앱 VM·포트·DNS·와일드카드 인증서, ARM64 non-root 이미지·revision·health, DB TLS 연결과 잘못된 CA/호스트 이름 거부, 앱 계정의 DB 한정 DML·호스트 제한·REQUIRE SSL을 확인했다. NPM Proxy Hosts 등록과 Google HTTPS callback 로그 제외, 배포 시크릿 6개와 자동 배포 활성화도 완료했다. 이 기록은 이후 인증서·권한·프록시 변경을 자동 검증한다는 뜻은 아니다.
 
