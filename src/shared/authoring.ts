@@ -50,7 +50,22 @@ export type DraftProblem = {
 export type DraftEdit = { meta: DraftMeta; sections: ClassSection[]; problems: DraftProblem[] };
 /** `skillKeys` are the class's own, carried so a question may only claim a concept the class teaches. */
 /** `terms` are the definitions this class may link: the shared dictionary and its own. */
-export type DraftDetail = DraftSummary & { edit: DraftEdit; skillKeys: string[]; terms: TermChoice[]; issues: string[] };
+/**
+ * Something that stops a draft from publishing, and where in the draft it is. The rules speak in
+ * English because they are the same rules the import command enforces, but where they apply is the
+ * editor's to say: an author should be taken to the block a rule refused, not handed its path.
+ */
+export type DraftIssue = {
+  message: string;
+  /** The validator's own path into the document, for whoever also operates the service. */
+  path?: string;
+  sectionId?: string;
+  blockId?: string;
+  problemVersionId?: string;
+  /** The field inside a block's payload, so the editor can name it the way that block's form does. */
+  field?: string;
+};
+export type DraftDetail = DraftSummary & { edit: DraftEdit; skillKeys: string[]; terms: TermChoice[]; issues: DraftIssue[] };
 
 /**
  * The shape of a draft: the steps it holds, the blocks in each, the questions the document keeps and
@@ -421,6 +436,25 @@ export const blockForms: BlockForm[] = [
     fields: [], editsProblems: true,
   },
 ];
+/**
+ * What a rule refused, named the way this screen names the field it was about. The rule keeps its
+ * own words — they are the import command's words too, and rewriting them here would mean two
+ * descriptions of one refusal — but `payload.text` is not a name anyone typed into, and 「글」 is.
+ */
+export function issueText(issue: DraftIssue, block?: ContentBlock): string {
+  if (!block) return issue.message;
+  // The rule names the kind of block it refused. The card it will be shown on already says that.
+  const said = `Invalid payload for ${blockKey(block)}: `;
+  const message = issue.message.startsWith(said) ? issue.message.slice(said.length) : issue.message;
+  if (!issue.field) return message;
+  const form = blockFormOf(block);
+  const tail = issue.field.split('.').at(-1);
+  const label = form?.fields.find((field) => field.key === issue.field)?.label
+    ?? form?.list?.fields.find((field) => field.key === tail)?.label
+    ?? form?.fields.find((field) => field.key === tail)?.label;
+  return label ? `${label}: ${message}` : message;
+}
+
 export const blockKey = (block: { kind: string; typeVersion: number }) => `${block.kind}@${block.typeVersion}`;
 export const blockFormOf = (block: { kind: string; typeVersion: number }) =>
   blockForms.find((form) => form.kind === block.kind && form.typeVersion === block.typeVersion);

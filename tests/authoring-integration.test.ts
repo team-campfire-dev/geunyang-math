@@ -159,11 +159,47 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
         payload: { alt: '그림', width: 320, height: 200, items: [{ kind: 'strip', x: 20, y: 80, width: 280, height: 40, parts: 4, filled: 9 }] } });
     });
     const saved = await service.saveDraft(admin.id, draftId, broken);
-    expect(saved.draft!.issues.join(' ')).toMatch(/filled must not exceed parts/);
+    expect(saved.draft!.issues.map((issue) => issue.message).join(' ')).toMatch(/filled must not exceed parts/);
+    // A rule says what it refused; the editor is told where, so it can take an author to the block.
+    expect(saved.draft!.issues[0]).toMatchObject({
+      sectionId: created.draft!.edit.sections[0].sectionId,
+      blockId: `${classKey}:explanation:scene:v2`,
+    });
+    expect(saved.draft!.issues[0].path).toContain('sections.0.contentBlocks.');
     const fixed = edited(created.draft!.edit, (sections) => { sections[0].contentBlocks.push(drawing(`${classKey}:explanation:scene:v2`)); });
     const good = await service.saveDraft(admin.id, draftId, fixed);
     expect(good.draft!.issues).toEqual([]);
     expect((await service.validateDraft(admin.id, draftId)).draft!.issues).toEqual([]);
+  });
+
+  it('points a refusal at the question it is about, wherever the rule found it', async () => {
+    const admin = await account('admin');
+    const created = await service.createDraft(admin.id, classKey);
+    const draftId = created.draft!.id;
+    const problem = created.draft!.edit.problems[0];
+
+    // A rule with a path into a question reaches the block inside it, and names the field.
+    const emptied = structuredClone(created.draft!.edit);
+    emptied.problems[0].solution = [{ ...problem.solution[0], payload: { ...problem.solution[0].payload, text: '' } }];
+    const blank = await service.saveDraft(admin.id, draftId, emptied);
+    // Editing a published question makes a new one, so the names to match are the saved draft's.
+    const renamed = blank.draft!.edit.problems[0];
+    expect(blank.draft!.issues[0]).toMatchObject({
+      problemVersionId: renamed.problemVersionId,
+      blockId: renamed.solution[0].blockId,
+      field: 'text',
+    });
+    // The rule is raised at the field it is about, not as a dump of everything the payload failed.
+    expect(blank.draft!.issues[0].path).toBe(`problems.0.solution.0.payload.text`);
+    expect(blank.draft!.issues[0].message).not.toContain('{');
+
+    // A rule that only names what it refused is placed by that name instead.
+    const claimed = structuredClone(blank.draft!.edit);
+    claimed.problems[0].skillKeys = ['no-such-skill'];
+    const missing = await service.saveDraft(admin.id, draftId, claimed);
+    expect(missing.draft!.issues.some((issue) => issue.problemVersionId === missing.draft!.edit.problems[0].problemVersionId)).toBe(true);
+
+    await service.deleteDraft(admin.id, draftId);
   });
 
   it('publishes the draft as a new immutable version and leaves the base version untouched', async () => {

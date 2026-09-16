@@ -11,7 +11,7 @@ import type { ContentBlock } from '@/shared/api';
 import {
   mayEditEveryDraft, mayGrantRoles, mayPublish, nextTermVersionId, pruneBlock, pruneProblems, pruneSections,
   renameProblem, renamedProblemVersionId, renameProblemReferences, responseSpecOf, scopeTermAnnotations, suggestVersionId,
-  type AccountRole, type AuthoringResponse, type AuthoringRole, type AuthoringWorkspace, type DraftDetail,
+  type AccountRole, type AuthoringResponse, type AuthoringRole, type AuthoringWorkspace, type DraftDetail, type DraftIssue,
   type DraftEdit, type DraftProblem, type DraftSummary, type EditableTermScope, type TermChoice, type TermEdit, type TermSummary,
 } from '@/shared/authoring';
 
@@ -209,7 +209,7 @@ export class AuthoringService {
    * holds a content role receives all of it. Nothing here is reachable without that role, and the
    * learning API still sends a learner only the public half.
    */
-  private async detail(row: DraftRow, userId: string, issues: string[]): Promise<DraftDetail> {
+  private async detail(row: DraftRow, userId: string, issues: DraftIssue[]): Promise<DraftDetail> {
     const document = row.document as unknown as StoredClass;
     const edit: DraftEdit = {
       meta: { versionId: document.public.versionId, title: document.public.title, summary: document.public.summary, estimatedMinutes: document.public.estimatedMinutes },
@@ -430,7 +430,7 @@ export class AuthoringService {
     try {
       await importContent(this.db, { schemaVersion: 1, skills: [], classes: [], diagnostics: [], terms: [definition] });
     } catch (error) {
-      throw new AppError(422, 'term_rejected', describeContentError(error)[0] ?? '용어를 발행하지 못했어요.');
+      throw new AppError(422, 'term_rejected', describeContentError(error)[0]?.message ?? '용어를 발행하지 못했어요.');
     }
     return { ...await this.listTerms(userId, edit.scopeKind, edit.scopeKey), publishedTermVersionId: versionId };
   }
@@ -525,9 +525,9 @@ export class AuthoringService {
     };
   }
 
-  private issues(document: StoredClass): string[] {
+  private issues(document: StoredClass): DraftIssue[] {
     try { validateClass(document); return []; }
-    catch (error) { return describeContentError(error); }
+    catch (error) { return describeContentError(error, document); }
   }
 
   async validateDraft(userId: string, draftId: string): Promise<AuthoringResponse> {
@@ -539,7 +539,7 @@ export class AuthoringService {
     // the publish command uses decides here too.
     if (!issues.length) {
       try { await importContent(this.db, this.bundle(document), true); }
-      catch (error) { issues.push(...describeContentError(error)); }
+      catch (error) { issues.push(...describeContentError(error, document)); }
     }
     return { workspace: await this.workspace(userId), draft: await this.detail(row, userId, issues) };
   }
@@ -557,8 +557,8 @@ export class AuthoringService {
     if (issues.length) throw new AppError(422, 'draft_invalid', '아직 고칠 곳이 있어 발행할 수 없어요.');
     try { await importContent(this.db, this.bundle(document), false); }
     catch (error) {
-      const described = describeContentError(error);
-      throw new AppError(422, 'publish_rejected', described[0] ?? '발행 검증을 통과하지 못했어요.');
+      const described = describeContentError(error, document);
+      throw new AppError(422, 'publish_rejected', described[0]?.message ?? '발행 검증을 통과하지 못했어요.');
     }
     // Re-publishing the same version is accepted as unchanged, so a failed update is safe to retry.
     const published = await this.db.contentDraft.update({ where: { id: draftId },
@@ -601,12 +601,70 @@ export class AuthoringService {
 }
 
 /**
- * Publishing rules speak in English for operators; the editor shows them next to the block. Only
- * the rules are quoted: anything else that failed is reported as a failure, not as its own text.
+ * Where in the document a validator's path points. The path is positional — `sections.2.contentBlocks.0`
+ * — and positions move as a draft is written, so it is turned into the names the editor knows a
+ * block by before it leaves the server.
  */
-export function describeContentError(error: unknown): string[] {
-  if (error instanceof z.ZodError) return error.issues.map((issue) => `${issue.path.join('.') || 'document'}: ${issue.message}`).slice(0, 20);
-  if (error instanceof ContentError) return [error.message];
-  if (error instanceof Error && error.name === 'Error') return [error.message];
-  return ['검증하지 못했어요. 잠시 후 다시 시도해 주세요.'];
+function locate(document: StoredClass, path: readonly PropertyKey[]): Omit<DraftIssue, 'message' | 'path'> {
+  const [root, index, ...rest] = path;
+  const field = () => {
+    const at = rest.indexOf('payload');
+    return at >= 0 && at + 1 < rest.length ? rest.slice(at + 1).join('.') : undefined;
+  };
+  if (root === 'sections' && typeof index === 'number') {
+    const section = document.sections[index];
+    if (!section) return {};
+    const block = rest[0] === 'contentBlocks' && typeof rest[1] === 'number' ? section.contentBlocks[rest[1]] : undefined;
+    return { sectionId: section.sectionId, blockId: block?.blockId, field: block ? field() : undefined };
+  }
+  if (root === 'problems' && typeof index === 'number') {
+    const problem = document.problems[index];
+    if (!problem) return {};
+    const part = rest[0];
+    const holds = part === 'promptContent' || part === 'hints' || part === 'solution';
+    const block = holds && typeof rest[1] === 'number' ? problem[part][rest[1]] : undefined;
+    return { problemVersionId: problem.problemVersionId, blockId: block?.blockId, field: block ? field() : undefined };
+  }
+  return {};
+}
+
+/**
+ * A rule that refused something by name can be shown beside it. Reference rules name the block or
+ * the question they refused, which is the only handle they give; a block's name is checked first
+ * because it contains the question's, and the narrower answer is the useful one.
+ */
+function named(document: StoredClass, message: string): Omit<DraftIssue, 'message' | 'path'> {
+  for (const section of document.sections) {
+    for (const block of section.contentBlocks) {
+      if (message.includes(block.blockId)) return { sectionId: section.sectionId, blockId: block.blockId };
+    }
+  }
+  for (const problem of document.problems) {
+    for (const block of [...problem.promptContent, ...problem.hints, ...problem.solution]) {
+      if (message.includes(block.blockId)) return { problemVersionId: problem.problemVersionId, blockId: block.blockId };
+    }
+    if (message.includes(problem.problemVersionId)) return { problemVersionId: problem.problemVersionId };
+  }
+  return {};
+}
+
+/**
+ * Publishing rules speak in English for operators; the editor shows them next to the block they are
+ * about. Only the rules are quoted: anything else that failed is reported as a failure, not as its
+ * own text.
+ */
+export function describeContentError(error: unknown, document?: StoredClass): DraftIssue[] {
+  const where = (message: string, path?: readonly PropertyKey[]) => {
+    if (!document) return {};
+    const found = path ? locate(document, path) : {};
+    return Object.values(found).some((value) => value !== undefined) ? found : named(document, message);
+  };
+  if (error instanceof z.ZodError) {
+    return error.issues.slice(0, 20).map((issue) => ({
+      message: issue.message, path: issue.path.join('.') || 'document', ...where(issue.message, issue.path),
+    }));
+  }
+  if (error instanceof ContentError) return [{ message: error.message, ...where(error.message) }];
+  if (error instanceof Error && error.name === 'Error') return [{ message: error.message, ...where(error.message) }];
+  return [{ message: '검증하지 못했어요. 잠시 후 다시 시도해 주세요.' }];
 }

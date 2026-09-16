@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { AttemptView, ClassSection, ContentBlock } from '@/shared/api';
 import {
-  blockFormOf, copyBlock, copyProblem, copySection, editShape, insertAfter, mayGrantRoles, mayPublish, moveBlock,
-  nextBlockId, nextSectionId, sectionRoleLabels, sectionRoles, versionLabel,
+  blockFormOf, copyBlock, copyProblem, copySection, editShape, insertAfter, issueText, mayGrantRoles, mayPublish,
+  moveBlock, nextBlockId, nextSectionId, sectionRoleLabels, sectionRoles, versionLabel,
   type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail,
-  type DraftEdit, type DraftProblem, type DraftSummary, type SkillChoice, type TermSummary,
+  type DraftEdit, type DraftIssue, type DraftProblem, type DraftSummary, type SkillChoice, type TermSummary,
 } from '@/shared/authoring';
 import { ApiError, learningApi, type Session } from '@/features/learning/api-client';
 import { Icon } from '@/features/learning/icons';
@@ -296,6 +296,33 @@ export function AuthoringWorkspace() {
   const writeProblem = (next: DraftProblem) => setEdit({ ...edit,
     problems: edit.problems.map((item) => (item.problemVersionId === next.problemVersionId ? next : item)) });
 
+  /** Every block the document holds, wherever it sits, so a rule's anchor can be read back. */
+  const blockAt = (blockId?: string) => (blockId
+    ? [...edit.sections.flatMap((item) => item.contentBlocks),
+      ...edit.problems.flatMap((problem) => [...problem.promptContent, ...problem.hints, ...problem.solution])]
+      .find((block) => block.blockId === blockId)
+    : undefined);
+  const describe = (issue: DraftIssue) => issueText(issue, blockAt(issue.blockId));
+  const issuesOfBlock = (blockId: string) => draft.issues.filter((issue) => issue.blockId === blockId);
+  const issuesOfProblem = (problemVersionId: string) =>
+    draft.issues.filter((issue) => issue.problemVersionId === problemVersionId);
+  /** Takes the screen to what a rule refused, rather than leaving an author to find it by its path. */
+  const goToIssue = (issue: DraftIssue) => {
+    const holds = (item: ClassSection) => (issue.sectionId ? item.sectionId === issue.sectionId : false)
+      || (issue.blockId ? item.contentBlocks.some((block) => block.blockId === issue.blockId) : false)
+      || (issue.problemVersionId ? item.contentBlocks.some((block) => Array.isArray(block.payload.problemVersionIds)
+        && (block.payload.problemVersionIds as string[]).includes(issue.problemVersionId!)) : false);
+    const at = edit.sections.findIndex(holds);
+    const home = at >= 0 ? at : sectionIndex;
+    setSectionIndex(home);
+    setTrying(false);
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    if (issue.problemVersionId) { setSelected({ kind: 'problem', id: issue.problemVersionId }); return; }
+    const block = issue.blockId
+      ? edit.sections[home].contentBlocks.findIndex((item) => item.blockId === issue.blockId) : -1;
+    setSelected(block >= 0 ? { kind: 'block', index: block } : null);
+  };
+
   /** A copy sits beside what it was copied from, and is what the screen turns to next. */
   const copyThisBlock = (index: number) => {
     const made = copyBlock({ block: section.contentBlocks[index], problems: edit.problems, classKey: draft.classKey,
@@ -405,7 +432,7 @@ export function AuthoringWorkspace() {
       </aside>
 
       <LessonSheet meta={edit.meta} section={section} index={sectionIndex} problems={edit.problems} terms={draft.terms}
-        selected={selected} published={published}
+        selected={selected} published={published} issues={draft.issues}
         trying={trying ? { actions: tryActions, attempts, busy: tryBusy } : undefined}
         onMeta={(meta) => setEdit({ ...edit, meta })} onSection={writeSection} onBlocks={writeBlocks}
         onProblem={writeProblem} onSelect={setSelected}
@@ -416,6 +443,7 @@ export function AuthoringWorkspace() {
       {!trying && <aside className="editor-inspector" aria-label="고른 것">
         {chosenProblem && holder
           ? <fieldset className="editor-inspector-block" disabled={published}>
+            <Amiss issues={issuesOfProblem(chosenProblem.problemVersionId)} describe={describe} expert={expert} />
             <ProblemPanel problem={chosenProblem} number={problemAt + 1} total={holderIds.length}
               skills={draftSkills} taken={blockIds} termChoices={draft.terms}
               onChange={writeProblem}
@@ -433,6 +461,7 @@ export function AuthoringWorkspace() {
           </fieldset>
           : chosenBlock !== undefined && selected?.kind === 'block'
           ? <fieldset className="editor-inspector-block" disabled={published}>
+            <Amiss issues={issuesOfBlock(chosenBlock.blockId)} describe={describe} expert={expert} />
             <BlockCard block={chosenBlock} index={selected.index} total={section.contentBlocks.length}
               termChoices={draft.terms}
               // A paragraph is written in the sheet, so the form does not ask for its body again.
@@ -512,8 +541,12 @@ export function AuthoringWorkspace() {
     </div>}
 
     {!!draft.issues.length && <section className="editor-issues" aria-label="검증 결과">
-      <strong>고칠 곳이 있어요</strong>
-      <ul>{draft.issues.map((issue) => <li key={issue}>{issue}</li>)}</ul>
+      <strong>고칠 곳 {draft.issues.length}</strong>
+      {/* Each one is a way there. A list of paths tells an author what is wrong and not where. */}
+      <ul>{draft.issues.map((issue, index) => <li key={`${issue.path ?? ''}:${index}`}>
+        <button type="button" className="text-button" onClick={() => goToIssue(issue)}>{describe(issue)}</button>
+        {expert && issue.path && <small>{issue.path}</small>}
+      </li>)}</ul>
     </section>}
 
     {removed && <div className="editor-toast" role="status">
@@ -524,6 +557,17 @@ export function AuthoringWorkspace() {
     </div>}
     </RemovalNotice.Provider>
   </Shell>;
+}
+
+/** What publishing refused about the thing on screen, said where that thing is being worked on. */
+function Amiss({ issues, describe, expert }: { issues: DraftIssue[]; describe: (issue: DraftIssue) => string; expert: boolean }) {
+  if (!issues.length) return null;
+  return <div className="editor-amiss" role="status">
+    <strong>고칠 곳 {issues.length}</strong>
+    <ul>{issues.map((issue, index) => <li key={`${issue.path ?? ''}:${index}`}>
+      {describe(issue)}{expert && issue.path && <small>{issue.path}</small>}
+    </li>)}</ul>
+  </div>;
 }
 
 const roleNames: Record<AuthoringRole, string> = { admin: '관리자 · 발행까지', author: '작성자 · 자기 초안' };

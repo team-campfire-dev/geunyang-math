@@ -5,7 +5,7 @@ import {
   nextBlockId, nextProblemBlockId, nextProblemVersionId,
   nextSectionId, problemBlockForms, problemGist, problemsOfBlock, pruneBlock, pruneSections, renameProblem,
   renameProblemReferences, renamedProblemVersionId, nextTermVersionId, responseSpecOf, scopeTermAnnotations,
-  suggestVersionId, termBlockForms, toPublicProblem, versionLabel, writePath,
+  issueText, suggestVersionId, termBlockForms, toPublicProblem, versionLabel, writePath,
 } from '@/shared/authoring';
 import { seedClasses } from './fixtures/content';
 
@@ -365,5 +365,29 @@ describe('copying what is already written', () => {
   it('puts a copy right after what it was copied from', () => {
     expect(insertAfter(['a', 'b', 'c'], 1, 'b2')).toEqual(['a', 'b', 'b2', 'c']);
     expect(insertAfter(['a'], 0, 'a2')).toEqual(['a', 'a2']);
+  });
+});
+
+describe('saying what a rule refused', () => {
+  const paragraph = { blockId: 'b1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '' } };
+
+  it('names the field the way the block\u0027s own form names it', () => {
+    expect(issueText({ message: 'Too small', field: 'text' }, paragraph)).toBe('글: Too small');
+    // A field inside a repeated row is named by the row\u0027s own form.
+    const linked = { ...paragraph, typeVersion: 2, payload: { text: '분모', terms: [] } };
+    expect(issueText({ message: 'Required', field: 'terms.0.termKey' }, linked)).toBe('용어 키: Required');
+  });
+
+  it('drops the kind of block from the message, because the card already says it', () => {
+    expect(issueText({ message: 'Invalid payload for core.rich_text@1: Too small', field: 'text' }, paragraph))
+      .toBe('글: Too small');
+    // The same message with no block to place it against is left exactly as the rule wrote it.
+    expect(issueText({ message: 'Invalid payload for core.rich_text@1: Too small', field: 'text' }))
+      .toBe('Invalid payload for core.rich_text@1: Too small');
+  });
+
+  it('says the rule alone when it was not about a field of the block', () => {
+    expect(issueText({ message: 'Missing term: term.denominator' }, paragraph)).toBe('Missing term: term.denominator');
+    expect(issueText({ message: 'Duplicate block id.', field: 'nothing' }, paragraph)).toBe('Duplicate block id.');
   });
 });

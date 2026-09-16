@@ -2,7 +2,10 @@
 
 import { useEffect, useRef, type ReactNode, type RefObject } from 'react';
 import type { AttemptView, ContentBlock, ClassSection } from '@/shared/api';
-import { blockFormOf, sectionRoleLabels, toPublicProblem, type DraftMeta, type DraftProblem, type TermChoice } from '@/shared/authoring';
+import {
+  blockFormOf, sectionRoleLabels, toPublicProblem,
+  type DraftIssue, type DraftMeta, type DraftProblem, type TermChoice,
+} from '@/shared/authoring';
 import { ContentBlocks } from '@/features/learning/content-blocks';
 import { ProblemCard, type ProblemActions } from '@/features/learning/problem-card';
 import { Icon } from '@/features/learning/icons';
@@ -87,9 +90,11 @@ export type Picked = { kind: 'block'; index: number } | { kind: 'problem'; id: s
  * puts a frame around each so it can be picked. A paragraph is the exception — chosen, it becomes
  * the text it is made of, because a paragraph is written by typing into it.
  */
-export function LessonSheet({ meta, section, index, problems, terms, selected, published, trying, onMeta, onSection, onBlocks, onProblem, onSelect, add }: {
+export function LessonSheet({ meta, section, index, problems, terms, selected, published, issues, trying, onMeta, onSection, onBlocks, onProblem, onSelect, add }: {
   meta: DraftMeta; section: ClassSection; index: number; problems: DraftProblem[]; terms: TermChoice[];
   selected: Picked | null; published: boolean;
+  /** What publishing refused, so the lesson can show where rather than list it somewhere else. */
+  issues: DraftIssue[];
   /**
    * Set while the lesson is being tried rather than written. Questions are answered for real, and
    * nothing on the page may be picked or typed into — an author trying their own lesson should meet
@@ -142,10 +147,11 @@ export function LessonSheet({ meta, section, index, problems, terms, selected, p
           // row in a list that happens to appear somewhere else.
           const held = problems.find((item) => item.problemVersionId === problem.problemVersionId);
           const chosen = selected?.kind === 'problem' && selected.id === problem.problemVersionId;
+          const trouble = issues.some((issue) => issue.problemVersionId === problem.problemVersionId);
           const writeProblem = (position: number, next: ContentBlock) => held && onProblem({ ...held,
             promptContent: held.promptContent.map((item, at) => (at === position ? next : item)) });
           const first = held?.promptContent.findIndex((item) => item.kind === 'core.rich_text') ?? -1;
-          return <div key={problem.problemVersionId} className={`sheet-block sheet-problem${chosen ? ' chosen' : ''}`}
+          return <div key={problem.problemVersionId} className={`sheet-block sheet-problem${chosen ? ' chosen' : ''}${trouble ? ' amiss' : ''}`}
             onClick={(event) => { event.stopPropagation(); onSelect({ kind: 'problem', id: problem.problemVersionId }); }}>
             <button type="button" className="sheet-block-pick" aria-pressed={chosen}
               onClick={(event) => { event.stopPropagation(); onSelect(chosen ? null : { kind: 'problem', id: problem.problemVersionId }); }}>
@@ -165,8 +171,9 @@ export function LessonSheet({ meta, section, index, problems, terms, selected, p
           if (trying) return <div key={block.blockId} className={className}>{drawn}</div>;
           const chosen = selected?.kind === 'block' && selected.index === position;
           const writing = chosen && !published && block.kind === 'core.rich_text';
+          const trouble = issues.some((issue) => issue.blockId === block.blockId);
           const label = blockFormOf(block)?.label ?? `${block.kind}@${block.typeVersion}`;
-          return <div key={block.blockId} className={`sheet-block${chosen ? ' chosen' : ''}${writing ? ' writing' : ''}`}
+          return <div key={block.blockId} className={`sheet-block${chosen ? ' chosen' : ''}${writing ? ' writing' : ''}${trouble ? ' amiss' : ''}`}
             onClick={(event) => { event.stopPropagation(); onSelect({ kind: 'block', index: position }); }}>
             {/* The frame's own handle, so a block can be chosen and named without a pointer. */}
             <button type="button" className="sheet-block-pick" aria-pressed={chosen}

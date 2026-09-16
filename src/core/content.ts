@@ -204,7 +204,15 @@ const blockSchema = z.object({
     return;
   }
   const parsed = schema.safeParse(block.payload);
-  if (!parsed.success) ctx.addIssue({ code: 'custom', path: ['payload'], message: `Invalid payload for ${key}: ${parsed.error.message}` });
+  // Each refusal is raised on its own, at the field it is about. Reported as one issue carrying the
+  // whole error, the path stopped at `payload` and the message was a JSON dump of the rest — which
+  // told a reader neither which field was wrong nor, in a word, what was wrong with it.
+  if (!parsed.success) {
+    for (const issue of parsed.error.issues) {
+      ctx.addIssue({ code: 'custom', path: ['payload', ...(issue.path as (string | number)[])],
+        message: `Invalid payload for ${key}: ${issue.message}` });
+    }
+  }
 });
 
 /** A drawing the learner arranges reports nothing, so it stays out of anything that is assessed:

@@ -103,6 +103,13 @@
 .sheet-block.chosen { outline: 2px solid var(--green); outline-offset: 8px; }
 /* A paragraph being written already shows it: the text box has its own ground and its own ring. */
 .sheet-block.chosen.writing { outline: none; }
+/* A block a rule refused says so where it sits, so the list at the foot is a way back to it and
+   not the only place the refusal is known. */
+.sheet-block.amiss { outline: 2px solid var(--editor-warn-line); outline-offset: 8px; }
+.sheet-block.amiss .sheet-block-pick { opacity: 1; background: var(--editor-warn-bg); color: var(--editor-warn); }
+.sheet-problem.amiss { outline-offset: 3px; }
+.sheet-block.chosen.amiss { outline-color: var(--editor-warn); }
+
 /* A question sits inside an activity, so its frame hugs it rather than standing as far off as a
    block's does — two frames the same distance apart would read as one. */
 .sheet-problem { border-radius: 9px; }
@@ -226,7 +233,17 @@
   background: var(--editor-warn-bg); }
 .editor-issues strong { font-size: 14px; color: var(--editor-warn); }
 .editor-issues ul { margin: 11px 0 0; padding-left: 20px; }
-.editor-issues li { font-size: var(--editor-label-size); line-height: 1.9; color: var(--editor-warn); word-break: break-all; }
+.editor-issues li { font-size: var(--editor-label-size); line-height: 1.9; color: var(--editor-warn); word-break: keep-all; }
+.authoring-page .editor-issues .text-button { color: var(--editor-warn); text-decoration: underline; text-align: left;
+  font-size: var(--editor-label-size); padding: 2px 0; }
+.editor-issues li small { display: block; font-size: 11px; opacity: .75; word-break: break-all; }
+/* What was refused, said beside the thing it was refused about. */
+.editor-amiss { margin-bottom: 14px; padding: 12px 14px; border: 1px solid var(--editor-warn-line); border-radius: 9px;
+  background: var(--editor-warn-bg); color: var(--editor-warn); font-size: var(--editor-help-size); line-height: 1.8; }
+.editor-amiss strong { display: block; font-size: var(--editor-label-size); margin-bottom: 6px; }
+.editor-amiss ul { margin: 0; padding-left: 17px; }
+.editor-amiss li { word-break: keep-all; }
+.editor-amiss li small { display: block; font-size: 11px; opacity: .75; word-break: break-all; }
 
 /* A drawing arranged by hand. The canvas itself is the learner's renderer; everything around it is
    this screen's, so it moves with this screen's scale. */
