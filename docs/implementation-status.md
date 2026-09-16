@@ -44,14 +44,14 @@
 
 분수 막대만 그릴 수 있던 블록은 새 콘텐츠에서 물러났다. `core.figure@1`과 `math.fraction_strip@1`은 이미 발행된 v4 판본이 쓰고 있어 검증·렌더러를 유지하되 편집기 팔레트에서 뺐고, 발행된 콘텐츠가 없던 `math.fraction_sequence@1`·`math.fraction_builder@1`은 제거했다. 재생·멈춤·앞뒤 이동 버튼은 장면이 있는 그림에 항상 함께 그리며 `autoplay`는 동작 줄이기 설정에 양보한다.
 
-`ClassVersion.document`는 수업 정보와 비공개 문제·힌트·해설·채점 규칙을 가진 불변 JSON 문서다. `DiagnosticVersion`은 진단 정의, `Skill`은 개념 이름·순서를 제공한다. 공개 카탈로그 응답은 발행된 클래스가 가르치는 개념 이름을 함께 제공하므로 로그아웃 화면의 소개 문구도 DB를 따른다. 클래스가 아직 없는 개념은 공개 응답에서 제외한다. 런타임의 하드코딩 seed는 제거했고, 배포 시 `db:migrate → content:verify`를 실행한다. `db:seed`는 읽기 전용 검증 호환 명령이다.
+발행된 클래스는 행으로 저장한다. `ClassVersion.metadata`가 수업 정보를, `ClassSection`이 섹션을, `PublishedProblem`이 문항의 채점 규칙·응답 형식을, `ContentBlock`이 본문·지문·힌트·해설 블록을 갖는다. 비공개 채점 규칙과 힌트·해설은 공개 응답을 만들 때 걸러진다. 진단과 용어 정의도 같은 표에서 읽고, `Skill`은 개념 이름·순서를 제공한다. 표별 내용은 [DB 콘텐츠 관리](content-management.md#저장-구조)에 있다. 공개 카탈로그 응답은 발행된 클래스가 가르치는 개념 이름을 함께 제공하므로 로그아웃 화면의 소개 문구도 DB를 따른다. 클래스가 아직 없는 개념은 공개 응답에서 제외한다. 런타임의 하드코딩 seed는 제거했고, 배포 시 `db:migrate → content:verify`를 실행한다. `db:seed`는 읽기 전용 검증 호환 명령이다.
 
 콘텐츠 CLI는 기존 판본과 같은 문제 ID의 다른 내용을 거부하고 등록 전체를 하나의 transaction으로 처리한다. 수정은 새 판본 ID로 발행한다. 기존 클래스 해시·발행 시각은 그대로 유지한다. 이 불변성은 등록·서비스 경로의 규칙이며, DB 관리자가 직접 SQL로 변경하는 것을 차단하는 trigger는 없다.
 
 ```text
 Skill                         → 개념 이름·표시 순서
 DiagnosticVersion             → DiagnosticRun.document + answers
-개인 Scope → Enrollment       → ClassVersion.document
+개인 Scope → Enrollment       → ClassVersion(+ 섹션·블록·문항 행)
 개인 Scope → Assignment       → AssignmentItem.problemSnapshot
                 └─ AssignmentRecipient → Submission
                                             ├─ Attempt
