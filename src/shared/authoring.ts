@@ -2,7 +2,7 @@
 // offer a form for every published block kind without importing the server's validation schemas,
 // and so the server can prune the same optional fields before it validates what the editor sent.
 import type { AnswerSpec } from './answer';
-import type { ClassSection, ContentBlock, PublicProblem } from './api';
+import type { ClassSection, ContentBlock, GradeResult, PublicProblem } from './api';
 
 /** A role on an account, not a property of one operator: a teacher system grants the same roles. */
 export type AuthoringRole = 'admin' | 'author';
@@ -110,10 +110,19 @@ export type AuthoringAction =
   | { action: 'role.revoke'; userId: string }
   | { action: 'term.list'; scopeKind: EditableTermScope; scopeKey: string }
   | { action: 'term.save'; edit: TermEdit }
-  | { action: 'editor.expertMode'; on: boolean };
+  | { action: 'editor.expertMode'; on: boolean }
+  /**
+   * Answering a question of the draft the way a learner would. Nothing is recorded: no attempt, no
+   * progress, no evidence for what to recommend next. The answer is judged by the same grader the
+   * learning API uses, which is why it is judged on the server rather than in the editor.
+   */
+  | { action: 'draft.tryAnswer'; draftId: string; problemVersionId: string; answer: string; assisted: boolean }
+  | { action: 'draft.openHint'; draftId: string; problemVersionId: string };
 export type AuthoringResponse = {
   workspace: AuthoringWorkspace; draft?: DraftDetail; publishedVersionId?: string;
   matches?: AccountRole[]; terms?: TermSummary[]; publishedTermVersionId?: string;
+  /** What the grader said about an answer tried in the editor, and the hint a question carries. */
+  tried?: GradeResult; hint?: ContentBlock[];
 };
 
 const versionSuffix = /:v(\d+)$/;

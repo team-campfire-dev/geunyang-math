@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { ClassSection, ContentBlock } from '@/shared/api';
+import type { AttemptView, ClassSection, ContentBlock } from '@/shared/api';
 import {
   blockFormOf, editShape, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId, sectionRoleLabels, sectionRoles,
   versionLabel, type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail,
@@ -9,6 +9,7 @@ import {
 } from '@/shared/authoring';
 import { ApiError, learningApi, type Session } from '@/features/learning/api-client';
 import { Icon } from '@/features/learning/icons';
+import type { ProblemActions } from '@/features/learning/problem-card';
 import { authoringApi } from './api-client';
 import { RemovalNotice, useEditHistory } from './edit-history';
 import { ExpertMode, useExpertMode } from './expert-mode';
@@ -30,6 +31,15 @@ export function AuthoringWorkspace() {
   const [sectionIndex, setSectionIndex] = useState(0);
   /** Which block of the step is being worked on, or none, which means the lesson itself is. */
   const [selected, setSelected] = useState<number | null>(null);
+  /**
+   * Trying the lesson rather than writing it. What happens here is not learning and is kept nowhere:
+   * the answers live until the mode is left, which is why they are held on this screen and not sent
+   * anywhere to be remembered.
+   */
+  const [trying, setTrying] = useState(false);
+  const [attempts, setAttempts] = useState<Record<string, AttemptView>>({});
+  const [assisted, setAssisted] = useState<Record<string, boolean>>({});
+  const [tryBusy, setTryBusy] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -65,6 +75,9 @@ export function AuthoringWorkspace() {
     setSaving('idle');
     setSectionIndex((current) => Math.min(current, Math.max(detail.edit.sections.length - 1, 0)));
     setSelected(null);
+    setTrying(false);
+    setAttempts({});
+    setAssisted({});
     setConfirming(false);
   }, [openEdit, markSaved]);
   /**
@@ -78,6 +91,7 @@ export function AuthoringWorkspace() {
   }, []);
   const closeDraft = useCallback(() => {
     setDraft(null); openEdit(null); latest.current = ''; markSaved(''); setSaving('idle'); setRemoved(null);
+    setTrying(false); setAttempts({}); setAssisted({});
   }, [openEdit, markSaved]);
   const notifyRemoval = useCallback((what: string) => setRemoved({ what, at: Date.now() }), []);
 
@@ -252,6 +266,34 @@ export function AuthoringWorkspace() {
       ? { ...item, contentBlocks: item.contentBlocks.map((existing, place) => (place === index ? block : existing)) }
       : item));
   const chosen = selected === null ? undefined : section.contentBlocks[selected];
+  /**
+   * Answering a question of this draft. Every try goes through the server, which holds the answer
+   * and the grader; the editor knows the answer too, but grading here would be a second grader to
+   * keep in step with the one that counts.
+   */
+  const tryActions = (problemVersionId: string): ProblemActions => ({
+    submit: async (answer) => {
+      setTryBusy(true);
+      try {
+        const helped = !!assisted[problemVersionId];
+        const response = await authoringApi.act({ action: 'draft.tryAnswer', draftId: draft.id, problemVersionId, answer, assisted: helped },
+          session?.user?.id ?? '');
+        if (!response.tried) throw new Error('채점 결과를 받지 못했어요.');
+        setAttempts((current) => ({ ...current,
+          [problemVersionId]: { id: problemVersionId, problemVersionId, answer, result: response.tried!, hintUsed: helped } }));
+      } finally { setTryBusy(false); }
+    },
+    openHint: async () => {
+      const response = await authoringApi.act({ action: 'draft.openHint', draftId: draft.id, problemVersionId }, session?.user?.id ?? '');
+      setAssisted((current) => ({ ...current, [problemVersionId]: true }));
+      return response.hint ?? [];
+    },
+  });
+  /** What the server holds is what gets answered, so anything unsaved goes first. */
+  const enterTry = async () => {
+    if (latest.current !== savedRef.current && !(await saveNow())) return;
+    setSelected(null); setAttempts({}); setAssisted({}); setTrying(true);
+  };
   const moveSection = (delta: number) => {
     setEdit({ ...edit, sections: moveBlock(edit.sections, sectionIndex, delta) });
     goToSection(Math.min(Math.max(sectionIndex + delta, 0), edit.sections.length - 1));
@@ -271,7 +313,14 @@ export function AuthoringWorkspace() {
     <div className="editor-bar">
       <button type="button" className="back-button" onClick={() => void leave()}><Icon name="back" size={16} />초안 목록</button>
       <div className="editor-bar-side">
-        {!published && <>
+        {/* Writing the lesson, or reading it the way it will be read. */}
+        <div className="editor-mode" role="group" aria-label="화면 모드">
+          <button type="button" className={trying ? '' : 'active'} aria-pressed={!trying}
+            onClick={() => { setTrying(false); setAttempts({}); setAssisted({}); }}>편집</button>
+          <button type="button" className={trying ? 'active' : ''} aria-pressed={trying}
+            onClick={() => void enterTry()}>해보기</button>
+        </div>
+        {!published && !trying && <>
           <button type="button" className="icon-button" aria-label="되돌리기" title="되돌리기 (⌘Z)" disabled={!canUndo} onClick={undo}>↶</button>
           <button type="button" className="icon-button" aria-label="다시 실행" title="다시 실행 (⇧⌘Z)" disabled={!canRedo} onClick={redo}>↷</button>
         </>}
@@ -281,36 +330,42 @@ export function AuthoringWorkspace() {
     {error && <p className="error-banner" role="alert">{error}</p>}
     {notice && <p className="notice-banner">{notice}</p>}
     {published && <p className="notice-banner">발행한 판본은 고칠 수 없어요. 더 고치려면 새 초안을 만들어 주세요.</p>}
+    {/* Said before anything is answered, because the card below says what a learner is told — and a
+        learner is recorded, which is the one thing that is not true here. */}
+    {trying && <p className="editor-note editor-trying-note">
+      학습자가 보는 그대로예요. 답은 학습 화면과 같은 규칙으로 서버가 채점하고, 여기서 푼 것은 아무 데도 기록되지 않아요.
+      해설은 학습자에게 보여 주지 않으니 여기에도 나오지 않고, 「편집」에서 씁니다.</p>}
 
-    <div className="editor-layout">
+    <div className={`editor-layout${trying ? ' trying' : ''}`}>
       <aside className="editor-steps">
         <span className="eyebrow">SECTIONS</span>
         {edit.sections.map((item, index) => <div key={item.sectionId} className={`editor-step${index === sectionIndex ? ' active' : ''}`}>
           <button type="button" className="editor-step-open" aria-current={index === sectionIndex ? 'step' : undefined}
             onClick={() => goToSection(index)}><small>{sectionRoleLabels[item.role]}</small>{item.title}</button>
-          {index === sectionIndex && !published && edit.sections.length > 1 && <div className="editor-step-tools">
+          {index === sectionIndex && !published && !trying && edit.sections.length > 1 && <div className="editor-step-tools">
             <button type="button" className="icon-button" aria-label="이 단계 위로" disabled={index === 0}
               onClick={() => moveSection(-1)}>↑</button>
             <button type="button" className="icon-button" aria-label="이 단계 아래로" disabled={index === edit.sections.length - 1}
               onClick={() => moveSection(1)}>↓</button>
           </div>}
         </div>)}
-        <button type="button" className="text-button" disabled={published || edit.sections.length >= 50} onClick={() => {
+        {!trying && <button type="button" className="text-button" disabled={published || edit.sections.length >= 50} onClick={() => {
           const role: ClassSection['role'] = 'explanation';
           const sectionId = nextSectionId(draft.classKey, role, edit.meta.versionId, edit.sections.map((item) => item.sectionId));
           setEdit({ ...edit, sections: [...edit.sections, { sectionId, role, title: '새 단계', contentBlocks: [] }] });
           goToSection(edit.sections.length);
-        }}><Icon name="plus" size={14} />단계 추가</button>
+        }}><Icon name="plus" size={14} />단계 추가</button>}
       </aside>
 
       <LessonSheet meta={edit.meta} section={section} index={sectionIndex} problems={edit.problems} terms={draft.terms}
         selected={selected} published={published}
+        trying={trying ? { actions: tryActions, attempts, busy: tryBusy } : undefined}
         onMeta={(meta) => setEdit({ ...edit, meta })} onSection={writeSection} onBlocks={writeBlocks} onSelect={setSelected}
         add={<AddBlock blockId={(kind) => nextBlockId(draft.classKey, section.sectionId, kind, edit.meta.versionId, blockIds)}
           onAdd={(block) => { writeBlocks([...section.contentBlocks, block]); setSelected(section.contentBlocks.length); }} />} />
 
       {/* What the chosen thing is made of. With nothing chosen, the lesson itself is what is chosen. */}
-      <aside className="editor-inspector" aria-label="고른 것">
+      {!trying && <aside className="editor-inspector" aria-label="고른 것">
         {chosen !== undefined && selected !== null
           ? <fieldset className="editor-inspector-block" disabled={published}>
             <BlockCard block={chosen} index={selected} total={section.contentBlocks.length}
@@ -359,7 +414,7 @@ export function AuthoringWorkspace() {
               }}><Icon name="close" size={14} />이 단계 삭제</button>}
             </div>
           </fieldset>}
-      </aside>
+      </aside>}
     </div>
 
     <div className="editor-actions">

@@ -56,8 +56,53 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     expect(await authoringRole(db, learner.id)).toBeNull();
     expect(await authoringRole(db, author.id)).toBe('author');
     expect(await authoringRole(db, admin.id)).toBe('admin');
-    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], classes: [], accounts: [], skills: [] });
+    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], classes: [], accounts: [], skills: [], expertMode: false });
     await expect(service.createDraft(learner.id, classKey)).rejects.toThrow(/권한/);
+  });
+
+  it('remembers how much of the editor an account wants to see, and lets it change nothing else', async () => {
+    const author = await account('author');
+    expect((await service.workspace(author.id)).expertMode).toBe(false);
+    expect((await service.setExpertMode(author.id, true)).workspace.expertMode).toBe(true);
+    expect((await service.workspace(author.id)).expertMode).toBe(true);
+    // It is a setting, not a permission: writing content is still decided by the role.
+    expect((await service.setExpertMode(author.id, true)).workspace.role).toBe('author');
+    expect((await service.setExpertMode(author.id, false)).workspace.expertMode).toBe(false);
+    const learner = await account();
+    await expect(service.setExpertMode(learner.id, true)).rejects.toThrow(/권한/);
+  });
+
+  it('judges an answer tried against a draft the way the lesson will, and keeps nothing', async () => {
+    const admin = await account('admin');
+    const created = await service.createDraft(admin.id, classKey);
+    const draftId = created.draft!.id;
+    const problem = created.draft!.edit.problems[0];
+    const written = problem.gradingSpec.kind === 'integer'
+      ? String(problem.gradingSpec.value)
+      : `${problem.gradingSpec.numerator}/${problem.gradingSpec.denominator}`;
+
+    const right = await service.tryAnswer(admin.id, draftId, problem.problemVersionId, written, false);
+    expect(right.tried).toMatchObject({ status: 'correct', assisted: false });
+    const wrong = await service.tryAnswer(admin.id, draftId, problem.problemVersionId, '9999', false);
+    expect(wrong.tried!.status).toBe('incorrect');
+    // The same grader the learning API uses, so an author reads the words a learner will read.
+    const helped = await service.tryAnswer(admin.id, draftId, problem.problemVersionId, written, true);
+    expect(helped.tried).toMatchObject({ status: 'correct', assisted: true });
+    expect(helped.tried!.message).not.toBe(right.tried!.message);
+
+    const hinted = await service.draftHint(admin.id, draftId, problem.problemVersionId);
+    expect(hinted.hint).toEqual(problem.hints);
+
+    // Trying is not learning: no attempt, no hint use, no progress is written for whoever tried.
+    expect(await db.attempt.count({ where: { userId: admin.id } })).toBe(0);
+    expect(await db.hintUse.count({ where: { userId: admin.id } })).toBe(0);
+    expect(await db.enrollment.count({ where: { userId: admin.id } })).toBe(0);
+
+    await expect(service.tryAnswer(admin.id, draftId, 'no-such-problem', written, false)).rejects.toThrow(/문항/);
+    // Someone else's draft stays someone else's, however the question is reached.
+    const other = await account('author');
+    await expect(service.tryAnswer(other.id, draftId, problem.problemVersionId, written, false)).rejects.toThrow(/다른 사람/);
+    await service.deleteDraft(admin.id, draftId);
   });
 
   it('stays closed unless the deployment opens it, and then needs no account of its own', async () => {

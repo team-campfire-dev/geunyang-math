@@ -51,6 +51,12 @@
 .editor-bar .back-button { margin-bottom: 0; }
 .editor-bar-side { display: flex; align-items: center; gap: 8px; }
 .authoring-page .pill.warn { background: #fdefe2; color: var(--editor-warn); }
+/* Writing the lesson, or reading it the way it will be read. Two words, one of them true at a time. */
+.editor-mode { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 8px; background: var(--editor-sunken); }
+.editor-mode button { padding: 6px 13px; border-radius: 6px; font-size: 12px; color: var(--editor-help); }
+.editor-mode button.active { background: var(--white); color: var(--editor-active-text); font-weight: 600; box-shadow: 0 1px 2px #6f825518; }
+.editor-trying-note { margin: 0 0 16px; padding: 11px 14px; border: 1px dashed #cdd8bd; border-radius: 8px;
+  background: var(--editor-sunken); }
 
 /* What was just removed, and the way back to it. Undo is a keystroke; this is the same move for a
    hand that never learned the keystroke, and it says which one of them the click undoes. */
@@ -59,6 +65,9 @@
   box-shadow: 0 6px 16px #6f825522; font-size: 13px; line-height: 1.7; color: var(--editor-label); }
 .editor-toast > span { flex: 1; min-width: 0; }
 .editor-toast .text-button { flex-shrink: 0; font-size: 13px; }
+
+/* Nothing to inspect while the lesson is being tried, so the lesson takes the room. */
+.editor-layout.trying { grid-template-columns: 200px minmax(0, 1fr); }
 
 /* The steps of the lesson, the lesson itself, and what the chosen thing is made of. The middle is
    the lesson as a learner will read it — there is no preview beside it, because it is the preview. */

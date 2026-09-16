@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useRef, type ReactNode, type RefObject } from 'react';
-import type { ContentBlock, ClassSection } from '@/shared/api';
+import type { AttemptView, ContentBlock, ClassSection } from '@/shared/api';
 import { blockFormOf, sectionRoleLabels, toPublicProblem, type DraftMeta, type DraftProblem, type TermChoice } from '@/shared/authoring';
 import { ContentBlocks } from '@/features/learning/content-blocks';
+import { ProblemCard, type ProblemActions } from '@/features/learning/problem-card';
 import { Icon } from '@/features/learning/icons';
 import { useExpertMode } from './expert-mode';
 import { useTermMentions } from './term-mentions';
@@ -74,14 +75,21 @@ function MentionParagraph({ block, terms, onChange }: {
  * puts a frame around each so it can be picked. A paragraph is the exception — chosen, it becomes
  * the text it is made of, because a paragraph is written by typing into it.
  */
-export function LessonSheet({ meta, section, index, problems, terms, selected, published, onMeta, onSection, onBlocks, onSelect, add }: {
+export function LessonSheet({ meta, section, index, problems, terms, selected, published, trying, onMeta, onSection, onBlocks, onSelect, add }: {
   meta: DraftMeta; section: ClassSection; index: number; problems: DraftProblem[]; terms: TermChoice[];
   selected: number | null; published: boolean;
+  /**
+   * Set while the lesson is being tried rather than written. Questions are answered for real, and
+   * nothing on the page may be picked or typed into — an author trying their own lesson should meet
+   * exactly the screen a learner meets, with no handles on it.
+   */
+  trying?: { actions: (problemVersionId: string) => ProblemActions; attempts: Record<string, AttemptView>; busy: boolean };
   onMeta: (next: DraftMeta) => void; onSection: (next: ClassSection) => void;
   onBlocks: (blocks: ContentBlock[]) => void; onSelect: (index: number | null) => void; add: ReactNode;
 }) {
   const expert = useExpertMode();
   const publicProblems = problems.map(toPublicProblem);
+  const fixed = published || !!trying;
   const write = (position: number, next: ContentBlock) =>
     onBlocks(section.contentBlocks.map((item, at) => (at === position ? next : item)));
 
@@ -89,7 +97,7 @@ export function LessonSheet({ meta, section, index, problems, terms, selected, p
     <div className="lesson-header sheet-header">
       <div>
         <span className="eyebrow">기초 수학 · {meta.estimatedMinutes}분 클래스</span>
-        {published
+        {fixed
           ? <h1>{meta.title}</h1>
           : <InlineText className="sheet-class-title" label="수업 제목" value={meta.title} maxLength={191}
               placeholder="수업 제목" onChange={(title) => onMeta({ ...meta, title })} />}
@@ -97,19 +105,23 @@ export function LessonSheet({ meta, section, index, problems, terms, selected, p
     </div>
 
     {/* Clicking the paper, rather than anything on it, is how a choice is let go of. */}
-    <article className="lesson-sheet" onClick={() => onSelect(null)}>
+    <article className="lesson-sheet" onClick={() => !fixed && onSelect(null)}>
       <div className="lesson-step-label">{String(index + 1).padStart(2, '0')}<i />{sectionRoleLabels[section.role]}</div>
-      {published
+      {fixed
         ? <h2>{section.title}</h2>
         : <InlineText className="sheet-section-title" label="단계 제목" value={section.title} maxLength={500}
             placeholder="단계 제목" onChange={(title) => onSection({ ...section, title })} />}
 
       <ContentBlocks blocks={section.contentBlocks} problems={publicProblems}
-        renderProblem={(problem) => <div className="problem-card">
-          <div className="problem-kicker"><Icon name="pencil" size={14} />문항 미리보기{expert && <span>{problem.problemVersionId}</span>}</div>
-          <ContentBlocks blocks={problem.promptContent} />
-        </div>}
+        renderProblem={(problem) => (trying
+          ? <ProblemCard key={problem.problemVersionId} problem={problem} attempt={trying.attempts[problem.problemVersionId]}
+              actions={trying.actions(problem.problemVersionId)} busy={trying.busy} submitLabel="정답 확인" />
+          : <div className="problem-card">
+            <div className="problem-kicker"><Icon name="pencil" size={14} />문항 미리보기{expert && <span>{problem.problemVersionId}</span>}</div>
+            <ContentBlocks blocks={problem.promptContent} />
+          </div>)}
         wrap={(block, position, drawn, className) => {
+          if (trying) return <div key={block.blockId} className={className}>{drawn}</div>;
           const chosen = position === selected;
           const writing = chosen && !published && block.kind === 'core.rich_text';
           const label = blockFormOf(block)?.label ?? `${block.kind}@${block.typeVersion}`;
@@ -128,7 +140,7 @@ export function LessonSheet({ meta, section, index, problems, terms, selected, p
           </div>;
         }} />
 
-      {!published && <div className="sheet-add" onClick={(event) => event.stopPropagation()}>{add}</div>}
+      {!fixed && <div className="sheet-add" onClick={(event) => event.stopPropagation()}>{add}</div>}
     </article>
   </div>;
 }

@@ -3,6 +3,7 @@ import { z } from 'zod';
 import type { PrismaClient } from '@prisma/client';
 import { canonicalJson, ContentError } from '@/core/content-bundle';
 import { validateClass, type StoredClass, type StoredProblem } from '@/core/content';
+import { gradeAnswer } from '@/core/grading';
 import { classRecord, importContent, publishedProblemRecords, termDefinitions } from './content-store';
 import { AppError } from './errors';
 import type { AnswerSpec } from '@/shared/answer';
@@ -74,6 +75,9 @@ export const authoringActionSchema = z.discriminatedUnion('action', [
     blocks: blockList.min(1).max(20),
   }).strict() }).strict(),
   z.object({ action: z.literal('editor.expertMode'), on: z.boolean() }).strict(),
+  z.object({ action: z.literal('draft.tryAnswer'), draftId: id, problemVersionId: id,
+    answer: z.string().trim().min(1).max(100), assisted: z.boolean() }).strict(),
+  z.object({ action: z.literal('draft.openHint'), draftId: id, problemVersionId: id }).strict(),
 ]);
 
 /**
@@ -441,6 +445,32 @@ export class AuthoringService {
     return { workspace: await this.workspace(userId) };
   }
 
+  /** The question as the draft holds it, for an author answering their own work. */
+  private async draftProblem(userId: string, draftId: string, problemVersionId: string): Promise<StoredProblem> {
+    const role = await this.require(userId);
+    const row = await this.load(draftId, userId, role);
+    const document = row.document as unknown as StoredClass;
+    const problem = document.problems.find((item) => item.problemVersionId === problemVersionId);
+    if (!problem) throw new AppError(404, 'problem_missing', '이 초안에 없는 문항이에요. 저장한 뒤 다시 해 보세요.');
+    return problem;
+  }
+
+  /**
+   * Judges an answer an author tried against their own draft. It is the learning API's grader, so
+   * what the editor shows is what a learner will be told, down to the wording. Nothing is written:
+   * the account trying this is writing the question, not learning from it, and an attempt recorded
+   * here would become evidence about a person who never answered anything.
+   */
+  async tryAnswer(userId: string, draftId: string, problemVersionId: string, answer: string, assisted: boolean): Promise<AuthoringResponse> {
+    const problem = await this.draftProblem(userId, draftId, problemVersionId);
+    return { workspace: await this.workspace(userId), tried: gradeAnswer(answer, problem.gradingSpec, assisted) };
+  }
+
+  async draftHint(userId: string, draftId: string, problemVersionId: string): Promise<AuthoringResponse> {
+    const problem = await this.draftProblem(userId, draftId, problemVersionId);
+    return { workspace: await this.workspace(userId), hint: problem.hints };
+  }
+
   async createDraft(userId: string, classKey: string): Promise<AuthoringResponse> {
     await this.require(userId);
     const versions = await this.db.classVersion.findMany({ where: { classKey }, orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }], select: { id: true } });
@@ -564,6 +594,8 @@ export class AuthoringService {
       case 'term.list': return this.listTerms(userId, action.scopeKind, action.scopeKey);
       case 'term.save': return this.saveTerm(userId, action.edit);
       case 'editor.expertMode': return this.setExpertMode(userId, action.on);
+      case 'draft.tryAnswer': return this.tryAnswer(userId, action.draftId, action.problemVersionId, action.answer, action.assisted);
+      case 'draft.openHint': return this.draftHint(userId, action.draftId, action.problemVersionId);
     }
   }
 }
