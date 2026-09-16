@@ -4,7 +4,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { canonicalJson, parseContentBundle, validateReferences } from '@/core/content-bundle';
-import { blockOf, currentDiagnostic, exportContent, importContent, indexClassDocument, publishBundle, verifyContent } from '@/server/content-store';
+import { blockOf, currentDiagnostic, currentTerms, exportContent, importContent, indexClassDocument, publishBundle, verifyContent } from '@/server/content-store';
 import initial from './fixtures/initial-content.json';
 import { seedClasses } from './fixtures/content';
 
@@ -220,6 +220,9 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     await importContent(db, { ...empty(), diagnostics: [definition] });
     try {
       expect((await currentDiagnostic(db))?.versionId).toBe(definition.versionId);
+      // A diagnostic question is a prompt and nothing else, and that prompt is rows like any other.
+      expect((await db.contentBlock.findMany({ where: { ownerKind: 'problem', ownerVersionId: definition.versionId },
+        orderBy: { order: 'asc' } })).map(blockOf)).toEqual(definition.problems[0].promptContent);
       const fresh = await learner();
       const state = (await service.act(fresh.id, { action: 'diagnostic.start' })).state;
       expect(state.diagnosticOffering).toMatchObject({ title: 'DB 진단', total: 1, estimatedMinutes: 1 });
@@ -237,7 +240,8 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     } finally {
       // Remove only this test's offer so other suites still start the baseline diagnostic.
       // Runs have their own immutable snapshot, with no FK to the live offer.
-      // The question index belongs to the version, so it goes with it or verification fails.
+      // The rows a version is read from belong to it, so they go with it or verification fails.
+      await db.contentBlock.deleteMany({ where: { ownerVersionId: definition.versionId } });
       await db.publishedProblem.deleteMany({ where: { ownerKind: 'diagnostic', ownerVersionId: definition.versionId } });
       await db.diagnosticVersion.delete({ where: { id: definition.versionId } });
     }
@@ -322,6 +326,28 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
       await db.classSection.update({ where, data: { title: c.sections[0].title } });
     }
     expect((await service.classDocument(c.public.classKey)).sections[0].title).toBe(c.sections[0].title);
+  });
+
+  it('reads a definition from its rows, and says so when they disagree with the document', async () => {
+    const key = `term.rows.${randomUUID()}`;
+    const term = { ...structuredClone(termFixture), versionId: `${key}:v1`, termKey: key };
+    term.blocks = [{ ...term.blocks[0], blockId: `${key}:v1:b1` }];
+    await importContent(db, { ...empty(), terms: [term] });
+    const where = { ownerKind_ownerVersionId_ownerId_slot_order: { ownerKind: 'term',
+      ownerVersionId: term.versionId, ownerId: term.versionId, slot: 'body', order: 0 } };
+    const stored = await db.contentBlock.findUniqueOrThrow({ where });
+    expect(blockOf(stored)).toEqual(term.blocks[0]);
+
+    const asked = [{ termKey: key, scopeKind: 'global' as const, scopeKey: '' }];
+    try {
+      await db.contentBlock.update({ where, data: { payload: { text: '행에서 고친 정의예요.' } } });
+      const [definition] = await currentTerms(db, asked);
+      expect((definition.blocks[0].payload as { text: string }).text).toBe('행에서 고친 정의예요.');
+      await expect(verifyContent(db)).rejects.toThrow(/disagree about a term/);
+    } finally {
+      await db.contentBlock.update({ where, data: { payload: stored.payload as never } });
+    }
+    expect((await currentTerms(db, asked))[0].blocks).toEqual(term.blocks);
   });
 
   it('names published concepts for signed-out visitors and withholds skills without a released class', async () => {

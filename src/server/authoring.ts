@@ -3,7 +3,7 @@ import { z } from 'zod';
 import type { PrismaClient } from '@prisma/client';
 import { canonicalJson, ContentError } from '@/core/content-bundle';
 import { validateClass, type StoredClass, type StoredProblem } from '@/core/content';
-import { classRecord, importContent } from './content-store';
+import { classRecord, importContent, publishedProblemRecords, termDefinitions } from './content-store';
 import { AppError } from './errors';
 import type { AnswerSpec } from '@/shared/answer';
 import type { ContentBlock } from '@/shared/api';
@@ -149,12 +149,11 @@ const storedProblem = (problem: DraftProblem): StoredProblem => ({
 type PublishedProblems = { document: Map<string, string>; taken: Set<string> };
 async function publishedProblems(db: PrismaClient, named: string[]): Promise<PublishedProblems> {
   const [wanted, names] = await Promise.all([
-    named.length ? db.publishedProblem.findMany({ where: { problemVersionId: { in: [...new Set(named)] } },
-      select: { problemVersionId: true, document: true }, distinct: ['problemVersionId'] }) : [],
+    publishedProblemRecords(db, named),
     db.publishedProblem.findMany({ select: { problemVersionId: true }, distinct: ['problemVersionId'] }),
   ]);
   return {
-    document: new Map(wanted.map(row => [row.problemVersionId, canonicalJson(row.document)])),
+    document: new Map([...wanted].map(([problemVersionId, problem]) => [problemVersionId, canonicalJson(problem)])),
     taken: new Set(names.map(row => row.problemVersionId)),
   };
 }
@@ -394,14 +393,13 @@ export class AuthoringService {
     await this.requireTermScope(userId, scopeKind, scopeKey);
     const rows = await this.db.termVersion.findMany({ where: { scopeKind, scopeKey }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
     const seen = new Set<string>();
-    const terms: TermSummary[] = [];
-    for (const row of rows) {
-      if (seen.has(row.termKey)) continue;
-      seen.add(row.termKey);
-      terms.push({ versionId: row.id, termKey: row.termKey, scopeKind, scopeKey, skillKey: row.skillKey,
-        label: row.label, summary: row.summary, blocks: structuredClone(row.document) as unknown as ContentBlock[],
-        publishedAt: row.publishedAt.toISOString() });
-    }
+    const latest = rows.filter((row) => { if (seen.has(row.termKey)) return false; seen.add(row.termKey); return true; });
+    const definitions = await termDefinitions(this.db, latest);
+    const terms: TermSummary[] = latest.map((row, index) => ({
+      versionId: row.id, termKey: row.termKey, scopeKind, scopeKey, skillKey: row.skillKey,
+      label: row.label, summary: row.summary, blocks: definitions[index].blocks as ContentBlock[],
+      publishedAt: row.publishedAt.toISOString(),
+    }));
     terms.sort((left, right) => left.label.localeCompare(right.label, 'ko'));
     return { workspace: await this.workspace(userId), terms };
   }
