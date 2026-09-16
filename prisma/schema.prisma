@@ -106,11 +106,8 @@ model ClassVersion {
   classKey    String @db.VarChar(100)
   title       String @db.VarChar(191)
   order       Int
-  /// The whole class as one immutable document. Still written, no longer read: the rows below say
-  /// the same thing, and a later change removes this once they have carried a release.
-  document    Json
   /// Everything a class says about itself that is not a section, a block or a question — `public`
-  /// and `homeworkProblemIds`.
+  /// and `homeworkProblemIds`. The rest is in ClassSection, ContentBlock and PublishedProblem.
   metadata    Json
   contentHash String @db.VarChar(64)
   publishedAt DateTime @default(now())
@@ -121,7 +118,7 @@ model ClassVersion {
 /**
  * Every question a published version holds, by name. A draft asks whether editing a question in
  * place would change what an already answered question meant, and that is a lookup by name — not a
- * reason to read every published document. The owning document stays the record; this repeats it.
+ * reason to read every published document. With its blocks it is also the whole of the question.
  */
 model PublishedProblem {
   ownerKind        String @db.VarChar(20)
@@ -136,8 +133,6 @@ model PublishedProblem {
   responseSpec     Json
   gradingSpec      Json
   hintAvailable    Boolean
-  /// The whole question as published, blocks included. Written and checked, no longer read.
-  document         Json
   @@id([ownerKind, ownerVersionId, problemVersionId])
   @@index([problemVersionId])
   @@index([ownerKind, ownerVersionId, order])
@@ -204,7 +199,7 @@ model TermVersion {
   skill       Skill @relation(fields: [skillKey], references: [key])
   label       String @db.VarChar(191)
   summary     String @db.VarChar(500)
-  document    Json
+  /// The definition itself is blocks, and they are rows of ContentBlock.
   contentHash String @db.VarChar(64)
   publishedAt DateTime @default(now())
   @@index([termKey, publishedAt])
@@ -217,7 +212,7 @@ model DiagnosticVersion {
   title            String @db.VarChar(191)
   description      String @db.Text
   estimatedMinutes Int
-  document         Json
+  /// The questions are rows of PublishedProblem, and their prompts rows of ContentBlock.
   contentHash      String @db.VarChar(64)
   publishedAt      DateTime @default(now())
   @@index([diagnosticKey, publishedAt])

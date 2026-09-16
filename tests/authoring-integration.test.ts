@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createDatabase } from '@/server/db';
 import { AuthoringService, authoringRole, authoringRoleDetail, openAuthoring, openAuthoringAccount } from '@/server/authoring';
-import { importContent } from '@/server/content-store';
+import { classRecord, importContent, termDefinitions } from '@/server/content-store';
 import type { StoredClass } from '@/core/content';
 import { newProblem, nextProblemVersionId, type DraftEdit, type DraftProblem } from '@/shared/authoring';
 import { seedClasses } from './fixtures/content';
@@ -126,8 +126,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const published = await service.publishDraft(admin.id, draftId);
     expect(published.publishedVersionId).toBe(versionId);
     expect(published.draft!.status).toBe('published');
-    const row = await db.classVersion.findUniqueOrThrow({ where: { id: versionId } });
-    const document = row.document as unknown as StoredClass;
+    const document = await classRecord(db, versionId) as StoredClass;
     expect(document.sections[0].contentBlocks.at(-1)!.kind).toBe('core.scene');
     // The published class carries the halves that follow from the answer, restated when it was saved.
     expect(document.problems[0].responseSpec.kind).toBe(document.problems[0].gradingSpec.kind);
@@ -206,7 +205,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
       problem.gradingSpec = { kind: 'rational', numerator: 2, denominator: 3 };
     }));
     await service.publishDraft(admin.id, draftId);
-    const document = (await db.classVersion.findUniqueOrThrow({ where: { id: versionId } })).document as unknown as StoredClass;
+    const document = await classRecord(db, versionId) as StoredClass;
     const written = document.problems.find((problem) => problem.problemVersionId === `${classKey}:check-1:${suffixOf(versionId)}`)!;
     expect(written.gradingSpec).toEqual({ kind: 'rational', numerator: 2, denominator: 3 });
     expect(document.problems.some((problem) => problem.problemVersionId === answered)).toBe(false);
@@ -232,7 +231,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     expect(saved.draft!.issues).toEqual([]);
     expect(saved.draft!.edit.problems.map((problem) => problem.problemVersionId)).toContain(written.problemVersionId);
     await service.publishDraft(admin.id, draftId);
-    const document = (await db.classVersion.findUniqueOrThrow({ where: { id: versionId } })).document as unknown as StoredClass;
+    const document = await classRecord(db, versionId) as StoredClass;
     const stored = document.problems.find((problem) => problem.problemVersionId === written.problemVersionId)!;
     // A question with no hints says so, and its response format restates the answer that was written.
     expect(stored.hintAvailable).toBe(false);
@@ -332,15 +331,14 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
   it('writes a definition the class keeps, and rewrites it as the next version', async () => {
     const admin = await account('admin');
     const termKey = `term.class.${randomUUID()}`;
-    const skillKey = (await db.classVersion.findUniqueOrThrow({ where: { id: `${classKey}:v1` } })
-      .then(row => (row.document as unknown as StoredClass).public.skillKeys[0]));
+    const skillKey = (await classRecord(db, `${classKey}:v1`))!.public.skillKeys[0];
     const published = await service.saveTerm(admin.id, { termKey, scopeKind: 'class', scopeKey: classKey, skillKey,
       label: '이 수업의 용어', summary: '이 수업에서만 쓰는 풀이예요.',
       blocks: [{ blockId: 'term:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '뜻을 풀어 썼어요.' } }] });
     expect(published.publishedTermVersionId).toBe(`${classKey}:${termKey}:v1`);
     // Blocks are named after the version that holds them, so the editor never chose the ID.
     const row = await db.termVersion.findUniqueOrThrow({ where: { id: `${classKey}:${termKey}:v1` } });
-    expect((row.document as { blockId: string }[])[0].blockId).toBe(`${classKey}:${termKey}:v1:b1`);
+    expect((await termDefinitions(db, [row]))[0].blocks[0].blockId).toBe(`${classKey}:${termKey}:v1:b1`);
     expect(row.scopeKind).toBe('class');
     expect(row.scopeKey).toBe(classKey);
 
@@ -363,8 +361,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const author = await account('author');
     const learner = await account();
     const termKey = `term.scope.${randomUUID()}`;
-    const skillKey = (await db.classVersion.findUniqueOrThrow({ where: { id: `${classKey}:v1` } })
-      .then(row => (row.document as unknown as StoredClass).public.skillKeys[0]));
+    const skillKey = (await classRecord(db, `${classKey}:v1`))!.public.skillKeys[0];
     const edit = { termKey, scopeKind: 'global' as const, scopeKey: '', skillKey, label: '사전 용어', summary: '사전이 쓴 풀이예요.',
       blocks: [{ blockId: 'term:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '사전 정의' } }] };
     await expect(service.saveTerm(author.id, edit)).rejects.toThrow(/공통 사전은 관리자만/);
@@ -394,8 +391,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
   it('offers a draft the terms it may link, and no others', async () => {
     const admin = await account('admin');
     const suffix = randomUUID();
-    const skillKey = (await db.classVersion.findUniqueOrThrow({ where: { id: `${classKey}:v1` } })
-      .then(row => (row.document as unknown as StoredClass).public.skillKeys[0]));
+    const skillKey = (await classRecord(db, `${classKey}:v1`))!.public.skillKeys[0];
     const define = (termKey: string, scopeKind: 'global' | 'class', scopeKey: string, label: string) =>
       service.saveTerm(admin.id, { termKey, scopeKind, scopeKey, skillKey, label, summary: `${label} 풀이예요.`,
         blocks: [{ blockId: 'term:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: label } }] });
