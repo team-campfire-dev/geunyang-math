@@ -2,7 +2,7 @@
 // offer a form for every published block kind without importing the server's validation schemas,
 // and so the server can prune the same optional fields before it validates what the editor sent.
 import type { AnswerSpec } from './answer';
-import type { ClassSection, ContentBlock, PublicProblem } from './api';
+import type { ClassSection, ContentBlock, GradeResult, PublicProblem } from './api';
 
 /** A role on an account, not a property of one operator: a teacher system grants the same roles. */
 export type AuthoringRole = 'admin' | 'author';
@@ -23,10 +23,24 @@ export type AccountRole = {
 
 export type DraftSummary = {
   id: string; classKey: string; versionId: string; baseVersionId: string | null; title: string;
-  status: 'draft' | 'published'; publishedVersionId: string | null; updatedAt: string;
+  /**
+   * Where the draft is. `review` is a writer saying they are done and asking the administrator who
+   * may publish to look — it locks nothing, because being asked to look at something is not a
+   * reason to stop being able to fix it.
+   */
+  status: 'draft' | 'review' | 'published'; publishedVersionId: string | null; updatedAt: string;
   authorName: string; mine: boolean;
 };
-export type DraftMeta = { versionId: string; title: string; summary: string; estimatedMinutes: number };
+export const draftStatusLabels: Record<DraftSummary['status'], string> = {
+  draft: '작성 중', review: '검토 요청', published: '발행함',
+};
+/** `skillKeys` are the concepts this class says it teaches; a question may only claim one of them. */
+export type DraftMeta = { versionId: string; title: string; summary: string; estimatedMinutes: number; skillKeys: string[] };
+/** What each step of a lesson is for, in the words the learner's outline uses for it too. */
+export const sectionRoleLabels: Record<ClassSection['role'], string> = {
+  explanation: '설명', worked_example: '예시', practice: '연습', check: '확인', summary: '정리',
+};
+export const sectionRoles = Object.keys(sectionRoleLabels) as ClassSection['role'][];
 /**
  * A question as the editor holds it. Answers, hints and solutions belong to the draft, so this
  * reaches a browser only where the account holds a content role. `responseSpec` and `hintAvailable`
@@ -43,9 +57,46 @@ export type DraftProblem = {
 };
 /** What an editor may change. Published questions are immutable, so the server renames what changed. */
 export type DraftEdit = { meta: DraftMeta; sections: ClassSection[]; problems: DraftProblem[] };
-/** `skillKeys` are the class's own, carried so a question may only claim a concept the class teaches. */
 /** `terms` are the definitions this class may link: the shared dictionary and its own. */
-export type DraftDetail = DraftSummary & { edit: DraftEdit; skillKeys: string[]; terms: TermChoice[]; issues: string[] };
+/**
+ * Something that stops a draft from publishing, and where in the draft it is. The rules speak in
+ * English because they are the same rules the import command enforces, but where they apply is the
+ * editor's to say: an author should be taken to the block a rule refused, not handed its path.
+ */
+export type DraftIssue = {
+  message: string;
+  /** The validator's own path into the document, for whoever also operates the service. */
+  path?: string;
+  sectionId?: string;
+  blockId?: string;
+  problemVersionId?: string;
+  /** The field inside a block's payload, so the editor can name it the way that block's form does. */
+  field?: string;
+};
+/**
+ * `homeworkProblemIds` are the questions the class sets as homework. They are not a lesson's to
+ * write or to take away — this screen does not edit them yet — but it has to know which questions
+ * they are, because those are held by something no section shows.
+ */
+export type DraftDetail = DraftSummary & {
+  edit: DraftEdit; terms: TermChoice[]; issues: DraftIssue[]; homeworkProblemIds: string[];
+};
+
+/**
+ * The shape of a draft: the steps it holds, the blocks in each, the questions the document keeps and
+ * the order an activity names them in. Two edits that share a shape differ only in what someone
+ * typed, which is what lets the editor fold a run of keystrokes into one undo step while still
+ * breaking a step wherever something was added, removed, moved or renamed.
+ */
+export function editShape(edit: DraftEdit): string {
+  const named = (blocks: ContentBlock[]) => blocks.map((block) => (block.kind === 'core.problem_set' && Array.isArray(block.payload.problemVersionIds)
+    ? `${block.blockId}(${(block.payload.problemVersionIds as string[]).join(',')})`
+    : block.blockId)).join(',');
+  const sections = edit.sections.map((section) => `${section.sectionId}:${section.role}>${named(section.contentBlocks)}`).join('|');
+  const problems = edit.problems.map((problem) =>
+    `${problem.problemVersionId}>${named([...problem.promptContent, ...problem.hints, ...problem.solution])}`).join('|');
+  return `${sections}#${problems}`;
+}
 
 export const responseSpecOf = (spec: AnswerSpec): PublicProblem['responseSpec'] =>
   (spec.kind === 'rational' && spec.requiredForm ? { kind: 'rational', requiredForm: spec.requiredForm } : { kind: spec.kind });
@@ -70,9 +121,21 @@ export type SkillChoice = { key: string; label: string };
 export type AuthoringWorkspace = {
   role: AuthoringRole | null; drafts: DraftSummary[]; classes: ClassChoice[];
   accounts: AccountRole[]; skills: SkillChoice[];
+  /**
+   * Whether this account reads the editor as someone who also operates the service. It decides what
+   * the screen shows, never what it may do: identifiers, the compatibility switches and the
+   * validator's own words appear with it on, and what a lesson is made of is all that is left with
+   * it off.
+   */
+  expertMode: boolean;
 };
+/** A key is what every name in a class is built from, so it stays to the letters a name may hold. */
+export const classKeyPattern = /^[a-z0-9][a-z0-9-]{1,63}$/;
 export type AuthoringAction =
   | { action: 'draft.create'; classKey: string }
+  /** A class nobody has published yet. It starts as a draft like any other, with one step in it. */
+  | { action: 'class.create'; classKey: string; title: string; skillKeys: string[] }
+  | { action: 'draft.review'; draftId: string; asking: boolean }
   | { action: 'draft.save'; draftId: string; edit: DraftEdit }
   | { action: 'draft.validate'; draftId: string }
   | { action: 'draft.publish'; draftId: string }
@@ -81,13 +144,46 @@ export type AuthoringAction =
   | { action: 'role.grant'; userId: string; role: AuthoringRole }
   | { action: 'role.revoke'; userId: string }
   | { action: 'term.list'; scopeKind: EditableTermScope; scopeKey: string }
-  | { action: 'term.save'; edit: TermEdit };
+  | { action: 'term.save'; edit: TermEdit }
+  | { action: 'editor.expertMode'; on: boolean }
+  /**
+   * Answering a question of the draft the way a learner would. Nothing is recorded: no attempt, no
+   * progress, no evidence for what to recommend next. The answer is judged by the same grader the
+   * learning API uses, which is why it is judged on the server rather than in the editor.
+   */
+  | { action: 'draft.tryAnswer'; draftId: string; problemVersionId: string; answer: string; assisted: boolean }
+  | { action: 'draft.openHint'; draftId: string; problemVersionId: string };
 export type AuthoringResponse = {
   workspace: AuthoringWorkspace; draft?: DraftDetail; publishedVersionId?: string;
   matches?: AccountRole[]; terms?: TermSummary[]; publishedTermVersionId?: string;
+  /** What the grader said about an answer tried in the editor, and the hint a question carries. */
+  tried?: GradeResult; hint?: ContentBlock[];
 };
 
 const versionSuffix = /:v(\d+)$/;
+/**
+ * How a version reads to someone writing a lesson. `fraction-meaning:v4` is the name the records
+ * use; what an author needs to know is that this is the fourth one. A name that does not end in a
+ * number has nothing to shorten, so it is shown as it is rather than guessed at.
+ */
+export const versionLabel = (versionId: string) => {
+  const match = versionSuffix.exec(versionId);
+  return match ? `${match[1]}판` : versionId;
+};
+
+/**
+ * The first words of a question, for a list that would otherwise name it by its identifier. A
+ * formula is written between dollars and is drawn, not read, so a line with no room to draw one
+ * says that a formula is there rather than showing its source.
+ */
+export function problemGist(problem: DraftProblem, limit = 42): string {
+  const first = problem.promptContent.find((block) => typeof block.payload.text === 'string');
+  const text = typeof first?.payload.text === 'string'
+    ? first.payload.text.replace(/\$[^$]*\$/g, '[식]').replace(/\s+/g, ' ').trim()
+    : '';
+  return text.length > limit ? `${text.slice(0, limit)}…` : text;
+}
+
 /** Generated names end in the version they were written for, the way published records read. */
 const suffixOf = (versionId: string) => (versionSuffix.test(versionId) ? versionId.slice(versionId.lastIndexOf(':') + 1) : 'v1');
 /** Published versions are immutable, so every edit becomes the next version of the same class. */
@@ -196,6 +292,31 @@ export function renameProblemReferences(sections: ClassSection[], renames: Map<s
   }));
 }
 
+/** Every question the activities in these blocks name, in the order they name them. */
+export const problemIdsIn = (blocks: ContentBlock[]): string[] =>
+  blocks.flatMap((block) => (block.kind === 'core.problem_set' && Array.isArray(block.payload.problemVersionIds)
+    ? (block.payload.problemVersionIds as string[])
+    : []));
+
+/**
+ * The questions nothing in the class holds any more. A question belongs to exactly one activity, so
+ * taking an activity out of a lesson leaves its questions held by nothing, and publishing refuses a
+ * class that carries one. Homework holds questions too, and those are held whether or not any
+ * section shows them.
+ */
+export function looseProblems(edit: DraftEdit, homework: string[]): DraftProblem[] {
+  const held = new Set([...problemIdsIn(edit.sections.flatMap((section) => section.contentBlocks)), ...homework]);
+  return edit.problems.filter((problem) => !held.has(problem.problemVersionId));
+}
+
+/** The same edit with those questions gone: what an activity held leaves with the activity. */
+export function dropLooseProblems(edit: DraftEdit, homework: string[]): DraftEdit {
+  const loose = looseProblems(edit, homework);
+  if (!loose.length) return edit;
+  const gone = new Set(loose.map((problem) => problem.problemVersionId));
+  return { ...edit, problems: edit.problems.filter((problem) => !gone.has(problem.problemVersionId)) };
+}
+
 /** The questions one activity holds, in the order that activity names them. */
 export function problemsOfBlock(block: ContentBlock, problems: DraftProblem[]): DraftProblem[] {
   const ids = Array.isArray(block.payload.problemVersionIds) ? (block.payload.problemVersionIds as string[]) : [];
@@ -206,13 +327,70 @@ export function problemsOfBlock(block: ContentBlock, problems: DraftProblem[]): 
 export function newProblem(problemVersionId: string, skillKeys: string[]): DraftProblem {
   return {
     problemVersionId, skillKeys: [...skillKeys],
-    promptContent: [{ blockId: `${problemVersionId}:prompt`, kind: 'core.rich_text', typeVersion: 1, required: true,
-      payload: { text: '여기에 문제를 씁니다.' } }],
+    promptContent: [{ blockId: `${problemVersionId}:prompt`, kind: 'core.rich_text', typeVersion: 2, required: true,
+      payload: { text: '여기에 문제를 씁니다.', terms: [] } }],
     gradingSpec: { kind: 'rational', numerator: 1, denominator: 2 },
     hints: [],
-    solution: [{ blockId: `${problemVersionId}:solution`, kind: 'core.rich_text', typeVersion: 1, required: true,
-      payload: { text: '여기에 풀이를 씁니다.' } }],
+    solution: [{ blockId: `${problemVersionId}:solution`, kind: 'core.rich_text', typeVersion: 2, required: true,
+      payload: { text: '여기에 풀이를 씁니다.', terms: [] } }],
   };
+}
+
+/**
+ * A copy of a block placed beside the original. Everything the document names once takes a new name:
+ * the block, and — when the block is an activity — every question it holds, because a question
+ * belongs to exactly one activity and two activities may not name the same one.
+ */
+export function copyBlock(input: {
+  block: ContentBlock; problems: DraftProblem[];
+  classKey: string; sectionId: string; role: string; versionId: string;
+  blockIds: string[]; problemIds: string[];
+}): { block: ContentBlock; problems: DraftProblem[] } {
+  const copied = structuredClone(input.block);
+  copied.blockId = nextBlockId(input.classKey, input.sectionId, copied.kind, input.versionId, input.blockIds);
+  if (copied.kind !== 'core.problem_set') return { block: copied, problems: [] };
+  const held = problemsOfBlock(input.block, input.problems);
+  const problemIds = [...input.problemIds];
+  const problems = held.map((problem) => {
+    const made = copyProblem(problem, input.classKey, input.role, input.versionId, problemIds);
+    problemIds.push(made.problemVersionId);
+    return made;
+  });
+  copied.payload = { ...copied.payload, problemVersionIds: problems.map((problem) => problem.problemVersionId) };
+  return { block: copied, problems };
+}
+
+/** A copy of a question, named after the activity it will sit in, with its own blocks renamed too. */
+export function copyProblem(problem: DraftProblem, classKey: string, role: string, versionId: string, taken: string[]): DraftProblem {
+  return renameProblem(structuredClone(problem), nextProblemVersionId(classKey, role, versionId, taken));
+}
+
+/**
+ * A copy of a step placed beside the original: its own name, new names for every block in it, and
+ * new questions for every activity it holds.
+ */
+export function copySection(input: {
+  section: ClassSection; problems: DraftProblem[];
+  classKey: string; versionId: string; sectionIds: string[]; blockIds: string[]; problemIds: string[];
+}): { section: ClassSection; problems: DraftProblem[] } {
+  const sectionId = nextSectionId(input.classKey, input.section.role, input.versionId, input.sectionIds);
+  const blockIds = [...input.blockIds];
+  const problemIds = [...input.problemIds];
+  const problems: DraftProblem[] = [];
+  const contentBlocks = input.section.contentBlocks.map((block) => {
+    const made = copyBlock({ block, problems: input.problems, classKey: input.classKey, sectionId,
+      role: input.section.role, versionId: input.versionId, blockIds, problemIds });
+    blockIds.push(made.block.blockId);
+    for (const problem of made.problems) problemIds.push(problem.problemVersionId);
+    problems.push(...made.problems);
+    return made.block;
+  });
+  return { section: { ...input.section, sectionId, title: `${input.section.title} 사본`, contentBlocks }, problems };
+}
+
+/** Puts a copy right after what it was copied from, which is where someone looks for it. */
+export function insertAfter<T>(items: T[], index: number, made: T): T[] {
+  return [...items.slice(0, index + 1), made, ...items.slice(index + 1)];
 }
 
 /** Reordering is the same move for blocks, for questions and for the names an activity holds. */
@@ -242,14 +420,15 @@ export type BlockForm = {
 const altHint = '화면 낭독용 이름이에요. 수식 표기 없이 평문으로 씁니다.';
 export const blockForms: BlockForm[] = [
   {
-    kind: 'core.rich_text', typeVersion: 1, label: '본문', hint: '$...$ 안에 수식을 넣을 수 있어요.',
+    kind: 'core.rich_text', typeVersion: 1, label: '글', hint: '$...$ 안에 수식을 넣을 수 있어요.',
     create: () => ({ text: '여기에 설명을 씁니다.' }),
-    fields: [{ key: 'text', label: '본문', kind: 'multiline' }],
+    fields: [{ key: 'text', label: '글', kind: 'multiline' }],
   },
   {
-    kind: 'core.rich_text', typeVersion: 2, label: '본문 + 용어 풀이', hint: '본문에 실제로 있는 낱말을 용어로 연결해요. 지금 배우는 개념의 용어는 서버가 알아서 숨깁니다.',
+    kind: 'core.rich_text', typeVersion: 2, label: '글',
+    hint: '$...$ 안에 수식을 넣을 수 있어요. @를 치면 본문의 낱말에 용어 풀이를 걸 수 있고, 지금 배우는 개념의 용어는 알아서 숨겨집니다.',
     create: () => ({ text: '여기에 설명을 씁니다.', terms: [] }),
-    fields: [{ key: 'text', label: '본문', kind: 'multiline' }],
+    fields: [{ key: 'text', label: '글', kind: 'multiline' }],
     list: {
       key: 'terms', label: '연결할 용어', addLabel: '용어 연결 추가', max: 20,
       create: () => ({ termKey: '', surface: '' }),
@@ -302,6 +481,25 @@ export const blockForms: BlockForm[] = [
     fields: [], editsProblems: true,
   },
 ];
+/**
+ * What a rule refused, named the way this screen names the field it was about. The rule keeps its
+ * own words — they are the import command's words too, and rewriting them here would mean two
+ * descriptions of one refusal — but `payload.text` is not a name anyone typed into, and 「글」 is.
+ */
+export function issueText(issue: DraftIssue, block?: ContentBlock): string {
+  if (!block) return issue.message;
+  // The rule names the kind of block it refused. The card it will be shown on already says that.
+  const said = `Invalid payload for ${blockKey(block)}: `;
+  const message = issue.message.startsWith(said) ? issue.message.slice(said.length) : issue.message;
+  if (!issue.field) return message;
+  const form = blockFormOf(block);
+  const tail = issue.field.split('.').at(-1);
+  const label = form?.fields.find((field) => field.key === issue.field)?.label
+    ?? form?.list?.fields.find((field) => field.key === tail)?.label
+    ?? form?.fields.find((field) => field.key === tail)?.label;
+  return label ? `${label}: ${message}` : message;
+}
+
 export const blockKey = (block: { kind: string; typeVersion: number }) => `${block.kind}@${block.typeVersion}`;
 export const blockFormOf = (block: { kind: string; typeVersion: number }) =>
   blockForms.find((form) => form.kind === block.kind && form.typeVersion === block.typeVersion);
@@ -371,9 +569,18 @@ export function pruneProblems(problems: DraftProblem[]): DraftProblem[] {
     hints: problem.hints.map(pruneBlock), solution: problem.solution.map(pruneBlock) }));
 }
 
-/** Only the definition's own blocks: a definition never embeds a question or another annotation. */
-export const termBlockForms = blockForms.filter((form) =>
-  form.kind !== 'core.problem_set' && !(form.kind === 'core.rich_text' && form.typeVersion === 2));
-
+/**
+ * An author writes one kind of paragraph, not two. Both versions of it are called 글 and both open
+ * for editing, because published classes hold each; which one a palette offers follows from where
+ * the block will sit, so nobody is asked to pick a schema version to get a term link.
+ */
+const paragraph = (form: BlockForm, typeVersion: number) => form.kind === 'core.rich_text' && form.typeVersion === typeVersion;
+/** A lesson's own blocks. Its paragraph is the one that can carry term links. */
+export const classBlockForms = blockForms.filter((form) => !paragraph(form, 1));
 /** A question holds no activity of its own, and a drawing inside one is read rather than arranged. */
-export const problemBlockForms = blockForms.filter((form) => form.kind !== 'core.problem_set');
+export const problemBlockForms = classBlockForms.filter((form) => form.kind !== 'core.problem_set');
+/**
+ * Only the definition's own blocks: a definition never embeds a question, and never a term inside a
+ * term, so its paragraph is the one that carries no links.
+ */
+export const termBlockForms = blockForms.filter((form) => form.kind !== 'core.problem_set' && !paragraph(form, 2));

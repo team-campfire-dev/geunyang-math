@@ -56,8 +56,133 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     expect(await authoringRole(db, learner.id)).toBeNull();
     expect(await authoringRole(db, author.id)).toBe('author');
     expect(await authoringRole(db, admin.id)).toBe('admin');
-    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], classes: [], accounts: [], skills: [] });
+    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], classes: [], accounts: [], skills: [], expertMode: false });
     await expect(service.createDraft(learner.id, classKey)).rejects.toThrow(/권한/);
+  });
+
+  it('remembers how much of the editor an account wants to see, and lets it change nothing else', async () => {
+    const author = await account('author');
+    expect((await service.workspace(author.id)).expertMode).toBe(false);
+    expect((await service.setExpertMode(author.id, true)).workspace.expertMode).toBe(true);
+    expect((await service.workspace(author.id)).expertMode).toBe(true);
+    // It is a setting, not a permission: writing content is still decided by the role.
+    expect((await service.setExpertMode(author.id, true)).workspace.role).toBe('author');
+    expect((await service.setExpertMode(author.id, false)).workspace.expertMode).toBe(false);
+    const learner = await account();
+    await expect(service.setExpertMode(learner.id, true)).rejects.toThrow(/권한/);
+  });
+
+  it('judges an answer tried against a draft the way the lesson will, and keeps nothing', async () => {
+    const admin = await account('admin');
+    const created = await service.createDraft(admin.id, classKey);
+    const draftId = created.draft!.id;
+    const problem = created.draft!.edit.problems[0];
+    const written = problem.gradingSpec.kind === 'integer'
+      ? String(problem.gradingSpec.value)
+      : `${problem.gradingSpec.numerator}/${problem.gradingSpec.denominator}`;
+
+    const right = await service.tryAnswer(admin.id, draftId, problem.problemVersionId, written, false);
+    expect(right.tried).toMatchObject({ status: 'correct', assisted: false });
+    const wrong = await service.tryAnswer(admin.id, draftId, problem.problemVersionId, '9999', false);
+    expect(wrong.tried!.status).toBe('incorrect');
+    // The same grader the learning API uses, so an author reads the words a learner will read.
+    const helped = await service.tryAnswer(admin.id, draftId, problem.problemVersionId, written, true);
+    expect(helped.tried).toMatchObject({ status: 'correct', assisted: true });
+    expect(helped.tried!.message).not.toBe(right.tried!.message);
+
+    const hinted = await service.draftHint(admin.id, draftId, problem.problemVersionId);
+    expect(hinted.hint).toEqual(problem.hints);
+
+    // Trying is not learning: no attempt, no hint use, no progress is written for whoever tried.
+    expect(await db.attempt.count({ where: { userId: admin.id } })).toBe(0);
+    expect(await db.hintUse.count({ where: { userId: admin.id } })).toBe(0);
+    expect(await db.enrollment.count({ where: { userId: admin.id } })).toBe(0);
+
+    await expect(service.tryAnswer(admin.id, draftId, 'no-such-problem', written, false)).rejects.toThrow(/문항/);
+    // Someone else's draft stays someone else's, however the question is reached.
+    const other = await account('author');
+    await expect(service.tryAnswer(other.id, draftId, problem.problemVersionId, written, false)).rejects.toThrow(/다른 사람/);
+    await service.deleteDraft(admin.id, draftId);
+  });
+
+  it('starts a class nobody has published, and refuses a key already spoken for', async () => {
+    const admin = await account('admin');
+    const key = `fresh-${randomUUID()}`.toLowerCase().slice(0, 40);
+    const skillKey = (await classRecord(db, `${classKey}:v1`))!.public.skillKeys[0];
+    const created = await service.createClass(admin.id, key, '처음부터 만든 수업', [skillKey]);
+
+    expect(created.draft!.versionId).toBe(`${key}:v1`);
+    // Nothing to carry over: there is no earlier version of this class to be the next one of.
+    expect(created.draft!.baseVersionId).toBeNull();
+    expect(created.draft!.edit.meta.skillKeys).toEqual([skillKey]);
+    // It explains and then asks, which is the smallest thing publishing would accept.
+    expect(created.draft!.edit.sections.map((section) => section.role)).toEqual(['explanation', 'practice']);
+    expect(created.draft!.edit.problems).toHaveLength(1);
+    expect(created.draft!.edit.problems[0].skillKeys).toEqual([skillKey]);
+    // What it starts as is already a document publishing would take.
+    expect(created.draft!.issues).toEqual([]);
+
+    await expect(service.createClass(admin.id, key, '같은 키', [skillKey])).rejects.toThrow(/클래스 키/);
+    await expect(service.createClass(admin.id, classKey, '발행된 키', [skillKey])).rejects.toThrow(/클래스 키/);
+    await expect(service.createClass(admin.id, `other-${key}`, '없는 개념', ['no-such-skill'])).rejects.toThrow(/개념/);
+    await service.deleteDraft(admin.id, created.draft!.id);
+  });
+
+  it('carries the concepts a class teaches through an edit, since a question may only claim one', async () => {
+    const admin = await account('admin');
+    const created = await service.createDraft(admin.id, classKey);
+    const draftId = created.draft!.id;
+    const before = created.draft!.edit.meta.skillKeys;
+    expect(before.length).toBeGreaterThan(0);
+
+    const widened = structuredClone(created.draft!.edit);
+    widened.meta.skillKeys = [...before, 'fraction.equivalence'];
+    const saved = await service.saveDraft(admin.id, draftId, widened);
+    expect(saved.draft!.edit.meta.skillKeys).toEqual(widened.meta.skillKeys);
+    expect(saved.draft!.issues).toEqual([]);
+    // A class has to teach something, and what the editor may send is where that is enforced.
+    const emptied = structuredClone(created.draft!.edit);
+    emptied.meta.skillKeys = [];
+    await expect(service.act(admin.id, { action: 'draft.save', draftId, edit: emptied })).rejects.toThrow();
+    await service.deleteDraft(admin.id, draftId);
+  });
+
+  it('tells the editor which questions homework holds, since no section shows them', async () => {
+    const admin = await account('admin');
+    const created = await service.createDraft(admin.id, classKey);
+    const homework = created.draft!.homeworkProblemIds;
+    expect(homework.length).toBeGreaterThan(0);
+    // They are questions of the draft, held by something the lesson does not show.
+    for (const id of homework) {
+      expect(created.draft!.edit.problems.some((problem) => problem.problemVersionId === id)).toBe(true);
+      expect(created.draft!.edit.sections.some((section) => section.contentBlocks.some((block) =>
+        Array.isArray(block.payload.problemVersionIds) && (block.payload.problemVersionIds as string[]).includes(id)))).toBe(false);
+    }
+    await service.deleteDraft(admin.id, created.draft!.id);
+  });
+
+  it('lets a writer hand work on without locking it, and lets it be handed back', async () => {
+    const author = await account('author');
+    const admin = await account('admin');
+    const created = await service.createDraft(author.id, classKey);
+    const draftId = created.draft!.id;
+    expect(created.draft!.status).toBe('draft');
+
+    const asked = await service.setReview(author.id, draftId, true);
+    expect(asked.draft!.status).toBe('review');
+    // Being asked to look at something is not a reason its author cannot go on fixing it.
+    const written = await service.saveDraft(author.id, draftId, edited(created.draft!.edit, (sections) => {
+      sections[0].title = '검토 중에도 고친 제목';
+    }));
+    expect(written.draft!.status).toBe('review');
+    expect(written.draft!.edit.sections[0].title).toBe('검토 중에도 고친 제목');
+    // An administrator sees it waiting, and may hand it back.
+    expect((await service.workspace(admin.id)).drafts.find((item) => item.id === draftId)?.status).toBe('review');
+    expect((await service.setReview(admin.id, draftId, false)).draft!.status).toBe('draft');
+
+    const stranger = await account('author');
+    await expect(service.setReview(stranger.id, draftId, true)).rejects.toThrow(/다른 사람/);
+    await service.deleteDraft(author.id, draftId);
   });
 
   it('stays closed unless the deployment opens it, and then needs no account of its own', async () => {
@@ -114,11 +239,47 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
         payload: { alt: '그림', width: 320, height: 200, items: [{ kind: 'strip', x: 20, y: 80, width: 280, height: 40, parts: 4, filled: 9 }] } });
     });
     const saved = await service.saveDraft(admin.id, draftId, broken);
-    expect(saved.draft!.issues.join(' ')).toMatch(/filled must not exceed parts/);
+    expect(saved.draft!.issues.map((issue) => issue.message).join(' ')).toMatch(/filled must not exceed parts/);
+    // A rule says what it refused; the editor is told where, so it can take an author to the block.
+    expect(saved.draft!.issues[0]).toMatchObject({
+      sectionId: created.draft!.edit.sections[0].sectionId,
+      blockId: `${classKey}:explanation:scene:v2`,
+    });
+    expect(saved.draft!.issues[0].path).toContain('sections.0.contentBlocks.');
     const fixed = edited(created.draft!.edit, (sections) => { sections[0].contentBlocks.push(drawing(`${classKey}:explanation:scene:v2`)); });
     const good = await service.saveDraft(admin.id, draftId, fixed);
     expect(good.draft!.issues).toEqual([]);
     expect((await service.validateDraft(admin.id, draftId)).draft!.issues).toEqual([]);
+  });
+
+  it('points a refusal at the question it is about, wherever the rule found it', async () => {
+    const admin = await account('admin');
+    const created = await service.createDraft(admin.id, classKey);
+    const draftId = created.draft!.id;
+    const problem = created.draft!.edit.problems[0];
+
+    // A rule with a path into a question reaches the block inside it, and names the field.
+    const emptied = structuredClone(created.draft!.edit);
+    emptied.problems[0].solution = [{ ...problem.solution[0], payload: { ...problem.solution[0].payload, text: '' } }];
+    const blank = await service.saveDraft(admin.id, draftId, emptied);
+    // Editing a published question makes a new one, so the names to match are the saved draft's.
+    const renamed = blank.draft!.edit.problems[0];
+    expect(blank.draft!.issues[0]).toMatchObject({
+      problemVersionId: renamed.problemVersionId,
+      blockId: renamed.solution[0].blockId,
+      field: 'text',
+    });
+    // The rule is raised at the field it is about, not as a dump of everything the payload failed.
+    expect(blank.draft!.issues[0].path).toBe(`problems.0.solution.0.payload.text`);
+    expect(blank.draft!.issues[0].message).not.toContain('{');
+
+    // A rule that only names what it refused is placed by that name instead.
+    const claimed = structuredClone(blank.draft!.edit);
+    claimed.problems[0].skillKeys = ['no-such-skill'];
+    const missing = await service.saveDraft(admin.id, draftId, claimed);
+    expect(missing.draft!.issues.some((issue) => issue.problemVersionId === missing.draft!.edit.problems[0].problemVersionId)).toBe(true);
+
+    await service.deleteDraft(admin.id, draftId);
   });
 
   it('publishes the draft as a new immutable version and leaves the base version untouched', async () => {

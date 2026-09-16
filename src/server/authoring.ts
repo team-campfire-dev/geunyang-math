@@ -3,14 +3,16 @@ import { z } from 'zod';
 import type { PrismaClient } from '@prisma/client';
 import { canonicalJson, ContentError } from '@/core/content-bundle';
 import { validateClass, type StoredClass, type StoredProblem } from '@/core/content';
+import { gradeAnswer } from '@/core/grading';
 import { classRecord, importContent, publishedProblemRecords, termDefinitions } from './content-store';
 import { AppError } from './errors';
 import type { AnswerSpec } from '@/shared/answer';
 import type { ContentBlock } from '@/shared/api';
 import {
-  mayEditEveryDraft, mayGrantRoles, mayPublish, nextTermVersionId, pruneBlock, pruneProblems, pruneSections,
+  classKeyPattern, mayEditEveryDraft, mayGrantRoles, mayPublish, newProblem, nextBlockId, nextProblemVersionId,
+  nextSectionId, nextTermVersionId, pruneBlock, pruneProblems, pruneSections,
   renameProblem, renamedProblemVersionId, renameProblemReferences, responseSpecOf, scopeTermAnnotations, suggestVersionId,
-  type AccountRole, type AuthoringResponse, type AuthoringRole, type AuthoringWorkspace, type DraftDetail,
+  type AccountRole, type AuthoringResponse, type AuthoringRole, type AuthoringWorkspace, type DraftDetail, type DraftIssue,
   type DraftEdit, type DraftProblem, type DraftSummary, type EditableTermScope, type TermChoice, type TermEdit, type TermSummary,
 } from '@/shared/authoring';
 
@@ -31,6 +33,7 @@ const editSchema = z.object({
     title: z.string().trim().min(1).max(191),
     summary: z.string().trim().min(1).max(500),
     estimatedMinutes: z.number().int().min(1).max(240),
+    skillKeys: z.array(id.max(100)).min(1).max(50),
   }).strict(),
   sections: z.array(z.object({
     sectionId: id,
@@ -56,6 +59,9 @@ const editSchema = z.object({
 
 export const authoringActionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('draft.create'), classKey: id }).strict(),
+  z.object({ action: z.literal('class.create'), classKey: z.string().regex(classKeyPattern),
+    title: z.string().trim().min(1).max(191), skillKeys: z.array(id.max(100)).min(1).max(50) }).strict(),
+  z.object({ action: z.literal('draft.review'), draftId: id, asking: z.boolean() }).strict(),
   z.object({ action: z.literal('draft.save'), draftId: id, edit: editSchema }).strict(),
   z.object({ action: z.literal('draft.validate'), draftId: id }).strict(),
   z.object({ action: z.literal('draft.publish'), draftId: id }).strict(),
@@ -73,6 +79,10 @@ export const authoringActionSchema = z.discriminatedUnion('action', [
     summary: z.string().trim().min(1).max(500),
     blocks: blockList.min(1).max(20),
   }).strict() }).strict(),
+  z.object({ action: z.literal('editor.expertMode'), on: z.boolean() }).strict(),
+  z.object({ action: z.literal('draft.tryAnswer'), draftId: id, problemVersionId: id,
+    answer: z.string().trim().min(1).max(100), assisted: z.boolean() }).strict(),
+  z.object({ action: z.literal('draft.openHint'), draftId: id, problemVersionId: id }).strict(),
 ]);
 
 /**
@@ -194,7 +204,8 @@ export class AuthoringService {
   private summary(row: DraftRow, userId: string): DraftSummary {
     return {
       id: row.id, classKey: row.classKey, versionId: row.versionId, baseVersionId: row.baseVersionId, title: row.title,
-      status: row.status === 'published' ? 'published' : 'draft', publishedVersionId: row.publishedVersionId,
+      status: row.status === 'published' ? 'published' : row.status === 'review' ? 'review' : 'draft',
+      publishedVersionId: row.publishedVersionId,
       updatedAt: row.updatedAt.toISOString(), authorName: row.author.displayName, mine: row.authorId === userId,
     };
   }
@@ -204,15 +215,16 @@ export class AuthoringService {
    * holds a content role receives all of it. Nothing here is reachable without that role, and the
    * learning API still sends a learner only the public half.
    */
-  private async detail(row: DraftRow, userId: string, issues: string[]): Promise<DraftDetail> {
+  private async detail(row: DraftRow, userId: string, issues: DraftIssue[]): Promise<DraftDetail> {
     const document = row.document as unknown as StoredClass;
     const edit: DraftEdit = {
-      meta: { versionId: document.public.versionId, title: document.public.title, summary: document.public.summary, estimatedMinutes: document.public.estimatedMinutes },
+      meta: { versionId: document.public.versionId, title: document.public.title, summary: document.public.summary,
+        estimatedMinutes: document.public.estimatedMinutes, skillKeys: [...document.public.skillKeys] },
       sections: structuredClone(document.sections),
       problems: document.problems.map(draftProblem),
     };
-    return { ...this.summary(row, userId), edit, skillKeys: [...document.public.skillKeys],
-      terms: await this.termChoices(document.public.classKey), issues };
+    return { ...this.summary(row, userId), edit, terms: await this.termChoices(document.public.classKey), issues,
+      homeworkProblemIds: [...document.homeworkProblemIds] };
   }
 
   /**
@@ -246,13 +258,14 @@ export class AuthoringService {
 
   async workspace(userId: string): Promise<AuthoringWorkspace> {
     const role = await authoringRole(this.db, userId);
-    if (!role) return { role: null, drafts: [], classes: [], accounts: [], skills: [] };
-    const [drafts, versions, accounts, skills] = await Promise.all([
+    if (!role) return { role: null, drafts: [], classes: [], accounts: [], skills: [], expertMode: false };
+    const [drafts, versions, accounts, skills, account] = await Promise.all([
       this.db.contentDraft.findMany({ where: mayEditEveryDraft(role) ? {} : { authorId: userId },
         orderBy: { updatedAt: 'desc' }, take: 50, include: { author: { select: { displayName: true } } } }),
       this.db.classVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }], select: { id: true, classKey: true, title: true } }),
       this.accounts(userId, role),
       this.db.skill.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }], select: { key: true, label: true } }),
+      this.db.user.findUnique({ where: { id: userId }, select: { editorExpertMode: true } }),
     ]);
     const openDrafts = new Set(drafts.filter((draft) => draft.status !== 'published').map((draft) => draft.classKey));
     const byKey = new Map<string, { title: string; versions: string[] }>();
@@ -266,6 +279,7 @@ export class AuthoringService {
       role,
       accounts,
       skills,
+      expertMode: account?.editorExpertMode ?? false,
       drafts: (drafts as DraftRow[]).map((row) => this.summary(row, userId)),
       classes: [...byKey.entries()].map(([classKey, entry]) => ({
         classKey, title: entry.title, latestVersionId: entry.versions[entry.versions.length - 1],
@@ -423,9 +437,45 @@ export class AuthoringService {
     try {
       await importContent(this.db, { schemaVersion: 1, skills: [], classes: [], diagnostics: [], terms: [definition] });
     } catch (error) {
-      throw new AppError(422, 'term_rejected', describeContentError(error)[0] ?? '용어를 발행하지 못했어요.');
+      throw new AppError(422, 'term_rejected', describeContentError(error)[0]?.message ?? '용어를 발행하지 못했어요.');
     }
     return { ...await this.listTerms(userId, edit.scopeKind, edit.scopeKey), publishedTermVersionId: versionId };
+  }
+
+  /**
+   * How much of itself the editor shows this account. It changes nothing about what the account may
+   * do — the role decides that — so holding any content role is enough to set it.
+   */
+  async setExpertMode(userId: string, on: boolean): Promise<AuthoringResponse> {
+    await this.require(userId);
+    await this.db.user.update({ where: { id: userId }, data: { editorExpertMode: on } });
+    return { workspace: await this.workspace(userId) };
+  }
+
+  /** The question as the draft holds it, for an author answering their own work. */
+  private async draftProblem(userId: string, draftId: string, problemVersionId: string): Promise<StoredProblem> {
+    const role = await this.require(userId);
+    const row = await this.load(draftId, userId, role);
+    const document = row.document as unknown as StoredClass;
+    const problem = document.problems.find((item) => item.problemVersionId === problemVersionId);
+    if (!problem) throw new AppError(404, 'problem_missing', '이 초안에 없는 문항이에요. 저장한 뒤 다시 해 보세요.');
+    return problem;
+  }
+
+  /**
+   * Judges an answer an author tried against their own draft. It is the learning API's grader, so
+   * what the editor shows is what a learner will be told, down to the wording. Nothing is written:
+   * the account trying this is writing the question, not learning from it, and an attempt recorded
+   * here would become evidence about a person who never answered anything.
+   */
+  async tryAnswer(userId: string, draftId: string, problemVersionId: string, answer: string, assisted: boolean): Promise<AuthoringResponse> {
+    const problem = await this.draftProblem(userId, draftId, problemVersionId);
+    return { workspace: await this.workspace(userId), tried: gradeAnswer(answer, problem.gradingSpec, assisted) };
+  }
+
+  async draftHint(userId: string, draftId: string, problemVersionId: string): Promise<AuthoringResponse> {
+    const problem = await this.draftProblem(userId, draftId, problemVersionId);
+    return { workspace: await this.workspace(userId), hint: problem.hints };
   }
 
   async createDraft(userId: string, classKey: string): Promise<AuthoringResponse> {
@@ -442,6 +492,67 @@ export class AuthoringService {
       include: { author: { select: { displayName: true } } },
     });
     return { workspace: await this.workspace(userId), draft: await this.detail(row as DraftRow, userId, this.issues(document)) };
+  }
+
+  /**
+   * A class nobody has published yet. Everything else starts from a published version; this is the
+   * one door into a key that has none, so it is also the only place the key itself is chosen — every
+   * name inside the class is built from it, and once a version is published the key cannot move.
+   */
+  async createClass(userId: string, classKey: string, title: string, skillKeys: string[]): Promise<AuthoringResponse> {
+    await this.require(userId);
+    const [taken, drafted, known, last] = await Promise.all([
+      this.db.classVersion.findFirst({ where: { classKey }, select: { id: true } }),
+      this.db.contentDraft.findFirst({ where: { classKey }, select: { id: true } }),
+      this.db.skill.findMany({ where: { key: { in: skillKeys } }, select: { key: true } }),
+      this.db.classVersion.aggregate({ _max: { order: true } }),
+    ]);
+    if (taken || drafted) throw new AppError(409, 'class_exists', '이미 쓰이고 있는 클래스 키예요. 다른 이름으로 지어 주세요.');
+    const missing = skillKeys.filter((key) => !known.some((skill) => skill.key === key));
+    if (missing.length) throw new AppError(422, 'skill_missing', `없는 개념이에요: ${missing.join(', ')}`);
+
+    // A class in this product explains and then asks, and publishing refuses one that never asks.
+    // So a new one starts as the smallest whole lesson rather than as something already invalid.
+    const versionId = `${classKey}:v1`;
+    const explaining = nextSectionId(classKey, 'explanation', versionId, []);
+    const practising = nextSectionId(classKey, 'practice', versionId, [explaining]);
+    const problem = newProblem(nextProblemVersionId(classKey, 'practice', versionId, []), skillKeys.slice(0, 1));
+    const document: StoredClass = {
+      public: { classKey, versionId, title, summary: '한 줄 소개를 적어 주세요.', estimatedMinutes: 10,
+        skillKeys: [...skillKeys], prerequisiteSkillKeys: [], sectionCount: 2, order: (last._max.order ?? 0) + 1 },
+      sections: [
+        { sectionId: explaining, role: 'explanation', title: '새 단계', contentBlocks: [
+          { blockId: nextBlockId(classKey, explaining, 'core.rich_text', versionId, []), kind: 'core.rich_text',
+            typeVersion: 2, required: true, payload: { text: '여기에 설명을 씁니다.', terms: [] } },
+        ] },
+        { sectionId: practising, role: 'practice', title: '직접 풀어 보기', contentBlocks: [
+          { blockId: nextBlockId(classKey, practising, 'core.problem_set', versionId, []), kind: 'core.problem_set',
+            typeVersion: 1, required: true, payload: { problemVersionIds: [problem.problemVersionId] } },
+        ] },
+      ],
+      problems: [storedProblem(problem)],
+      homeworkProblemIds: [],
+    };
+    const row = await this.db.contentDraft.create({
+      data: { classKey, versionId, baseVersionId: null, title, document: document as never, authorId: userId },
+      include: { author: { select: { displayName: true } } },
+    });
+    return { workspace: await this.workspace(userId), draft: await this.detail(row as DraftRow, userId, this.issues(document)) };
+  }
+
+  /**
+   * A writer saying they are done, and asking whoever may publish to look. It locks nothing: being
+   * asked to look at something is not a reason for its author to stop being able to fix it.
+   */
+  async setReview(userId: string, draftId: string, asking: boolean): Promise<AuthoringResponse> {
+    const role = await this.require(userId);
+    const row = await this.load(draftId, userId, role);
+    if (row.status === 'published') throw new AppError(409, 'draft_published', '이미 발행한 초안이에요.');
+    const saved = await this.db.contentDraft.update({ where: { id: draftId },
+      data: { status: asking ? 'review' : 'draft' },
+      include: { author: { select: { displayName: true } } } });
+    return { workspace: await this.workspace(userId),
+      draft: await this.detail(saved as DraftRow, userId, this.issues(saved.document as unknown as StoredClass)) };
   }
 
   async saveDraft(userId: string, draftId: string, edit: DraftEdit): Promise<AuthoringResponse> {
@@ -474,7 +585,7 @@ export class AuthoringService {
     return {
       ...stored,
       public: { ...stored.public, versionId: edit.meta.versionId, title: edit.meta.title, summary: edit.meta.summary,
-        estimatedMinutes: edit.meta.estimatedMinutes, sectionCount: sections.length },
+        estimatedMinutes: edit.meta.estimatedMinutes, skillKeys: [...edit.meta.skillKeys], sectionCount: sections.length },
       sections: sections as StoredClass['sections'],
       problems,
       // Homework names questions without a block of its own, so its references move the same way.
@@ -482,9 +593,9 @@ export class AuthoringService {
     };
   }
 
-  private issues(document: StoredClass): string[] {
+  private issues(document: StoredClass): DraftIssue[] {
     try { validateClass(document); return []; }
-    catch (error) { return describeContentError(error); }
+    catch (error) { return describeContentError(error, document); }
   }
 
   async validateDraft(userId: string, draftId: string): Promise<AuthoringResponse> {
@@ -496,7 +607,7 @@ export class AuthoringService {
     // the publish command uses decides here too.
     if (!issues.length) {
       try { await importContent(this.db, this.bundle(document), true); }
-      catch (error) { issues.push(...describeContentError(error)); }
+      catch (error) { issues.push(...describeContentError(error, document)); }
     }
     return { workspace: await this.workspace(userId), draft: await this.detail(row, userId, issues) };
   }
@@ -514,8 +625,8 @@ export class AuthoringService {
     if (issues.length) throw new AppError(422, 'draft_invalid', '아직 고칠 곳이 있어 발행할 수 없어요.');
     try { await importContent(this.db, this.bundle(document), false); }
     catch (error) {
-      const described = describeContentError(error);
-      throw new AppError(422, 'publish_rejected', described[0] ?? '발행 검증을 통과하지 못했어요.');
+      const described = describeContentError(error, document);
+      throw new AppError(422, 'publish_rejected', described[0]?.message ?? '발행 검증을 통과하지 못했어요.');
     }
     // Re-publishing the same version is accepted as unchanged, so a failed update is safe to retry.
     const published = await this.db.contentDraft.update({ where: { id: draftId },
@@ -541,6 +652,8 @@ export class AuthoringService {
     const action = authoringActionSchema.parse(input);
     switch (action.action) {
       case 'draft.create': return this.createDraft(userId, action.classKey);
+      case 'class.create': return this.createClass(userId, action.classKey, action.title, action.skillKeys);
+      case 'draft.review': return this.setReview(userId, action.draftId, action.asking);
       case 'draft.save': return this.saveDraft(userId, action.draftId, action.edit);
       case 'draft.validate': return this.validateDraft(userId, action.draftId);
       case 'draft.publish': return this.publishDraft(userId, action.draftId);
@@ -550,17 +663,78 @@ export class AuthoringService {
       case 'role.revoke': return this.revokeRole(userId, action.userId);
       case 'term.list': return this.listTerms(userId, action.scopeKind, action.scopeKey);
       case 'term.save': return this.saveTerm(userId, action.edit);
+      case 'editor.expertMode': return this.setExpertMode(userId, action.on);
+      case 'draft.tryAnswer': return this.tryAnswer(userId, action.draftId, action.problemVersionId, action.answer, action.assisted);
+      case 'draft.openHint': return this.draftHint(userId, action.draftId, action.problemVersionId);
     }
   }
 }
 
 /**
- * Publishing rules speak in English for operators; the editor shows them next to the block. Only
- * the rules are quoted: anything else that failed is reported as a failure, not as its own text.
+ * Where in the document a validator's path points. The path is positional — `sections.2.contentBlocks.0`
+ * — and positions move as a draft is written, so it is turned into the names the editor knows a
+ * block by before it leaves the server.
  */
-export function describeContentError(error: unknown): string[] {
-  if (error instanceof z.ZodError) return error.issues.map((issue) => `${issue.path.join('.') || 'document'}: ${issue.message}`).slice(0, 20);
-  if (error instanceof ContentError) return [error.message];
-  if (error instanceof Error && error.name === 'Error') return [error.message];
-  return ['검증하지 못했어요. 잠시 후 다시 시도해 주세요.'];
+function locate(document: StoredClass, path: readonly PropertyKey[]): Omit<DraftIssue, 'message' | 'path'> {
+  const [root, index, ...rest] = path;
+  const field = () => {
+    const at = rest.indexOf('payload');
+    return at >= 0 && at + 1 < rest.length ? rest.slice(at + 1).join('.') : undefined;
+  };
+  if (root === 'sections' && typeof index === 'number') {
+    const section = document.sections[index];
+    if (!section) return {};
+    const block = rest[0] === 'contentBlocks' && typeof rest[1] === 'number' ? section.contentBlocks[rest[1]] : undefined;
+    return { sectionId: section.sectionId, blockId: block?.blockId, field: block ? field() : undefined };
+  }
+  if (root === 'problems' && typeof index === 'number') {
+    const problem = document.problems[index];
+    if (!problem) return {};
+    const part = rest[0];
+    const holds = part === 'promptContent' || part === 'hints' || part === 'solution';
+    const block = holds && typeof rest[1] === 'number' ? problem[part][rest[1]] : undefined;
+    return { problemVersionId: problem.problemVersionId, blockId: block?.blockId, field: block ? field() : undefined };
+  }
+  return {};
+}
+
+/**
+ * A rule that refused something by name can be shown beside it. Reference rules name the block or
+ * the question they refused, which is the only handle they give; a block's name is checked first
+ * because it contains the question's, and the narrower answer is the useful one.
+ */
+function named(document: StoredClass, message: string): Omit<DraftIssue, 'message' | 'path'> {
+  for (const section of document.sections) {
+    for (const block of section.contentBlocks) {
+      if (message.includes(block.blockId)) return { sectionId: section.sectionId, blockId: block.blockId };
+    }
+  }
+  for (const problem of document.problems) {
+    for (const block of [...problem.promptContent, ...problem.hints, ...problem.solution]) {
+      if (message.includes(block.blockId)) return { problemVersionId: problem.problemVersionId, blockId: block.blockId };
+    }
+    if (message.includes(problem.problemVersionId)) return { problemVersionId: problem.problemVersionId };
+  }
+  return {};
+}
+
+/**
+ * Publishing rules speak in English for operators; the editor shows them next to the block they are
+ * about. Only the rules are quoted: anything else that failed is reported as a failure, not as its
+ * own text.
+ */
+export function describeContentError(error: unknown, document?: StoredClass): DraftIssue[] {
+  const where = (message: string, path?: readonly PropertyKey[]) => {
+    if (!document) return {};
+    const found = path ? locate(document, path) : {};
+    return Object.values(found).some((value) => value !== undefined) ? found : named(document, message);
+  };
+  if (error instanceof z.ZodError) {
+    return error.issues.slice(0, 20).map((issue) => ({
+      message: issue.message, path: issue.path.join('.') || 'document', ...where(issue.message, issue.path),
+    }));
+  }
+  if (error instanceof ContentError) return [{ message: error.message, ...where(error.message) }];
+  if (error instanceof Error && error.name === 'Error') return [{ message: error.message, ...where(error.message) }];
+  return [{ message: '검증하지 못했어요. 잠시 후 다시 시도해 주세요.' }];
 }

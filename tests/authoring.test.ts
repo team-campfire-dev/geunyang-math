@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { supportedBlockTypes, termContentBlockSchema, validateClass } from '@/core/content';
 import {
-  blockForms, blockFormOf, moveBlock, newProblem, nextBlockId, nextProblemBlockId, nextProblemVersionId, nextSectionId,
-  problemsOfBlock, pruneBlock, pruneSections, renameProblem, renameProblemReferences, renamedProblemVersionId,
-  nextTermVersionId, responseSpecOf, scopeTermAnnotations, suggestVersionId, termBlockForms, toPublicProblem, writePath,
+  blockForms, blockFormOf, classBlockForms, copyBlock, copyProblem, copySection, dropLooseProblems, insertAfter,
+  looseProblems, moveBlock, newProblem,
+  nextBlockId, nextProblemBlockId, nextProblemVersionId,
+  nextSectionId, problemBlockForms, problemGist, problemsOfBlock, pruneBlock, pruneSections, renameProblem,
+  renameProblemReferences, renamedProblemVersionId, nextTermVersionId, responseSpecOf, scopeTermAnnotations,
+  issueText, suggestVersionId, termBlockForms, toPublicProblem, versionLabel, writePath,
 } from '@/shared/authoring';
 import { seedClasses } from './fixtures/content';
 
@@ -63,6 +66,19 @@ describe('what the editor sends is what publishing accepts', () => {
     expect(offered).toContain('core.scene');
     expect(offered).not.toContain('core.figure');
     expect(offered).not.toContain('math.fraction_strip');
+  });
+
+  it('offers one paragraph wherever a paragraph may go, never a choice of schema version', () => {
+    const paragraphs = (forms: typeof blockForms) =>
+      forms.filter((form) => !form.retired && form.kind === 'core.rich_text');
+    // A lesson's paragraph is the one that can carry term links; a definition's is the one that cannot.
+    expect(paragraphs(classBlockForms).map((form) => form.typeVersion)).toEqual([2]);
+    expect(paragraphs(problemBlockForms).map((form) => form.typeVersion)).toEqual([2]);
+    expect(paragraphs(termBlockForms).map((form) => form.typeVersion)).toEqual([1]);
+    // Both are called the same thing, because to whoever is writing they are the same thing.
+    expect([...new Set(paragraphs(blockForms).map((form) => form.label))]).toEqual(['글']);
+    // The older one still opens, so a class published with it can be read and edited.
+    expect(blockFormOf({ kind: 'core.rich_text', typeVersion: 1 })).toBeDefined();
   });
 
   it('starts every new block at a payload the validator already accepts', () => {
@@ -230,5 +246,194 @@ describe('writing a definition', () => {
       expect(() => termContentBlockSchema.parse({ blockId: 'term:block:1', kind: form.kind,
         typeVersion: form.typeVersion, required: true, payload: form.create() }), form.kind).not.toThrow();
     }
+  });
+});
+
+describe('naming a version and a question for whoever is writing', () => {
+  it('reads a version as the number it ends in, and leaves an unnumbered name alone', () => {
+    expect(versionLabel('fraction-meaning:v4')).toBe('4판');
+    expect(versionLabel('fraction-meaning:v12')).toBe('12판');
+    expect(versionLabel('fraction-meaning:draft')).toBe('fraction-meaning:draft');
+    expect(versionLabel('')).toBe('');
+  });
+
+  it('says which question is which by its first words, not by its name', () => {
+    const problem = newProblem('fraction-meaning:practice-1:v2', []);
+    expect(problemGist(problem)).toBe('여기에 문제를 씁니다.');
+    const long = { ...problem, promptContent: [{ ...problem.promptContent[0],
+      payload: { text: `${'가'.repeat(60)}`, terms: [] } }] };
+    expect(problemGist(long)).toHaveLength(43);
+    expect(problemGist(long).endsWith('…')).toBe(true);
+    // Line breaks in the source are not breaks in a one-line summary.
+    const wrapped = { ...problem, promptContent: [{ ...problem.promptContent[0],
+      payload: { text: '  첫 줄\n\n  둘째 줄  ', terms: [] } }] };
+    expect(problemGist(wrapped)).toBe('첫 줄 둘째 줄');
+    // A formula cannot be drawn on one line, so the line says one is there.
+    const math = { ...problem, promptContent: [{ ...problem.promptContent[0],
+      payload: { text: '$\\frac{3}{7}$에서 분모는 어떤 수인가요?', terms: [] } }] };
+    expect(problemGist(math)).toBe('[식]에서 분모는 어떤 수인가요?');
+    // A question whose prompt is only a drawing has no words to show, and says nothing rather than guessing.
+    expect(problemGist({ ...problem, promptContent: [] })).toBe('');
+  });
+});
+
+describe('copying what is already written', () => {
+  const draftOf = (record: (typeof seedClasses)[number]) => ({
+    classKey: record.public.classKey, versionId: `${record.public.classKey}:v9`,
+    sectionIds: record.sections.map((section) => section.sectionId),
+    blockIds: record.sections.flatMap((section) => section.contentBlocks.map((block) => block.blockId)),
+    problemIds: record.problems.map((problem) => problem.problemVersionId),
+  });
+
+  it('gives a copied block its own name and leaves what it says alone', () => {
+    const record = structuredClone(seedClasses[0]);
+    const section = record.sections[0];
+    const original = section.contentBlocks[0];
+    const { block: made, problems } = copyBlock({ block: original, problems: [], role: section.role,
+      sectionId: section.sectionId, ...draftOf(record) });
+    expect(made.blockId).not.toBe(original.blockId);
+    expect(draftOf(record).blockIds).not.toContain(made.blockId);
+    expect(made.payload).toEqual(original.payload);
+    expect(problems).toEqual([]);
+  });
+
+  it('copies the questions an activity holds, because a question belongs to one activity', () => {
+    const record = structuredClone(seedClasses[0]);
+    const section = record.sections.find((item) => item.contentBlocks.some((block) => block.kind === 'core.problem_set'))!;
+    const activity = section.contentBlocks.find((block) => block.kind === 'core.problem_set')!;
+    const held = problemsOfBlock(activity, record.problems as never);
+    expect(held.length).toBeGreaterThan(0);
+
+    const { block: made, problems } = copyBlock({ block: activity, problems: record.problems as never,
+      role: section.role, sectionId: section.sectionId, ...draftOf(record) });
+    expect(problems).toHaveLength(held.length);
+    // The copy names its own questions, and no question is named by two activities.
+    expect(made.payload.problemVersionIds).toEqual(problems.map((problem) => problem.problemVersionId));
+    for (const problem of problems) expect(record.problems.map((item) => item.problemVersionId)).not.toContain(problem.problemVersionId);
+    // The blocks inside a question carry its name, so they move with it.
+    for (const problem of problems) {
+      for (const block of [...problem.promptContent, ...problem.hints, ...problem.solution]) {
+        expect(block.blockId.startsWith(problem.problemVersionId), block.blockId).toBe(true);
+      }
+    }
+    // What the copy asks and accepts is what the original asked and accepted.
+    expect(problems.map((problem) => problem.gradingSpec)).toEqual(held.map((problem) => problem.gradingSpec));
+  });
+
+  it('copies a step whole, and the result is a document publishing accepts', () => {
+    const record = structuredClone(seedClasses[0]);
+    const section = record.sections.find((item) => item.contentBlocks.some((block) => block.kind === 'core.problem_set'))!;
+    const index = record.sections.indexOf(section);
+    const made = copySection({ section, problems: record.problems as never, ...draftOf(record) });
+
+    expect(made.section.sectionId).not.toBe(section.sectionId);
+    expect(made.section.title).toBe(`${section.title} 사본`);
+    const names = made.section.contentBlocks.map((block) => block.blockId);
+    expect(new Set(names).size).toBe(names.length);
+    for (const name of names) expect(draftOf(record).blockIds).not.toContain(name);
+
+    record.sections = insertAfter(record.sections, index, made.section) as never;
+    record.problems = [...record.problems, ...made.problems] as never;
+    record.public.sectionCount = record.sections.length;
+    expect(() => validateClass(record)).not.toThrow();
+  });
+
+  it('keeps every copy out of the names already spoken for, however many are made', () => {
+    const record = structuredClone(seedClasses[0]);
+    const section = record.sections[0];
+    const original = section.contentBlocks[0];
+    const blockIds = draftOf(record).blockIds;
+    const made: string[] = [];
+    for (let round = 0; round < 4; round++) {
+      const copy = copyBlock({ block: original, problems: [], role: section.role, sectionId: section.sectionId,
+        ...draftOf(record), blockIds: [...blockIds, ...made] });
+      expect(made).not.toContain(copy.block.blockId);
+      made.push(copy.block.blockId);
+    }
+    expect(new Set(made).size).toBe(4);
+  });
+
+  it('names a copied question after the activity it will sit in', () => {
+    const problem = newProblem('fraction-meaning:practice-1:v2', ['fraction.meaning']);
+    const made = copyProblem(problem, 'fraction-meaning', 'practice', 'fraction-meaning:v2', [problem.problemVersionId]);
+    expect(made.problemVersionId).not.toBe(problem.problemVersionId);
+    expect(made.problemVersionId.endsWith(':v2')).toBe(true);
+    expect(made.promptContent[0].blockId.startsWith(made.problemVersionId)).toBe(true);
+    // The original is untouched by the copying.
+    expect(problem.problemVersionId).toBe('fraction-meaning:practice-1:v2');
+  });
+
+  it('puts a copy right after what it was copied from', () => {
+    expect(insertAfter(['a', 'b', 'c'], 1, 'b2')).toEqual(['a', 'b', 'b2', 'c']);
+    expect(insertAfter(['a'], 0, 'a2')).toEqual(['a', 'a2']);
+  });
+});
+
+describe('saying what a rule refused', () => {
+  const paragraph = { blockId: 'b1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '' } };
+
+  it('names the field the way the block\u0027s own form names it', () => {
+    expect(issueText({ message: 'Too small', field: 'text' }, paragraph)).toBe('글: Too small');
+    // A field inside a repeated row is named by the row\u0027s own form.
+    const linked = { ...paragraph, typeVersion: 2, payload: { text: '분모', terms: [] } };
+    expect(issueText({ message: 'Required', field: 'terms.0.termKey' }, linked)).toBe('용어 키: Required');
+  });
+
+  it('drops the kind of block from the message, because the card already says it', () => {
+    expect(issueText({ message: 'Invalid payload for core.rich_text@1: Too small', field: 'text' }, paragraph))
+      .toBe('글: Too small');
+    // The same message with no block to place it against is left exactly as the rule wrote it.
+    expect(issueText({ message: 'Invalid payload for core.rich_text@1: Too small', field: 'text' }))
+      .toBe('Invalid payload for core.rich_text@1: Too small');
+  });
+
+  it('says the rule alone when it was not about a field of the block', () => {
+    expect(issueText({ message: 'Missing term: term.denominator' }, paragraph)).toBe('Missing term: term.denominator');
+    expect(issueText({ message: 'Duplicate block id.', field: 'nothing' }, paragraph)).toBe('Duplicate block id.');
+  });
+});
+
+describe('what an activity holds leaves with it', () => {
+  const activity = (blockId: string, ids: string[]) =>
+    ({ blockId, kind: 'core.problem_set', typeVersion: 1, required: true, payload: { problemVersionIds: ids } });
+  const lesson = (blocks: ReturnType<typeof activity>[], problems: string[]) => ({
+    meta: { versionId: 'c:v2', title: '수업', summary: '한 줄', estimatedMinutes: 10, skillKeys: ['s'] },
+    sections: [{ sectionId: 'c:practice:v2', role: 'practice' as const, title: '연습', contentBlocks: blocks }],
+    problems: problems.map((id) => newProblem(id, ['s'])),
+  });
+
+  it('calls a question loose when no activity in the lesson holds it', () => {
+    const edit = lesson([activity('c:set:v2', ['p1'])], ['p1', 'p2']);
+    expect(looseProblems(edit, []).map((problem) => problem.problemVersionId)).toEqual(['p2']);
+    // Homework holds questions no section shows, so those are held all the same.
+    expect(looseProblems(edit, ['p2'])).toEqual([]);
+  });
+
+  it('drops what nothing holds, and leaves the edit alone when everything is held', () => {
+    const edit = lesson([activity('c:set:v2', ['p1'])], ['p1', 'p2']);
+    expect(dropLooseProblems(edit, []).problems.map((problem) => problem.problemVersionId)).toEqual(['p1']);
+    // Nothing to drop means the very same value, so nothing downstream reads it as a change.
+    const whole = lesson([activity('c:set:v2', ['p1'])], ['p1']);
+    expect(dropLooseProblems(whole, [])).toBe(whole);
+    expect(dropLooseProblems(edit, ['p2'])).toBe(edit);
+  });
+
+  it('leaves a lesson publishing accepts after an activity is taken out', () => {
+    const record = structuredClone(seedClasses[0]);
+    const section = record.sections.find((item) => item.contentBlocks.some((block) => block.kind === 'core.problem_set'))!;
+    const edit = {
+      meta: { versionId: record.public.versionId, title: record.public.title, summary: record.public.summary,
+        estimatedMinutes: record.public.estimatedMinutes, skillKeys: [...record.public.skillKeys] },
+      sections: structuredClone(record.sections),
+      problems: structuredClone(record.problems) as never,
+    };
+    const without = { ...edit, sections: edit.sections.filter((item) => item.sectionId !== section.sectionId) };
+    // Left as it is, the class carries questions nothing holds and publishing says so.
+    record.sections = without.sections;
+    record.public.sectionCount = record.sections.length;
+    expect(() => validateClass(record)).toThrow(/Unreferenced problem version/);
+    // The questions leave with the step, and what is left is a class publishing takes.
+    record.problems = dropLooseProblems(without, record.homeworkProblemIds).problems as never;
+    expect(() => validateClass(record)).not.toThrow();
   });
 });

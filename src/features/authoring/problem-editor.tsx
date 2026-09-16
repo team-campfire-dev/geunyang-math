@@ -4,11 +4,13 @@ import { useState } from 'react';
 import type { ContentBlock } from '@/shared/api';
 import { answerSpec, answerText, type AnswerSpec } from '@/shared/answer';
 import {
-  moveBlock, newProblem, nextProblemBlockId, nextProblemVersionId, problemBlockForms, problemsOfBlock,
-  type DraftProblem, type TermChoice,
+  copyProblem, insertAfter, moveBlock, newProblem, nextProblemBlockId, nextProblemVersionId, problemBlockForms,
+  problemGist, problemsOfBlock, type DraftProblem, type SkillChoice, type TermChoice,
 } from '@/shared/authoring';
 import { Icon } from '@/features/learning/icons';
 import { AddBlock, BlockCard } from './block-editor';
+import { useRemovalNotice } from './edit-history';
+import { useExpertMode } from './expert-mode';
 
 /**
  * An author writes the answer the way a learner will type it, and the same reader decides both. A
@@ -39,28 +41,33 @@ function AnswerField({ spec, onChange }: { spec: AnswerSpec; onChange: (next: An
   </div>;
 }
 
-function SkillPicker({ skillKeys, chosen, onChange }: { skillKeys: string[]; chosen: string[]; onChange: (next: string[]) => void }) {
-  if (!skillKeys.length) return null;
+/** The concepts this class teaches, named the way the catalogue names them rather than by key. */
+export function SkillPicker({ skills, chosen, onChange, label = '다루는 개념' }: {
+  skills: SkillChoice[]; chosen: string[]; onChange: (next: string[]) => void; label?: string;
+}) {
+  if (!skills.length) return null;
   return <div className="editor-skills">
-    <span className="editor-label">다루는 개념</span>
+    <span className="editor-label">{label}</span>
     <div className="editor-skill-buttons">
-      {skillKeys.map((key) => <label key={key} className="editor-check">
-        <input type="checkbox" checked={chosen.includes(key)}
-          onChange={() => onChange(chosen.includes(key) ? chosen.filter((item) => item !== key) : [...chosen, key])} />
-        <span>{key}</span>
+      {skills.map((skill) => <label key={skill.key} className="editor-check">
+        <input type="checkbox" checked={chosen.includes(skill.key)}
+          onChange={() => onChange(chosen.includes(skill.key) ? chosen.filter((item) => item !== skill.key) : [...chosen, skill.key])} />
+        <span>{skill.label}</span>
       </label>)}
     </div>
   </div>;
 }
 
-function ProblemBlocks({ label, hint, part, problem, blocks, taken, termChoices, onChange }: {
+function ProblemBlocks({ label, hint, part, problem, blocks, taken, termChoices, omitText, onChange }: {
   label: string; hint?: string; part: 'prompt' | 'hint' | 'solution'; problem: DraftProblem;
-  blocks: ContentBlock[]; taken: string[]; termChoices: TermChoice[]; onChange: (next: ContentBlock[]) => void;
+  blocks: ContentBlock[]; taken: string[]; termChoices: TermChoice[]; omitText?: boolean;
+  onChange: (next: ContentBlock[]) => void;
 }) {
   return <div className="editor-problem-part">
     <span className="editor-label">{label}</span>
     {hint && <p className="editor-note">{hint}</p>}
     {blocks.map((block, index) => <BlockCard key={block.blockId} block={block} index={index} total={blocks.length}
+      omit={omitText && block.kind === 'core.rich_text' ? ['text'] : undefined}
       arrangingRefusal="문항 안에서는 놓아 보게 만들 수 없어요. 놓은 결과는 채점되지 않는데 답 칸 옆에 있으면 답으로 읽혀요."
       termChoices={termChoices}
       onChange={(next) => onChange(blocks.map((item, position) => (position === index ? next : item)))}
@@ -72,35 +79,43 @@ function ProblemBlocks({ label, hint, part, problem, blocks, taken, termChoices,
   </div>;
 }
 
-function ProblemCard({ problem, index, total, skillKeys, taken, termChoices, onChange, onMove, onRemove }: {
-  problem: DraftProblem; index: number; total: number; skillKeys: string[]; taken: string[]; termChoices: TermChoice[];
-  onChange: (next: DraftProblem) => void; onMove: (delta: number) => void; onRemove: () => void;
+/**
+ * One question, opened on its own. The prompt is written on the sheet where it will be read, so what
+ * is left here is everything a prompt cannot show: the answer it accepts, the concepts it claims, and
+ * the help that only appears when someone asks for it.
+ */
+export function ProblemPanel({ problem, number, total, skills, taken, termChoices, onChange, onMove, onCopy, onRemove }: {
+  problem: DraftProblem; number: number; total: number; skills: SkillChoice[]; taken: string[]; termChoices: TermChoice[];
+  onChange: (next: DraftProblem) => void; onMove: (delta: number) => void; onCopy: () => void; onRemove: () => void;
 }) {
-  const [open, setOpen] = useState(false);
-  return <section className="editor-problem">
+  const expert = useExpertMode();
+  const notifyRemoval = useRemovalNotice();
+  return <section className="editor-block">
     <header>
-      <button type="button" className="editor-problem-open" aria-expanded={open} onClick={() => setOpen(!open)}>
-        <Icon name="chevron" size={14} />
-        <span><strong>{index + 1}번 문항</strong><small>{problem.problemVersionId}</small></span>
-      </button>
+      <div>
+        <strong>{number}번 문항</strong>
+        {expert && <small>{problem.problemVersionId}</small>}
+      </div>
       <div className="editor-block-tools">
-        <button type="button" className="icon-button" aria-label={`${index + 1}번 문항 위로`} disabled={index === 0} onClick={() => onMove(-1)}>↑</button>
-        <button type="button" className="icon-button" aria-label={`${index + 1}번 문항 아래로`} disabled={index === total - 1} onClick={() => onMove(1)}>↓</button>
-        <button type="button" className="icon-button" aria-label={`${index + 1}번 문항 삭제`} onClick={onRemove}><Icon name="close" size={14} /></button>
+        <button type="button" className="icon-button" aria-label="문항 복제" title="문항 복제" onClick={onCopy}><Icon name="copy" size={15} /></button>
+        <button type="button" className="icon-button" aria-label="문항 위로" disabled={number <= 1} onClick={() => onMove(-1)}>↑</button>
+        <button type="button" className="icon-button" aria-label="문항 아래로" disabled={number >= total} onClick={() => onMove(1)}>↓</button>
+        <button type="button" className="icon-button" aria-label="문항 삭제"
+          onClick={() => { notifyRemoval('문항'); onRemove(); }}><Icon name="close" size={15} /></button>
       </div>
     </header>
-    {open && <div className="editor-problem-body">
-      <ProblemBlocks label="문제" part="prompt" problem={problem} blocks={problem.promptContent} taken={taken} termChoices={termChoices}
-        onChange={(promptContent) => onChange({ ...problem, promptContent })} />
-      <AnswerField spec={problem.gradingSpec} onChange={(gradingSpec) => onChange({ ...problem, gradingSpec })} />
-      <SkillPicker skillKeys={skillKeys} chosen={problem.skillKeys} onChange={(next) => onChange({ ...problem, skillKeys: next })} />
-      <ProblemBlocks label="힌트" part="hint" problem={problem} blocks={problem.hints} taken={taken} termChoices={termChoices}
-        hint="힌트를 하나라도 두면 학습 화면에 힌트 버튼이 생겨요. 힌트를 열고 맞히면 도움을 받은 풀이로 기록합니다."
-        onChange={(hints) => onChange({ ...problem, hints })} />
-      <ProblemBlocks label="해설" part="solution" problem={problem} blocks={problem.solution} taken={taken} termChoices={termChoices}
-        hint="문항을 마친 뒤에만 보여 줍니다. 한 블록 이상 있어야 발행할 수 있어요."
-        onChange={(solution) => onChange({ ...problem, solution })} />
-    </div>}
+    <p className="editor-note">문제 지문은 수업 화면에서 바로 씁니다. 여기에는 지문이 보여 주지 않는 것들이 있어요.</p>
+    <AnswerField spec={problem.gradingSpec} onChange={(gradingSpec) => onChange({ ...problem, gradingSpec })} />
+    <SkillPicker skills={skills} chosen={problem.skillKeys} onChange={(next) => onChange({ ...problem, skillKeys: next })} />
+    <ProblemBlocks label="문제" part="prompt" problem={problem} blocks={problem.promptContent} taken={taken} termChoices={termChoices}
+      hint="글은 수업 화면에서 고치고, 그림처럼 지문에 더 넣을 것이 있으면 여기에서 더합니다."
+      onChange={(promptContent) => onChange({ ...problem, promptContent })} omitText />
+    <ProblemBlocks label="힌트" part="hint" problem={problem} blocks={problem.hints} taken={taken} termChoices={termChoices}
+      hint="힌트를 하나라도 두면 학습 화면에 힌트 버튼이 생겨요. 힌트를 열고 맞히면 도움을 받은 풀이로 기록합니다."
+      onChange={(hints) => onChange({ ...problem, hints })} />
+    <ProblemBlocks label="해설" part="solution" problem={problem} blocks={problem.solution} taken={taken} termChoices={termChoices}
+      hint="문항을 마친 뒤에만 보여 줍니다. 한 블록 이상 있어야 발행할 수 있어요."
+      onChange={(solution) => onChange({ ...problem, solution })} />
   </section>;
 }
 
@@ -109,10 +124,12 @@ function ProblemCard({ problem, index, total, skillKeys, taken, termChoices, onC
  * question is written, changed and removed; removing one here drops it from the version being
  * written, while every published version keeps the question it was published with.
  */
-export function ProblemSetEditor({ block, problems, skillKeys, classKey, role, versionId, taken, termChoices, onChange }: {
-  block: ContentBlock; problems: DraftProblem[]; skillKeys: string[]; classKey: string; role: string; versionId: string;
-  taken: string[]; termChoices: TermChoice[]; onChange: (block: ContentBlock, problems: DraftProblem[]) => void;
+export function ProblemSetEditor({ block, problems, classKey, role, versionId, skills, onPick, onChange }: {
+  block: ContentBlock; problems: DraftProblem[]; classKey: string; role: string; versionId: string;
+  skills: SkillChoice[]; onPick: (problemVersionId: string) => void;
+  onChange: (block: ContentBlock, problems: DraftProblem[]) => void;
 }) {
+  const notifyRemoval = useRemovalNotice();
   const ids = Array.isArray(block.payload.problemVersionIds) ? (block.payload.problemVersionIds as string[]) : [];
   const chosen = problemsOfBlock(block, problems);
   // An activity and its questions are one change: writing them separately would leave the activity
@@ -121,16 +138,35 @@ export function ProblemSetEditor({ block, problems, skillKeys, classKey, role, v
     onChange({ ...block, payload: { ...block.payload, problemVersionIds: nextIds } }, nextProblems);
   const add = () => {
     const created = newProblem(nextProblemVersionId(classKey, role, versionId, problems.map((item) => item.problemVersionId)),
-      chosen[0]?.skillKeys ?? problems[0]?.skillKeys ?? skillKeys.slice(0, 1));
+      chosen[0]?.skillKeys ?? problems[0]?.skillKeys ?? skills.slice(0, 1).map((skill) => skill.key));
     write([...ids, created.problemVersionId], [...problems, created]);
+    onPick(created.problemVersionId);
+  };
+  const copy = (problem: DraftProblem, at: number) => {
+    const made = copyProblem(problem, classKey, role, versionId, problems.map((item) => item.problemVersionId));
+    write(insertAfter(ids, at, made.problemVersionId), [...problems, made]);
+    onPick(made.problemVersionId);
   };
   return <div className="editor-problems">
-    {chosen.map((problem, index) => <ProblemCard key={problem.problemVersionId} problem={problem} index={index}
-      total={chosen.length} skillKeys={skillKeys} taken={taken} termChoices={termChoices}
-      onChange={(next) => write(ids, problems.map((item) => (item.problemVersionId === problem.problemVersionId ? next : item)))}
-      onMove={(delta) => write(moveBlock(ids, index, delta), problems)}
-      onRemove={() => write(ids.filter((item) => item !== problem.problemVersionId),
-        problems.filter((item) => item.problemVersionId !== problem.problemVersionId))} />)}
+    <p className="editor-note">문항은 수업 화면에서 눌러 고칩니다. 여기에서는 순서를 바꾸고, 더하고, 복제하고, 뺍니다.</p>
+    {chosen.map((problem, index) => <div key={problem.problemVersionId} className="editor-problem-row">
+      <button type="button" className="editor-problem-open" onClick={() => onPick(problem.problemVersionId)}>
+        <strong>{index + 1}번</strong>
+        <small>{problemGist(problem) || '아직 비어 있어요'}</small>
+      </button>
+      <div className="editor-block-tools">
+        <button type="button" className="icon-button" aria-label={`${index + 1}번 문항 복제`} title="복제"
+          onClick={() => copy(problem, index)}><Icon name="copy" size={14} /></button>
+        <button type="button" className="icon-button" aria-label={`${index + 1}번 문항 위로`} disabled={index === 0}
+          onClick={() => write(moveBlock(ids, index, -1), problems)}>↑</button>
+        <button type="button" className="icon-button" aria-label={`${index + 1}번 문항 아래로`} disabled={index === chosen.length - 1}
+          onClick={() => write(moveBlock(ids, index, 1), problems)}>↓</button>
+        <button type="button" className="icon-button" aria-label={`${index + 1}번 문항 삭제`}
+          onClick={() => { notifyRemoval('문항');
+            write(ids.filter((item) => item !== problem.problemVersionId),
+              problems.filter((item) => item.problemVersionId !== problem.problemVersionId)); }}><Icon name="close" size={14} /></button>
+      </div>
+    </div>)}
     {ids.length > chosen.length && <p className="editor-note editor-warn">
       이 활동이 가리키는 문항 중 {ids.length - chosen.length}개가 이 판본에 없어요. 발행 전에 지우거나 다시 만들어 주세요.</p>}
     <button type="button" className="button secondary" onClick={add}><Icon name="plus" size={14} />문항 추가</button>

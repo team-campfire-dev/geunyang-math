@@ -365,15 +365,28 @@ export function unsupportedRequiredBlocks(blocks: ContentBlock[], problems: Publ
   return blocks.some((block) => block.required && !registry[`${block.kind}@${block.typeVersion}`]?.validate(block.payload, context));
 }
 
-export function ContentBlocks({ blocks, problems = [], renderProblem = () => null, glossary = noGlossary }: { blocks: ContentBlock[]; problems?: PublicProblem[]; renderProblem?: BlockContext['renderProblem']; glossary?: GlossaryContext }) {
+export function ContentBlocks({ blocks, problems = [], renderProblem = () => null, glossary = noGlossary, wrap }: {
+  blocks: ContentBlock[]; problems?: PublicProblem[]; renderProblem?: BlockContext['renderProblem']; glossary?: GlossaryContext;
+  /**
+   * Puts something of the caller's own around each block. A lesson needs nothing around one, so this
+   * is normally absent; the editor draws the same lesson but has to make every block pickable, and
+   * without this it would need a second renderer that could drift from the one that ships.
+   */
+  wrap?: (block: ContentBlock, index: number, drawn: ReactNode, className: string) => ReactNode;
+}) {
   const context: BlockContext = { problems, renderProblem, glossary };
-  return <div className="content-blocks">{blocks.map((block) => {
+  return <div className="content-blocks">{blocks.map((block, index) => {
     const renderer = registry[`${block.kind}@${block.typeVersion}`];
-    if (!renderer?.validate(block.payload, context)) return <div key={block.blockId} className={block.required ? 'unsupported-block' : 'optional-block'} role={block.required ? 'alert' : undefined}>
+    const supported = !!renderer?.validate(block.payload, context);
+    const className = supported
+      ? `content-block block-${block.kind.replaceAll('.', '-')}`
+      : block.required ? 'unsupported-block' : 'optional-block';
+    const drawn = supported ? renderer.render(block, context) : <>
       <strong>{block.required ? '이 학습 내용은 현재 버전에서 열 수 없어요.' : '추가 콘텐츠'}</strong>
       <p>{block.fallback ?? '지원하지 않는 콘텐츠 형식이에요.'}</p>
       {block.required && <p>필수 내용이므로 이 단계를 완료할 수 없어요. 최신 버전에서 다시 열어 주세요.</p>}
-    </div>;
-    return <div key={block.blockId} className={`content-block block-${block.kind.replaceAll('.', '-')}`}>{renderer.render(block, context)}</div>;
+    </>;
+    if (wrap) return wrap(block, index, drawn, className);
+    return <div key={block.blockId} className={className} role={!supported && block.required ? 'alert' : undefined}>{drawn}</div>;
   })}</div>;
 }

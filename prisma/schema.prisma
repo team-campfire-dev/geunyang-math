@@ -13,6 +13,9 @@ model User {
   preferredClassKey String? @db.VarChar(100)
   dailyMinutes Int      @default(10)
   timezone     String   @default("Asia/Seoul") @db.VarChar(80)
+  /// Whether the content editor shows the names the system uses — block and version IDs, the
+  /// compatibility switches — rather than only what a lesson is made of.
+  editorExpertMode Boolean @default(false)
   createdAt    DateTime @default(now())
   scopes       Scope[]
   sessions     Session[]
