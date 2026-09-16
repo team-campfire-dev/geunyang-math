@@ -74,6 +74,10 @@ export function validateReferences(bundle: ContentBundle) {
   consistentCase(bundle.diagnostics.map(d => d.versionId));
   consistentCase(bundle.diagnostics.map(d => d.diagnosticKey));
   consistentCase(bundle.terms.map(t => t.versionId));
+  // Blocks hang off the version that holds them, named by that version's ID alone. A name shared by
+  // a class and a definition would make one version's blocks answer for the other's.
+  unique([...bundle.classes.map(c => c.public.versionId), ...bundle.diagnostics.map(d => d.versionId),
+    ...bundle.terms.map(t => t.versionId)], 'version IDs across classes, diagnostics and terms');
   // Keys only have to stay unambiguous inside their own scope; a class may reuse a dictionary word.
   for (const scope of new Set(bundle.terms.map(t => `${t.scopeKind}:${t.scopeKey}`))) {
     consistentCase(bundle.terms.filter(t => `${t.scopeKind}:${t.scopeKey}` === scope).map(t => t.termKey));

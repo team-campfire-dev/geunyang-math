@@ -6,7 +6,7 @@ import { seedClasses } from './fixtures/content';
 import { developmentLoginEnabled, sessionUser } from '@/server/auth';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
-import { classMetadata, indexClassDocument } from '@/server/content-store';
+import { classMetadata, indexClassDocument, indexTermDocument } from '@/server/content-store';
 import type { LearningAction } from '@/shared/api';
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
@@ -304,11 +304,15 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     const classKey = `integration-glossary-${suffix}`;
     const [earlier, primary, secondary] = ['earlier', 'primary', 'secondary'].map(name => `test.${name}.${suffix}`);
     await db.skill.createMany({ data: [earlier, primary, secondary].map((key, order) => ({ key, label: key, order: 2000 + order })) });
-    const publishTerm = (skillKey: string) => db.termVersion.create({ data: {
-      id: `term.${skillKey}:v1`, termKey: `term.${skillKey}`, skillKey, label: skillKey, summary: `${skillKey} 한 줄 설명`,
-      document: asJson([{ blockId: `term.${skillKey}:v1:b1`, kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: `${skillKey} 정의` } }]),
-      contentHash: createHash('sha256').update(skillKey).digest('hex'),
-    } });
+    // A fixture publishes the way the application does: the definition is read back from its rows.
+    const publishTerm = async (skillKey: string) => {
+      const blocks = [{ blockId: `term.${skillKey}:v1:b1`, kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: `${skillKey} 정의` } }];
+      await db.termVersion.create({ data: {
+        id: `term.${skillKey}:v1`, termKey: `term.${skillKey}`, skillKey, label: skillKey, summary: `${skillKey} 한 줄 설명`,
+        document: asJson(blocks), contentHash: createHash('sha256').update(skillKey).digest('hex'),
+      } });
+      await indexTermDocument(db, `term.${skillKey}:v1`, blocks);
+    };
     for (const skillKey of [earlier, primary, secondary]) await publishTerm(skillKey);
 
     // Fresh question IDs: a published problem version is immutable across every class in the database.
