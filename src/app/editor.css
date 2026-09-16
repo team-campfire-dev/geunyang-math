@@ -38,6 +38,10 @@
 .authoring-head h1 { font-size: 27px; font-weight: 600; letter-spacing: -1.1px; margin-top: 8px; }
 .authoring-head-side { display: flex; align-items: center; gap: 14px; }
 .authoring-head-side a { text-decoration: none; }
+/* The account's reading of this screen. It sits with the role because the two answer neighbouring
+   questions — what this account may do, and how much of the machinery it wants to see. */
+.expert-toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--editor-help); cursor: pointer; }
+.expert-toggle input { width: 18px; height: 18px; accent-color: var(--green); }
 .authoring-page .eyebrow { font-size: 10px; }
 .authoring-page .icon-button { min-width: var(--editor-control); min-height: var(--editor-control); font-size: 14px; }
 .authoring-page .text-button { font-size: 12px; }
@@ -83,6 +87,13 @@
 .editor-check { flex-direction: row; align-items: center; gap: 9px; }
 .editor-check input { width: 18px; height: 18px; min-height: 0; flex: 0 0 18px; accent-color: var(--green); }
 .editor-check.inline { margin: 0; }
+
+/* Term links as the words they sit on, which is how they were made: typed into the text above. */
+.editor-links { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--editor-rule); }
+.editor-link-list { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+.editor-link { display: inline-flex; align-items: center; gap: 4px; padding: 5px 6px 5px 11px; border: 1px solid #cdd8bd;
+  border-radius: 999px; background: var(--editor-sunken); font-size: var(--editor-label-size); color: var(--editor-label); }
+.authoring-page .editor-link .icon-button { min-width: 24px; min-height: 24px; border-radius: 999px; }
 
 .editor-block { border: 1px solid var(--line); border-radius: 10px; background: var(--white); padding: 16px 18px 20px; }
 .editor-block > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px;
@@ -181,6 +192,12 @@
 .scene-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(136px, 1fr)); gap: 10px 14px; }
 .scene-fields .editor-field { margin-top: 10px; }
 .scene-panel textarea { font-family: ui-monospace, monospace; font-size: 13px; }
+.scene-swatches { display: flex; flex-wrap: wrap; gap: 6px; }
+.scene-swatch { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--editor-field-line); background: var(--white); }
+.scene-swatch.active { outline: 2px solid var(--green); outline-offset: 2px; }
+/* Nothing to fill with, drawn as the absence it is rather than as another colour. */
+.scene-swatch.empty { background-image:
+  linear-gradient(to top right, transparent calc(50% - 1px), #a8764f 50%, transparent calc(50% + 1px)); }
 .scene-frames { margin-top: 14px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--editor-sunken); }
 .scene-frames-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .scene-frame-list { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
@@ -215,4 +232,5 @@
   .authoring-page .editor-field input, .authoring-page .editor-field select,
   .authoring-page .role-row select { min-height: 44px; }
   .authoring-page .button { min-height: 44px; }
+  .scene-swatch { width: 38px; height: 38px; }
 }

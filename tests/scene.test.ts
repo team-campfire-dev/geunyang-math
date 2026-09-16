@@ -3,7 +3,7 @@ import { termContentBlockSchema, validateClass } from '@/core/content';
 import {
   changeFor, createSceneItem, cssColor, emptyScene, isSceneColor, itemBounds, moveItem, nameItem, pathPattern,
   placeInZone, placementOffset, removeFromZone, reorderItem, resizeItem, sceneItemKinds, setChange, taskComplete,
-  zoneAt, type SceneItem, type SceneZone,
+  sceneColorLabels, sceneColors, zoneAt, type SceneItem, type SceneZone,
 } from '@/shared/scene';
 import { seedClasses } from './fixtures/content';
 
@@ -199,5 +199,16 @@ describe('a drawing the learner arranges', () => {
     const illustrated = structuredClone(seedClasses[0]);
     illustrated.problems[0].promptContent.push(still as never);
     expect(() => validateClass(illustrated)).not.toThrow();
+  });
+});
+
+describe('naming a colour for whoever is drawing', () => {
+  it('has a word for every colour the palette offers, and none for one it does not', () => {
+    for (const name of sceneColors) {
+      expect(sceneColorLabels[name], name).toBeTruthy();
+      // The key names the colour for the renderer; the label has to say something else.
+      expect(sceneColorLabels[name], name).not.toBe(name);
+    }
+    expect(Object.keys(sceneColorLabels).sort()).toEqual([...sceneColors].sort());
   });
 });

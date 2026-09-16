@@ -8,6 +8,7 @@ import {
 } from '@/shared/authoring';
 import { Icon } from '@/features/learning/icons';
 import { AddBlock, BlockCard } from './block-editor';
+import { useExpertMode } from './expert-mode';
 
 const refusal = '용어 풀이 안에는 놓아 보는 그림을 둘 수 없어요. 풀이는 문항이 기다리는 동안 읽는 설명이라 조작을 요구하지 않아요.';
 
@@ -15,6 +16,7 @@ function TermForm({ edit, skills, busy, existing, onChange, onPublish, onClose }
   edit: TermEdit; skills: SkillChoice[]; busy: boolean; existing: TermSummary | null;
   onChange: (next: TermEdit) => void; onPublish: () => void; onClose: () => void;
 }) {
+  const expert = useExpertMode();
   const taken = edit.blocks.map((block) => block.blockId);
   const writeBlocks = (blocks: ContentBlock[]) => onChange({ ...edit, blocks });
   const ready = !!edit.termKey.trim() && !!edit.label.trim() && !!edit.summary.trim() && !!edit.skillKey && edit.blocks.length > 0;
@@ -22,20 +24,20 @@ function TermForm({ edit, skills, busy, existing, onChange, onPublish, onClose }
     <legend>{existing ? `${existing.label} 고치기` : '새 용어'}</legend>
     <p className="editor-note">
       {existing
-        ? `발행하면 ${existing.versionId} 다음 판본이 새로 생기고, 이 용어를 쓰는 모든 수업에 바로 반영돼요. 이전 판본은 그대로 남습니다.`
+        ? `발행하면 ${expert ? existing.versionId : existing.label}의 다음 판이 새로 생기고, 이 용어를 쓰는 모든 수업에 바로 반영돼요. 이전 판은 그대로 남습니다.`
         : '발행하면 바로 쓸 수 있어요. 용어 키는 나중에 바꿀 수 없으니 본문에서 부를 이름으로 정해 주세요.'}
     </p>
-    <label className="editor-field"><span className="editor-label">용어 키</span>
+    {(!existing || expert) && <label className="editor-field"><span className="editor-label">용어 키</span>
       <input value={edit.termKey} disabled={!!existing} placeholder="term.denominator"
         onChange={(event) => onChange({ ...edit, termKey: event.target.value.trim() })} />
-      <small>본문 주석이 이 키로 용어를 부릅니다. 발행한 뒤에는 바꿀 수 없어요.</small></label>
+      <small>이 용어를 부르는 이름이에요. 글에서 @로 고를 때는 쓸 일이 없고, 발행한 뒤에는 바꿀 수 없어요.</small></label>}
     <label className="editor-field"><span className="editor-label">표시 이름</span>
       <input value={edit.label} maxLength={191} onChange={(event) => onChange({ ...edit, label: event.target.value })} /></label>
     <label className="editor-field"><span className="editor-label">한 줄 요약</span>
       <input value={edit.summary} maxLength={500} onChange={(event) => onChange({ ...edit, summary: event.target.value })} /></label>
     <label className="editor-field"><span className="editor-label">다루는 개념</span>
       <select value={edit.skillKey} onChange={(event) => onChange({ ...edit, skillKey: event.target.value })}>
-        {skills.map((skill) => <option key={skill.key} value={skill.key}>{skill.label} · {skill.key}</option>)}
+        {skills.map((skill) => <option key={skill.key} value={skill.key}>{expert ? `${skill.label} · ${skill.key}` : skill.label}</option>)}
       </select>
       <small>이 개념을 배우는 중이거나 평가하는 동안에는 이 용어가 숨겨져요. 발행한 뒤에는 바꿀 수 없어요.</small></label>
 
@@ -73,6 +75,8 @@ export function TermPanel({ classes, skills, terms, busy, mayEditDictionary, onL
   const [scopeKey, setScopeKey] = useState(classes[0]?.classKey ?? '');
   const [edit, setEdit] = useState<TermEdit | null>(null);
   const [existing, setExisting] = useState<TermSummary | null>(null);
+  const expert = useExpertMode();
+  const skillLabel = (key: string) => skills.find((skill) => skill.key === key)?.label ?? key;
   const scope = { scopeKind, scopeKey: scopeKind === 'class' ? scopeKey : '' };
   const open = (term: TermSummary | null) => {
     setExisting(term);
@@ -109,7 +113,7 @@ export function TermPanel({ classes, skills, terms, busy, mayEditDictionary, onL
           {terms.map((term) => <div key={term.versionId} className="role-row">
             <span className="role-who">
               <strong>{term.label}</strong>
-              <small>{term.termKey} · {term.skillKey} · {term.versionId}</small>
+              <small>{expert ? `${term.termKey} · ${term.skillKey} · ${term.versionId}` : `${skillLabel(term.skillKey)} · ${term.summary}`}</small>
             </span>
             <button type="button" className="button secondary" disabled={busy} onClick={() => open(term)}>고치기</button>
           </div>)}

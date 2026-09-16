@@ -3,8 +3,8 @@
 import { useRef, useState } from 'react';
 import {
   changeFor, createSceneItem, createZone, emptyFrames, frameLimits, itemBounds, moveItem, nameItem, reorderItem,
-  resizeItem, sceneColors, sceneItemKinds, sceneItemLabels, sceneLimits, setChange, snap,
-  type Scene, type SceneFrame, type SceneItem, type SceneItemKind, type SceneZone,
+  resizeItem, sceneColorLabels, sceneColors, sceneItemKinds, sceneItemLabels, sceneLimits, scenePalette, setChange, snap,
+  type Scene, type SceneColor, type SceneFrame, type SceneItem, type SceneItemKind, type SceneZone,
 } from '@/shared/scene';
 import { SceneShapes } from '@/features/learning/content-blocks';
 import { Icon } from '@/features/learning/icons';
@@ -285,11 +285,23 @@ function ZonePanel({ zone, items, onChange, onRemove }: {
   </div>;
 }
 
+/**
+ * A colour is chosen by looking at it. The palette's keys name these for the renderer, and one of
+ * them reading `fill-soft` told an author nothing about what it would draw.
+ */
 function ColorPicker({ label, value, onChange }: { label: string; value: string | undefined; onChange: (next: string) => void }) {
-  return <label className="editor-field"><span className="editor-label">{label}</span>
-    <select value={value ?? 'none'} onChange={(event) => onChange(event.target.value)}>
-      {sceneColors.map((name) => <option key={name} value={name}>{name}</option>)}
-    </select></label>;
+  const chosen = value ?? 'none';
+  return <div className="editor-field">
+    <span className="editor-label">{label}</span>
+    <div className="scene-swatches" role="group" aria-label={label}>
+      {sceneColors.map((name) => <button key={name} type="button" aria-pressed={name === chosen} aria-label={sceneColorLabels[name]}
+        title={sceneColorLabels[name]} className={`scene-swatch${name === chosen ? ' active' : ''}${name === 'none' ? ' empty' : ''}`}
+        style={name === 'none' ? undefined : { background: scenePalette[name] }}
+        onClick={() => onChange(name)} />)}
+    </div>
+    {/* A drawing may also carry a colour written as a hex value, which no swatch stands for. */}
+    <small>{sceneColorLabels[chosen as SceneColor] ?? chosen}</small>
+  </div>;
 }
 
 function ItemPanel({ item, index, total, arrangeable, onChange, onName, onReorder, onRemove }: {

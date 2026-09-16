@@ -73,6 +73,7 @@ export const authoringActionSchema = z.discriminatedUnion('action', [
     summary: z.string().trim().min(1).max(500),
     blocks: blockList.min(1).max(20),
   }).strict() }).strict(),
+  z.object({ action: z.literal('editor.expertMode'), on: z.boolean() }).strict(),
 ]);
 
 /**
@@ -246,13 +247,14 @@ export class AuthoringService {
 
   async workspace(userId: string): Promise<AuthoringWorkspace> {
     const role = await authoringRole(this.db, userId);
-    if (!role) return { role: null, drafts: [], classes: [], accounts: [], skills: [] };
-    const [drafts, versions, accounts, skills] = await Promise.all([
+    if (!role) return { role: null, drafts: [], classes: [], accounts: [], skills: [], expertMode: false };
+    const [drafts, versions, accounts, skills, account] = await Promise.all([
       this.db.contentDraft.findMany({ where: mayEditEveryDraft(role) ? {} : { authorId: userId },
         orderBy: { updatedAt: 'desc' }, take: 50, include: { author: { select: { displayName: true } } } }),
       this.db.classVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }], select: { id: true, classKey: true, title: true } }),
       this.accounts(userId, role),
       this.db.skill.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }], select: { key: true, label: true } }),
+      this.db.user.findUnique({ where: { id: userId }, select: { editorExpertMode: true } }),
     ]);
     const openDrafts = new Set(drafts.filter((draft) => draft.status !== 'published').map((draft) => draft.classKey));
     const byKey = new Map<string, { title: string; versions: string[] }>();
@@ -266,6 +268,7 @@ export class AuthoringService {
       role,
       accounts,
       skills,
+      expertMode: account?.editorExpertMode ?? false,
       drafts: (drafts as DraftRow[]).map((row) => this.summary(row, userId)),
       classes: [...byKey.entries()].map(([classKey, entry]) => ({
         classKey, title: entry.title, latestVersionId: entry.versions[entry.versions.length - 1],
@@ -428,6 +431,16 @@ export class AuthoringService {
     return { ...await this.listTerms(userId, edit.scopeKind, edit.scopeKey), publishedTermVersionId: versionId };
   }
 
+  /**
+   * How much of itself the editor shows this account. It changes nothing about what the account may
+   * do — the role decides that — so holding any content role is enough to set it.
+   */
+  async setExpertMode(userId: string, on: boolean): Promise<AuthoringResponse> {
+    await this.require(userId);
+    await this.db.user.update({ where: { id: userId }, data: { editorExpertMode: on } });
+    return { workspace: await this.workspace(userId) };
+  }
+
   async createDraft(userId: string, classKey: string): Promise<AuthoringResponse> {
     await this.require(userId);
     const versions = await this.db.classVersion.findMany({ where: { classKey }, orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }], select: { id: true } });
@@ -550,6 +563,7 @@ export class AuthoringService {
       case 'role.revoke': return this.revokeRole(userId, action.userId);
       case 'term.list': return this.listTerms(userId, action.scopeKind, action.scopeKey);
       case 'term.save': return this.saveTerm(userId, action.edit);
+      case 'editor.expertMode': return this.setExpertMode(userId, action.on);
     }
   }
 }

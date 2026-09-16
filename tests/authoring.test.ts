@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { supportedBlockTypes, termContentBlockSchema, validateClass } from '@/core/content';
 import {
-  blockForms, blockFormOf, moveBlock, newProblem, nextBlockId, nextProblemBlockId, nextProblemVersionId, nextSectionId,
-  problemsOfBlock, pruneBlock, pruneSections, renameProblem, renameProblemReferences, renamedProblemVersionId,
-  nextTermVersionId, responseSpecOf, scopeTermAnnotations, suggestVersionId, termBlockForms, toPublicProblem, writePath,
+  blockForms, blockFormOf, classBlockForms, moveBlock, newProblem, nextBlockId, nextProblemBlockId, nextProblemVersionId,
+  nextSectionId, problemBlockForms, problemGist, problemsOfBlock, pruneBlock, pruneSections, renameProblem,
+  renameProblemReferences, renamedProblemVersionId, nextTermVersionId, responseSpecOf, scopeTermAnnotations,
+  suggestVersionId, termBlockForms, toPublicProblem, versionLabel, writePath,
 } from '@/shared/authoring';
 import { seedClasses } from './fixtures/content';
 
@@ -63,6 +64,19 @@ describe('what the editor sends is what publishing accepts', () => {
     expect(offered).toContain('core.scene');
     expect(offered).not.toContain('core.figure');
     expect(offered).not.toContain('math.fraction_strip');
+  });
+
+  it('offers one paragraph wherever a paragraph may go, never a choice of schema version', () => {
+    const paragraphs = (forms: typeof blockForms) =>
+      forms.filter((form) => !form.retired && form.kind === 'core.rich_text');
+    // A lesson's paragraph is the one that can carry term links; a definition's is the one that cannot.
+    expect(paragraphs(classBlockForms).map((form) => form.typeVersion)).toEqual([2]);
+    expect(paragraphs(problemBlockForms).map((form) => form.typeVersion)).toEqual([2]);
+    expect(paragraphs(termBlockForms).map((form) => form.typeVersion)).toEqual([1]);
+    // Both are called the same thing, because to whoever is writing they are the same thing.
+    expect([...new Set(paragraphs(blockForms).map((form) => form.label))]).toEqual(['글']);
+    // The older one still opens, so a class published with it can be read and edited.
+    expect(blockFormOf({ kind: 'core.rich_text', typeVersion: 1 })).toBeDefined();
   });
 
   it('starts every new block at a payload the validator already accepts', () => {
@@ -230,5 +244,33 @@ describe('writing a definition', () => {
       expect(() => termContentBlockSchema.parse({ blockId: 'term:block:1', kind: form.kind,
         typeVersion: form.typeVersion, required: true, payload: form.create() }), form.kind).not.toThrow();
     }
+  });
+});
+
+describe('naming a version and a question for whoever is writing', () => {
+  it('reads a version as the number it ends in, and leaves an unnumbered name alone', () => {
+    expect(versionLabel('fraction-meaning:v4')).toBe('4판');
+    expect(versionLabel('fraction-meaning:v12')).toBe('12판');
+    expect(versionLabel('fraction-meaning:draft')).toBe('fraction-meaning:draft');
+    expect(versionLabel('')).toBe('');
+  });
+
+  it('says which question is which by its first words, not by its name', () => {
+    const problem = newProblem('fraction-meaning:practice-1:v2', []);
+    expect(problemGist(problem)).toBe('여기에 문제를 씁니다.');
+    const long = { ...problem, promptContent: [{ ...problem.promptContent[0],
+      payload: { text: `${'가'.repeat(60)}`, terms: [] } }] };
+    expect(problemGist(long)).toHaveLength(43);
+    expect(problemGist(long).endsWith('…')).toBe(true);
+    // Line breaks in the source are not breaks in a one-line summary.
+    const wrapped = { ...problem, promptContent: [{ ...problem.promptContent[0],
+      payload: { text: '  첫 줄\n\n  둘째 줄  ', terms: [] } }] };
+    expect(problemGist(wrapped)).toBe('첫 줄 둘째 줄');
+    // A formula cannot be drawn on one line, so the line says one is there.
+    const math = { ...problem, promptContent: [{ ...problem.promptContent[0],
+      payload: { text: '$\\frac{3}{7}$에서 분모는 어떤 수인가요?', terms: [] } }] };
+    expect(problemGist(math)).toBe('[식]에서 분모는 어떤 수인가요?');
+    // A question whose prompt is only a drawing has no words to show, and says nothing rather than guessing.
+    expect(problemGist({ ...problem, promptContent: [] })).toBe('');
   });
 });

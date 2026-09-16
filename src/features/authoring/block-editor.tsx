@@ -2,9 +2,11 @@
 
 import type { ReactNode } from 'react';
 import type { ContentBlock } from '@/shared/api';
-import { blockForms, blockFormOf, moveBlock, readPath, writePath, type BlockField, type BlockForm, type TermChoice } from '@/shared/authoring';
+import { classBlockForms, blockFormOf, moveBlock, readPath, writePath, type BlockField, type BlockForm, type TermChoice } from '@/shared/authoring';
+import type { TermAnnotation } from '@/shared/rich-text';
 import { TermText } from './term-mentions';
 import { useRemovalNotice } from './edit-history';
+import { useExpertMode } from './expert-mode';
 import { Icon } from '@/features/learning/icons';
 import { SceneEditor } from './scene-editor';
 
@@ -66,11 +68,34 @@ function Rows({ form, payload, onChange }: { form: BlockForm; payload: Record<st
   </div>;
 }
 
+/**
+ * The term links a paragraph carries, shown as the words they sit on. They are put there by typing
+ * `@` in the text above, which is also what decides which occurrence of a word is meant, so this is
+ * only where one is taken back off.
+ */
+function TermLinks({ payload, onChange }: { payload: Record<string, unknown>; onChange: (next: Record<string, unknown>) => void }) {
+  const notifyRemoval = useRemovalNotice();
+  const terms = Array.isArray(payload.terms) ? (payload.terms as TermAnnotation[]) : [];
+  if (!terms.length) return null;
+  return <div className="editor-links">
+    <span className="editor-label">연결한 용어</span>
+    <div className="editor-link-list">
+      {terms.map((term, index) => <span key={`${term.termKey}:${term.surface}:${index}`} className="editor-link">
+        {term.surface}
+        <button type="button" className="icon-button" aria-label={`${term.surface} 용어 연결 끊기`}
+          onClick={() => { onChange({ ...payload, terms: terms.filter((_, position) => position !== index) }); notifyRemoval('용어 연결'); }}>
+          <Icon name="close" size={12} /></button>
+      </span>)}
+    </div>
+  </div>;
+}
+
 export function BlockEditor({ block, problems, arrangingRefusal, termChoices, onChange }: {
   block: ContentBlock; problems?: ReactNode; arrangingRefusal?: string; termChoices?: TermChoice[];
   onChange: (next: ContentBlock) => void;
 }) {
   const form = blockFormOf(block);
+  const expert = useExpertMode();
   const setPayload = (payload: Record<string, unknown>) => onChange({ ...block, payload });
   if (!form) {
     return <p className="editor-note">이 앱이 모르는 블록이에요({block.kind}@{block.typeVersion}). 여기서는 고칠 수 없고, 대체 설명만 바꿀 수 있어요.</p>;
@@ -82,7 +107,11 @@ export function BlockEditor({ block, problems, arrangingRefusal, termChoices, on
       ? <TermText key={field.key} payload={block.payload} terms={termChoices ?? []} onChange={setPayload} />
       : <Field key={field.key} field={field} value={readPath(block.payload, field.key)}
           onChange={(value) => setPayload(writePath(block.payload, field.key, value))} />))}
-    {form.list && <Rows form={form} payload={block.payload} onChange={setPayload} />}
+    {form.list && (writesTerms && !expert
+      // The picker above writes these. Its table names a term by key and counts which occurrence it
+      // meant, which is the app's bookkeeping, not a decision anyone makes while writing a lesson.
+      ? <TermLinks payload={block.payload} onChange={setPayload} />
+      : <Rows form={form} payload={block.payload} onChange={setPayload} />)}
     {form.editsScene && <SceneEditor payload={block.payload} arrangingRefusal={arrangingRefusal} onChange={setPayload} />}
     {form.editsProblems && problems}
   </>;
@@ -93,18 +122,21 @@ export function BlockCard({ block, index, total, problems, arrangingRefusal, ter
   onChange: (next: ContentBlock) => void; onMove: (delta: number) => void; onRemove: () => void;
 }) {
   const form = blockFormOf(block);
+  const expert = useExpertMode();
   const notifyRemoval = useRemovalNotice();
   return <section className="editor-block">
     <header>
       <div>
         <strong>{form?.label ?? `${block.kind}@${block.typeVersion}`}</strong>
-        <small>{block.blockId}</small>
+        {expert && <small>{block.blockId}</small>}
       </div>
       <div className="editor-block-tools">
-        <label className="editor-check inline">
+        {/* Whether an app too old to draw this block may still finish the lesson, and what it says
+            instead. That is a question about released apps, not about the lesson being written. */}
+        {expert && <label className="editor-check inline">
           <input type="checkbox" checked={block.required} onChange={(event) => onChange({ ...block, required: event.target.checked })} />
           <span className="editor-label">필수</span>
-        </label>
+        </label>}
         <button type="button" className="icon-button" aria-label="위로" disabled={index === 0} onClick={() => onMove(-1)}>↑</button>
         <button type="button" className="icon-button" aria-label="아래로" disabled={index === total - 1} onClick={() => onMove(1)}>↓</button>
         <button type="button" className="icon-button" aria-label="블록 삭제"
@@ -113,13 +145,13 @@ export function BlockCard({ block, index, total, problems, arrangingRefusal, ter
     </header>
     {form?.hint && <p className="editor-note">{form.hint}</p>}
     <BlockEditor block={block} problems={problems} arrangingRefusal={arrangingRefusal} termChoices={termChoices} onChange={onChange} />
-    {!block.required && <Field field={{ key: 'fallback', label: '대체 설명', kind: 'text', optional: true, hint: '이 블록을 모르는 앱 버전에서 대신 보여줄 문장이에요.' }}
+    {expert && !block.required && <Field field={{ key: 'fallback', label: '대체 설명', kind: 'text', optional: true, hint: '이 블록을 모르는 앱 버전에서 대신 보여줄 문장이에요.' }}
       value={block.fallback} onChange={(value) => onChange({ ...block, fallback: typeof value === 'string' ? value : '' })} />}
   </section>;
 }
 
 /** The caller names the new block, since where a block lands decides what its name should read as. */
-export function AddBlock({ label = '블록 추가', forms = blockForms, blockId, onAdd }: {
+export function AddBlock({ label = '블록 추가', forms = classBlockForms, blockId, onAdd }: {
   label?: string; forms?: BlockForm[]; blockId: (kind: string) => string; onAdd: (block: ContentBlock) => void;
 }) {
   return <div className="editor-add">

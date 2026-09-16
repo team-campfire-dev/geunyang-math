@@ -4,12 +4,13 @@ import { useState } from 'react';
 import type { ContentBlock } from '@/shared/api';
 import { answerSpec, answerText, type AnswerSpec } from '@/shared/answer';
 import {
-  moveBlock, newProblem, nextProblemBlockId, nextProblemVersionId, problemBlockForms, problemsOfBlock,
-  type DraftProblem, type TermChoice,
+  moveBlock, newProblem, nextProblemBlockId, nextProblemVersionId, problemBlockForms, problemGist, problemsOfBlock,
+  type DraftProblem, type SkillChoice, type TermChoice,
 } from '@/shared/authoring';
 import { Icon } from '@/features/learning/icons';
 import { AddBlock, BlockCard } from './block-editor';
 import { useRemovalNotice } from './edit-history';
+import { useExpertMode } from './expert-mode';
 
 /**
  * An author writes the answer the way a learner will type it, and the same reader decides both. A
@@ -40,15 +41,16 @@ function AnswerField({ spec, onChange }: { spec: AnswerSpec; onChange: (next: An
   </div>;
 }
 
-function SkillPicker({ skillKeys, chosen, onChange }: { skillKeys: string[]; chosen: string[]; onChange: (next: string[]) => void }) {
-  if (!skillKeys.length) return null;
+/** The concepts this class teaches, named the way the catalogue names them rather than by key. */
+function SkillPicker({ skills, chosen, onChange }: { skills: SkillChoice[]; chosen: string[]; onChange: (next: string[]) => void }) {
+  if (!skills.length) return null;
   return <div className="editor-skills">
     <span className="editor-label">다루는 개념</span>
     <div className="editor-skill-buttons">
-      {skillKeys.map((key) => <label key={key} className="editor-check">
-        <input type="checkbox" checked={chosen.includes(key)}
-          onChange={() => onChange(chosen.includes(key) ? chosen.filter((item) => item !== key) : [...chosen, key])} />
-        <span>{key}</span>
+      {skills.map((skill) => <label key={skill.key} className="editor-check">
+        <input type="checkbox" checked={chosen.includes(skill.key)}
+          onChange={() => onChange(chosen.includes(skill.key) ? chosen.filter((item) => item !== skill.key) : [...chosen, skill.key])} />
+        <span>{skill.label}</span>
       </label>)}
     </div>
   </div>;
@@ -73,17 +75,21 @@ function ProblemBlocks({ label, hint, part, problem, blocks, taken, termChoices,
   </div>;
 }
 
-function ProblemCard({ problem, index, total, skillKeys, taken, termChoices, onChange, onMove, onRemove }: {
-  problem: DraftProblem; index: number; total: number; skillKeys: string[]; taken: string[]; termChoices: TermChoice[];
+function ProblemCard({ problem, index, total, skills, taken, termChoices, onChange, onMove, onRemove }: {
+  problem: DraftProblem; index: number; total: number; skills: SkillChoice[]; taken: string[]; termChoices: TermChoice[];
   onChange: (next: DraftProblem) => void; onMove: (delta: number) => void; onRemove: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const expert = useExpertMode();
   const notifyRemoval = useRemovalNotice();
   return <section className="editor-problem">
     <header>
       <button type="button" className="editor-problem-open" aria-expanded={open} onClick={() => setOpen(!open)}>
         <Icon name="chevron" size={14} />
-        <span><strong>{index + 1}번 문항</strong><small>{problem.problemVersionId}</small></span>
+        {/* Folded shut, a question has to say which one it is. Its name does that for whoever
+            operates the service; for everyone else the question itself does. */}
+        <span><strong>{index + 1}번 문항</strong>
+          <small>{expert ? problem.problemVersionId : problemGist(problem) || '아직 비어 있어요'}</small></span>
       </button>
       <div className="editor-block-tools">
         <button type="button" className="icon-button" aria-label={`${index + 1}번 문항 위로`} disabled={index === 0} onClick={() => onMove(-1)}>↑</button>
@@ -96,7 +102,7 @@ function ProblemCard({ problem, index, total, skillKeys, taken, termChoices, onC
       <ProblemBlocks label="문제" part="prompt" problem={problem} blocks={problem.promptContent} taken={taken} termChoices={termChoices}
         onChange={(promptContent) => onChange({ ...problem, promptContent })} />
       <AnswerField spec={problem.gradingSpec} onChange={(gradingSpec) => onChange({ ...problem, gradingSpec })} />
-      <SkillPicker skillKeys={skillKeys} chosen={problem.skillKeys} onChange={(next) => onChange({ ...problem, skillKeys: next })} />
+      <SkillPicker skills={skills} chosen={problem.skillKeys} onChange={(next) => onChange({ ...problem, skillKeys: next })} />
       <ProblemBlocks label="힌트" part="hint" problem={problem} blocks={problem.hints} taken={taken} termChoices={termChoices}
         hint="힌트를 하나라도 두면 학습 화면에 힌트 버튼이 생겨요. 힌트를 열고 맞히면 도움을 받은 풀이로 기록합니다."
         onChange={(hints) => onChange({ ...problem, hints })} />
@@ -112,8 +118,8 @@ function ProblemCard({ problem, index, total, skillKeys, taken, termChoices, onC
  * question is written, changed and removed; removing one here drops it from the version being
  * written, while every published version keeps the question it was published with.
  */
-export function ProblemSetEditor({ block, problems, skillKeys, classKey, role, versionId, taken, termChoices, onChange }: {
-  block: ContentBlock; problems: DraftProblem[]; skillKeys: string[]; classKey: string; role: string; versionId: string;
+export function ProblemSetEditor({ block, problems, skills, classKey, role, versionId, taken, termChoices, onChange }: {
+  block: ContentBlock; problems: DraftProblem[]; skills: SkillChoice[]; classKey: string; role: string; versionId: string;
   taken: string[]; termChoices: TermChoice[]; onChange: (block: ContentBlock, problems: DraftProblem[]) => void;
 }) {
   const ids = Array.isArray(block.payload.problemVersionIds) ? (block.payload.problemVersionIds as string[]) : [];
@@ -124,12 +130,12 @@ export function ProblemSetEditor({ block, problems, skillKeys, classKey, role, v
     onChange({ ...block, payload: { ...block.payload, problemVersionIds: nextIds } }, nextProblems);
   const add = () => {
     const created = newProblem(nextProblemVersionId(classKey, role, versionId, problems.map((item) => item.problemVersionId)),
-      chosen[0]?.skillKeys ?? problems[0]?.skillKeys ?? skillKeys.slice(0, 1));
+      chosen[0]?.skillKeys ?? problems[0]?.skillKeys ?? skills.slice(0, 1).map((skill) => skill.key));
     write([...ids, created.problemVersionId], [...problems, created]);
   };
   return <div className="editor-problems">
     {chosen.map((problem, index) => <ProblemCard key={problem.problemVersionId} problem={problem} index={index}
-      total={chosen.length} skillKeys={skillKeys} taken={taken} termChoices={termChoices}
+      total={chosen.length} skills={skills} taken={taken} termChoices={termChoices}
       onChange={(next) => write(ids, problems.map((item) => (item.problemVersionId === problem.problemVersionId ? next : item)))}
       onMove={(delta) => write(moveBlock(ids, index, delta), problems)}
       onRemove={() => write(ids.filter((item) => item !== problem.problemVersionId),

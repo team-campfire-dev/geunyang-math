@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react';
 import type { TermChoice } from '@/shared/authoring';
 import { occurrenceAt, termRefId, type TermAnnotation } from '@/shared/rich-text';
+import { useExpertMode } from './expert-mode';
 
 /**
  * The mention being typed at the caret, if any. A mention is one unbroken run right after `@`, so a
@@ -44,6 +45,7 @@ export function TermText({ payload, terms, onChange }: {
   const annotations = Array.isArray(payload.terms) ? (payload.terms as TermAnnotation[]) : [];
   const [mention, setMention] = useState<{ from: number; query: string } | null>(null);
   const [highlight, setHighlight] = useState(0);
+  const expert = useExpertMode();
   const area = useRef<HTMLTextAreaElement>(null);
 
   const matches = mention
@@ -61,7 +63,7 @@ export function TermText({ payload, terms, onChange }: {
   };
 
   return <label className="editor-field term-writing">
-    <span className="editor-label">본문</span>
+    <span className="editor-label">글</span>
     <textarea ref={area} rows={4} value={text}
       onChange={(event) => { onChange({ ...payload, text: event.target.value }); look(event.target.value, event.target.selectionStart); }}
       onClick={(event) => look(text, event.currentTarget.selectionStart)}
@@ -75,14 +77,14 @@ export function TermText({ payload, terms, onChange }: {
       }}
       // The list closes a moment later so a click on it still lands.
       onBlur={() => window.setTimeout(() => setMention(null), 150)} />
-    <small>용어를 걸려면 <code>@</code> 뒤에 이름을 적고 고르세요. 고른 이름이 본문에 들어가고 아래 목록에 연결이 추가돼요.</small>
+    <small>용어를 걸려면 <code>@</code> 뒤에 이름을 적고 고르세요. 고른 이름이 글에 들어가고, 아래에 연결한 용어로 남습니다.</small>
     {mention && (matches.length
       ? <ul className="term-mentions" role="listbox">
         {matches.map((term, index) => <li key={choiceKey(term)}>
           <button type="button" className={index === at ? 'active' : ''}
             onMouseDown={(event) => event.preventDefault()} onClick={() => pick(term)}>
             <strong>{term.label}</strong>
-            <small>{term.termKey} · {term.scopeKind === 'class' ? '이 클래스' : '공통 사전'}</small>
+            <small>{expert && `${term.termKey} · `}{term.scopeKind === 'class' ? '이 클래스' : '공통 사전'}</small>
           </button>
         </li>)}
       </ul>

@@ -3,15 +3,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ClassSection, ContentBlock } from '@/shared/api';
 import {
-  blockFormOf, editShape, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId, toPublicProblem,
+  blockFormOf, editShape, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId, toPublicProblem, versionLabel,
   type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail, type DraftEdit,
-  type DraftProblem, type DraftSummary, type TermSummary,
+  type DraftProblem, type DraftSummary, type SkillChoice, type TermSummary,
 } from '@/shared/authoring';
 import { ApiError, learningApi, type Session } from '@/features/learning/api-client';
 import { ContentBlocks } from '@/features/learning/content-blocks';
 import { Icon } from '@/features/learning/icons';
 import { authoringApi } from './api-client';
 import { RemovalNotice, useEditHistory } from './edit-history';
+import { ExpertMode, useExpertMode } from './expert-mode';
 import { AddBlock, BlockCard } from './block-editor';
 import { ProblemSetEditor } from './problem-editor';
 import { TermPanel } from './term-editor';
@@ -205,8 +206,11 @@ export function AuthoringWorkspace() {
       </div>}</Shell>;
   }
 
+  const expert = workspace.expertMode;
+  const onExpert = (on: boolean) => act({ action: 'editor.expertMode', on });
+
   if (!draft || !edit) {
-    return <Shell role={workspace.role}>
+    return <Shell role={workspace.role} expert={expert} busy={busy} onExpert={onExpert}>
       {error && <p className="error-banner" role="alert">{error}</p>}
       {notice && <p className="notice-banner">{notice}</p>}
       <DraftList workspace={workspace} busy={busy}
@@ -217,7 +221,7 @@ export function AuthoringWorkspace() {
         onList={(scopeKind, scopeKey) => act({ action: 'term.list', scopeKind, scopeKey }, (response) => setTerms(response.terms ?? []))}
         onSave={(edit) => act({ action: 'term.save', edit }, (response) => {
           setTerms(response.terms ?? []);
-          setNotice(`${response.publishedTermVersionId} 판본을 발행했어요.`);
+          setNotice(expert ? `${response.publishedTermVersionId} 판본을 발행했어요.` : '용어를 발행했어요.');
         })} />
       {mayGrantRoles(workspace.role) && <RolePanel accounts={workspace.accounts} busy={busy} matches={matches}
         onSearch={(query) => act({ action: 'account.search', query }, (response) => setMatches(response.matches ?? []))}
@@ -240,13 +244,18 @@ export function AuthoringWorkspace() {
       ? { ...item, contentBlocks: item.contentBlocks.map((existing, place) => (place === index ? block : existing)) }
       : item));
   const previewProblems = edit.problems.map(toPublicProblem);
+  // A question may only claim a concept this class teaches, and it names them the way a catalogue does.
+  const draftSkills: SkillChoice[] = draft.skillKeys.map((key) =>
+    workspace.skills.find((skill) => skill.key === key) ?? { key, label: key });
 
-  const savedLabel = published ? `발행 완료 · ${draft.publishedVersionId}`
+  const savedLabel = published
+    ? `발행 완료 · ${expert ? draft.publishedVersionId : versionLabel(draft.publishedVersionId ?? '')}`
     : saving === 'saving' ? '저장하는 중'
       : saving === 'failed' ? '저장하지 못했어요'
         : dirty ? '곧 저장해요' : '저장됨';
 
-  return <Shell role={workspace.role}><RemovalNotice.Provider value={notifyRemoval}>
+  return <Shell role={workspace.role} expert={expert} busy={busy} onExpert={onExpert}>
+    <RemovalNotice.Provider value={notifyRemoval}>
     <div className="editor-bar">
       <button type="button" className="back-button" onClick={() => void leave()}><Icon name="back" size={16} />초안 목록</button>
       <div className="editor-bar-side">
@@ -277,9 +286,14 @@ export function AuthoringWorkspace() {
       <div className="editor-main">
         <fieldset className="editor-panel" disabled={published}>
           <legend>클래스 정보</legend>
-          <label className="editor-field"><span className="editor-label">새 판본 ID</span>
-            <input value={edit.meta.versionId} onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, versionId: event.target.value } })} />
-            <small>발행한 판본은 고칠 수 없어서, 수정은 늘 새 판본이 돼요. 기준 판본: {draft.baseVersionId ?? '없음'}</small></label>
+          {/* The name of the version being written. The server suggests it and nothing here needs to
+              be told it, so only an operator is shown the field. */}
+          {expert
+            ? <label className="editor-field"><span className="editor-label">새 판본 ID</span>
+              <input value={edit.meta.versionId} onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, versionId: event.target.value } })} />
+              <small>발행한 판본은 고칠 수 없어서, 수정은 늘 새 판본이 돼요. 기준 판본: {draft.baseVersionId ?? '없음'}</small></label>
+            : <p className="editor-note">발행하면 {versionLabel(edit.meta.versionId)}이 돼요. 이미 발행한 판은 고칠 수 없어서,
+              수정은 늘 새 판이 됩니다. 수강 중인 사람은 시작한 판을 끝까지 봅니다.</p>}
           <label className="editor-field"><span className="editor-label">제목</span>
             <input value={edit.meta.title} onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, title: event.target.value } })} /></label>
           <label className="editor-field"><span className="editor-label">한 줄 소개</span>
@@ -309,7 +323,7 @@ export function AuthoringWorkspace() {
           return <BlockCard key={block.blockId} block={block} index={index} total={section.contentBlocks.length}
             termChoices={draft.terms}
             problems={blockFormOf(block)?.editsProblems && <ProblemSetEditor block={block} problems={edit.problems}
-              skillKeys={draft.skillKeys} classKey={draft.classKey} role={section.role} versionId={edit.meta.versionId}
+              skills={draftSkills} classKey={draft.classKey} role={section.role} versionId={edit.meta.versionId}
               taken={blockIds} termChoices={draft.terms}
               onChange={(next, problems) => setEdit({ ...edit, sections: writeSectionBlock(index, next), problems })} />}
             onChange={writeBlock}
@@ -329,7 +343,7 @@ export function AuthoringWorkspace() {
           {/* The learner's renderer, so an unsupported or malformed block looks here as it will there. */}
           <ContentBlocks blocks={section.contentBlocks} problems={previewProblems}
             renderProblem={(problem) => <div className="problem-card">
-              <div className="problem-kicker"><Icon name="pencil" size={14} />문항 미리보기<span>{problem.problemVersionId}</span></div>
+              <div className="problem-kicker"><Icon name="pencil" size={14} />문항 미리보기{expert && <span>{problem.problemVersionId}</span>}</div>
               <ContentBlocks blocks={problem.promptContent} />
             </div>} />
         </article>
@@ -351,9 +365,9 @@ export function AuthoringWorkspace() {
     </div>
 
     {confirming && <div className="editor-confirm" role="alertdialog" aria-label="발행 확인">
-      <strong>{edit.meta.versionId} 판본을 발행할까요?</strong>
+      <strong>{expert ? edit.meta.versionId : versionLabel(edit.meta.versionId)} 판본을 발행할까요?</strong>
       <p>발행하면 되돌릴 수 없어요. 이미 수강 중인 사람은 이전 판본을 계속 보고, 새로 수강하는 사람부터 이 판본을 받습니다.
-        새 종류의 블록을 넣었다면 그 블록을 아는 앱이 먼저 배포되어 있어야 해요.</p>
+        {expert && ' 새 종류의 블록을 넣었다면 그 블록을 아는 앱이 먼저 배포되어 있어야 해요.'}</p>
       <div className="editor-actions">
         <button type="button" className="button primary" disabled={busy}
           onClick={() => act({ action: 'draft.publish', draftId: draft.id }, (response) => setNotice(`${response.publishedVersionId} 판본을 발행했어요.`))}>
@@ -373,7 +387,8 @@ export function AuthoringWorkspace() {
         <Icon name="back" size={13} />되돌리기</button>
       <button type="button" className="icon-button" aria-label="알림 닫기" onClick={() => setRemoved(null)}><Icon name="close" size={13} /></button>
     </div>}
-  </RemovalNotice.Provider></Shell>;
+    </RemovalNotice.Provider>
+  </Shell>;
 }
 
 const roleNames: Record<AuthoringRole, string> = { admin: '관리자 · 발행까지', author: '작성자 · 자기 초안' };
@@ -444,23 +459,35 @@ function RolePanel({ accounts, matches, busy, onSearch, onGrant, onRevoke }: {
   </section>;
 }
 
-function Shell({ role, children }: { role?: string; children: React.ReactNode }) {
-  return <main className="authoring-page">
+/**
+ * The frame every state of this screen is drawn in, and where the account's reading of it is put
+ * into the tree. The switch is a setting, not a permission: it changes what is named on screen and
+ * nothing about what this account may write or publish.
+ */
+function Shell({ role, expert = false, busy, onExpert, children }: {
+  role?: string; expert?: boolean; busy?: boolean; onExpert?: (on: boolean) => void; children: React.ReactNode;
+}) {
+  return <ExpertMode.Provider value={expert}><main className="authoring-page">
     <header className="authoring-head">
       <div><span className="eyebrow">CONTENT STUDIO</span><h1>콘텐츠 편집</h1></div>
       <div className="authoring-head-side">
-        {role && <span className="pill">{role === 'admin' ? '관리자 · 발행 가능' : '작성자 · 검토 요청'}</span>}
+        {onExpert && <label className="expert-toggle" title="블록과 판본의 이름, 앱 호환 설정을 함께 보여줘요.">
+          <input type="checkbox" checked={expert} disabled={busy} onChange={(event) => onExpert(event.target.checked)} />
+          <span>전문가 모드</span>
+        </label>}
+        {role && <span className="pill">{role === 'admin' ? '관리자 · 발행 가능' : '작성자 · 발행은 관리자가'}</span>}
         <a className="text-button" href="/">학습 화면으로<Icon name="arrow" size={14} /></a>
       </div>
     </header>
     {children}
-  </main>;
+  </main></ExpertMode.Provider>;
 }
 
 function DraftList({ workspace, busy, onOpen, onCreate }: {
   workspace: Workspace; busy: boolean; onOpen: (draft: DraftSummary) => void; onCreate: (classKey: string) => void;
 }) {
   const [classKey, setClassKey] = useState(workspace.classes[0]?.classKey ?? '');
+  const expert = useExpertMode();
   return <>
     <fieldset className="editor-panel">
       <legend>새 초안</legend>
@@ -469,7 +496,8 @@ function DraftList({ workspace, busy, onOpen, onCreate }: {
         <label className="editor-field"><span className="editor-label">클래스</span>
           <select value={classKey} onChange={(event) => setClassKey(event.target.value)}>
             {workspace.classes.map((item) => <option key={item.classKey} value={item.classKey}>
-              {item.title} · {item.latestVersionId} → {item.suggestedVersionId}{item.hasDraft ? ' (초안 있음)' : ''}</option>)}
+              {item.title} · {expert ? item.latestVersionId : versionLabel(item.latestVersionId)} →{' '}
+              {expert ? item.suggestedVersionId : versionLabel(item.suggestedVersionId)}{item.hasDraft ? ' (초안 있음)' : ''}</option>)}
           </select></label>
         <button type="button" className="button primary" disabled={busy || !classKey} onClick={() => onCreate(classKey)}>초안 만들기</button>
       </div>
@@ -481,7 +509,7 @@ function DraftList({ workspace, busy, onOpen, onCreate }: {
         : <div className="assignment-list">{workspace.drafts.map((item) => <button key={item.id} type="button" className="assignment-row" onClick={() => onOpen(item)}>
           <span className="assignment-icon"><Icon name="pencil" size={18} /></span>
           <span className="assignment-info"><strong>{item.title}</strong>
-            <small>{item.versionId} · {item.authorName}{item.mine ? '' : ' (다른 작성자)'} · {new Date(item.updatedAt).toLocaleString('ko-KR')}</small></span>
+            <small>{expert ? item.versionId : versionLabel(item.versionId)} · {item.authorName}{item.mine ? '' : ' (다른 작성자)'} · {new Date(item.updatedAt).toLocaleString('ko-KR')}</small></span>
           <span className={`assignment-status${item.status === 'published' ? ' submitted' : ''}`}>{item.status === 'published' ? '발행함' : '작성 중'}</span>
           <Icon name="chevron" size={16} />
         </button>)}</div>}

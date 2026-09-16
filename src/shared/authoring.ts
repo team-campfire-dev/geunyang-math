@@ -86,6 +86,13 @@ export type SkillChoice = { key: string; label: string };
 export type AuthoringWorkspace = {
   role: AuthoringRole | null; drafts: DraftSummary[]; classes: ClassChoice[];
   accounts: AccountRole[]; skills: SkillChoice[];
+  /**
+   * Whether this account reads the editor as someone who also operates the service. It decides what
+   * the screen shows, never what it may do: identifiers, the compatibility switches and the
+   * validator's own words appear with it on, and what a lesson is made of is all that is left with
+   * it off.
+   */
+  expertMode: boolean;
 };
 export type AuthoringAction =
   | { action: 'draft.create'; classKey: string }
@@ -97,13 +104,37 @@ export type AuthoringAction =
   | { action: 'role.grant'; userId: string; role: AuthoringRole }
   | { action: 'role.revoke'; userId: string }
   | { action: 'term.list'; scopeKind: EditableTermScope; scopeKey: string }
-  | { action: 'term.save'; edit: TermEdit };
+  | { action: 'term.save'; edit: TermEdit }
+  | { action: 'editor.expertMode'; on: boolean };
 export type AuthoringResponse = {
   workspace: AuthoringWorkspace; draft?: DraftDetail; publishedVersionId?: string;
   matches?: AccountRole[]; terms?: TermSummary[]; publishedTermVersionId?: string;
 };
 
 const versionSuffix = /:v(\d+)$/;
+/**
+ * How a version reads to someone writing a lesson. `fraction-meaning:v4` is the name the records
+ * use; what an author needs to know is that this is the fourth one. A name that does not end in a
+ * number has nothing to shorten, so it is shown as it is rather than guessed at.
+ */
+export const versionLabel = (versionId: string) => {
+  const match = versionSuffix.exec(versionId);
+  return match ? `${match[1]}판` : versionId;
+};
+
+/**
+ * The first words of a question, for a list that would otherwise name it by its identifier. A
+ * formula is written between dollars and is drawn, not read, so a line with no room to draw one
+ * says that a formula is there rather than showing its source.
+ */
+export function problemGist(problem: DraftProblem, limit = 42): string {
+  const first = problem.promptContent.find((block) => typeof block.payload.text === 'string');
+  const text = typeof first?.payload.text === 'string'
+    ? first.payload.text.replace(/\$[^$]*\$/g, '[식]').replace(/\s+/g, ' ').trim()
+    : '';
+  return text.length > limit ? `${text.slice(0, limit)}…` : text;
+}
+
 /** Generated names end in the version they were written for, the way published records read. */
 const suffixOf = (versionId: string) => (versionSuffix.test(versionId) ? versionId.slice(versionId.lastIndexOf(':') + 1) : 'v1');
 /** Published versions are immutable, so every edit becomes the next version of the same class. */
@@ -222,12 +253,12 @@ export function problemsOfBlock(block: ContentBlock, problems: DraftProblem[]): 
 export function newProblem(problemVersionId: string, skillKeys: string[]): DraftProblem {
   return {
     problemVersionId, skillKeys: [...skillKeys],
-    promptContent: [{ blockId: `${problemVersionId}:prompt`, kind: 'core.rich_text', typeVersion: 1, required: true,
-      payload: { text: '여기에 문제를 씁니다.' } }],
+    promptContent: [{ blockId: `${problemVersionId}:prompt`, kind: 'core.rich_text', typeVersion: 2, required: true,
+      payload: { text: '여기에 문제를 씁니다.', terms: [] } }],
     gradingSpec: { kind: 'rational', numerator: 1, denominator: 2 },
     hints: [],
-    solution: [{ blockId: `${problemVersionId}:solution`, kind: 'core.rich_text', typeVersion: 1, required: true,
-      payload: { text: '여기에 풀이를 씁니다.' } }],
+    solution: [{ blockId: `${problemVersionId}:solution`, kind: 'core.rich_text', typeVersion: 2, required: true,
+      payload: { text: '여기에 풀이를 씁니다.', terms: [] } }],
   };
 }
 
@@ -258,14 +289,15 @@ export type BlockForm = {
 const altHint = '화면 낭독용 이름이에요. 수식 표기 없이 평문으로 씁니다.';
 export const blockForms: BlockForm[] = [
   {
-    kind: 'core.rich_text', typeVersion: 1, label: '본문', hint: '$...$ 안에 수식을 넣을 수 있어요.',
+    kind: 'core.rich_text', typeVersion: 1, label: '글', hint: '$...$ 안에 수식을 넣을 수 있어요.',
     create: () => ({ text: '여기에 설명을 씁니다.' }),
-    fields: [{ key: 'text', label: '본문', kind: 'multiline' }],
+    fields: [{ key: 'text', label: '글', kind: 'multiline' }],
   },
   {
-    kind: 'core.rich_text', typeVersion: 2, label: '본문 + 용어 풀이', hint: '본문에 실제로 있는 낱말을 용어로 연결해요. 지금 배우는 개념의 용어는 서버가 알아서 숨깁니다.',
+    kind: 'core.rich_text', typeVersion: 2, label: '글',
+    hint: '$...$ 안에 수식을 넣을 수 있어요. @를 치면 본문의 낱말에 용어 풀이를 걸 수 있고, 지금 배우는 개념의 용어는 알아서 숨겨집니다.',
     create: () => ({ text: '여기에 설명을 씁니다.', terms: [] }),
-    fields: [{ key: 'text', label: '본문', kind: 'multiline' }],
+    fields: [{ key: 'text', label: '글', kind: 'multiline' }],
     list: {
       key: 'terms', label: '연결할 용어', addLabel: '용어 연결 추가', max: 20,
       create: () => ({ termKey: '', surface: '' }),
@@ -387,9 +419,18 @@ export function pruneProblems(problems: DraftProblem[]): DraftProblem[] {
     hints: problem.hints.map(pruneBlock), solution: problem.solution.map(pruneBlock) }));
 }
 
-/** Only the definition's own blocks: a definition never embeds a question or another annotation. */
-export const termBlockForms = blockForms.filter((form) =>
-  form.kind !== 'core.problem_set' && !(form.kind === 'core.rich_text' && form.typeVersion === 2));
-
+/**
+ * An author writes one kind of paragraph, not two. Both versions of it are called 글 and both open
+ * for editing, because published classes hold each; which one a palette offers follows from where
+ * the block will sit, so nobody is asked to pick a schema version to get a term link.
+ */
+const paragraph = (form: BlockForm, typeVersion: number) => form.kind === 'core.rich_text' && form.typeVersion === typeVersion;
+/** A lesson's own blocks. Its paragraph is the one that can carry term links. */
+export const classBlockForms = blockForms.filter((form) => !paragraph(form, 1));
 /** A question holds no activity of its own, and a drawing inside one is read rather than arranged. */
-export const problemBlockForms = blockForms.filter((form) => form.kind !== 'core.problem_set');
+export const problemBlockForms = classBlockForms.filter((form) => form.kind !== 'core.problem_set');
+/**
+ * Only the definition's own blocks: a definition never embeds a question, and never a term inside a
+ * term, so its paragraph is the one that carries no links.
+ */
+export const termBlockForms = blockForms.filter((form) => form.kind !== 'core.problem_set' && !paragraph(form, 2));
