@@ -2,17 +2,22 @@ import 'server-only';
 import { createHash } from 'node:crypto';
 import { Prisma, type PrismaClient, type DiagnosticVersion, type TermVersion } from '@prisma/client';
 import { canonicalJson, ContentError, diagnosticDefinitionSchema, parseContentBundle, termDefinitionSchema, validateReferences, type ContentBundle, type DiagnosticDefinition, type TermDefinition } from '@/core/content-bundle';
-import type { StoredClass } from '@/core/content';
+import type { StoredClass, StoredProblem } from '@/core/content';
 import type { ContentBlock } from '@/shared/api';
 import { termRefId, type TermRef, type TermScopeKind } from '@/shared/rich-text';
 
 type Db = Prisma.TransactionClient;
 const json = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 const hash = (value: unknown) => createHash('sha256').update(canonicalJson(value)).digest('hex');
-type IndexedProblem = { problemVersionId: string };
-/** The lookup rows a published version owns. Derived from its document, never edited on its own. */
+type IndexedProblem = StoredProblem | DiagnosticDefinition['problems'][number];
+/**
+ * A published question as a row: what it is apart from its blocks, plus the whole of it as it was
+ * published. The blocks are rows of their own, so reading one back joins the two.
+ */
 const problemRows = (ownerKind: 'class' | 'diagnostic', ownerVersionId: string, problems: IndexedProblem[]) =>
-  problems.map(problem => ({ ownerKind, ownerVersionId, problemVersionId: problem.problemVersionId, document: json(problem) }));
+  problems.map((problem, order) => ({ ownerKind, ownerVersionId, problemVersionId: problem.problemVersionId,
+    order, skillKeys: json(problem.skillKeys), responseSpec: json(problem.responseSpec),
+    gradingSpec: json(problem.gradingSpec), hintAvailable: problem.hintAvailable, document: json(problem) }));
 const problemRowsOf = (bundle: ContentBundle) => [
   ...bundle.classes.flatMap(c => problemRows('class', c.public.versionId, c.problems)),
   ...bundle.diagnostics.flatMap(d => problemRows('diagnostic', d.versionId, d.problems)),
@@ -34,6 +39,8 @@ export const blockOf = (row: StoredBlockRow): ContentBlock => ({
   blockId: row.blockId, kind: row.kind, typeVersion: row.typeVersion, required: row.required,
   payload: row.payload as Record<string, unknown>, ...(row.fallback === null ? {} : { fallback: row.fallback }),
 });
+/** Everything a class says about itself that is not a section, a block or a question. */
+export const classMetadata = (record: StoredClass) => ({ public: record.public, homeworkProblemIds: record.homeworkProblemIds });
 /** Every section and block a published class holds, in the order the document holds them. */
 const classRows = (record: StoredClass) => ({
   sections: record.sections.map((section, order) => ({ classVersionId: record.public.versionId,
@@ -48,8 +55,8 @@ const classRows = (record: StoredClass) => ({
   ],
 });
 /**
- * Writes every row derived from a published class document — its sections, its blocks and its
- * questions by name — beside the document they come from. Whoever publishes a class owes these.
+ * Writes every row a published class is read from — what it says about itself, its sections, its
+ * blocks and its questions. Whoever publishes a class owes these.
  */
 export async function indexClassDocument(db: Db, record: StoredClass) {
   const { sections, blocks } = classRows(record);
@@ -58,12 +65,62 @@ export async function indexClassDocument(db: Db, record: StoredClass) {
   await indexPublishedProblems(db, 'class', record.public.versionId, record.problems);
 }
 /**
- * Writes the lookup rows a published version owns. Whoever writes a version owes these, and whoever
- * removes one owes their removal; verifyProblemIndex is what says so out loud.
+ * Writes the question rows a published version owns. Whoever writes a version owes these, and
+ * whoever removes one owes their removal; verifyProblemIndex is what says so out loud.
  */
 export async function indexPublishedProblems(db: Db, ownerKind: 'class' | 'diagnostic', ownerVersionId: string, problems: IndexedProblem[]) {
   const rows = problemRows(ownerKind, ownerVersionId, problems);
   if (rows.length) await db.publishedProblem.createMany({ data: rows, skipDuplicates: true });
+}
+
+type ProblemRow = { problemVersionId: string; skillKeys: unknown; responseSpec: unknown; gradingSpec: unknown; hintAvailable: boolean };
+/** A question read back: what the row says, with its blocks put back in the order they were in. */
+const problemOf = (row: ProblemRow, blocks: (slot: string) => ContentBlock[]): StoredProblem => ({
+  problemVersionId: row.problemVersionId,
+  skillKeys: row.skillKeys as string[],
+  promptContent: blocks('prompt'),
+  responseSpec: row.responseSpec as StoredProblem['responseSpec'],
+  hintAvailable: row.hintAvailable,
+  gradingSpec: row.gradingSpec as StoredProblem['gradingSpec'],
+  hints: blocks('hint'),
+  solution: blocks('solution'),
+});
+/**
+ * Published classes read from their rows rather than from the document they were written as. The
+ * document is still written and still checked against this, until a later change removes it.
+ */
+export async function classRecords(db: Db, versionIds: string[]): Promise<Map<string, StoredClass>> {
+  const wanted = [...new Set(versionIds)];
+  if (!wanted.length) return new Map();
+  const [versions, sections, blocks, problems] = await Promise.all([
+    db.classVersion.findMany({ where: { id: { in: wanted } }, select: { id: true, metadata: true } }),
+    db.classSection.findMany({ where: { classVersionId: { in: wanted } }, orderBy: { order: 'asc' } }),
+    db.contentBlock.findMany({ where: { ownerVersionId: { in: wanted } }, orderBy: { order: 'asc' } }),
+    db.publishedProblem.findMany({ where: { ownerKind: 'class', ownerVersionId: { in: wanted } }, orderBy: { order: 'asc' } }),
+  ]);
+  const held = new Map<string, ContentBlock[]>();
+  for (const block of blocks) {
+    const key = `${block.ownerVersionId}/${block.ownerKind}/${block.ownerId}/${block.slot}`;
+    (held.get(key) ?? held.set(key, []).get(key)!).push(blockOf(block));
+  }
+  const blocksOf = (versionId: string, ownerKind: string, ownerId: string, slot: string) =>
+    held.get(`${versionId}/${ownerKind}/${ownerId}/${slot}`) ?? [];
+  return new Map(versions.map(version => {
+    const metadata = version.metadata as { public: StoredClass['public']; homeworkProblemIds: string[] };
+    return [version.id, {
+      public: metadata.public,
+      sections: sections.filter(section => section.classVersionId === version.id).map(section => ({
+        sectionId: section.sectionId, role: section.role as StoredClass['sections'][number]['role'],
+        title: section.title, contentBlocks: blocksOf(version.id, 'section', section.sectionId, 'body'),
+      })),
+      problems: problems.filter(problem => problem.ownerVersionId === version.id).map(problem =>
+        problemOf(problem, slot => blocksOf(version.id, 'problem', problem.problemVersionId, slot))),
+      homeworkProblemIds: metadata.homeworkProblemIds,
+    }];
+  }));
+}
+export async function classRecord(db: Db, versionId: string): Promise<StoredClass | null> {
+  return (await classRecords(db, [versionId])).get(versionId) ?? null;
 }
 
 export function diagnosticDefinition(row: DiagnosticVersion): DiagnosticDefinition {
@@ -102,15 +159,18 @@ export async function currentDiagnostic(db: Db) {
 export async function exportContent(db: Db): Promise<ContentBundle> {
   const [skills, classes, diagnostics, terms] = await Promise.all([
     db.skill.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }] }),
-    db.classVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }] }),
+    db.classVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }],
+      select: { id: true, classKey: true, title: true, order: true } }),
     db.diagnosticVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }] }),
     db.termVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }] }),
   ]);
+  const records = await classRecords(db, classes.map(row => row.id));
   for (const row of classes) {
-    const record = row.document as unknown as StoredClass;
+    const record = records.get(row.id);
+    if (!record) throw new ContentError(`Published class has no rows to read it from: ${row.id}`);
     if (row.id !== record.public?.versionId || row.classKey !== record.public?.classKey || row.title !== record.public?.title || row.order !== record.public?.order) throw new ContentError(`Class metadata mismatch: ${row.id}`);
   }
-  return parseContentBundle({ schemaVersion: 1, skills, classes: classes.map(c => c.document),
+  return parseContentBundle({ schemaVersion: 1, skills, classes: classes.map(row => records.get(row.id)),
     diagnostics: diagnostics.map(diagnosticDefinition), terms: terms.map(termDefinition) });
 }
 
@@ -131,32 +191,30 @@ export async function verifyProblemIndex(db: Db, bundle: ContentBundle) {
   return rows.length;
 }
 
-const sectionKey = (row: { classVersionId: string; sectionId: string }) => `${row.classVersionId}/${row.sectionId}`;
-const blockKey = (row: { ownerKind: string; ownerVersionId: string; ownerId: string; slot: string; order: number }) =>
-  `${row.ownerKind}/${row.ownerVersionId}/${row.ownerId}/${row.slot}/${row.order}`;
 /**
- * The section and block rows are derived from the class documents, and a later change will read
- * them instead. Until then the two have to say exactly the same thing, down to the order a section
- * holds its blocks in, so the check compares the whole row set both ways.
+ * The rows are what a class is read from now, and the document it was published as is still there.
+ * So the check is the one that matters: put the rows back together and see whether they say exactly
+ * what the document says, down to the order a section holds its blocks in.
  */
-export async function verifyClassTables(db: Db, bundle: ContentBundle) {
-  const derived = bundle.classes.map(classRows);
-  const compare = <T>(label: string, expected: Map<string, string>, rows: T[], key: (row: T) => string, value: (row: T) => string) => {
-    for (const row of rows) {
-      const wanted = expected.get(key(row));
-      if (wanted === undefined) throw new ContentError(`A ${label} row belongs to no published class: ${key(row)}`);
-      if (wanted !== value(row)) throw new ContentError(`A ${label} row disagrees with the class document: ${key(row)}`);
-      expected.delete(key(row));
-    }
-    if (expected.size) throw new ContentError(`Published ${label}s are missing rows: ${[...expected.keys()].slice(0, 5).join(', ')}`);
-    return rows.length;
-  };
-  const [sections, blocks] = await Promise.all([db.classSection.findMany(), db.contentBlock.findMany()]);
-  compare('section', new Map(derived.flatMap(rows => rows.sections).map(row =>
-    [sectionKey(row), canonicalJson({ role: row.role, title: row.title, order: row.order })])),
-    sections, sectionKey, row => canonicalJson({ role: row.role, title: row.title, order: row.order }));
-  return compare('block', new Map(derived.flatMap(rows => rows.blocks).map(row => [blockKey(row), canonicalJson(blockOf(row))])),
-    blocks, blockKey, row => canonicalJson(blockOf(row)));
+export async function verifyClassDocuments(db: Db, bundle: ContentBundle) {
+  const assembled = new Map(bundle.classes.map(record => [record.public.versionId, canonicalJson(record)]));
+  const rows = await db.classVersion.findMany({ select: { id: true, document: true } });
+  for (const row of rows) {
+    const record = assembled.get(row.id);
+    if (record === undefined) throw new ContentError(`Published class has no rows to read it from: ${row.id}`);
+    if (record !== canonicalJson(row.document)) throw new ContentError(`The rows and the document disagree about a class: ${row.id}`);
+    assembled.delete(row.id);
+  }
+  if (assembled.size) throw new ContentError(`Rows describe a class no version holds: ${[...assembled.keys()].slice(0, 5).join(', ')}`);
+  // Every class matched, so counting is all that is left to catch a row belonging to none of them.
+  const [sections, blocks] = await Promise.all([db.classSection.count(), db.contentBlock.count()]);
+  const expected = bundle.classes.reduce((totals, record) => {
+    const rows = classRows(record);
+    return { sections: totals.sections + rows.sections.length, blocks: totals.blocks + rows.blocks.length };
+  }, { sections: 0, blocks: 0 });
+  if (sections !== expected.sections) throw new ContentError(`Section rows belong to no published class: ${sections - expected.sections} extra.`);
+  if (blocks !== expected.blocks) throw new ContentError(`Block rows belong to no published class: ${blocks - expected.blocks} extra.`);
+  return blocks;
 }
 
 export async function verifyContent(db: Db) {
@@ -164,7 +222,7 @@ export async function verifyContent(db: Db) {
   validateReferences(bundle);
   if (!bundle.classes.length || !bundle.skills.length || !bundle.diagnostics.some(d => d.diagnosticKey === 'starting-point')) throw new ContentError('Database content is incomplete. Apply database migrations or import a reviewed bundle.');
   const indexedProblems = await verifyProblemIndex(db, bundle);
-  const indexedBlocks = await verifyClassTables(db, bundle);
+  const indexedBlocks = await verifyClassDocuments(db, bundle);
   return { classes: bundle.classes.length, classProblems: bundle.classes.reduce((n, c) => n + c.problems.length, 0), indexedProblems, indexedBlocks,
     skills: bundle.skills.length, diagnosticVersions: bundle.diagnostics.length, diagnosticProblems: bundle.diagnostics.reduce((n, d) => n + d.problems.length, 0),
     termVersions: bundle.terms.length, terms: new Set(bundle.terms.map(termRefId)).size };
@@ -208,7 +266,8 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
     const publishedAt = () => new Date(publishedTime++);
     for (const s of incoming.skills) await db.skill.upsert({ where: { key: s.key }, create: s, update: { label: s.label, order: s.order } });
     for (const c of newClasses) await db.classVersion.create({ data: { id: c.public.versionId, classKey: c.public.classKey,
-      title: c.public.title, order: c.public.order, document: json(c), contentHash: hash(c), publishedAt: publishedAt() } });
+      title: c.public.title, order: c.public.order, document: json(c), metadata: json(classMetadata(c)),
+      contentHash: hash(c), publishedAt: publishedAt() } });
     for (const d of newDiagnostics) await db.diagnosticVersion.create({ data: { id: d.versionId, diagnosticKey: d.diagnosticKey,
       title: d.title, description: d.description, estimatedMinutes: d.estimatedMinutes, document: json(d.problems), contentHash: hash(d), publishedAt: publishedAt() } });
     // The index shares the transaction that publishes the version, so a question is never findable

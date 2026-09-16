@@ -6,7 +6,7 @@ import { seedClasses } from './fixtures/content';
 import { developmentLoginEnabled, sessionUser } from '@/server/auth';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
-import { indexClassDocument } from '@/server/content-store';
+import { classMetadata, indexClassDocument } from '@/server/content-store';
 import type { LearningAction } from '@/shared/api';
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
@@ -38,7 +38,7 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     return db.classVersion.create({ data: {
       id: document.public.versionId, classKey: document.public.classKey,
       title: document.public.title, order: document.public.order,
-      document: asJson(document), contentHash, ...(publishedAt ? { publishedAt } : {}),
+      document: asJson(document), metadata: asJson(classMetadata(document)), contentHash, ...(publishedAt ? { publishedAt } : {}),
     } });
   }
 

@@ -106,7 +106,12 @@ model ClassVersion {
   classKey    String @db.VarChar(100)
   title       String @db.VarChar(191)
   order       Int
+  /// The whole class as one immutable document. Still written, no longer read: the rows below say
+  /// the same thing, and a later change removes this once they have carried a release.
   document    Json
+  /// Everything a class says about itself that is not a section, a block or a question — `public`
+  /// and `homeworkProblemIds`.
+  metadata    Json
   contentHash String @db.VarChar(64)
   publishedAt DateTime @default(now())
   enrollments Enrollment[]
@@ -122,9 +127,20 @@ model PublishedProblem {
   ownerKind        String @db.VarChar(20)
   ownerVersionId   String @db.VarChar(191)
   problemVersionId String @db.VarChar(191)
+  /// The position the version holds this question in. A question list is ordered, and an activity
+  /// that names no question falls back to it.
+  order            Int
+  skillKeys        Json
+  /// What the question expects and how it is marked. Both follow from the answer, but they are
+  /// stored as they were published rather than derived again at read time.
+  responseSpec     Json
+  gradingSpec      Json
+  hintAvailable    Boolean
+  /// The whole question as published, blocks included. Written and checked, no longer read.
   document         Json
   @@id([ownerKind, ownerVersionId, problemVersionId])
   @@index([problemVersionId])
+  @@index([ownerKind, ownerVersionId, order])
 }
 
 /**

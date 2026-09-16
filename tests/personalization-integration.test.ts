@@ -6,7 +6,7 @@ import { LearningService } from '@/server/learning-service';
 import { diagnosticProblems } from './fixtures/content';
 import { seedClasses } from './fixtures/content';
 import { getActivityProblemIds } from '@/core/content';
-import { indexClassDocument } from '@/server/content-store';
+import { classMetadata, indexClassDocument } from '@/server/content-store';
 import type { DiagnosticView, LearningState } from '@/shared/api';
 
 const url = process.env.TEST_DATABASE_URL;
@@ -23,7 +23,8 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     for (const record of seedClasses) {
       await db.classVersion.upsert({ where: { id: record.public.versionId }, update: {}, create: {
         id: record.public.versionId, classKey: record.public.classKey, title: record.public.title, order: record.public.order,
-        document: json(record), contentHash: createHash('sha256').update(JSON.stringify(record)).digest('hex'),
+        document: json(record), metadata: json(classMetadata(record)),
+        contentHash: createHash('sha256').update(JSON.stringify(record)).digest('hex'),
       } });
       await indexClassDocument(db, record);
     }

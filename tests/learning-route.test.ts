@@ -4,7 +4,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import * as database from '@/server/db';
 import { hashSessionToken } from '@/server/auth';
 import { seedClasses } from './fixtures/content';
-import { indexClassDocument } from '@/server/content-store';
+import { classMetadata, indexClassDocument } from '@/server/content-store';
 import { POST } from '@/app/api/v1/learning/route';
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
@@ -24,7 +24,8 @@ describe.skipIf(!testDatabaseUrl)('learning HTTP account binding', () => {
     if (previous) expect(previous.contentHash).toBe(contentHash);
     else await db.classVersion.create({ data: {
       id: document.public.versionId, classKey: document.public.classKey, title: document.public.title,
-      order: document.public.order, document: JSON.parse(serialized) as Prisma.InputJsonValue, contentHash,
+      order: document.public.order, document: JSON.parse(serialized) as Prisma.InputJsonValue,
+      metadata: JSON.parse(JSON.stringify(classMetadata(document))) as Prisma.InputJsonValue, contentHash,
     } });
     await indexClassDocument(db, document);
   });

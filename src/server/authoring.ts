@@ -3,7 +3,7 @@ import { z } from 'zod';
 import type { PrismaClient } from '@prisma/client';
 import { canonicalJson, ContentError } from '@/core/content-bundle';
 import { validateClass, type StoredClass, type StoredProblem } from '@/core/content';
-import { importContent } from './content-store';
+import { classRecord, importContent } from './content-store';
 import { AppError } from './errors';
 import type { AnswerSpec } from '@/shared/answer';
 import type { ContentBlock } from '@/shared/api';
@@ -432,10 +432,11 @@ export class AuthoringService {
 
   async createDraft(userId: string, classKey: string): Promise<AuthoringResponse> {
     await this.require(userId);
-    const versions = await this.db.classVersion.findMany({ where: { classKey }, orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }] });
+    const versions = await this.db.classVersion.findMany({ where: { classKey }, orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }], select: { id: true } });
     const base = versions[versions.length - 1];
     if (!base) throw new AppError(404, 'class_missing', '아직 발행된 적 없는 클래스예요. 새 클래스 작성은 다음 단계예요.');
-    const document = structuredClone(base.document) as unknown as StoredClass;
+    const document = await classRecord(this.db, base.id);
+    if (!document) throw new AppError(404, 'class_missing', '아직 발행된 적 없는 클래스예요. 새 클래스 작성은 다음 단계예요.');
     document.public.versionId = suggestVersionId(classKey, versions.map((version) => version.id));
     const row = await this.db.contentDraft.create({
       data: { classKey, versionId: document.public.versionId, baseVersionId: base.id, title: document.public.title,
