@@ -158,6 +158,14 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 
 #28은 base가 `feat/published-problem-index`였던 스택 PR이라 머지 결과가 main에 닿지 않았고, 같은 내용을 #29로 다시 올렸다. 아래쪽 PR이 먼저 머지되어도 base 브랜치가 남아 있으면 GitHub이 재조준하지 않는다.
 
+2026-09-16 릴리스는 편집 화면을 관리자용에서 수업을 준비하는 사람의 화면으로 옮긴 묶음이다.
+
+| 릴리스 | commit | 검증·운영 결과 |
+|---|---|---|
+| [교사가 쓰는 편집 화면 #35](https://github.com/team-campfire-dev/geunyang-math/pull/35) | `03e0ad5` | 자동 저장·되돌리기, 타이포·대비, 전문가 모드, 미리보기를 편집기로, 해보기, 복제, 거부의 자리, 검토 요청·새 수업을 한 브랜치에 일곱 단계로 쌓았다. 359개 테스트(통합 포함)·웹/모바일 빌드 통과. 배포 후 `/api/version`·컨테이너 이미지·`current` 심링크가 모두 같은 커밋이고 재시작 0회·오류 로그 없음을 확인했다. migration은 배포가 적용했고 운영 DB에서 `User.editorExpertMode`가 세 계정 모두 기본값(꺼짐)인 것과 발행 콘텐츠 수(`classVersions 6`·`sections 30`·`blocks 148`·`problems 36`·`terms 6`)가 그대로인 것을 확인. |
+
+이 릴리스의 `20260916030000_editor_expert_mode`는 `User`에 `editorExpertMode`(기본 꺼짐) 한 칸을 더하는 **추가 전용** migration이라 되돌리려면 이전 이미지를 다시 띄우면 된다. 초안 상태에 더한 `review`는 `status`가 이미 문자열 칸이라 migration이 없다.
+
 DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVersion과 초기 콘텐츠를 등록한다. 기본 콘텐츠는 클래스 3개(수업·숙제 문항 15개), 진단 1종(6문항), 개념 3개다. 기존 ClassVersion 행의 내용·해시·발행 시각을 덮어쓰지 않는다. 배포용 migrator는 `db:migrate` 후 저장소의 `content/*.json`을 `content:publish`로 발행하고 `content:verify`를 실행한다. `AppliedContentBundle`에 같은 checksum이 있으면 건너뛰므로 내용이 그대로인 배포는 DB를 건드리지 않고, 이미 발행한 판본을 고쳐 커밋하면 배포가 실패한다. 등록 명령과 불변 판본 정책은 [DB 콘텐츠 관리](content-management.md)를 따른다.
 
 ### 저장 구조 migration
