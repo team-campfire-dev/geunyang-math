@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { Prisma } from '@prisma/client';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { diagnosticProblems } from './fixtures/content';
@@ -15,11 +16,13 @@ const answers = ['4/9', '12', '10', '3/4', '7/11', '5/12'];
 
 describe.skipIf(!url)('personalized learning on MySQL', () => {
   let db: ReturnType<typeof createDatabase>;
+  let existing: Existing;
   let service: LearningService;
   beforeAll(async () => {
     const parsed = new URL(url!);
     if (parsed.protocol !== 'mysql:' || !parsed.pathname.endsWith('_test')) throw new Error('Use an isolated _test database.');
     db = createDatabase(url!); service = new LearningService(db);
+    existing = await existingRows(db);
     for (const record of seedClasses) {
       await db.classVersion.upsert({ where: { id: record.public.versionId }, update: {}, create: {
         id: record.public.versionId, classKey: record.public.classKey, title: record.public.title, order: record.public.order,
@@ -29,7 +32,11 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
       await indexClassDocument(db, record);
     }
   });
-  afterAll(async () => { await db?.$disconnect(); });
+  afterAll(async () => {
+    // A shared database keeps whatever a run leaves behind, so this run leaves nothing.
+    if (existing) await removeRowsAddedSince(db, existing);
+    await db?.$disconnect();
+  });
   async function learner(minutes = 10) {
     return db.user.create({ data: { displayName: `placement ${randomUUID().slice(0, 8)}`, dailyMinutes: minutes, scopes: { create: { kind: 'personal' } } } });
   }

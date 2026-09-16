@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { createDatabase } from '@/server/db';
 import { AuthoringService, authoringRole, authoringRoleDetail, openAuthoring, openAuthoringAccount } from '@/server/authoring';
 import { classRecord, importContent, termDefinitions } from '@/server/content-store';
@@ -10,6 +11,7 @@ import { seedClasses } from './fixtures/content';
 const url = process.env.TEST_DATABASE_URL;
 describe.skipIf(!url)('content authoring on MySQL', () => {
   let db: ReturnType<typeof createDatabase>;
+  let existing: Existing;
   let service: AuthoringService;
   let classKey: string;
 
@@ -17,6 +19,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const parsed = new URL(url!);
     if (parsed.protocol !== 'mysql:' || !parsed.pathname.endsWith('_test')) throw new Error('Use an isolated _test database.');
     db = createDatabase(url!);
+    existing = await existingRows(db);
     service = new AuthoringService(db);
     // A class of this suite's own, so drafts here never publish a version of a shared fixture.
     classKey = `authoring-${randomUUID()}`;
@@ -24,7 +27,11 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     base.public.order = 2000;
     await importContent(db, { schemaVersion: 1, skills: [], classes: [base], diagnostics: [], terms: [] });
   });
-  afterAll(async () => { await db?.$disconnect(); });
+  afterAll(async () => {
+    // A shared database keeps whatever a run leaves behind, so this run leaves nothing.
+    if (existing) await removeRowsAddedSince(db, existing);
+    await db?.$disconnect();
+  });
 
   const account = async (role?: 'admin' | 'author') => {
     const user = await db.user.create({ data: { displayName: `author ${randomUUID()}`, scopes: { create: { kind: 'personal' } } } });
