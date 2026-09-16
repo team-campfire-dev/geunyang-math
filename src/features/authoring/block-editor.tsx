@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import type { ContentBlock } from '@/shared/api';
 import { blockForms, blockFormOf, moveBlock, readPath, writePath, type BlockField, type BlockForm, type TermChoice } from '@/shared/authoring';
 import { TermText } from './term-mentions';
+import { useRemovalNotice } from './edit-history';
 import { Icon } from '@/features/learning/icons';
 import { SceneEditor } from './scene-editor';
 
@@ -42,6 +43,7 @@ function Field({ field, value, onChange }: { field: BlockField; value: unknown; 
 }
 
 function Rows({ form, payload, onChange }: { form: BlockForm; payload: Record<string, unknown>; onChange: (next: Record<string, unknown>) => void }) {
+  const notifyRemoval = useRemovalNotice();
   const list = form.list!;
   const rows = Array.isArray(payload[list.key]) ? (payload[list.key] as Record<string, unknown>[]) : [];
   const write = (next: Record<string, unknown>[]) => onChange({ ...payload, [list.key]: next });
@@ -58,7 +60,7 @@ function Rows({ form, payload, onChange }: { form: BlockForm; payload: Record<st
         <button type="button" className="icon-button" aria-label={`${index + 1}번째 항목 아래로`} disabled={index === rows.length - 1}
           onClick={() => { const next = [...rows]; [next[index + 1], next[index]] = [next[index], next[index + 1]]; write(next); }}>↓</button>
         <button type="button" className="icon-button" aria-label={`${index + 1}번째 항목 삭제`}
-          onClick={() => write(rows.filter((_, position) => position !== index))}><Icon name="close" size={14} /></button>
+          onClick={() => { write(rows.filter((_, position) => position !== index)); notifyRemoval(list.label); }}><Icon name="close" size={14} /></button>
       </div>
     </div>)}
   </div>;
@@ -91,6 +93,7 @@ export function BlockCard({ block, index, total, problems, arrangingRefusal, ter
   onChange: (next: ContentBlock) => void; onMove: (delta: number) => void; onRemove: () => void;
 }) {
   const form = blockFormOf(block);
+  const notifyRemoval = useRemovalNotice();
   return <section className="editor-block">
     <header>
       <div>
@@ -104,7 +107,8 @@ export function BlockCard({ block, index, total, problems, arrangingRefusal, ter
         </label>
         <button type="button" className="icon-button" aria-label="위로" disabled={index === 0} onClick={() => onMove(-1)}>↑</button>
         <button type="button" className="icon-button" aria-label="아래로" disabled={index === total - 1} onClick={() => onMove(1)}>↓</button>
-        <button type="button" className="icon-button" aria-label="블록 삭제" onClick={onRemove}><Icon name="close" size={15} /></button>
+        <button type="button" className="icon-button" aria-label="블록 삭제"
+          onClick={() => { notifyRemoval(form?.label ?? '블록'); onRemove(); }}><Icon name="close" size={15} /></button>
       </div>
     </header>
     {form?.hint && <p className="editor-note">{form.hint}</p>}

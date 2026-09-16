@@ -8,6 +8,7 @@ import {
 } from '@/shared/scene';
 import { SceneShapes } from '@/features/learning/content-blocks';
 import { Icon } from '@/features/learning/icons';
+import { useRemovalNotice } from './edit-history';
 
 const step = 2;
 const number = (value: unknown, fallback: number) => (typeof value === 'number' && Number.isFinite(value) ? value : fallback);
@@ -40,6 +41,7 @@ export function SceneEditor({ payload, onChange, arrangingRefusal }: {
   payload: Record<string, unknown>; onChange: (next: Record<string, unknown>) => void; arrangingRefusal?: string;
 }) {
   const scene = readScene(payload);
+  const notifyRemoval = useRemovalNotice();
   const [selected, setSelected] = useState<{ on: 'item' | 'zone'; index: number } | null>(null);
   const [frameIndex, setFrameIndex] = useState<number | null>(null);
   const [drag, setDrag] = useState<Drag | null>(null);
@@ -236,7 +238,7 @@ export function SceneEditor({ payload, onChange, arrangingRefusal }: {
     {zone && selected?.on === 'zone'
       ? <ZonePanel zone={zone} items={scene.items}
           onChange={(next) => writeZones(zones.map((current, index) => (index === selected.index ? next : current)), { task })}
-          onRemove={() => { writeZones(zones.filter((_, index) => index !== selected.index), { task }); setSelected(null); }} />
+          onRemove={() => { writeZones(zones.filter((_, index) => index !== selected.index), { task }); setSelected(null); notifyRemoval('놓는 자리'); }} />
       : item && selected?.on === 'item'
         ? <ItemPanel item={item} index={selected.index} total={scene.items.length} arrangeable={zones.length > 0}
             onChange={(next) => replace(selected.index, next)}
@@ -249,7 +251,7 @@ export function SceneEditor({ payload, onChange, arrangingRefusal }: {
               write(reorderItem(scene.items, selected.index, delta));
               setSelected({ on: 'item', index: Math.min(Math.max(selected.index + delta, 0), scene.items.length - 1) });
             }}
-            onRemove={() => { write(scene.items.filter((_, position) => position !== selected.index)); setSelected(null); }} />
+            onRemove={() => { write(scene.items.filter((_, position) => position !== selected.index)); setSelected(null); notifyRemoval('도형'); }} />
         : <p className="editor-note">도형을 클릭하면 색과 위치를 고칠 수 있어요. 빈 곳을 누르면 선택이 풀립니다.</p>}
   </div>;
 }

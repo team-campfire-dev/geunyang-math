@@ -1,9 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ClassSection, ContentBlock } from '@/shared/api';
 import {
-  blockFormOf, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId, toPublicProblem,
+  blockFormOf, editShape, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId, toPublicProblem,
   type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail, type DraftEdit,
   type DraftProblem, type DraftSummary, type TermSummary,
 } from '@/shared/authoring';
@@ -11,6 +11,7 @@ import { ApiError, learningApi, type Session } from '@/features/learning/api-cli
 import { ContentBlocks } from '@/features/learning/content-blocks';
 import { Icon } from '@/features/learning/icons';
 import { authoringApi } from './api-client';
+import { RemovalNotice, useEditHistory } from './edit-history';
 import { AddBlock, BlockCard } from './block-editor';
 import { ProblemSetEditor } from './problem-editor';
 import { TermPanel } from './term-editor';
@@ -19,13 +20,16 @@ const roleLabels: Record<ClassSection['role'], string> = {
   explanation: '설명', worked_example: '예시', practice: '연습', check: '확인', summary: '정리',
 };
 const roles = Object.keys(roleLabels) as ClassSection['role'][];
-const sameEdit = (left: DraftEdit, right: DraftEdit) => JSON.stringify(left) === JSON.stringify(right);
+/** How long the editor waits after the last keystroke before it writes what is on screen. */
+const autosaveMs = 1500;
+/** A failed save is tried once more before the editor leaves it to the banner and the author. */
+const retryMs = 8000;
 
 export function AuthoringWorkspace() {
   const [session, setSession] = useState<Session | null>(null);
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
   const [draft, setDraft] = useState<DraftDetail | null>(null);
-  const [edit, setEdit] = useState<DraftEdit | null>(null);
+  const { value: edit, write: setEdit, replace, open: openEdit, undo, redo, canUndo, canRedo } = useEditHistory<DraftEdit>(editShape);
   const [sectionIndex, setSectionIndex] = useState(0);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,14 +38,39 @@ export function AuthoringWorkspace() {
   const [loading, setLoading] = useState(true);
   const [matches, setMatches] = useState<AccountRole[] | null>(null);
   const [terms, setTerms] = useState<TermSummary[] | null>(null);
+  const [saved, setSaved] = useState('');
+  const [saving, setSaving] = useState<'idle' | 'saving' | 'failed'>('idle');
+  const [removed, setRemoved] = useState<{ what: string; at: number } | null>(null);
 
-  const dirty = !!draft && !!edit && !sameEdit(draft.edit, edit);
+  const editJson = useMemo(() => (edit ? JSON.stringify(edit) : ''), [edit]);
+  /**
+   * Whether the editor holds something the server has not been told. It is measured against the
+   * editor's own last word rather than the server's restatement of it: the server drops the blank
+   * optional fields a form leaves behind, and comparing against that would read as a change nobody
+   * made and keep the draft forever unsaved.
+   */
+  const dirty = !!draft && !!edit && editJson !== saved;
+  // Work that has awaited something reads these instead: by then the rendered values are a moment old.
+  const latest = useRef(editJson);
+  latest.current = editJson;
+  const savedRef = useRef(saved);
+  const inFlight = useRef(false);
+  const markSaved = useCallback((json: string) => { savedRef.current = json; setSaved(json); }, []);
+
   const open = useCallback((detail: DraftDetail) => {
+    const next = structuredClone(detail.edit);
     setDraft(detail);
-    setEdit(structuredClone(detail.edit));
+    openEdit(next);
+    latest.current = JSON.stringify(next);
+    markSaved(latest.current);
+    setSaving('idle');
     setSectionIndex((current) => Math.min(current, Math.max(detail.edit.sections.length - 1, 0)));
     setConfirming(false);
-  }, []);
+  }, [openEdit, markSaved]);
+  const closeDraft = useCallback(() => {
+    setDraft(null); openEdit(null); latest.current = ''; markSaved(''); setSaving('idle'); setRemoved(null);
+  }, [openEdit, markSaved]);
+  const notifyRemoval = useCallback((what: string) => setRemoved({ what, at: Date.now() }), []);
 
   useEffect(() => {
     let active = true;
@@ -72,6 +101,92 @@ export function AuthoringWorkspace() {
       if (response.draft) open(response.draft);
       after?.(response);
     });
+
+  /**
+   * Writes what is on screen without taking the screen over. The server restates what it stored —
+   * blank optional fields dropped, an edited question renamed — and that restatement is adopted only
+   * when nothing has changed since this save left, because adopting it mid-sentence would throw the
+   * sentence away.
+   */
+  const saveNow = useCallback(async (): Promise<boolean> => {
+    if (!draft || draft.status === 'published') return true;
+    const snapshot = latest.current;
+    if (!snapshot || snapshot === savedRef.current) return true;
+    if (inFlight.current) return false;
+    inFlight.current = true;
+    setSaving('saving');
+    try {
+      const response = await authoringApi.act({ action: 'draft.save', draftId: draft.id, edit: JSON.parse(snapshot) as DraftEdit },
+        session?.user?.id ?? '');
+      setWorkspace(response.workspace);
+      let acknowledged = snapshot;
+      if (response.draft) {
+        setDraft(response.draft);
+        if (latest.current === snapshot) {
+          const restated = structuredClone(response.draft.edit);
+          const restatedJson = JSON.stringify(restated);
+          // Not a step anyone took, so it never becomes one they can take back.
+          if (restatedJson !== snapshot) { latest.current = restatedJson; replace(restated); acknowledged = restatedJson; }
+        }
+      }
+      markSaved(acknowledged);
+      setSaving('idle');
+      setError(null);
+      return true;
+    } catch (reason) {
+      setSaving('failed');
+      setError(reason instanceof ApiError ? reason.message : '저장하지 못했어요. 창을 닫지 말아 주세요.');
+      return false;
+    } finally { inFlight.current = false; }
+  }, [draft, session, replace, markSaved]);
+
+  // Saving is the editor's job, not the author's: it follows the last keystroke rather than a button.
+  useEffect(() => {
+    if (!dirty || saving === 'saving') return;
+    const timer = window.setTimeout(() => { void saveNow(); }, saving === 'failed' ? retryMs : autosaveMs);
+    return () => window.clearTimeout(timer);
+  }, [dirty, editJson, saving, saveNow]);
+
+  // Closing the tab on unsaved work is the one loss autosave cannot catch, so the browser asks first.
+  useEffect(() => {
+    if (!dirty && saving !== 'saving') return;
+    // Chrome honours the first; Safari still wants the second, and neither shows wording we choose.
+    const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = true; };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [dirty, saving]);
+
+  useEffect(() => {
+    if (!draft || draft.status === 'published') return;
+    const onKey = (event: KeyboardEvent) => {
+      if (!(event.metaKey || event.ctrlKey) || event.altKey) return;
+      const key = event.key.toLowerCase();
+      if (key === 's') { event.preventDefault(); void saveNow(); return; }
+      // Every field here is controlled, so the browser's own undo cannot reach what was written.
+      if (key === 'z') { event.preventDefault(); if (event.shiftKey) redo(); else undo(); return; }
+      if (key === 'y' && !event.metaKey) { event.preventDefault(); redo(); }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [draft, saveNow, undo, redo]);
+
+  useEffect(() => {
+    if (!removed) return;
+    const timer = window.setTimeout(() => setRemoved(null), 9000);
+    return () => window.clearTimeout(timer);
+  }, [removed]);
+
+  /** Leaving saves first. A draft list reached by losing an afternoon's writing is not worth reaching. */
+  const leave = async () => {
+    const waiting = '저장하는 중이에요. 잠시 뒤에 다시 눌러 주세요.';
+    if (latest.current !== savedRef.current) {
+      // A save already on its way carries an older snapshot, so waiting for it is the whole point.
+      if (inFlight.current) { setError(waiting); return; }
+      if (!(await saveNow())) return;
+      if (latest.current !== savedRef.current) { setError(waiting); return; }
+    }
+    closeDraft();
+  };
 
   if (loading) return <main className="authoring-page"><p className="editor-note">불러오는 중이에요.</p></main>;
   if (!workspace?.role && !session?.user) {
@@ -126,10 +241,21 @@ export function AuthoringWorkspace() {
       : item));
   const previewProblems = edit.problems.map(toPublicProblem);
 
-  return <Shell role={workspace.role}>
+  const savedLabel = published ? `발행 완료 · ${draft.publishedVersionId}`
+    : saving === 'saving' ? '저장하는 중'
+      : saving === 'failed' ? '저장하지 못했어요'
+        : dirty ? '곧 저장해요' : '저장됨';
+
+  return <Shell role={workspace.role}><RemovalNotice.Provider value={notifyRemoval}>
     <div className="editor-bar">
-      <button type="button" className="back-button" onClick={() => { setDraft(null); setEdit(null); }}><Icon name="back" size={16} />초안 목록</button>
-      <span className={`pill${published ? ' green' : ''}`}>{published ? `발행 완료 · ${draft.publishedVersionId}` : dirty ? '저장하지 않은 변경' : '저장됨'}</span>
+      <button type="button" className="back-button" onClick={() => void leave()}><Icon name="back" size={16} />초안 목록</button>
+      <div className="editor-bar-side">
+        {!published && <>
+          <button type="button" className="icon-button" aria-label="되돌리기" title="되돌리기 (⌘Z)" disabled={!canUndo} onClick={undo}>↶</button>
+          <button type="button" className="icon-button" aria-label="다시 실행" title="다시 실행 (⇧⌘Z)" disabled={!canRedo} onClick={redo}>↷</button>
+        </>}
+        <span className={`pill${published ? ' green' : ''}${saving === 'failed' ? ' warn' : ''}`}>{savedLabel}</span>
+      </div>
     </div>
     {error && <p className="error-banner" role="alert">{error}</p>}
     {notice && <p className="notice-banner">{notice}</p>}
@@ -174,6 +300,7 @@ export function AuthoringWorkspace() {
           {edit.sections.length > 1 && <button type="button" className="text-button" onClick={() => {
             setEdit({ ...edit, sections: edit.sections.filter((_, index) => index !== sectionIndex) });
             setSectionIndex(Math.max(sectionIndex - 1, 0));
+            notifyRemoval('단계');
           }}><Icon name="close" size={14} />이 단계 삭제</button>}
         </fieldset>
 
@@ -210,15 +337,15 @@ export function AuthoringWorkspace() {
     </div>
 
     <div className="editor-actions">
-      <button type="button" className="button secondary" disabled={busy || published || !dirty}
-        onClick={() => act({ action: 'draft.save', draftId: draft.id, edit }, () => setNotice('초안을 저장했어요.'))}>저장</button>
+      <button type="button" className="button secondary" disabled={busy || published || !dirty || saving === 'saving'}
+        onClick={() => void saveNow()}>지금 저장</button>
       <button type="button" className="button secondary" disabled={busy || dirty}
         onClick={() => act({ action: 'draft.validate', draftId: draft.id }, (response) =>
           setNotice(response.draft?.issues.length ? null : '발행 검증을 통과했어요.'))}>검증</button>
       {mayPublish(workspace.role) && !published && <button type="button" className="button primary" disabled={busy || dirty || !!draft.issues.length}
         onClick={() => setConfirming(true)}>발행<Icon name="arrow" size={16} /></button>}
       <button type="button" className="text-button" disabled={busy}
-        onClick={() => { if (confirm('이 초안을 삭제할까요? 발행한 판본은 남습니다.')) void act({ action: 'draft.delete', draftId: draft.id }, () => { setDraft(null); setEdit(null); }); }}>
+        onClick={() => { if (confirm('이 초안을 삭제할까요? 발행한 판본은 남습니다.')) void act({ action: 'draft.delete', draftId: draft.id }, closeDraft); }}>
         초안 삭제</button>
       {dirty && <span className="editor-note">검증과 발행은 저장한 내용으로 해요.</span>}
     </div>
@@ -239,7 +366,14 @@ export function AuthoringWorkspace() {
       <strong>고칠 곳이 있어요</strong>
       <ul>{draft.issues.map((issue) => <li key={issue}>{issue}</li>)}</ul>
     </section>}
-  </Shell>;
+
+    {removed && <div className="editor-toast" role="status">
+      <span>{removed.what} 하나를 지웠어요.</span>
+      <button type="button" className="text-button" disabled={!canUndo} onClick={() => { undo(); setRemoved(null); }}>
+        <Icon name="back" size={13} />되돌리기</button>
+      <button type="button" className="icon-button" aria-label="알림 닫기" onClick={() => setRemoved(null)}><Icon name="close" size={13} /></button>
+    </div>}
+  </RemovalNotice.Provider></Shell>;
 }
 
 const roleNames: Record<AuthoringRole, string> = { admin: '관리자 · 발행까지', author: '작성자 · 자기 초안' };

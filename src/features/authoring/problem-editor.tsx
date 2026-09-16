@@ -9,6 +9,7 @@ import {
 } from '@/shared/authoring';
 import { Icon } from '@/features/learning/icons';
 import { AddBlock, BlockCard } from './block-editor';
+import { useRemovalNotice } from './edit-history';
 
 /**
  * An author writes the answer the way a learner will type it, and the same reader decides both. A
@@ -77,6 +78,7 @@ function ProblemCard({ problem, index, total, skillKeys, taken, termChoices, onC
   onChange: (next: DraftProblem) => void; onMove: (delta: number) => void; onRemove: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const notifyRemoval = useRemovalNotice();
   return <section className="editor-problem">
     <header>
       <button type="button" className="editor-problem-open" aria-expanded={open} onClick={() => setOpen(!open)}>
@@ -86,7 +88,8 @@ function ProblemCard({ problem, index, total, skillKeys, taken, termChoices, onC
       <div className="editor-block-tools">
         <button type="button" className="icon-button" aria-label={`${index + 1}번 문항 위로`} disabled={index === 0} onClick={() => onMove(-1)}>↑</button>
         <button type="button" className="icon-button" aria-label={`${index + 1}번 문항 아래로`} disabled={index === total - 1} onClick={() => onMove(1)}>↓</button>
-        <button type="button" className="icon-button" aria-label={`${index + 1}번 문항 삭제`} onClick={onRemove}><Icon name="close" size={14} /></button>
+        <button type="button" className="icon-button" aria-label={`${index + 1}번 문항 삭제`}
+          onClick={() => { notifyRemoval('문항'); onRemove(); }}><Icon name="close" size={14} /></button>
       </div>
     </header>
     {open && <div className="editor-problem-body">

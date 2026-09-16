@@ -47,6 +47,22 @@ export type DraftEdit = { meta: DraftMeta; sections: ClassSection[]; problems: D
 /** `terms` are the definitions this class may link: the shared dictionary and its own. */
 export type DraftDetail = DraftSummary & { edit: DraftEdit; skillKeys: string[]; terms: TermChoice[]; issues: string[] };
 
+/**
+ * The shape of a draft: the steps it holds, the blocks in each, the questions the document keeps and
+ * the order an activity names them in. Two edits that share a shape differ only in what someone
+ * typed, which is what lets the editor fold a run of keystrokes into one undo step while still
+ * breaking a step wherever something was added, removed, moved or renamed.
+ */
+export function editShape(edit: DraftEdit): string {
+  const named = (blocks: ContentBlock[]) => blocks.map((block) => (block.kind === 'core.problem_set' && Array.isArray(block.payload.problemVersionIds)
+    ? `${block.blockId}(${(block.payload.problemVersionIds as string[]).join(',')})`
+    : block.blockId)).join(',');
+  const sections = edit.sections.map((section) => `${section.sectionId}:${section.role}>${named(section.contentBlocks)}`).join('|');
+  const problems = edit.problems.map((problem) =>
+    `${problem.problemVersionId}>${named([...problem.promptContent, ...problem.hints, ...problem.solution])}`).join('|');
+  return `${sections}#${problems}`;
+}
+
 export const responseSpecOf = (spec: AnswerSpec): PublicProblem['responseSpec'] =>
   (spec.kind === 'rational' && spec.requiredForm ? { kind: 'rational', requiredForm: spec.requiredForm } : { kind: spec.kind });
 /** The half of a question a learner may see. The preview reads questions the way the lesson will. */

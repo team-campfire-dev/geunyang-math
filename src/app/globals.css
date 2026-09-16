@@ -205,6 +205,16 @@
 .authoring-head-side a { text-decoration: none; }
 .editor-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
 .editor-bar .back-button { margin-bottom: 0; }
+.editor-bar-side { display: flex; align-items: center; gap: 8px; }
+.editor-bar-side .icon-button { min-width: 28px; min-height: 28px; font-size: 13px; }
+.pill.warn { background: #fdefe2; color: #9c7858; }
+/* What was just removed, and the way back to it. Undo is a keystroke; this is the same move for a
+   hand that never learned the keystroke, and it says which one of them the click undoes. */
+.editor-toast { position: sticky; bottom: 16px; z-index: 5; display: flex; align-items: center; gap: 14px;
+  margin-top: 18px; padding: 11px 14px; border: 1px solid #dbe3cd; border-radius: 9px; background: var(--white);
+  box-shadow: 0 6px 16px #6f825522; font-size: 11px; line-height: 1.7; color: #5f7154; }
+.editor-toast > span { flex: 1; min-width: 0; }
+.editor-toast .text-button { flex-shrink: 0; }
 .editor-layout { display: grid; grid-template-columns: 180px minmax(0, 1fr) minmax(0, 0.95fr); gap: 22px; align-items: start; }
 .editor-steps { position: sticky; top: 20px; display: flex; flex-direction: column; gap: 6px; }
 .editor-steps > .eyebrow { font-size: 8px; margin: 0 0 10px 10px; }
