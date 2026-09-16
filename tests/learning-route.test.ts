@@ -1,6 +1,7 @@
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { Prisma } from '@prisma/client';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import * as database from '@/server/db';
 import { hashSessionToken } from '@/server/auth';
 import { seedClasses } from './fixtures/content';
@@ -13,10 +14,12 @@ const profileAction = { action: 'profile.update', goal: 'daily-math', dailyMinut
 
 describe.skipIf(!testDatabaseUrl)('learning HTTP account binding', () => {
   let db: ReturnType<typeof database.createDatabase>;
+  let existing: Existing;
   beforeAll(async () => {
     const parsed = new URL(testDatabaseUrl!);
     if (parsed.protocol !== 'mysql:' || !decodeURIComponent(parsed.pathname.slice(1)).endsWith('_test')) throw new Error('Learning route integration requires a MySQL database ending in _test.');
     db = database.createDatabase(testDatabaseUrl!);
+    existing = await existingRows(db);
     const document = seedClasses[0];
     const serialized = JSON.stringify(document);
     const contentHash = createHash('sha256').update(serialized).digest('hex');
@@ -38,7 +41,11 @@ describe.skipIf(!testDatabaseUrl)('learning HTTP account binding', () => {
     vi.spyOn(database, 'getDatabase').mockImplementation(() => db);
   });
   afterEach(() => { vi.unstubAllEnvs(); vi.restoreAllMocks(); });
-  afterAll(async () => { await db?.$disconnect(); });
+  afterAll(async () => {
+    // A shared database keeps whatever a run leaves behind, so this run leaves nothing.
+    if (existing) await removeRowsAddedSince(db, existing);
+    await db?.$disconnect();
+  });
 
   async function learner() {
     const token = randomBytes(32).toString('hex');

@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { canonicalJson, parseContentBundle, validateReferences } from '@/core/content-bundle';
@@ -142,12 +143,18 @@ describe('content publishing contract', () => {
 const url = process.env.TEST_DATABASE_URL;
 describe.skipIf(!url)('DB content publishing and learner snapshot preservation', () => {
   let db: ReturnType<typeof createDatabase>, service: LearningService;
-  beforeAll(() => {
+  let existing: Existing;
+  beforeAll(async () => {
     const parsed = new URL(url!);
     if (parsed.protocol !== 'mysql:' || !parsed.pathname.endsWith('_test')) throw new Error('Use an isolated _test database.');
     db = createDatabase(url!); service = new LearningService(db);
+    existing = await existingRows(db);
   });
-  afterAll(async () => { await db?.$disconnect(); });
+  afterAll(async () => {
+    // A shared database keeps whatever a run leaves behind, so this run leaves nothing.
+    if (existing) await removeRowsAddedSince(db, existing);
+    await db?.$disconnect();
+  });
   const learner = () => db.user.create({ data: { displayName: `content ${randomUUID()}`, scopes: { create: { kind: 'personal' } } } });
   it('loads migration content exactly, retaining legacy hashes and all diagnostic questions', async () => {
     for (const c of seedClasses) {

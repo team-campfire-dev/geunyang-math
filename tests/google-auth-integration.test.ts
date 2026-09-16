@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import * as database from '@/server/db';
 import { googleCookieName, hashSessionToken, sessionUser } from '@/server/auth';
 import { GoogleLoginService, googleFailure } from '@/server/google-auth';
@@ -12,10 +13,12 @@ const request = (path: string, cookie?: string) => new Request(`${origin}${path}
 
 describe.skipIf(!testDatabaseUrl)('MySQL Google login identity, one-use state, and session isolation', () => {
   let db: ReturnType<typeof database.createDatabase>;
-  beforeAll(() => {
+  let existing: Existing;
+  beforeAll(async () => {
     const parsed = new URL(testDatabaseUrl!);
     if (parsed.protocol !== 'mysql:' || !decodeURIComponent(parsed.pathname.slice(1)).endsWith('_test')) throw new Error('OAuth integration requires a MySQL database ending in _test.');
     db = database.createDatabase(testDatabaseUrl!);
+    existing = await existingRows(db);
   });
   beforeEach(() => {
     vi.stubEnv('NODE_ENV', 'production');
@@ -26,7 +29,11 @@ describe.skipIf(!testDatabaseUrl)('MySQL Google login identity, one-use state, a
     vi.spyOn(database, 'getDatabase').mockImplementation(() => db);
   });
   afterEach(() => { vi.unstubAllEnvs(); vi.restoreAllMocks(); });
-  afterAll(async () => { await db?.$disconnect(); });
+  afterAll(async () => {
+    // A shared database keeps whatever a run leaves behind, so this run leaves nothing.
+    if (existing) await removeRowsAddedSince(db, existing);
+    await db?.$disconnect();
+  });
 
   function service(subject = `test-${randomUUID()}`, displayName = `oauth ${randomUUID()}`) {
     const exchange = vi.fn(async () => ({ subject, displayName }));

@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { Prisma } from '@prisma/client';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { getActivityProblemIds, validateClass, type StoredClass, type StoredProblem } from '@/core/content';
 import { seedClasses } from './fixtures/content';
 import { developmentLoginEnabled, sessionUser } from '@/server/auth';
@@ -22,6 +23,7 @@ function fixtureAnswer(problem: StoredProblem): string {
 
 describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () => {
   let db: ReturnType<typeof createDatabase>;
+  let existing: Existing;
   let service: LearningService;
 
   async function publishImmutable(document: StoredClass, publishedAt?: Date) {
@@ -48,12 +50,17 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
       throw new Error('TEST_DATABASE_URL must use MySQL and a database name ending in _test.');
     }
     db = createDatabase(testDatabaseUrl!);
+    existing = await existingRows(db);
     service = new LearningService(db);
     // Migrations are performed by the caller/CI. Never truncate, drop, or reset an existing DB.
     for (const seed of seedClasses) await publishImmutable(seed);
   }, 30_000);
 
-  afterAll(async () => { await db?.$disconnect(); });
+  afterAll(async () => {
+    // A shared database keeps whatever a run leaves behind, so this run leaves nothing.
+    if (existing) await removeRowsAddedSince(db, existing);
+    await db?.$disconnect();
+  });
 
   async function newLearner() {
     const user = await db.user.create({ data: {
