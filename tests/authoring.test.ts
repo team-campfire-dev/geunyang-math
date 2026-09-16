@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { supportedBlockTypes, termContentBlockSchema, validateLesson } from '@/core/content';
+import { supportedBlockTypes, definitionBlockSchema, validateLesson } from '@/core/content';
 import {
   blockForms, blockFormOf, lessonBlockForms, copyBlock, copyProblem, copySection, dropLooseProblems, insertAfter,
   looseProblems, moveBlock, newProblem,
   nextBlockId, nextProblemBlockId, nextProblemVersionId,
   nextSectionId, problemBlockForms, problemGist, problemsOfBlock, pruneBlock, pruneSections, renameProblem,
-  renameProblemReferences, renamedProblemVersionId, nextTermVersionId, responseSpecOf, scopeTermAnnotations,
-  issueText, suggestVersionId, termBlockForms, toPublicProblem, versionLabel, writePath,
+  renameProblemReferences, renamedProblemVersionId, responseSpecOf, scopeDefinitionLinks,
+  issueText, suggestVersionId, definitionBlockForms, toPublicProblem, versionLabel, writePath,
 } from '@/shared/authoring';
 import { seedLessons } from './fixtures/content';
 
@@ -71,10 +71,10 @@ describe('what the editor sends is what publishing accepts', () => {
   it('offers one paragraph wherever a paragraph may go, never a choice of schema version', () => {
     const paragraphs = (forms: typeof blockForms) =>
       forms.filter((form) => !form.retired && form.kind === 'core.rich_text');
-    // A lesson's paragraph is the one that can carry term links; a definition's is the one that cannot.
-    expect(paragraphs(lessonBlockForms).map((form) => form.typeVersion)).toEqual([2]);
-    expect(paragraphs(problemBlockForms).map((form) => form.typeVersion)).toEqual([2]);
-    expect(paragraphs(termBlockForms).map((form) => form.typeVersion)).toEqual([1]);
+    // A lesson's paragraph is the one that can carry definition links; a definition's is the one that cannot.
+    expect(paragraphs(lessonBlockForms).map((form) => form.typeVersion)).toEqual([3]);
+    expect(paragraphs(problemBlockForms).map((form) => form.typeVersion)).toEqual([3]);
+    expect(paragraphs(definitionBlockForms).map((form) => form.typeVersion)).toEqual([1]);
     // Both are called the same thing, because to whoever is writing they are the same thing.
     expect([...new Set(paragraphs(blockForms).map((form) => form.label))]).toEqual(['글']);
     // The older one still opens, so a lesson published with it can be read and edited.
@@ -167,7 +167,7 @@ describe('naming a question, and keeping an answered one as it was answered', ()
     const record = structuredClone(seedLessons[0]);
     const activity = record.sections.flatMap((section) => section.contentBlocks).find((block) => block.kind === 'core.problem_set')!;
     const created = newProblem(nextProblemVersionId(lessonKey, 'practice', 'fraction-meaning:v5',
-      record.problems.map((problem) => problem.problemVersionId)), record.problems[0].skillKeys);
+      record.problems.map((problem) => problem.problemVersionId)), record.problems[0].conceptKeys);
     record.problems.push({ ...created, responseSpec: responseSpecOf(created.gradingSpec), hintAvailable: created.hints.length > 0 });
     (activity.payload.problemVersionIds as string[]).push(created.problemVersionId);
     expect(() => validateLesson(record)).not.toThrow();
@@ -175,7 +175,7 @@ describe('naming a question, and keeping an answered one as it was answered', ()
 
   it('shows the preview the half of a question a learner may see', () => {
     const problem = newProblem('fraction-meaning:practice-1:v2', ['fraction.meaning']);
-    expect(toPublicProblem(problem)).toEqual({ problemVersionId: problem.problemVersionId, skillKeys: ['fraction.meaning'],
+    expect(toPublicProblem(problem)).toEqual({ problemVersionId: problem.problemVersionId, conceptKeys: ['fraction.meaning'],
       promptContent: problem.promptContent, responseSpec: { kind: 'rational' }, hintAvailable: false });
     problem.hints.push({ blockId: 'fraction-meaning:practice-1:v2:hint', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '힌트' } });
     problem.gradingSpec = { kind: 'rational', numerator: 1, denominator: 2, requiredForm: 'reduced_fraction' };
@@ -183,67 +183,56 @@ describe('naming a question, and keeping an answered one as it was answered', ()
   });
 });
 
-describe('which lesson keeps a linked term', () => {
-  const linked = (terms: Record<string, unknown>[]) => ([{
-    blockId: 'fraction-meaning:explanation:text:v5', kind: 'core.rich_text', typeVersion: 2, required: true,
-    payload: { text: '분모는 전체를 나눈 조각 수예요.', terms },
+describe('which lesson keeps a linked definition', () => {
+  const linked = (definitions: Record<string, unknown>[]) => ([{
+    blockId: 'fraction-meaning:explanation:text:v5', kind: 'core.rich_text', typeVersion: 3, required: true,
+    payload: { text: '분모는 전체를 나눈 조각 수예요.', definitions },
   }]);
 
-  it('writes the owning lesson onto a term the lesson keeps, and leaves a dictionary term bare', () => {
-    const scoped = scopeTermAnnotations(linked([{ termKey: 'term.denominator', surface: '분모', scopeKind: 'lesson' }]), 'fraction-meaning');
-    expect(scoped[0].payload.terms).toEqual([{ termKey: 'term.denominator', surface: '분모', scopeKind: 'lesson', scopeKey: 'fraction-meaning' }]);
+  it('writes the owning lesson onto a definition the lesson keeps, and leaves a dictionary definition bare', () => {
+    const scoped = scopeDefinitionLinks(linked([{ conceptKey: 'term.denominator', surface: '분모', scopeKind: 'lesson' }]), 'fraction-meaning');
+    expect(scoped[0].payload.definitions).toEqual([{ conceptKey: 'term.denominator', surface: '분모', scopeKind: 'lesson', scopeKey: 'fraction-meaning' }]);
     // The shared dictionary is the absence of a scope, so nothing is written for it.
-    const shared = scopeTermAnnotations(linked([{ termKey: 'term.denominator', surface: '분모' }]), 'fraction-meaning');
-    expect(shared[0].payload.terms).toEqual([{ termKey: 'term.denominator', surface: '분모' }]);
+    const shared = scopeDefinitionLinks(linked([{ conceptKey: 'term.denominator', surface: '분모' }]), 'fraction-meaning');
+    expect(shared[0].payload.definitions).toEqual([{ conceptKey: 'term.denominator', surface: '분모' }]);
   });
 
   it('never lets an annotation keep a scope the editor did not choose', () => {
     // An author who switches back to the dictionary must not leave the old lesson behind.
-    const switched = scopeTermAnnotations(linked([{ termKey: 'term.denominator', surface: '분모', scopeKey: 'other-lesson' }]), 'fraction-meaning');
-    expect(switched[0].payload.terms).toEqual([{ termKey: 'term.denominator', surface: '분모' }]);
+    const switched = scopeDefinitionLinks(linked([{ conceptKey: 'term.denominator', surface: '분모', scopeKey: 'other-lesson' }]), 'fraction-meaning');
+    expect(switched[0].payload.definitions).toEqual([{ conceptKey: 'term.denominator', surface: '분모' }]);
     // And a lesson may only ever write its own name, whatever the payload said.
-    const borrowed = scopeTermAnnotations(linked([{ termKey: 'term.denominator', surface: '분모', scopeKind: 'lesson', scopeKey: 'other-lesson' }]), 'fraction-meaning');
-    expect(borrowed[0].payload.terms).toEqual([{ termKey: 'term.denominator', surface: '분모', scopeKind: 'lesson', scopeKey: 'fraction-meaning' }]);
+    const borrowed = scopeDefinitionLinks(linked([{ conceptKey: 'term.denominator', surface: '분모', scopeKind: 'lesson', scopeKey: 'other-lesson' }]), 'fraction-meaning');
+    expect(borrowed[0].payload.definitions).toEqual([{ conceptKey: 'term.denominator', surface: '분모', scopeKind: 'lesson', scopeKey: 'fraction-meaning' }]);
   });
 
-  it('leaves blocks that carry no term links untouched', () => {
+  it('leaves blocks that carry no definition links untouched', () => {
     const plain = [{ blockId: 'b1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '본문' } }];
-    // Returned as-is, so a document with no term links is not rewritten on every save.
-    expect(scopeTermAnnotations(plain, 'fraction-meaning')[0]).toBe(plain[0]);
+    // Returned as-is, so a document with no definition links is not rewritten on every save.
+    expect(scopeDefinitionLinks(plain, 'fraction-meaning')[0]).toBe(plain[0]);
   });
 
   it('offers the scope as a choice the publishing schema accepts', () => {
-    const form = blockFormOf({ kind: 'core.rich_text', typeVersion: 2 })!;
+    const form = blockFormOf({ kind: 'core.rich_text', typeVersion: 3 })!;
     const field = form.list!.fields.find((item) => item.key === 'scopeKind')!;
     expect(field.kind).toBe('select');
     expect(field.options!.map((option) => option.value)).toEqual(['', 'lesson']);
     // An unchosen scope is an empty string, which pruning drops before validation ever sees it.
-    const pruned = pruneBlock({ blockId: 'b1', kind: 'core.rich_text', typeVersion: 2, required: true,
-      payload: { text: '분모는 전체를 나눈 조각 수예요.', terms: [{ termKey: 'term.denominator', surface: '분모', scopeKind: '' }] } });
-    expect(pruned.payload.terms).toEqual([{ termKey: 'term.denominator', surface: '분모' }]);
+    const pruned = pruneBlock({ blockId: 'b1', kind: 'core.rich_text', typeVersion: 3, required: true,
+      payload: { text: '분모는 전체를 나눈 조각 수예요.', definitions: [{ conceptKey: 'term.denominator', surface: '분모', scopeKind: '' }] } });
+    expect(pruned.payload.definitions).toEqual([{ conceptKey: 'term.denominator', surface: '분모' }]);
   });
 });
 
 describe('writing a definition', () => {
-  it('names the next version after the scope that keeps the term', () => {
-    const shared = { termKey: 'term.denominator', scopeKind: 'global' as const, scopeKey: '' };
-    expect(nextTermVersionId(shared, [])).toBe('term.denominator:v1');
-    expect(nextTermVersionId(shared, ['term.denominator:v1', 'term.denominator:v2'])).toBe('term.denominator:v3');
-    const mine = { termKey: 'term.denominator', scopeKind: 'lesson' as const, scopeKey: 'fraction-meaning' };
-    expect(nextTermVersionId(mine, [])).toBe('fraction-meaning:term.denominator:v1');
-    // The two scopes count separately, so one lesson's versions never push the dictionary along.
-    expect(nextTermVersionId(mine, ['fraction-meaning:term.denominator:v1'])).toBe('fraction-meaning:term.denominator:v2');
-    expect(nextTermVersionId(shared, ['fraction-meaning:term.denominator:v7'])).toBe('term.denominator:v1');
-  });
-
   it('offers only the blocks a definition may hold, and each one publishes as written', () => {
-    const offered = termBlockForms.filter((form) => !form.retired);
+    const offered = definitionBlockForms.filter((form) => !form.retired);
     expect(offered.map((form) => form.kind)).not.toContain('core.problem_set');
     // A definition read while a question waits explains; it does not annotate further or ask.
-    expect(offered.some((form) => form.kind === 'core.rich_text' && form.typeVersion === 2)).toBe(false);
+    expect(offered.some((form) => form.kind === 'core.rich_text' && form.typeVersion === 3)).toBe(false);
     expect(offered.map((form) => form.kind)).toContain('core.scene');
     for (const form of offered) {
-      expect(() => termContentBlockSchema.parse({ blockId: 'term:block:1', kind: form.kind,
+      expect(() => definitionBlockSchema.parse({ blockId: 'definition:block:1', kind: form.kind,
         typeVersion: form.typeVersion, required: true, payload: form.create() }), form.kind).not.toThrow();
     }
   });
@@ -261,16 +250,16 @@ describe('naming a version and a question for whoever is writing', () => {
     const problem = newProblem('fraction-meaning:practice-1:v2', []);
     expect(problemGist(problem)).toBe('여기에 문제를 씁니다.');
     const long = { ...problem, promptContent: [{ ...problem.promptContent[0],
-      payload: { text: `${'가'.repeat(60)}`, terms: [] } }] };
+      payload: { text: `${'가'.repeat(60)}`, definitions: [] } }] };
     expect(problemGist(long)).toHaveLength(43);
     expect(problemGist(long).endsWith('…')).toBe(true);
     // Line breaks in the source are not breaks in a one-line summary.
     const wrapped = { ...problem, promptContent: [{ ...problem.promptContent[0],
-      payload: { text: '  첫 줄\n\n  둘째 줄  ', terms: [] } }] };
+      payload: { text: '  첫 줄\n\n  둘째 줄  ', definitions: [] } }] };
     expect(problemGist(wrapped)).toBe('첫 줄 둘째 줄');
     // A formula cannot be drawn on one line, so the line says one is there.
     const math = { ...problem, promptContent: [{ ...problem.promptContent[0],
-      payload: { text: '$\\frac{3}{7}$에서 분모는 어떤 수인가요?', terms: [] } }] };
+      payload: { text: '$\\frac{3}{7}$에서 분모는 어떤 수인가요?', definitions: [] } }] };
     expect(problemGist(math)).toBe('[식]에서 분모는 어떤 수인가요?');
     // A question whose prompt is only a drawing has no words to show, and says nothing rather than guessing.
     expect(problemGist({ ...problem, promptContent: [] })).toBe('');
@@ -375,8 +364,8 @@ describe('saying what a rule refused', () => {
   it('names the field the way the block\u0027s own form names it', () => {
     expect(issueText({ message: 'Too small', field: 'text' }, paragraph)).toBe('글: Too small');
     // A field inside a repeated row is named by the row\u0027s own form.
-    const linked = { ...paragraph, typeVersion: 2, payload: { text: '분모', terms: [] } };
-    expect(issueText({ message: 'Required', field: 'terms.0.termKey' }, linked)).toBe('용어 키: Required');
+    const linked = { ...paragraph, typeVersion: 3, payload: { text: '분모', definitions: [] } };
+    expect(issueText({ message: 'Required', field: 'definitions.0.conceptKey' }, linked)).toBe('개념 키: Required');
   });
 
   it('drops the kind of block from the message, because the card already says it', () => {
@@ -388,7 +377,7 @@ describe('saying what a rule refused', () => {
   });
 
   it('says the rule alone when it was not about a field of the block', () => {
-    expect(issueText({ message: 'Missing term: term.denominator' }, paragraph)).toBe('Missing term: term.denominator');
+    expect(issueText({ message: 'Missing definition: definition.denominator' }, paragraph)).toBe('Missing definition: definition.denominator');
     expect(issueText({ message: 'Duplicate block id.', field: 'nothing' }, paragraph)).toBe('Duplicate block id.');
   });
 });
@@ -397,7 +386,7 @@ describe('what an activity holds leaves with it', () => {
   const activity = (blockId: string, ids: string[]) =>
     ({ blockId, kind: 'core.problem_set', typeVersion: 1, required: true, payload: { problemVersionIds: ids } });
   const lesson = (blocks: ReturnType<typeof activity>[], problems: string[]) => ({
-    meta: { versionId: 'c:v2', title: '수업', summary: '한 줄', estimatedMinutes: 10, skillKeys: ['s'] },
+    meta: { versionId: 'c:v2', title: '수업', summary: '한 줄', estimatedMinutes: 10, conceptKeys: ['s'] },
     sections: [{ sectionId: 'c:practice:v2', role: 'practice' as const, title: '연습', contentBlocks: blocks }],
     problems: problems.map((id) => newProblem(id, ['s'])),
   });
@@ -423,7 +412,7 @@ describe('what an activity holds leaves with it', () => {
     const section = record.sections.find((item) => item.contentBlocks.some((block) => block.kind === 'core.problem_set'))!;
     const edit = {
       meta: { versionId: record.public.versionId, title: record.public.title, summary: record.public.summary,
-        estimatedMinutes: record.public.estimatedMinutes, skillKeys: [...record.public.skillKeys] },
+        estimatedMinutes: record.public.estimatedMinutes, conceptKeys: [...record.public.conceptKeys] },
       sections: structuredClone(record.sections),
       problems: structuredClone(record.problems) as never,
     };

@@ -7,7 +7,7 @@ import {
   insertAfter, issueText, looseProblems, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId,
   problemGist, sectionRoleLabels, sectionRoles, versionLabel,
   type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail,
-  type DraftEdit, type DraftIssue, type DraftProblem, type DraftSummary, type SkillChoice, type TermSummary,
+  type DraftEdit, type DraftIssue, type DraftProblem, type DraftSummary, type ConceptChoice, type DefinitionSummary,
 } from '@/shared/authoring';
 import { ApiError, learningApi, type Session } from '@/features/learning/api-client';
 import { Icon } from '@/features/learning/icons';
@@ -17,8 +17,8 @@ import { RemovalNotice, useEditHistory } from './edit-history';
 import { ExpertMode, useExpertMode } from './expert-mode';
 import { AddBlock, BlockCard } from './block-editor';
 import { LessonSheet, type Picked } from './lesson-sheet';
-import { ProblemPanel, ProblemSetEditor, SkillPicker } from './problem-editor';
-import { TermPanel } from './term-editor';
+import { ProblemPanel, ProblemSetEditor, ConceptPicker } from './problem-editor';
+import { DefinitionPanel } from './definition-editor';
 
 /** How long the editor waits after the last keystroke before it writes what is on screen. */
 const autosaveMs = 1500;
@@ -48,7 +48,7 @@ export function AuthoringWorkspace() {
   const [confirming, setConfirming] = useState(false);
   const [loading, setLoading] = useState(true);
   const [matches, setMatches] = useState<AccountRole[] | null>(null);
-  const [terms, setTerms] = useState<TermSummary[] | null>(null);
+  const [definitions, setTerms] = useState<DefinitionSummary[] | null>(null);
   const [saved, setSaved] = useState('');
   const [saving, setSaving] = useState<'idle' | 'saving' | 'failed'>('idle');
   const [removed, setRemoved] = useState<{ what: string; at: number } | null>(null);
@@ -263,13 +263,13 @@ export function AuthoringWorkspace() {
       <DraftList workspace={workspace} busy={busy}
         onOpen={(summary) => run(async () => open((await authoringApi.draft(summary.id)).draft))}
         onCreate={(lessonKey) => act({ action: 'draft.create', lessonKey })}
-        onCreateLesson={(courseKey, lessonKey, title, skillKeys) => act({ action: 'lesson.create', courseKey, lessonKey, title, skillKeys })} />
-      <TermPanel lessons={workspace.lessons} skills={workspace.skills} terms={terms} busy={busy}
+        onCreateLesson={(courseKey, lessonKey, title, conceptKeys) => act({ action: 'lesson.create', courseKey, lessonKey, title, conceptKeys })} />
+      <DefinitionPanel lessons={workspace.lessons} concepts={workspace.concepts} definitions={definitions} busy={busy}
         mayEditDictionary={mayPublish(workspace.role)}
-        onList={(scopeKind, scopeKey) => act({ action: 'term.list', scopeKind, scopeKey }, (response) => setTerms(response.terms ?? []))}
-        onSave={(edit) => act({ action: 'term.save', edit }, (response) => {
-          setTerms(response.terms ?? []);
-          setNotice(expert ? `${response.publishedTermVersionId} 판본을 발행했어요.` : '용어를 발행했어요.');
+        onList={(scopeKind, scopeKey) => act({ action: 'definition.list', scopeKind, scopeKey }, (response) => setTerms(response.definitions ?? []))}
+        onSave={(edit) => act({ action: 'definition.save', edit }, (response) => {
+          setTerms(response.definitions ?? []);
+          setNotice(expert ? `${response.savedDefinition?.conceptKey} 뜻풀이를 저장했어요.` : '뜻풀이를 저장했어요.');
         })} />
       {mayGrantRoles(workspace.role) && <RolePanel accounts={workspace.accounts} busy={busy} matches={matches}
         onSearch={(query) => act({ action: 'account.search', query }, (response) => setMatches(response.matches ?? []))}
@@ -388,8 +388,8 @@ export function AuthoringWorkspace() {
     goToSection(Math.min(Math.max(sectionIndex + delta, 0), edit.sections.length - 1));
   };
   // A question may only claim a concept this lesson teaches, and it names them the way a catalogue does.
-  const draftSkills: SkillChoice[] = edit.meta.skillKeys.map((key) =>
-    workspace.skills.find((skill) => skill.key === key) ?? { key, label: key });
+  const draftConcepts: ConceptChoice[] = edit.meta.conceptKeys.map((key) =>
+    workspace.concepts.find((concept) => concept.key === key) ?? { key, label: key, assessable: true });
 
   const savedLabel = published
     ? `발행 완료 · ${expert ? draft.publishedVersionId : versionLabel(draft.publishedVersionId ?? '')}`
@@ -447,7 +447,7 @@ export function AuthoringWorkspace() {
         }}><Icon name="plus" size={14} />단계 추가</button>}
       </aside>
 
-      <LessonSheet meta={edit.meta} section={section} index={sectionIndex} problems={edit.problems} terms={draft.terms}
+      <LessonSheet meta={edit.meta} section={section} index={sectionIndex} problems={edit.problems} definitions={draft.definitions}
         selected={selected} published={published} issues={draft.issues}
         trying={trying ? { actions: tryActions, attempts, busy: tryBusy } : undefined}
         onMeta={(meta) => setEdit({ ...edit, meta })} onSection={writeSection} onBlocks={writeBlocks}
@@ -461,7 +461,7 @@ export function AuthoringWorkspace() {
           ? <fieldset className="editor-inspector-block" disabled={published}>
             <Amiss issues={issuesOfProblem(chosenProblem.problemVersionId)} describe={describe} expert={expert} />
             <ProblemPanel problem={chosenProblem} number={problemAt + 1} total={holderIds.length}
-              skills={draftSkills} taken={blockIds} termChoices={draft.terms}
+              concepts={draftConcepts} taken={blockIds} definitionChoices={draft.definitions}
               onChange={writeProblem}
               onMove={(delta) => writeHolder(moveBlock(holderIds, problemAt, delta), edit.problems)}
               onCopy={() => {
@@ -479,11 +479,11 @@ export function AuthoringWorkspace() {
           ? <fieldset className="editor-inspector-block" disabled={published}>
             <Amiss issues={issuesOfBlock(chosenBlock.blockId)} describe={describe} expert={expert} />
             <BlockCard block={chosenBlock} index={selected.index} total={section.contentBlocks.length}
-              termChoices={draft.terms}
+              definitionChoices={draft.definitions}
               // A paragraph is written in the sheet, so the form does not ask for its body again.
               omit={chosenBlock.kind === 'core.rich_text' ? ['text'] : undefined}
               problems={blockFormOf(chosenBlock)?.editsProblems && <ProblemSetEditor block={chosenBlock} problems={edit.problems}
-                skills={draftSkills} lessonKey={draft.lessonKey} role={section.role} versionId={edit.meta.versionId}
+                concepts={draftConcepts} lessonKey={draft.lessonKey} role={section.role} versionId={edit.meta.versionId}
                 onPick={(id) => setSelected({ kind: 'problem', id })}
                 onChange={(next, problems) => setEdit({ ...edit, sections: writeSectionBlock(selected.index, next), problems })} />}
               onChange={(next) => writeBlocks(section.contentBlocks.map((item, position) => (position === selected.index ? next : item)))}
@@ -517,8 +517,8 @@ export function AuthoringWorkspace() {
             <label className="editor-field"><span className="editor-label">예상 시간(분)</span>
               <input type="number" min={1} max={240} value={edit.meta.estimatedMinutes}
                 onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, estimatedMinutes: Number(event.target.value) } })} /></label>
-            <SkillPicker skills={workspace.skills} chosen={edit.meta.skillKeys} label="이 수업이 가르치는 개념"
-              onChange={(skillKeys) => setEdit({ ...edit, meta: { ...edit.meta, skillKeys } })} />
+            <ConceptPicker concepts={workspace.concepts.filter((concept) => concept.assessable)} chosen={edit.meta.conceptKeys} label="이 수업이 가르치는 개념"
+              onChange={(conceptKeys) => setEdit({ ...edit, meta: { ...edit.meta, conceptKeys } })} />
             <p className="editor-note">문항은 여기 고른 개념 중에서만 고를 수 있어요. 하나 이상 있어야 발행할 수 있습니다.</p>
 
             {!!loose.length && <div className="editor-inspector-part">
@@ -716,18 +716,18 @@ function Shell({ role, expert = false, busy, onExpert, children }: {
 
 function DraftList({ workspace, busy, onOpen, onCreate, onCreateLesson }: {
   workspace: Workspace; busy: boolean; onOpen: (draft: DraftSummary) => void; onCreate: (lessonKey: string) => void;
-  onCreateLesson: (courseKey: string, lessonKey: string, title: string, skillKeys: string[]) => void;
+  onCreateLesson: (courseKey: string, lessonKey: string, title: string, conceptKeys: string[]) => void;
 }) {
   const [lessonKey, setLessonKey] = useState(workspace.lessons[0]?.lessonKey ?? '');
   const [query, setQuery] = useState('');
-  const [made, setMade] = useState({ courseKey: workspace.courses[0]?.key ?? '', key: '', title: '', skillKeys: [] as string[] });
+  const [made, setMade] = useState({ courseKey: workspace.courses[0]?.key ?? '', key: '', title: '', conceptKeys: [] as string[] });
   const expert = useExpertMode();
   const chosen = workspace.lessons.find((item) => item.lessonKey === lessonKey);
   const found = workspace.drafts.filter((item) => {
     const words = query.trim().toLowerCase();
     return !words || [item.title, item.authorName, item.versionId].some((value) => value.toLowerCase().includes(words));
   });
-  const readyToMake = !!made.courseKey && lessonKeyPattern.test(made.key) && !!made.title.trim() && made.skillKeys.length > 0;
+  const readyToMake = !!made.courseKey && lessonKeyPattern.test(made.key) && !!made.title.trim() && made.conceptKeys.length > 0;
 
   return <>
     <fieldset className="editor-panel">
@@ -763,11 +763,11 @@ function DraftList({ workspace, busy, onOpen, onCreate, onCreateLesson }: {
         {made.key && !lessonKeyPattern.test(made.key)
           ? <small className="editor-warn">영문 소문자·숫자·하이픈만 쓸 수 있고, 두 글자 이상이어야 해요.</small>
           : <small>이 수업 안의 모든 이름이 여기서 만들어져요. 발행한 뒤에는 바꿀 수 없어요.</small>}</label>
-      <SkillPicker skills={workspace.skills} chosen={made.skillKeys} label="이 수업이 가르치는 개념"
-        onChange={(skillKeys) => setMade({ ...made, skillKeys })} />
+      <ConceptPicker concepts={workspace.concepts.filter((concept) => concept.assessable)} chosen={made.conceptKeys} label="이 수업이 가르치는 개념"
+        onChange={(conceptKeys) => setMade({ ...made, conceptKeys })} />
       <div className="editor-actions">
         <button type="button" className="button primary" disabled={busy || !readyToMake}
-          onClick={() => onCreateLesson(made.courseKey, made.key, made.title.trim(), made.skillKeys)}>수업 만들기</button>
+          onClick={() => onCreateLesson(made.courseKey, made.key, made.title.trim(), made.conceptKeys)}>수업 만들기</button>
         {!readyToMake && <span className="editor-note">코스·이름·키·개념이 모두 있어야 만들 수 있어요.</span>}
       </div>
     </fieldset>

@@ -8,30 +8,30 @@ import {
   removeFromZone, sceneItemKinds, sceneLimits, stepFrameIndex, taskComplete, zoneAt, zoneOf,
   type ScenePlacement, type SceneFrame, type SceneItem, type SceneTask, type SceneZone,
 } from '@/shared/scene';
-import { locateTerms, splitRichText, termRefId, type TermAnnotation } from '@/shared/rich-text';
+import { locateTerms, splitRichText, definitionRefId, type DefinitionLink } from '@/shared/rich-text';
 import { Icon } from './icons';
 
 /**
- * Terms the server chose to reveal here. An annotation whose term is absent renders as plain text,
+ * Definitions the server chose to reveal here. An annotation whose definition is absent renders as plain text,
  * so the decision to withhold a definition lives on the server and never leaks into the markup.
  */
 export type GlossaryContext = {
   entries: GlossaryEntry[];
-  /** Concepts the learner is still practising; their terms get a stronger hint that help is there. */
-  reviewSkillKeys?: string[];
+  /** Concepts the learner is still practising; their definitions get a stronger hint that help is there. */
+  reviewConceptKeys?: string[];
   currentLessonKey?: string;
   onOpenLesson?: (lessonKey: string) => void;
 };
 const noGlossary: GlossaryContext = { entries: [] };
 
-export function RichText({ text, terms = [], glossary = noGlossary, asCaption = false }: { text: string; terms?: TermAnnotation[]; glossary?: GlossaryContext; asCaption?: boolean }) {
+export function RichText({ text, definitions = [], glossary = noGlossary, asCaption = false }: { text: string; definitions?: DefinitionLink[]; glossary?: GlossaryContext; asCaption?: boolean }) {
   // Holds the scoped reference, not the bare key: two scopes may use the same key.
-  const [openTerm, setOpenTerm] = useState<string | null>(null);
+  const [openDefinition, setOpenDefinition] = useState<string | null>(null);
   const panelId = useId();
-  const entryOf = (ref: string) => glossary.entries.find((entry) => termRefId(entry) === ref);
+  const entryOf = (ref: string) => glossary.entries.find((entry) => definitionRefId(entry) === ref);
   // A caption renders inline inside figcaption, where an expanding panel has nowhere to open.
-  const spans = asCaption ? [] : locateTerms(text, terms.filter((term) => entryOf(termRefId(term)))).spans;
-  const open = openTerm ? entryOf(openTerm) : undefined;
+  const spans = asCaption ? [] : locateTerms(text, definitions.filter((definition) => entryOf(definitionRefId(definition)))).spans;
+  const open = openDefinition ? entryOf(openDefinition) : undefined;
   // Only the math renderer creates HTML. Text and authored content remain React text nodes.
   const nodes: ReactNode[] = [];
   const pushText = (value: string, key: number) => { if (value) nodes.push(<span key={key}>{value}</span>); };
@@ -48,21 +48,21 @@ export function RichText({ text, terms = [], glossary = noGlossary, asCaption = 
     for (const span of spans) {
       if (span.start < cursor || span.end > segmentEnd) continue;
       const entry = entryOf(span.ref)!;
-      const expanded = openTerm === span.ref;
+      const expanded = openDefinition === span.ref;
       pushText(text.slice(cursor, span.start), cursor);
       nodes.push(<button key={span.start} type="button" aria-expanded={expanded} aria-controls={expanded ? panelId : undefined}
-        className={`term-mark${glossary.reviewSkillKeys?.includes(entry.skillKey) ? ' needs-review' : ''}${expanded ? ' open' : ''}`}
-        onClick={() => setOpenTerm(expanded ? null : span.ref)}>{text.slice(span.start, span.end)}</button>);
+        className={`term-mark${glossary.reviewConceptKeys?.includes(entry.conceptKey) ? ' needs-review' : ''}${expanded ? ' open' : ''}`}
+        onClick={() => setOpenDefinition(expanded ? null : span.ref)}>{text.slice(span.start, span.end)}</button>);
       cursor = span.end;
     }
     pushText(text.slice(cursor, segmentEnd), cursor);
   }
   const Wrapper = asCaption ? 'span' : 'div';
-  return <Wrapper className={asCaption ? 'caption-text' : 'rich-text'} onKeyDown={(event) => { if (event.key === 'Escape' && openTerm) { event.stopPropagation(); setOpenTerm(null); } }}>
+  return <Wrapper className={asCaption ? 'caption-text' : 'rich-text'} onKeyDown={(event) => { if (event.key === 'Escape' && openDefinition) { event.stopPropagation(); setOpenDefinition(null); } }}>
     {nodes}
     {open && <aside className="term-panel" id={panelId}>
       <div className="term-panel-head"><strong>{open.label}</strong>
-        <button type="button" className="icon-button" aria-label="용어 설명 닫기" onClick={() => setOpenTerm(null)}><Icon name="close" size={15} /></button></div>
+        <button type="button" className="icon-button" aria-label="뜻풀이 닫기" onClick={() => setOpenDefinition(null)}><Icon name="close" size={15} /></button></div>
       <p className="term-summary">{open.summary}</p>
       {/* Definitions never nest: the inner blocks render without a glossary of their own. */}
       <ContentBlocks blocks={open.blocks} />
@@ -315,15 +315,15 @@ const validScene = (payload: Record<string, unknown>) => typeof payload.alt === 
   && (payload.zones === undefined || (Array.isArray(payload.zones)
     && payload.zones.every((zone) => !!zone && typeof zone === 'object' && typeof (zone as SceneZone).id === 'string' && typeof (zone as SceneZone).label === 'string')
     && (!payload.zones.length || (!!payload.task && typeof (payload.task as SceneTask).prompt === 'string'))));
-const validTerms = (payload: Record<string, unknown>) => Array.isArray(payload.terms) && payload.terms.every((term) => !!term && typeof term === 'object' && typeof (term as TermAnnotation).termKey === 'string' && typeof (term as TermAnnotation).surface === 'string');
+const validLinks = (payload: Record<string, unknown>) => Array.isArray(payload.definitions) && payload.definitions.every((definition) => !!definition && typeof definition === 'object' && typeof (definition as DefinitionLink).conceptKey === 'string' && typeof (definition as DefinitionLink).surface === 'string');
 const registry: Record<string, Renderer> = {
   'core.rich_text@1': {
     validate: (payload) => typeof payload.text === 'string',
     render: (block) => <RichText text={block.payload.text as string} />,
   },
-  'core.rich_text@2': {
-    validate: (payload) => typeof payload.text === 'string' && validTerms(payload),
-    render: (block, context) => <RichText text={block.payload.text as string} terms={block.payload.terms as TermAnnotation[]} glossary={context.glossary} />,
+  'core.rich_text@3': {
+    validate: (payload) => typeof payload.text === 'string' && validLinks(payload),
+    render: (block, context) => <RichText text={block.payload.text as string} definitions={block.payload.definitions as DefinitionLink[]} glossary={context.glossary} />,
   },
   'math.fraction_strip@1': {
     validate: (payload) => validFraction(payload) && (!String(payload.label ?? '').includes('$') || typeof payload.labelAlt === 'string'),

@@ -1,10 +1,11 @@
 import 'server-only';
 import { createHash } from 'node:crypto';
-import { Prisma, type PrismaClient, type DiagnosticVersion, type TermVersion } from '@prisma/client';
-import { canonicalJson, ContentError, diagnosticDefinitionSchema, parseContentBundle, termDefinitionSchema, validateReferences, type ContentBundle, type CourseDefinition, type DiagnosticDefinition, type TermDefinition } from '@/core/content-bundle';
+import { Prisma, type PrismaClient, type DiagnosticVersion } from '@prisma/client';
+import { canonicalJson, ContentError, diagnosticDefinitionSchema, parseContentBundle, definitionSchema, validateReferences, type ContentBundle, type CourseDefinition, type DiagnosticDefinition, type DefinitionRecord } from '@/core/content-bundle';
+import type { PublishedDefinition } from '@/core/glossary';
 import type { StoredLesson, StoredProblem } from '@/core/content';
 import type { ContentBlock } from '@/shared/api';
-import { termRefId, type TermRef, type ConceptScope } from '@/shared/rich-text';
+import { definitionRefId, type DefinitionRef, type ConceptScope } from '@/shared/rich-text';
 
 type Db = Prisma.TransactionClient;
 const json = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
@@ -16,7 +17,7 @@ type IndexedProblem = StoredProblem | DiagnosticDefinition['problems'][number];
  */
 const problemRows = (ownerKind: 'lesson' | 'diagnostic', ownerVersionId: string, problems: IndexedProblem[]) =>
   problems.map((problem, order) => ({ ownerKind, ownerVersionId, problemVersionId: problem.problemVersionId,
-    order, skillKeys: json(problem.skillKeys), responseSpec: json(problem.responseSpec),
+    order, conceptKeys: json(problem.conceptKeys), responseSpec: json(problem.responseSpec),
     gradingSpec: json(problem.gradingSpec), hintAvailable: problem.hintAvailable }));
 type BlockRow = { ownerKind: string; ownerVersionId: string; ownerId: string; slot: string; order: number;
   blockId: string; kind: string; typeVersion: number; required: boolean; payload: Prisma.InputJsonValue; fallback: string | null };
@@ -24,7 +25,7 @@ type BlockRow = { ownerKind: string; ownerVersionId: string; ownerId: string; sl
  * A block as a row. `fallback` is absent from a document rather than empty, so it travels as null
  * and comes back as no key at all — a row that restored it as null would change the content hash.
  */
-const blockRows = (ownerKind: 'section' | 'problem' | 'term', ownerVersionId: string, ownerId: string, slot: string, blocks: ContentBlock[]): BlockRow[] =>
+const blockRows = (ownerKind: 'section' | 'problem' | 'definition', ownerVersionId: string, ownerId: string, slot: string, blocks: ContentBlock[]): BlockRow[] =>
   blocks.map((block, order) => ({ ownerKind, ownerVersionId, ownerId, slot, order,
     blockId: block.blockId, kind: block.kind, typeVersion: block.typeVersion, required: block.required,
     payload: json(block.payload), fallback: block.fallback ?? null }));
@@ -76,10 +77,11 @@ export async function indexDiagnosticDocument(db: Db, definition: DiagnosticDefi
     blockRows('problem', definition.versionId, problem.problemVersionId, 'prompt', problem.promptContent));
   if (blocks.length) await db.contentBlock.createMany({ data: blocks, skipDuplicates: true });
 }
-/** Writes the rows a published definition is read from: one list of blocks the version owns. */
-export async function indexTermDocument(db: Db, versionId: string, blocks: ContentBlock[]) {
-  const rows = blockRows('term', versionId, versionId, 'body', blocks);
-  if (rows.length) await db.contentBlock.createMany({ data: rows, skipDuplicates: true });
+/** Writes the blocks a definition is read from. A definition is saved in place, so what was there goes first. */
+export async function indexDefinitionBlocks(db: Db, definitionId: string, blocks: ContentBlock[]) {
+  await db.contentBlock.deleteMany({ where: { ownerKind: 'definition', ownerVersionId: definitionId } });
+  const rows = blockRows('definition', definitionId, definitionId, 'body', blocks);
+  if (rows.length) await db.contentBlock.createMany({ data: rows });
 }
 /** Published questions by name, as they were published: the row's own columns and its blocks. */
 export async function publishedProblemRecords(db: Db, problemVersionIds: string[]): Promise<Map<string, StoredProblem>> {
@@ -94,11 +96,11 @@ export async function publishedProblemRecords(db: Db, problemVersionIds: string[
     problemOf(row, slot => blocksOf(row.ownerVersionId, 'problem', row.problemVersionId, slot))]));
 }
 
-type ProblemRow = { problemVersionId: string; skillKeys: unknown; responseSpec: unknown; gradingSpec: unknown; hintAvailable: boolean };
+type ProblemRow = { problemVersionId: string; conceptKeys: unknown; responseSpec: unknown; gradingSpec: unknown; hintAvailable: boolean };
 /** A question read back: what the row says, with its blocks put back in the order they were in. */
 const problemOf = (row: ProblemRow, blocks: (slot: string) => ContentBlock[]): StoredProblem => ({
   problemVersionId: row.problemVersionId,
-  skillKeys: row.skillKeys as string[],
+  conceptKeys: row.conceptKeys as string[],
   promptContent: blocks('prompt'),
   responseSpec: row.responseSpec as StoredProblem['responseSpec'],
   hintAvailable: row.hintAvailable,
@@ -158,34 +160,28 @@ export async function diagnosticDefinitions(db: Db, rows: DiagnosticVersion[]): 
     problems: problems.filter(problem => problem.ownerVersionId === row.id)
       .map(problem => problemOf(problem, slot => blocksOf(row.id, 'problem', problem.problemVersionId, slot))) }));
 }
-/** A definition is its own columns and one list of blocks the version owns directly. */
-export async function termDefinitions(db: Db, rows: TermVersion[]): Promise<TermDefinition[]> {
+type DefinitionRow = { id: string; conceptKey: string; scopeKind: string; scopeKey: string; label: string | null; summary: string | null };
+const definitionWhere = (ref: DefinitionRef) => ({ conceptKey: ref.conceptKey, scopeKind: ref.scopeKind ?? 'global', scopeKey: ref.scopeKey ?? '' });
+/** Definitions as a bundle carries them: what the row says, and the blocks the row owns. */
+export async function definitionRecords(db: Db, rows: DefinitionRow[]): Promise<DefinitionRecord[]> {
   if (!rows.length) return [];
   const blocksOf = await blockIndex(db, rows.map(row => row.id));
-  return rows.map(row => termDefinitionSchema.parse({ versionId: row.id, termKey: row.termKey,
-    scopeKind: row.scopeKind, scopeKey: row.scopeKey, skillKey: row.skillKey,
-    label: row.label, summary: row.summary, blocks: blocksOf(row.id, 'term', row.id, 'body') }));
+  return rows.map(row => definitionSchema.parse({ conceptKey: row.conceptKey, scopeKind: row.scopeKind, scopeKey: row.scopeKey,
+    ...(row.label === null ? {} : { label: row.label }), ...(row.summary === null ? {} : { summary: row.summary }),
+    blocks: blocksOf(row.id, 'definition', row.id, 'body') }));
 }
-const rowRef = (row: { termKey: string; scopeKind: string; scopeKey: string }) =>
-  termRefId({ termKey: row.termKey, scopeKind: row.scopeKind as ConceptScope, scopeKey: row.scopeKey });
 /**
- * Latest published definition for each term a document asked for. A reference names its scope, so a
- * lesson-scoped term and a dictionary term may share a key without either one answering for the
- * other. Only the version is late-bound: a reworded definition needs no lesson republished.
+ * The definitions a document linked, as a learner may open them. A reference names its scope, so a
+ * lesson's own definition and the dictionary's may explain the same concept without either answering
+ * for the other. A row that only renames the concept has nothing to open and is left out.
  */
-export async function currentTerms(db: Db, refs: TermRef[]): Promise<TermDefinition[]> {
+export async function currentDefinitions(db: Db, refs: DefinitionRef[]): Promise<PublishedDefinition[]> {
   if (!refs.length) return [];
-  const wanted = new Set(refs.map(termRefId));
-  const rows = await db.termVersion.findMany({ where: { termKey: { in: [...new Set(refs.map(ref => ref.termKey))] } },
-    orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
-  const seen = new Set<string>();
-  const current = rows.filter(row => {
-    const ref = rowRef(row);
-    if (!wanted.has(ref) || seen.has(ref)) return false;
-    seen.add(ref);
-    return true;
-  });
-  return termDefinitions(db, current);
+  const rows = await db.conceptDefinition.findMany({ where: { OR: refs.map(definitionWhere) }, include: { concept: { select: { label: true } } } });
+  const blocksOf = await blockIndex(db, rows.map(row => row.id));
+  return rows.map(row => ({ conceptKey: row.conceptKey, scopeKind: row.scopeKind as ConceptScope, scopeKey: row.scopeKey,
+    label: row.label ?? row.concept.label, summary: row.summary ?? '', blocks: blocksOf(row.id, 'definition', row.id, 'body') }))
+    .filter(definition => definition.blocks.length);
 }
 export async function currentDiagnostic(db: Db) {
   const row = await db.diagnosticVersion.findFirst({ where: { diagnosticKey: 'starting-point' }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
@@ -201,13 +197,13 @@ async function courseDefinitions(db: Db): Promise<CourseDefinition[]> {
     lessons: course.lessons, diagnostics: course.diagnostics.map(row => row.key) }));
 }
 export async function exportContent(db: Db): Promise<ContentBundle> {
-  const [courses, skills, lessons, diagnostics, terms] = await Promise.all([
+  const [courses, concepts, lessons, diagnostics, definitionRows] = await Promise.all([
     courseDefinitions(db),
-    db.skill.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }] }),
+    db.concept.findMany({ orderBy: { key: 'asc' }, select: { key: true, label: true, assessable: true } }),
     db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }],
       select: { id: true, lessonKey: true, title: true } }),
     db.diagnosticVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }] }),
-    db.termVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }] }),
+    db.conceptDefinition.findMany({ orderBy: [{ scopeKind: 'asc' }, { scopeKey: 'asc' }, { conceptKey: 'asc' }] }),
   ]);
   const records = await lessonRecords(db, lessons.map(row => row.id));
   for (const row of lessons) {
@@ -215,8 +211,8 @@ export async function exportContent(db: Db): Promise<ContentBundle> {
     if (!record) throw new ContentError(`Published lesson has no rows to read it from: ${row.id}`);
     if (row.id !== record.public?.versionId || row.lessonKey !== record.public?.lessonKey || row.title !== record.public?.title) throw new ContentError(`Lesson metadata mismatch: ${row.id}`);
   }
-  return parseContentBundle({ schemaVersion: 1, courses, skills, lessons: lessons.map(row => records.get(row.id)),
-    diagnostics: await diagnosticDefinitions(db, diagnostics), terms: await termDefinitions(db, terms) });
+  return parseContentBundle({ schemaVersion: 1, courses, concepts, lessons: lessons.map(row => records.get(row.id)),
+    diagnostics: await diagnosticDefinitions(db, diagnostics), definitions: await definitionRecords(db, definitionRows) });
 }
 
 /**
@@ -269,7 +265,7 @@ export async function verifyRowsBelongToVersions(db: Db, bundle: ContentBundle) 
       problems: totals.problems + record.problems.length };
   }, { sections: 0, blocks: 0, problems: 0 });
   expected.blocks += bundle.diagnostics.reduce((n, d) => n + d.problems.reduce((m, p) => m + p.promptContent.length, 0), 0);
-  expected.blocks += bundle.terms.reduce((n, t) => n + t.blocks.length, 0);
+  expected.blocks += bundle.definitions.reduce((n, t) => n + t.blocks.length, 0);
   expected.problems += bundle.diagnostics.reduce((n, d) => n + d.problems.length, 0);
   const [sections, blocks, problems] = await Promise.all([db.lessonSection.count(), db.contentBlock.count(), db.publishedProblem.count()]);
   if (sections !== expected.sections) throw new ContentError(`Section rows belong to no published lesson: ${sections - expected.sections} extra.`);
@@ -281,17 +277,17 @@ export async function verifyRowsBelongToVersions(db: Db, bundle: ContentBundle) 
 export async function verifyContent(db: Db) {
   const bundle = await exportContent(db);
   validateReferences(bundle);
-  if (!bundle.lessons.length || !bundle.skills.length || !bundle.diagnostics.some(d => d.diagnosticKey === 'starting-point')) throw new ContentError('Database content is incomplete. Apply database migrations or import a reviewed bundle.');
+  if (!bundle.lessons.length || !bundle.concepts.length || !bundle.diagnostics.some(d => d.diagnosticKey === 'starting-point')) throw new ContentError('Database content is incomplete. Apply database migrations or import a reviewed bundle.');
   const { blocks: indexedBlocks, problems: indexedProblems } = await verifyRowsBelongToVersions(db, bundle);
   return { lessons: bundle.lessons.length, lessonProblems: bundle.lessons.reduce((n, c) => n + c.problems.length, 0), indexedProblems, indexedBlocks,
-    skills: bundle.skills.length, diagnosticVersions: bundle.diagnostics.length, diagnosticProblems: bundle.diagnostics.reduce((n, d) => n + d.problems.length, 0),
-    termVersions: bundle.terms.length, terms: new Set(bundle.terms.map(termRefId)).size };
+    concepts: bundle.concepts.length, diagnosticVersions: bundle.diagnostics.length, diagnosticProblems: bundle.diagnostics.reduce((n, d) => n + d.problems.length, 0),
+    definitions: bundle.definitions.length };
 }
 
 type Ledger = { name: string; checksum: string };
 async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: boolean, ledger?: Ledger) {
   const existing = await exportContent(db);
-  const newLessons: StoredLesson[] = [], newDiagnostics: DiagnosticDefinition[] = [], newTerms: TermDefinition[] = [];
+  const newLessons: StoredLesson[] = [], newDiagnostics: DiagnosticDefinition[] = [];
   for (const c of incoming.lessons) {
     const old = await lessonRecord(db, c.public.versionId);
     if (old && canonicalJson(old) !== canonicalJson(c)) throw new ContentError(`Published lesson is immutable: ${c.public.versionId}. Use a new version ID.`);
@@ -303,33 +299,29 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
     if (published && canonicalJson(published) !== canonicalJson(d)) throw new ContentError(`Published diagnostic is immutable: ${d.versionId}. Use a new version ID.`);
     if (!old) newDiagnostics.push(d);
   }
-  for (const t of incoming.terms) {
-    const old = await db.termVersion.findUnique({ where: { id: t.versionId } });
-    const published = old ? (await termDefinitions(db, [old]))[0] : null;
-    if (published && canonicalJson(published) !== canonicalJson(t)) throw new ContentError(`Published term is immutable: ${t.versionId}. Use a new version ID.`);
-    if (!old) newTerms.push(t);
+  // A concept named again is the same concept restated; a definition named again is rewritten in place.
+  const concepts = new Map(existing.concepts.map(s => [s.key, s]));
+  for (const s of incoming.concepts) {
+    const old = await db.concept.findUnique({ where: { key: s.key } });
+    if (old && old.key !== s.key) throw new ContentError('Concept keys cannot differ only by letter case.');
+    concepts.set(s.key, s);
   }
-  const skills = new Map(existing.skills.map(s => [s.key, s]));
-  for (const s of incoming.skills) {
-    const old = await db.skill.findUnique({ where: { key: s.key } });
-    if (old && old.key !== s.key) throw new ContentError('Skill keys cannot differ only by letter case.');
-    skills.set(s.key, s);
-  }
+  const definitions = new Map(existing.definitions.map(t => [definitionRefId(t), t]));
+  for (const t of incoming.definitions) definitions.set(definitionRefId(t), t);
   const courses = mergeCourses(existing.courses, incoming.courses);
-  validateReferences({ schemaVersion: 1, courses, skills: [...skills.values()], lessons: [...existing.lessons, ...newLessons],
-    diagnostics: [...existing.diagnostics, ...newDiagnostics], terms: [...existing.terms, ...newTerms] });
+  validateReferences({ schemaVersion: 1, courses, concepts: [...concepts.values()], lessons: [...existing.lessons, ...newLessons],
+    diagnostics: [...existing.diagnostics, ...newDiagnostics], definitions: [...definitions.values()] });
   if (!dryRun) {
     // A version hangs off the identity that keeps it, so the course and its lessons come first.
     for (const course of incoming.courses) await writeCourse(db, course);
     // Bundle order is publication order. Millisecond ties must not select an arbitrary version.
-    const [lastLesson, lastDiagnostic, lastTerm] = await Promise.all([
+    const [lastLesson, lastDiagnostic] = await Promise.all([
       db.lessonVersion.findFirst({ orderBy: { publishedAt: 'desc' }, select: { publishedAt: true } }),
       db.diagnosticVersion.findFirst({ orderBy: { publishedAt: 'desc' }, select: { publishedAt: true } }),
-      db.termVersion.findFirst({ orderBy: { publishedAt: 'desc' }, select: { publishedAt: true } }),
     ]);
-    let publishedTime = Math.max(Date.now(), (lastLesson?.publishedAt.getTime() ?? 0) + 1, (lastDiagnostic?.publishedAt.getTime() ?? 0) + 1, (lastTerm?.publishedAt.getTime() ?? 0) + 1);
+    let publishedTime = Math.max(Date.now(), (lastLesson?.publishedAt.getTime() ?? 0) + 1, (lastDiagnostic?.publishedAt.getTime() ?? 0) + 1);
     const publishedAt = () => new Date(publishedTime++);
-    for (const s of incoming.skills) await db.skill.upsert({ where: { key: s.key }, create: s, update: { label: s.label, order: s.order } });
+    for (const s of incoming.concepts) await db.concept.upsert({ where: { key: s.key }, create: s, update: { label: s.label, assessable: s.assessable } });
     for (const c of newLessons) await db.lessonVersion.create({ data: { id: c.public.versionId, lessonKey: c.public.lessonKey,
       title: c.public.title, metadata: json(lessonMetadata(c)),
       contentHash: hash(c), publishedAt: publishedAt() } });
@@ -339,18 +331,20 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
     // by name before the document that holds it exists.
     for (const c of newLessons) await indexLessonDocument(db, c);
     for (const d of newDiagnostics) await indexDiagnosticDocument(db, d);
-    // Term links live inside lesson JSON with no foreign key, so creation order is free; the merged
-    // reference check above already proved every linked term exists.
-    for (const t of newTerms) await db.termVersion.create({ data: { id: t.versionId, termKey: t.termKey,
-      scopeKind: t.scopeKind, scopeKey: t.scopeKey, skillKey: t.skillKey,
-      label: t.label, summary: t.summary, contentHash: hash(t), publishedAt: publishedAt() } });
-    for (const t of newTerms) await indexTermDocument(db, t.versionId, t.blocks as ContentBlock[]);
+    // A definition is written where it is: the row by its concept and scope, then its blocks anew.
+    for (const t of incoming.definitions) {
+      const row = await db.conceptDefinition.upsert({
+        where: { conceptKey_scopeKind_scopeKey: { conceptKey: t.conceptKey, scopeKind: t.scopeKind, scopeKey: t.scopeKey } },
+        create: { conceptKey: t.conceptKey, scopeKind: t.scopeKind, scopeKey: t.scopeKey, label: t.label ?? null, summary: t.summary ?? null },
+        update: { label: t.label ?? null, summary: t.summary ?? null } });
+      await indexDefinitionBlocks(db, row.id, t.blocks as ContentBlock[]);
+    }
     // The ledger entry shares this transaction: a file counts as applied only if its content landed.
     if (ledger) await db.appliedContentBundle.upsert({ where: { name: ledger.name }, create: { ...ledger },
       update: { checksum: ledger.checksum, appliedAt: new Date() } });
   }
-  return { dryRun, newLessons: newLessons.length, newDiagnostics: newDiagnostics.length, newTerms: newTerms.length, skills: incoming.skills.length,
-    unchangedVersions: incoming.lessons.length + incoming.diagnostics.length + incoming.terms.length - newLessons.length - newDiagnostics.length - newTerms.length };
+  return { dryRun, newLessons: newLessons.length, newDiagnostics: newDiagnostics.length, concepts: incoming.concepts.length, definitions: incoming.definitions.length,
+    unchangedVersions: incoming.lessons.length + incoming.diagnostics.length - newLessons.length - newDiagnostics.length };
 }
 export async function importContent(db: PrismaClient, input: unknown, dryRun = false, ledger?: Ledger) {
   const incoming = parseContentBundle(input);

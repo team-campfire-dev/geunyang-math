@@ -1,11 +1,11 @@
 import 'server-only';
 import { createHash } from 'node:crypto';
-import { lessonRecord, lessonRecords, currentDiagnostic, currentTerms } from './content-store';
-import { recommend, reviewSelection, skillReadiness, type Evidence } from '@/core/personalization';
+import { lessonRecord, lessonRecords, currentDiagnostic, currentDefinitions } from './content-store';
+import { recommend, reviewSelection, conceptReadiness, type Evidence } from '@/core/personalization';
 import { glossaryEntries } from '@/core/glossary';
 import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
-import { blockTermRefs, getActivityProblemIds, termReferences, toPublicLesson, validateLesson, type LessonMetadata, type StoredLesson, type StoredProblem } from '@/core/content';
+import { blockDefinitionRefs, getActivityProblemIds, definitionReferences, toPublicLesson, validateLesson, type LessonMetadata, type StoredLesson, type StoredProblem } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
 import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicCatalog, PublicLesson, PublicProblem, DiagnosticAnswer, Recommendation } from '@/shared/api';
 import { AppError } from './errors';
@@ -29,10 +29,21 @@ const asJson = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.I
 const notFound = () => new AppError(404, 'not_found', '학습 기록을 찾을 수 없어요.');
 const conflict = (message: string) => new AppError(409, 'conflict', message);
 function publicProblem(p: StoredProblem): PublicProblem {
-  return { problemVersionId: p.problemVersionId, skillKeys: p.skillKeys, promptContent: p.promptContent, responseSpec: p.responseSpec, hintAvailable: p.hintAvailable };
+  return { problemVersionId: p.problemVersionId, conceptKeys: p.conceptKeys, promptContent: p.promptContent, responseSpec: p.responseSpec, hintAvailable: p.hintAvailable };
 }
 function attemptView(a: Attempt): AttemptView {
   return { id: a.id, problemVersionId: a.problemVersionId, answer: a.answer, result: a.result as GradeResult, hintUsed: a.hintUsed };
+}
+/**
+ * Assessable concepts in the order the catalogue teaches them: the first lesson that teaches a
+ * concept places it, and concepts no published lesson teaches follow by name. Concepts have no order
+ * of their own — the course's order of lessons is the only order there is.
+ */
+function orderConcepts<T extends { key: string; label: string }>(rows: T[], lessons: PublicLesson[]): T[] {
+  const position = new Map<string, number>();
+  lessons.forEach((lesson, index) => { for (const key of lesson.conceptKeys) if (!position.has(key)) position.set(key, index); });
+  return [...rows].sort((a, b) => (position.get(a.key) ?? Number.MAX_SAFE_INTEGER) - (position.get(b.key) ?? Number.MAX_SAFE_INTEGER)
+    || a.label.localeCompare(b.label, 'ko') || a.key.localeCompare(b.key));
 }
 
 export class LearningService {
@@ -49,19 +60,19 @@ export class LearningService {
       .map(row => ({ ...(row.metadata as { public: LessonMetadata }).public, courseKey: row.lesson.course.key }));
   }
 
-  // Signed-out screens name the concepts the published catalogue teaches. A skill without a
+  // Signed-out screens name the concepts the published catalogue teaches. A concept without a
   // published lesson stays out of the public response until its lesson is released.
   async publicCatalog(db: Tx = this.db): Promise<PublicCatalog> {
     const lessons = await this.catalog(db);
-    const taught = new Set(lessons.flatMap(item => item.skillKeys));
+    const taught = new Set(lessons.flatMap(item => item.conceptKeys));
     const published = new Set(lessons.map(item => item.courseKey));
     const [rows, courses] = await Promise.all([
-      db.skill.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }] }),
+      db.concept.findMany({ where: { assessable: true } }),
       db.course.findMany({ orderBy: [{ createdAt: 'asc' }, { key: 'asc' }], select: { key: true, title: true, summary: true } }),
     ]);
     // A course with nothing published yet is not in the catalogue either.
     return { courses: courses.filter(course => published.has(course.key)), lessons,
-      skills: rows.filter(row => taught.has(row.key)).map(row => ({ key: row.key, label: row.label })) };
+      concepts: orderConcepts(rows.filter(row => taught.has(row.key)), lessons).map(row => ({ key: row.key, label: row.label })) };
   }
 
   async lessonDocument(lessonKey: string, userId?: string) {
@@ -71,17 +82,17 @@ export class LearningService {
     if (!versionId) throw notFound();
     const record = await lessonRecord(this.db, versionId);
     if (!record) throw notFound();
-    // Definitions resolve at delivery so a reworded term reaches an in-progress lesson version too.
-    const [terms, lessons, lesson] = await Promise.all([
-      currentTerms(this.db, termReferences(record)), this.catalog(),
+    // Definitions resolve at delivery so a reworded definition reaches an in-progress lesson version too.
+    const [definitions, lessons, lesson] = await Promise.all([
+      currentDefinitions(this.db, definitionReferences(record)), this.catalog(),
       this.db.lesson.findUnique({ where: { key: lessonKey }, select: { course: { select: { key: true } } } }),
     ]);
     if (!lesson) throw notFound();
-    return toPublicLesson(record, lesson.course.key, glossaryEntries(terms, lessons));
+    return toPublicLesson(record, lesson.course.key, glossaryEntries(definitions, lessons));
   }
 
   async state(userId: string, db: Tx = this.db): Promise<LearningState> {
-    const [user, lessons, enrollments, recipients, diagnostic, history, skillRows, offering] = await Promise.all([
+    const [user, lessons, enrollments, recipients, diagnostic, history, assessable, offering] = await Promise.all([
       db.user.findUnique({ where: { id: userId } }), this.catalog(db),
       db.enrollment.findMany({ where: { userId }, include: { lessonVersion: { select: { id: true, lessonKey: true } },
         attempts: { orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] } }, orderBy: { createdAt: 'asc' } }),
@@ -91,12 +102,13 @@ export class LearningService {
       }, orderBy: { recommendedAt: 'asc' } }),
       db.diagnosticRun.findFirst({ where: { userId }, orderBy: { createdAt: 'desc' } }),
       db.recommendationHistory.findMany({ where: { userId }, orderBy: [{ createdAt: 'desc' }, { id: 'desc' }], take: 10 }),
-      db.skill.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }] }), currentDiagnostic(db),
+      db.concept.findMany({ where: { assessable: true } }), currentDiagnostic(db),
     ]);
     if (!user) throw notFound();
-    const skillLabels = Object.fromEntries(skillRows.map(s => [s.key, s.label]));
-    const skills: LearningState['skills'] = Object.entries(skillLabels).map(([key, label]) => ({ key, label, state: 'unknown' }));
-    const firstEvidence = new Map<string, { result: GradeResult; date: Date; skillKeys: string[]; delayed: boolean }>();
+    const conceptRows = orderConcepts(assessable, lessons);
+    const conceptLabels = Object.fromEntries(conceptRows.map(s => [s.key, s.label]));
+    const concepts: LearningState['concepts'] = Object.entries(conceptLabels).map(([key, label]) => ({ key, label, state: 'unknown' }));
+    const firstEvidence = new Map<string, { result: GradeResult; date: Date; conceptKeys: string[]; delayed: boolean }>();
     const evidence: Evidence[] = [];
     const observedIds = new Set<string>();
     const records = await lessonRecords(db, enrollments.map(e => e.lessonVersionId));
@@ -111,14 +123,14 @@ export class LearningService {
         if (!p) continue;
         if (!observedIds.has(p.problemVersionId)) {
           observedIds.add(p.problemVersionId);
-          evidence.push({ problemVersionId: p.problemVersionId, skillKeys: p.skillKeys, result, date: a.createdAt, check: checks.has(p.problemVersionId), assessmentId: e.id });
+          evidence.push({ problemVersionId: p.problemVersionId, conceptKeys: p.conceptKeys, result, date: a.createdAt, check: checks.has(p.problemVersionId), assessmentId: e.id });
         }
-        for (const skill of skills.filter(s => p.skillKeys.includes(s.key))) if (skill.state === 'unknown') skill.state = 'practicing';
-        if (checks.has(p.problemVersionId) && !firstEvidence.has(p.problemVersionId)) firstEvidence.set(p.problemVersionId, { result, date: a.createdAt, skillKeys: p.skillKeys, delayed: false });
+        for (const concept of concepts.filter(s => p.conceptKeys.includes(s.key))) if (concept.state === 'unknown') concept.state = 'practicing';
+        if (checks.has(p.problemVersionId) && !firstEvidence.has(p.problemVersionId)) firstEvidence.set(p.problemVersionId, { result, date: a.createdAt, conceptKeys: p.conceptKeys, delayed: false });
       }
     }
     const assignmentProblems = recipients.flatMap(r => r.assignment.items.map(item => item.problemSnapshot as unknown as StoredProblem));
-    const assignmentTerms = await currentTerms(db, blockTermRefs(assignmentProblems.flatMap(p => [...p.promptContent, ...p.hints])));
+    const assignmentTerms = await currentDefinitions(db, blockDefinitionRefs(assignmentProblems.flatMap(p => [...p.promptContent, ...p.hints])));
     const assignments: AssignmentView[] = recipients.map(r => {
       const submission = r.submissions[0];
       if (!submission) throw new Error('Missing initial submission');
@@ -127,17 +139,17 @@ export class LearningService {
         const p = item.problemSnapshot as unknown as StoredProblem;
         const matching = submission.attempts.filter(a => a.assignmentItemId === item.id);
         if (matching.some(a => (a.result as GradeResult).status !== 'invalid')) {
-          for (const skill of skills.filter(s => p.skillKeys.includes(s.key))) if (skill.state === 'unknown') skill.state = 'practicing';
+          for (const concept of concepts.filter(s => p.conceptKeys.includes(s.key))) if (concept.state === 'unknown') concept.state = 'practicing';
         }
         // Only finalized, server-received work contributes homework evidence.
         if (submission.status === 'submitted') {
           const first = matching.find(a => (a.result as GradeResult).status !== 'invalid');
           if (first && !observedIds.has(p.problemVersionId)) {
             observedIds.add(p.problemVersionId);
-            evidence.push({ problemVersionId: p.problemVersionId, skillKeys: p.skillKeys, result: first.result as GradeResult, date: first.createdAt, check: true, assessmentId: r.id });
+            evidence.push({ problemVersionId: p.problemVersionId, conceptKeys: p.conceptKeys, result: first.result as GradeResult, date: first.createdAt, check: true, assessmentId: r.id });
           }
           if (first && !firstEvidence.has(p.problemVersionId)) firstEvidence.set(p.problemVersionId, {
-            result: first.result as GradeResult, date: first.createdAt, skillKeys: p.skillKeys,
+            result: first.result as GradeResult, date: first.createdAt, conceptKeys: p.conceptKeys,
             delayed: first.createdAt >= r.recommendedAt,
           });
         }
@@ -152,20 +164,20 @@ export class LearningService {
         glossary: glossaryEntries(assignmentTerms, lessons),
         reason: typeof (r.assignment.policySnapshot as { reviewReason?: string }).reviewReason === 'string' ? (r.assignment.policySnapshot as { reviewReason: string }).reviewReason : undefined };
     });
-    for (const skill of skills) {
-      const correct = [...firstEvidence.values()].filter(e => e.skillKeys.includes(skill.key) && e.result.status === 'correct' && !e.result.assisted);
-      if (correct.length >= 2) skill.state = 'independent';
-      if (correct.some(e => e.delayed) && correct.some(e => !e.delayed)) skill.state = 'retained';
+    for (const concept of concepts) {
+      const correct = [...firstEvidence.values()].filter(e => e.conceptKeys.includes(concept.key) && e.result.status === 'correct' && !e.result.assisted);
+      if (correct.length >= 2) concept.state = 'independent';
+      if (correct.some(e => e.delayed) && correct.some(e => !e.delayed)) concept.state = 'retained';
     }
     const diagnosticBank = diagnostic?.document as unknown as StoredProblem[] | undefined;
     const diagnosticAnswers = (diagnostic?.answers ?? []) as unknown as DiagnosticAnswer[];
     const completedDiagnostic = diagnostic?.status === 'completed';
-    const readiness = skillReadiness(skillLabels, completedDiagnostic && diagnosticBank ? { answers: diagnosticAnswers, problems: diagnosticBank } : null, evidence);
+    const readiness = conceptReadiness(conceptLabels, completedDiagnostic && diagnosticBank ? { answers: diagnosticAnswers, problems: diagnosticBank } : null, evidence);
     const { recommendations, plan } = recommend({ lessons, enrollments: enrollments.map(e => ({ lessonKey: e.lessonVersion.lessonKey, status: e.status })),
       assignments, readiness, dailyMinutes: user.dailyMinutes, goal: user.goal as LearningState['user']['goal'], now: new Date(), preferredLessonKey: user.preferredLessonKey });
     return {
       user: { id: user.id, displayName: user.displayName, goal: user.goal as LearningState['user']['goal'], dailyMinutes: user.dailyMinutes },
-      lessons, assignments, recommendations, skills, plan,
+      lessons, assignments, recommendations, concepts, plan,
       diagnosticOffering: offering ? { version: offering.versionId, title: offering.title, description: offering.description,
         total: offering.problems.length, estimatedMinutes: offering.estimatedMinutes } : null,
       diagnostic: diagnostic && diagnosticBank ? { id: diagnostic.id, version: diagnostic.version, status: diagnostic.status as 'active' | 'completed',
@@ -354,7 +366,7 @@ export class LearningService {
       const result = attempt.result as GradeResult;
       if (!p || result.status === 'invalid' || seen.has(p.problemVersionId)) continue;
       seen.add(p.problemVersionId);
-      evidence.push({ problemVersionId: p.problemVersionId, skillKeys: p.skillKeys, responseKind: p.responseSpec.kind, result, date: attempt.createdAt, check: checkIds.has(p.problemVersionId) });
+      evidence.push({ problemVersionId: p.problemVersionId, conceptKeys: p.conceptKeys, responseKind: p.responseSpec.kind, result, date: attempt.createdAt, check: checkIds.has(p.problemVersionId) });
     }
     const selection = reviewSelection(record.homeworkProblemIds.map(id => record.problems.find(p => p.problemVersionId === id)!), evidence, user.dailyMinutes);
     return tx.assignment.create({ data: {

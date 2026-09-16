@@ -1,27 +1,33 @@
 import 'server-only';
 import { z } from 'zod';
-import { diagnosticProblemSchema, termContentBlockSchema, termReferences, validateLesson, type StoredLesson } from './content';
-import { termRefId } from '@/shared/rich-text';
+import { diagnosticProblemSchema, definitionBlockSchema, definitionReferences, validateLesson, type StoredLesson } from './content';
+import { definitionRefId } from '@/shared/rich-text';
 
 const id = z.string().min(1).max(191).regex(/^[a-zA-Z0-9:._-]+$/);
-export const skillSchema = z.object({ key: id.max(100), label: z.string().trim().min(1).max(191), order: z.number().int().min(0).max(1_000_000) }).strict();
+/** A concept is global: its key never moves, and whether a question may assess it is its own. */
+export const conceptSchema = z.object({ key: id.max(100), label: z.string().trim().min(1).max(191), assessable: z.boolean() }).strict();
+export type ConceptRecord = z.infer<typeof conceptSchema>;
 export const diagnosticDefinitionSchema = z.object({
   versionId: id, diagnosticKey: id.max(100), title: z.string().trim().min(1).max(191),
   description: z.string().trim().min(1).max(2000), estimatedMinutes: z.number().int().min(1).max(120),
   problems: z.array(diagnosticProblemSchema).min(1).max(100),
 }).strict();
 export type DiagnosticDefinition = z.infer<typeof diagnosticDefinitionSchema>;
-export const termDefinitionSchema = z.object({
-  versionId: id, termKey: id.max(100),
-  // A bundle written before scopes existed carries neither field and imports as the shared dictionary.
+/**
+ * How one scope calls and explains a concept. Not a version: a definition is written in place, since
+ * it decides nothing and has no past to recover. A row with no blocks only renames the concept in
+ * that scope; a paragraph may link only a definition that has something to show.
+ */
+export const definitionSchema = z.object({
+  conceptKey: id.max(100),
+  // Absent means the operator's shared dictionary.
   scopeKind: z.enum(['global', 'organization', 'course', 'lesson']).optional().default('global'),
   scopeKey: id.max(100).or(z.literal('')).optional().default(''),
-  skillKey: id.max(100),
-  label: z.string().trim().min(1).max(191), summary: z.string().trim().min(1).max(500),
-  blocks: z.array(termContentBlockSchema).min(1).max(20),
-}).strict().refine((term) => (term.scopeKind === 'global' ? term.scopeKey === '' : term.scopeKey !== ''),
-  { message: 'A scoped term must name the scope it belongs to, and a global one must not' });
-export type TermDefinition = z.infer<typeof termDefinitionSchema>;
+  label: z.string().trim().min(1).max(191).optional(), summary: z.string().trim().min(1).max(500).optional(),
+  blocks: z.array(definitionBlockSchema).max(20),
+}).strict().refine((definition) => (definition.scopeKind === 'global' ? definition.scopeKey === '' : definition.scopeKey !== ''),
+  { message: 'A scoped definition must name the scope it belongs to, and a global one must not' });
+export type DefinitionRecord = z.infer<typeof definitionSchema>;
 /**
  * A course and the identities it keeps. Nothing here is a version: a course changes in place, and a
  * lesson's place in it is the course's to move. A bundle that names a course merges into the one
@@ -34,27 +40,28 @@ export const courseSchema = z.object({
   diagnostics: z.array(id.max(100)).max(50),
 }).strict();
 export type CourseDefinition = z.infer<typeof courseSchema>;
-export type ContentBundle = { schemaVersion: 1; courses: CourseDefinition[]; skills: z.infer<typeof skillSchema>[]; lessons: StoredLesson[]; diagnostics: DiagnosticDefinition[]; terms: TermDefinition[] };
+export type ContentBundle = { schemaVersion: 1; courses: CourseDefinition[]; concepts: ConceptRecord[]; lessons: StoredLesson[]; diagnostics: DiagnosticDefinition[]; definitions: DefinitionRecord[] };
 export class ContentError extends Error {}
 function unique(values: string[], label: string) {
   if (new Set(values).size !== values.length) throw new ContentError(`Duplicate ${label}.`);
 }
 export function parseContentBundle(input: unknown): ContentBundle {
-  // Terms are additive: a bundle exported before glossary support still imports unchanged.
-  // Courses too: a bundle written before courses existed names none, and may still add terms.
+  // Definitions are additive: a bundle exported before glossary support still imports unchanged.
+  // Courses too: a bundle written before courses existed names none, and may still add definitions.
   const parsed = z.object({ schemaVersion: z.literal(1), courses: z.array(courseSchema).max(200).optional().default([]),
-    skills: z.array(skillSchema).max(1000),
+    concepts: z.array(conceptSchema).max(1000),
     lessons: z.array(z.unknown()).max(1000), diagnostics: z.array(diagnosticDefinitionSchema).max(100),
-    terms: z.array(termDefinitionSchema).max(2000).optional().default([]),
+    definitions: z.array(definitionSchema).max(2000).optional().default([]),
   }).strict().parse(input);
   unique(parsed.courses.map(c => c.key), 'course keys');
   // A lesson or a diagnostic belongs to exactly one course, so one bundle may not place it in two.
   unique(parsed.courses.flatMap(c => c.lessons.map(l => l.key)), 'lesson keys across courses');
   unique(parsed.courses.flatMap(c => c.diagnostics), 'diagnostic keys across courses');
-  unique(parsed.skills.map(s => s.key), 'skill keys');
+  unique(parsed.concepts.map(s => s.key), 'concept keys');
   unique(parsed.diagnostics.map(d => d.versionId), 'diagnostic version IDs');
-  unique(parsed.terms.map(t => t.versionId), 'term version IDs');
-  unique(parsed.terms.flatMap(t => t.blocks.map(b => b.blockId)), 'term block IDs');
+  // One definition per concept in each scope.
+  unique(parsed.definitions.map(definitionRefId), 'definitions per concept and scope');
+  unique(parsed.definitions.flatMap(t => t.blocks.map(b => b.blockId)), 'definition block IDs');
   for (const record of parsed.lessons) {
     validateLesson(record);
     if (record.public.lessonKey.length > 100 || record.public.title.length > 191) throw new ContentError('Lesson metadata exceeds database limits.');
@@ -64,9 +71,9 @@ export function parseContentBundle(input: unknown): ContentBundle {
   for (const d of parsed.diagnostics) {
     unique(d.problems.map(p => p.problemVersionId), 'diagnostic problem IDs');
     unique(d.problems.flatMap(p => p.promptContent.map(b => b.blockId)), 'diagnostic block IDs');
-    for (const p of d.problems) unique(p.skillKeys, 'diagnostic problem skill keys');
+    for (const p of d.problems) unique(p.conceptKeys, 'diagnostic problem concept keys');
   }
-  return { schemaVersion: 1, courses: parsed.courses, skills: parsed.skills, lessons, diagnostics: parsed.diagnostics, terms: parsed.terms };
+  return { schemaVersion: 1, courses: parsed.courses, concepts: parsed.concepts, lessons, diagnostics: parsed.diagnostics, definitions: parsed.definitions };
 }
 
 // Object order in MySQL JSON differs from source files. Compare semantic content, not serialization order.
@@ -88,19 +95,17 @@ export function validateReferences(bundle: ContentBundle) {
   }
   consistentCase(bundle.courses.map(c => c.key));
   consistentCase(bundle.courses.flatMap(c => c.lessons.map(l => l.key)));
-  consistentCase(bundle.skills.map(s => s.key));
+  consistentCase(bundle.concepts.map(s => s.key));
   consistentCase(bundle.lessons.map(c => c.public.versionId));
   consistentCase(bundle.lessons.map(c => c.public.lessonKey));
   consistentCase(bundle.diagnostics.map(d => d.versionId));
   consistentCase(bundle.diagnostics.map(d => d.diagnosticKey));
-  consistentCase(bundle.terms.map(t => t.versionId));
-  // Blocks hang off the version that holds them, named by that version's ID alone. A name shared by
-  // a lesson and a definition would make one version's blocks answer for the other's.
-  unique([...bundle.lessons.map(c => c.public.versionId), ...bundle.diagnostics.map(d => d.versionId),
-    ...bundle.terms.map(t => t.versionId)], 'version IDs across lessons, diagnostics and terms');
+  // Blocks hang off the version that holds them, named by that version's ID alone. Definitions hang
+  // theirs off a generated row id, so they cannot collide with a name an author chose.
+  unique([...bundle.lessons.map(c => c.public.versionId), ...bundle.diagnostics.map(d => d.versionId)], 'version IDs across lessons and diagnostics');
   // Keys only have to stay unambiguous inside their own scope; a lesson may reuse a dictionary word.
-  for (const scope of new Set(bundle.terms.map(t => `${t.scopeKind}:${t.scopeKey}`))) {
-    consistentCase(bundle.terms.filter(t => `${t.scopeKind}:${t.scopeKey}` === scope).map(t => t.termKey));
+  for (const scope of new Set(bundle.definitions.map(t => `${t.scopeKind}:${t.scopeKey}`))) {
+    consistentCase(bundle.definitions.filter(t => `${t.scopeKind}:${t.scopeKey}` === scope).map(t => t.conceptKey));
   }
   consistentCase([...bundle.lessons.flatMap(c => c.problems), ...bundle.diagnostics.flatMap(d => d.problems)].map(p => p.problemVersionId));
   // Nothing floats outside a course: every published lesson and diagnostic is kept by exactly one.
@@ -112,38 +117,40 @@ export function validateReferences(bundle: ContentBundle) {
   for (const d of bundle.diagnostics) {
     if (!diagnosticCourses.has(d.diagnosticKey)) throw new ContentError(`Diagnostic belongs to no course: ${d.diagnosticKey}`);
   }
-  const skills = new Set(bundle.skills.map(s => s.key));
+  const concepts = new Map(bundle.concepts.map(s => [s.key, s]));
   const problems = new Map<string, string>();
   const lessonProblems = new Set(bundle.lessons.flatMap(c => c.problems.map(p => p.problemVersionId)));
-  const assertSkill = (key: string) => { if (!skills.has(key)) throw new ContentError(`Missing skill: ${key}`); };
+  const assertConcept = (key: string) => { if (!concepts.has(key)) throw new ContentError(`Missing concept: `); };
+  // Readiness travels on concepts a question can assess, so what a lesson teaches and presumes, and
+  // what a question claims, must be assessable; a definition may explain any concept.
+  const assertAssessable = (key: string) => {
+    assertConcept(key);
+    if (!concepts.get(key)!.assessable) throw new ContentError(`Concept is not assessable: `);
+  };
   for (const c of bundle.lessons) {
-    [...c.public.skillKeys, ...c.public.prerequisiteSkillKeys].forEach(assertSkill);
+    [...c.public.conceptKeys, ...c.public.prerequisiteConceptKeys].forEach(assertAssessable);
   }
-  const termSkills = new Map<string, string>();
-  for (const t of bundle.terms) {
-    assertSkill(t.skillKey);
-    const ref = termRefId(t);
-    const concept = termSkills.get(ref);
-    // Visibility follows the concept a term belongs to, so it must not move between versions.
-    if (concept && concept !== t.skillKey) throw new ContentError(`Term concept cannot change across versions: ${t.termKey}`);
-    termSkills.set(ref, t.skillKey);
+  // Only a definition with something to show can be linked; a row that merely renames a concept cannot.
+  const linkable = new Set<string>();
+  for (const t of bundle.definitions) {
+    assertConcept(t.conceptKey);
+    if (t.blocks.length) linkable.add(definitionRefId(t));
   }
-  for (const c of bundle.lessons) for (const reference of termReferences(c)) {
-    // A lesson-scoped term belongs to the lesson that keeps it. Reaching into another lesson's terms
-    // would make one lesson's wording depend on a document its author cannot see.
+  for (const c of bundle.lessons) for (const reference of definitionReferences(c)) {
+    // A lesson-scoped definition belongs to the lesson that keeps it. Reaching into another lesson's
+    // definitions would make one lesson's wording depend on a document its author cannot see.
     if (reference.scopeKind === 'lesson' && reference.scopeKey !== c.public.lessonKey) {
-      throw new ContentError(`A lesson can only link its own terms: ${reference.termKey} (${reference.blockId})`);
+      throw new ContentError(`A lesson can only link its own definitions:  ()`);
     }
-    const concept = termSkills.get(termRefId(reference));
-    if (!concept) throw new ContentError(`Missing term: ${reference.termKey} (${reference.blockId})`);
+    if (!linkable.has(definitionRefId(reference))) throw new ContentError(`Missing definition:  ()`);
     // A definition of the very concept under assessment would answer the question.
-    if (reference.problemSkillKeys?.includes(concept)) throw new ContentError(`A problem cannot explain the concept it assesses: ${reference.termKey} (${reference.blockId})`);
+    if (reference.problemConceptKeys?.includes(reference.conceptKey)) throw new ContentError(`A problem cannot explain the concept it assesses:  ()`);
   }
   for (const d of bundle.diagnostics) for (const p of d.problems) {
     if (lessonProblems.has(p.problemVersionId)) throw new ContentError(`Diagnostic problem overlaps lesson content: ${p.problemVersionId}`);
   }
   for (const p of [...bundle.lessons.flatMap(c => c.problems), ...bundle.diagnostics.flatMap(d => d.problems)]) {
-    p.skillKeys.forEach(assertSkill);
+    p.conceptKeys.forEach(assertAssessable);
     const value = canonicalJson(p);
     if (problems.has(p.problemVersionId) && problems.get(p.problemVersionId) !== value) throw new ContentError(`Problem version is immutable: ${p.problemVersionId}`);
     problems.set(p.problemVersionId, value);

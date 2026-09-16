@@ -109,7 +109,7 @@ describe('reviewed content bundles published by the migrator', () => {
       const bundle = parseContentBundle(JSON.parse(raw));
       expect(bundle.lessons, name).toHaveLength(0);
       expect(bundle.diagnostics, name).toHaveLength(0);
-      expect(bundle.terms.length, name).toBeGreaterThan(0);
+      expect(bundle.definitions.length, name).toBeGreaterThan(0);
     }
   });
 });
