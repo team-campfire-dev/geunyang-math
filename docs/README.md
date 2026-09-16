@@ -9,6 +9,7 @@
 | [프로젝트 README](../README.md) | 서비스 개요, 로컬 실행·테스트·빌드 명령 |
 | [구현 현황](implementation-status.md) | 현재 가능한 흐름, 미구현 범위, 검증 기준과 다음 순서 |
 | [제품 방향](product-direction.md) | 성인 기초 재학습, 개인화·블록 확장·AI·기관의 설계 원칙 |
+| [용어 사전](glossary.md) | 코스·수업·문제집·개념 등 단위의 이름과 그렇게 정한 이유 (결정 기록, 구현 전) |
 | [개인화](personalization.md) | 진단·추천·학습 증거·복습 분량과 간격의 규칙 |
 | [DB 콘텐츠 관리](content-management.md) | 콘텐츠 저장·내보내기·등록·불변 판본과 기존 기록 보존 |
 | [운영 배포](deployment.md) | Oracle·DB·NPM·Google 설정, 배포·복구 절차와 릴리스별 근거 |
