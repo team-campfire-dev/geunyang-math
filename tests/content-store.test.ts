@@ -4,7 +4,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { canonicalJson, parseContentBundle, validateReferences } from '@/core/content-bundle';
-import { blockOf, currentDiagnostic, currentTerms, exportContent, importContent, indexClassDocument, publishBundle, verifyContent } from '@/server/content-store';
+import { blockOf, classRecord, currentDiagnostic, currentTerms, diagnosticDefinitions, exportContent, importContent, indexClassDocument, publishBundle, verifyContent } from '@/server/content-store';
 import initial from './fixtures/initial-content.json';
 import { seedClasses } from './fixtures/content';
 
@@ -152,11 +152,12 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
   it('loads migration content exactly, retaining legacy hashes and all diagnostic questions', async () => {
     for (const c of seedClasses) {
       const row = await db.classVersion.findUniqueOrThrow({ where: { id: c.public.versionId } });
-      expect(row.document).toEqual(c);
+      // What the migration installed as one document still reads back out of its rows, exactly.
+      expect(await classRecord(db, c.public.versionId)).toEqual(c);
       expect(row.contentHash).toBe(createHash('sha256').update(JSON.stringify(c)).digest('hex'));
     }
     const diagnostic = await db.diagnosticVersion.findUniqueOrThrow({ where: { id: initial.diagnostics[0].versionId } });
-    expect(diagnostic.document).toEqual(initial.diagnostics[0].problems);
+    expect((await diagnosticDefinitions(db, [diagnostic]))[0].problems).toEqual(initial.diagnostics[0].problems);
     expect((await verifyContent(db)).skills).toBeGreaterThanOrEqual(3);
   });
   it('exports and reimports without rewriting any published content, hash or timestamp', async () => {
@@ -246,22 +247,24 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
       await db.diagnosticVersion.delete({ where: { id: definition.versionId } });
     }
   });
-  it('indexes every published question by name and refuses an index that drifts from its document', async () => {
+  it('stores every published question as a row and refuses a class whose question went missing', async () => {
     const c = newClass(), skillKey = `test.${randomUUID()}`;
     c.public.skillKeys = [skillKey]; c.public.prerequisiteSkillKeys = [];
     c.problems.forEach(p => { p.skillKeys = [skillKey]; });
     await importContent(db, { ...empty(), classes: [c], skills: [{ key: skillKey, label: '색인 검사 개념', order: 998 }] });
-    const rows = await db.publishedProblem.findMany({ where: { ownerKind: 'class', ownerVersionId: c.public.versionId } });
-    expect(rows.map(row => row.problemVersionId).sort()).toEqual(c.problems.map(p => p.problemVersionId).sort());
-    expect(rows.find(row => row.problemVersionId === c.problems[0].problemVersionId)?.document).toEqual(c.problems[0]);
-    // The index only repeats what the document holds, so a disagreement is a fault a deploy must see.
-    const where = { ownerKind_ownerVersionId_problemVersionId: { ownerKind: 'class',
-      ownerVersionId: c.public.versionId, problemVersionId: c.problems[0].problemVersionId } };
+    const rows = await db.publishedProblem.findMany({ where: { ownerKind: 'class', ownerVersionId: c.public.versionId }, orderBy: { order: 'asc' } });
+    expect(rows.map(row => row.problemVersionId)).toEqual(c.problems.map(p => p.problemVersionId));
+    expect(await classRecord(db, c.public.versionId)).toEqual(c);
+    // An activity still names the question the rows lost, so the class no longer reads back whole.
+    const [removed] = rows;
+    const where = { ownerKind_ownerVersionId_problemVersionId: { ownerKind: removed.ownerKind,
+      ownerVersionId: removed.ownerVersionId, problemVersionId: removed.problemVersionId } };
     try {
-      await db.publishedProblem.update({ where, data: { document: { ...c.problems[0], skillKeys: ['drifted'] } as never } });
-      await expect(verifyContent(db)).rejects.toThrow(/Question index disagrees/);
+      await db.publishedProblem.delete({ where });
+      await expect(verifyContent(db)).rejects.toThrow(/Missing immutable problem version/);
     } finally {
-      await db.publishedProblem.update({ where, data: { document: c.problems[0] as never } });
+      await db.publishedProblem.create({ data: { ...removed,
+        skillKeys: removed.skillKeys as never, responseSpec: removed.responseSpec as never, gradingSpec: removed.gradingSpec as never } });
     }
     expect((await verifyContent(db)).indexedProblems).toBeGreaterThanOrEqual(rows.length);
   });
@@ -294,19 +297,21 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     expect((await blocksOf('problem', problem.problemVersionId, 'hint')).map(blockOf)).toEqual(problem.hints);
     expect((await blocksOf('problem', problem.problemVersionId, 'solution')).map(blockOf)).toEqual(problem.solution);
 
-    // A block the rows lost is a class that no longer reads back as what was published, and that is
-    // what a deploy has to see. Writing the rows again repairs it without touching what is there.
+    // The rows are the class now: one taken away is one the class no longer has, and writing them
+    // again puts it back without touching what is already there.
     try {
       await db.contentBlock.delete({ where: { ownerKind_ownerVersionId_ownerId_slot_order: { ownerKind: 'section',
         ownerVersionId: c.public.versionId, ownerId: c.sections[0].sectionId, slot: 'body', order: 0 } } });
-      await expect(verifyContent(db)).rejects.toThrow(/rows and the document disagree/);
+      expect((await classRecord(db, c.public.versionId))!.sections[0].contentBlocks)
+        .toEqual(c.sections[0].contentBlocks.slice(1));
     } finally {
       await indexClassDocument(db, c);
     }
+    expect(await classRecord(db, c.public.versionId)).toEqual(c);
     expect((await verifyContent(db)).indexedBlocks).toBeGreaterThanOrEqual(c.sections[0].contentBlocks.length);
   });
 
-  it('serves a class from its rows, not from the document it was published as', async () => {
+  it('serves a class from its rows', async () => {
     const c = newClass(), skillKey = `test.${randomUUID()}`;
     c.public.skillKeys = [skillKey]; c.public.prerequisiteSkillKeys = [];
     c.problems.forEach(p => { p.skillKeys = [skillKey]; });
@@ -315,20 +320,18 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     expect(published.sections.map(section => section.title)).toEqual(c.sections.map(section => section.title));
     expect(published.problems.map(problem => problem.problemVersionId)).toEqual(c.problems.map(problem => problem.problemVersionId));
 
-    // Changing a row changes what a learner is served, which is what reading from rows means. The
-    // document is untouched, so verification sees the two disagree and says so.
+    // Changing a row changes what a learner is served, which is what reading from rows means.
     const where = { classVersionId_sectionId: { classVersionId: c.public.versionId, sectionId: c.sections[0].sectionId } };
     try {
       await db.classSection.update({ where, data: { title: '행에서 고친 제목' } });
       expect((await service.classDocument(c.public.classKey)).sections[0].title).toBe('행에서 고친 제목');
-      await expect(verifyContent(db)).rejects.toThrow(/rows and the document disagree/);
     } finally {
       await db.classSection.update({ where, data: { title: c.sections[0].title } });
     }
     expect((await service.classDocument(c.public.classKey)).sections[0].title).toBe(c.sections[0].title);
   });
 
-  it('reads a definition from its rows, and says so when they disagree with the document', async () => {
+  it('reads a definition from its rows', async () => {
     const key = `term.rows.${randomUUID()}`;
     const term = { ...structuredClone(termFixture), versionId: `${key}:v1`, termKey: key };
     term.blocks = [{ ...term.blocks[0], blockId: `${key}:v1:b1` }];
@@ -343,7 +346,6 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
       await db.contentBlock.update({ where, data: { payload: { text: '행에서 고친 정의예요.' } } });
       const [definition] = await currentTerms(db, asked);
       expect((definition.blocks[0].payload as { text: string }).text).toBe('행에서 고친 정의예요.');
-      await expect(verifyContent(db)).rejects.toThrow(/disagree about a term/);
     } finally {
       await db.contentBlock.update({ where, data: { payload: stored.payload as never } });
     }

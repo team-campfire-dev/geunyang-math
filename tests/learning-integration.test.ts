@@ -6,7 +6,7 @@ import { seedClasses } from './fixtures/content';
 import { developmentLoginEnabled, sessionUser } from '@/server/auth';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
-import { classMetadata, indexClassDocument, indexTermDocument } from '@/server/content-store';
+import { classMetadata, classRecord, indexClassDocument, indexTermDocument } from '@/server/content-store';
 import type { LearningAction } from '@/shared/api';
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
@@ -38,7 +38,7 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     return db.classVersion.create({ data: {
       id: document.public.versionId, classKey: document.public.classKey,
       title: document.public.title, order: document.public.order,
-      document: asJson(document), metadata: asJson(classMetadata(document)), contentHash, ...(publishedAt ? { publishedAt } : {}),
+      metadata: asJson(classMetadata(document)), contentHash, ...(publishedAt ? { publishedAt } : {}),
     } });
   }
 
@@ -295,7 +295,8 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     const nextEnrollmentId = await enroll(nextLearner.userId, classKey);
     const nextEnrollment = await db.enrollment.findUniqueOrThrow({ where: { id: nextEnrollmentId } });
     expect(nextEnrollment.classVersionId).toBe(second.public.versionId);
-    expect((await db.classVersion.findUniqueOrThrow({ where: { id: first.public.versionId } })).document).toEqual(first);
+    // The version a learner started stays exactly what it was published as.
+    expect(await classRecord(db, first.public.versionId)).toEqual(first);
   });
 
   it('explains every term a lesson linked, wherever the author linked it', async () => {
@@ -309,7 +310,7 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
       const blocks = [{ blockId: `term.${skillKey}:v1:b1`, kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: `${skillKey} 정의` } }];
       await db.termVersion.create({ data: {
         id: `term.${skillKey}:v1`, termKey: `term.${skillKey}`, skillKey, label: skillKey, summary: `${skillKey} 한 줄 설명`,
-        document: asJson(blocks), contentHash: createHash('sha256').update(skillKey).digest('hex'),
+        contentHash: createHash('sha256').update(skillKey).digest('hex'),
       } });
       await indexTermDocument(db, `term.${skillKey}:v1`, blocks);
     };

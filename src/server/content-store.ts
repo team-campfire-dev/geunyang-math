@@ -11,19 +11,13 @@ const json = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.Inp
 const hash = (value: unknown) => createHash('sha256').update(canonicalJson(value)).digest('hex');
 type IndexedProblem = StoredProblem | DiagnosticDefinition['problems'][number];
 /**
- * A published question as a row: what it is apart from its blocks, plus the whole of it as it was
- * published. The blocks are rows of their own, so reading one back joins the two.
+ * A published question as a row: what it is apart from its blocks. The blocks are rows of their own,
+ * so reading a question back joins the two.
  */
 const problemRows = (ownerKind: 'class' | 'diagnostic', ownerVersionId: string, problems: IndexedProblem[]) =>
   problems.map((problem, order) => ({ ownerKind, ownerVersionId, problemVersionId: problem.problemVersionId,
     order, skillKeys: json(problem.skillKeys), responseSpec: json(problem.responseSpec),
-    gradingSpec: json(problem.gradingSpec), hintAvailable: problem.hintAvailable, document: json(problem) }));
-const problemRowsOf = (bundle: ContentBundle) => [
-  ...bundle.classes.flatMap(c => problemRows('class', c.public.versionId, c.problems)),
-  ...bundle.diagnostics.flatMap(d => problemRows('diagnostic', d.versionId, d.problems)),
-];
-const rowKey = (row: { ownerKind: string; ownerVersionId: string; problemVersionId: string }) =>
-  `${row.ownerKind}/${row.ownerVersionId}/${row.problemVersionId}`;
+    gradingSpec: json(problem.gradingSpec), hintAvailable: problem.hintAvailable }));
 type BlockRow = { ownerKind: string; ownerVersionId: string; ownerId: string; slot: string; order: number;
   blockId: string; kind: string; typeVersion: number; required: boolean; payload: Prisma.InputJsonValue; fallback: string | null };
 /**
@@ -123,10 +117,7 @@ async function blockIndex(db: Db, versionIds: string[]): Promise<BlockIndex> {
   }
   return (versionId, ownerKind, ownerId, slot) => held.get(`${versionId}/${ownerKind}/${ownerId}/${slot}`) ?? [];
 }
-/**
- * Published classes read from their rows rather than from the document they were written as. The
- * document is still written and still checked against this, until a later change removes it.
- */
+/** A published class, put back together out of the rows that are now all there is of it. */
 export async function classRecords(db: Db, versionIds: string[]): Promise<Map<string, StoredClass>> {
   const wanted = [...new Set(versionIds)];
   if (!wanted.length) return new Map();
@@ -219,65 +210,32 @@ export async function exportContent(db: Db): Promise<ContentBundle> {
 }
 
 /**
- * The question index repeats what the published documents hold, so a disagreement means one of the
- * two is wrong and a draft would be renaming questions on a false answer. Deploys check it.
+ * Nothing holds a second copy of a published version any more, so verification is no longer a
+ * comparison of two stories. What is left is that every row belongs to a version that reads back
+ * whole — exportContent has just rebuilt and revalidated all of them — and that no row belongs to
+ * none of them, which is a matter of counting.
  */
-export async function verifyProblemIndex(db: Db, bundle: ContentBundle) {
-  const expected = new Map(problemRowsOf(bundle).map(row => [rowKey(row), canonicalJson(row.document)]));
-  const rows = await db.publishedProblem.findMany();
-  for (const row of rows) {
-    const document = expected.get(rowKey(row));
-    if (document === undefined) throw new ContentError(`Question index holds a question its version does not: ${rowKey(row)}`);
-    if (document !== canonicalJson(row.document)) throw new ContentError(`Question index disagrees with the published document: ${rowKey(row)}`);
-    expected.delete(rowKey(row));
-  }
-  if (expected.size) throw new ContentError(`Question index is missing published questions: ${[...expected.keys()].slice(0, 5).join(', ')}`);
-  return rows.length;
-}
-
-/**
- * The rows are what a published version is read from now, and the document it was published as is
- * still there. So the check is the one that matters: put the rows back together and see whether
- * they say exactly what the document says, down to the order a section holds its blocks in.
- */
-export async function verifyPublishedDocuments(db: Db, bundle: ContentBundle) {
-  const compare = async <T>(label: string, assembled: Map<string, string>, rows: { id: string; document: unknown }[]) => {
-    for (const row of rows) {
-      const record = assembled.get(row.id);
-      if (record === undefined) throw new ContentError(`A published ${label} has no rows to read it from: ${row.id}`);
-      if (record !== canonicalJson(row.document)) throw new ContentError(`The rows and the document disagree about a ${label}: ${row.id}`);
-      assembled.delete(row.id);
-    }
-    if (assembled.size) throw new ContentError(`Rows describe a ${label} no version holds: ${[...assembled.keys()].slice(0, 5).join(', ')}`);
-  };
-  const [classRowsOf, diagnosticRows, termRows] = await Promise.all([
-    db.classVersion.findMany({ select: { id: true, document: true } }),
-    db.diagnosticVersion.findMany({ select: { id: true, document: true } }),
-    db.termVersion.findMany({ select: { id: true, document: true } }),
-  ]);
-  await compare('class', new Map(bundle.classes.map(record => [record.public.versionId, canonicalJson(record)])), classRowsOf);
-  // A diagnostic's document is its question list, and a definition's is its blocks.
-  await compare('diagnostic', new Map(bundle.diagnostics.map(d => [d.versionId, canonicalJson(d.problems)])), diagnosticRows);
-  await compare('term', new Map(bundle.terms.map(t => [t.versionId, canonicalJson(t.blocks)])), termRows);
-  // Every version matched, so counting is all that is left to catch a row belonging to none of them.
-  const [sections, blocks] = await Promise.all([db.classSection.count(), db.contentBlock.count()]);
+export async function verifyRowsBelongToVersions(db: Db, bundle: ContentBundle) {
   const expected = bundle.classes.reduce((totals, record) => {
     const rows = classRows(record);
-    return { sections: totals.sections + rows.sections.length, blocks: totals.blocks + rows.blocks.length };
-  }, { sections: 0, blocks: 0 });
+    return { sections: totals.sections + rows.sections.length, blocks: totals.blocks + rows.blocks.length,
+      problems: totals.problems + record.problems.length };
+  }, { sections: 0, blocks: 0, problems: 0 });
   expected.blocks += bundle.diagnostics.reduce((n, d) => n + d.problems.reduce((m, p) => m + p.promptContent.length, 0), 0);
   expected.blocks += bundle.terms.reduce((n, t) => n + t.blocks.length, 0);
+  expected.problems += bundle.diagnostics.reduce((n, d) => n + d.problems.length, 0);
+  const [sections, blocks, problems] = await Promise.all([db.classSection.count(), db.contentBlock.count(), db.publishedProblem.count()]);
   if (sections !== expected.sections) throw new ContentError(`Section rows belong to no published class: ${sections - expected.sections} extra.`);
   if (blocks !== expected.blocks) throw new ContentError(`Block rows belong to no published version: ${blocks - expected.blocks} extra.`);
-  return blocks;
+  if (problems !== expected.problems) throw new ContentError(`Question rows belong to no published version: ${problems - expected.problems} extra.`);
+  return { blocks, problems };
 }
 
 export async function verifyContent(db: Db) {
   const bundle = await exportContent(db);
   validateReferences(bundle);
   if (!bundle.classes.length || !bundle.skills.length || !bundle.diagnostics.some(d => d.diagnosticKey === 'starting-point')) throw new ContentError('Database content is incomplete. Apply database migrations or import a reviewed bundle.');
-  const indexedProblems = await verifyProblemIndex(db, bundle);
-  const indexedBlocks = await verifyPublishedDocuments(db, bundle);
+  const { blocks: indexedBlocks, problems: indexedProblems } = await verifyRowsBelongToVersions(db, bundle);
   return { classes: bundle.classes.length, classProblems: bundle.classes.reduce((n, c) => n + c.problems.length, 0), indexedProblems, indexedBlocks,
     skills: bundle.skills.length, diagnosticVersions: bundle.diagnostics.length, diagnosticProblems: bundle.diagnostics.reduce((n, d) => n + d.problems.length, 0),
     termVersions: bundle.terms.length, terms: new Set(bundle.terms.map(termRefId)).size };
@@ -288,8 +246,8 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
   const existing = await exportContent(db);
   const newClasses: StoredClass[] = [], newDiagnostics: DiagnosticDefinition[] = [], newTerms: TermDefinition[] = [];
   for (const c of incoming.classes) {
-    const old = await db.classVersion.findUnique({ where: { id: c.public.versionId } });
-    if (old && canonicalJson(old.document) !== canonicalJson(c)) throw new ContentError(`Published class is immutable: ${c.public.versionId}. Use a new version ID.`);
+    const old = await classRecord(db, c.public.versionId);
+    if (old && canonicalJson(old) !== canonicalJson(c)) throw new ContentError(`Published class is immutable: ${c.public.versionId}. Use a new version ID.`);
     if (!old) newClasses.push(c);
   }
   for (const d of incoming.diagnostics) {
@@ -323,10 +281,10 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
     const publishedAt = () => new Date(publishedTime++);
     for (const s of incoming.skills) await db.skill.upsert({ where: { key: s.key }, create: s, update: { label: s.label, order: s.order } });
     for (const c of newClasses) await db.classVersion.create({ data: { id: c.public.versionId, classKey: c.public.classKey,
-      title: c.public.title, order: c.public.order, document: json(c), metadata: json(classMetadata(c)),
+      title: c.public.title, order: c.public.order, metadata: json(classMetadata(c)),
       contentHash: hash(c), publishedAt: publishedAt() } });
     for (const d of newDiagnostics) await db.diagnosticVersion.create({ data: { id: d.versionId, diagnosticKey: d.diagnosticKey,
-      title: d.title, description: d.description, estimatedMinutes: d.estimatedMinutes, document: json(d.problems), contentHash: hash(d), publishedAt: publishedAt() } });
+      title: d.title, description: d.description, estimatedMinutes: d.estimatedMinutes, contentHash: hash(d), publishedAt: publishedAt() } });
     // The index shares the transaction that publishes the version, so a question is never findable
     // by name before the document that holds it exists.
     for (const c of newClasses) await indexClassDocument(db, c);
@@ -335,7 +293,7 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
     // reference check above already proved every linked term exists.
     for (const t of newTerms) await db.termVersion.create({ data: { id: t.versionId, termKey: t.termKey,
       scopeKind: t.scopeKind, scopeKey: t.scopeKey, skillKey: t.skillKey,
-      label: t.label, summary: t.summary, document: json(t.blocks), contentHash: hash(t), publishedAt: publishedAt() } });
+      label: t.label, summary: t.summary, contentHash: hash(t), publishedAt: publishedAt() } });
     for (const t of newTerms) await indexTermDocument(db, t.versionId, t.blocks as ContentBlock[]);
     // The ledger entry shares this transaction: a file counts as applied only if its content landed.
     if (ledger) await db.appliedContentBundle.upsert({ where: { name: ledger.name }, create: { ...ledger },

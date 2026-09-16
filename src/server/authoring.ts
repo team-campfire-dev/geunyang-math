@@ -146,14 +146,14 @@ const storedProblem = (problem: DraftProblem): StoredProblem => ({
  * never come to mean a different question. The index answers the two halves this needs: what the
  * questions this draft names were published as, and which names are already spoken for.
  */
-type PublishedProblems = { document: Map<string, string>; taken: Set<string> };
+type PublishedProblems = { record: Map<string, string>; taken: Set<string> };
 async function publishedProblems(db: PrismaClient, named: string[]): Promise<PublishedProblems> {
   const [wanted, names] = await Promise.all([
     publishedProblemRecords(db, named),
     db.publishedProblem.findMany({ select: { problemVersionId: true }, distinct: ['problemVersionId'] }),
   ]);
   return {
-    document: new Map([...wanted].map(([problemVersionId, problem]) => [problemVersionId, canonicalJson(problem)])),
+    record: new Map([...wanted].map(([problemVersionId, problem]) => [problemVersionId, canonicalJson(problem)])),
     taken: new Set(names.map(row => row.problemVersionId)),
   };
 }
@@ -167,7 +167,7 @@ function renameEditedProblems(problems: StoredProblem[], versionId: string, publ
   const taken = new Set(problems.map((problem) => problem.problemVersionId));
   const renames = new Map<string, string>();
   const next = problems.map((problem) => {
-    const before = published.document.get(problem.problemVersionId);
+    const before = published.record.get(problem.problemVersionId);
     if (!before || before === canonicalJson(problem)) return problem;
     const renamed = renameProblem(problem, renamedProblemVersionId(problem.problemVersionId, versionId,
       (candidate) => taken.has(candidate) || published.taken.has(candidate)));

@@ -24,7 +24,7 @@ describe.skipIf(!testDatabaseUrl)('learning HTTP account binding', () => {
     if (previous) expect(previous.contentHash).toBe(contentHash);
     else await db.classVersion.create({ data: {
       id: document.public.versionId, classKey: document.public.classKey, title: document.public.title,
-      order: document.public.order, document: JSON.parse(serialized) as Prisma.InputJsonValue,
+      order: document.public.order,
       metadata: JSON.parse(JSON.stringify(classMetadata(document))) as Prisma.InputJsonValue, contentHash,
     } });
     await indexClassDocument(db, document);

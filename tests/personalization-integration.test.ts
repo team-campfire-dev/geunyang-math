@@ -23,7 +23,7 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     for (const record of seedClasses) {
       await db.classVersion.upsert({ where: { id: record.public.versionId }, update: {}, create: {
         id: record.public.versionId, classKey: record.public.classKey, title: record.public.title, order: record.public.order,
-        document: json(record), metadata: json(classMetadata(record)),
+        metadata: json(classMetadata(record)),
         contentHash: createHash('sha256').update(JSON.stringify(record)).digest('hex'),
       } });
       await indexClassDocument(db, record);

@@ -150,6 +150,8 @@ DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVer
 
 되돌리기: 이전 이미지는 `document`를 읽고 그 칸은 그대로 기록되므로 학습 화면은 그대로 돈다. 다만 **되돌린 상태에서 새 콘텐츠를 발행하면 실패한다** — 옛 코드는 새로 생긴 필수 칸을 채우지 않는다. 되돌린 동안에는 발행을 하지 않는다. `20260916010000_diagnostic_and_term_blocks`는 남아 있던 블록 — 진단 문항의 지문과 용어 정의의 본문 — 을 같은 표로 옮긴다. 운영 기준으로 블록이 134개에서 148개(지문 6 · 정의 8)가 되고, 그중 둘은 `fallback`을 가진 블록이라 되돌리기 검사가 실제로 그 경로를 지난다.
 
+`20260916020000_drop_published_documents`는 **되돌릴 수 없는 단계다.** 발행된 판본의 `document` 칸 네 개(`ClassVersion`·`DiagnosticVersion`·`TermVersion`·`PublishedProblem`)를 지운다. 이전 이미지는 그 칸을 읽으므로, 이 migration이 돌고 나면 이미지를 되돌려도 학습 화면이 열리지 않는다. 되돌려야 하면 DB를 함께 되돌려야 한다. 그 전 세 번의 배포가 매번 행과 문서를 대조해 같음을 확인했고, 마지막 확인은 판본 6개·블록 148개였다.
+
 초기 인프라 점검에서는 앱 VM·포트·DNS·와일드카드 인증서, ARM64 non-root 이미지·revision·health, DB TLS 연결과 잘못된 CA/호스트 이름 거부, 앱 계정의 DB 한정 DML·호스트 제한·REQUIRE SSL을 확인했다. NPM Proxy Hosts 등록과 Google HTTPS callback 로그 제외, 배포 시크릿 6개와 자동 배포 활성화도 완료했다. 이 기록은 이후 인증서·권한·프록시 변경을 자동 검증한다는 뜻은 아니다.
 
 최근 기능 릴리스에서는 공개 health 정상, 정확한 commit, `googleLogin=true`·`developmentLogin=false`를 확인했다. 공개 API의 클래스 문서에서 비공개 채점 명세가 노출되지 않음을 비교했다. 운영 화면 점검은 기존 계정의 조회만 수행했고 실제 진단·과제 답안을 새로 제출하지 않았다. 기존 DB 업그레이드의 모든 행·해시·시각·snapshot 보존 비교는 별도의 로컬 테스트 DB에서 수행했다.
