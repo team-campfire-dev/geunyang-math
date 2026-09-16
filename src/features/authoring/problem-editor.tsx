@@ -42,10 +42,12 @@ function AnswerField({ spec, onChange }: { spec: AnswerSpec; onChange: (next: An
 }
 
 /** The concepts this class teaches, named the way the catalogue names them rather than by key. */
-function SkillPicker({ skills, chosen, onChange }: { skills: SkillChoice[]; chosen: string[]; onChange: (next: string[]) => void }) {
+export function SkillPicker({ skills, chosen, onChange, label = '다루는 개념' }: {
+  skills: SkillChoice[]; chosen: string[]; onChange: (next: string[]) => void; label?: string;
+}) {
   if (!skills.length) return null;
   return <div className="editor-skills">
-    <span className="editor-label">다루는 개념</span>
+    <span className="editor-label">{label}</span>
     <div className="editor-skill-buttons">
       {skills.map((skill) => <label key={skill.key} className="editor-check">
         <input type="checkbox" checked={chosen.includes(skill.key)}

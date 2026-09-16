@@ -132,6 +132,9 @@
 .editor-inspector { position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto; min-width: 0; }
 /* A published version cannot be changed, so the chosen block is shown rather than offered. */
 .editor-inspector-block { border: 0; margin: 0; padding: 0; min-width: 0; }
+/* A draft waiting to be looked at is neither being written nor done, and reads as neither. */
+.authoring-page .assignment-status.waiting { background: #f3ede0; color: #8a6f44; }
+.draft-search { margin-top: 0; width: 200px; }
 .editor-inspector-part { margin-top: 22px; padding-top: 16px; border-top: 1px dashed var(--editor-rule); }
 .editor-panel { border: 1px solid var(--line); border-radius: 10px; background: var(--white); padding: 20px 22px 22px; min-width: 0; }
 .editor-panel legend { padding: 0 7px; font-size: var(--editor-label-size); font-weight: 600; color: var(--editor-label); }

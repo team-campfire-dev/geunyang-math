@@ -23,10 +23,19 @@ export type AccountRole = {
 
 export type DraftSummary = {
   id: string; classKey: string; versionId: string; baseVersionId: string | null; title: string;
-  status: 'draft' | 'published'; publishedVersionId: string | null; updatedAt: string;
+  /**
+   * Where the draft is. `review` is a writer saying they are done and asking the administrator who
+   * may publish to look — it locks nothing, because being asked to look at something is not a
+   * reason to stop being able to fix it.
+   */
+  status: 'draft' | 'review' | 'published'; publishedVersionId: string | null; updatedAt: string;
   authorName: string; mine: boolean;
 };
-export type DraftMeta = { versionId: string; title: string; summary: string; estimatedMinutes: number };
+export const draftStatusLabels: Record<DraftSummary['status'], string> = {
+  draft: '작성 중', review: '검토 요청', published: '발행함',
+};
+/** `skillKeys` are the concepts this class says it teaches; a question may only claim one of them. */
+export type DraftMeta = { versionId: string; title: string; summary: string; estimatedMinutes: number; skillKeys: string[] };
 /** What each step of a lesson is for, in the words the learner's outline uses for it too. */
 export const sectionRoleLabels: Record<ClassSection['role'], string> = {
   explanation: '설명', worked_example: '예시', practice: '연습', check: '확인', summary: '정리',
@@ -48,7 +57,6 @@ export type DraftProblem = {
 };
 /** What an editor may change. Published questions are immutable, so the server renames what changed. */
 export type DraftEdit = { meta: DraftMeta; sections: ClassSection[]; problems: DraftProblem[] };
-/** `skillKeys` are the class's own, carried so a question may only claim a concept the class teaches. */
 /** `terms` are the definitions this class may link: the shared dictionary and its own. */
 /**
  * Something that stops a draft from publishing, and where in the draft it is. The rules speak in
@@ -65,7 +73,7 @@ export type DraftIssue = {
   /** The field inside a block's payload, so the editor can name it the way that block's form does. */
   field?: string;
 };
-export type DraftDetail = DraftSummary & { edit: DraftEdit; skillKeys: string[]; terms: TermChoice[]; issues: DraftIssue[] };
+export type DraftDetail = DraftSummary & { edit: DraftEdit; terms: TermChoice[]; issues: DraftIssue[] };
 
 /**
  * The shape of a draft: the steps it holds, the blocks in each, the questions the document keeps and
@@ -114,8 +122,13 @@ export type AuthoringWorkspace = {
    */
   expertMode: boolean;
 };
+/** A key is what every name in a class is built from, so it stays to the letters a name may hold. */
+export const classKeyPattern = /^[a-z0-9][a-z0-9-]{1,63}$/;
 export type AuthoringAction =
   | { action: 'draft.create'; classKey: string }
+  /** A class nobody has published yet. It starts as a draft like any other, with one step in it. */
+  | { action: 'class.create'; classKey: string; title: string; skillKeys: string[] }
+  | { action: 'draft.review'; draftId: string; asking: boolean }
   | { action: 'draft.save'; draftId: string; edit: DraftEdit }
   | { action: 'draft.validate'; draftId: string }
   | { action: 'draft.publish'; draftId: string }

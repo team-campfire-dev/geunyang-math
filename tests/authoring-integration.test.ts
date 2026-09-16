@@ -105,6 +105,72 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     await service.deleteDraft(admin.id, draftId);
   });
 
+  it('starts a class nobody has published, and refuses a key already spoken for', async () => {
+    const admin = await account('admin');
+    const key = `fresh-${randomUUID()}`.toLowerCase().slice(0, 40);
+    const skillKey = (await classRecord(db, `${classKey}:v1`))!.public.skillKeys[0];
+    const created = await service.createClass(admin.id, key, '처음부터 만든 수업', [skillKey]);
+
+    expect(created.draft!.versionId).toBe(`${key}:v1`);
+    // Nothing to carry over: there is no earlier version of this class to be the next one of.
+    expect(created.draft!.baseVersionId).toBeNull();
+    expect(created.draft!.edit.meta.skillKeys).toEqual([skillKey]);
+    // It explains and then asks, which is the smallest thing publishing would accept.
+    expect(created.draft!.edit.sections.map((section) => section.role)).toEqual(['explanation', 'practice']);
+    expect(created.draft!.edit.problems).toHaveLength(1);
+    expect(created.draft!.edit.problems[0].skillKeys).toEqual([skillKey]);
+    // What it starts as is already a document publishing would take.
+    expect(created.draft!.issues).toEqual([]);
+
+    await expect(service.createClass(admin.id, key, '같은 키', [skillKey])).rejects.toThrow(/클래스 키/);
+    await expect(service.createClass(admin.id, classKey, '발행된 키', [skillKey])).rejects.toThrow(/클래스 키/);
+    await expect(service.createClass(admin.id, `other-${key}`, '없는 개념', ['no-such-skill'])).rejects.toThrow(/개념/);
+    await service.deleteDraft(admin.id, created.draft!.id);
+  });
+
+  it('carries the concepts a class teaches through an edit, since a question may only claim one', async () => {
+    const admin = await account('admin');
+    const created = await service.createDraft(admin.id, classKey);
+    const draftId = created.draft!.id;
+    const before = created.draft!.edit.meta.skillKeys;
+    expect(before.length).toBeGreaterThan(0);
+
+    const widened = structuredClone(created.draft!.edit);
+    widened.meta.skillKeys = [...before, 'fraction.equivalence'];
+    const saved = await service.saveDraft(admin.id, draftId, widened);
+    expect(saved.draft!.edit.meta.skillKeys).toEqual(widened.meta.skillKeys);
+    expect(saved.draft!.issues).toEqual([]);
+    // A class has to teach something, and what the editor may send is where that is enforced.
+    const emptied = structuredClone(created.draft!.edit);
+    emptied.meta.skillKeys = [];
+    await expect(service.act(admin.id, { action: 'draft.save', draftId, edit: emptied })).rejects.toThrow();
+    await service.deleteDraft(admin.id, draftId);
+  });
+
+  it('lets a writer hand work on without locking it, and lets it be handed back', async () => {
+    const author = await account('author');
+    const admin = await account('admin');
+    const created = await service.createDraft(author.id, classKey);
+    const draftId = created.draft!.id;
+    expect(created.draft!.status).toBe('draft');
+
+    const asked = await service.setReview(author.id, draftId, true);
+    expect(asked.draft!.status).toBe('review');
+    // Being asked to look at something is not a reason its author cannot go on fixing it.
+    const written = await service.saveDraft(author.id, draftId, edited(created.draft!.edit, (sections) => {
+      sections[0].title = '검토 중에도 고친 제목';
+    }));
+    expect(written.draft!.status).toBe('review');
+    expect(written.draft!.edit.sections[0].title).toBe('검토 중에도 고친 제목');
+    // An administrator sees it waiting, and may hand it back.
+    expect((await service.workspace(admin.id)).drafts.find((item) => item.id === draftId)?.status).toBe('review');
+    expect((await service.setReview(admin.id, draftId, false)).draft!.status).toBe('draft');
+
+    const stranger = await account('author');
+    await expect(service.setReview(stranger.id, draftId, true)).rejects.toThrow(/다른 사람/);
+    await service.deleteDraft(author.id, draftId);
+  });
+
   it('stays closed unless the deployment opens it, and then needs no account of its own', async () => {
     const stranger = await account();
     expect(openAuthoring()).toBe(false);

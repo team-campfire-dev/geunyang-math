@@ -9,7 +9,8 @@ import { AppError } from './errors';
 import type { AnswerSpec } from '@/shared/answer';
 import type { ContentBlock } from '@/shared/api';
 import {
-  mayEditEveryDraft, mayGrantRoles, mayPublish, nextTermVersionId, pruneBlock, pruneProblems, pruneSections,
+  classKeyPattern, mayEditEveryDraft, mayGrantRoles, mayPublish, newProblem, nextBlockId, nextProblemVersionId,
+  nextSectionId, nextTermVersionId, pruneBlock, pruneProblems, pruneSections,
   renameProblem, renamedProblemVersionId, renameProblemReferences, responseSpecOf, scopeTermAnnotations, suggestVersionId,
   type AccountRole, type AuthoringResponse, type AuthoringRole, type AuthoringWorkspace, type DraftDetail, type DraftIssue,
   type DraftEdit, type DraftProblem, type DraftSummary, type EditableTermScope, type TermChoice, type TermEdit, type TermSummary,
@@ -32,6 +33,7 @@ const editSchema = z.object({
     title: z.string().trim().min(1).max(191),
     summary: z.string().trim().min(1).max(500),
     estimatedMinutes: z.number().int().min(1).max(240),
+    skillKeys: z.array(id.max(100)).min(1).max(50),
   }).strict(),
   sections: z.array(z.object({
     sectionId: id,
@@ -57,6 +59,9 @@ const editSchema = z.object({
 
 export const authoringActionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('draft.create'), classKey: id }).strict(),
+  z.object({ action: z.literal('class.create'), classKey: z.string().regex(classKeyPattern),
+    title: z.string().trim().min(1).max(191), skillKeys: z.array(id.max(100)).min(1).max(50) }).strict(),
+  z.object({ action: z.literal('draft.review'), draftId: id, asking: z.boolean() }).strict(),
   z.object({ action: z.literal('draft.save'), draftId: id, edit: editSchema }).strict(),
   z.object({ action: z.literal('draft.validate'), draftId: id }).strict(),
   z.object({ action: z.literal('draft.publish'), draftId: id }).strict(),
@@ -199,7 +204,8 @@ export class AuthoringService {
   private summary(row: DraftRow, userId: string): DraftSummary {
     return {
       id: row.id, classKey: row.classKey, versionId: row.versionId, baseVersionId: row.baseVersionId, title: row.title,
-      status: row.status === 'published' ? 'published' : 'draft', publishedVersionId: row.publishedVersionId,
+      status: row.status === 'published' ? 'published' : row.status === 'review' ? 'review' : 'draft',
+      publishedVersionId: row.publishedVersionId,
       updatedAt: row.updatedAt.toISOString(), authorName: row.author.displayName, mine: row.authorId === userId,
     };
   }
@@ -212,12 +218,12 @@ export class AuthoringService {
   private async detail(row: DraftRow, userId: string, issues: DraftIssue[]): Promise<DraftDetail> {
     const document = row.document as unknown as StoredClass;
     const edit: DraftEdit = {
-      meta: { versionId: document.public.versionId, title: document.public.title, summary: document.public.summary, estimatedMinutes: document.public.estimatedMinutes },
+      meta: { versionId: document.public.versionId, title: document.public.title, summary: document.public.summary,
+        estimatedMinutes: document.public.estimatedMinutes, skillKeys: [...document.public.skillKeys] },
       sections: structuredClone(document.sections),
       problems: document.problems.map(draftProblem),
     };
-    return { ...this.summary(row, userId), edit, skillKeys: [...document.public.skillKeys],
-      terms: await this.termChoices(document.public.classKey), issues };
+    return { ...this.summary(row, userId), edit, terms: await this.termChoices(document.public.classKey), issues };
   }
 
   /**
@@ -487,6 +493,67 @@ export class AuthoringService {
     return { workspace: await this.workspace(userId), draft: await this.detail(row as DraftRow, userId, this.issues(document)) };
   }
 
+  /**
+   * A class nobody has published yet. Everything else starts from a published version; this is the
+   * one door into a key that has none, so it is also the only place the key itself is chosen — every
+   * name inside the class is built from it, and once a version is published the key cannot move.
+   */
+  async createClass(userId: string, classKey: string, title: string, skillKeys: string[]): Promise<AuthoringResponse> {
+    await this.require(userId);
+    const [taken, drafted, known, last] = await Promise.all([
+      this.db.classVersion.findFirst({ where: { classKey }, select: { id: true } }),
+      this.db.contentDraft.findFirst({ where: { classKey }, select: { id: true } }),
+      this.db.skill.findMany({ where: { key: { in: skillKeys } }, select: { key: true } }),
+      this.db.classVersion.aggregate({ _max: { order: true } }),
+    ]);
+    if (taken || drafted) throw new AppError(409, 'class_exists', '이미 쓰이고 있는 클래스 키예요. 다른 이름으로 지어 주세요.');
+    const missing = skillKeys.filter((key) => !known.some((skill) => skill.key === key));
+    if (missing.length) throw new AppError(422, 'skill_missing', `없는 개념이에요: ${missing.join(', ')}`);
+
+    // A class in this product explains and then asks, and publishing refuses one that never asks.
+    // So a new one starts as the smallest whole lesson rather than as something already invalid.
+    const versionId = `${classKey}:v1`;
+    const explaining = nextSectionId(classKey, 'explanation', versionId, []);
+    const practising = nextSectionId(classKey, 'practice', versionId, [explaining]);
+    const problem = newProblem(nextProblemVersionId(classKey, 'practice', versionId, []), skillKeys.slice(0, 1));
+    const document: StoredClass = {
+      public: { classKey, versionId, title, summary: '한 줄 소개를 적어 주세요.', estimatedMinutes: 10,
+        skillKeys: [...skillKeys], prerequisiteSkillKeys: [], sectionCount: 2, order: (last._max.order ?? 0) + 1 },
+      sections: [
+        { sectionId: explaining, role: 'explanation', title: '새 단계', contentBlocks: [
+          { blockId: nextBlockId(classKey, explaining, 'core.rich_text', versionId, []), kind: 'core.rich_text',
+            typeVersion: 2, required: true, payload: { text: '여기에 설명을 씁니다.', terms: [] } },
+        ] },
+        { sectionId: practising, role: 'practice', title: '직접 풀어 보기', contentBlocks: [
+          { blockId: nextBlockId(classKey, practising, 'core.problem_set', versionId, []), kind: 'core.problem_set',
+            typeVersion: 1, required: true, payload: { problemVersionIds: [problem.problemVersionId] } },
+        ] },
+      ],
+      problems: [storedProblem(problem)],
+      homeworkProblemIds: [],
+    };
+    const row = await this.db.contentDraft.create({
+      data: { classKey, versionId, baseVersionId: null, title, document: document as never, authorId: userId },
+      include: { author: { select: { displayName: true } } },
+    });
+    return { workspace: await this.workspace(userId), draft: await this.detail(row as DraftRow, userId, this.issues(document)) };
+  }
+
+  /**
+   * A writer saying they are done, and asking whoever may publish to look. It locks nothing: being
+   * asked to look at something is not a reason for its author to stop being able to fix it.
+   */
+  async setReview(userId: string, draftId: string, asking: boolean): Promise<AuthoringResponse> {
+    const role = await this.require(userId);
+    const row = await this.load(draftId, userId, role);
+    if (row.status === 'published') throw new AppError(409, 'draft_published', '이미 발행한 초안이에요.');
+    const saved = await this.db.contentDraft.update({ where: { id: draftId },
+      data: { status: asking ? 'review' : 'draft' },
+      include: { author: { select: { displayName: true } } } });
+    return { workspace: await this.workspace(userId),
+      draft: await this.detail(saved as DraftRow, userId, this.issues(saved.document as unknown as StoredClass)) };
+  }
+
   async saveDraft(userId: string, draftId: string, edit: DraftEdit): Promise<AuthoringResponse> {
     const role = await this.require(userId);
     const row = await this.load(draftId, userId, role);
@@ -517,7 +584,7 @@ export class AuthoringService {
     return {
       ...stored,
       public: { ...stored.public, versionId: edit.meta.versionId, title: edit.meta.title, summary: edit.meta.summary,
-        estimatedMinutes: edit.meta.estimatedMinutes, sectionCount: sections.length },
+        estimatedMinutes: edit.meta.estimatedMinutes, skillKeys: [...edit.meta.skillKeys], sectionCount: sections.length },
       sections: sections as StoredClass['sections'],
       problems,
       // Homework names questions without a block of its own, so its references move the same way.
@@ -584,6 +651,8 @@ export class AuthoringService {
     const action = authoringActionSchema.parse(input);
     switch (action.action) {
       case 'draft.create': return this.createDraft(userId, action.classKey);
+      case 'class.create': return this.createClass(userId, action.classKey, action.title, action.skillKeys);
+      case 'draft.review': return this.setReview(userId, action.draftId, action.asking);
       case 'draft.save': return this.saveDraft(userId, action.draftId, action.edit);
       case 'draft.validate': return this.validateDraft(userId, action.draftId);
       case 'draft.publish': return this.publishDraft(userId, action.draftId);

@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { AttemptView, ClassSection, ContentBlock } from '@/shared/api';
 import {
-  blockFormOf, copyBlock, copyProblem, copySection, editShape, insertAfter, issueText, mayGrantRoles, mayPublish,
-  moveBlock, nextBlockId, nextSectionId, sectionRoleLabels, sectionRoles, versionLabel,
+  blockFormOf, classKeyPattern, copyBlock, copyProblem, copySection, draftStatusLabels, editShape, insertAfter,
+  issueText, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId, sectionRoleLabels, sectionRoles, versionLabel,
   type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail,
   type DraftEdit, type DraftIssue, type DraftProblem, type DraftSummary, type SkillChoice, type TermSummary,
 } from '@/shared/authoring';
@@ -16,7 +16,7 @@ import { RemovalNotice, useEditHistory } from './edit-history';
 import { ExpertMode, useExpertMode } from './expert-mode';
 import { AddBlock, BlockCard } from './block-editor';
 import { LessonSheet, type Picked } from './lesson-sheet';
-import { ProblemPanel, ProblemSetEditor } from './problem-editor';
+import { ProblemPanel, ProblemSetEditor, SkillPicker } from './problem-editor';
 import { TermPanel } from './term-editor';
 
 /** How long the editor waits after the last keystroke before it writes what is on screen. */
@@ -201,6 +201,17 @@ export function AuthoringWorkspace() {
   }, [removed]);
 
   /**
+   * Saying the writing is done, or taking that back. It changes where the draft stands and nothing
+   * in it, so the work and every step taken to reach it are left exactly as they are.
+   */
+  const reviewNow = (asking: boolean) => run(async () => {
+    const response = await authoringApi.act({ action: 'draft.review', draftId: draft!.id, asking }, session?.user?.id ?? '');
+    setWorkspace(response.workspace);
+    if (response.draft) setDraft(response.draft);
+    setNotice(asking ? '검토를 요청했어요. 발행은 관리자가 합니다.' : '검토 요청을 거뒀어요.');
+  });
+
+  /**
    * Checking a draft without disturbing it. It reads rather than writes, so the working copy and
    * every step taken to reach it stay as they are — running a check is not a reason to lose the
    * ability to take back what was checked.
@@ -250,7 +261,8 @@ export function AuthoringWorkspace() {
       {notice && <p className="notice-banner">{notice}</p>}
       <DraftList workspace={workspace} busy={busy}
         onOpen={(summary) => run(async () => open((await authoringApi.draft(summary.id)).draft))}
-        onCreate={(classKey) => act({ action: 'draft.create', classKey })} />
+        onCreate={(classKey) => act({ action: 'draft.create', classKey })}
+        onCreateClass={(classKey, title, skillKeys) => act({ action: 'class.create', classKey, title, skillKeys })} />
       <TermPanel classes={workspace.classes} skills={workspace.skills} terms={terms} busy={busy}
         mayEditDictionary={mayPublish(workspace.role)}
         onList={(scopeKind, scopeKey) => act({ action: 'term.list', scopeKind, scopeKey }, (response) => setTerms(response.terms ?? []))}
@@ -373,12 +385,13 @@ export function AuthoringWorkspace() {
     goToSection(Math.min(Math.max(sectionIndex + delta, 0), edit.sections.length - 1));
   };
   // A question may only claim a concept this class teaches, and it names them the way a catalogue does.
-  const draftSkills: SkillChoice[] = draft.skillKeys.map((key) =>
+  const draftSkills: SkillChoice[] = edit.meta.skillKeys.map((key) =>
     workspace.skills.find((skill) => skill.key === key) ?? { key, label: key });
 
   const savedLabel = published
     ? `발행 완료 · ${expert ? draft.publishedVersionId : versionLabel(draft.publishedVersionId ?? '')}`
-    : saving === 'saving' ? '저장하는 중'
+    : draft.status === 'review' && saving === 'idle' && !dirty ? '검토 요청함'
+      : saving === 'saving' ? '저장하는 중'
       : saving === 'failed' ? '저장하지 못했어요'
         : dirty ? '곧 저장해요' : '저장됨';
 
@@ -494,6 +507,9 @@ export function AuthoringWorkspace() {
             <label className="editor-field"><span className="editor-label">예상 시간(분)</span>
               <input type="number" min={1} max={240} value={edit.meta.estimatedMinutes}
                 onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, estimatedMinutes: Number(event.target.value) } })} /></label>
+            <SkillPicker skills={workspace.skills} chosen={edit.meta.skillKeys} label="이 수업이 가르치는 개념"
+              onChange={(skillKeys) => setEdit({ ...edit, meta: { ...edit.meta, skillKeys } })} />
+            <p className="editor-note">문항은 여기 고른 개념 중에서만 고를 수 있어요. 하나 이상 있어야 발행할 수 있습니다.</p>
 
             <div className="editor-inspector-part">
               <span className="editor-label">이 단계</span>
@@ -520,6 +536,13 @@ export function AuthoringWorkspace() {
       <button type="button" className="button secondary" disabled={busy || published || !dirty || saving === 'saving'}
         onClick={() => void saveNow()}>지금 저장</button>
       <button type="button" className="button secondary" disabled={busy || dirty} onClick={() => void validateNow()}>검증</button>
+      {/* A writer hands the work on rather than publishing it; whoever may publish takes it from there. */}
+      {!published && draft.mine && (draft.status === 'review'
+        ? <button type="button" className="button secondary" disabled={busy} onClick={() => void reviewNow(false)}>검토 요청 거두기</button>
+        : <button type="button" className="button secondary" disabled={busy || dirty} onClick={() => void reviewNow(true)}>검토 요청</button>)}
+      {!published && !draft.mine && draft.status === 'review' && mayPublish(workspace.role) &&
+        <button type="button" className="button secondary" disabled={busy}
+          onClick={() => void reviewNow(false)}>작성자에게 돌려보내기</button>}
       {mayPublish(workspace.role) && !published && <button type="button" className="button primary" disabled={busy || dirty || !!draft.issues.length}
         onClick={() => setConfirming(true)}>발행<Icon name="arrow" size={16} /></button>}
       <button type="button" className="text-button" disabled={busy}
@@ -662,11 +685,21 @@ function Shell({ role, expert = false, busy, onExpert, children }: {
   </main></ExpertMode.Provider>;
 }
 
-function DraftList({ workspace, busy, onOpen, onCreate }: {
+function DraftList({ workspace, busy, onOpen, onCreate, onCreateClass }: {
   workspace: Workspace; busy: boolean; onOpen: (draft: DraftSummary) => void; onCreate: (classKey: string) => void;
+  onCreateClass: (classKey: string, title: string, skillKeys: string[]) => void;
 }) {
   const [classKey, setClassKey] = useState(workspace.classes[0]?.classKey ?? '');
+  const [query, setQuery] = useState('');
+  const [made, setMade] = useState({ key: '', title: '', skillKeys: [] as string[] });
   const expert = useExpertMode();
+  const chosen = workspace.classes.find((item) => item.classKey === classKey);
+  const found = workspace.drafts.filter((item) => {
+    const words = query.trim().toLowerCase();
+    return !words || [item.title, item.authorName, item.versionId].some((value) => value.toLowerCase().includes(words));
+  });
+  const readyToMake = classKeyPattern.test(made.key) && !!made.title.trim() && made.skillKeys.length > 0;
+
   return <>
     <fieldset className="editor-panel">
       <legend>새 초안</legend>
@@ -680,16 +713,48 @@ function DraftList({ workspace, busy, onOpen, onCreate }: {
           </select></label>
         <button type="button" className="button primary" disabled={busy || !classKey} onClick={() => onCreate(classKey)}>초안 만들기</button>
       </div>
+      {/* Two open drafts of one class both aim at the same next version, and only one of them can have it. */}
+      {chosen?.hasDraft && <p className="editor-note editor-warn">
+        이 클래스에는 이미 작성 중인 초안이 있어요. 새로 만들면 둘 다 같은 판을 노리게 되고, 먼저 발행한 쪽이 그 판을 가집니다.</p>}
     </fieldset>
+
+    <fieldset className="editor-panel">
+      <legend>새 수업</legend>
+      <p className="editor-note">아직 아무도 발행한 적 없는 수업을 처음부터 시작해요. 단계 하나만 있는 초안이 생기고, 나머지는 편집 화면에서 씁니다.</p>
+      <label className="editor-field"><span className="editor-label">수업 이름</span>
+        <input value={made.title} maxLength={191} placeholder="예: 소수, 자리와 크기"
+          onChange={(event) => setMade({ ...made, title: event.target.value })} /></label>
+      <label className="editor-field"><span className="editor-label">수업 키</span>
+        <input value={made.key} maxLength={64} placeholder="decimal-place-value" spellCheck={false}
+          onChange={(event) => setMade({ ...made, key: event.target.value.trim().toLowerCase() })} />
+        {made.key && !classKeyPattern.test(made.key)
+          ? <small className="editor-warn">영문 소문자·숫자·하이픈만 쓸 수 있고, 두 글자 이상이어야 해요.</small>
+          : <small>이 수업 안의 모든 이름이 여기서 만들어져요. 발행한 뒤에는 바꿀 수 없어요.</small>}</label>
+      <SkillPicker skills={workspace.skills} chosen={made.skillKeys} label="이 수업이 가르치는 개념"
+        onChange={(skillKeys) => setMade({ ...made, skillKeys })} />
+      <div className="editor-actions">
+        <button type="button" className="button primary" disabled={busy || !readyToMake}
+          onClick={() => onCreateClass(made.key, made.title.trim(), made.skillKeys)}>수업 만들기</button>
+        {!readyToMake && <span className="editor-note">이름·키·개념이 모두 있어야 만들 수 있어요.</span>}
+      </div>
+    </fieldset>
+
     <section className="dashboard-section">
-      <div className="section-heading"><div><span className="eyebrow">DRAFTS</span><h2>초안</h2></div></div>
-      {workspace.drafts.length === 0
-        ? <p className="empty-inline">아직 초안이 없어요.</p>
-        : <div className="assignment-list">{workspace.drafts.map((item) => <button key={item.id} type="button" className="assignment-row" onClick={() => onOpen(item)}>
+      <div className="section-heading">
+        <div><span className="eyebrow">DRAFTS</span><h2>초안</h2></div>
+        {workspace.drafts.length > 3 && <label className="editor-field draft-search">
+          <span className="editor-label">찾기</span>
+          <input value={query} placeholder="제목이나 작성자" onChange={(event) => setQuery(event.target.value)} />
+        </label>}
+      </div>
+      {found.length === 0
+        ? <p className="empty-inline">{workspace.drafts.length ? '찾은 초안이 없어요.' : '아직 초안이 없어요.'}</p>
+        : <div className="assignment-list">{found.map((item) => <button key={item.id} type="button" className="assignment-row" onClick={() => onOpen(item)}>
           <span className="assignment-icon"><Icon name="pencil" size={18} /></span>
           <span className="assignment-info"><strong>{item.title}</strong>
             <small>{expert ? item.versionId : versionLabel(item.versionId)} · {item.authorName}{item.mine ? '' : ' (다른 작성자)'} · {new Date(item.updatedAt).toLocaleString('ko-KR')}</small></span>
-          <span className={`assignment-status${item.status === 'published' ? ' submitted' : ''}`}>{item.status === 'published' ? '발행함' : '작성 중'}</span>
+          <span className={`assignment-status${item.status === 'published' ? ' submitted' : ''}${item.status === 'review' ? ' waiting' : ''}`}>
+            {draftStatusLabels[item.status]}</span>
           <Icon name="chevron" size={16} />
         </button>)}</div>}
     </section>

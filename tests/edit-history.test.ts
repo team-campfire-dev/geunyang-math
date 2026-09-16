@@ -99,7 +99,7 @@ const block = (blockId: string, kind = 'core.rich_text', payload: Record<string,
 const section = (sectionId: string, contentBlocks: ContentBlock[]): ClassSection =>
   ({ sectionId, role: 'explanation', title: '단계', contentBlocks });
 const draft = (sections: ClassSection[], problems: DraftEdit['problems'] = []): DraftEdit =>
-  ({ meta: { versionId: 'fractions:v2', title: '수업', summary: '한 줄', estimatedMinutes: 12 }, sections, problems });
+  ({ meta: { versionId: 'fractions:v2', title: '수업', summary: '한 줄', estimatedMinutes: 12, skillKeys: ['fraction.meaning'] }, sections, problems });
 
 describe('what counts as the same shape while writing', () => {
   const base = draft([section('s1', [block('b1'), block('b2')])]);
