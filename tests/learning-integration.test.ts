@@ -4,6 +4,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest
 import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { getActivityProblemIds, validateLesson, type StoredLesson, type StoredProblem } from '@/core/content';
 import { seedLessons } from './fixtures/content';
+import { ensureLesson } from './fixtures/identity';
 import { developmentLoginEnabled, sessionUser } from '@/server/auth';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
@@ -38,9 +39,10 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
       expect(await lessonRecord(db, document.public.versionId), `Published fixture ${document.public.versionId} must not change`).toEqual(document);
       return previous;
     }
+    await ensureLesson(db, document.public.lessonKey);
     return db.lessonVersion.create({ data: {
       id: document.public.versionId, lessonKey: document.public.lessonKey,
-      title: document.public.title, order: document.public.order,
+      title: document.public.title,
       metadata: asJson(lessonMetadata(document)), contentHash, ...(publishedAt ? { publishedAt } : {}),
     } });
   }

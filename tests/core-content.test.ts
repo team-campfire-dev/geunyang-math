@@ -22,7 +22,7 @@ describe('versioned lesson content', () => {
   });
 
   it('publishes explicit problem DTOs without answers, hints, or solutions', () => {
-    const publicLesson = toPublicLesson(seedLessons[0]);
+    const publicLesson = toPublicLesson(seedLessons[0], 'fractions');
     expect(publicLesson.problems).toHaveLength(5);
     for (const problem of publicLesson.problems) {
       expect(Object.keys(problem).sort()).toEqual(['hintAvailable', 'problemVersionId', 'promptContent', 'responseSpec', 'skillKeys']);
@@ -242,7 +242,7 @@ describe('glossary term annotations in lesson text', () => {
   it('accepts an annotation that resolves in the block text', () => {
     const record = annotated([{ termKey: 'term.denominator', surface: '분모' }, { termKey: 'term.equivalent', surface: '동치분수' }]);
     expect(() => validateLesson(record)).not.toThrow();
-    expect(toPublicLesson(record).sections[0].contentBlocks[0].payload.terms).toHaveLength(2);
+    expect(toPublicLesson(record, 'fractions').sections[0].contentBlocks[0].payload.terms).toHaveLength(2);
   });
 
   it('rejects an annotation the text does not carry', () => {

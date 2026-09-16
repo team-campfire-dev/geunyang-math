@@ -5,7 +5,7 @@ import { recommend, reviewSelection, skillReadiness, type Evidence } from '@/cor
 import { glossaryEntries } from '@/core/glossary';
 import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
-import { blockTermRefs, getActivityProblemIds, termReferences, toPublicLesson, validateLesson, type StoredLesson, type StoredProblem } from '@/core/content';
+import { blockTermRefs, getActivityProblemIds, termReferences, toPublicLesson, validateLesson, type LessonMetadata, type StoredLesson, type StoredProblem } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
 import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicCatalog, PublicLesson, PublicProblem, DiagnosticAnswer, Recommendation } from '@/shared/api';
 import { AppError } from './errors';
@@ -38,12 +38,15 @@ function attemptView(a: Attempt): AttemptView {
 export class LearningService {
   constructor(private readonly db: PrismaClient) {}
 
-  async catalog(db: Tx = this.db) {
+  /** The latest version of every published lesson, in the order its course gives it. */
+  async catalog(db: Tx = this.db): Promise<PublicLesson[]> {
     const rows = await db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }],
-      select: { lessonKey: true, metadata: true } });
+      select: { lessonKey: true, metadata: true, lesson: { select: { order: true, course: { select: { key: true, createdAt: true } } } } } });
     const seen = new Set<string>();
     return rows.filter(row => { if (seen.has(row.lessonKey)) return false; seen.add(row.lessonKey); return true; })
-      .map(row => (row.metadata as { public: PublicLesson }).public).sort((a, b) => a.order - b.order);
+      .sort((a, b) => a.lesson.course.createdAt.getTime() - b.lesson.course.createdAt.getTime()
+        || a.lesson.course.key.localeCompare(b.lesson.course.key) || a.lesson.order - b.lesson.order || a.lessonKey.localeCompare(b.lessonKey))
+      .map(row => ({ ...(row.metadata as { public: LessonMetadata }).public, courseKey: row.lesson.course.key }));
   }
 
   // Signed-out screens name the concepts the published catalogue teaches. A skill without a
@@ -51,8 +54,14 @@ export class LearningService {
   async publicCatalog(db: Tx = this.db): Promise<PublicCatalog> {
     const lessons = await this.catalog(db);
     const taught = new Set(lessons.flatMap(item => item.skillKeys));
-    const rows = await db.skill.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }] });
-    return { lessons, skills: rows.filter(row => taught.has(row.key)).map(row => ({ key: row.key, label: row.label })) };
+    const published = new Set(lessons.map(item => item.courseKey));
+    const [rows, courses] = await Promise.all([
+      db.skill.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }] }),
+      db.course.findMany({ orderBy: [{ createdAt: 'asc' }, { key: 'asc' }], select: { key: true, title: true, summary: true } }),
+    ]);
+    // A course with nothing published yet is not in the catalogue either.
+    return { courses: courses.filter(course => published.has(course.key)), lessons,
+      skills: rows.filter(row => taught.has(row.key)).map(row => ({ key: row.key, label: row.label })) };
   }
 
   async lessonDocument(lessonKey: string, userId?: string) {
@@ -63,10 +72,12 @@ export class LearningService {
     const record = await lessonRecord(this.db, versionId);
     if (!record) throw notFound();
     // Definitions resolve at delivery so a reworded term reaches an in-progress lesson version too.
-    const [terms, lessons] = await Promise.all([
+    const [terms, lessons, lesson] = await Promise.all([
       currentTerms(this.db, termReferences(record)), this.catalog(),
+      this.db.lesson.findUnique({ where: { key: lessonKey }, select: { course: { select: { key: true } } } }),
     ]);
-    return toPublicLesson(record, glossaryEntries(terms, lessons));
+    if (!lesson) throw notFound();
+    return toPublicLesson(record, lesson.course.key, glossaryEntries(terms, lessons));
   }
 
   async state(userId: string, db: Tx = this.db): Promise<LearningState> {

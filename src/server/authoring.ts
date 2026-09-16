@@ -59,7 +59,7 @@ const editSchema = z.object({
 
 export const authoringActionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('draft.create'), lessonKey: id }).strict(),
-  z.object({ action: z.literal('lesson.create'), lessonKey: z.string().regex(lessonKeyPattern),
+  z.object({ action: z.literal('lesson.create'), courseKey: id.max(100), lessonKey: z.string().regex(lessonKeyPattern),
     title: z.string().trim().min(1).max(191), skillKeys: z.array(id.max(100)).min(1).max(50) }).strict(),
   z.object({ action: z.literal('draft.review'), draftId: id, asking: z.boolean() }).strict(),
   z.object({ action: z.literal('draft.save'), draftId: id, edit: editSchema }).strict(),
@@ -258,19 +258,21 @@ export class AuthoringService {
 
   async workspace(userId: string): Promise<AuthoringWorkspace> {
     const role = await authoringRole(this.db, userId);
-    if (!role) return { role: null, drafts: [], lessons: [], accounts: [], skills: [], expertMode: false };
-    const [drafts, versions, accounts, skills, account] = await Promise.all([
+    if (!role) return { role: null, drafts: [], courses: [], lessons: [], accounts: [], skills: [], expertMode: false };
+    const [drafts, versions, courses, accounts, skills, account] = await Promise.all([
       this.db.contentDraft.findMany({ where: mayEditEveryDraft(role) ? {} : { authorId: userId },
         orderBy: { updatedAt: 'desc' }, take: 50, include: { author: { select: { displayName: true } } } }),
-      this.db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }], select: { id: true, lessonKey: true, title: true } }),
+      this.db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }],
+        select: { id: true, lessonKey: true, title: true, lesson: { select: { course: { select: { key: true } } } } } }),
+      this.db.course.findMany({ orderBy: [{ createdAt: 'asc' }, { key: 'asc' }], select: { key: true, title: true } }),
       this.accounts(userId, role),
       this.db.skill.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }], select: { key: true, label: true } }),
       this.db.user.findUnique({ where: { id: userId }, select: { editorExpertMode: true } }),
     ]);
     const openDrafts = new Set(drafts.filter((draft) => draft.status !== 'published').map((draft) => draft.lessonKey));
-    const byKey = new Map<string, { title: string; versions: string[] }>();
+    const byKey = new Map<string, { title: string; courseKey: string; versions: string[] }>();
     for (const version of versions) {
-      const entry = byKey.get(version.lessonKey) ?? { title: version.title, versions: [] };
+      const entry = byKey.get(version.lessonKey) ?? { title: version.title, courseKey: version.lesson.course.key, versions: [] };
       entry.title = version.title;
       entry.versions.push(version.id);
       byKey.set(version.lessonKey, entry);
@@ -279,10 +281,11 @@ export class AuthoringService {
       role,
       accounts,
       skills,
+      courses,
       expertMode: account?.editorExpertMode ?? false,
       drafts: (drafts as DraftRow[]).map((row) => this.summary(row, userId)),
       lessons: [...byKey.entries()].map(([lessonKey, entry]) => ({
-        lessonKey, title: entry.title, latestVersionId: entry.versions[entry.versions.length - 1],
+        lessonKey, courseKey: entry.courseKey, title: entry.title, latestVersionId: entry.versions[entry.versions.length - 1],
         suggestedVersionId: suggestVersionId(lessonKey, entry.versions), hasDraft: openDrafts.has(lessonKey),
       })),
     };
@@ -499,17 +502,22 @@ export class AuthoringService {
    * one door into a key that has none, so it is also the only place the key itself is chosen — every
    * name inside the lesson is built from it, and once a version is published the key cannot move.
    */
-  async createLesson(userId: string, lessonKey: string, title: string, skillKeys: string[]): Promise<AuthoringResponse> {
+  async createLesson(userId: string, courseKey: string, lessonKey: string, title: string, skillKeys: string[]): Promise<AuthoringResponse> {
     await this.require(userId);
-    const [taken, drafted, known, last] = await Promise.all([
-      this.db.lessonVersion.findFirst({ where: { lessonKey }, select: { id: true } }),
+    const [course, taken, drafted, known] = await Promise.all([
+      this.db.course.findUnique({ where: { key: courseKey }, select: { id: true } }),
+      this.db.lesson.findUnique({ where: { key: lessonKey }, select: { key: true } }),
       this.db.contentDraft.findFirst({ where: { lessonKey }, select: { id: true } }),
       this.db.skill.findMany({ where: { key: { in: skillKeys } }, select: { key: true } }),
-      this.db.lessonVersion.aggregate({ _max: { order: true } }),
     ]);
+    if (!course) throw new AppError(404, 'course_missing', '그런 코스가 없어요. 코스를 먼저 골라 주세요.');
     if (taken || drafted) throw new AppError(409, 'lesson_exists', '이미 쓰이고 있는 수업 키예요. 다른 이름으로 지어 주세요.');
     const missing = skillKeys.filter((key) => !known.some((skill) => skill.key === key));
     if (missing.length) throw new AppError(422, 'skill_missing', `없는 개념이에요: ${missing.join(', ')}`);
+    // The lesson exists from here on — in its course, after the lessons already there — so a draft
+    // never floats outside a course and the course's order already has a place for it.
+    const last = await this.db.lesson.aggregate({ where: { courseId: course.id }, _max: { order: true } });
+    await this.db.lesson.create({ data: { key: lessonKey, courseId: course.id, order: (last._max.order ?? 0) + 1 } });
 
     // A lesson in this product explains and then asks, and publishing refuses one that never asks.
     // So a new one starts as the smallest whole lesson rather than as something already invalid.
@@ -519,7 +527,7 @@ export class AuthoringService {
     const problem = newProblem(nextProblemVersionId(lessonKey, 'practice', versionId, []), skillKeys.slice(0, 1));
     const document: StoredLesson = {
       public: { lessonKey, versionId, title, summary: '한 줄 소개를 적어 주세요.', estimatedMinutes: 10,
-        skillKeys: [...skillKeys], prerequisiteSkillKeys: [], sectionCount: 2, order: (last._max.order ?? 0) + 1 },
+        skillKeys: [...skillKeys], prerequisiteSkillKeys: [], sectionCount: 2 },
       sections: [
         { sectionId: explaining, role: 'explanation', title: '새 단계', contentBlocks: [
           { blockId: nextBlockId(lessonKey, explaining, 'core.rich_text', versionId, []), kind: 'core.rich_text',
@@ -639,6 +647,12 @@ export class AuthoringService {
     const role = await this.require(userId);
     const row = await this.load(draftId, userId, role);
     await this.db.contentDraft.delete({ where: { id: row.id } });
+    // A lesson that was only ever this draft leaves with it, so its key can be chosen again.
+    const [versions, drafts] = await Promise.all([
+      this.db.lessonVersion.count({ where: { lessonKey: row.lessonKey } }),
+      this.db.contentDraft.count({ where: { lessonKey: row.lessonKey } }),
+    ]);
+    if (!versions && !drafts) await this.db.lesson.deleteMany({ where: { key: row.lessonKey } });
     return { workspace: await this.workspace(userId) };
   }
 
@@ -652,7 +666,7 @@ export class AuthoringService {
     const action = authoringActionSchema.parse(input);
     switch (action.action) {
       case 'draft.create': return this.createDraft(userId, action.lessonKey);
-      case 'lesson.create': return this.createLesson(userId, action.lessonKey, action.title, action.skillKeys);
+      case 'lesson.create': return this.createLesson(userId, action.courseKey, action.lessonKey, action.title, action.skillKeys);
       case 'draft.review': return this.setReview(userId, action.draftId, action.asking);
       case 'draft.save': return this.saveDraft(userId, action.draftId, action.edit);
       case 'draft.validate': return this.validateDraft(userId, action.draftId);

@@ -15,8 +15,9 @@ export type PublishedTerm = {
  * the lesson that teaches it.
  */
 export function glossaryEntries(terms: PublishedTerm[], lessons: PublicLesson[]): GlossaryEntry[] {
+  // Lessons arrive in course order, so the first lesson teaching a concept is the one to go back to.
   const taughtIn = new Map<string, PublicLesson>();
-  for (const item of [...lessons].sort((a, b) => a.order - b.order)) {
+  for (const item of lessons) {
     for (const skillKey of item.skillKeys) if (!taughtIn.has(skillKey)) taughtIn.set(skillKey, item);
   }
   return terms.map((term) => ({

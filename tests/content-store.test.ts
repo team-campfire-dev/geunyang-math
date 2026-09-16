@@ -6,15 +6,21 @@ import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { canonicalJson, parseContentBundle, validateReferences } from '@/core/content-bundle';
 import { blockOf, lessonRecord, currentDiagnostic, currentTerms, diagnosticDefinitions, exportContent, importContent, indexLessonDocument, publishBundle, verifyContent } from '@/server/content-store';
-import initial from './fixtures/initial-content.json';
+import initial from '../prisma/seed/fractions.json';
 import { seedLessons } from './fixtures/content';
 
 const bundle = () => parseContentBundle(structuredClone(initial));
-const empty = () => ({ schemaVersion: 1 as const, skills: [], lessons: [], diagnostics: [], terms: [] });
+const empty = () => ({ schemaVersion: 1 as const, courses: [], skills: [], lessons: [], diagnostics: [], terms: [] });
+/**
+ * A course of the test's own for the lessons it publishes, so the seeded course is never touched. It is
+ * named after the first lesson, so every version of one lesson lands in the same course.
+ */
+const inCourse = (...lessons: { public: { lessonKey: string } }[]) => [{ key: `course-${lessons[0].public.lessonKey}`, title: '검사 코스',
+  lessons: [...new Set(lessons.map((lesson) => lesson.public.lessonKey))].map((key, index) => ({ key, order: index + 1 })), diagnostics: [] }];
 function newLesson() {
   const key = `content-test-${randomUUID()}`;
   const c = JSON.parse(JSON.stringify(seedLessons[0]).replaceAll('fraction-meaning', key)) as typeof seedLessons[number];
-  c.public.order = 1000;
+
   return c;
 }
 
@@ -177,14 +183,14 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     const c = newLesson(), skillKey = `test.${randomUUID()}`;
     c.public.skillKeys = [skillKey]; c.public.prerequisiteSkillKeys = [];
     c.problems.forEach(p => { p.skillKeys = [skillKey]; });
-    const input = { ...empty(), lessons: [c], skills: [{ key: skillKey, label: 'DB에서 등록한 개념', order: 999 }] };
+    const input = { ...empty(), courses: inCourse(c), lessons: [c], skills: [{ key: skillKey, label: 'DB에서 등록한 개념', order: 999 }] };
     expect(await importContent(db, input, true)).toMatchObject({ dryRun: true, newLessons: 1 });
     expect(await db.lessonVersion.findUnique({ where: { id: c.public.versionId } })).toBeNull();
     expect(await db.skill.findUnique({ where: { key: skillKey } })).toBeNull();
     await importContent(db, input);
     const user = await learner();
     const state = await service.state(user.id);
-    expect(state.lessons).toContainEqual(c.public);
+    expect(state.lessons).toContainEqual({ ...c.public, courseKey: input.courses[0].key });
     expect(state.skills).toContainEqual({ key: skillKey, label: 'DB에서 등록한 개념', state: 'unknown' });
     expect(JSON.stringify(await service.lessonDocument(c.public.lessonKey))).not.toContain('gradingSpec');
     const edited = structuredClone(c); edited.public.title = 'Cannot overwrite';
@@ -193,22 +199,22 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
   });
   it('rejects unknown references and changes to reused question versions without partial writes', async () => {
     const bad = newLesson(); bad.public.skillKeys = ['missing.skill']; bad.problems.forEach(p => { p.skillKeys = ['missing.skill']; });
-    await expect(importContent(db, { ...empty(), lessons: [bad] })).rejects.toThrow(/Missing skill/);
+    await expect(importContent(db, { ...empty(), courses: inCourse(bad), lessons: [bad] })).rejects.toThrow(/Missing skill/);
     expect(await db.lessonVersion.findUnique({ where: { id: bad.public.versionId } })).toBeNull();
-    const first = newLesson(); await importContent(db, { ...empty(), lessons: [first] });
+    const first = newLesson(); await importContent(db, { ...empty(), courses: inCourse(first), lessons: [first] });
     const second = structuredClone(first); second.public.versionId += '-next'; second.problems[0].promptContent[0].payload.text = 'Changed problem';
-    await expect(importContent(db, { ...empty(), lessons: [second] })).rejects.toThrow(/Problem version is immutable/);
+    await expect(importContent(db, { ...empty(), courses: inCourse(second), lessons: [second] })).rejects.toThrow(/Problem version is immutable/);
     expect(await db.lessonVersion.findUnique({ where: { id: second.public.versionId } })).toBeNull();
   });
   it('selects the last newly published version while pinning existing enrollment and homework', async () => {
-    const first = newLesson(); await importContent(db, { ...empty(), lessons: [first] });
+    const first = newLesson(); await importContent(db, { ...empty(), courses: inCourse(first), lessons: [first] });
     const user = await learner(), scope = await db.learningScope.findUniqueOrThrow({ where: { ownerUserId: user.id } });
     await service.act(user.id, { action: 'enrollment.start', lessonKey: first.public.lessonKey });
     const assignment = await db.$transaction(tx => service.createPersonalAssignment(tx, user.id, scope.id, first));
     const before = await db.assignmentItem.findMany({ where: { assignmentId: assignment.id }, orderBy: { id: 'asc' } });
     const second = structuredClone(first); second.public.versionId += '-2'; second.public.title = 'Second edition';
     const third = structuredClone(first); third.public.versionId += '-3'; third.public.title = 'Third edition';
-    await importContent(db, { ...empty(), lessons: [second, third] });
+    await importContent(db, { ...empty(), courses: inCourse(second, third), lessons: [second, third] });
     expect((await service.lessonDocument(first.public.lessonKey)).versionId).toBe(third.public.versionId);
     expect((await service.lessonDocument(first.public.lessonKey, user.id)).versionId).toBe(first.public.versionId);
     expect((await service.catalog()).find(c => c.lessonKey === first.public.lessonKey)?.versionId).toBe(third.public.versionId);
@@ -257,7 +263,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     const c = newLesson(), skillKey = `test.${randomUUID()}`;
     c.public.skillKeys = [skillKey]; c.public.prerequisiteSkillKeys = [];
     c.problems.forEach(p => { p.skillKeys = [skillKey]; });
-    await importContent(db, { ...empty(), lessons: [c], skills: [{ key: skillKey, label: '색인 검사 개념', order: 998 }] });
+    await importContent(db, { ...empty(), courses: inCourse(c), lessons: [c], skills: [{ key: skillKey, label: '색인 검사 개념', order: 998 }] });
     const rows = await db.publishedProblem.findMany({ where: { ownerKind: 'lesson', ownerVersionId: c.public.versionId }, orderBy: { order: 'asc' } });
     expect(rows.map(row => row.problemVersionId)).toEqual(c.problems.map(p => p.problemVersionId));
     expect(await lessonRecord(db, c.public.versionId)).toEqual(c);
@@ -284,7 +290,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     c.sections[0].contentBlocks.push({ blockId: `${c.sections[0].sectionId}:optional`, kind: 'core.rich_text',
       typeVersion: 1, required: false, payload: { text: '되돌아오는지 보려고 둔 블록이에요.' },
       fallback: '그림을 볼 수 없을 때 읽는 문장이에요.' });
-    await importContent(db, { ...empty(), lessons: [c], skills: [{ key: skillKey, label: '블록 표 검사 개념', order: 997 }] });
+    await importContent(db, { ...empty(), courses: inCourse(c), lessons: [c], skills: [{ key: skillKey, label: '블록 표 검사 개념', order: 997 }] });
 
     const sections = await db.lessonSection.findMany({ where: { lessonVersionId: c.public.versionId }, orderBy: { order: 'asc' } });
     expect(sections.map(section => section.sectionId)).toEqual(c.sections.map(section => section.sectionId));
@@ -321,7 +327,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     const c = newLesson(), skillKey = `test.${randomUUID()}`;
     c.public.skillKeys = [skillKey]; c.public.prerequisiteSkillKeys = [];
     c.problems.forEach(p => { p.skillKeys = [skillKey]; });
-    await importContent(db, { ...empty(), lessons: [c], skills: [{ key: skillKey, label: '행에서 읽는 개념', order: 996 }] });
+    await importContent(db, { ...empty(), courses: inCourse(c), lessons: [c], skills: [{ key: skillKey, label: '행에서 읽는 개념', order: 996 }] });
     const published = await service.lessonDocument(c.public.lessonKey);
     expect(published.sections.map(section => section.title)).toEqual(c.sections.map(section => section.title));
     expect(published.problems.map(problem => problem.problemVersionId)).toEqual(c.problems.map(problem => problem.problemVersionId));
@@ -362,7 +368,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     const c = newLesson(), taught = `test.taught.${randomUUID()}`, unreleased = `test.unreleased.${randomUUID()}`;
     c.public.skillKeys = [taught]; c.public.prerequisiteSkillKeys = [];
     c.problems.forEach(p => { p.skillKeys = [taught]; });
-    await importContent(db, { ...empty(), lessons: [c], skills: [
+    await importContent(db, { ...empty(), courses: inCourse(c), lessons: [c], skills: [
       { key: taught, label: '공개 카탈로그 개념', order: 990 },
       { key: unreleased, label: '아직 수업이 없는 개념', order: 991 },
     ] });
@@ -378,9 +384,9 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     const suffix = randomUUID();
     const earlier = `test.earlier.${suffix}`, current = `test.current.${suffix}`;
     const first = newLesson(), second = newLesson();
-    first.public.order = 1001; first.public.skillKeys = [earlier]; first.public.prerequisiteSkillKeys = [];
+first.public.skillKeys = [earlier]; first.public.prerequisiteSkillKeys = [];
     first.problems.forEach(p => { p.skillKeys = [earlier]; });
-    second.public.order = 1002; second.public.skillKeys = [current]; second.public.prerequisiteSkillKeys = [earlier];
+second.public.skillKeys = [current]; second.public.prerequisiteSkillKeys = [earlier];
     second.problems.forEach(p => { p.skillKeys = [current]; });
     const earlierTerm = { versionId: `term.earlier.${suffix}:v1`, termKey: `term.earlier.${suffix}`, skillKey: earlier,
       label: '분모', summary: '전체를 나눈 조각 수예요.', blocks: [{ blockId: `term.earlier.${suffix}:v1:b1`,
@@ -391,7 +397,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     const block = second.sections[0].contentBlocks[0];
     second.sections[0].contentBlocks[0] = { ...block, typeVersion: 2, payload: { text: '분모가 다르면 통분을 해요.',
       terms: [{ termKey: earlierTerm.termKey, surface: '분모' }, { termKey: currentTerm.termKey, surface: '통분' }] } };
-    const input = { ...empty(), lessons: [first, second], terms: [earlierTerm, currentTerm],
+    const input = { ...empty(), courses: inCourse(first, second), lessons: [first, second], terms: [earlierTerm, currentTerm],
       skills: [{ key: earlier, label: '앞선 개념', order: 1001 }, { key: current, label: '지금 개념', order: 1002 }] };
 
     await expect(importContent(db, { ...input, terms: [] })).rejects.toThrow(/Missing term/);
@@ -426,9 +432,9 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     const suffix = randomUUID();
     const earlier = `test.dict.earlier.${suffix}`, current = `test.dict.current.${suffix}`;
     const first = newLesson(), second = newLesson();
-    first.public.order = 1101; first.public.skillKeys = [earlier]; first.public.prerequisiteSkillKeys = [];
+first.public.skillKeys = [earlier]; first.public.prerequisiteSkillKeys = [];
     first.problems.forEach(p => { p.skillKeys = [earlier]; });
-    second.public.order = 1102; second.public.skillKeys = [current]; second.public.prerequisiteSkillKeys = [earlier];
+second.public.skillKeys = [current]; second.public.prerequisiteSkillKeys = [earlier];
     second.problems.forEach(p => { p.skillKeys = [current]; });
     const termKey = `term.shared.${suffix}`;
     const shared = { versionId: `${termKey}:v1`, termKey, skillKey: earlier, label: '분모', summary: '사전이 쓴 설명이에요.',
@@ -440,7 +446,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     const block = second.sections[0].contentBlocks[0];
     second.sections[0].contentBlocks[0] = { ...block, typeVersion: 2, payload: { text: '분모가 무엇인지 떠올려 보세요.',
       terms: [{ termKey, surface: '분모', scopeKind: 'lesson', scopeKey: second.public.lessonKey }] } };
-    const input = { ...empty(), lessons: [first, second], terms: [shared, mine],
+    const input = { ...empty(), courses: inCourse(first, second), lessons: [first, second], terms: [shared, mine],
       skills: [{ key: earlier, label: '앞선 개념', order: 1101 }, { key: current, label: '지금 개념', order: 1102 }] };
 
     // The dictionary alone does not answer for a reference that named the lesson.
