@@ -145,6 +145,7 @@ model ProblemSetVersion {
   problemSet   ProblemSet @relation(fields: [problemSetId], references: [id])
   contentHash  String     @db.VarChar(64)
   publishedAt  DateTime   @default(now())
+  assignments  Assignment[]
   @@index([problemSetId, publishedAt])
 }
 
@@ -316,8 +317,16 @@ model Assignment {
   title                String @db.VarChar(191)
   issuerType           String @default("system") @db.VarChar(20)
   sourceLessonVersionId String? @db.VarChar(191)
+  // The questions come from one frozen problem set version; an item only picks and orders them.
+  problemSetId         String @db.VarChar(191)
+  problemSetVersionId  String @db.VarChar(191)
+  problemSetVersion    ProblemSetVersion @relation(fields: [problemSetVersionId], references: [id])
+  // How it is taken (kind, hints, results, solutions) and when it opens and is due. The reasons
+  // behind a system-issued review stay in policySnapshot.
+  policy               Json
+  schedule             Json
   policySnapshot       Json
-  issuedAt             DateTime @default(now())
+  issuedAt             DateTime?
   items                AssignmentItem[]
   recipients           AssignmentRecipient[]
 }
@@ -327,7 +336,6 @@ model AssignmentItem {
   assignmentId     String @db.VarChar(191)
   assignment       Assignment @relation(fields: [assignmentId], references: [id])
   problemVersionId String @db.VarChar(191)
-  problemSnapshot  Json
   position         Int
   attempts         Attempt[]
   submissions      SubmissionItem[]
@@ -343,8 +351,9 @@ model AssignmentRecipient {
   sourceEnrollmentId String? @unique @db.VarChar(191)
   sourceEnrollment   Enrollment? @relation(fields: [sourceEnrollmentId], references: [id])
   recommendedAt      DateTime
+  // Set only when this person's window differs from the assignment's schedule.
+  opensAt            DateTime?
   dueAt              DateTime?
-  assignmentPolicy   String @default("adaptive") @db.VarChar(20)
   status             String @default("assigned") @db.VarChar(20)
   submissions        Submission[]
   @@unique([assignmentId, learnerUserId])

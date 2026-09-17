@@ -197,6 +197,23 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     expect(await db.hintUse.count({ where: { userId: learner.userId } })).toBe(1);
   });
 
+  it('keeps hints back when the assignment policy says so, and shows a recipient their own due date over the rule', async () => {
+    const learner = await newLearner();
+    const recipient = await standaloneAssignment(learner);
+    const due = new Date('2026-10-01T09:00:00.000Z'), own = new Date('2026-10-03T09:00:00.000Z');
+    await db.assignment.update({ where: { id: recipient.assignmentId }, data: { policy: { kind: 'exam', hints: false, results: 'after-submission', solutions: 'never' },
+      schedule: { due: { kind: 'at', at: due.toISOString() } } } });
+    let state = await service.state(learner.userId);
+    expect(state.assignments[0]).toMatchObject({ policy: { kind: 'exam', hints: false }, dueAt: due.toISOString(), opensAt: null });
+    expect(state.assignments[0].items.every(item => !item.problem.hintAvailable)).toBe(true);
+    await expect(service.act(learner.userId, { action: 'hint.open', context: 'assignment', contextId: recipient.id,
+      problemVersionId: recipient.assignment.items[0].problemVersionId })).rejects.toMatchObject({ status: 409 });
+    expect(await db.hintUse.count({ where: { userId: learner.userId } })).toBe(0);
+    await db.assignmentRecipient.update({ where: { id: recipient.id }, data: { dueAt: own } });
+    state = await service.state(learner.userId);
+    expect(state.assignments[0].dueAt).toBe(own.toISOString());
+  });
+
   it('finalizes only answered work, deduplicates retries, and preserves the selected attempts after submission', async () => {
     const learner = await newLearner();
     const recipient = await standaloneAssignment(learner);
@@ -223,15 +240,20 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     expect(await db.submission.count({ where: { recipientId: recipient.id } })).toBe(1);
   }, 30_000);
 
-  it('supports a standalone assignment without an enrollment while preserving its content snapshot', async () => {
+  it('supports a standalone assignment without an enrollment and reads its questions from the frozen problem set version', async () => {
     const learner = await newLearner();
     const recipient = await standaloneAssignment(learner);
     expect(recipient.sourceEnrollmentId).toBeNull();
     expect(await db.enrollment.count({ where: { userId: learner.userId } })).toBe(0);
-    expect(recipient.assignment.items[0].problemSnapshot).toEqual(problemById(recipient.assignment.items[0].problemVersionId));
+    expect(recipient.assignment).toMatchObject({ problemSetId: record.review!.problemSetId, problemSetVersionId: record.review!.problemSetVersionId,
+      policy: { kind: 'review', hints: true }, schedule: {} });
+    expect(recipient.assignment.issuedAt).not.toBeNull();
+    expect(recipient).toMatchObject({ opensAt: null, dueAt: null });
     const state = await service.state(learner.userId);
     expect(state.assignments).toHaveLength(1);
-    expect(state.assignments[0]).toMatchObject({ recipientId: recipient.id, lessonKey: null, status: 'assigned' });
+    expect(state.assignments[0]).toMatchObject({ recipientId: recipient.id, lessonKey: null, status: 'assigned', opensAt: null, dueAt: null, policy: { kind: 'review' } });
+    expect(state.assignments[0].items.map(item => item.problem.problemVersionId)).toEqual(recipient.assignment.items.map(item => item.problemVersionId));
+    expect(state.assignments[0].items[0].problem.promptContent).toEqual(problemById(recipient.assignment.items[0].problemVersionId).promptContent);
     expect(JSON.stringify(state.assignments)).not.toContain('gradingSpec');
     const firstItem = state.assignments[0].items[0];
     const result = await service.act(learner.userId, { action: 'attempt.submit', context: 'assignment', contextId: recipient.id,

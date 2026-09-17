@@ -41,7 +41,7 @@
 판본이 아닌 JSON도 남아 있다.
 
 - `ContentDraft.document`: 작업 중인 초안은 지금도 JSON 한 덩이다. 발행된 판본이 아니므로 불변도 아니고 쪼갤 이유도 없다. 초안은 `ownerKind`로 수업(`lesson`, `ownerKey`=수업 키)과 문제집(`problem_set`, `ownerKey`=문제집 ID)으로 갈리고, 수업 초안이 참조하는 문제집 초안은 수업과 **같은 트랜잭션에서 함께 발행**된다.
-- `Enrollment.lessonVersionId`, `AssignmentItem.problemSnapshot`, `DiagnosticRun.document`: 수강·과제·진단의 기존 판본을 계속 참조하거나 복사해 보존한다.
+- `Enrollment.lessonVersionId`, `Assignment.problemSetVersionId`, `DiagnosticRun.document`: 수강·과제는 시작할 때의 판본을 계속 참조하고, 진단은 복사해 보존한다. 과제 항목은 문제 ID와 순서만 들고 내용은 문제집 판본에서 읽는다.
 
 블록은 DB 안의 확장 가능한 형식이다. `kind`, `typeVersion`, `payload`, `required`, `fallback` 계약은 유지한다. 기존 블록으로 만든 콘텐츠는 앱 재배포 없이 등록할 수 있다. 새로운 그래프·도형 블록 종류는 검증 스키마와 웹/모바일 렌더러를 추가한 뒤 배포해야 한다.
 

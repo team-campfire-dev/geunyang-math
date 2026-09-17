@@ -173,6 +173,7 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 | [클래스를 수업으로 #37](https://github.com/team-campfire-dev/geunyang-math/pull/37) | `0176f84` | migrator에 `DROP`이 없어 `RENAME TABLE`이 거부됐다(1142). 표는 하나도 바뀌지 않았고 실패 기록만 남아 다음 배포까지 막았다. `DROP`을 부여한 뒤 `prisma migrate resolve --rolled-back`으로 기록을 정리했다. |
 | [코스·개념 #40](https://github.com/team-campfire-dev/geunyang-math/pull/40) | `068c684` | 위 실패 기록 때문에 시작조차 하지 않았다(P3009). |
 | [문제집 #41](https://github.com/team-campfire-dev/geunyang-math/pull/41) | `7d0121a` | A·B·C는 적용됐다. D는 `CREATE TEMPORARY TABLE`에서 거부됐다(1044, migrator에 `CREATE TEMPORARY TABLES`가 없다). 그 앞의 `ProblemSet`·`ProblemSetVersion`은 만들어진 채 남았고, 되돌린 옛 앱은 개명된 표를 읽지 못해 health 503으로 서비스가 내려갔다. D를 일반 표로 고치고 반쯤 적용된 상태에서 다시 돌 수 있게 했다. |
+| [문제집 migration 수정 #42](https://github.com/team-campfire-dev/geunyang-math/pull/42) | `bde6491` | D의 실패 기록을 rolled back으로 표시한 뒤 배포. migration·씨앗·검증·기동·health·commit 확인까지 통과해 A~D가 운영에 적용됐다. 공개 주소의 health `ready`, commit 일치. |
 
 여기서 배운 것 두 가지. migration은 migrator가 가진 권한(CREATE·ALTER·INDEX·REFERENCES·DROP)만 쓴다 — 임시 표는 쓰지 않는다. 그리고 MySQL DDL은 되돌아가지 않으므로 여러 문장으로 된 migration은 중간에 멈춘 자리에서 다시 돌 수 있게 쓴다(`DROP TABLE IF EXISTS`로 자기가 만든 것을 먼저 치운다).
 
@@ -199,6 +200,8 @@ DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVer
 `20260917020000_concepts`는 `Skill`과 `TermVersion`을 `Concept`·`ConceptDefinition`으로 합친다. 개념 3개는 평가할 수 있는 개념이 되고, 용어 6개는 각각 설명만 있는 개념이 되며 키의 `term.` 접두어를 잃는다(`term.denominator` → `denominator`). 범위마다 마지막 판본이 그 범위의 뜻풀이 한 행이 되고(판본 id를 행 id로 그대로 쓴다), 옛 판본의 블록은 지운다. `PublishedProblem.skillKeys`는 `conceptKeys`로, 문서의 `skillKeys`·`prerequisiteSkillKeys`도 같이 바뀌며, 발행된 `core.rich_text@2` 블록은 `@3`(`definitions[].conceptKey`)으로 옮겨진다. 옛 형식의 초안은 옮기지 않고 지운다. 두 표를 `DROP TABLE`하므로 A 단계의 `DROP` 권한이 여기서도 필요하다. 저장소 번들은 `content/glossary-v2.json`으로 바뀐다 — 옛 `glossary-v1.json`의 원장 행은 남지만 파일이 없어 다시 발행되지 않는다.
 
 `20260917030000_problem_sets`는 문제의 주인을 수업에서 문제집으로 옮긴다. 발행된 수업 판본의 활동 블록마다 문제집 `<수업키>:<단계 역할>`과 판본 `<수업키>:<역할>:<vN>`을 만들고(수업 판본마다 자기 문제집 판본을 갖는다), 숙제 풀은 `<수업키>:review`가 되어 `metadata.review`로 참조된다. `PublishedProblem`과 문항 블록은 문제집 판본으로 주인을 옮기고, 활동 블록은 `core.problem_set@2`(문제집 ID + 판본 ID + 고른 문제 ID)가 된다. 옮겨진 문제집 판본의 `contentHash`는 자리만 채운 값이다. 한 수업 판본에 같은 역할의 단계가 둘이면 이름이 겹쳐 migration이 멈춘다(병합하지 않는다). `ContentDraft`는 `ownerKind`·`ownerKey`로 일반화되고 옛 형식의 초안은 지운다. 작업용 표 `activity`·`review`·`moved`는 임시 표가 아니라 일반 표다 — migrator에 `CREATE TEMPORARY TABLES`가 없어 첫 운영 실행이 거기서 멈췄다. 그 실행이 만들어 둔 두 표를 `DROP TABLE IF EXISTS`로 먼저 치우므로, 실패 기록을 rolled back으로 표시하면 같은 migration을 다시 적용할 수 있다.
+
+`20260917040000_assignments`는 과제가 문제집 판본을 가리키게 한다. `Assignment`에 `problemSetId`·`problemSetVersionId`(FK)·`policy`·`schedule`이 생기고 `issuedAt`은 비울 수 있게 된다. 기존 과제는 모두 시스템이 낸 복습이므로 `sourceLessonVersionId`가 가리키는 수업 판본의 `metadata.review`에서 문제집 판본을 찾아 옮기고, 정책은 `{kind:'review', hints:true, results:'per-item', solutions:'never'}`, 기간 규칙은 빈 객체로 둔다. 수업 판본이 없어 자리를 못 찾는 과제는 그 기록(시도·제출·배정·항목)과 함께 지운다. `AssignmentRecipient`는 `assignmentPolicy`를 잃고 `opensAt`을 얻으며, `AssignmentItem.problemSnapshot`은 사라진다 — 문항 내용은 문제집 판본의 행에서 읽는다. 작업용 표 `unplaced`는 일반 표다.
 
 사본이 있는 동안 `content:verify`는 배포마다 행과 `document`를 대조했다 — 처음에는 문항 색인을, 그다음에는 블록을, 세 번째 단계부터는 행을 도로 맞춘 결과 전체를 한 글자도 다르지 않은지 봤다. 네 번의 배포(#27·#29·#30·#31)가 모두 같음을 확인한 뒤에 사본을 지웠다. 지금 `content:verify`가 보고하는 수는 운영 기준으로 `indexedProblems: 36`, `indexedBlocks: 148`이고, 어긋나면 배포가 그 자리에서 멈춘다.
 

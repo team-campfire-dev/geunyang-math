@@ -15,9 +15,9 @@
 | 계정 | Google 웹 OAuth, 재로그인 복원, 7일 서버 세션·회전·로그아웃 | 계정 관리·자동 탈퇴 UI, 데이터 보관·삭제 운영 절차 |
 | 개인화 | 선택형 진단, 선수개념·첫 풀이 기반 추천, 직접 선택/자동 복귀, 시간별 새 과제 분량·1/3일 권장 시점, 추천 이력 | 규칙의 학습 효과 검증, 상세 오류 유형, 반복 복습 |
 | 학습 증거 | 미확인·연습 중·직접 해결·지연 복습 상태, 힌트·첫 유효 시도 구분 | 충분한 독립 문항과 전문가 검증을 거친 기준 |
-| 과제 | 독립 과제 내용, 개인 배정, 초안 답안 저장·확정 제출, 판본 snapshot | 독립 과제 작성 UI/API, 재배정·재제출·취소, 기관 마감·공개 정책 |
+| 과제 | 문제집 판본 참조, 정책(`policy`: 종류·힌트·결과·해설)과 기간 규칙(`schedule`)을 과제가 들고 배정이 시각으로 풂, 개인 배정, 초안 답안 저장·확정 제출 | 교사가 과제를 내는 UI/API, 재배정·재제출·취소, 기간 열림·마감의 강제 |
 | 재채점 | `AssessmentRevision` 테이블 정의 | 정정 요청·재채점·이전 판정 비교·사용자 안내 |
-| 기관 | 개인 scope와 과제/배정/제출의 경계, `adaptive`/`fixed` 정책 필드 | Organization, Membership, LearningGroup, 교사 권한·기관 간 격리·성적 관리 |
+| 기관 | 개인 scope와 과제/배정/제출의 경계, 배정마다 다른 기간(`opensAt`·`dueAt`) | Organization, Membership, LearningGroup, 교사 권한·기관 간 격리·성적 관리 |
 | 모바일 | 공용 UI와 HTTP 계약, Capacitor 설정 초안, 정적 export 성공 | runtime·native 프로젝트, native 인증·CORS·기기 저장소, 실기·스토어 출시 |
 | 운영 | Oracle 배포, NPM HTTPS, 전용 DB·제한 계정·TLS, CI 후 배포·앱 복구 | 백업 복원 훈련, 모니터링·보관 정책 확장 |
 | AI | 모델 호출 없음 | 편집기와 같은 초안 형식으로 생성·검증·검수, 평가·비용 관리 |
@@ -54,7 +54,7 @@
 Concept                       → 개념(평가 여부), ConceptDefinition → 범위별 호칭·뜻풀이
 DiagnosticVersion             → DiagnosticRun.document + answers
 개인 LearningScope → Enrollment       → LessonVersion(+ 섹션·블록·문항 행)
-개인 LearningScope → Assignment       → AssignmentItem.problemSnapshot
+개인 LearningScope → Assignment       → ProblemSetVersion(+ 문항 행); AssignmentItem은 고른 문제 ID·순서
                 └─ AssignmentRecipient → Submission
                                             ├─ Attempt
                                             └─ SubmissionItem: 확정 Attempt
