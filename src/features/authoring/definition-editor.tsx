@@ -183,8 +183,6 @@ export function DefinitionPanel({ lessons, concepts, mayEditDictionary, onList, 
           <select disabled={busy || !!edit} value={scopeKey} onChange={(event) => pick('lesson', event.target.value)}>
             {lessons.map((item) => <option key={item.lessonKey} value={item.lessonKey}>{item.title}</option>)}
           </select></label>}
-        <button type="button" className="button secondary" disabled={busy || !!edit || (scopeKind === 'lesson' && !scopeKey)}
-          onClick={() => setReload((value) => value + 1)}>새로고침</button>
       </div>
 
       {busy && definitions === null && <p className="editor-note" role="status">뜻풀이를 불러오는 중이에요.</p>}
@@ -194,7 +192,7 @@ export function DefinitionPanel({ lessons, concepts, mayEditDictionary, onList, 
           {definitions.map((definition) => <div key={`${definition.scopeKind}:${definition.scopeKey}:${definition.conceptKey}`} className="role-row">
             <span className="role-who">
               <strong>{definition.label || definition.conceptLabel}</strong>
-              <small>{expert ? `${definition.conceptKey}${definition.label ? ` · ${definition.conceptLabel}` : ''}` : definition.summary || (definition.blocks.length ? '' : '이름만 있어요')}</small>
+              <small>{expert ? `${definition.conceptKey}${definition.label ? ` · ${definition.conceptLabel}` : ''}` : definition.summary || (definition.blocks.length ? '한 줄 설명 없이 본문만 있어요' : '이름만 있어요')}</small>
             </span>
             <button type="button" className="button secondary" disabled={busy} onClick={() => open(definition)}>고치기</button>
           </div>)}

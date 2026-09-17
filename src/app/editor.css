@@ -41,6 +41,10 @@
 /* The account's reading of this screen. It sits with the role because the two answer neighbouring
    questions — what this account may do, and how much of the machinery it wants to see. */
 .expert-toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--editor-help); cursor: pointer; }
+/* Where a preference of the account lives: after the work, not above it. */
+.authoring-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;
+  margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); }
+.authoring-foot small { font-size: var(--editor-help-size); color: var(--editor-help); }
 .expert-toggle input { width: 18px; height: 18px; accent-color: var(--green); }
 .expert-toggle span { white-space: nowrap; }
 .authoring-page .eyebrow { font-size: 10px; }
@@ -337,7 +341,6 @@
 .studio-order { font-size: 18px; color: var(--editor-help); padding-top: 2px; font-variant-numeric: tabular-nums; }
 .studio-draft-link { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; text-align: left; padding: 10px 0 0; line-height: 1.6; color: var(--editor-active-text); font-size: 13px; }
 .studio-order-actions { display: flex; }
-.editor-breadcrumb { display: flex; flex-wrap: wrap; gap: 10px; font-size: 13px; color: var(--editor-help); margin-bottom: 22px; }
 .inspector-heading { display: flex; align-items: center; justify-content: space-between; padding: 0 0 14px; font-size: 13px; gap: 12px; }
 .inspector-jump { display: none; }
 .editor-inspector { scroll-margin-top: 20px; }
