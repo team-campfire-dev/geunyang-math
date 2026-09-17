@@ -1,7 +1,8 @@
 import 'server-only';
 import { createHash } from 'node:crypto';
-import { lessonRecord, lessonRecords, currentDiagnostic, currentDefinitions } from './content-store';
+import { lessonRecord, lessonRecords, currentDiagnostic, currentDefinitions, publishedProblemRecords } from './content-store';
 import { recommend, reviewSelection, conceptReadiness, type Evidence } from '@/core/personalization';
+import { assignmentWindow, parseAssignmentPolicy, parseAssignmentSchedule, recipientDates, reviewPolicy } from '@/core/assignment';
 import { glossaryEntries } from '@/core/glossary';
 import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
@@ -129,14 +130,18 @@ export class LearningService {
         if (checks.has(p.problemVersionId) && !firstEvidence.has(p.problemVersionId)) firstEvidence.set(p.problemVersionId, { result, date: a.createdAt, conceptKeys: p.conceptKeys, delayed: false });
       }
     }
-    const assignmentProblems = recipients.flatMap(r => r.assignment.items.map(item => item.problemSnapshot as unknown as StoredProblem));
-    const assignmentTerms = await currentDefinitions(db, blockDefinitionRefs(assignmentProblems.flatMap(p => [...p.promptContent, ...p.hints])));
+    // An item names a question in the assignment's frozen problem set version, so the content is read there.
+    const assignmentProblems = await publishedProblemRecords(db, recipients.flatMap(r => r.assignment.items.map(item => item.problemVersionId)));
+    const assignmentTerms = await currentDefinitions(db, blockDefinitionRefs([...assignmentProblems.values()].flatMap(p => [...p.promptContent, ...p.hints])));
     const assignments: AssignmentView[] = recipients.map(r => {
       const submission = r.submissions[0];
       if (!submission) throw new Error('Missing initial submission');
       const lessonKey = enrollments.find(e => e.id === r.sourceEnrollmentId)?.lessonVersion.lessonKey ?? null;
+      const policy = parseAssignmentPolicy(r.assignment.policy);
+      const window = assignmentWindow(parseAssignmentSchedule(r.assignment.schedule), r);
       const items = r.assignment.items.map(item => {
-        const p = item.problemSnapshot as unknown as StoredProblem;
+        const p = assignmentProblems.get(item.problemVersionId);
+        if (!p) throw new Error(`Missing published problem ${item.problemVersionId}`);
         const matching = submission.attempts.filter(a => a.assignmentItemId === item.id);
         if (matching.some(a => (a.result as GradeResult).status !== 'invalid')) {
           for (const concept of concepts.filter(s => p.conceptKeys.includes(s.key))) if (concept.state === 'unknown') concept.state = 'practicing';
@@ -156,11 +161,12 @@ export class LearningService {
         const visibleAttempt = submission.status === 'submitted'
           ? submission.items.find(selected => selected.assignmentItemId === item.id)?.selectedAttempt
           : matching[matching.length - 1];
-        return { id: item.id, problem: publicProblem(p), attempt: visibleAttempt ? attemptView(visibleAttempt) : null };
+        // A policy without hints hides them the way a question without hints does.
+        return { id: item.id, problem: { ...publicProblem(p), hintAvailable: policy.hints && p.hintAvailable }, attempt: visibleAttempt ? attemptView(visibleAttempt) : null };
       });
       return { id: r.assignmentId, recipientId: r.id, title: r.assignment.title, lessonKey,
-        recommendedAt: r.recommendedAt.toISOString(), policy: r.assignmentPolicy as 'adaptive' | 'fixed',
-        status: r.status as 'assigned' | 'submitted', items, submissionId: submission.id,
+        recommendedAt: r.recommendedAt.toISOString(), opensAt: window.opensAt?.toISOString() ?? null, dueAt: window.dueAt?.toISOString() ?? null,
+        policy, status: r.status as 'assigned' | 'submitted', items, submissionId: submission.id,
         glossary: glossaryEntries(assignmentTerms, lessons),
         reason: typeof (r.assignment.policySnapshot as { reviewReason?: string }).reviewReason === 'string' ? (r.assignment.policySnapshot as { reviewReason: string }).reviewReason : undefined };
     });
@@ -209,7 +215,7 @@ export class LearningService {
       const index = record.sections.indexOf(section);
       if (record.sections.slice(0, index).some(s => !(enrollment.completedSectionIds as string[]).includes(s.sectionId))) throw conflict('앞의 학습 단계부터 이어가 주세요.');
       if ((enrollment.completedSectionIds as string[]).includes(section.sectionId)) throw conflict('완료한 단계의 시도는 바꿀 수 없어요.');
-      return { problem: record.problems.find(p => p.problemVersionId === problemId)!, scopeId: enrollment.scopeId, enrollmentId: enrollment.id, submissionId: undefined, assignmentItemId: undefined };
+      return { problem: record.problems.find(p => p.problemVersionId === problemId)!, scopeId: enrollment.scopeId, enrollmentId: enrollment.id, submissionId: undefined, assignmentItemId: undefined, hints: true };
     }
     const recipient = await tx.assignmentRecipient.findFirst({ where: { id: contextId, learnerUserId: userId, assignment: { learningScope: { ownerUserId: userId, kind: 'personal' } } }, include: { assignment: { include: { items: true } }, submissions: { orderBy: { submissionIndex: 'desc' } } } });
     if (!recipient) throw notFound();
@@ -217,7 +223,10 @@ export class LearningService {
     if (!submission || submission.status !== 'draft') throw conflict('제출이 완료된 과제는 수정할 수 없어요.');
     const item = recipient.assignment.items.find(item => item.problemVersionId === problemId);
     if (!item) throw notFound();
-    return { problem: item.problemSnapshot as unknown as StoredProblem, scopeId: recipient.assignment.ownerScopeId, enrollmentId: undefined, submissionId: submission.id, assignmentItemId: item.id };
+    const problem = (await publishedProblemRecords(tx, [item.problemVersionId])).get(item.problemVersionId);
+    if (!problem) throw notFound();
+    return { problem, scopeId: recipient.assignment.ownerScopeId, enrollmentId: undefined, submissionId: submission.id, assignmentItemId: item.id,
+      hints: parseAssignmentPolicy(recipient.assignment.policy).hints };
   }
 
   async act(userId: string, input: unknown): Promise<ActionResponse> {
@@ -292,6 +301,7 @@ export class LearningService {
             }
             case 'hint.open': {
               const target = await this.activity(tx, userId, action.context, action.contextId, action.problemVersionId);
+              if (!target.hints) throw conflict('이 과제는 힌트 없이 풀어요.');
               await tx.hintUse.upsert({ where: { userId_contextKind_contextId_problemVersionId: { userId, contextKind: action.context, contextId: action.contextId, problemVersionId: action.problemVersionId } },
                 create: { userId, contextKind: action.context, contextId: action.contextId, problemVersionId: action.problemVersionId }, update: {} });
               return { hint: target.problem.hints };
@@ -370,12 +380,16 @@ export class LearningService {
       evidence.push({ problemVersionId: p.problemVersionId, conceptKeys: p.conceptKeys, responseKind: p.responseSpec.kind, result, date: attempt.createdAt, check: checkIds.has(p.problemVersionId) });
     }
     const selection = reviewSelection(record.review.problemVersionIds.map(id => record.problems.find(p => p.problemVersionId === id)!), evidence, user.dailyMinutes);
+    // A review has a recommended moment, not a window: the schedule is empty and the recipient's dates stay so.
+    const schedule = {};
     return tx.assignment.create({ data: {
       ownerScopeId: scopeId, title: `${record.public.title} · 다시 풀기`, sourceLessonVersionId: record.public.versionId,
-      policySnapshot: { version: 1, audience: 'self-study', hints: 'on-request-assisted', results: 'after-item-attempt', solutions: 'not-exposed', reviewVersion: selection.version, reviewReason: selection.reason, dailyMinutes: user.dailyMinutes, intervalDays: selection.intervalDays },
-      items: { create: selection.items.map((problem, position) => ({ problemVersionId: problem.problemVersionId, position, problemSnapshot: asJson(problem) })) },
+      problemSetId: record.review.problemSetId, problemSetVersionId: record.review.problemSetVersionId,
+      policy: reviewPolicy, schedule, issuedAt: new Date(),
+      policySnapshot: { version: 1, audience: 'self-study', reviewVersion: selection.version, reviewReason: selection.reason, dailyMinutes: user.dailyMinutes, intervalDays: selection.intervalDays },
+      items: { create: selection.items.map((problem, position) => ({ problemVersionId: problem.problemVersionId, position })) },
       recipients: { create: { learnerUserId: userId, sourceEnrollmentId, recommendedAt: new Date(Date.now() + selection.intervalDays * 86400000),
-        submissions: { create: { submissionIndex: 1 } } } },
+        ...recipientDates(schedule, new Date()), submissions: { create: { submissionIndex: 1 } } } },
     } });
   }
 }

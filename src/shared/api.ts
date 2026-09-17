@@ -61,9 +61,25 @@ export type EnrollmentView = {
   id: string; lessonKey: string; lessonVersionId: string; completedSectionIds: string[];
   status: 'active' | 'completed'; attempts: AttemptView[];
 };
+/**
+ * What an assignment is for and how it is taken. Homework, exam and review are not kinds of
+ * thing but values here (docs/glossary.md): the same problem set can be issued under any of them.
+ */
+export type AssignmentPolicy = {
+  kind: 'homework' | 'exam' | 'review';
+  hints: boolean;
+  results: 'per-item' | 'after-submission';
+  solutions: 'never' | 'after-submission';
+};
+/** When an assignment opens and is due: at a moment, or (for the due date) so many days after the recipient's completion. */
+export type AssignmentSchedule = {
+  opens?: { kind: 'at'; at: string };
+  due?: { kind: 'at'; at: string } | { kind: 'after'; days: number };
+};
 export type AssignmentView = {
   id: string; recipientId: string; title: string; lessonKey: string | null;
-  recommendedAt: string; policy: 'adaptive' | 'fixed'; status: 'assigned' | 'submitted';
+  recommendedAt: string; opensAt: string | null; dueAt: string | null;
+  policy: AssignmentPolicy; status: 'assigned' | 'submitted';
   items: { id: string; problem: PublicProblem; attempt: AttemptView | null }[];
   submissionId: string;
   reason?: string;

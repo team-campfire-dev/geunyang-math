@@ -56,7 +56,7 @@ export async function removeRowsAddedSince(db: PrismaClient, before: Existing) {
   const collect = async <T extends { id: string }>(rows: Promise<T[]>) => (await rows).map(row => row.id);
   const scopes = await collect(db.learningScope.findMany({ where: { ownerUserId: { in: users } }, select: { id: true } }));
   const enrollments = await collect(db.enrollment.findMany({ where: { OR: [{ userId: { in: users } }, { lessonVersionId: { in: lessons } }] }, select: { id: true } }));
-  const assignments = await collect(db.assignment.findMany({ where: { OR: [{ ownerScopeId: { in: scopes } }, { sourceLessonVersionId: { in: lessons } }] }, select: { id: true } }));
+  const assignments = await collect(db.assignment.findMany({ where: { OR: [{ ownerScopeId: { in: scopes } }, { sourceLessonVersionId: { in: lessons } }, { problemSetVersionId: { in: setVersions } }] }, select: { id: true } }));
   const recipients = await collect(db.assignmentRecipient.findMany({ where: { OR: [{ assignmentId: { in: assignments } }, { learnerUserId: { in: users } }, { sourceEnrollmentId: { in: enrollments } }] }, select: { id: true } }));
   const submissions = await collect(db.submission.findMany({ where: { recipientId: { in: recipients } }, select: { id: true } }));
   const items = await collect(db.assignmentItem.findMany({ where: { assignmentId: { in: assignments } }, select: { id: true } }));

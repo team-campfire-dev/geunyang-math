@@ -228,6 +228,8 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     expect((await service.lessonDocument(first.public.lessonKey, user.id)).versionId).toBe(first.public.versionId);
     expect((await service.catalog()).find(c => c.lessonKey === first.public.lessonKey)?.versionId).toBe(third.public.versionId);
     expect(await db.assignmentItem.findMany({ where: { assignmentId: assignment.id }, orderBy: { id: 'asc' } })).toEqual(before);
+    // The assignment stays with the problem set version it was issued from, whatever the lesson publishes next.
+    expect((await db.assignment.findUniqueOrThrow({ where: { id: assignment.id } })).problemSetVersionId).toBe(first.review!.problemSetVersionId);
     const next = await learner();
     const enrollmentId = (await service.act(next.id, { action: 'enrollment.start', lessonKey: first.public.lessonKey })).enrollmentId!;
     expect((await db.enrollment.findUniqueOrThrow({ where: { id: enrollmentId } })).lessonVersionId).toBe(third.public.versionId);
