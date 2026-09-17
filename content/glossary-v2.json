@@ -5,155 +5,165 @@
     {
       "key": "fraction",
       "label": "분수",
-      "assessable": false
-    },
-    {
-      "key": "denominator",
-      "label": "분모",
-      "assessable": false
+      "assessable": true
     },
     {
       "key": "numerator",
       "label": "분자",
-      "assessable": false
+      "assessable": true
+    },
+    {
+      "key": "denominator",
+      "label": "분모",
+      "assessable": true
     },
     {
       "key": "equivalent-fraction",
       "label": "동치분수",
-      "assessable": false
+      "assessable": true
     },
     {
       "key": "reduce",
       "label": "약분",
-      "assessable": false
+      "assessable": true
     },
     {
       "key": "common-denominator",
       "label": "통분",
-      "assessable": false
+      "assessable": true
+    },
+    {
+      "key": "addition",
+      "label": "덧셈",
+      "assessable": true
     }
   ],
   "lessons": [],
+  "problemSets": [],
   "diagnostics": [],
   "definitions": [
     {
       "conceptKey": "fraction",
-      "summary": "전체를 똑같이 나눈 조각으로 수를 나타내는 방법이에요.",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "분수",
+      "summary": "두 정수의 비를 나타내는 수예요. 분모는 0이 아니어야 해요.",
       "blocks": [
         {
-          "blockId": "global:fraction:b1",
+          "blockId": "global:fraction:body",
           "kind": "core.rich_text",
           "typeVersion": 1,
           "required": true,
           "payload": {
-            "text": "하나를 똑같은 크기로 나눈 다음, 그 조각을 몇 개 세었는지로 나타낸 수예요. $3/4$은 넷으로 나눈 조각 중 세 개를 뜻해요."
-          }
-        },
-        {
-          "blockId": "global:fraction:b2",
-          "kind": "core.figure",
-          "typeVersion": 1,
-          "required": false,
-          "fallback": "넷으로 나눈 조각 중 세 개를 칠한 그림이에요.",
-          "payload": {
-            "alt": "넷으로 나눈 막대에서 세 조각이 칠해진 그림",
-            "caption": "3/4",
-            "primitive": {
-              "kind": "fraction_strip",
-              "parts": 4,
-              "filled": 3
-            }
-          }
-        }
-      ]
-    },
-    {
-      "conceptKey": "denominator",
-      "summary": "전체를 몇 조각으로 나누었는지 알려주는 아래쪽 수예요.",
-      "blocks": [
-        {
-          "blockId": "global:denominator:b1",
-          "kind": "core.rich_text",
-          "typeVersion": 1,
-          "required": true,
-          "payload": {
-            "text": "분수에서 가로줄 아래에 있는 수예요. 전체를 똑같이 몇 조각으로 나누었는지를 말해 줘요. 분모가 클수록 조각 하나는 작아져요."
-          }
-        },
-        {
-          "blockId": "global:denominator:b2",
-          "kind": "core.figure",
-          "typeVersion": 1,
-          "required": false,
-          "fallback": "전체를 네 조각으로 나눈 그림이에요.",
-          "payload": {
-            "alt": "네 조각으로 나뉜 빈 막대",
-            "caption": "분모 4 · 네 조각으로 나눈 전체",
-            "primitive": {
-              "kind": "fraction_strip",
-              "parts": 4,
-              "filled": 0
-            }
+            "text": "정수 $a$와 0이 아닌 정수 $b$로 $\\frac{a}{b}$처럼 나타내는 수예요. 처음에는 전체 하나를 똑같이 나눈 조각으로 이해할 수 있어요. $\\frac{3}{4}$은 4등분한 조각 3개예요. 분수는 1보다 클 수도 있어요. $\\frac{5}{4}$은 같은 조각 5개이므로 $1\\frac{1}{4}$이에요."
           }
         }
       ]
     },
     {
       "conceptKey": "numerator",
-      "summary": "나눈 조각 중 몇 개를 세었는지 알려주는 위쪽 수예요.",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "분자",
+      "summary": "분수에서 가로선 위에 쓰는 수예요.",
       "blocks": [
         {
-          "blockId": "global:numerator:b1",
+          "blockId": "global:numerator:body",
           "kind": "core.rich_text",
           "typeVersion": 1,
           "required": true,
           "payload": {
-            "text": "분수에서 가로줄 위에 있는 수예요. 분모가 정한 크기의 조각을 몇 개 가지고 있는지를 말해 줘요."
+            "text": "분수 $\\frac{3}{4}$에서 위의 3이 분자예요. 전체를 똑같이 나눈 상황에서는 그 조각을 몇 개 세었는지 나타내요. $\\frac{5}{4}$의 분자는 5이고, 전체 하나보다 많은 양도 나타낼 수 있어요."
+          }
+        }
+      ]
+    },
+    {
+      "conceptKey": "denominator",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "분모",
+      "summary": "분수에서 가로선 아래에 쓰는 0이 아닌 수예요.",
+      "blocks": [
+        {
+          "blockId": "global:denominator:body",
+          "kind": "core.rich_text",
+          "typeVersion": 1,
+          "required": true,
+          "payload": {
+            "text": "분수 $\\frac{3}{4}$에서 아래의 4가 분모예요. 전체 하나를 똑같이 나눈 상황에서는 전체를 몇 조각으로 나눴는지 나타내요. 분모가 4이면 한 조각은 전체의 $\\frac{1}{4}$이에요. 0으로 나눌 수 없으므로 분모는 0이 될 수 없어요."
           }
         }
       ]
     },
     {
       "conceptKey": "equivalent-fraction",
-      "summary": "생김새는 달라도 같은 크기를 나타내는 분수예요.",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "동치분수",
+      "summary": "모양은 달라도 값이 같은 분수예요.",
       "blocks": [
         {
-          "blockId": "global:equivalent-fraction:b1",
+          "blockId": "global:equivalent-fraction:body",
           "kind": "core.rich_text",
           "typeVersion": 1,
           "required": true,
           "payload": {
-            "text": "$1/2$과 $2/4$처럼 조각을 세는 방식만 다르고 실제 크기는 같은 분수예요. 분모와 분자에 같은 수를 곱하거나 나누면 만들 수 있어요."
+            "text": "같은 전체에서 $\\frac{1}{2}$과 $\\frac{2}{4}$은 같은 양을 나타내는 동치분수예요. 분자와 분모에 같은 0이 아닌 수를 곱하거나 나누어도 값은 변하지 않아요."
           }
         }
       ]
     },
     {
       "conceptKey": "reduce",
-      "summary": "분모와 분자를 같은 수로 나누어 더 간단하게 쓰는 일이에요.",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "약분",
+      "summary": "분자와 분모를 같은 공약수로 나누어 간단히 나타내는 것이에요.",
       "blocks": [
         {
-          "blockId": "global:reduce:b1",
+          "blockId": "global:reduce:body",
           "kind": "core.rich_text",
           "typeVersion": 1,
           "required": true,
           "payload": {
-            "text": "크기는 그대로 두고 표현만 간단하게 만드는 일이에요. $6/8$의 분모와 분자를 각각 2로 나누면 $3/4$이 돼요. 더 나눌 수 없을 때까지 줄인 분수를 기약분수라고 해요."
+            "text": "$\\frac{6}{9}$의 분자와 분모를 3으로 나누면 $\\frac{2}{3}$이에요. 이렇게 두 수를 같은 공약수로 나누는 것이 약분이에요. 더 이상 약분할 수 없을 때까지 나누면 기약분수가 돼요."
           }
         }
       ]
     },
     {
       "conceptKey": "common-denominator",
-      "summary": "분모가 다른 분수들의 분모를 같게 맞추는 일이에요.",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "통분",
+      "summary": "여러 분수의 분모가 같도록 동치분수로 바꾸는 것이에요.",
       "blocks": [
         {
-          "blockId": "global:common-denominator:b1",
+          "blockId": "global:common-denominator:body",
           "kind": "core.rich_text",
           "typeVersion": 1,
           "required": true,
           "payload": {
-            "text": "조각 크기가 다르면 그대로 더할 수 없어요. 동치분수를 이용해 분모를 같게 맞추면 조각 크기가 같아져서 분자끼리 더할 수 있어요."
+            "text": "$\\frac{1}{2}$과 $\\frac{1}{3}$의 분모를 6으로 맞추면 $\\frac{3}{6}$과 $\\frac{2}{6}$이 돼요. 이를 통분이라고 해요. 분모만 바꾸지 않고 분자에도 같은 수를 곱해야 각각의 값이 그대로예요."
+          }
+        }
+      ]
+    },
+    {
+      "conceptKey": "addition",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "덧셈",
+      "summary": "두 수나 양을 합하는 연산이에요.",
+      "blocks": [
+        {
+          "blockId": "global:addition:body",
+          "kind": "core.rich_text",
+          "typeVersion": 1,
+          "required": true,
+          "payload": {
+            "text": "$3+2=5$처럼 수나 양을 합하는 것을 덧셈이라고 해요. 길이끼리, 같은 단위의 양끼리 더해요. 분수도 같은 단위로 맞추면 $\\frac{1}{4}+\\frac{2}{4}=\\frac{3}{4}$처럼 더할 수 있어요."
           }
         }
       ]

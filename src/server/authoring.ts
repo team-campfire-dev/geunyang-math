@@ -1,4 +1,5 @@
 import 'server-only';
+import { unfinishedIssues } from '@/shared/authoring-checks';
 import { z } from 'zod';
 import type { PrismaClient } from '@prisma/client';
 import { canonicalJson, ContentError } from '@/core/content-bundle';
@@ -30,16 +31,16 @@ const answerNumber = z.number().int().min(Number.MIN_SAFE_INTEGER).max(Number.MA
 const editSchema = z.object({
   meta: z.object({
     versionId: id.regex(/^[a-zA-Z0-9:._-]+$/),
-    title: z.string().trim().min(1).max(191),
-    summary: z.string().trim().min(1).max(500),
-    estimatedMinutes: z.number().int().min(1).max(240),
-    conceptKeys: z.array(id.max(100)).min(1).max(50),
+    title: z.string().max(191),
+    summary: z.string().max(500),
+    estimatedMinutes: z.number().int().min(0).max(240),
+    conceptKeys: z.array(id.max(100)).max(50),
     prerequisiteConceptKeys: z.array(id.max(100)).max(50).optional(),
   }).strict(),
   sections: z.array(z.object({
     sectionId: id,
     role: z.enum(['explanation', 'worked_example', 'practice', 'check', 'summary']),
-    title: z.string().min(1).max(500),
+    title: z.string().max(500),
     contentBlocks: blockList,
   }).strict()).min(1).max(50),
   reviewBlockId: id.nullable().optional(),
@@ -65,8 +66,9 @@ export const authoringActionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('course.reorder'), courseKey: id.max(100), lessonKeys: z.array(id).max(1000) }).strict(),
   z.object({ action: z.literal('concept.create'), key: z.string().regex(lessonKeyPattern), label: z.string().trim().min(1).max(191) }).strict(),
   z.object({ action: z.literal('draft.create'), lessonKey: id }).strict(),
+  z.object({ action: z.literal('lesson.read'), versionId: id }).strict(),
   z.object({ action: z.literal('lesson.create'), courseKey: id.max(100), lessonKey: z.string().regex(lessonKeyPattern),
-    title: z.string().trim().min(1).max(191), conceptKeys: z.array(id.max(100)).min(1).max(50) }).strict(),
+    title: z.string().trim().min(1).max(191), conceptKeys: z.array(id.max(100)).max(50) }).strict(),
   z.object({ action: z.literal('draft.review'), draftId: id, asking: z.boolean() }).strict(),
   z.object({ action: z.literal('draft.save'), draftId: id, edit: editSchema }).strict(),
   z.object({ action: z.literal('draft.validate'), draftId: id }).strict(),
@@ -217,7 +219,7 @@ export class AuthoringService {
 
   private summary(row: Omit<DraftRow, 'document' | 'ownerKind'>, userId: string): DraftSummary {
     return {
-      id: row.id, lessonKey: row.ownerKey, versionId: row.versionId, baseVersionId: row.baseVersionId, title: row.title,
+      id: row.id, lessonKey: row.ownerKey, versionId: row.versionId, baseVersionId: row.baseVersionId, title: row.title || '제목 없는 수업',
       status: row.status === 'published' ? 'published' : row.status === 'review' ? 'review' : 'draft',
       publishedVersionId: row.publishedVersionId,
       updatedAt: row.updatedAt.toISOString(), authorName: row.author.displayName, mine: row.authorId === userId,
@@ -309,9 +311,9 @@ export class AuthoringService {
     const [drafts, versions, courses, accounts, concepts, account, identities] = await Promise.all([
       this.db.contentDraft.findMany({ where: { ownerKind: 'lesson', ...(mayEditEveryDraft(role) ? {} : { authorId: userId }) },
         orderBy: { updatedAt: 'desc' }, select: { id: true, ownerKey: true, versionId: true, baseVersionId: true, title: true,
-          status: true, authorId: true, publishedVersionId: true, updatedAt: true, ...withAuthor } }),
+          status: true, authorId: true, publishedVersionId: true, updatedAt: true, document: true, ...withAuthor } }),
       this.db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }],
-        select: { id: true, lessonKey: true, title: true, lesson: { select: { course: { select: { key: true } } } } } }),
+        select: { id: true, lessonKey: true, title: true, metadata: true, lesson: { select: { course: { select: { key: true } } } } } }),
       this.db.course.findMany({ orderBy: [{ createdAt: 'asc' }, { key: 'asc' }], select: { key: true, title: true, summary: true } }),
       this.accounts(userId, role),
       this.db.concept.findMany({ orderBy: [{ assessable: 'desc' }, { label: 'asc' }], select: { key: true, label: true, assessable: true } }),
@@ -319,10 +321,11 @@ export class AuthoringService {
       this.db.lesson.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }], select: { key: true, course: { select: { key: true } } } }),
     ]);
     const openDrafts = new Set(drafts.filter((draft) => draft.status !== 'published').map((draft) => draft.ownerKey));
-    const byKey = new Map<string, { title: string; courseKey: string; versions: string[] }>();
+    const byKey = new Map<string, { title: string; courseKey: string; versions: string[]; conceptKeys: string[] }>();
     for (const version of versions) {
-      const entry = byKey.get(version.lessonKey) ?? { title: version.title, courseKey: version.lesson.course.key, versions: [] };
+      const entry = byKey.get(version.lessonKey) ?? { title: version.title, courseKey: version.lesson.course.key, versions: [], conceptKeys: [] };
       entry.title = version.title;
+      entry.conceptKeys = (version.metadata as unknown as { public: { conceptKeys: string[] } }).public.conceptKeys;
       entry.versions.push(version.id);
       byKey.set(version.lessonKey, entry);
     }
@@ -338,7 +341,9 @@ export class AuthoringService {
         const draft = drafts.find((item) => item.ownerKey === identity.key);
         // An unpublished lesson is visible only if this account can open its draft.
         if (!entry && !draft) return [];
-        return [{ lessonKey: identity.key, courseKey: identity.course.key, title: entry?.title ?? draft!.title,
+        return [{ lessonKey: identity.key, courseKey: identity.course.key, title: entry?.title || draft?.title || '제목 없는 수업',
+          conceptKeys: [...new Set([...(entry?.conceptKeys ?? []), ...drafts.filter(d => d.ownerKey === identity.key && d.status !== 'published')
+            .flatMap(d => (d.document as unknown as StoredLesson).public.conceptKeys)])],
           latestVersionId: entry?.versions.at(-1) ?? null,
           suggestedVersionId: suggestVersionId(identity.key, entry?.versions ?? []), hasDraft: openDrafts.has(identity.key) }];
       }),
@@ -510,7 +515,7 @@ export class AuthoringService {
    * new wording at once. That is the bargain the glossary makes — a paragraph links a concept by key
    * rather than pinning a text, so a correction republishes nothing. Saving runs the CLI's own import,
    * so a definition that would break a reference is refused here for the same reason it would be
-   * there. A concept nobody has named yet is made along the way, not assessable.
+   * there. A concept nobody has named yet is made along the way and can also be selected in lessons and questions.
    */
   async saveDefinition(userId: string, edit: DefinitionEdit): Promise<AuthoringResponse> {
     await this.requireDefinitionScope(userId, edit.scopeKind, edit.scopeKey);
@@ -521,7 +526,7 @@ export class AuthoringService {
     const blocks = edit.blocks.map(pruneBlock).map((block, index) => ({ ...block, blockId: `${stem}:b${index + 1}` }));
     const definition = { conceptKey: edit.conceptKey, scopeKind: edit.scopeKind, scopeKey: edit.scopeKey,
       ...(edit.label.trim() ? { label: edit.label.trim() } : {}), ...(edit.summary.trim() ? { summary: edit.summary.trim() } : {}), blocks };
-    const concepts = !known && edit.newConcept ? [{ key: edit.conceptKey, label: edit.newConcept.label, assessable: false }] : [];
+    const concepts = !known && edit.newConcept ? [{ key: edit.conceptKey, label: edit.newConcept.label, assessable: true }] : [];
     try {
       await importContent(this.db, { schemaVersion: 1, concepts, lessons: [], diagnostics: [], definitions: [definition] });
     } catch (error) {
@@ -564,6 +569,20 @@ export class AuthoringService {
   async draftHint(userId: string, draftId: string, problemVersionId: string): Promise<AuthoringResponse> {
     const problem = await this.draftProblem(userId, draftId, problemVersionId);
     return { workspace: await this.workspace(userId), hint: problem.hints };
+  }
+
+  /** Read a frozen version without creating an editable draft or changing publication state. */
+  async readLesson(userId: string, versionId: string): Promise<AuthoringResponse> {
+    await this.require(userId);
+    const record = await lessonRecord(this.db, versionId);
+    if (!record) throw new AppError(404, 'lesson_missing', '발행한 수업을 찾을 수 없어요.');
+    const document = storedLessonOf(record);
+    const versions = [...new Set(problemSetRefs(document).map(ref => ref.problemSetVersionId))];
+    const sets: ResolvedSets = { published: await problemSetRecords(this.db, versions), drafted: new Map() };
+    const row: DraftRow = { id: `published:${versionId}`, ownerKind: 'lesson', ownerKey: document.public.lessonKey,
+      versionId, baseVersionId: versionId, title: document.public.title, document, status: 'published', authorId: '',
+      publishedVersionId: versionId, updatedAt: new Date(0), author: { displayName: '발행판' } };
+    return { workspace: await this.workspace(userId), draft: await this.detail(row, userId, [], sets) };
   }
 
   async createDraft(userId: string, lessonKey: string): Promise<AuthoringResponse> {
@@ -777,9 +796,9 @@ export class AuthoringService {
 
   /** What stops this draft from publishing: the lesson's own rules, and each set draft's. */
   private issues(document: StoredLesson, sets: ResolvedSets): DraftIssue[] {
-    const found: DraftIssue[] = [];
+    const found: DraftIssue[] = unfinishedIssues({ meta: document.public, sections: document.sections, problems: this.problemsOf(document, sets).map(draftProblem) });
     try { validateLesson(document); }
-    catch (error) { found.push(...describeContentError(error, { sections: document.sections, problems: [] })); }
+    catch (error) { found.push(...describeContentError(error, { sections: document.sections, problems: [] }).filter(issue => !found.some(existing => existing.field && existing.field === issue.field && existing.sectionId === issue.sectionId && !existing.blockId && !issue.blockId))); }
     for (const ref of problemSetRefs(document)) {
       if (!ref.blockId) continue;
       const set = this.setOf(sets, ref.problemSetVersionId);
@@ -877,6 +896,7 @@ export class AuthoringService {
       case 'course.save': return this.saveCourse(userId, action.key, action.title, action.summary, action.creating);
       case 'course.reorder': return this.reorderCourse(userId, action.courseKey, action.lessonKeys);
       case 'concept.create': return this.createConcept(userId, action.key, action.label);
+      case 'lesson.read': return this.readLesson(userId, action.versionId);
       case 'draft.create': return this.createDraft(userId, action.lessonKey);
       case 'lesson.create': return this.createLesson(userId, action.courseKey, action.lessonKey, action.title, action.conceptKeys);
       case 'draft.review': return this.setReview(userId, action.draftId, action.asking);
@@ -907,11 +927,12 @@ function locate(view: DraftView, path: readonly PropertyKey[]): Omit<DraftIssue,
     const at = rest.indexOf('payload');
     return at >= 0 && at + 1 < rest.length ? rest.slice(at + 1).join('.') : undefined;
   };
+  if (root === 'public' && typeof index === 'string') return { field: index };
   if (root === 'sections' && typeof index === 'number') {
     const section = view.sections[index];
     if (!section) return {};
     const block = rest[0] === 'contentBlocks' && typeof rest[1] === 'number' ? section.contentBlocks[rest[1]] : undefined;
-    return { sectionId: section.sectionId, blockId: block?.blockId, field: block ? field() : undefined };
+    return { sectionId: section.sectionId, blockId: block?.blockId, field: block ? field() : rest[0] === 'title' ? 'title' : undefined };
   }
   if (root === 'problems' && typeof index === 'number') {
     const problem = view.problems[index];

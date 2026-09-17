@@ -1,8 +1,9 @@
-import initial from '../../prisma/seed/fractions.json';
+import initial from './fractions-v1.json';
 import { parseContentBundle, type ContentBundle } from '@/core/content-bundle';
 import { problemSetRefs, storedLessonOf, type LessonRecord, type StoredLesson, type StoredProblem, type StoredProblemSet } from '@/core/content';
 
-// The platform's own content, as db:seed installs it. Tests read it; the application never imports it.
+// Historical v1 content: keeps compatibility and learning-policy tests stable as the live curriculum changes.
+// The production seed has separate contract tests in seed-content.test.ts.
 const bundle = parseContentBundle(initial);
 function deepFreeze<T>(value: T): T {
   if (value && typeof value === 'object' && !Object.isFrozen(value)) {

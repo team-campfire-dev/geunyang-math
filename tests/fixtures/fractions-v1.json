@@ -1,0 +1,1475 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "fractions",
+      "title": "분수",
+      "summary": "분수가 무엇인지에서 시작해 크기를 맞추고 더하는 것까지 이어지는 기초 과정이에요.",
+      "lessons": [
+        {
+          "key": "fraction-meaning",
+          "order": 1
+        },
+        {
+          "key": "fraction-equivalence",
+          "order": 2
+        },
+        {
+          "key": "fraction-addition",
+          "order": 3
+        }
+      ],
+      "diagnostics": [
+        "starting-point"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "key": "fraction.meaning",
+      "label": "분수의 의미",
+      "assessable": true
+    },
+    {
+      "key": "fraction.equivalence",
+      "label": "동치분수와 약분",
+      "assessable": true
+    },
+    {
+      "key": "fraction.addition",
+      "label": "분수의 덧셈",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "fraction-meaning",
+        "versionId": "fraction-meaning:v1",
+        "title": "분수, 전체와 조각의 관계",
+        "summary": "일상의 나누기에서 시작해 분자와 분모의 뜻을 다시 익혀요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "fraction.meaning"
+        ],
+        "prerequisiteConceptKeys": [],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "fraction-meaning:explanation:v1",
+          "role": "explanation",
+          "title": "같은 크기로 나눈다는 것",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-meaning:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분수는 전체와 부분의 관계를 나타내요. 먼저 무엇을 전체 1로 볼지 정하고, 그것을 같은 크기로 나눠요.\n\n3/4는 전체를 같은 크기의 4조각으로 나눈 뒤 3조각을 고른 양이에요. 아래의 4는 분모, 위의 3은 분자예요. 조각 크기가 서로 다르면 조각 개수만으로 분수를 정할 수 없어요."
+              }
+            },
+            {
+              "blockId": "fraction-meaning:explanation:figure:v1",
+              "kind": "core.figure",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "alt": "전체를 같은 크기 4칸으로 나누고 3칸을 채운 막대",
+                "caption": "같은 크기의 4칸 중 3칸 = 3/4",
+                "primitive": {
+                  "kind": "fraction_strip",
+                  "parts": 4,
+                  "filled": 3,
+                  "label": "3/4"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-meaning:worked_example:v1",
+          "role": "worked_example",
+          "title": "함께 보기: 초콜릿 한 판",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-meaning:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "초콜릿 한 판을 같은 크기의 5조각으로 나눴고 2조각을 먹었어요.\n\n① 전체는 초콜릿 한 판이에요.\n② 전체를 5조각으로 나눴으니 분모는 5예요.\n③ 먹은 것은 2조각이니 분자는 2예요.\n따라서 먹은 양은 한 판의 2/5예요. 남은 양은 3/5이고, 둘을 합치면 한 판이에요."
+              }
+            },
+            {
+              "blockId": "fraction-meaning:example:strip:v1",
+              "kind": "math.fraction_strip",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "parts": 5,
+                "filled": 2,
+                "label": "먹은 양 2/5"
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-meaning:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-meaning:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "fraction-meaning:practice",
+                "problemSetVersionId": "fraction-meaning:practice:v1",
+                "problemVersionIds": [
+                  "fraction-meaning:practice-1:v1",
+                  "fraction-meaning:practice-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-meaning:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-meaning:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "fraction-meaning:check",
+                "problemSetVersionId": "fraction-meaning:check:v1",
+                "problemVersionIds": [
+                  "fraction-meaning:check-1:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-meaning:summary:v1",
+          "role": "summary",
+          "title": "오늘 기억할 두 가지",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-meaning:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모는 전체를 같은 크기로 나눈 조각 수, 분자는 그중 고른 조각 수예요. 전체가 무엇인지와 조각 크기가 같은지를 먼저 확인해요.\n\n수업을 마치면 복습 과제가 생겨요. 오늘의 풀이와 별도로 기록되며, 다음 날 다시 풀어 보면 기억을 확인하는 데 도움이 돼요."
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "fraction-meaning:review",
+        "problemSetVersionId": "fraction-meaning:review:v1",
+        "problemVersionIds": [
+          "fraction-meaning:homework-1:v1",
+          "fraction-meaning:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "fraction-equivalence",
+        "versionId": "fraction-equivalence:v1",
+        "title": "모양이 달라도 같은 분수",
+        "summary": "동치분수와 약분을 익히고, 같은 양을 다른 조각으로 표현해요.",
+        "estimatedMinutes": 15,
+        "conceptKeys": [
+          "fraction.equivalence"
+        ],
+        "prerequisiteConceptKeys": [
+          "fraction.meaning"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "fraction-equivalence:explanation:v1",
+          "role": "explanation",
+          "title": "조각 수가 달라도 양은 그대로",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-equivalence:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 전체를 기준으로 1/2과 2/4는 같은 양이에요. 반쪽 하나를 다시 둘로 나누면, 조각은 두 개가 되지만 실제 양은 그대로예요. 이렇게 크기가 같은 분수를 동치분수라고 해요.\n\n분자와 분모에 같은 0이 아닌 수를 곱하거나 나누면 분수의 값은 변하지 않아요. 분자와 분모를 공통된 자연수로 나누어 간단히 만드는 것을 약분이라고 해요."
+              }
+            },
+            {
+              "blockId": "fraction-equivalence:explanation:half:v1",
+              "kind": "math.fraction_strip",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "parts": 2,
+                "filled": 1,
+                "label": "1/2"
+              }
+            },
+            {
+              "blockId": "fraction-equivalence:explanation:quarters:v1",
+              "kind": "math.fraction_strip",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "parts": 4,
+                "filled": 2,
+                "label": "2/4 — 같은 전체에서 같은 양"
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-equivalence:worked_example:v1",
+          "role": "worked_example",
+          "title": "함께 보기: 4/6을 간단하게",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-equivalence:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "4/6을 약분해 볼게요.\n\n① 4와 6은 모두 2로 나누어떨어져요.\n② 분자와 분모를 함께 2로 나누면 (4 ÷ 2)/(6 ÷ 2) = 2/3이에요.\n③ 2와 3은 1 이외의 공약수가 없으므로 여기서 마쳐요.\n\n4/6과 2/3은 같은 값이지만, “더 이상 약분할 수 없는 분수”를 요구하는 문제에서는 2/3으로 써야 해요."
+              }
+            },
+            {
+              "blockId": "fraction-equivalence:example:strip:v1",
+              "kind": "math.fraction_strip",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "parts": 6,
+                "filled": 4,
+                "label": "4/6 = 2/3"
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-equivalence:practice:v1",
+          "role": "practice",
+          "title": "같은 양을 다르게 쓰기",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-equivalence:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "fraction-equivalence:practice",
+                "problemSetVersionId": "fraction-equivalence:practice:v1",
+                "problemVersionIds": [
+                  "fraction-equivalence:practice-1:v1",
+                  "fraction-equivalence:practice-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-equivalence:check:v1",
+          "role": "check",
+          "title": "약분 혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-equivalence:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "fraction-equivalence:check",
+                "problemSetVersionId": "fraction-equivalence:check:v1",
+                "problemVersionIds": [
+                  "fraction-equivalence:check-1:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-equivalence:summary:v1",
+          "role": "summary",
+          "title": "분자와 분모는 함께 바꿔요",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-equivalence:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분자와 분모에 같은 수를 곱하거나 나누면 크기가 같은 분수가 돼요. 한쪽만 바꾸면 일반적으로 값이 달라져요.\n\n약분한 뒤 분자와 분모를 함께 나눌 수 있는 1보다 큰 자연수가 없는지 확인해요. 값이 맞는 것과 문제에서 요구한 모양으로 쓰는 것은 모두 중요해요."
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "fraction-equivalence:review",
+        "problemSetVersionId": "fraction-equivalence:review:v1",
+        "problemVersionIds": [
+          "fraction-equivalence:homework-1:v1",
+          "fraction-equivalence:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "fraction-addition",
+        "versionId": "fraction-addition:v1",
+        "title": "분수 더하기, 조각 크기 맞추기",
+        "summary": "동치분수로 분모를 맞추고, 일상의 양을 더해 봐요.",
+        "estimatedMinutes": 18,
+        "conceptKeys": [
+          "fraction.addition"
+        ],
+        "prerequisiteConceptKeys": [
+          "fraction.meaning",
+          "fraction.equivalence"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "fraction-addition:explanation:v1",
+          "role": "explanation",
+          "title": "더하려면 단위가 같아야 해요",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-addition:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분수를 더할 때는 같은 전체를 기준으로 조각 크기를 맞춰요. 분모가 같으면 조각 크기가 같으므로 분자만 더해요. 예를 들어 1/5 + 2/5 = 3/5예요.\n\n분모가 다르면 동치분수로 바꾸어 분모를 같게 만들어요. 이것을 통분이라고 해요. 1/2 + 1/3에서 분모끼리 더해 2/5로 쓰면 안 돼요. 반 조각과 삼분의 일 조각은 크기가 다르기 때문이에요."
+              }
+            },
+            {
+              "blockId": "fraction-addition:explanation:strip:v1",
+              "kind": "math.fraction_strip",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "parts": 5,
+                "filled": 3,
+                "label": "1/5 조각 1개 + 2개 = 3개"
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-addition:worked_example:v1",
+          "role": "worked_example",
+          "title": "함께 보기: 1/2컵과 1/3컵",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-addition:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 계량컵으로 물 1/2컵과 1/3컵을 합쳐 볼게요.\n\n① 2와 3의 공통 배수인 6을 분모로 정해요.\n② 1/2 = 3/6, 1/3 = 2/6으로 바꿔요.\n③ 같은 크기의 1/6컵 조각을 세면 3개 + 2개 = 5개예요.\n④ 따라서 1/2 + 1/3 = 5/6컵이에요.\n\n분모는 조각의 크기를 나타내므로 그대로 두고 분자끼리 더해요."
+              }
+            },
+            {
+              "blockId": "fraction-addition:example:strip:v1",
+              "kind": "math.fraction_strip",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "parts": 6,
+                "filled": 5,
+                "label": "3/6 + 2/6 = 5/6"
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-addition:practice:v1",
+          "role": "practice",
+          "title": "조각 크기를 맞춰서 더하기",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-addition:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "fraction-addition:practice",
+                "problemSetVersionId": "fraction-addition:practice:v1",
+                "problemVersionIds": [
+                  "fraction-addition:practice-1:v1",
+                  "fraction-addition:practice-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-addition:check:v1",
+          "role": "check",
+          "title": "통분과 약분 혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-addition:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "fraction-addition:check",
+                "problemSetVersionId": "fraction-addition:check:v1",
+                "problemVersionIds": [
+                  "fraction-addition:check-1:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-addition:summary:v1",
+          "role": "summary",
+          "title": "통분 → 덧셈 → 약분",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-addition:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "① 같은 전체를 기준으로 생각해요.\n② 분모가 다르면 통분해 조각 크기를 맞춰요.\n③ 분모는 그대로 두고 분자를 더해요.\n④ 더 이상 약분할 수 없는지 확인해요.\n\n틀린 문제는 힌트와 함께 다시 풀어도 괜찮아요. 힌트를 본 풀이와 혼자 푼 풀이는 구분해 기록해요."
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "fraction-addition:review",
+        "problemSetVersionId": "fraction-addition:review:v1",
+        "problemVersionIds": [
+          "fraction-addition:homework-1:v1",
+          "fraction-addition:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "fraction-meaning:practice",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-meaning:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "fraction-meaning:practice-1:v1",
+          "conceptKeys": [
+            "fraction.meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-meaning:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "식빵 한 장을 같은 크기의 4조각으로 나눴어요. 그중 1조각을 먹었다면, 먹은 양은 전체의 얼마인가요? 분수로 입력해 보세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "hintAvailable": true,
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 4
+          },
+          "hints": [
+            {
+              "blockId": "fraction-meaning:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모에는 전체를 나눈 조각 수를, 분자에는 먹은 조각 수를 써요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "fraction-meaning:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체가 같은 크기의 4조각이고 먹은 것은 1조각이므로 1/4이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "fraction-meaning:practice-2:v1",
+          "conceptKeys": [
+            "fraction.meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-meaning:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "3/7에서 분모는 어떤 수인가요? 숫자 하나로 입력해 보세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "hintAvailable": true,
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hints": [
+            {
+              "blockId": "fraction-meaning:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분수에서 가로선 아래의 수가 분모예요. 전체를 같은 크기로 몇 조각 나누었는지 나타내요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "fraction-meaning:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모는 7이에요. 3/7은 전체를 같은 크기로 7조각 나눈 것 중 3조각을 뜻해요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "fraction-meaning:check",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-meaning:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "fraction-meaning:check-1:v1",
+          "conceptKeys": [
+            "fraction.meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-meaning:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "물 한 병을 같은 양의 8컵에 나눠 담았어요. 그중 5컵의 물은 원래 한 병의 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "hintAvailable": true,
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 8
+          },
+          "hints": [
+            {
+              "blockId": "fraction-meaning:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 병 전체가 8개의 같은 단위로 나뉘었고, 그중 5개를 골랐어요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "fraction-meaning:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 양의 8컵 중 5컵이므로 한 병의 5/8이에요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "fraction-meaning:review",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-meaning:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "fraction-meaning:homework-1:v1",
+          "conceptKeys": [
+            "fraction.meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-meaning:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 크기로 나눈 초콜릿 6조각 중 5조각이 남아 있어요. 남은 양은 초콜릿 전체의 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "hintAvailable": true,
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 6
+          },
+          "hints": [
+            {
+              "blockId": "fraction-meaning:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "남아 있는 조각 수와 처음의 전체 조각 수를 구분해 보세요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "fraction-meaning:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 6조각 중 5조각이 남았으므로 5/6이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "fraction-meaning:homework-2:v1",
+          "conceptKeys": [
+            "fraction.meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-meaning:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 시간을 같은 길이의 10구간으로 나눴어요. 그중 3구간을 공부했다면, 공부한 시간은 한 시간의 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "hintAvailable": true,
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 10
+          },
+          "hints": [
+            {
+              "blockId": "fraction-meaning:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 구간 수가 분모, 공부한 구간 수가 분자예요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "fraction-meaning:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 길이의 10구간 중 3구간이므로 3/10시간이에요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "fraction-equivalence:practice",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-equivalence:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "fraction-equivalence:practice-1:v1",
+          "conceptKeys": [
+            "fraction.equivalence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-equivalence:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1/2과 크기가 같은 분수를 □/8로 쓰려고 해요. □에 들어갈 정수를 입력해 보세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "hintAvailable": true,
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hints": [
+            {
+              "blockId": "fraction-equivalence:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모 2에 어떤 수를 곱하면 8이 되나요? 분자에도 같은 수를 곱해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "fraction-equivalence:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모를 2 × 4 = 8로 바꿨으니 분자도 1 × 4 = 4예요. 1/2 = 4/8이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "fraction-equivalence:practice-2:v1",
+          "conceptKeys": [
+            "fraction.equivalence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-equivalence:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "6/9를 더 이상 약분할 수 없는 분수로 써 보세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 2,
+            "denominator": 3,
+            "requiredForm": "reduced_fraction"
+          },
+          "hints": [
+            {
+              "blockId": "fraction-equivalence:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "6과 9를 모두 나눌 수 있는 가장 큰 자연수를 찾아 보세요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "fraction-equivalence:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "6과 9를 모두 3으로 나누면 2/3이에요. 2와 3은 1 이외의 공약수가 없어 더 약분할 수 없어요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "fraction-equivalence:check",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-equivalence:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "fraction-equivalence:check-1:v1",
+          "conceptKeys": [
+            "fraction.equivalence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-equivalence:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "10/14를 더 이상 약분할 수 없는 분수로 써 보세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 7,
+            "requiredForm": "reduced_fraction"
+          },
+          "hints": [
+            {
+              "blockId": "fraction-equivalence:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분자와 분모를 같은 수로 나눠야 크기가 그대로 유지돼요. 10과 14의 공약수를 찾아 보세요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "fraction-equivalence:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분자와 분모를 2로 나누면 10 ÷ 2 = 5, 14 ÷ 2 = 7이므로 5/7이에요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "fraction-equivalence:review",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-equivalence:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "fraction-equivalence:homework-1:v1",
+          "conceptKeys": [
+            "fraction.equivalence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-equivalence:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "3/4 = □/12가 되도록 □에 들어갈 정수를 입력해 보세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "hintAvailable": true,
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hints": [
+            {
+              "blockId": "fraction-equivalence:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모 4가 12가 되려면 3배가 되어야 해요. 분자에도 같은 규칙을 적용해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "fraction-equivalence:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분자와 분모에 3을 곱하면 3/4 = 9/12예요. 빈칸은 9예요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "fraction-equivalence:homework-2:v1",
+          "conceptKeys": [
+            "fraction.equivalence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-equivalence:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "12/20을 더 이상 약분할 수 없는 분수로 써 보세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 5,
+            "requiredForm": "reduced_fraction"
+          },
+          "hints": [
+            {
+              "blockId": "fraction-equivalence:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "12와 20을 모두 나눌 수 있는 수로 나눠 보세요. 한 번 더 나눌 수 있는지도 확인해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "fraction-equivalence:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "12와 20을 4로 나누면 3/5가 돼요. 3과 5에는 1 이외의 공약수가 없어요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "fraction-addition:practice",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-addition:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "fraction-addition:practice-1:v1",
+          "conceptKeys": [
+            "fraction.addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-addition:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1/7 + 3/7은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "hintAvailable": true,
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 4,
+            "denominator": 7
+          },
+          "hints": [
+            {
+              "blockId": "fraction-addition:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "조각 크기가 이미 같아요. 1/7 조각이 모두 몇 개가 되는지 세어 보세요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "fraction-addition:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1/7 조각 1개와 3개를 합치면 4개예요. 분모는 그대로 두어 4/7이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "fraction-addition:practice-2:v1",
+          "conceptKeys": [
+            "fraction.addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-addition:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1/2 + 1/4은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "hintAvailable": true,
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 4
+          },
+          "hints": [
+            {
+              "blockId": "fraction-addition:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1/2를 분모가 4인 동치분수로 바꾸면, 같은 크기의 조각끼리 더할 수 있어요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "fraction-addition:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1/2 = 2/4이므로 2/4 + 1/4 = 3/4이에요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "fraction-addition:check",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-addition:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "fraction-addition:check-1:v1",
+          "conceptKeys": [
+            "fraction.addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-addition:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1/3 + 1/6을 계산하고, 더 이상 약분할 수 없는 분수로 써 보세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hints": [
+            {
+              "blockId": "fraction-addition:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "먼저 두 분수를 분모 6으로 맞춰요. 더한 뒤 약분할 수 있는지 확인해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "fraction-addition:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1/3 = 2/6이므로 2/6 + 1/6 = 3/6이에요. 3으로 약분하면 1/2이에요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "fraction-addition:review",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-addition:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "fraction-addition:homework-1:v1",
+          "conceptKeys": [
+            "fraction.addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-addition:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "2/9 + 4/9를 계산하고, 더 이상 약분할 수 없는 분수로 써 보세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 2,
+            "denominator": 3,
+            "requiredForm": "reduced_fraction"
+          },
+          "hints": [
+            {
+              "blockId": "fraction-addition:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모가 같으므로 분자를 더해요. 계산 결과를 다시 약분해 보세요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "fraction-addition:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "2/9 + 4/9 = 6/9이고, 분자와 분모를 3으로 나누면 2/3이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "fraction-addition:homework-2:v1",
+          "conceptKeys": [
+            "fraction.addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-addition:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "물을 3/4리터 마시고 1/8리터 더 마셨어요. 모두 몇 리터를 마셨나요? 더 이상 약분할 수 없는 분수로 써 보세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 7,
+            "denominator": 8,
+            "requiredForm": "reduced_fraction"
+          },
+          "hints": [
+            {
+              "blockId": "fraction-addition:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "3/4을 분모가 8인 분수로 바꾸고 1/8을 더해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "fraction-addition:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "3/4 = 6/8이므로 6/8 + 1/8 = 7/8리터예요. 7/8은 더 약분할 수 없어요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "starting-point",
+      "courseKey": "fractions",
+      "name": "분수의 시작점 확인",
+      "versionId": "starting-point:v1",
+      "problems": [
+        {
+          "problemVersionId": "fraction-placement-v1:meaning-1",
+          "conceptKeys": [
+            "fraction.meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v1:meaning-1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 크기로 나눈 케이크 9조각 중 4조각이 남았어요. 전체 케이크에서 남은 양을 분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 4,
+            "denominator": 9
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fraction-placement-v1:meaning-2",
+          "conceptKeys": [
+            "fraction.meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v1:meaning-2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "5/12에서 전체를 같은 크기로 나눈 조각 수를 나타내는 수는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fraction-placement-v1:equivalence-1",
+          "conceptKeys": [
+            "fraction.equivalence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v1:equivalence-1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "2/3 = □/15가 되도록 빈칸에 들어갈 정수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fraction-placement-v1:equivalence-2",
+          "conceptKeys": [
+            "fraction.equivalence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v1:equivalence-2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "18/24를 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 4,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fraction-placement-v1:addition-1",
+          "conceptKeys": [
+            "fraction.addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v1:addition-1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "2/11 + 5/11은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 7,
+            "denominator": 11
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fraction-placement-v1:addition-2",
+          "conceptKeys": [
+            "fraction.addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v1:addition-2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1/4 + 1/6을 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 12,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [
+    {
+      "versionId": "fraction-placement-v1",
+      "diagnosticKey": "starting-point",
+      "title": "분수의 시작점 확인",
+      "description": "분수의 의미, 약분, 덧셈을 짧게 확인해요. 모르는 문제는 건너뛰어도 괜찮아요.",
+      "estimatedMinutes": 5,
+      "problemSet": {
+        "problemSetId": "starting-point",
+        "problemSetVersionId": "starting-point:v1",
+        "problemVersionIds": [
+          "fraction-placement-v1:meaning-1",
+          "fraction-placement-v1:meaning-2",
+          "fraction-placement-v1:equivalence-1",
+          "fraction-placement-v1:equivalence-2",
+          "fraction-placement-v1:addition-1",
+          "fraction-placement-v1:addition-2"
+        ]
+      }
+    }
+  ],
+  "definitions": []
+}

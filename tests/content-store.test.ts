@@ -6,7 +6,7 @@ import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { canonicalJson, parseContentBundle, validateReferences } from '@/core/content-bundle';
 import { blockOf, lessonRecord, currentDiagnostic, currentDefinitions, diagnosticDefinitions, exportContent, importContent, indexLessonDocument, publishBundle, verifyContent } from '@/server/content-store';
-import initial from '../prisma/seed/fractions.json';
+import initial from './fixtures/fractions-v1.json';
 import { diagnosticProblems, seedLessons, setsOf } from './fixtures/content';
 import { storedLessonOf } from '@/core/content';
 
@@ -172,6 +172,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     if (parsed.protocol !== 'mysql:' || !parsed.pathname.endsWith('_test')) throw new Error('Use an isolated _test database.');
     db = createDatabase(url!); service = new LearningService(db);
     existing = await existingRows(db);
+    await importContent(db, bundle());
   });
   afterAll(async () => {
     // A shared database keeps whatever a run leaves behind, so this run leaves nothing.
@@ -179,7 +180,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     await db?.$disconnect();
   });
   const learner = () => db.user.create({ data: { displayName: `content ${randomUUID()}`, learningScopes: { create: { kind: 'personal' } } } });
-  it('loads migration content exactly, retaining legacy hashes and all diagnostic questions', async () => {
+  it('loads historical content exactly, retaining all diagnostic questions', async () => {
     for (const c of seedLessons) {
       const row = await db.lessonVersion.findUniqueOrThrow({ where: { id: c.public.versionId } });
       // What the migration installed as one document still reads back out of its rows, exactly.

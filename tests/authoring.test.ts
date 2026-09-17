@@ -152,6 +152,7 @@ describe('naming a question, and keeping an answered one as it was answered', ()
     const problem = newProblem('fraction-meaning:practice-1:v1', ['fraction.meaning']);
     problem.hints.push({ blockId: 'fraction-meaning:shared:hint:v1', kind: 'core.rich_text', typeVersion: 1,
       required: true, payload: { text: '힌트예요.' } });
+    problem.solution = [{ ...structuredClone(problem.promptContent[0]), blockId: `${problem.problemVersionId}:solution` }];
     const renamed = renameProblem(problem, 'fraction-meaning:practice-1:v2');
     expect(renamed.promptContent[0].blockId).toBe('fraction-meaning:practice-1:v2:prompt');
     expect(renamed.solution[0].blockId).toBe('fraction-meaning:practice-1:v2:solution');
@@ -186,7 +187,7 @@ describe('naming a question, and keeping an answered one as it was answered', ()
   it('shows the preview the half of a question a learner may see', () => {
     const problem = newProblem('fraction-meaning:practice-1:v2', ['fraction.meaning']);
     expect(toPublicProblem(problem)).toEqual({ problemVersionId: problem.problemVersionId, conceptKeys: ['fraction.meaning'],
-      promptContent: problem.promptContent, responseSpec: { kind: 'rational' }, hintAvailable: false });
+      promptContent: problem.promptContent, responseSpec: { kind: 'integer' }, hintAvailable: false });
     problem.hints.push({ blockId: 'fraction-meaning:practice-1:v2:hint', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '힌트' } });
     problem.gradingSpec = { kind: 'rational', numerator: 1, denominator: 2, requiredForm: 'reduced_fraction' };
     expect(toPublicProblem(problem)).toMatchObject({ hintAvailable: true, responseSpec: { kind: 'rational', requiredForm: 'reduced_fraction' } });

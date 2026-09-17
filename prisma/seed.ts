@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { readFileSync } from 'node:fs';
 import { z } from 'zod';
-import { ContentError } from '../src/core/content-bundle';
+import { ContentError, parseContentBundle } from '../src/core/content-bundle';
 import { getDatabase } from '../src/server/db';
 import { importContent } from '../src/server/content-store';
 
@@ -13,9 +13,17 @@ import { importContent } from '../src/server/content-store';
  * The file carries answer keys, as the migration that first installed this content did.
  */
 async function seed() {
-  const input = JSON.parse(readFileSync(new URL('./seed/fractions.json', import.meta.url), 'utf8')) as unknown;
+  const input = parseContentBundle(JSON.parse(readFileSync(new URL('./seed/fractions.json', import.meta.url), 'utf8')));
+  const dictionary = parseContentBundle(JSON.parse(readFileSync(new URL('../content/glossary-v2.json', import.meta.url), 'utf8')));
   const db = getDatabase();
-  try { console.log(JSON.stringify({ seed: 'fractions', ...(await importContent(db, input)) })); }
+  try {
+    // The lessons link atomic concepts from their first publication. Install missing definitions
+    // in the same transaction; later seeds must preserve explanations edited in the authoring UI.
+    // Reviewed changes to the dictionary still go through content:publish and its checksum ledger.
+    const existing = new Set((await db.conceptDefinition.findMany({ where: { scopeKind: 'global', scopeKey: '' }, select: { conceptKey: true } })).map(row => row.conceptKey));
+    const definitions = dictionary.definitions.filter(definition => !existing.has(definition.conceptKey));
+    console.log(JSON.stringify({ seed: 'fractions', ...(await importContent(db, { ...input, definitions })) }));
+  }
   finally { await db.$disconnect(); }
 }
 

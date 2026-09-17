@@ -49,6 +49,29 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
       items: [{ kind: 'strip', x: 20, y: 80, width: 280, height: 40, parts: 4, filled: 3 }] },
   });
 
+  it('reads a published version without creating drafts and still requires an author role', async () => {
+    const author = await account('author'); const learner = await account();
+    const before = await db.contentDraft.count();
+    await expect(service.act(learner.id, { action: 'lesson.read', versionId: `${lessonKey}:v1` })).rejects.toThrow(/권한/);
+    const response = await service.act(author.id, { action: 'lesson.read', versionId: `${lessonKey}:v1` });
+    expect(response.draft).toMatchObject({ status: 'published', versionId: `${lessonKey}:v1` });
+    expect(response.draft!.edit.problems.length).toBeGreaterThan(0);
+    expect(await db.contentDraft.count()).toBe(before);
+    expect(response.workspace.lessons.find(l => l.lessonKey === lessonKey)!.conceptKeys!.length).toBeGreaterThan(0);
+  });
+
+  it('saves temporarily blank metadata without allowing it to publish', async () => {
+    const admin = await account('admin');
+    const draft = (await service.createDraft(admin.id, lessonKey)).draft!;
+    const edit = structuredClone(draft.edit);
+    edit.meta.title = ''; edit.meta.summary = ''; edit.meta.conceptKeys = []; edit.sections[0].title = '';
+    const saved = await service.act(admin.id, {action:'draft.save',draftId:draft.id,edit});
+    expect(saved.draft!.edit.meta.title).toBe('');
+    expect(saved.draft!.issues.length).toBeGreaterThan(0);
+    await expect(service.publishDraft(admin.id,draft.id)).rejects.toThrow(/고칠 곳/);
+    await service.deleteDraft(admin.id,draft.id);
+  });
+
   it('manages course information and complete lesson order only as an administrator', async () => {
     const admin = await account('admin');
     const author = await account('author');
@@ -94,6 +117,9 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const saved = await service.act(admin.id, { action: 'draft.save', draftId: draft.id, edit });
     expect(saved.draft!.review).toMatchObject({ problemVersionIds: [edit.problems[0].problemVersionId] });
     expect(saved.draft!.edit.reviewBlockId).toBe(activity.blockId);
+    const completed = structuredClone(saved.draft!.edit);
+    completed.meta.summary = '수업 소개'; completed.sections[0].title = '개념 살펴보기'; completed.sections[0].contentBlocks[0].payload.text = '설명 본문'; completed.problems[0].promptContent[0].payload.text = '0을 입력해 주세요.';
+    await service.saveDraft(admin.id, draft.id, completed);
     await service.publishDraft(admin.id, draft.id);
     const published = await lessonRecord(db, draft.versionId);
     expect(published!.public.prerequisiteConceptKeys).toEqual([concepts[1].key]);
@@ -195,8 +221,9 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     expect(created.draft!.edit.sections.map((section) => section.role)).toEqual(['explanation', 'practice']);
     expect(created.draft!.edit.problems).toHaveLength(1);
     expect(created.draft!.edit.problems[0].conceptKeys).toEqual([conceptKey]);
-    // What it starts as is already a document publishing would take.
-    expect(created.draft!.issues).toEqual([]);
+    // A starter is saved, but instructional copy must never be published by accident.
+    expect(created.draft!.issues.length).toBeGreaterThan(0);
+    await expect(service.publishDraft(admin.id, created.draft!.id)).rejects.toThrow(/고칠 곳/);
 
     await expect(service.createLesson(admin.id, 'fractions', key, '같은 키', [conceptKey])).rejects.toThrow(/수업 키/);
     await expect(service.createLesson(admin.id, 'fractions', lessonKey, '발행된 키', [conceptKey])).rejects.toThrow(/수업 키/);
@@ -216,10 +243,13 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const saved = await service.saveDraft(admin.id, draftId, widened);
     expect(saved.draft!.edit.meta.conceptKeys).toEqual(widened.meta.conceptKeys);
     expect(saved.draft!.issues).toEqual([]);
-    // A lesson has to teach something, and what the editor may send is where that is enforced.
+    // Classification may be unfinished in a saved draft; publication is still blocked.
     const emptied = structuredClone(created.draft!.edit);
     emptied.meta.conceptKeys = [];
-    await expect(service.act(admin.id, { action: 'draft.save', draftId, edit: emptied })).rejects.toThrow();
+    const incomplete = await service.act(admin.id, { action: 'draft.save', draftId, edit: emptied });
+    expect(incomplete.draft!.edit.meta.conceptKeys).toEqual([]);
+    expect(incomplete.draft!.issues.length).toBeGreaterThan(0);
+    await expect(service.publishDraft(admin.id, draftId)).rejects.toThrow(/고칠 곳/);
     await service.deleteDraft(admin.id, draftId);
   });
 
@@ -597,7 +627,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
       blocks: [{ blockId: 'definition:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '뜻을 풀어 썼어요.' } }] });
     expect(saved.savedDefinition).toEqual({ conceptKey });
     // The concept came into being with its definition, and is not one a question may assess.
-    expect(await db.concept.findUniqueOrThrow({ where: { key: conceptKey } })).toMatchObject({ label: '이 수업의 낱말', assessable: false });
+    expect(await db.concept.findUniqueOrThrow({ where: { key: conceptKey } })).toMatchObject({ label: '이 수업의 낱말', assessable: true });
     // Blocks are named after the row that holds them, so the editor never chose the ID.
     const row = await db.conceptDefinition.findUniqueOrThrow({ where: { conceptKey_scopeKind_scopeKey: { conceptKey, scopeKind: 'lesson', scopeKey: lessonKey } } });
     expect((await definitionRecords(db, [row]))[0].blocks[0].blockId).toBe(`lesson:${lessonKey}:${conceptKey}:b1`);

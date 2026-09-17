@@ -24,7 +24,7 @@ export const sceneColors = Object.keys(scenePalette) as SceneColor[];
 export const sceneColorLabels: Record<SceneColor, string> = {
   ink: '먹색', muted: '회색', line: '연한 선', paper: '종이색', white: '흰색',
   green: '초록', 'deep-green': '진한 초록', 'light-green': '연한 초록', orange: '주황',
-  fill: '막대 초록', 'fill-soft': '연한 막대 초록', sand: '모래', sky: '하늘', none: '없음',
+  fill: '강조색', 'fill-soft': '연한 강조색', sand: '모래', sky: '하늘', none: '없음',
 };
 const hex = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
 export const isSceneColor = (value: unknown): value is string =>

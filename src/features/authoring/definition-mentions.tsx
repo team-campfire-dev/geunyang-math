@@ -97,7 +97,7 @@ export function useDefinitionMentions({ payload, definitions, onChange }: {
       </li>)}
     </ul>
     : <p className="editor-note term-mentions-empty">
-      「{mention.query}」에 맞는 뜻풀이가 없어요. 「개념과 뜻풀이」에서 먼저 써 주세요.</p>);
+      「{mention.query}」에 맞는 뜻풀이가 없어요. 「뜻풀이 사전」에서 먼저 써 주세요.</p>);
 
   return { bind, picker };
 }

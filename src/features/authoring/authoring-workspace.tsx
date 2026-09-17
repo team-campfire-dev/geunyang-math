@@ -19,6 +19,9 @@ import { AddBlock, BlockCard } from './block-editor';
 import { LessonSheet, type Picked } from './lesson-sheet';
 import { ProblemPanel, ProblemSetEditor, ConceptPicker } from './problem-editor';
 import { DefinitionPanel } from './definition-editor';
+import { invalidAnswers, unfinishedIssues, type AnswerInput } from '@/shared/authoring-checks';
+import { discardChanges } from './unsaved-form';
+import { ConceptLibrary } from './concept-library';
 import { CourseLibrary } from './course-library';
 
 /** How long the editor waits after the last keystroke before it writes what is on screen. */
@@ -49,9 +52,12 @@ export function AuthoringWorkspace() {
   const [confirming, setConfirming] = useState(false);
   const [loading, setLoading] = useState(true);
   const [matches, setMatches] = useState<AccountRole[] | null>(null);
-  const [libraryPage, setLibraryPage] = useState<'courses' | 'dictionary' | 'settings'>('courses');
+  const [libraryPage, setLibraryPage] = useState<'courses' | 'concepts' | 'dictionary' | 'settings'>('courses');
   const [courseKey, setCourseKey] = useState<string | null>(null);
   const [showDefinitions, setShowDefinitions] = useState(false);
+  const [libraryDirty, setLibraryDirty] = useState(false);
+  const [definitionDirty, setDefinitionDirty] = useState(false);
+  const [answerInputs, setAnswerInputs] = useState<Record<string, AnswerInput>>({});
   const [saved, setSaved] = useState('');
   const [saving, setSaving] = useState<'idle' | 'saving' | 'failed'>('idle');
   const [removed, setRemoved] = useState<{ what: string; at: number } | null>(null);
@@ -63,6 +69,9 @@ export function AuthoringWorkspace() {
    * optional fields a form leaves behind, and comparing against that would read as a change nobody
    * made and keep the draft forever unsaved.
    */
+  const invalid = edit ? invalidAnswers(edit, answerInputs) : [];
+  const invalidRef = useRef(invalid); invalidRef.current = invalid;
+  const localIssues = edit && draft?.status !== 'published' ? unfinishedIssues(edit) : [];
   const dirty = !!draft && !!edit && editJson !== saved;
   // Work that has awaited something reads these instead: by then the rendered values are a moment old.
   const latest = useRef(editJson);
@@ -78,7 +87,8 @@ export function AuthoringWorkspace() {
     latest.current = JSON.stringify(next);
     markSaved(latest.current);
     setSaving('idle');
-    setSectionIndex((current) => Math.min(current, Math.max(detail.edit.sections.length - 1, 0)));
+    setSectionIndex(0);
+    setAnswerInputs({}); setError(null); setNotice(null); setLibraryDirty(false); setDefinitionDirty(false);
     setSelected(null);
     setTrying(false);
     setAttempts({});
@@ -96,7 +106,7 @@ export function AuthoringWorkspace() {
   }, []);
   const closeDraft = useCallback(() => {
     setDraft(null); openEdit(null); latest.current = ''; markSaved(''); setSaving('idle'); setRemoved(null);
-    setTrying(false); setAttempts({}); setAssisted({});
+    setTrying(false); setAttempts({}); setAssisted({}); setAnswerInputs({}); setDefinitionDirty(false);
   }, [openEdit, markSaved]);
   const notifyRemoval = useCallback((what: string) => setRemoved({ what, at: Date.now() }), []);
 
@@ -108,7 +118,25 @@ export function AuthoringWorkspace() {
         if (!active) return;
         setSession(current);
         // The editor may be open without a sign-in, so the workspace answers this, not the session.
-        try { setWorkspace((await authoringApi.workspace()).workspace); }
+        try {
+          const loaded = (await authoringApi.workspace()).workspace;
+          if (!active) return;
+          setWorkspace(loaded);
+          const params = new URLSearchParams(window.location.search);
+          setCourseKey(params.get('course'));
+          const page = params.get('view');
+          if (page === 'concepts' || page === 'dictionary' || page === 'settings') setLibraryPage(page);
+          const draftId = params.get('draft'); const versionId = params.get('version');
+          if (draftId || versionId) {
+            const detail = draftId ? (await authoringApi.draft(draftId)).draft
+              : (await authoringApi.act({action:'lesson.read',versionId:versionId!},current.user?.id ?? '')).draft!;
+            if (!active) return;
+            open(detail);
+            setCourseKey(loaded.lessons.find(l => l.lessonKey === detail.lessonKey)?.courseKey ?? null);
+            const step = Number(params.get('step') ?? 0);
+            setSectionIndex(Number.isInteger(step) ? Math.max(0, Math.min(step, detail.edit.sections.length - 1)) : 0);
+          }
+        }
         catch (reason) { if (!(reason instanceof ApiError && reason.status === 401)) throw reason; }
       } catch (reason) { if (active) setError(reason instanceof Error ? reason.message : '불러오지 못했어요.'); }
       finally { if (active) setLoading(false); }
@@ -126,7 +154,7 @@ export function AuthoringWorkspace() {
     run(async () => {
       const response = await authoringApi.act(action, session?.user?.id ?? '');
       setWorkspace(response.workspace);
-      if (response.draft) open(response.draft);
+      if (response.draft) { open(response.draft); setCourseKey(response.workspace.lessons.find(l => l.lessonKey === response.draft!.lessonKey)?.courseKey ?? null); }
       after?.(response);
     });
 
@@ -138,8 +166,9 @@ export function AuthoringWorkspace() {
    */
   const saveNow = useCallback(async (): Promise<boolean> => {
     if (!draft || draft.status === 'published') return true;
+    if (invalidRef.current.length) { setError('정답 입력을 확인해 주세요. 표시한 문항을 고친 뒤 저장할 수 있어요.'); return false; }
     const snapshot = latest.current;
-    if (!snapshot || snapshot === savedRef.current) return true;
+    if (!snapshot || snapshot === savedRef.current) { setSaving('idle'); setError(null); return true; }
     if (inFlight.current) return false;
     inFlight.current = true;
     setSaving('saving');
@@ -170,19 +199,19 @@ export function AuthoringWorkspace() {
 
   // Saving is the editor's job, not the author's: it follows the last keystroke rather than a button.
   useEffect(() => {
-    if (!dirty || saving === 'saving') return;
+    if (!dirty || invalid.length || saving === 'saving') return;
     const timer = window.setTimeout(() => { void saveNow(); }, saving === 'failed' ? retryMs : autosaveMs);
     return () => window.clearTimeout(timer);
-  }, [dirty, editJson, saving, saveNow]);
+  }, [dirty, editJson, saving, saveNow, invalid.length]);
 
   // Closing the tab on unsaved work is the one loss autosave cannot catch, so the browser asks first.
   useEffect(() => {
-    if (!dirty && saving !== 'saving') return;
+    if (!dirty && !invalid.length && !definitionDirty && saving !== 'saving') return;
     // Chrome honours the first; Safari still wants the second, and neither shows wording we choose.
     const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = true; };
     window.addEventListener('beforeunload', warn);
     return () => window.removeEventListener('beforeunload', warn);
-  }, [dirty, saving]);
+  }, [dirty, saving, invalid.length, definitionDirty]);
 
   useEffect(() => {
     if (!draft || draft.status === 'published') return;
@@ -191,12 +220,13 @@ export function AuthoringWorkspace() {
       const key = event.key.toLowerCase();
       if (key === 's') { event.preventDefault(); void saveNow(); return; }
       // Every field here is controlled, so the browser's own undo cannot reach what was written.
+      if (showDefinitions) return;
       if (key === 'z') { event.preventDefault(); if (event.shiftKey) redo(); else undo(); return; }
       if (key === 'y' && !event.metaKey) { event.preventDefault(); redo(); }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [draft, saveNow, undo, redo]);
+  }, [draft, saveNow, undo, redo, showDefinitions]);
 
   useEffect(() => {
     if (!removed) return;
@@ -229,6 +259,8 @@ export function AuthoringWorkspace() {
 
   /** Leaving saves first. A draft list reached by losing an afternoon's writing is not worth reaching. */
   const leave = async () => {
+    if (!discardChanges(definitionDirty)) return;
+    if (invalidRef.current.length) { setError('입력 중인 정답을 고치거나 변경을 버린 뒤 이동해 주세요.'); return; }
     const waiting = '저장하는 중이에요. 잠시 뒤에 다시 눌러 주세요.';
     if (latest.current !== savedRef.current) {
       // A save already on its way carries an older snapshot, so waiting for it is the whole point.
@@ -242,6 +274,22 @@ export function AuthoringWorkspace() {
   useEffect(() => {
     if (showDefinitions) window.document.getElementById('lesson-definitions')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [showDefinitions]);
+
+  // Invalidate a validation result as soon as the content being certified changes.
+  useEffect(() => { setNotice(null); setConfirming(false); if (!dirty) { setSaving('idle'); setError(null); } }, [editJson, dirty]);
+  useEffect(() => {
+    if (loading || !workspace?.role) return;
+    const params = new URLSearchParams();
+    if (courseKey) params.set('course', courseKey);
+    if (libraryPage !== 'courses') params.set('view', libraryPage);
+    if (draft) {
+      if (draft.id.startsWith('published:')) params.set('version', draft.versionId);
+      else params.set('draft', draft.id);
+      params.set('step', String(sectionIndex));
+    }
+    const search = params.toString();
+    window.history.replaceState(null, '', `/authoring${search ? '?' + search : ''}`);
+  }, [loading, workspace?.role, courseKey, libraryPage, draft?.id, sectionIndex]);
 
   if (loading) return <main className="authoring-page"><p className="editor-note">불러오는 중이에요.</p></main>;
   if (!workspace?.role && !session?.user) {
@@ -268,18 +316,25 @@ export function AuthoringWorkspace() {
       {error && <p className="error-banner" role="alert">{error}</p>}
       {notice && <p className="notice-banner">{notice}</p>}
       <nav className="studio-nav" aria-label="콘텐츠 관리">
-        <button className={libraryPage === 'courses' ? 'active' : ''} aria-current={libraryPage === 'courses' ? 'page' : undefined} onClick={() => setLibraryPage('courses')}>코스와 수업</button>
-        <button className={libraryPage === 'dictionary' ? 'active' : ''} aria-current={libraryPage === 'dictionary' ? 'page' : undefined} onClick={() => setLibraryPage('dictionary')}>개념과 뜻풀이</button>
-        {mayGrantRoles(workspace.role) && <button className={libraryPage === 'settings' ? 'active' : ''} aria-current={libraryPage === 'settings' ? 'page' : undefined} onClick={() => setLibraryPage('settings')}>편집 권한</button>}
+        <button className={libraryPage === 'courses' ? 'active' : ''} aria-current={libraryPage === 'courses' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('courses'); }}>코스와 수업</button>
+        <button className={libraryPage === 'dictionary' ? 'active' : ''} aria-current={libraryPage === 'dictionary' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('dictionary'); }}>뜻풀이 사전</button>
+        <button className={libraryPage === 'concepts' ? 'active' : ''} aria-current={libraryPage === 'concepts' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('concepts'); }}>개념으로 찾기</button>
+        {mayGrantRoles(workspace.role) && <button className={libraryPage === 'settings' ? 'active' : ''} aria-current={libraryPage === 'settings' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('settings'); }}>편집 권한</button>}
       </nav>
-      {libraryPage === 'courses' && <CourseLibrary workspace={workspace} busy={busy} courseKey={courseKey} onCourse={setCourseKey}
+      {libraryPage === 'courses' && <CourseLibrary onDirty={setLibraryDirty} workspace={workspace} busy={busy} courseKey={courseKey} onCourse={setCourseKey}
         onOpen={(summary) => run(async () => open((await authoringApi.draft(summary.id)).draft))}
         onAction={async (action) => {
           let succeeded = false;
           await act(action, () => { succeeded = true; });
           return succeeded;
         }} />}
-      {libraryPage === 'dictionary' && <DefinitionPanel lessons={workspace.lessons} concepts={workspace.concepts}
+      {libraryPage === 'concepts' && <ConceptLibrary
+        onListDefinitions={async (scopeKind, scopeKey) => (await authoringApi.act({ action: 'definition.list', scopeKind, scopeKey }, session?.user?.id ?? '')).definitions ?? []}
+        onSaveDefinition={async edit => { const response = await authoringApi.act({ action: 'definition.save', edit }, session?.user?.id ?? ''); setWorkspace(response.workspace); return response.definitions ?? []; }}
+        workspace={workspace} busy={busy} onDirty={setLibraryDirty}
+        onOpen={summary => { if (discardChanges(libraryDirty)) void run(async () => { const detail = (await authoringApi.draft(summary.id)).draft; open(detail); setCourseKey(workspace.lessons.find(l => l.lessonKey === detail.lessonKey)?.courseKey ?? null); }); }}
+        onAction={async action => { if (action.action === 'lesson.read' && !discardChanges(libraryDirty)) return false; let ok = false; await act(action, () => { ok = true; }); return ok; }} />}
+      {libraryPage === 'dictionary' && <DefinitionPanel onDirty={setLibraryDirty} lessons={workspace.lessons} concepts={workspace.concepts}
         mayEditDictionary={mayPublish(workspace.role)}
         onList={async (scopeKind, scopeKey) => (await authoringApi.act({ action: 'definition.list', scopeKind, scopeKey }, session?.user?.id ?? '')).definitions ?? []}
         onSave={async (edit) => {
@@ -293,6 +348,7 @@ export function AuthoringWorkspace() {
     </Shell>;
   }
 
+  const issues = [...new Map([...localIssues, ...draft.issues].map(issue => [JSON.stringify([issue.message, issue.field, issue.sectionId, issue.blockId, issue.problemVersionId, issue.path]), issue])).values()];
   const section = edit.sections[Math.min(sectionIndex, edit.sections.length - 1)];
   // Block IDs are unique across the whole document, questions included, so a new one avoids them all.
   const blockIds = [
@@ -333,11 +389,12 @@ export function AuthoringWorkspace() {
       .find((block) => block.blockId === blockId)
     : undefined);
   const describe = (issue: DraftIssue) => issueText(issue, blockAt(issue.blockId));
-  const issuesOfBlock = (blockId: string) => draft.issues.filter((issue) => issue.blockId === blockId);
+  const issuesOfBlock = (blockId: string) => issues.filter((issue) => issue.blockId === blockId);
   const issuesOfProblem = (problemVersionId: string) =>
-    draft.issues.filter((issue) => issue.problemVersionId === problemVersionId);
+    issues.filter((issue) => issue.problemVersionId === problemVersionId);
   /** Takes the screen to what a rule refused, rather than leaving an author to find it by its path. */
   const goToIssue = (issue: DraftIssue) => {
+    if (!issue.sectionId && !issue.blockId && !issue.problemVersionId) { setSelected(null); setTrying(false); window.requestAnimationFrame(() => { const name = issue.field === 'title' ? '수업 제목' : issue.field === 'summary' ? '한 줄 소개' : issue.field === 'estimatedMinutes' ? '예상 시간(분)' : '수업에서 다루는 개념 검색'; const node = document.querySelector<HTMLElement>(`[aria-label="${name}"]`); node?.scrollIntoView({block:'center'}); node?.focus(); }); return; }
     const holds = (item: LessonSection) => (issue.sectionId ? item.sectionId === issue.sectionId : false)
       || (issue.blockId ? item.contentBlocks.some((block) => block.blockId === issue.blockId) : false)
       || (issue.problemVersionId ? item.contentBlocks.some((block) => Array.isArray(block.payload.problemVersionIds)
@@ -395,6 +452,7 @@ export function AuthoringWorkspace() {
   });
   /** What the server holds is what gets answered, so anything unsaved goes first. */
   const enterTry = async () => {
+    if (invalid.length) { setError('정답 입력을 고친 뒤 해볼 수 있어요.'); return; }
     if (latest.current !== savedRef.current && !(await saveNow())) return;
     setSelected(null); setAttempts({}); setAssisted({}); setTrying(true);
   };
@@ -412,7 +470,7 @@ export function AuthoringWorkspace() {
     : draft.status === 'review' && saving === 'idle' && !dirty ? '검토 요청함'
       : saving === 'saving' ? '저장하는 중'
       : saving === 'failed' ? '저장하지 못했어요'
-        : dirty ? '곧 저장해요' : '저장됨';
+        : invalid.length ? '정답 입력 확인 필요' : dirty ? '곧 저장해요' : '저장됨';
 
   return <Shell role={workspace.role} expert={expert} busy={busy} onExpert={onExpert}>
     <RemovalNotice.Provider value={notifyRemoval}>
@@ -420,12 +478,12 @@ export function AuthoringWorkspace() {
       <button type="button" className="back-button" onClick={() => void leave()}><Icon name="back" size={16} />{courseTitle}</button>
       <div className="editor-bar-side">
         {/* Writing the lesson, or reading it the way it will be read. */}
-        <div className="editor-mode" role="group" aria-label="화면 모드">
+        {!published && <div className="editor-mode" role="group" aria-label="화면 모드">
           <button type="button" className={trying ? '' : 'active'} aria-pressed={!trying}
             onClick={() => { setTrying(false); setAttempts({}); setAssisted({}); }}>편집</button>
           <button type="button" className={trying ? 'active' : ''} aria-pressed={trying}
             onClick={() => void enterTry()}>해보기</button>
-        </div>
+        </div>}
         {!published && !trying && <>
           <button type="button" className="icon-button" aria-label="되돌리기" title="되돌리기 (⌘Z)" disabled={!canUndo} onClick={undo}>↶</button>
           <button type="button" className="icon-button" aria-label="다시 실행" title="다시 실행 (⇧⌘Z)" disabled={!canRedo} onClick={redo}>↷</button>
@@ -443,10 +501,10 @@ export function AuthoringWorkspace() {
       학습자가 보는 그대로예요. 답은 학습 화면과 같은 규칙으로 서버가 채점하고, 여기서 푼 것은 아무 데도 기록되지 않아요.
       해설은 학습자에게 보여 주지 않으니 여기에도 나오지 않고, 「편집」에서 씁니다.</p>}
 
-    {showDefinitions && !trying && <div id="lesson-definitions" className="studio-inline-definitions"><button className="text-button" onClick={() => {
+    {!published && <div hidden={!showDefinitions || trying} id="lesson-definitions" className="studio-inline-definitions"><button className="text-button" onClick={() => {
       setShowDefinitions(false); window.requestAnimationFrame(() => window.document.getElementById('lesson-preview')?.scrollIntoView({ behavior: 'smooth' }));
     }}>뜻풀이 닫고 수업으로 ↓</button><DefinitionPanel
-      key={draft.id} initialLessonKey={draft.lessonKey} lessons={workspace.lessons} concepts={workspace.concepts} mayEditDictionary={mayPublish(workspace.role)}
+      onDirty={setDefinitionDirty} key={draft.id} initialLessonKey={draft.lessonKey} lessons={workspace.lessons} concepts={workspace.concepts} mayEditDictionary={mayPublish(workspace.role)}
       onList={async (scopeKind, scopeKey) => (await authoringApi.act({ action: 'definition.list', scopeKind, scopeKey }, session?.user?.id ?? '')).definitions ?? []}
       onSave={async (definition) => {
         const response = await authoringApi.act({ action: 'definition.save', edit: definition }, session?.user?.id ?? '');
@@ -478,7 +536,7 @@ export function AuthoringWorkspace() {
       </aside>
 
       <LessonSheet meta={edit.meta} section={section} index={sectionIndex} problems={edit.problems} definitions={draft.definitions} glossary={{ entries: draft.glossary, currentLessonKey: draft.lessonKey }} courseTitle={courseTitle}
-        selected={selected} published={published} issues={draft.issues}
+        selected={selected} published={published} issues={issues}
         trying={trying ? { actions: tryActions, attempts, busy: tryBusy } : undefined}
         onMeta={(meta) => setEdit({ ...edit, meta })} onSection={writeSection} onBlocks={writeBlocks}
         onProblem={writeProblem} onSelect={setSelected}
@@ -491,7 +549,7 @@ export function AuthoringWorkspace() {
         {chosenProblem && holder
           ? <fieldset className="editor-inspector-block" disabled={published}>
             <Amiss issues={issuesOfProblem(chosenProblem.problemVersionId)} describe={describe} expert={expert} />
-            <ProblemPanel problem={chosenProblem} number={problemAt + 1} total={holderIds.length}
+            <ProblemPanel answerInput={answerInputs[chosenProblem.problemVersionId]} onAnswerInput={input => setAnswerInputs(current => ({...current, [chosenProblem.problemVersionId]: input}))} problem={chosenProblem} number={problemAt + 1} total={holderIds.length}
               concepts={draftConcepts} taken={blockIds} definitionChoices={draft.definitions}
               onChange={writeProblem}
               onMove={(delta) => writeHolder(moveBlock(holderIds, problemAt, delta), edit.problems)}
@@ -539,17 +597,17 @@ export function AuthoringWorkspace() {
               ? <label className="editor-field"><span className="editor-label">새 판본 ID</span>
                 <input value={edit.meta.versionId} onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, versionId: event.target.value } })} />
                 <small>발행한 판본은 고칠 수 없어서, 수정은 늘 새 판본이 돼요. 기준 판본: {draft.baseVersionId ?? '없음'}</small></label>
-              : <p className="editor-note">발행하면 {versionLabel(edit.meta.versionId)}이 돼요. 이미 발행한 판은 고칠 수 없어서,
+              : <p className="editor-note">{published ? `${versionLabel(edit.meta.versionId)} 발행판입니다.` : `발행하면 ${versionLabel(edit.meta.versionId)}이 돼요.`} 이미 발행한 판은 고칠 수 없어서,
                 수정은 늘 새 판이 됩니다. 수강 중인 사람은 시작한 판을 끝까지 봅니다.</p>}
             <label className="editor-field"><span className="editor-label">한 줄 소개</span>
-              <input value={edit.meta.summary} onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, summary: event.target.value } })} />
-              <small>수업을 고르는 화면에서 제목 아래에 보여요.</small></label>
+              <input aria-label="한 줄 소개" aria-invalid={localIssues.some(issue => issue.field === 'summary')} value={edit.meta.summary} onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, summary: event.target.value } })} />
+              <small>{localIssues.find(issue => issue.field === 'summary')?.message ?? '수업을 고르는 화면에서 제목 아래에 보여요.'}</small></label>
             <label className="editor-field"><span className="editor-label">예상 시간(분)</span>
-              <input type="number" min={1} max={240} value={edit.meta.estimatedMinutes}
+              <input aria-label="예상 시간(분)" type="number" min={1} max={240} value={edit.meta.estimatedMinutes}
                 onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, estimatedMinutes: Number(event.target.value) } })} /></label>
-            <ConceptPicker concepts={workspace.concepts.filter((concept) => concept.assessable)} chosen={edit.meta.conceptKeys} label="이 수업이 가르치는 개념"
+            <ConceptPicker concepts={workspace.concepts.filter((concept) => concept.assessable)} chosen={edit.meta.conceptKeys} label="수업에서 다루는 개념"
               onChange={(conceptKeys) => setEdit({ ...edit, meta: { ...edit.meta, conceptKeys, prerequisiteConceptKeys: edit.meta.prerequisiteConceptKeys?.filter((key) => !conceptKeys.includes(key)) } })} />
-            <p className="editor-note">문항은 여기 고른 개념 중에서만 고를 수 있어요. 하나 이상 있어야 발행할 수 있습니다.</p>
+            <p className="editor-note">분수·분자·분모처럼 수업에서 배우는 작은 단위를 골라 주세요. 개념마다 뜻풀이를 연결할 수 있고, 각 문제는 이 중 무엇을 확인하는지 선택합니다.</p>
             <ConceptPicker concepts={workspace.concepts.filter((concept) => concept.assessable && !edit.meta.conceptKeys.includes(concept.key))}
               chosen={edit.meta.prerequisiteConceptKeys ?? []} label="먼저 알아야 하는 개념"
               onChange={(prerequisiteConceptKeys) => setEdit({ ...edit, meta: { ...edit.meta, prerequisiteConceptKeys } })} />
@@ -604,24 +662,27 @@ export function AuthoringWorkspace() {
       </aside>}
     </div>
 
-    <div className="editor-actions">
-      <button type="button" className="button secondary" disabled={busy || published || !dirty || saving === 'saving'}
+    {!published && <div className="editor-actions">
+      <button type="button" className="button secondary" disabled={busy || published || !dirty || !!invalid.length || saving === 'saving'}
         onClick={() => void saveNow()}>지금 저장</button>
-      <button type="button" className="button secondary" disabled={busy || dirty} onClick={() => void validateNow()}>검증</button>
+      <button type="button" className="button secondary" disabled={busy || dirty || !!invalid.length} onClick={() => void validateNow()}>검증</button>
       {/* A writer hands the work on rather than publishing it; whoever may publish takes it from there. */}
       {!published && draft.mine && (draft.status === 'review'
         ? <button type="button" className="button secondary" disabled={busy} onClick={() => void reviewNow(false)}>검토 요청 거두기</button>
-        : <button type="button" className="button secondary" disabled={busy || dirty} onClick={() => void reviewNow(true)}>검토 요청</button>)}
+        : <button type="button" className="button secondary" disabled={busy || dirty || !!invalid.length || !!issues.length} onClick={() => void reviewNow(true)}>검토 요청</button>)}
       {!published && !draft.mine && draft.status === 'review' && mayPublish(workspace.role) &&
         <button type="button" className="button secondary" disabled={busy}
           onClick={() => void reviewNow(false)}>작성자에게 돌려보내기</button>}
-      {mayPublish(workspace.role) && !published && <button type="button" className="button primary" disabled={busy || dirty || !!draft.issues.length}
+      {mayPublish(workspace.role) && !published && <button type="button" className="button primary" disabled={busy || dirty || !!invalid.length || !!localIssues.length || !!draft.issues.length}
         onClick={() => setConfirming(true)}>발행<Icon name="arrow" size={16} /></button>}
       <button type="button" className="text-button" disabled={busy}
         onClick={() => { if (confirm('이 초안을 삭제할까요? 발행한 판본은 남습니다.')) void act({ action: 'draft.delete', draftId: draft.id }, closeDraft); }}>
         초안 삭제</button>
       {dirty && <span className="editor-note">검증과 발행은 저장한 내용으로 해요.</span>}
-    </div>
+    </div>}
+
+    {(saving === 'failed' || invalid.length > 0) && <button className="text-button" onClick={() => { if (discardChanges(true)) { setError(null); closeDraft(); } }}>저장하지 않은 변경을 버리고 코스로</button>}
+    {!!invalid.length && <div className="editor-amiss" role="alert">정답을 확인할 문항: {invalid.map(problem => <button key={problem.problemVersionId} className="text-button" onClick={() => goToIssue({message:'정답 확인',problemVersionId:problem.problemVersionId})}>{problemGist(problem) || '내용 없는 문항'}</button>)}</div>}
 
     {confirming && <div className="editor-confirm" role="alertdialog" aria-label="발행 확인">
       <strong>{expert ? edit.meta.versionId : versionLabel(edit.meta.versionId)} 판본을 발행할까요?</strong>
@@ -635,10 +696,10 @@ export function AuthoringWorkspace() {
       </div>
     </div>}
 
-    {!!draft.issues.length && <section className="editor-issues" aria-label="검증 결과">
-      <strong>고칠 곳 {draft.issues.length}</strong>
+    {!!issues.length && <section className="editor-issues" aria-label="검증 결과">
+      <strong>고칠 곳 {issues.length}</strong>
       {/* Each one is a way there. A list of paths tells an author what is wrong and not where. */}
-      <ul>{draft.issues.map((issue, index) => <li key={`${issue.path ?? ''}:${index}`}>
+      <ul>{issues.map((issue, index) => <li key={`${issue.path ?? ''}:${index}`}>
         <button type="button" className="text-button" onClick={() => goToIssue(issue)}>{describe(issue)}</button>
         {expert && issue.path && <small>{issue.path}</small>}
       </li>)}</ul>

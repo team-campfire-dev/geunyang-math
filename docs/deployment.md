@@ -231,3 +231,10 @@ DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVer
 새 릴리스는 해당 Actions 성공과 공개 `/api/health`·`/api/version`을 확인한다. 과거 릴리스의 성공 기록만으로 현재 배포 상태를 확정하지 않는다.
 
 구현 근거: [Google OpenID Connect](https://developers.google.com/identity/openid-connect/openid-connect), [Google 공식 Node.js 인증 라이브러리](https://github.com/googleapis/google-auth-library-nodejs).
+
+
+### 2026-09-17 원자적 개념과 기본 수업 재작성
+
+`20260917060000_atomic_concept_curriculum`은 실사용 전 콘텐츠 교체를 위해 기존 플랫폼 수업 `fraction-meaning`, `fraction-equivalence`, `fraction-addition`과 `starting-point` 진단의 구 판본·초안 및 연결된 학습 기록을 정리한다. 계정·인증·편집 권한과 다른 코스는 유지한다. 다른 수업·진단·초안이 참조하는 문제집 판본과 다른 콘텐츠가 사용하는 옛 개념은 보존한다. 적용 전에 해당 기본 수업을 사용 중인 서비스가 아닌지 확인해야 하며, 실사용 후에는 이 초기화 정책을 재사용하지 않는다.
+
+뒤따르는 `db:seed`가 새 수업 3개, 수업·복습 문항 17개, 진단 8문항을 설치한다. `content:publish`가 분수·분자·분모·동치분수·약분·통분·덧셈의 공통 뜻풀이를 갱신한다. 이 초기화는 구 학습 기록을 복구하지 않으므로 앱 이미지 롤백만으로 옛 수업 이력을 되살릴 수 없다. 이번 PR 작업에서는 로컬 DB에만 적용하며 운영 반영은 머지 후 배포 절차를 따른다.
