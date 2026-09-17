@@ -3,11 +3,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { AttemptView, LessonSection, ContentBlock } from '@/shared/api';
 import {
-  blockFormOf, lessonKeyPattern, copyBlock, copyProblem, copySection, draftStatusLabels, dropLooseProblems, editShape,
+  blockFormOf, copyBlock, copyProblem, copySection, dropLooseProblems, editShape,
   insertAfter, issueText, looseProblems, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId,
   problemGist, sectionRoleLabels, sectionRoles, versionLabel,
   type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail,
-  type DraftEdit, type DraftIssue, type DraftProblem, type DraftSummary, type ConceptChoice, type DefinitionSummary,
+  type DraftEdit, type DraftIssue, type DraftProblem, type ConceptChoice,
 } from '@/shared/authoring';
 import { ApiError, learningApi, type Session } from '@/features/learning/api-client';
 import { Icon } from '@/features/learning/icons';
@@ -19,6 +19,7 @@ import { AddBlock, BlockCard } from './block-editor';
 import { LessonSheet, type Picked } from './lesson-sheet';
 import { ProblemPanel, ProblemSetEditor, ConceptPicker } from './problem-editor';
 import { DefinitionPanel } from './definition-editor';
+import { CourseLibrary } from './course-library';
 
 /** How long the editor waits after the last keystroke before it writes what is on screen. */
 const autosaveMs = 1500;
@@ -48,7 +49,9 @@ export function AuthoringWorkspace() {
   const [confirming, setConfirming] = useState(false);
   const [loading, setLoading] = useState(true);
   const [matches, setMatches] = useState<AccountRole[] | null>(null);
-  const [definitions, setTerms] = useState<DefinitionSummary[] | null>(null);
+  const [libraryPage, setLibraryPage] = useState<'courses' | 'dictionary' | 'settings'>('courses');
+  const [courseKey, setCourseKey] = useState<string | null>(null);
+  const [showDefinitions, setShowDefinitions] = useState(false);
   const [saved, setSaved] = useState('');
   const [saving, setSaving] = useState<'idle' | 'saving' | 'failed'>('idle');
   const [removed, setRemoved] = useState<{ what: string; at: number } | null>(null);
@@ -80,7 +83,7 @@ export function AuthoringWorkspace() {
     setTrying(false);
     setAttempts({});
     setAssisted({});
-    setConfirming(false);
+    setConfirming(false); setShowDefinitions(false);
   }, [openEdit, markSaved]);
   /**
    * Moving to another step starts at the top of it. The page is a lesson long, and keeping the old
@@ -236,6 +239,10 @@ export function AuthoringWorkspace() {
     closeDraft();
   };
 
+  useEffect(() => {
+    if (showDefinitions) window.document.getElementById('lesson-definitions')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [showDefinitions]);
+
   if (loading) return <main className="authoring-page"><p className="editor-note">불러오는 중이에요.</p></main>;
   if (!workspace?.role && !session?.user) {
     return <Shell>{error
@@ -260,18 +267,26 @@ export function AuthoringWorkspace() {
     return <Shell role={workspace.role} expert={expert} busy={busy} onExpert={onExpert}>
       {error && <p className="error-banner" role="alert">{error}</p>}
       {notice && <p className="notice-banner">{notice}</p>}
-      <DraftList workspace={workspace} busy={busy}
+      <nav className="studio-nav" aria-label="콘텐츠 관리">
+        <button className={libraryPage === 'courses' ? 'active' : ''} aria-current={libraryPage === 'courses' ? 'page' : undefined} onClick={() => setLibraryPage('courses')}>코스와 수업</button>
+        <button className={libraryPage === 'dictionary' ? 'active' : ''} aria-current={libraryPage === 'dictionary' ? 'page' : undefined} onClick={() => setLibraryPage('dictionary')}>개념과 뜻풀이</button>
+        {mayGrantRoles(workspace.role) && <button className={libraryPage === 'settings' ? 'active' : ''} aria-current={libraryPage === 'settings' ? 'page' : undefined} onClick={() => setLibraryPage('settings')}>편집 권한</button>}
+      </nav>
+      {libraryPage === 'courses' && <CourseLibrary workspace={workspace} busy={busy} courseKey={courseKey} onCourse={setCourseKey}
         onOpen={(summary) => run(async () => open((await authoringApi.draft(summary.id)).draft))}
-        onCreate={(lessonKey) => act({ action: 'draft.create', lessonKey })}
-        onCreateLesson={(courseKey, lessonKey, title, conceptKeys) => act({ action: 'lesson.create', courseKey, lessonKey, title, conceptKeys })} />
-      <DefinitionPanel lessons={workspace.lessons} concepts={workspace.concepts} definitions={definitions} busy={busy}
+        onAction={async (action) => {
+          let succeeded = false;
+          await act(action, () => { succeeded = true; });
+          return succeeded;
+        }} />}
+      {libraryPage === 'dictionary' && <DefinitionPanel lessons={workspace.lessons} concepts={workspace.concepts}
         mayEditDictionary={mayPublish(workspace.role)}
-        onList={(scopeKind, scopeKey) => act({ action: 'definition.list', scopeKind, scopeKey }, (response) => setTerms(response.definitions ?? []))}
-        onSave={(edit) => act({ action: 'definition.save', edit }, (response) => {
-          setTerms(response.definitions ?? []);
-          setNotice(expert ? `${response.savedDefinition?.conceptKey} 뜻풀이를 저장했어요.` : '뜻풀이를 저장했어요.');
-        })} />
-      {mayGrantRoles(workspace.role) && <RolePanel accounts={workspace.accounts} busy={busy} matches={matches}
+        onList={async (scopeKind, scopeKey) => (await authoringApi.act({ action: 'definition.list', scopeKind, scopeKey }, session?.user?.id ?? '')).definitions ?? []}
+        onSave={async (edit) => {
+          const response = await authoringApi.act({ action: 'definition.save', edit }, session?.user?.id ?? '');
+          setWorkspace(response.workspace); return response.definitions ?? [];
+        }} />}
+      {libraryPage === 'settings' && mayGrantRoles(workspace.role) && <RolePanel accounts={workspace.accounts} busy={busy} matches={matches}
         onSearch={(query) => act({ action: 'account.search', query }, (response) => setMatches(response.matches ?? []))}
         onGrant={(userId, role) => act({ action: 'role.grant', userId, role }, () => setMatches(null))}
         onRevoke={(userId) => act({ action: 'role.revoke', userId }, () => setMatches(null))} />}
@@ -391,6 +406,7 @@ export function AuthoringWorkspace() {
   const draftConcepts: ConceptChoice[] = edit.meta.conceptKeys.map((key) =>
     workspace.concepts.find((concept) => concept.key === key) ?? { key, label: key, assessable: true });
 
+  const courseTitle = workspace.courses.find((item) => item.key === workspace.lessons.find((lesson) => lesson.lessonKey === draft.lessonKey)?.courseKey)?.title ?? '코스';
   const savedLabel = published
     ? `발행 완료 · ${expert ? draft.publishedVersionId : versionLabel(draft.publishedVersionId ?? '')}`
     : draft.status === 'review' && saving === 'idle' && !dirty ? '검토 요청함'
@@ -401,7 +417,7 @@ export function AuthoringWorkspace() {
   return <Shell role={workspace.role} expert={expert} busy={busy} onExpert={onExpert}>
     <RemovalNotice.Provider value={notifyRemoval}>
     <div className="editor-bar">
-      <button type="button" className="back-button" onClick={() => void leave()}><Icon name="back" size={16} />초안 목록</button>
+      <button type="button" className="back-button" onClick={() => void leave()}><Icon name="back" size={16} />{courseTitle}</button>
       <div className="editor-bar-side">
         {/* Writing the lesson, or reading it the way it will be read. */}
         <div className="editor-mode" role="group" aria-label="화면 모드">
@@ -419,6 +435,7 @@ export function AuthoringWorkspace() {
     </div>
     {error && <p className="error-banner" role="alert">{error}</p>}
     {notice && <p className="notice-banner">{notice}</p>}
+    <p className="editor-breadcrumb">{courseTitle} <span aria-hidden="true"> / </span> {edit.meta.title}</p>
     {published && <p className="notice-banner">발행한 판본은 고칠 수 없어요. 더 고치려면 새 초안을 만들어 주세요.</p>}
     {/* Said before anything is answered, because the card below says what a learner is told — and a
         learner is recorded, which is the one thing that is not true here. */}
@@ -426,9 +443,22 @@ export function AuthoringWorkspace() {
       학습자가 보는 그대로예요. 답은 학습 화면과 같은 규칙으로 서버가 채점하고, 여기서 푼 것은 아무 데도 기록되지 않아요.
       해설은 학습자에게 보여 주지 않으니 여기에도 나오지 않고, 「편집」에서 씁니다.</p>}
 
+    {showDefinitions && !trying && <div id="lesson-definitions" className="studio-inline-definitions"><button className="text-button" onClick={() => {
+      setShowDefinitions(false); window.requestAnimationFrame(() => window.document.getElementById('lesson-preview')?.scrollIntoView({ behavior: 'smooth' }));
+    }}>뜻풀이 닫고 수업으로 ↓</button><DefinitionPanel
+      key={draft.id} initialLessonKey={draft.lessonKey} lessons={workspace.lessons} concepts={workspace.concepts} mayEditDictionary={mayPublish(workspace.role)}
+      onList={async (scopeKind, scopeKey) => (await authoringApi.act({ action: 'definition.list', scopeKind, scopeKey }, session?.user?.id ?? '')).definitions ?? []}
+      onSave={async (definition) => {
+        const response = await authoringApi.act({ action: 'definition.save', edit: definition }, session?.user?.id ?? '');
+        setWorkspace(response.workspace);
+        const refreshed = (await authoringApi.draft(draft.id)).draft;
+        setDraft((current) => current?.id === refreshed.id ? { ...current, definitions: refreshed.definitions, glossary: refreshed.glossary } : current);
+        return response.definitions ?? [];
+      }} /></div>}
+    {!trying && <a className="inspector-jump text-button" href="#lesson-inspector">{selected ? '선택한 내용 편집하기 ↓' : '수업 설정 ↓'}</a>}
     <div className={`editor-layout${trying ? ' trying' : ''}`}>
       <aside className="editor-steps">
-        <span className="eyebrow">SECTIONS</span>
+        <span className="eyebrow">수업 단계</span>
         {edit.sections.map((item, index) => <div key={item.sectionId} className={`editor-step${index === sectionIndex ? ' active' : ''}`}>
           <button type="button" className="editor-step-open" aria-current={index === sectionIndex ? 'step' : undefined}
             onClick={() => goToSection(index)}><small>{sectionRoleLabels[item.role]}</small>{item.title}</button>
@@ -447,7 +477,7 @@ export function AuthoringWorkspace() {
         }}><Icon name="plus" size={14} />단계 추가</button>}
       </aside>
 
-      <LessonSheet meta={edit.meta} section={section} index={sectionIndex} problems={edit.problems} definitions={draft.definitions}
+      <LessonSheet meta={edit.meta} section={section} index={sectionIndex} problems={edit.problems} definitions={draft.definitions} glossary={{ entries: draft.glossary, currentLessonKey: draft.lessonKey }} courseTitle={courseTitle}
         selected={selected} published={published} issues={draft.issues}
         trying={trying ? { actions: tryActions, attempts, busy: tryBusy } : undefined}
         onMeta={(meta) => setEdit({ ...edit, meta })} onSection={writeSection} onBlocks={writeBlocks}
@@ -456,7 +486,8 @@ export function AuthoringWorkspace() {
           onAdd={(block) => { writeBlocks([...section.contentBlocks, block]); setSelected({ kind: 'block', index: section.contentBlocks.length }); }} />} />
 
       {/* What the chosen thing is made of. With nothing chosen, the lesson itself is what is chosen. */}
-      {!trying && <aside className="editor-inspector" aria-label="고른 것">
+      {!trying && <aside className="editor-inspector" id="lesson-inspector" aria-label="수업 편집 도구">
+        <div className="inspector-heading"><strong>{selected ? '선택한 내용 편집' : '수업 설정'}</strong>{selected && <button className="text-button" onClick={() => setSelected(null)}>수업 설정으로</button>}<a className="inspector-return text-button" href="#lesson-preview">본문으로 ↑</a></div>
         {chosenProblem && holder
           ? <fieldset className="editor-inspector-block" disabled={published}>
             <Amiss issues={issuesOfProblem(chosenProblem.problemVersionId)} describe={describe} expert={expert} />
@@ -517,11 +548,22 @@ export function AuthoringWorkspace() {
               <input type="number" min={1} max={240} value={edit.meta.estimatedMinutes}
                 onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, estimatedMinutes: Number(event.target.value) } })} /></label>
             <ConceptPicker concepts={workspace.concepts.filter((concept) => concept.assessable)} chosen={edit.meta.conceptKeys} label="이 수업이 가르치는 개념"
-              onChange={(conceptKeys) => setEdit({ ...edit, meta: { ...edit.meta, conceptKeys } })} />
+              onChange={(conceptKeys) => setEdit({ ...edit, meta: { ...edit.meta, conceptKeys, prerequisiteConceptKeys: edit.meta.prerequisiteConceptKeys?.filter((key) => !conceptKeys.includes(key)) } })} />
             <p className="editor-note">문항은 여기 고른 개념 중에서만 고를 수 있어요. 하나 이상 있어야 발행할 수 있습니다.</p>
+            <ConceptPicker concepts={workspace.concepts.filter((concept) => concept.assessable && !edit.meta.conceptKeys.includes(concept.key))}
+              chosen={edit.meta.prerequisiteConceptKeys ?? []} label="먼저 알아야 하는 개념"
+              onChange={(prerequisiteConceptKeys) => setEdit({ ...edit, meta: { ...edit.meta, prerequisiteConceptKeys } })} />
+            <label className="editor-field"><span className="editor-label">수업을 마친 뒤 복습</span>
+              <select value={edit.reviewBlockId === undefined ? 'keep' : edit.reviewBlockId ?? 'none'} onChange={(event) => setEdit({ ...edit, reviewBlockId: event.target.value === 'keep' ? undefined : event.target.value === 'none' ? null : event.target.value })}>
+                {draft.review && draft.edit.reviewBlockId === undefined && <option value="keep">기존 복습 문제 유지</option>}
+                <option value="none">복습 과제 만들지 않기</option>
+                {edit.sections.flatMap((section) => section.contentBlocks.filter((block) => block.kind === 'core.problem_set').map((block, index) => <option key={block.blockId} value={block.blockId}>{section.title} · 문제 {index + 1} 묶음</option>))}
+              </select><small>선택한 문제 중 학습자의 풀이와 목표에 맞게 복습 과제를 만들어요. 수업 안의 문제를 선택하면 이후 수정도 함께 반영됩니다.</small>
+            </label>
+            <button type="button" className="button secondary" onClick={() => setShowDefinitions((value) => !value)} aria-expanded={showDefinitions}>이 수업의 뜻풀이 {showDefinitions ? '닫기' : '관리'}</button>
             <p className="editor-note">{draft.review
-              ? `복습 풀: 문제 ${draft.review.problemVersionIds.length}개. 수업을 마친 학습자의 복습 과제가 여기서 고릅니다.`
-              : '복습 풀이 없어 수업을 마쳐도 복습 과제를 만들지 않아요.'}</p>
+              ? `저장된 복습 문제: ${draft.review.problemVersionIds.length}개.`
+              : '저장된 복습 문제가 없어요.'}</p>
 
             {!!loose.length && <div className="editor-inspector-part">
               <span className="editor-label">어디에도 속하지 않은 문항</span>
@@ -587,7 +629,7 @@ export function AuthoringWorkspace() {
         {expert && ' 새 종류의 블록을 넣었다면 그 블록을 아는 앱이 먼저 배포되어 있어야 해요.'}</p>
       <div className="editor-actions">
         <button type="button" className="button primary" disabled={busy}
-          onClick={() => act({ action: 'draft.publish', draftId: draft.id }, (response) => setNotice(`${response.publishedVersionId} 판본을 발행했어요.`))}>
+          onClick={() => act({ action: 'draft.publish', draftId: draft.id }, (response) => setNotice(`${expert ? response.publishedVersionId : versionLabel(response.publishedVersionId ?? '')}을 발행했어요.`))}>
           발행할게요</button>
         <button type="button" className="button secondary" disabled={busy} onClick={() => setConfirming(false)}>취소</button>
       </div>
@@ -713,84 +755,4 @@ function Shell({ role, expert = false, busy, onExpert, children }: {
     </header>
     {children}
   </main></ExpertMode.Provider>;
-}
-
-function DraftList({ workspace, busy, onOpen, onCreate, onCreateLesson }: {
-  workspace: Workspace; busy: boolean; onOpen: (draft: DraftSummary) => void; onCreate: (lessonKey: string) => void;
-  onCreateLesson: (courseKey: string, lessonKey: string, title: string, conceptKeys: string[]) => void;
-}) {
-  const [lessonKey, setLessonKey] = useState(workspace.lessons[0]?.lessonKey ?? '');
-  const [query, setQuery] = useState('');
-  const [made, setMade] = useState({ courseKey: workspace.courses[0]?.key ?? '', key: '', title: '', conceptKeys: [] as string[] });
-  const expert = useExpertMode();
-  const chosen = workspace.lessons.find((item) => item.lessonKey === lessonKey);
-  const found = workspace.drafts.filter((item) => {
-    const words = query.trim().toLowerCase();
-    return !words || [item.title, item.authorName, item.versionId].some((value) => value.toLowerCase().includes(words));
-  });
-  const readyToMake = !!made.courseKey && lessonKeyPattern.test(made.key) && !!made.title.trim() && made.conceptKeys.length > 0;
-
-  return <>
-    <fieldset className="editor-panel">
-      <legend>새 초안</legend>
-      <p className="editor-note">발행된 수업을 기준으로 다음 판본의 초안을 만듭니다. 문항과 채점 규칙은 기준 판본에서 그대로 이어받고, 이 화면에서는 단계와 블록을 고쳐요.</p>
-      <div className="editor-actions">
-        <label className="editor-field"><span className="editor-label">수업</span>
-          <select value={lessonKey} onChange={(event) => setLessonKey(event.target.value)}>
-            {workspace.lessons.map((item) => <option key={item.lessonKey} value={item.lessonKey}>
-              {item.title} · {expert ? item.latestVersionId : versionLabel(item.latestVersionId)} →{' '}
-              {expert ? item.suggestedVersionId : versionLabel(item.suggestedVersionId)}{item.hasDraft ? ' (초안 있음)' : ''}</option>)}
-          </select></label>
-        <button type="button" className="button primary" disabled={busy || !lessonKey} onClick={() => onCreate(lessonKey)}>초안 만들기</button>
-      </div>
-      {/* Two open drafts of one lesson both aim at the same next version, and only one of them can have it. */}
-      {chosen?.hasDraft && <p className="editor-note editor-warn">
-        이 수업에는 이미 작성 중인 초안이 있어요. 새로 만들면 둘 다 같은 판을 노리게 되고, 먼저 발행한 쪽이 그 판을 가집니다.</p>}
-    </fieldset>
-
-    <fieldset className="editor-panel">
-      <legend>새 수업</legend>
-      <p className="editor-note">아직 아무도 발행한 적 없는 수업을 처음부터 시작해요. 수업은 코스 하나에 속하고, 그 코스의 마지막 자리에 놓여요. 단계 하나만 있는 초안이 생기고, 나머지는 편집 화면에서 씁니다.</p>
-      <label className="editor-field"><span className="editor-label">코스</span>
-        <select value={made.courseKey} onChange={(event) => setMade({ ...made, courseKey: event.target.value })}>
-          {workspace.courses.map((course) => <option key={course.key} value={course.key}>{course.title}{expert ? ` · ${course.key}` : ''}</option>)}
-        </select></label>
-      <label className="editor-field"><span className="editor-label">수업 이름</span>
-        <input value={made.title} maxLength={191} placeholder="예: 소수, 자리와 크기"
-          onChange={(event) => setMade({ ...made, title: event.target.value })} /></label>
-      <label className="editor-field"><span className="editor-label">수업 키</span>
-        <input value={made.key} maxLength={64} placeholder="decimal-place-value" spellCheck={false}
-          onChange={(event) => setMade({ ...made, key: event.target.value.trim().toLowerCase() })} />
-        {made.key && !lessonKeyPattern.test(made.key)
-          ? <small className="editor-warn">영문 소문자·숫자·하이픈만 쓸 수 있고, 두 글자 이상이어야 해요.</small>
-          : <small>이 수업 안의 모든 이름이 여기서 만들어져요. 발행한 뒤에는 바꿀 수 없어요.</small>}</label>
-      <ConceptPicker concepts={workspace.concepts.filter((concept) => concept.assessable)} chosen={made.conceptKeys} label="이 수업이 가르치는 개념"
-        onChange={(conceptKeys) => setMade({ ...made, conceptKeys })} />
-      <div className="editor-actions">
-        <button type="button" className="button primary" disabled={busy || !readyToMake}
-          onClick={() => onCreateLesson(made.courseKey, made.key, made.title.trim(), made.conceptKeys)}>수업 만들기</button>
-        {!readyToMake && <span className="editor-note">코스·이름·키·개념이 모두 있어야 만들 수 있어요.</span>}
-      </div>
-    </fieldset>
-
-    <section className="dashboard-section">
-      <div className="section-heading">
-        <div><span className="eyebrow">DRAFTS</span><h2>초안</h2></div>
-        {workspace.drafts.length > 3 && <label className="editor-field draft-search">
-          <span className="editor-label">찾기</span>
-          <input value={query} placeholder="제목이나 작성자" onChange={(event) => setQuery(event.target.value)} />
-        </label>}
-      </div>
-      {found.length === 0
-        ? <p className="empty-inline">{workspace.drafts.length ? '찾은 초안이 없어요.' : '아직 초안이 없어요.'}</p>
-        : <div className="assignment-list">{found.map((item) => <button key={item.id} type="button" className="assignment-row" onClick={() => onOpen(item)}>
-          <span className="assignment-icon"><Icon name="pencil" size={18} /></span>
-          <span className="assignment-info"><strong>{item.title}</strong>
-            <small>{expert ? item.versionId : versionLabel(item.versionId)} · {item.authorName}{item.mine ? '' : ' (다른 작성자)'} · {new Date(item.updatedAt).toLocaleString('ko-KR')}</small></span>
-          <span className={`assignment-status${item.status === 'published' ? ' submitted' : ''}${item.status === 'review' ? ' waiting' : ''}`}>
-            {draftStatusLabels[item.status]}</span>
-          <Icon name="chevron" size={16} />
-        </button>)}</div>}
-    </section>
-  </>;
 }

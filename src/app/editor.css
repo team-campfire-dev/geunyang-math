@@ -310,3 +310,55 @@
   .authoring-page .button { min-height: 44px; }
   .scene-swatch { width: 38px; height: 38px; }
 }
+
+/* Course preparation stays separate from the lesson's paper and editing tools. */
+.studio-nav { display: flex; gap: 8px; border-bottom: 1px solid var(--line); margin: 0 0 30px; overflow-x: auto; }
+.studio-nav button { padding: 12px 18px; color: var(--editor-help); white-space: nowrap; border-bottom: 2px solid transparent; }
+.studio-nav button.active { color: var(--deep-green); border-bottom-color: var(--green); font-weight: 600; }
+.studio-heading { align-items: flex-start; }
+.studio-heading h2 { font-size: 27px; margin: 8px 0; }
+.studio-heading .editor-note { max-width: 720px; margin-bottom: 0; }
+.studio-courses { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 20px; }
+.studio-course { text-align: left; padding: 26px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); }
+.studio-course:hover { border-color: var(--green); background: #f7faef; }
+.studio-course h3 { margin: 15px 0 9px; font-size: 22px; }
+.studio-course p { color: var(--editor-help); font-size: 14px; line-height: 1.8; min-height: 50px; margin-bottom: 20px; }
+.studio-form { max-width: 840px; margin-bottom: 26px; }
+.studio-form h3 { margin: 0 0 18px; }
+.studio-new-concept { margin: 18px 0; padding: 14px; background: var(--editor-sunken); border-radius: 8px; }
+.studio-new-concept summary { cursor: pointer; font-size: 13px; }
+.studio-lessons { border: 1px solid var(--line); border-radius: 10px; background: var(--white); overflow: hidden; }
+.studio-lesson { display: flex; align-items: flex-start; gap: 18px; padding: 22px; border-bottom: 1px solid var(--line); }
+.studio-lesson:last-child { border: 0; }
+.studio-lesson h3 { margin: 0 0 8px; font-size: 17px; }
+.studio-order { font-size: 18px; color: var(--editor-help); padding-top: 2px; font-variant-numeric: tabular-nums; }
+.studio-draft-link { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; text-align: left; padding: 10px 0 0; line-height: 1.6; color: var(--editor-active-text); font-size: 13px; }
+.studio-order-actions { display: flex; }
+.editor-breadcrumb { display: flex; flex-wrap: wrap; gap: 10px; font-size: 13px; color: var(--editor-help); margin-bottom: 22px; }
+.inspector-heading { display: flex; align-items: center; justify-content: space-between; padding: 0 0 14px; font-size: 13px; gap: 12px; }
+.inspector-jump { display: none; }
+.editor-inspector { scroll-margin-top: 20px; }
+.studio-inline-definitions { margin-bottom: 24px; border: 1px solid var(--line); padding: 20px; border-radius: 10px; }
+.studio-inline-definitions .dashboard-section { margin-top: 0; }
+@media (max-width: 1180px) {
+  .editor-layout.trying { grid-template-columns: 180px minmax(0, 1fr); }
+  .inspector-jump { display: inline-flex; margin-bottom: 18px; }
+}
+@media (max-width: 740px) {
+  .editor-layout, .editor-layout.trying { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .editor-bar, .studio-heading { flex-wrap: wrap; }
+  .editor-bar-side { flex-wrap: wrap; }
+  .editor-steps { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 8px; }
+  .editor-steps > .eyebrow { display: none; }
+  .editor-step { flex: 0 0 150px; }
+  .editor-steps > .text-button { flex: 0 0 auto; }
+  .studio-lesson { flex-wrap: wrap; gap: 12px; padding: 18px; }
+  .studio-lesson > .assignment-info { flex: 1; min-width: 0; }
+  .studio-lesson > .editor-actions { width: 100%; padding-left: 32px; justify-content: flex-end; }
+  .studio-nav button { padding: 12px 10px; font-size: 13px; }
+  .studio-form, .studio-inline-definitions { padding: 16px; }
+  .editor-sheet .lesson-sheet { padding: 25px 20px; }
+  .studio-heading h2 { font-size: 23px; }
+}
+.inspector-return { display: none; }
+@media (max-width: 1180px) { .inspector-return { display: inline-flex; } }

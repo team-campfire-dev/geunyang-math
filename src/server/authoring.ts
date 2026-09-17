@@ -4,7 +4,7 @@ import type { PrismaClient } from '@prisma/client';
 import { canonicalJson, ContentError } from '@/core/content-bundle';
 import { problemSetRefs, storedLessonOf, validateLesson, validateProblemSet, type StoredLesson, type StoredProblem, type StoredProblemSet } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
-import { frozenProblemSet, lessonRecord, importContent, problemSetRecords, publishedProblemRecords, definitionRecords } from './content-store';
+import { frozenProblemSet, lessonRecord, importContent, problemSetRecords, publishedProblemRecords, definitionRecords, currentDefinitions } from './content-store';
 import { AppError } from './errors';
 import type { AnswerSpec } from '@/shared/answer';
 import type { ContentBlock, LessonSection, ProblemSetRef } from '@/shared/api';
@@ -34,6 +34,7 @@ const editSchema = z.object({
     summary: z.string().trim().min(1).max(500),
     estimatedMinutes: z.number().int().min(1).max(240),
     conceptKeys: z.array(id.max(100)).min(1).max(50),
+    prerequisiteConceptKeys: z.array(id.max(100)).max(50).optional(),
   }).strict(),
   sections: z.array(z.object({
     sectionId: id,
@@ -41,6 +42,7 @@ const editSchema = z.object({
     title: z.string().min(1).max(500),
     contentBlocks: blockList,
   }).strict()).min(1).max(50),
+  reviewBlockId: id.nullable().optional(),
   // An answer says what a question expects; the response format and whether a hint exists follow
   // from it and from the hints, so the editor never sends either and the two cannot disagree.
   problems: z.array(z.object({
@@ -58,6 +60,10 @@ const editSchema = z.object({
 }).strict();
 
 export const authoringActionSchema = z.discriminatedUnion('action', [
+  z.object({ action: z.literal('course.save'), key: id.max(100).regex(/^[a-zA-Z0-9:._-]+$/), title: z.string().trim().min(1).max(191),
+    summary: z.string().trim().max(500), creating: z.boolean() }).strict(),
+  z.object({ action: z.literal('course.reorder'), courseKey: id.max(100), lessonKeys: z.array(id).max(1000) }).strict(),
+  z.object({ action: z.literal('concept.create'), key: z.string().regex(lessonKeyPattern), label: z.string().trim().min(1).max(191) }).strict(),
   z.object({ action: z.literal('draft.create'), lessonKey: id }).strict(),
   z.object({ action: z.literal('lesson.create'), courseKey: id.max(100), lessonKey: z.string().regex(lessonKeyPattern),
     title: z.string().trim().min(1).max(191), conceptKeys: z.array(id.max(100)).min(1).max(50) }).strict(),
@@ -209,7 +215,7 @@ export class AuthoringService {
     return role;
   }
 
-  private summary(row: DraftRow, userId: string): DraftSummary {
+  private summary(row: Omit<DraftRow, 'document' | 'ownerKind'>, userId: string): DraftSummary {
     return {
       id: row.id, lessonKey: row.ownerKey, versionId: row.versionId, baseVersionId: row.baseVersionId, title: row.title,
       status: row.status === 'published' ? 'published' : row.status === 'review' ? 'review' : 'draft',
@@ -258,11 +264,16 @@ export class AuthoringService {
     const resolved = sets ?? await this.resolveSets(document);
     const edit: DraftEdit = {
       meta: { versionId: document.public.versionId, title: document.public.title, summary: document.public.summary,
-        estimatedMinutes: document.public.estimatedMinutes, conceptKeys: [...document.public.conceptKeys] },
+        estimatedMinutes: document.public.estimatedMinutes, conceptKeys: [...document.public.conceptKeys],
+        prerequisiteConceptKeys: [...document.public.prerequisiteConceptKeys] },
       sections: structuredClone(document.sections),
+      ...(document.review ? { reviewBlockId: document.sections.flatMap((section) => section.contentBlocks).find((block) =>
+        block.kind === 'core.problem_set' && canonicalJson(block.payload) === canonicalJson(document.review))?.blockId } : { reviewBlockId: null }),
       problems: this.problemsOf(document, resolved).map(draftProblem),
     };
-    return { ...this.summary(row, userId), edit, definitions: await this.definitionChoices(document.public.lessonKey), issues,
+    const definitions = await this.definitionChoices(document.public.lessonKey);
+    const glossary = (await currentDefinitions(this.db, definitions)).map((entry) => ({ ...entry, lessonKey: null }));
+    return { ...this.summary(row, userId), edit, definitions, glossary, issues,
       review: document.review ? structuredClone(document.review) : null };
   }
 
@@ -295,15 +306,17 @@ export class AuthoringService {
   async workspace(userId: string): Promise<AuthoringWorkspace> {
     const role = await authoringRole(this.db, userId);
     if (!role) return { role: null, drafts: [], courses: [], lessons: [], accounts: [], concepts: [], expertMode: false };
-    const [drafts, versions, courses, accounts, concepts, account] = await Promise.all([
+    const [drafts, versions, courses, accounts, concepts, account, identities] = await Promise.all([
       this.db.contentDraft.findMany({ where: { ownerKind: 'lesson', ...(mayEditEveryDraft(role) ? {} : { authorId: userId }) },
-        orderBy: { updatedAt: 'desc' }, take: 50, include: withAuthor }),
+        orderBy: { updatedAt: 'desc' }, select: { id: true, ownerKey: true, versionId: true, baseVersionId: true, title: true,
+          status: true, authorId: true, publishedVersionId: true, updatedAt: true, ...withAuthor } }),
       this.db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }],
         select: { id: true, lessonKey: true, title: true, lesson: { select: { course: { select: { key: true } } } } } }),
-      this.db.course.findMany({ orderBy: [{ createdAt: 'asc' }, { key: 'asc' }], select: { key: true, title: true } }),
+      this.db.course.findMany({ orderBy: [{ createdAt: 'asc' }, { key: 'asc' }], select: { key: true, title: true, summary: true } }),
       this.accounts(userId, role),
       this.db.concept.findMany({ orderBy: [{ assessable: 'desc' }, { label: 'asc' }], select: { key: true, label: true, assessable: true } }),
       this.db.user.findUnique({ where: { id: userId }, select: { editorExpertMode: true } }),
+      this.db.lesson.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }], select: { key: true, course: { select: { key: true } } } }),
     ]);
     const openDrafts = new Set(drafts.filter((draft) => draft.status !== 'published').map((draft) => draft.ownerKey));
     const byKey = new Map<string, { title: string; courseKey: string; versions: string[] }>();
@@ -319,12 +332,49 @@ export class AuthoringService {
       concepts,
       courses,
       expertMode: account?.editorExpertMode ?? false,
-      drafts: (drafts as DraftRow[]).map((row) => this.summary(row, userId)),
-      lessons: [...byKey.entries()].map(([lessonKey, entry]) => ({
-        lessonKey, courseKey: entry.courseKey, title: entry.title, latestVersionId: entry.versions[entry.versions.length - 1],
-        suggestedVersionId: suggestVersionId(lessonKey, entry.versions), hasDraft: openDrafts.has(lessonKey),
-      })),
+      drafts: drafts.map((row) => this.summary(row, userId)),
+      lessons: identities.flatMap((identity) => {
+        const entry = byKey.get(identity.key);
+        const draft = drafts.find((item) => item.ownerKey === identity.key);
+        // An unpublished lesson is visible only if this account can open its draft.
+        if (!entry && !draft) return [];
+        return [{ lessonKey: identity.key, courseKey: identity.course.key, title: entry?.title ?? draft!.title,
+          latestVersionId: entry?.versions.at(-1) ?? null,
+          suggestedVersionId: suggestVersionId(identity.key, entry?.versions ?? []), hasDraft: openDrafts.has(identity.key) }];
+      }),
     };
+  }
+
+  /** Course identity and order change immediately, so only a publisher manages them. */
+  async saveCourse(userId: string, key: string, title: string, summary: string, creating: boolean): Promise<AuthoringResponse> {
+    if (!mayPublish(await this.require(userId))) throw new AppError(403, 'not_a_publisher', '코스 정보는 관리자만 고칠 수 있어요.');
+    const existing = await this.db.course.findUnique({ where: { key } });
+    if (creating && existing) throw new AppError(409, 'course_exists', '이미 쓰고 있는 코스 키예요.');
+    if (!creating && !existing) throw new AppError(404, 'course_missing', '코스를 찾을 수 없어요.');
+    if (creating) await this.db.course.create({ data: { key, title, summary } });
+    else await this.db.course.update({ where: { key }, data: { title, summary } });
+    return { workspace: await this.workspace(userId) };
+  }
+
+  async reorderCourse(userId: string, courseKey: string, lessonKeys: string[]): Promise<AuthoringResponse> {
+    if (!mayPublish(await this.require(userId))) throw new AppError(403, 'not_a_publisher', '수업 순서는 관리자만 바꿀 수 있어요.');
+    await this.db.$transaction(async (tx) => {
+      const course = await tx.course.findUnique({ where: { key: courseKey }, include: { lessons: { select: { key: true } } } });
+      if (!course) throw new AppError(404, 'course_missing', '코스를 찾을 수 없어요.');
+      if (new Set(lessonKeys).size !== lessonKeys.length || course.lessons.length !== lessonKeys.length ||
+        course.lessons.some((lesson) => !lessonKeys.includes(lesson.key))) {
+        throw new AppError(409, 'course_changed', '수업 목록이 바뀌었어요. 화면을 새로 불러온 뒤 순서를 정해 주세요.');
+      }
+      for (const [order, key] of lessonKeys.entries()) await tx.lesson.update({ where: { key }, data: { order: order + 1 } });
+    }, { isolationLevel: 'Serializable' });
+    return { workspace: await this.workspace(userId) };
+  }
+
+  async createConcept(userId: string, key: string, label: string): Promise<AuthoringResponse> {
+    if (!mayPublish(await this.require(userId))) throw new AppError(403, 'not_a_publisher', '학습 개념은 관리자만 추가할 수 있어요.');
+    if (await this.db.concept.findUnique({ where: { key } })) throw new AppError(409, 'concept_exists', '이미 있는 개념이에요. 목록에서 골라 주세요.');
+    await this.db.concept.create({ data: { key, label, assessable: true } });
+    return { workspace: await this.workspace(userId) };
   }
 
   /**
@@ -709,12 +759,19 @@ export class AuthoringService {
           problemSetVersionId: versionOf.get(String(block.payload.problemSetId ?? '')) ?? '',
           problemVersionIds: (block.payload.problemVersionIds as string[] | undefined) ?? [] } }
       : block)) }));
+    let review = stored.review;
+    if (edit.reviewBlockId === null) review = null;
+    else if (edit.reviewBlockId !== undefined) {
+      const block = referenced.flatMap((section) => section.contentBlocks).find((block) => block.blockId === edit.reviewBlockId && block.kind === 'core.problem_set');
+      if (!block) throw new AppError(422, 'review_missing', '복습에 쓸 문제가 있는 단계를 다시 골라 주세요.');
+      review = structuredClone(block.payload) as ProblemSetRef;
+    }
     return { sets, document: {
       public: { ...stored.public, versionId: edit.meta.versionId, title: edit.meta.title, summary: edit.meta.summary,
-        estimatedMinutes: edit.meta.estimatedMinutes, conceptKeys: [...edit.meta.conceptKeys], sectionCount: referenced.length },
+        estimatedMinutes: edit.meta.estimatedMinutes, conceptKeys: [...edit.meta.conceptKeys],
+        prerequisiteConceptKeys: [...(edit.meta.prerequisiteConceptKeys ?? stored.public.prerequisiteConceptKeys)], sectionCount: referenced.length },
       sections: referenced as StoredLesson['sections'],
-      // The review pool is a published set the lesson keeps referencing; this screen does not edit it.
-      review: stored.review,
+      review,
     } };
   }
 
@@ -817,6 +874,9 @@ export class AuthoringService {
   async act(userId: string, input: unknown): Promise<AuthoringResponse> {
     const action = authoringActionSchema.parse(input);
     switch (action.action) {
+      case 'course.save': return this.saveCourse(userId, action.key, action.title, action.summary, action.creating);
+      case 'course.reorder': return this.reorderCourse(userId, action.courseKey, action.lessonKeys);
+      case 'concept.create': return this.createConcept(userId, action.key, action.label);
       case 'draft.create': return this.createDraft(userId, action.lessonKey);
       case 'lesson.create': return this.createLesson(userId, action.courseKey, action.lessonKey, action.title, action.conceptKeys);
       case 'draft.review': return this.setReview(userId, action.draftId, action.asking);

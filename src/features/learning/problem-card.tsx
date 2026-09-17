@@ -23,12 +23,12 @@ export type ProblemActions = {
  * the last answer, and a hint if the question carries one. The answer itself is never here — it is
  * sent away and judged, and this only shows the judgement.
  */
-export function ProblemCard({ problem, attempt, actions, busy, disabled, ready = true, onReady, readyNote, submitLabel = '정답 확인', onDraftChange, glossary }: {
+export function ProblemCard({ problem, attempt, actions, busy, disabled, ready = true, onReady, readyNote, submitLabel = '정답 확인', onDraftChange, glossary, recordsLearning = true }: {
   problem: PublicProblem; attempt?: AttemptView | null; actions: ProblemActions;
   busy: boolean; disabled?: boolean;
   /** Whether answering is possible yet. A lesson not started is the reason it is usually not. */
   ready?: boolean; onReady?: () => void; readyNote?: string;
-  submitLabel?: string;
+  submitLabel?: string; recordsLearning?: boolean;
   onDraftChange?: (id: string, dirty: boolean) => void; glossary?: GlossaryContext;
 }) {
   const [answer, setAnswer] = useState(attempt?.answer ?? '');
@@ -63,7 +63,7 @@ export function ProblemCard({ problem, attempt, actions, busy, disabled, ready =
       <button className="button primary" disabled={busy || disabled || unsupported || !ready || !answer.trim()} type="submit">{busy ? '저장 중…' : submitLabel}</button>
     </form>
     {problem.responseSpec.requiredForm && <p className="input-help">답안 형식: {problem.responseSpec.requiredForm === 'simplest' || problem.responseSpec.requiredForm === 'simplest_fraction' || problem.responseSpec.requiredForm === 'reduced_fraction' ? '기약분수' : problem.responseSpec.requiredForm}</p>}
-    {attempt && <div className={`answer-feedback ${changed ? 'draft-feedback' : attempt.result.status}`} role="status"><Icon name={attempt.result.status === 'correct' && !changed ? 'check' : 'pencil'} size={18} /><span>{changed ? '답안을 수정했어요. 다시 저장하면 학습 기록에 반영돼요.' : attempt.result.message}{!changed && attempt.result.assisted && <small>도움받은 풀이로 기록했어요.</small>}</span></div>}
+    {attempt && <div className={`answer-feedback ${changed ? 'draft-feedback' : attempt.result.status}`} role="status"><Icon name={attempt.result.status === 'correct' && !changed ? 'check' : 'pencil'} size={18} /><span>{changed ? recordsLearning ? '답안을 수정했어요. 다시 저장하면 학습 기록에 반영돼요.' : '답안을 수정했어요. 다시 확인해 보세요.' : attempt.result.message}{!changed && attempt.result.assisted && <small>{recordsLearning ? '도움받은 풀이로 기록했어요.' : '힌트를 사용한 풀이예요. 학습 기록에는 남지 않아요.'}</small>}</span></div>}
     {localError && <p className="field-error" role="alert">{localError}</p>}
     {problem.hintAvailable && <div className="hint-area"><button className="text-button hint-button" disabled={busy || disabled || unsupported} onClick={openHint}><Icon name="lightbulb" size={16} />{hint ? '힌트 다시 보기' : '조금만 도움받기'}</button>{hint && <div className="hint-content"><ContentBlocks blocks={hint} glossary={glossary} /></div>}</div>}
     {!ready && readyNote && <p className="input-help">{readyNote}</p>}
