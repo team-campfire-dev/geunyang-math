@@ -7,16 +7,20 @@ import { LearningService } from '@/server/learning-service';
 import { canonicalJson, parseContentBundle, validateReferences } from '@/core/content-bundle';
 import { blockOf, lessonRecord, currentDiagnostic, currentDefinitions, diagnosticDefinitions, exportContent, importContent, indexLessonDocument, publishBundle, verifyContent } from '@/server/content-store';
 import initial from '../prisma/seed/fractions.json';
-import { seedLessons } from './fixtures/content';
+import { seedLessons, setsOf } from './fixtures/content';
+import { storedLessonOf } from '@/core/content';
 
 const bundle = () => parseContentBundle(structuredClone(initial));
-const empty = () => ({ schemaVersion: 1 as const, courses: [], concepts: [], lessons: [], diagnostics: [], definitions: [] });
+const empty = () => ({ schemaVersion: 1 as const, courses: [], concepts: [], lessons: [], problemSets: [], diagnostics: [], definitions: [] });
 /**
  * A course of the test's own for the lessons it publishes, so the seeded course is never touched. It is
  * named after the first lesson, so every version of one lesson lands in the same course.
  */
 const inCourse = (...lessons: { public: { lessonKey: string } }[]) => [{ key: `course-${lessons[0].public.lessonKey}`, title: '검사 코스',
   lessons: [...new Set(lessons.map((lesson) => lesson.public.lessonKey))].map((key, index) => ({ key, order: index + 1 })), diagnostics: [] }];
+/** What publishing these records takes: their course, the lessons, and the sets rebuilt from what each holds. */
+const publish = (...records: (typeof seedLessons)[number][]) => ({ courses: inCourse(...records), lessons: records.map(storedLessonOf),
+  problemSets: [...new Map(records.flatMap((record) => setsOf(record, inCourse(...records)[0].key)).map((set) => [set.versionId, set])).values()] });
 function newLesson() {
   const key = `content-test-${randomUUID()}`;
   const c = JSON.parse(JSON.stringify(seedLessons[0]).replaceAll('fraction-meaning', key)) as typeof seedLessons[number];
@@ -54,7 +58,7 @@ describe('content publishing contract', () => {
     expect(() => validateReferences(a)).toThrow(/Missing concept/);
     const b = bundle(); b.lessons.push(b.lessons[0]);
     expect(() => parseContentBundle(b)).toThrow(/Duplicate/);
-    const c = bundle(); c.diagnostics[0].problems[0].problemVersionId = c.lessons[0].problems[0].problemVersionId;
+    const c = bundle(); c.diagnostics[0].problems[0].problemVersionId = c.problemSets[0].problems[0].problemVersionId;
     expect(() => validateReferences(c)).toThrow(/overlaps lesson/);
   });
   it('validates private diagnostic grading and forbids hints and unsupported required blocks', () => {
@@ -68,7 +72,7 @@ describe('content publishing contract', () => {
   it('rejects case-only identities that MySQL treats as equal', () => {
     const a = bundle(); a.concepts.push({ ...a.concepts[0], key: a.concepts[0].key.toUpperCase() });
     expect(() => validateReferences(a)).toThrow(/letter case/);
-    const b = bundle(); b.diagnostics[0].problems[0].problemVersionId = b.lessons[0].problems[0].problemVersionId.toUpperCase();
+    const b = bundle(); b.diagnostics[0].problems[0].problemVersionId = b.problemSets[0].problems[0].problemVersionId.toUpperCase();
     expect(() => validateReferences(b)).toThrow(/letter case/);
   });
   it('links lesson text to definitions and rejects a lesson that links to none', () => {
@@ -127,7 +131,7 @@ describe('content publishing contract', () => {
 
   it('refuses a question that explains the concept it assesses', () => {
     const b = withTerms();
-    const problem = b.lessons[0].problems[0];
+    const problem = b.problemSets.find(set => set.versionId === 'fraction-meaning:practice:v1')!.problems[0];
     expect(problem.conceptKeys).toContain('fraction.meaning');
     b.definitions.push({ ...structuredClone(definitionFixture), conceptKey: 'fraction.meaning', label: '분수의 의미',
       blocks: [{ ...definitionFixture.blocks[0], blockId: 'global:fraction.meaning:b1' }] });
@@ -137,8 +141,8 @@ describe('content publishing contract', () => {
   });
   it('keeps definition definitions free of questions and of further definition links', () => {
     const withBlock = (block: unknown) => ({ ...structuredClone(initial), definitions: [{ ...definitionFixture, blocks: [block] }] });
-    expect(() => parseContentBundle(withBlock({ blockId: 'definition:bad:v1', kind: 'core.problem_set', typeVersion: 1, required: true,
-      payload: { problemVersionIds: [initial.lessons[0].problems[0].problemVersionId] } }))).toThrow();
+    expect(() => parseContentBundle(withBlock({ blockId: 'definition:bad:v1', kind: 'core.problem_set', typeVersion: 2, required: true,
+      payload: { problemSetId: 'x', problemSetVersionId: 'x:v1', problemVersionIds: [initial.problemSets[0].problems[0].problemVersionId] } }))).toThrow();
     expect(() => parseContentBundle(withBlock({ blockId: 'definition:bad:v1', kind: 'core.rich_text', typeVersion: 3, required: true,
       payload: { text: '분모를 설명해요.', definitions: [{ conceptKey: 'term.denominator', surface: '분모' }] } }))).toThrow();
     expect(() => parseContentBundle(withBlock(definitionFixture.blocks[0]))).not.toThrow();
@@ -188,7 +192,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     const c = newLesson(), conceptKey = `test.${randomUUID()}`;
     c.public.conceptKeys = [conceptKey]; c.public.prerequisiteConceptKeys = [];
     c.problems.forEach(p => { p.conceptKeys = [conceptKey]; });
-    const input = { ...empty(), courses: inCourse(c), lessons: [c], concepts: [{ key: conceptKey, label: 'DB에서 등록한 개념', assessable: true }] };
+    const input = { ...empty(), ...publish(c), concepts: [{ key: conceptKey, label: 'DB에서 등록한 개념', assessable: true }] };
     expect(await importContent(db, input, true)).toMatchObject({ dryRun: true, newLessons: 1 });
     expect(await db.lessonVersion.findUnique({ where: { id: c.public.versionId } })).toBeNull();
     expect(await db.concept.findUnique({ where: { key: conceptKey } })).toBeNull();
@@ -199,27 +203,27 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     expect(state.concepts).toContainEqual({ key: conceptKey, label: 'DB에서 등록한 개념', state: 'unknown' });
     expect(JSON.stringify(await service.lessonDocument(c.public.lessonKey))).not.toContain('gradingSpec');
     const edited = structuredClone(c); edited.public.title = 'Cannot overwrite';
-    await expect(importContent(db, { ...input, lessons: [edited], concepts: [{ ...input.concepts[0], label: 'Must not persist' }] })).rejects.toThrow(/immutable/);
+    await expect(importContent(db, { ...input, lessons: [storedLessonOf(edited)], concepts: [{ ...input.concepts[0], label: 'Must not persist' }] })).rejects.toThrow(/immutable/);
     expect((await db.concept.findUniqueOrThrow({ where: { key: conceptKey } })).label).toBe('DB에서 등록한 개념');
   });
   it('rejects unknown references and changes to reused question versions without partial writes', async () => {
     const bad = newLesson(); bad.public.conceptKeys = ['missing.concept']; bad.problems.forEach(p => { p.conceptKeys = ['missing.concept']; });
-    await expect(importContent(db, { ...empty(), courses: inCourse(bad), lessons: [bad] })).rejects.toThrow(/Missing concept/);
+    await expect(importContent(db, { ...empty(), ...publish(bad) })).rejects.toThrow(/Missing concept/);
     expect(await db.lessonVersion.findUnique({ where: { id: bad.public.versionId } })).toBeNull();
-    const first = newLesson(); await importContent(db, { ...empty(), courses: inCourse(first), lessons: [first] });
+    const first = newLesson(); await importContent(db, { ...empty(), ...publish(first) });
     const second = structuredClone(first); second.public.versionId += '-next'; second.problems[0].promptContent[0].payload.text = 'Changed problem';
-    await expect(importContent(db, { ...empty(), courses: inCourse(second), lessons: [second] })).rejects.toThrow(/Problem version is immutable/);
+    await expect(importContent(db, { ...empty(), ...publish(second) })).rejects.toThrow(/immutable/);
     expect(await db.lessonVersion.findUnique({ where: { id: second.public.versionId } })).toBeNull();
   });
   it('selects the last newly published version while pinning existing enrollment and homework', async () => {
-    const first = newLesson(); await importContent(db, { ...empty(), courses: inCourse(first), lessons: [first] });
+    const first = newLesson(); await importContent(db, { ...empty(), ...publish(first) });
     const user = await learner(), scope = await db.learningScope.findUniqueOrThrow({ where: { ownerUserId: user.id } });
     await service.act(user.id, { action: 'enrollment.start', lessonKey: first.public.lessonKey });
-    const assignment = await db.$transaction(tx => service.createPersonalAssignment(tx, user.id, scope.id, first));
+    const assignment = (await db.$transaction(tx => service.createPersonalAssignment(tx, user.id, scope.id, first)))!;
     const before = await db.assignmentItem.findMany({ where: { assignmentId: assignment.id }, orderBy: { id: 'asc' } });
     const second = structuredClone(first); second.public.versionId += '-2'; second.public.title = 'Second edition';
     const third = structuredClone(first); third.public.versionId += '-3'; third.public.title = 'Third edition';
-    await importContent(db, { ...empty(), courses: inCourse(second, third), lessons: [second, third] });
+    await importContent(db, { ...empty(), ...publish(second, third) });
     expect((await service.lessonDocument(first.public.lessonKey)).versionId).toBe(third.public.versionId);
     expect((await service.lessonDocument(first.public.lessonKey, user.id)).versionId).toBe(first.public.versionId);
     expect((await service.catalog()).find(c => c.lessonKey === first.public.lessonKey)?.versionId).toBe(third.public.versionId);
@@ -268,9 +272,10 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     const c = newLesson(), conceptKey = `test.${randomUUID()}`;
     c.public.conceptKeys = [conceptKey]; c.public.prerequisiteConceptKeys = [];
     c.problems.forEach(p => { p.conceptKeys = [conceptKey]; });
-    await importContent(db, { ...empty(), courses: inCourse(c), lessons: [c], concepts: [{ key: conceptKey, label: '색인 검사 개념', assessable: true }] });
-    const rows = await db.publishedProblem.findMany({ where: { ownerKind: 'lesson', ownerVersionId: c.public.versionId }, orderBy: { order: 'asc' } });
-    expect(rows.map(row => row.problemVersionId)).toEqual(c.problems.map(p => p.problemVersionId));
+    await importContent(db, { ...empty(), ...publish(c), concepts: [{ key: conceptKey, label: '색인 검사 개념', assessable: true }] });
+    // The questions are the problem sets' rows now, each set version holding its own in order.
+    const rows = (await Promise.all(setsOf(c).map(set => db.publishedProblem.findMany({ where: { ownerKind: 'problem_set', ownerVersionId: set.versionId }, orderBy: { order: 'asc' } })))).flat();
+    expect(rows.map(row => row.problemVersionId).sort()).toEqual(c.problems.map(p => p.problemVersionId).sort());
     expect(await lessonRecord(db, c.public.versionId)).toEqual(c);
     // An activity still names the question the rows lost, so the lesson no longer reads back whole.
     const [removed] = rows;
@@ -278,7 +283,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
       ownerVersionId: removed.ownerVersionId, problemVersionId: removed.problemVersionId } };
     try {
       await db.publishedProblem.delete({ where });
-      await expect(verifyContent(db)).rejects.toThrow(/Missing immutable problem version/);
+      await expect(verifyContent(db)).rejects.toThrow(/Problem is not in the problem set version/);
     } finally {
       await db.publishedProblem.create({ data: { ...removed,
         conceptKeys: removed.conceptKeys as never, responseSpec: removed.responseSpec as never, gradingSpec: removed.gradingSpec as never } });
@@ -295,24 +300,26 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     c.sections[0].contentBlocks.push({ blockId: `${c.sections[0].sectionId}:optional`, kind: 'core.rich_text',
       typeVersion: 1, required: false, payload: { text: '되돌아오는지 보려고 둔 블록이에요.' },
       fallback: '그림을 볼 수 없을 때 읽는 문장이에요.' });
-    await importContent(db, { ...empty(), courses: inCourse(c), lessons: [c], concepts: [{ key: conceptKey, label: '블록 표 검사 개념', assessable: true }] });
+    await importContent(db, { ...empty(), ...publish(c), concepts: [{ key: conceptKey, label: '블록 표 검사 개념', assessable: true }] });
 
     const sections = await db.lessonSection.findMany({ where: { lessonVersionId: c.public.versionId }, orderBy: { order: 'asc' } });
     expect(sections.map(section => section.sectionId)).toEqual(c.sections.map(section => section.sectionId));
     expect(sections.map(section => ({ role: section.role, title: section.title })))
       .toEqual(c.sections.map(section => ({ role: section.role, title: section.title })));
 
-    const blocksOf = (ownerKind: string, ownerId: string, slot: string) => db.contentBlock.findMany({
-      where: { ownerKind, ownerVersionId: c.public.versionId, ownerId, slot }, orderBy: { order: 'asc' } });
-    const body = await blocksOf('section', c.sections[0].sectionId, 'body');
+    const blocksOf = (ownerKind: string, ownerVersionId: string, ownerId: string, slot: string) => db.contentBlock.findMany({
+      where: { ownerKind, ownerVersionId, ownerId, slot }, orderBy: { order: 'asc' } });
+    const body = await blocksOf('section', c.public.versionId, c.sections[0].sectionId, 'body');
     expect(body.map(blockOf)).toEqual(c.sections[0].contentBlocks);
     // Absent, not null: the restored block has no `fallback` key where the document had none.
     expect(Object.keys(blockOf(body[0]))).not.toContain('fallback');
     expect(body[body.length - 1].fallback).toBe('그림을 볼 수 없을 때 읽는 문장이에요.');
+    // A question's blocks hang off the problem set version that holds the question.
     const problem = c.problems[0];
-    expect((await blocksOf('problem', problem.problemVersionId, 'prompt')).map(blockOf)).toEqual(problem.promptContent);
-    expect((await blocksOf('problem', problem.problemVersionId, 'hint')).map(blockOf)).toEqual(problem.hints);
-    expect((await blocksOf('problem', problem.problemVersionId, 'solution')).map(blockOf)).toEqual(problem.solution);
+    const setVersion = setsOf(c).find(set => set.problems.some(p => p.problemVersionId === problem.problemVersionId))!.versionId;
+    expect((await blocksOf('problem', setVersion, problem.problemVersionId, 'prompt')).map(blockOf)).toEqual(problem.promptContent);
+    expect((await blocksOf('problem', setVersion, problem.problemVersionId, 'hint')).map(blockOf)).toEqual(problem.hints);
+    expect((await blocksOf('problem', setVersion, problem.problemVersionId, 'solution')).map(blockOf)).toEqual(problem.solution);
 
     // The rows are the lesson now: one taken away is one the lesson no longer has, and writing them
     // again puts it back without touching what is already there.
@@ -322,7 +329,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
       expect((await lessonRecord(db, c.public.versionId))!.sections[0].contentBlocks)
         .toEqual(c.sections[0].contentBlocks.slice(1));
     } finally {
-      await indexLessonDocument(db, c);
+      await indexLessonDocument(db, storedLessonOf(c));
     }
     expect(await lessonRecord(db, c.public.versionId)).toEqual(c);
     expect((await verifyContent(db)).indexedBlocks).toBeGreaterThanOrEqual(c.sections[0].contentBlocks.length);
@@ -332,7 +339,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     const c = newLesson(), conceptKey = `test.${randomUUID()}`;
     c.public.conceptKeys = [conceptKey]; c.public.prerequisiteConceptKeys = [];
     c.problems.forEach(p => { p.conceptKeys = [conceptKey]; });
-    await importContent(db, { ...empty(), courses: inCourse(c), lessons: [c], concepts: [{ key: conceptKey, label: '행에서 읽는 개념', assessable: true }] });
+    await importContent(db, { ...empty(), ...publish(c), concepts: [{ key: conceptKey, label: '행에서 읽는 개념', assessable: true }] });
     const published = await service.lessonDocument(c.public.lessonKey);
     expect(published.sections.map(section => section.title)).toEqual(c.sections.map(section => section.title));
     expect(published.problems.map(problem => problem.problemVersionId)).toEqual(c.problems.map(problem => problem.problemVersionId));
@@ -373,7 +380,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     const c = newLesson(), taught = `test.taught.${randomUUID()}`, unreleased = `test.unreleased.${randomUUID()}`;
     c.public.conceptKeys = [taught]; c.public.prerequisiteConceptKeys = [];
     c.problems.forEach(p => { p.conceptKeys = [taught]; });
-    await importContent(db, { ...empty(), courses: inCourse(c), lessons: [c], concepts: [
+    await importContent(db, { ...empty(), ...publish(c), concepts: [
       { key: taught, label: '공개 카탈로그 개념', assessable: true },
       { key: unreleased, label: '아직 수업이 없는 개념', assessable: true },
     ] });
@@ -400,7 +407,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     const block = second.sections[0].contentBlocks[0];
     second.sections[0].contentBlocks[0] = { ...block, typeVersion: 3, payload: { text: '분모가 다르면 통분을 해요.',
       definitions: [{ conceptKey: earlier, surface: '분모' }, { conceptKey: current, surface: '통분' }] } };
-    const input = { ...empty(), courses: inCourse(first, second), lessons: [first, second], definitions: [earlierDefinition, currentDefinition],
+    const input = { ...empty(), ...publish(first, second), definitions: [earlierDefinition, currentDefinition],
       concepts: [{ key: earlier, label: '앞선 개념', assessable: true }, { key: current, label: '지금 개념', assessable: true }] };
 
     await expect(importContent(db, { ...input, definitions: [] })).rejects.toThrow(/Missing definition/);
@@ -448,7 +455,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     const block = second.sections[0].contentBlocks[0];
     second.sections[0].contentBlocks[0] = { ...block, typeVersion: 3, payload: { text: '분모가 무엇인지 떠올려 보세요.',
       definitions: [{ conceptKey: earlier, surface: '분모', scopeKind: 'lesson', scopeKey: second.public.lessonKey }] } };
-    const input = { ...empty(), courses: inCourse(first, second), lessons: [first, second], definitions: [shared, mine],
+    const input = { ...empty(), ...publish(first, second), definitions: [shared, mine],
       concepts: [{ key: earlier, label: '앞선 개념', assessable: true }, { key: current, label: '지금 개념', assessable: true }] };
 
     // The dictionary alone does not answer for a reference that named the lesson.

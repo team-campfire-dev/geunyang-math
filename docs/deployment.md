@@ -188,6 +188,8 @@ DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVer
 
 `20260917020000_concepts`는 `Skill`과 `TermVersion`을 `Concept`·`ConceptDefinition`으로 합친다. 개념 3개는 평가할 수 있는 개념이 되고, 용어 6개는 각각 설명만 있는 개념이 되며 키의 `term.` 접두어를 잃는다(`term.denominator` → `denominator`). 범위마다 마지막 판본이 그 범위의 뜻풀이 한 행이 되고(판본 id를 행 id로 그대로 쓴다), 옛 판본의 블록은 지운다. `PublishedProblem.skillKeys`는 `conceptKeys`로, 문서의 `skillKeys`·`prerequisiteSkillKeys`도 같이 바뀌며, 발행된 `core.rich_text@2` 블록은 `@3`(`definitions[].conceptKey`)으로 옮겨진다. 옛 형식의 초안은 옮기지 않고 지운다. 두 표를 `DROP TABLE`하므로 A 단계의 `DROP` 권한이 여기서도 필요하다. 저장소 번들은 `content/glossary-v2.json`으로 바뀐다 — 옛 `glossary-v1.json`의 원장 행은 남지만 파일이 없어 다시 발행되지 않는다.
 
+`20260917030000_problem_sets`는 문제의 주인을 수업에서 문제집으로 옮긴다. 발행된 수업 판본의 활동 블록마다 문제집 `<수업키>:<단계 역할>`과 판본 `<수업키>:<역할>:<vN>`을 만들고(수업 판본마다 자기 문제집 판본을 갖는다), 숙제 풀은 `<수업키>:review`가 되어 `metadata.review`로 참조된다. `PublishedProblem`과 문항 블록은 문제집 판본으로 주인을 옮기고, 활동 블록은 `core.problem_set@2`(문제집 ID + 판본 ID + 고른 문제 ID)가 된다. 옮겨진 문제집 판본의 `contentHash`는 자리만 채운 값이다. 한 수업 판본에 같은 역할의 단계가 둘이면 이름이 겹쳐 migration이 멈춘다(병합하지 않는다). `ContentDraft`는 `ownerKind`·`ownerKey`로 일반화되고 옛 형식의 초안은 지운다.
+
 사본이 있는 동안 `content:verify`는 배포마다 행과 `document`를 대조했다 — 처음에는 문항 색인을, 그다음에는 블록을, 세 번째 단계부터는 행을 도로 맞춘 결과 전체를 한 글자도 다르지 않은지 봤다. 네 번의 배포(#27·#29·#30·#31)가 모두 같음을 확인한 뒤에 사본을 지웠다. 지금 `content:verify`가 보고하는 수는 운영 기준으로 `indexedProblems: 36`, `indexedBlocks: 148`이고, 어긋나면 배포가 그 자리에서 멈춘다.
 
 초기 인프라 점검에서는 앱 VM·포트·DNS·와일드카드 인증서, ARM64 non-root 이미지·revision·health, DB TLS 연결과 잘못된 CA/호스트 이름 거부, 앱 계정의 DB 한정 DML·호스트 제한·REQUIRE SSL을 확인했다. NPM Proxy Hosts 등록과 Google HTTPS callback 로그 제외, 배포 시크릿 6개와 자동 배포 활성화도 완료했다. 이 기록은 이후 인증서·권한·프록시 변경을 자동 검증한다는 뜻은 아니다.

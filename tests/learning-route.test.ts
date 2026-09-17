@@ -4,9 +4,8 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import * as database from '@/server/db';
 import { hashSessionToken } from '@/server/auth';
-import { seedLessons } from './fixtures/content';
-import { ensureLesson } from './fixtures/identity';
-import { lessonMetadata, lessonRecord, indexLessonDocument } from '@/server/content-store';
+import { lessonBundle, seedLessons } from './fixtures/content';
+import { importContent, lessonRecord } from '@/server/content-store';
 import { POST } from '@/app/api/v1/learning/route';
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
@@ -21,20 +20,9 @@ describe.skipIf(!testDatabaseUrl)('learning HTTP account binding', () => {
     if (parsed.protocol !== 'mysql:' || !decodeURIComponent(parsed.pathname.slice(1)).endsWith('_test')) throw new Error('Learning route integration requires a MySQL database ending in _test.');
     db = database.createDatabase(testDatabaseUrl!);
     existing = await existingRows(db);
-    const document = seedLessons[0];
-    const serialized = JSON.stringify(document);
-    const contentHash = createHash('sha256').update(serialized).digest('hex');
-    const previous = await db.lessonVersion.findUnique({ where: { id: document.public.versionId } });
-    // The seeded rows were renamed in place by a migration, so their stored hash is historical; the content is what must hold.
-    if (previous) expect(await lessonRecord(db, document.public.versionId)).toEqual(document);
-    else {
-      await ensureLesson(db, document.public.lessonKey);
-      await db.lessonVersion.create({ data: {
-      id: document.public.versionId, lessonKey: document.public.lessonKey, title: document.public.title,
-      metadata: JSON.parse(JSON.stringify(lessonMetadata(document))) as Prisma.InputJsonValue, contentHash,
-    } });
-    }
-    await indexLessonDocument(db, document);
+    // The seeded lessons are installed by db:seed; publishing them again is a no-op that proves they read back whole.
+    await importContent(db, lessonBundle([...seedLessons]));
+    expect(await lessonRecord(db, seedLessons[0].public.versionId)).toEqual(seedLessons[0]);
   });
   beforeEach(() => {
     vi.stubEnv('NODE_ENV', 'production');

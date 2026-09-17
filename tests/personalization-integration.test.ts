@@ -5,10 +5,9 @@ import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { diagnosticProblems } from './fixtures/content';
-import { seedLessons } from './fixtures/content';
-import { ensureLesson } from './fixtures/identity';
+import { lessonBundle, seedLessons } from './fixtures/content';
 import { getActivityProblemIds } from '@/core/content';
-import { lessonMetadata, indexLessonDocument } from '@/server/content-store';
+import { importContent } from '@/server/content-store';
 import type { DiagnosticView, LearningState } from '@/shared/api';
 
 const url = process.env.TEST_DATABASE_URL;
@@ -24,15 +23,8 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     if (parsed.protocol !== 'mysql:' || !parsed.pathname.endsWith('_test')) throw new Error('Use an isolated _test database.');
     db = createDatabase(url!); service = new LearningService(db);
     existing = await existingRows(db);
-    for (const record of seedLessons) {
-      await ensureLesson(db, record.public.lessonKey);
-      await db.lessonVersion.upsert({ where: { id: record.public.versionId }, update: {}, create: {
-        id: record.public.versionId, lessonKey: record.public.lessonKey, title: record.public.title,
-        metadata: json(lessonMetadata(record)),
-        contentHash: createHash('sha256').update(JSON.stringify(record)).digest('hex'),
-      } });
-      await indexLessonDocument(db, record);
-    }
+    // The seeded lessons are installed by db:seed; publishing them again is a no-op.
+    await importContent(db, lessonBundle([...seedLessons]));
   });
   afterAll(async () => {
     // A shared database keeps whatever a run leaves behind, so this run leaves nothing.
@@ -146,7 +138,7 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     const user = await learner();
     await place(user.id, answers);
     const scope = await db.learningScope.findUniqueOrThrow({ where: { ownerUserId: user.id } });
-    const assignment = await db.$transaction(tx => service.createPersonalAssignment(tx, user.id, scope.id, seedLessons[0]));
+    const assignment = (await db.$transaction(tx => service.createPersonalAssignment(tx, user.id, scope.id, seedLessons[0])))!;
     let state: LearningState = await service.state(user.id);
     const recipient = state.assignments.find(a => a.id === assignment.id)!;
     for (const item of recipient.items) state = (await service.act(user.id, { action: 'attempt.submit', context: 'assignment', contextId: recipient.recipientId,

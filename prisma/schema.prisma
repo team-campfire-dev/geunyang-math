@@ -40,11 +40,15 @@ model ContentAuthor {
   grantedAt DateTime @default(now())
 }
 
-/// A working copy of a class document. Published versions stay immutable, so publishing copies the
-/// draft into a new LessonVersion; a draft is never the record a learner reads.
+/// A working copy of something that is frozen when published: a lesson or a problem set. Publishing
+/// copies the draft into a new version; a draft is never the record a learner reads. A lesson draft
+/// names the problem set drafts it publishes with, by the version ids its blocks reference.
 model ContentDraft {
   id                 String @id @default(cuid()) @db.VarChar(191)
-  lessonKey           String @db.VarChar(100)
+  /// 'lesson' | 'problem_set'
+  ownerKind          String @db.VarChar(20)
+  /// Lesson.key or ProblemSet.id
+  ownerKey           String @db.VarChar(191)
   versionId          String @db.VarChar(191)
   baseVersionId      String? @db.VarChar(191)
   title              String @db.VarChar(191)
@@ -55,7 +59,7 @@ model ContentDraft {
   publishedVersionId String? @db.VarChar(191)
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
-  @@index([lessonKey])
+  @@index([ownerKind, ownerKey])
   @@index([authorId, updatedAt])
 }
 
@@ -117,6 +121,31 @@ model Course {
   updatedAt   DateTime @updatedAt
   lessons     Lesson[]
   diagnostics Diagnostic[]
+  problemSets ProblemSet[]
+}
+
+/// The identity of a problem set: which course keeps it, and its name. A name is the declaration
+/// that it is meant to be reused; a set made in place while writing a lesson has none and is not
+/// listed. A question belongs to exactly one problem set, however many lessons reference it.
+model ProblemSet {
+  id        String   @id @db.VarChar(191)
+  courseId  String   @db.VarChar(191)
+  course    Course   @relation(fields: [courseId], references: [id])
+  name      String?  @db.VarChar(191)
+  createdAt DateTime @default(now())
+  versions  ProblemSetVersion[]
+  @@index([courseId])
+}
+
+/// A frozen problem set. Its questions are rows of PublishedProblem and their blocks rows of
+/// ContentBlock, both hanging off this id, which therefore shares the namespace of version ids.
+model ProblemSetVersion {
+  id           String     @id @db.VarChar(191)
+  problemSetId String     @db.VarChar(191)
+  problemSet   ProblemSet @relation(fields: [problemSetId], references: [id])
+  contentHash  String     @db.VarChar(64)
+  publishedAt  DateTime   @default(now())
+  @@index([problemSetId, publishedAt])
 }
 
 /// The identity of a lesson, apart from any version of it: which course keeps it and where it
@@ -145,8 +174,8 @@ model LessonVersion {
   lessonKey   String @db.VarChar(100)
   lesson      Lesson @relation(fields: [lessonKey], references: [key])
   title       String @db.VarChar(191)
-  /// Everything a lesson says about itself that is not a section, a block or a question — `public`
-  /// and `homeworkProblemIds`. The rest is in LessonSection, ContentBlock and PublishedProblem.
+  /// Everything a lesson says about itself that is not a section or a block — `public`, and `review`,
+  /// the problem set its review assignments draw from. Questions are the problem sets' now.
   metadata    Json
   contentHash String @db.VarChar(64)
   publishedAt DateTime @default(now())
@@ -163,8 +192,7 @@ model PublishedProblem {
   ownerKind        String @db.VarChar(20)
   ownerVersionId   String @db.VarChar(191)
   problemVersionId String @db.VarChar(191)
-  /// The position the version holds this question in. A question list is ordered, and an activity
-  /// that names no question falls back to it.
+  /// The position the version holds this question in. A question list is ordered.
   order            Int
   conceptKeys      Json
   /// What the question expects and how it is marked. Both follow from the answer, but they are

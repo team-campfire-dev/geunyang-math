@@ -75,7 +75,7 @@ describe('placement and prerequisite recommendations', () => {
 
 describe('immutable adaptive review decisions', () => {
   const record = seedLessons[1];
-  const candidates = record.homeworkProblemIds.map(id => record.problems.find(p => p.problemVersionId === id)!);
+  const candidates = record.review!.problemVersionIds.map(id => record.problems.find(p => p.problemVersionId === id)!);
   it('uses one question at five minutes and at most the available pool for longer sessions', () => {
     expect(reviewSelection(candidates, [], 5).items).toHaveLength(1);
     expect(reviewSelection(candidates, [], 10).items).toHaveLength(2);
@@ -85,8 +85,8 @@ describe('immutable adaptive review decisions', () => {
   it('selects the response form that needs practice and never mutates the published pool', () => {
     const before = structuredClone(candidates);
     const wrong = evidence('incorrect', { conceptKeys: ['fraction.equivalence'], responseKind: 'rational' });
-    expect(reviewSelection(candidates, [wrong], 5).items[0].problemVersionId).toBe(record.homeworkProblemIds[1]);
-    expect(reviewSelection(candidates, [], 5).items[0].problemVersionId).toBe(record.homeworkProblemIds[0]);
+    expect(reviewSelection(candidates, [wrong], 5).items[0].problemVersionId).toBe(record.review!.problemVersionIds[1]);
+    expect(reviewSelection(candidates, [], 5).items[0].problemVersionId).toBe(record.review!.problemVersionIds[0]);
     expect(candidates).toEqual(before);
   });
   it('uses three days only after independent first-attempt success; errors, hints and unknown evidence use one', () => {

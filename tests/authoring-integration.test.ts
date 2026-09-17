@@ -4,9 +4,9 @@ import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { createDatabase } from '@/server/db';
 import { AuthoringService, authoringRole, authoringRoleDetail, openAuthoring, openAuthoringAccount } from '@/server/authoring';
 import { lessonRecord, importContent, definitionRecords } from '@/server/content-store';
-import type { StoredLesson } from '@/core/content';
+import type { LessonRecord, StoredLesson } from '@/core/content';
 import { newProblem, nextProblemVersionId, type DraftEdit, type DraftProblem } from '@/shared/authoring';
-import { seedLessons } from './fixtures/content';
+import { lessonBundle, seedLessons } from './fixtures/content';
 
 const url = process.env.TEST_DATABASE_URL;
 describe.skipIf(!url)('content authoring on MySQL', () => {
@@ -23,9 +23,9 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     service = new AuthoringService(db);
     // A lesson of this suite's own, so drafts here never publish a version of a shared fixture.
     lessonKey = `authoring-${randomUUID()}`;
-    const base = JSON.parse(JSON.stringify(seedLessons[0]).replaceAll('fraction-meaning', lessonKey)) as StoredLesson;
+    const base = JSON.parse(JSON.stringify(seedLessons[0]).replaceAll('fraction-meaning', lessonKey)) as LessonRecord;
 
-    await importContent(db, { schemaVersion: 1, courses: [{ key: `course-${base.public.lessonKey}`, title: '검사 코스', lessons: [{ key: base.public.lessonKey, order: 1 }], diagnostics: [] }], concepts: [], lessons: [base], diagnostics: [], definitions: [] });
+    await importContent(db, lessonBundle([base], { key: `course-${base.public.lessonKey}`, title: '검사 코스' }));
   });
   afterAll(async () => {
     // A shared database keeps whatever a run leaves behind, so this run leaves nothing.
@@ -147,14 +147,14 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     await service.deleteDraft(admin.id, draftId);
   });
 
-  it('tells the editor which questions homework holds, since no section shows them', async () => {
+  it('tells the editor about the review pool, which no section shows and this screen does not edit', async () => {
     const admin = await account('admin');
     const created = await service.createDraft(admin.id, lessonKey);
-    const homework = created.draft!.homeworkProblemIds;
-    expect(homework.length).toBeGreaterThan(0);
-    // They are questions of the draft, held by something the lesson does not show.
-    for (const id of homework) {
-      expect(created.draft!.edit.problems.some((problem) => problem.problemVersionId === id)).toBe(true);
+    const review = created.draft!.review!;
+    expect(review.problemVersionIds.length).toBeGreaterThan(0);
+    // The pool's questions are the review set's, not the draft's to edit, so they are not among its questions.
+    for (const id of review.problemVersionIds) {
+      expect(created.draft!.edit.problems.some((problem) => problem.problemVersionId === id)).toBe(false);
       expect(created.draft!.edit.sections.some((section) => section.contentBlocks.some((block) =>
         Array.isArray(block.payload.problemVersionIds) && (block.payload.problemVersionIds as string[]).includes(id)))).toBe(false);
     }
@@ -294,8 +294,12 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const published = await service.publishDraft(admin.id, draftId);
     expect(published.publishedVersionId).toBe(versionId);
     expect(published.draft!.status).toBe('published');
-    const document = await lessonRecord(db, versionId) as StoredLesson;
+    const document = await lessonRecord(db, versionId) as LessonRecord;
     expect(document.sections[0].contentBlocks.at(-1)!.kind).toBe('core.scene');
+    // Nothing about the questions changed, so the new lesson version references the same set versions.
+    for (const block of document.sections.flatMap((section) => section.contentBlocks).filter((block) => block.kind === 'core.problem_set')) {
+      expect(String(block.payload.problemSetVersionId)).toMatch(/:v1$/);
+    }
     // The published lesson carries the halves that follow from the answer, restated when it was saved.
     expect(document.problems[0].responseSpec.kind).toBe(document.problems[0].gradingSpec.kind);
     expect(document.problems[0].hintAvailable).toBe(document.problems[0].hints.length > 0);
@@ -347,17 +351,25 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     await service.deleteDraft(admin.id, created.draft!.id);
   });
 
-  it('moves a homework reference too, since homework names questions without a block', async () => {
+  it('drafts the next version of a set only for the activity that changed', async () => {
     const admin = await account('admin');
     const created = await service.createDraft(admin.id, lessonKey);
     const draftId = created.draft!.id;
-    const answered = `${lessonKey}:homework-1:v1`;
+    const answered = `${lessonKey}:practice-1:v1`;
     await service.saveDraft(admin.id, draftId, rewritten(created.draft!.edit, answered,
       (problem) => { problem.solution[0].payload.text = '풀이를 다시 썼어요.'; }));
+    const setDrafts = await db.contentDraft.findMany({ where: { ownerKind: 'problem_set', status: { not: 'published' } } });
+    // One set draft, for the practice set; the check set matches its published version and needs none.
+    expect(setDrafts.filter((draft) => draft.ownerKey.startsWith(`${lessonKey}:`)).map((draft) => draft.ownerKey)).toEqual([`${lessonKey}:practice`]);
     const row = await db.contentDraft.findUniqueOrThrow({ where: { id: draftId } });
     const document = row.document as unknown as StoredLesson;
-    expect(document.homeworkProblemIds).toContain(`${lessonKey}:homework-1:${suffixOf(created.draft!.versionId)}`);
-    expect(document.homeworkProblemIds).not.toContain(answered);
+    const practice = document.sections.flatMap((section) => section.contentBlocks)
+      .find((block) => block.kind === 'core.problem_set' && block.payload.problemSetId === `${lessonKey}:practice`)!;
+    expect(practice.payload.problemSetVersionId).toBe(`${lessonKey}:practice:v2`);
+    expect(practice.payload.problemVersionIds).toContain(`${lessonKey}:practice-1:${suffixOf(created.draft!.versionId)}`);
+    // Putting the question back the way it was published lets the activity reference the published set again.
+    await service.saveDraft(admin.id, draftId, created.draft!.edit);
+    expect(await db.contentDraft.count({ where: { ownerKind: 'problem_set', ownerKey: `${lessonKey}:practice`, status: { not: 'published' } } })).toBe(0);
     await service.deleteDraft(admin.id, draftId);
   });
 
@@ -373,8 +385,13 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
       problem.gradingSpec = { kind: 'rational', numerator: 2, denominator: 3 };
     }));
     await service.publishDraft(admin.id, draftId);
-    const document = await lessonRecord(db, versionId) as StoredLesson;
+    const document = await lessonRecord(db, versionId) as LessonRecord;
     const written = document.problems.find((problem) => problem.problemVersionId === `${lessonKey}:check-1:${suffixOf(versionId)}`)!;
+    // The changed activity published a new version of its set; the other activity still references its old one.
+    const setVersions = document.sections.flatMap((section) => section.contentBlocks).filter((block) => block.kind === 'core.problem_set')
+      .map((block) => String(block.payload.problemSetVersionId));
+    expect(setVersions).toContain(`${lessonKey}:check:v2`);
+    expect(setVersions).toContain(`${lessonKey}:practice:v1`);
     expect(written.gradingSpec).toEqual({ kind: 'rational', numerator: 2, denominator: 3 });
     expect(document.problems.some((problem) => problem.problemVersionId === answered)).toBe(false);
     // The version a learner may be part-way through still holds the question they answered.
@@ -399,7 +416,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     expect(saved.draft!.issues).toEqual([]);
     expect(saved.draft!.edit.problems.map((problem) => problem.problemVersionId)).toContain(written.problemVersionId);
     await service.publishDraft(admin.id, draftId);
-    const document = await lessonRecord(db, versionId) as StoredLesson;
+    const document = await lessonRecord(db, versionId) as LessonRecord;
     const stored = document.problems.find((problem) => problem.problemVersionId === written.problemVersionId)!;
     // A question with no hints says so, and its response format restates the answer that was written.
     expect(stored.hintAvailable).toBe(false);
@@ -554,7 +571,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     await expect(service.saveDefinition(admin.id, base)).rejects.toThrow(/없는 개념/);
     // A definition never holds a question.
     await expect(service.saveDefinition(admin.id, { ...base, newConcept: { label: '나쁜 낱말' },
-      blocks: [{ blockId: 'definition:block:1', kind: 'core.problem_set', typeVersion: 1, required: true, payload: { problemVersionIds: [`${lessonKey}:practice-1:v1`] } }] }))
+      blocks: [{ blockId: 'definition:block:1', kind: 'core.problem_set', typeVersion: 2, required: true, payload: { problemSetId: `${lessonKey}:practice`, problemSetVersionId: `${lessonKey}:practice:v1`, problemVersionIds: [`${lessonKey}:practice-1:v1`] } }] }))
       .rejects.toThrow(/cannot embed/);
     expect(await db.concept.findUnique({ where: { key: conceptKey } })).toBeNull();
   });
@@ -572,8 +589,8 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
       newConcept: { label: '이름만' }, label: '이 수업에서 부르는 이름', summary: '', blocks: [] });
     // Another lesson keeps one of its own; this draft must not be offered it.
     const other = `other-${randomUUID()}`;
-    const record = JSON.parse(JSON.stringify(seedLessons[0]).replaceAll('fraction-meaning', other)) as StoredLesson;
-    await importContent(db, { schemaVersion: 1, courses: [{ key: `course-${record.public.lessonKey}`, title: '검사 코스', lessons: [{ key: record.public.lessonKey, order: 1 }], diagnostics: [] }], concepts: [], lessons: [record], diagnostics: [], definitions: [] });
+    const record = JSON.parse(JSON.stringify(seedLessons[0]).replaceAll('fraction-meaning', other)) as LessonRecord;
+    await importContent(db, lessonBundle([record], { key: `course-${record.public.lessonKey}`, title: '검사 코스' }));
     await define(`other-${suffix}`, 'lesson', other, '남의 수업 낱말');
 
     const { draft } = await service.createDraft(admin.id, lessonKey);

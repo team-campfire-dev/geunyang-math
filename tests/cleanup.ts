@@ -16,7 +16,7 @@ export type Existing = Awaited<ReturnType<typeof existingRows>>;
 const ids = <T, K extends keyof T>(rows: T[], key: K) => new Set(rows.map(row => String(row[key])));
 
 export async function existingRows(db: PrismaClient) {
-  const [users, lessons, diagnostics, definitions, concepts, bundles, courses, lessonKeys, diagnosticKeys] = await Promise.all([
+  const [users, lessons, diagnostics, definitions, concepts, bundles, courses, lessonKeys, diagnosticKeys, problemSets, setVersions] = await Promise.all([
     db.user.findMany({ select: { id: true } }),
     db.lessonVersion.findMany({ select: { id: true } }),
     db.diagnosticVersion.findMany({ select: { id: true } }),
@@ -26,10 +26,13 @@ export async function existingRows(db: PrismaClient) {
     db.course.findMany({ select: { key: true } }),
     db.lesson.findMany({ select: { key: true } }),
     db.diagnostic.findMany({ select: { key: true } }),
+    db.problemSet.findMany({ select: { id: true } }),
+    db.problemSetVersion.findMany({ select: { id: true } }),
   ]);
   return { users: ids(users, 'id'), lessons: ids(lessons, 'id'), diagnostics: ids(diagnostics, 'id'),
     definitions: ids(definitions, 'id'), concepts: ids(concepts, 'key'), bundles: ids(bundles, 'name'),
-    courses: ids(courses, 'key'), lessonKeys: ids(lessonKeys, 'key'), diagnosticKeys: ids(diagnosticKeys, 'key') };
+    courses: ids(courses, 'key'), lessonKeys: ids(lessonKeys, 'key'), diagnosticKeys: ids(diagnosticKeys, 'key'),
+    problemSets: ids(problemSets, 'id'), setVersions: ids(setVersions, 'id') };
 }
 
 /** What a suite adds is what it removes. Order follows the foreign keys, deepest first. */
@@ -45,8 +48,10 @@ export async function removeRowsAddedSince(db: PrismaClient, before: Existing) {
   const courses = added(now.courses, before.courses);
   const lessonKeys = added(now.lessonKeys, before.lessonKeys);
   const diagnosticKeys = added(now.diagnosticKeys, before.diagnosticKeys);
-  const versions = [...lessons, ...diagnostics, ...definitions];
-  if (!users.length && !versions.length && !concepts.length && !bundles.length && !courses.length && !lessonKeys.length && !diagnosticKeys.length) return;
+  const problemSets = added(now.problemSets, before.problemSets);
+  const setVersions = added(now.setVersions, before.setVersions);
+  const versions = [...lessons, ...diagnostics, ...definitions, ...setVersions];
+  if (!users.length && !versions.length && !concepts.length && !bundles.length && !courses.length && !lessonKeys.length && !diagnosticKeys.length && !problemSets.length) return;
 
   const collect = async <T extends { id: string }>(rows: Promise<T[]>) => (await rows).map(row => row.id);
   const scopes = await collect(db.learningScope.findMany({ where: { ownerUserId: { in: users } }, select: { id: true } }));
@@ -78,16 +83,18 @@ export async function removeRowsAddedSince(db: PrismaClient, before: Existing) {
   // A published version is its rows, so the rows go with it.
   await db.contentBlock.deleteMany({ where: { ownerVersionId: { in: versions } } });
   await db.lessonSection.deleteMany({ where: { lessonVersionId: { in: lessons } } });
-  await db.publishedProblem.deleteMany({ where: { ownerVersionId: { in: [...lessons, ...diagnostics] } } });
+  await db.publishedProblem.deleteMany({ where: { ownerVersionId: { in: [...setVersions, ...diagnostics] } } });
   await db.lessonVersion.deleteMany({ where: { id: { in: lessons } } });
+  await db.problemSetVersion.deleteMany({ where: { id: { in: setVersions } } });
   await db.diagnosticVersion.deleteMany({ where: { id: { in: diagnostics } } });
   // A definition owns blocks under its own id, the way a version does.
   await db.contentBlock.deleteMany({ where: { ownerKind: 'definition', ownerVersionId: { in: definitions } } });
   await db.conceptDefinition.deleteMany({ where: { id: { in: definitions } } });
   // Identities go after their versions, and a course after the identities it keeps. A draft of a
   // lesson this run made was already removed with its author.
-  await db.contentDraft.deleteMany({ where: { lessonKey: { in: lessonKeys } } });
+  await db.contentDraft.deleteMany({ where: { OR: [{ ownerKind: 'lesson', ownerKey: { in: lessonKeys } }, { ownerKind: 'problem_set', ownerKey: { in: problemSets } }] } });
   await db.lesson.deleteMany({ where: { key: { in: lessonKeys } } });
+  await db.problemSet.deleteMany({ where: { id: { in: problemSets } } });
   await db.diagnostic.deleteMany({ where: { key: { in: diagnosticKeys } } });
   await db.course.deleteMany({ where: { key: { in: courses } } });
   // A concept is named by the definitions and lessons that use it, so it goes last.

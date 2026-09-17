@@ -17,6 +17,8 @@ export type PublicProblem = {
   responseSpec: { kind: 'integer' | 'rational'; requiredForm?: string };
   hintAvailable: boolean;
 };
+/** How a lesson names questions: a problem set, a frozen version of it, and the questions it picked. */
+export type ProblemSetRef = { problemSetId: string; problemSetVersionId: string; problemVersionIds: string[] };
 export type LessonSection = {
   sectionId: string;
   role: 'explanation' | 'worked_example' | 'practice' | 'check' | 'summary';

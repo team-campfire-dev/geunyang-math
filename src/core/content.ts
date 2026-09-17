@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { z } from 'zod';
-import type { LessonDocument, LessonSection, ContentBlock, GlossaryEntry, PublicLesson, PublicProblem } from '@/shared/api';
+import type { LessonDocument, LessonSection, ContentBlock, GlossaryEntry, ProblemSetRef, PublicLesson, PublicProblem } from '@/shared/api';
 import { frameLimits, isSceneColor, itemIdPattern, pathPattern, sceneLimits, stripLimits } from '@/shared/scene';
 import { locateTerms, definitionRefId, type DefinitionLink, type DefinitionRef } from '@/shared/rich-text';
 
@@ -21,11 +21,30 @@ export type StoredProblem = PublicProblem & {
 /** What a lesson version says about itself. Which course keeps it, and where, is the identity's, not the version's. */
 export type LessonMetadata = Omit<PublicLesson, 'courseKey'>;
 
+export type { ProblemSetRef };
+
+/**
+ * A lesson version as it is frozen. Its steps reference problem sets; the questions themselves are
+ * the sets'. `review` is the set its review assignments draw from, or null for a lesson that sets none.
+ */
 export type StoredLesson = {
   public: LessonMetadata;
   sections: LessonSection[];
+  review: ProblemSetRef | null;
+};
+/** A lesson read back with the questions its references resolve to, which is what a reader needs. */
+export type LessonRecord = StoredLesson & { problems: StoredProblem[] };
+
+/**
+ * A problem set version as it is frozen, with the identity that keeps it. A course owns the set;
+ * its name — none for a set made in place while writing a lesson — is the identity's and may change.
+ */
+export type StoredProblemSet = {
+  problemSetId: string;
+  courseKey: string;
+  name: string | null;
+  versionId: string;
   problems: StoredProblem[];
-  homeworkProblemIds: string[];
 };
 
 const id = z.string().min(1).max(191).regex(/^[a-zA-Z0-9:._-]+$/);
@@ -115,7 +134,8 @@ const blockSchemas = {
     .superRefine((payload, ctx) => {
       for (const issue of locateTerms(payload.text, payload.definitions).issues) ctx.addIssue({ code: 'custom', message: issue });
     }),
-  'core.problem_set@1': z.object({ problemVersionIds: z.array(id).min(1).max(50) }).strict(),
+  // A step references a problem set: which one, which frozen version, and which of its questions.
+  'core.problem_set@2': z.object({ problemSetId: id, problemSetVersionId: id, problemVersionIds: z.array(id).min(1).max(50) }).strict(),
   // caption may carry math: the wrapping role="img" takes its accessible name from alt.
   'core.figure@1': z.object({
     alt: plainText(500),
@@ -275,6 +295,9 @@ export const diagnosticProblemSchema = z.object({ ...problemShape,
   solution: z.array(problemContentBlockSchema).max(0),
 }).strict().superRefine(validateProblemFields);
 
+const problemSetRefSchema = z.object({
+  problemSetId: id, problemSetVersionId: id, problemVersionIds: z.array(id).min(1).max(50),
+}).strict();
 const storedLessonSchema = z.object({
   public: z.object({
     lessonKey: id,
@@ -292,20 +315,36 @@ const storedLessonSchema = z.object({
     title: shortText,
     contentBlocks: z.array(blockSchema).min(1).max(100, 'At most 100 blocks per content array'),
   }).strict()).min(1).max(50, 'At most 50 sections per lesson'),
-  problems: z.array(problemSchema).min(1).max(200, 'At most 200 problems per lesson'),
-  homeworkProblemIds: z.array(id).max(200),
+  review: problemSetRefSchema.nullable(),
+}).strict();
+const storedProblemSetSchema = z.object({
+  problemSetId: id,
+  courseKey: id.max(100),
+  name: z.string().trim().min(1).max(191).nullable(),
+  versionId: id,
+  problems: z.array(problemSchema).min(1).max(200, 'At most 200 problems per problem set'),
 }).strict();
 
 function requireUnique(values: string[], label: string): void {
   if (new Set(values).size !== values.length) throw new Error(`Duplicate ${label}`);
 }
 
+/** The problem set references a lesson holds: one per activity block, and the review pool. */
+export function problemSetRefs(record: StoredLesson): (ProblemSetRef & { blockId: string | null })[] {
+  const refs = record.sections.flatMap((section) => section.contentBlocks
+    .filter((block) => block.kind === 'core.problem_set' && block.typeVersion === 2)
+    .map((block) => ({ ...(block.payload as unknown as ProblemSetRef), blockId: block.blockId })));
+  return record.review ? [...refs, { ...record.review, blockId: null }] : refs;
+}
+
+/**
+ * A lesson on its own: its steps and what they reference, before the references are checked
+ * against the problem sets themselves. Questions are not the lesson's to validate.
+ */
 export function validateLesson(record: unknown): asserts record is StoredLesson {
   const parsed = storedLessonSchema.parse(record);
   if (parsed.public.sectionCount !== parsed.sections.length) throw new Error('sectionCount does not match sections');
   requireUnique(parsed.sections.map((section) => section.sectionId), 'section IDs');
-  requireUnique(parsed.problems.map((problem) => problem.problemVersionId), 'problem version IDs');
-  requireUnique(parsed.homeworkProblemIds, 'homework problem IDs');
   requireUnique(parsed.public.conceptKeys, 'lesson concept keys');
   requireUnique(parsed.public.prerequisiteConceptKeys, 'prerequisite concept keys');
   for (const prerequisite of parsed.public.prerequisiteConceptKeys) {
@@ -313,37 +352,35 @@ export function validateLesson(record: unknown): asserts record is StoredLesson 
       throw new Error(`Lesson cannot require its own concept as a prerequisite: ${prerequisite}`);
     }
   }
-  const problems = new Set(parsed.problems.map((problem) => problem.problemVersionId));
   const sectionBlocks = parsed.sections.flatMap((section) => section.contentBlocks);
-  const blocks = [
-    ...sectionBlocks,
-    ...parsed.problems.flatMap((problem) => [...problem.promptContent, ...problem.hints, ...problem.solution]),
-  ];
-  requireUnique(blocks.map((block) => block.blockId), 'block IDs');
-  const referenceOwners = new Map(parsed.homeworkProblemIds.map((problemId) => [problemId, 'homework']));
+  requireUnique(sectionBlocks.map((block) => block.blockId), 'block IDs');
+  // A question appears in one activity of a lesson. Two activities showing the same question would
+  // record one answer twice, under two steps.
+  const referenceOwners = new Map<string, string>();
   for (const block of sectionBlocks) {
-    if (block.kind === 'core.problem_set' && block.typeVersion === 1) {
-      const ids = block.payload.problemVersionIds as string[];
-      requireUnique(ids, `problem references in ${block.blockId}`);
-      for (const problemId of ids) {
-        const existingOwner = referenceOwners.get(problemId);
-        if (existingOwner) {
-          throw new Error(`Reused problem version across activities: ${problemId} (${existingOwner} and ${block.blockId})`);
-        }
-        referenceOwners.set(problemId, block.blockId);
-      }
+    if (block.kind !== 'core.problem_set' || block.typeVersion !== 2) continue;
+    const ids = (block.payload as unknown as ProblemSetRef).problemVersionIds;
+    requireUnique(ids, `problem references in ${block.blockId}`);
+    for (const problemId of ids) {
+      const existingOwner = referenceOwners.get(problemId);
+      if (existingOwner) throw new Error(`Reused problem version across activities: ${problemId} (${existingOwner} and ${block.blockId})`);
+      referenceOwners.set(problemId, block.blockId);
     }
   }
-  for (const reference of referenceOwners.keys()) {
-    if (!problems.has(reference)) throw new Error(`Missing immutable problem version: ${reference}`);
-  }
-  for (const problem of parsed.problems) {
-    if (!referenceOwners.has(problem.problemVersionId)) throw new Error(`Unreferenced problem version: ${problem.problemVersionId}`);
-    for (const concept of problem.conceptKeys) {
-      if (!parsed.public.conceptKeys.includes(concept)) throw new Error(`Problem concept is absent from lesson concepts: ${concept}`);
-    }
-  }
+  if (parsed.review) requireUnique(parsed.review.problemVersionIds, 'review problem references');
 }
+
+/** A problem set on its own: the questions it holds and their blocks, each valid and named once. */
+export function validateProblemSet(record: unknown): asserts record is StoredProblemSet {
+  const parsed = storedProblemSetSchema.parse(record);
+  requireUnique(parsed.problems.map((problem) => problem.problemVersionId), 'problem version IDs');
+  requireUnique(parsed.problems.flatMap((problem) => [...problem.promptContent, ...problem.hints, ...problem.solution])
+    .map((block) => block.blockId), 'block IDs');
+}
+
+/** The frozen half of a lesson read back: what a bundle carries and a hash is taken over. */
+export const storedLessonOf = (record: LessonRecord): StoredLesson =>
+  ({ public: record.public, sections: record.sections, review: record.review });
 
 function publicProblem(problem: StoredProblem): PublicProblem {
   return {
@@ -355,8 +392,8 @@ function publicProblem(problem: StoredProblem): PublicProblem {
   };
 }
 
-export function toPublicLesson(record: StoredLesson, courseKey: string, glossary: GlossaryEntry[] = []): LessonDocument {
-  validateLesson(record);
+export function toPublicLesson(record: LessonRecord, courseKey: string, glossary: GlossaryEntry[] = []): LessonDocument {
+  validateLesson(storedLessonOf(record));
   return {
     ...structuredClone(record.public), courseKey,
     sections: structuredClone(record.sections),
@@ -381,7 +418,7 @@ export function blockDefinitionRefs(blocks: ContentBlock[]): DefinitionRef[] {
  * Links name a concept and the scope whose definition explains it; the definition is its own row, so
  * rewording it republishes no lesson. Callers resolve the references against ConceptDefinition.
  */
-export function definitionReferences(record: StoredLesson): (DefinitionRef & { blockId: string; problemConceptKeys: string[] | null })[] {
+export function definitionReferences(record: LessonRecord): (DefinitionRef & { blockId: string; problemConceptKeys: string[] | null })[] {
   const annotations = (block: ContentBlock, problemConceptKeys: string[] | null) =>
     blockLinks(block).map((definition) => ({ conceptKey: definition.conceptKey, scopeKind: definition.scopeKind, scopeKey: definition.scopeKey,
       blockId: block.blockId, problemConceptKeys }));
@@ -396,7 +433,7 @@ export function getActivityProblemIds(record: StoredLesson, sectionId: string): 
   const section = record.sections.find((item) => item.sectionId === sectionId);
   if (!section) throw new Error(`Unknown section: ${sectionId}`);
   return [...new Set(section.contentBlocks.flatMap((block) =>
-    block.kind === 'core.problem_set' && block.typeVersion === 1
+    block.kind === 'core.problem_set' && block.typeVersion === 2
       ? (block.payload.problemVersionIds as string[])
       : [],
   ))];
