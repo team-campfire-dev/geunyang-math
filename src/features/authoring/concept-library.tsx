@@ -26,11 +26,8 @@ export function ConceptLibrary({ workspace, busy, onAction, onOpen, onDirty, onL
       <strong>{c.label}</strong><span>{workspace.lessons.filter(l => l.conceptKeys?.includes(c.key)).length}개 수업</span>
     </button>)}</div>
     {!concepts.length && <p className="empty-inline">찾은 개념이 없어요. 다른 이름으로 검색하거나 새 개념을 추가해 주세요.</p>}
-    {mayPublish(workspace.role) && <form className="editor-panel" onSubmit={async e => { e.preventDefault(); if (!name.trim() || busy || !discardChanges(definitionDirty)) return;
-      const key = `concept-${crypto.randomUUID()}`;
-      if (await onAction({action:'concept.create',key,label:name.trim()})) { setName(''); setQuery(''); setDefinitionDirty(false); setChosen(key); }
-    }}><label className="editor-field"><span className="editor-label">새 개념 이름</span><input value={name} maxLength={191} onChange={e => setName(e.target.value)} placeholder="예: 미지수" /></label>
-      <div className="editor-actions"><button className="button secondary" disabled={busy || !name.trim()}>개념 추가</button><span className="editor-note">기존 이름을 먼저 확인해 주세요. 모든 코스가 함께 쓰는 개념입니다.</span></div></form>}
+    {/* What was just clicked is answered here, directly under the card that was clicked. Making a
+        new concept is a different errand, so it waits at the bottom. */}
     {selected && <DefinitionPanel key={selected.key} conceptKey={selected.key} onDirty={setDefinitionDirty} lessons={workspace.lessons} concepts={workspace.concepts}
       mayEditDictionary={mayPublish(workspace.role)} onList={onListDefinitions} onSave={onSaveDefinition} />}
     {selected && <section className="dashboard-section"><h3>{selected.label} · {lessons.length}개 수업</h3>
@@ -43,5 +40,10 @@ export function ConceptLibrary({ workspace, busy, onAction, onOpen, onDirty, onL
         </article>;
       })}</div> : <p className="empty-inline">아직 이 개념을 다루는 수업이 없어요. 수업 설정의 ‘수업에서 다루는 개념’에서 선택해 주세요.</p>}
     </section>}
+    {mayPublish(workspace.role) && <form className="editor-panel" onSubmit={async e => { e.preventDefault(); if (!name.trim() || busy || !discardChanges(definitionDirty)) return;
+      const key = `concept-${crypto.randomUUID()}`;
+      if (await onAction({action:'concept.create',key,label:name.trim()})) { setName(''); setQuery(''); setDefinitionDirty(false); setChosen(key); }
+    }}><label className="editor-field"><span className="editor-label">새 개념 이름</span><input value={name} maxLength={191} onChange={e => setName(e.target.value)} placeholder="예: 미지수" /></label>
+      <div className="editor-actions"><button className="button secondary" disabled={busy || !name.trim()}>개념 추가</button><span className="editor-note">기존 이름을 먼저 확인해 주세요. 모든 코스가 함께 쓰는 개념입니다.</span></div></form>}
   </section>;
 }

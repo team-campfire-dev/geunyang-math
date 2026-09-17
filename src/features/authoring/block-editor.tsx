@@ -127,7 +127,18 @@ export function BlockCard({ block, index, total, problems, arrangingRefusal, def
   const form = blockFormOf(block);
   const expert = useExpertMode();
   const notifyRemoval = useRemovalNotice();
-  return <section className="editor-block">
+  const shown = form ? form.fields.filter((field) => !omit?.includes(field.key)) : [];
+  const writesTerms = form?.list?.key === 'definitions';
+  const links = Array.isArray(block.payload.definitions) ? (block.payload.definitions as unknown[]).length : 0;
+  const listShows = !!form?.list && (writesTerms && !expert ? links > 0 : true);
+  /**
+   * A block every field of which is written somewhere else — a paragraph typed on the sheet where it
+   * will be read — has nothing left for this card but its name and its handles. It says that much and
+   * stops: an empty card, with a hint about a field it is not showing, is a card in the way.
+   */
+  const bodyless = !!form && !shown.length && !listShows && !form.editsScene && !form.editsProblems
+    && !(expert && !block.required);
+  return <section className={`editor-block${bodyless ? ' compact' : ''}`}>
     <header>
       <div>
         <strong>{form?.label ?? `${block.kind}@${block.typeVersion}`}</strong>
@@ -148,11 +159,13 @@ export function BlockCard({ block, index, total, problems, arrangingRefusal, def
           onClick={() => { notifyRemoval(form?.label ?? '블록'); onRemove(); }}><Icon name="close" size={15} /></button>
       </div>
     </header>
-    {form?.hint && <p className="editor-note">{form.hint}</p>}
-    <BlockEditor block={block} problems={problems} arrangingRefusal={arrangingRefusal} definitionChoices={definitionChoices}
-      omit={omit} onChange={onChange} />
-    {expert && !block.required && <Field field={{ key: 'fallback', label: '대체 설명', kind: 'text', optional: true, hint: '이 블록을 모르는 앱 버전에서 대신 보여줄 문장이에요.' }}
-      value={block.fallback} onChange={(value) => onChange({ ...block, fallback: typeof value === 'string' ? value : '' })} />}
+    {!bodyless && <>
+      {form?.hint && <p className="editor-note">{form.hint}</p>}
+      <BlockEditor block={block} problems={problems} arrangingRefusal={arrangingRefusal} definitionChoices={definitionChoices}
+        omit={omit} onChange={onChange} />
+      {expert && !block.required && <Field field={{ key: 'fallback', label: '대체 설명', kind: 'text', optional: true, hint: '이 블록을 모르는 앱 버전에서 대신 보여줄 문장이에요.' }}
+        value={block.fallback} onChange={(value) => onChange({ ...block, fallback: typeof value === 'string' ? value : '' })} />}
+    </>}
   </section>;
 }
 

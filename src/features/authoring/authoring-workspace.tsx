@@ -631,18 +631,22 @@ export function AuthoringWorkspace() {
     {/* One thing to press. Writing is saved as it is written, checking is what publishing already
         does, and throwing the draft away sits on the settings page with the rest of the lesson. */}
     {!published && <div className="editor-actions">
-      {saving === 'failed' && <button type="button" className="button secondary" disabled={busy || saving !== 'failed'}
+      {saving === 'failed' && <button type="button" className="button secondary" disabled={busy}
         onClick={() => void saveNow()}>다시 저장</button>}
-      {!published && draft.mine && (draft.status === 'review'
+      {/* Read in the order it is done: check, then hand on or publish. */}
+      <button type="button" className="text-button" disabled={busy || dirty || !!invalid.length} onClick={() => void validateNow()}>발행 전 검사</button>
+      {/* A writer hands the work on rather than publishing it; whoever may publish takes it from
+          there, and is not asked to request a review of their own draft from themselves. */}
+      {draft.mine && draft.status === 'review'
         ? <button type="button" className="button secondary" disabled={busy} onClick={() => void reviewNow(false)}>검토 요청 거두기</button>
-        // A writer hands the work on rather than publishing it; whoever may publish takes it from there.
-        : <button type="button" className={`button ${mayPublish(workspace.role) ? 'secondary' : 'primary'}`} disabled={busy || dirty || !!invalid.length || !!issues.length} onClick={() => void reviewNow(true)}>검토 요청</button>)}
-      {!published && !draft.mine && draft.status === 'review' && mayPublish(workspace.role) &&
+        : draft.mine && !mayPublish(workspace.role)
+          ? <button type="button" className="button primary" disabled={busy || dirty || !!invalid.length || !!issues.length} onClick={() => void reviewNow(true)}>검토 요청</button>
+          : null}
+      {!draft.mine && draft.status === 'review' && mayPublish(workspace.role) &&
         <button type="button" className="button secondary" disabled={busy}
           onClick={() => void reviewNow(false)}>작성자에게 돌려보내기</button>}
-      {mayPublish(workspace.role) && !published && <button type="button" className="button primary" disabled={busy || dirty || !!invalid.length || !!localIssues.length || !!draft.issues.length}
+      {mayPublish(workspace.role) && <button type="button" className="button primary" disabled={busy || dirty || !!invalid.length || !!localIssues.length || !!draft.issues.length}
         onClick={() => setConfirming(true)}>발행<Icon name="arrow" size={16} /></button>}
-      <button type="button" className="text-button" disabled={busy || dirty || !!invalid.length} onClick={() => void validateNow()}>발행 전 검사</button>
       {dirty && <span className="editor-note">검사와 발행은 저장한 내용으로 해요.</span>}
     </div>}
 
