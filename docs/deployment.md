@@ -1,6 +1,6 @@
 # Oracle 운영 배포
 
-2026-09-14 기준 운영 배포 완료. 최근 기능 릴리스는 DB 콘텐츠 전환 `0c5e505`이며, 릴리스별 실행과 검증 범위는 아래 [검증 기록](#릴리스별-검증-기록)을 기준으로 한다. 문서 변경 이후 최신 배포 commit은 `/api/version`과 GitHub Actions에서 확인한다.
+2026-09-17 확인 기준 최근 기능 릴리스는 개념 탐색 `b8f635e` (#48)다. [해당 검증·배포 기록](#개념-탐색-48)에 확인 근거를 남겼으며, 이전 릴리스는 아래 기록으로 보존한다. 문서 변경 이후 최신 배포 commit은 `/api/version`과 GitHub Actions에서 확인한다.
 
 ## 대상과 범위
 
@@ -104,7 +104,7 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 
 [GitHub workflow](../.github/workflows/ci.yml)는 모든 브랜치의 타입·단위/실제 MySQL 검사·웹/모바일 빌드를 실행한다. 운영 배포는 검증에 성공한 `main` push 또는 `main`의 수동 실행에서만 진행한다. PR에서는 배포 비밀값을 사용하지 않는다.
 
-검증한 Git SHA의 archive와 환경 파일을 `incoming/`으로 전송한다. SHA별 `releases/<sha>/` 디렉터리에서 [deploy-remote.sh](../scripts/deploy-remote.sh)를 실행한다. 스크립트는 앱과 migrator 이미지를 따로 만들고, migration→저장소 번들 발행→content:verify→기동→사설·공개 health/version 확인이 끝나야 `current`를 새 릴리스로 바꾼다.
+검증한 Git SHA의 archive와 환경 파일을 `incoming/`으로 전송한다. SHA별 `releases/<sha>/` 디렉터리에서 [deploy-remote.sh](../scripts/deploy-remote.sh)를 실행한다. 스크립트는 앱과 migrator 이미지를 따로 만들고, migration→기본 콘텐츠 seed→저장소 번들 발행→content:verify→기동→사설·공개 health/version 확인이 끝나야 `current`를 새 릴리스로 바꾼다.
 
 릴리스 archive는 제한된 파일 권한을 유지한다. Dockerfile은 migrator가 읽는 package·Prisma 설정·소스를 `node` 사용자 소유로 복사한다. CI는 실제로 권한 600/700의 archive에서 migrator를 빌드하고, 일반 사용자로 소스를 읽으며 빈 테스트 DB에 migration과 콘텐츠 검증을 실행하는지 검사한다. 최초 배포에서 확인된 root 소유 파일의 `EACCES` 재발을 이 경로로 검증한다.
 
@@ -116,7 +116,7 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 
 ## 릴리스별 검증 기록
 
-모든 날짜는 2026-09-14다. 아래 commit은 기능 검증 당시의 릴리스이며, 후속 문서 배포의 commit과 다를 수 있다.
+바로 아래 첫 릴리스 표의 날짜는 2026-09-14다. 이후 기록은 각 항목의 날짜를 따른다. 아래 commit은 기능 검증 당시의 릴리스이며, 후속 문서 배포의 commit과 다를 수 있다.
 
 | 릴리스 | commit | 검증·운영 결과 |
 |---|---|---|
@@ -181,6 +181,16 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 
 DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVersion과 초기 콘텐츠를 등록한다. 기본 콘텐츠는 수업 3개(수업·숙제 문항 15개), 진단 1종(6문항), 개념 3개다. 기존 LessonVersion 행의 내용·해시·발행 시각을 덮어쓰지 않는다. 배포용 migrator는 `db:migrate` 후 저장소의 `content/*.json`을 `content:publish`로 발행하고 `content:verify`를 실행한다. `AppliedContentBundle`에 같은 checksum이 있으면 건너뛰므로 내용이 그대로인 배포는 DB를 건드리지 않고, 이미 발행한 판본을 고쳐 커밋하면 배포가 실패한다. 등록 명령과 불변 판본 정책은 [DB 콘텐츠 관리](content-management.md)를 따른다.
 
+### 개념 탐색 #48
+
+- 날짜: 2026-09-17. [PR #48](https://github.com/team-campfire-dev/geunyang-math/pull/48) 병합 commit `b8f635eb470d16aed937013de50677837cc65f5d`.
+- [main Actions](https://github.com/team-campfire-dev/geunyang-math/actions/runs/35195038716)에서 verify와 Oracle 배포 성공. 타입 검사·MySQL 통합 포함 392개 테스트·웹 빌드·모바일 정적 export 통과.
+- 문서 마무리 중 공개 `/api/version`의 commit이 `b8f635e`와 일치하고 `/api/health`가 `ready`인 것을 확인했다. 이후 배포의 상태는 다시 조회해야 한다.
+- `20260917190000_definition_usage_note`는 nullable `usageNote` 한 칸을 추가한다. 수업·학습 기록을 초기화하지 않는다. v3 사전은 기존 뜻풀이를 한 번 갱신하고 정수·공약수·기약분수를 더한다. 기본 설치 기준 개념·공통 뜻풀이는 각 10개다.
+- 배포 순서: 새 이미지 빌드 → `db:migrate → db:seed → content:publish → content:verify` → 새 앱 기동·health/version 검사. seed는 기존 뜻풀이 편집을 보존하지만 v3 번들은 지정된 공통 사전 10개를 갱신하므로 별도 운영 편집이 있다면 먼저 비교한다.
+- 새 사전의 `core.rich_text@3`를 처리하지 못하는 이전 서버로 앱만 롤백하면 뜻풀이 편집·콘텐츠 검증이 실패할 수 있다. migration의 nullable 칸만으로 롤백 호환성을 판단하지 않는다. 이미 적용한 v2 파일과 원장 checksum은 바꾸지 않았다.
+- 실제 브라우저 검증과 후속 범위는 [개념 탐색 문서](concept-exploration-design.md#9-첫-구현의-구체적인-경계)를 따른다. 본 확인은 실제 스크린리더·네이티브 앱·수학 원고의 전문가 검수를 뜻하지 않는다.
+
 ### 저장 구조 migration
 
 발행된 판본을 JSON 한 덩이에서 행으로 옮긴 다섯 단계다. 앞의 네 단계는 **추가 전용**이라 발행된 내용을 바꾸지 않고, 되돌리려면 이전 이미지를 다시 띄우면 된다. 마지막 단계만 되돌릴 수 없다.
@@ -221,6 +231,12 @@ DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVer
 
 수동 작업 중 확인한 제약이 두 가지 있다. 첫째, `scp`로 올린 번들은 `ubuntu`(uid 1001) 소유 0600이라 `node`(uid 1000)로 도는 컨테이너가 읽지 못한다. `--user 1000:1001`과 그룹 읽기 권한으로 실행한 뒤 권한을 되돌린다. 둘째, `migrate` 서비스만 쓰더라도 Compose는 파일 전체를 해석하므로 `APP_BIND_IP`·`DEPLOY_ENV_FILE`까지 필요하다. 일회성 작업은 같은 환경 파일·CA·호스트 별칭을 주어 `docker run`으로 직접 실행하는 편이 간단하다.
 
+### 2026-09-17 개념과 기본 수업 재작성 (#47)
+
+`20260917060000_atomic_concept_curriculum`은 실사용 전 콘텐츠 교체를 위해 기존 플랫폼 수업 `fraction-meaning`, `fraction-equivalence`, `fraction-addition`과 `starting-point` 진단의 구 판본·초안 및 연결된 학습 기록을 정리한다. 계정·인증·편집 권한과 다른 코스는 유지한다. 다른 수업·진단·초안이 참조하는 문제집 판본과 다른 콘텐츠가 사용하는 옛 개념은 보존한다. 적용 전에 해당 기본 수업을 사용 중인 서비스가 아닌지 확인해야 하며, 실사용 후에는 이 초기화 정책을 재사용하지 않는다.
+
+뒤따르는 `db:seed`가 새 수업 3개, 수업·복습 문항 17개, 진단 8문항을 설치한다. `content:publish`가 분수·분자·분모·동치분수·약분·통분·덧셈의 공통 뜻풀이를 갱신한다. 이 초기화는 구 학습 기록을 복구하지 않으므로 앱 이미지 롤백만으로 옛 수업 이력을 되살릴 수 없다. [#47 main 실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/35189780079)은 검증·배포에 성공했다. 후속 #48 확인 당시 공개 `/api/version`에서도 이 릴리스 `df588ec`를 확인한 뒤 새 배포로 전환되는 것을 확인했다.
+
 ## 운영 후속 작업
 
 - 백업 생성·복원 훈련과 복구 소요 시간 확인. 계정 데이터를 전체 삭제한 뒤라 되돌릴 수단이 없는 상태가 실제로 확인됐다.
@@ -231,10 +247,3 @@ DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVer
 새 릴리스는 해당 Actions 성공과 공개 `/api/health`·`/api/version`을 확인한다. 과거 릴리스의 성공 기록만으로 현재 배포 상태를 확정하지 않는다.
 
 구현 근거: [Google OpenID Connect](https://developers.google.com/identity/openid-connect/openid-connect), [Google 공식 Node.js 인증 라이브러리](https://github.com/googleapis/google-auth-library-nodejs).
-
-
-### 2026-09-17 원자적 개념과 기본 수업 재작성
-
-`20260917060000_atomic_concept_curriculum`은 실사용 전 콘텐츠 교체를 위해 기존 플랫폼 수업 `fraction-meaning`, `fraction-equivalence`, `fraction-addition`과 `starting-point` 진단의 구 판본·초안 및 연결된 학습 기록을 정리한다. 계정·인증·편집 권한과 다른 코스는 유지한다. 다른 수업·진단·초안이 참조하는 문제집 판본과 다른 콘텐츠가 사용하는 옛 개념은 보존한다. 적용 전에 해당 기본 수업을 사용 중인 서비스가 아닌지 확인해야 하며, 실사용 후에는 이 초기화 정책을 재사용하지 않는다.
-
-뒤따르는 `db:seed`가 새 수업 3개, 수업·복습 문항 17개, 진단 8문항을 설치한다. `content:publish`가 분수·분자·분모·동치분수·약분·통분·덧셈의 공통 뜻풀이를 갱신한다. 이 초기화는 구 학습 기록을 복구하지 않으므로 앱 이미지 롤백만으로 옛 수업 이력을 되살릴 수 없다. 이번 PR 작업에서는 로컬 DB에만 적용하며 운영 반영은 머지 후 배포 절차를 따른다.
