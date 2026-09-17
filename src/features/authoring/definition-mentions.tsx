@@ -92,7 +92,7 @@ export function useDefinitionMentions({ payload, definitions, onChange }: {
         <button type="button" className={index === at ? 'active' : ''}
           onMouseDown={(event) => event.preventDefault()} onClick={() => pick(definition)}>
           <strong>{definition.label}</strong>
-          <small>{expert && `${definition.conceptKey} · `}{definition.scopeKind === 'lesson' ? '이 수업' : '공통 사전'}</small>
+          <small>{expert && `${definition.conceptKey} · `}{definition.scopeKind === 'lesson' ? '이 수업' : '공통 사전'}{definition.usageNote ? ` · ${definition.usageNote}` : ''}</small>
         </button>
       </li>)}
     </ul>

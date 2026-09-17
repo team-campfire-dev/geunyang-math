@@ -4,7 +4,7 @@ import type { ConceptScope } from '@/shared/rich-text';
 /** A definition as one scope keeps it, with the name that scope uses for the concept already resolved. */
 export type PublishedDefinition = {
   conceptKey: string; scopeKind: ConceptScope; scopeKey: string;
-  label: string; summary: string; blocks: GlossaryEntry['blocks'];
+  label: string; summary: string; usageNote?: string; revision?: string; blocks: GlossaryEntry['blocks'];
 };
 
 /**
@@ -15,15 +15,15 @@ export type PublishedDefinition = {
  * The one thing this adds is where a concept is taught, so a definition can offer the way back to
  * the lesson that teaches it.
  */
-export function glossaryEntries(definitions: PublishedDefinition[], lessons: PublicLesson[]): GlossaryEntry[] {
+export function glossaryEntries(definitions: PublishedDefinition[], lessons: PublicLesson[], courseKey?: string): GlossaryEntry[] {
   // Lessons arrive in course order, so the first lesson teaching a concept is the one to go back to.
   const taughtIn = new Map<string, PublicLesson>();
-  for (const item of lessons) {
+  for (const item of lessons.filter(lesson => !courseKey || lesson.courseKey === courseKey)) {
     for (const conceptKey of item.conceptKeys) if (!taughtIn.has(conceptKey)) taughtIn.set(conceptKey, item);
   }
   return definitions.map((definition) => ({
     conceptKey: definition.conceptKey, scopeKind: definition.scopeKind, scopeKey: definition.scopeKey,
-    label: definition.label, summary: definition.summary,
+    label: definition.label, summary: definition.summary, usageNote: definition.usageNote, revision: definition.revision,
     blocks: definition.blocks, lessonKey: taughtIn.get(definition.conceptKey)?.lessonKey ?? null,
   }));
 }

@@ -147,12 +147,12 @@ describe('content publishing contract', () => {
       payload: { text: '분수의 의미를 떠올려 분모가 4인 분수를 고르세요.', definitions: [{ conceptKey: 'fraction.meaning', surface: '분수의 의미' }] } };
     expect(() => validateReferences(b)).toThrow(/cannot explain the concept it assesses/);
   });
-  it('keeps definition definitions free of questions and of further definition links', () => {
+  it('allows links inside definitions while refusing embedded questions', () => {
     const withBlock = (block: unknown) => ({ ...structuredClone(initial), definitions: [{ ...definitionFixture, blocks: [block] }] });
     expect(() => parseContentBundle(withBlock({ blockId: 'definition:bad:v1', kind: 'core.problem_set', typeVersion: 2, required: true,
       payload: { problemSetId: 'x', problemSetVersionId: 'x:v1', problemVersionIds: [initial.problemSets[0].problems[0].problemVersionId] } }))).toThrow();
     expect(() => parseContentBundle(withBlock({ blockId: 'definition:bad:v1', kind: 'core.rich_text', typeVersion: 3, required: true,
-      payload: { text: '분모를 설명해요.', definitions: [{ conceptKey: 'term.denominator', surface: '분모' }] } }))).toThrow();
+      payload: { text: '분모를 설명해요.', definitions: [{ conceptKey: 'term.denominator', surface: '분모' }] } }))).not.toThrow();
     expect(() => parseContentBundle(withBlock(definitionFixture.blocks[0]))).not.toThrow();
   });
   it('keeps fixture imports outside runtime and migrator code', () => {

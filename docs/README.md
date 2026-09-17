@@ -10,6 +10,7 @@
 | [구현 현황](implementation-status.md) | 현재 가능한 흐름, 미구현 범위, 검증 기준과 다음 순서 |
 | [제품 방향](product-direction.md) | 성인 기초 재학습, 개인화·블록 확장·AI·기관의 설계 원칙 |
 | [용어 사전](glossary.md) | 코스·수업·문제집·개념 등 단위의 이름과 그렇게 정한 이유. 이름을 새로 지을 때 기준 |
+| [개념 탐색 설계와 구현](concept-exploration-design.md) | 첫 구현 완료·배포 전. 수업 맥락에 맞는 뜻풀이와 정의 안의 개념 탐색, 중등·고등·대학 수학 확장 기준 |
 | [스키마 변경안](schema-change-plan.md) | 용어 사전을 DB 스키마와 코드에 옮긴 순서와 단계별 migration·PR, 확정된 결정 (2026-09-17 완료) |
 | [개인화](personalization.md) | 진단·추천·학습 증거·복습 분량과 간격의 규칙 |
 | [DB 콘텐츠 관리](content-management.md) | 콘텐츠 저장·내보내기·등록·불변 판본과 기존 기록 보존 |

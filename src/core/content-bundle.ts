@@ -1,7 +1,7 @@
 import 'server-only';
 import { z } from 'zod';
-import { definitionBlockSchema, definitionReferences, problemSetRefSchema, problemSetRefs, validateLesson, validateProblemSet, type LessonRecord, type StoredLesson, type StoredProblem, type StoredProblemSet } from './content';
-import { definitionRefId } from '@/shared/rich-text';
+import { blockDefinitionRefs, definitionBlockSchema, definitionReferences, problemSetRefSchema, problemSetRefs, validateLesson, validateProblemSet, type LessonRecord, type StoredLesson, type StoredProblem, type StoredProblemSet } from './content';
+import { definitionRefId, mayReferenceDefinition } from '@/shared/rich-text';
 
 const id = z.string().min(1).max(191).regex(/^[a-zA-Z0-9:._-]+$/);
 /** A concept is global: its key never moves, and whether a question may assess it is its own. */
@@ -27,6 +27,7 @@ export const definitionSchema = z.object({
   scopeKind: z.enum(['global', 'organization', 'course', 'lesson']).optional().default('global'),
   scopeKey: id.max(100).or(z.literal('')).optional().default(''),
   label: z.string().trim().min(1).max(191).optional(), summary: z.string().trim().min(1).max(500).optional(),
+  usageNote: z.string().trim().min(1).max(500).optional(),
   blocks: z.array(definitionBlockSchema).max(20),
 }).strict().refine((definition) => (definition.scopeKind === 'global' ? definition.scopeKey === '' : definition.scopeKey !== ''),
   { message: 'A scoped definition must name the scope it belongs to, and a global one must not' });
@@ -189,6 +190,11 @@ export function validateReferences(bundle: ContentBundle) {
   for (const t of bundle.definitions) {
     assertConcept(t.conceptKey);
     if (t.blocks.length) linkable.add(definitionRefId(t));
+  }
+  // Cycles are valid references; verify each edge without recursively expanding the graph.
+  for (const definition of bundle.definitions) for (const reference of blockDefinitionRefs(definition.blocks)) {
+    if (!mayReferenceDefinition(definition, reference)) throw new ContentError(`A definition can only link its own scope or the dictionary: ${definitionRefId(reference)}`);
+    if (!linkable.has(definitionRefId(reference))) throw new ContentError(`Missing definition: ${definitionRefId(reference)}`);
   }
   for (const c of lessonProblems.values()) for (const reference of definitionReferences(c)) {
     // A lesson-scoped definition belongs to the lesson that keeps it. Reaching into another lesson's

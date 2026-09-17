@@ -243,11 +243,10 @@ const blockSchema = z.object({
 const arrangeable = (block: { kind: string; payload: Record<string, unknown> }) =>
   block.kind === 'core.scene' && Array.isArray(block.payload.zones) && block.payload.zones.length > 0;
 
-// Definitions are leaves: no problem groups, and no links nesting a definition inside a definition.
-// A definition is read while a problem waits, so it explains rather than asks for an interaction.
+// Definitions may link other concepts, but never embed questions or require an answer/arrangement.
 export const definitionBlockSchema = blockSchema.refine(
-  (block) => block.kind !== 'core.problem_set' && !(block.kind === 'core.rich_text' && block.typeVersion === 3) && !arrangeable(block),
-  { message: 'Definitions cannot embed problems, further definition links, or a drawing to arrange' },
+  (block) => block.kind !== 'core.problem_set' && !arrangeable(block),
+  { message: 'Definitions cannot embed problems or a drawing to arrange' },
 );
 
 const responseSchema = z.object({

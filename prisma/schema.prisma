@@ -268,8 +268,10 @@ model ConceptDefinition {
   scopeKey   String   @default("") @db.VarChar(100)
   /// What this scope calls the concept. Null means the concept's own label.
   label      String?  @db.VarChar(191)
-  /// One line of explanation. A row with neither summary nor blocks only renames the concept.
+  /// Optional summary. The full explanation and its mathematical conditions live in blocks.
   summary    String?  @db.VarChar(500)
+  /// Mathematical setting of this explanation; not a difficulty or learner grade.
+  usageNote  String?  @db.VarChar(500)
   updatedAt  DateTime @updatedAt
   @@unique([conceptKey, scopeKind, scopeKey])
   @@index([scopeKind, scopeKey])

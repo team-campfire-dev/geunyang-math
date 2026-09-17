@@ -77,7 +77,7 @@ describe('what the editor sends is what publishing accepts', () => {
     // A lesson's paragraph is the one that can carry definition links; a definition's is the one that cannot.
     expect(paragraphs(lessonBlockForms).map((form) => form.typeVersion)).toEqual([3]);
     expect(paragraphs(problemBlockForms).map((form) => form.typeVersion)).toEqual([3]);
-    expect(paragraphs(definitionBlockForms).map((form) => form.typeVersion)).toEqual([1]);
+    expect(paragraphs(definitionBlockForms).map((form) => form.typeVersion)).toEqual([3]);
     // Both are called the same thing, because to whoever is writing they are the same thing.
     expect([...new Set(paragraphs(blockForms).map((form) => form.label))]).toEqual(['글']);
     // The older one still opens, so a lesson published with it can be read and edited.
@@ -240,7 +240,7 @@ describe('writing a definition', () => {
     const offered = definitionBlockForms.filter((form) => !form.retired);
     expect(offered.map((form) => form.kind)).not.toContain('core.problem_set');
     // A definition read while a question waits explains; it does not annotate further or ask.
-    expect(offered.some((form) => form.kind === 'core.rich_text' && form.typeVersion === 3)).toBe(false);
+    expect(offered.some((form) => form.kind === 'core.rich_text' && form.typeVersion === 3)).toBe(true);
     expect(offered.map((form) => form.kind)).toContain('core.scene');
     for (const form of offered) {
       expect(() => definitionBlockSchema.parse({ blockId: 'definition:block:1', kind: form.kind,

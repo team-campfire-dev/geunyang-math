@@ -192,7 +192,7 @@ export async function diagnosticRecords(db: Db, rows: DiagnosticVersion[]): Prom
     return { ...d, problems };
   });
 }
-type DefinitionRow = { id: string; conceptKey: string; scopeKind: string; scopeKey: string; label: string | null; summary: string | null };
+type DefinitionRow = { id: string; conceptKey: string; scopeKind: string; scopeKey: string; label: string | null; summary: string | null; usageNote: string | null };
 const definitionWhere = (ref: DefinitionRef) => ({ conceptKey: ref.conceptKey, scopeKind: ref.scopeKind ?? 'global', scopeKey: ref.scopeKey ?? '' });
 /** Definitions as a bundle carries them: what the row says, and the blocks the row owns. */
 export async function definitionRecords(db: Db, rows: DefinitionRow[]): Promise<DefinitionRecord[]> {
@@ -200,6 +200,7 @@ export async function definitionRecords(db: Db, rows: DefinitionRow[]): Promise<
   const blocksOf = await blockIndex(db, rows.map(row => row.id));
   return rows.map(row => definitionSchema.parse({ conceptKey: row.conceptKey, scopeKind: row.scopeKind, scopeKey: row.scopeKey,
     ...(row.label === null ? {} : { label: row.label }), ...(row.summary === null ? {} : { summary: row.summary }),
+    ...(row.usageNote ? { usageNote: row.usageNote } : {}),
     blocks: blocksOf(row.id, 'definition', row.id, 'body') }));
 }
 /**
@@ -212,7 +213,7 @@ export async function currentDefinitions(db: Db, refs: DefinitionRef[]): Promise
   const rows = await db.conceptDefinition.findMany({ where: { OR: refs.map(definitionWhere) }, include: { concept: { select: { label: true } } } });
   const blocksOf = await blockIndex(db, rows.map(row => row.id));
   return rows.map(row => ({ conceptKey: row.conceptKey, scopeKind: row.scopeKind as ConceptScope, scopeKey: row.scopeKey,
-    label: row.label ?? row.concept.label, summary: row.summary ?? '', blocks: blocksOf(row.id, 'definition', row.id, 'body') }))
+    label: row.label ?? row.concept.label, summary: row.summary ?? '', usageNote: row.usageNote ?? '', revision: row.updatedAt.toISOString(), blocks: blocksOf(row.id, 'definition', row.id, 'body') }))
     .filter(definition => definition.blocks.length);
 }
 export async function currentDiagnostic(db: Db): Promise<DiagnosticRecord | null> {
@@ -394,8 +395,8 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
     for (const t of incoming.definitions) {
       const row = await db.conceptDefinition.upsert({
         where: { conceptKey_scopeKind_scopeKey: { conceptKey: t.conceptKey, scopeKind: t.scopeKind, scopeKey: t.scopeKey } },
-        create: { conceptKey: t.conceptKey, scopeKind: t.scopeKind, scopeKey: t.scopeKey, label: t.label ?? null, summary: t.summary ?? null },
-        update: { label: t.label ?? null, summary: t.summary ?? null } });
+        create: { conceptKey: t.conceptKey, scopeKind: t.scopeKind, scopeKey: t.scopeKey, label: t.label ?? null, summary: t.summary ?? null, usageNote: t.usageNote ?? null },
+        update: { label: t.label ?? null, summary: t.summary ?? null, usageNote: t.usageNote ?? null } });
       await indexDefinitionBlocks(db, row.id, t.blocks as ContentBlock[]);
     }
     // The ledger entry shares this transaction: a file counts as applied only if its content landed.

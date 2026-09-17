@@ -84,6 +84,7 @@ export const authoringActionSchema = z.discriminatedUnion('action', [
     scopeKey: z.string().max(100),
     label: z.string().trim().max(191),
     summary: z.string().trim().max(500),
+    usageNote: z.string().trim().max(500).optional(),
     blocks: blockList.max(20),
     newConcept: z.object({ label: z.string().trim().min(1).max(191) }).strict().optional(),
   }).strict() }).strict(),
@@ -286,15 +287,15 @@ export class AuthoringService {
   private async definitionChoices(lessonKey: string): Promise<DefinitionChoice[]> {
     const rows = await this.db.conceptDefinition.findMany({
       where: { OR: [{ scopeKind: 'global' }, { scopeKind: 'lesson', scopeKey: lessonKey }] },
-      select: { id: true, conceptKey: true, scopeKind: true, scopeKey: true, label: true, concept: { select: { label: true } } },
+      select: { id: true, conceptKey: true, scopeKind: true, scopeKey: true, label: true, usageNote: true, concept: { select: { label: true } } },
     });
     const withBody = new Set((await this.db.contentBlock.findMany({
       where: { ownerKind: 'definition', ownerVersionId: { in: rows.map((row) => row.id) } },
       distinct: ['ownerVersionId'], select: { ownerVersionId: true } })).map((row) => row.ownerVersionId));
     return rows.filter((row) => withBody.has(row.id))
       .map((row) => ({ conceptKey: row.conceptKey, scopeKind: row.scopeKind === 'lesson' ? 'lesson' as const : 'global' as const,
-        scopeKey: row.scopeKey, label: row.label ?? row.concept.label }))
-      .sort((left, right) => left.label.localeCompare(right.label, 'ko'));
+        scopeKey: row.scopeKey, label: row.label ?? row.concept.label, usageNote: row.usageNote ?? '' }))
+      .sort((left, right) => Number(right.scopeKind === 'lesson') - Number(left.scopeKind === 'lesson') || left.label.localeCompare(right.label, 'ko'));
   }
 
   private async load(draftId: string, userId: string, role: AuthoringRole): Promise<DraftRow> {
@@ -498,12 +499,13 @@ export class AuthoringService {
 
   /** Every definition one scope keeps: what an author opens and what they change. */
   async listDefinitions(userId: string, scopeKind: EditableConceptScope, scopeKey: string): Promise<AuthoringResponse> {
-    await this.requireDefinitionScope(userId, scopeKind, scopeKey);
+    if (scopeKind === 'global' && !scopeKey) await this.require(userId);
+    else await this.requireDefinitionScope(userId, scopeKind, scopeKey);
     const rows = await this.db.conceptDefinition.findMany({ where: { scopeKind, scopeKey }, include: { concept: { select: { label: true } } } });
     const records = await definitionRecords(this.db, rows);
     const definitions: DefinitionSummary[] = rows.map((row, index) => ({
       conceptKey: row.conceptKey, conceptLabel: row.concept.label, scopeKind, scopeKey,
-      label: row.label ?? '', summary: row.summary ?? '', blocks: records[index].blocks as ContentBlock[],
+      label: row.label ?? '', summary: row.summary ?? '', usageNote: row.usageNote ?? '', blocks: records[index].blocks as ContentBlock[],
       updatedAt: row.updatedAt.toISOString(),
     }));
     definitions.sort((left, right) => (left.label || left.conceptLabel).localeCompare(right.label || right.conceptLabel, 'ko'));
@@ -525,7 +527,8 @@ export class AuthoringService {
     const stem = `${edit.scopeKind}:${edit.scopeKey || 'global'}:${edit.conceptKey}`;
     const blocks = edit.blocks.map(pruneBlock).map((block, index) => ({ ...block, blockId: `${stem}:b${index + 1}` }));
     const definition = { conceptKey: edit.conceptKey, scopeKind: edit.scopeKind, scopeKey: edit.scopeKey,
-      ...(edit.label.trim() ? { label: edit.label.trim() } : {}), ...(edit.summary.trim() ? { summary: edit.summary.trim() } : {}), blocks };
+      ...(edit.label.trim() ? { label: edit.label.trim() } : {}), ...(edit.summary.trim() ? { summary: edit.summary.trim() } : {}),
+      ...(edit.usageNote?.trim() ? { usageNote: edit.usageNote.trim() } : {}), blocks };
     const concepts = !known && edit.newConcept ? [{ key: edit.conceptKey, label: edit.newConcept.label, assessable: true }] : [];
     try {
       await importContent(this.db, { schemaVersion: 1, concepts, lessons: [], diagnostics: [], definitions: [definition] });

@@ -14,6 +14,11 @@ export type DefinitionRef = { conceptKey: string; scopeKind?: ConceptScope; scop
 export const definitionRefId = (definition: DefinitionRef): string =>
   (!definition.scopeKind || definition.scopeKind === 'global' ? `global::${definition.conceptKey}` : `${definition.scopeKind}:${definition.scopeKey ?? ''}:${definition.conceptKey}`);
 export type DefinitionLink = DefinitionRef & { surface: string; occurrence?: number };
+/** Shared definitions cannot depend on a narrower/private scope. Other scopes may link themselves or the dictionary. */
+export function mayReferenceDefinition(from: DefinitionRef, to: DefinitionRef): boolean {
+  const kind = to.scopeKind ?? 'global';
+  return kind === 'global' ? !to.scopeKey : kind === from.scopeKind && !!to.scopeKey && to.scopeKey === from.scopeKey;
+}
 export type TermPlacement = { ref: string; conceptKey: string; start: number; end: number };
 
 const mathPattern = /\$\$[\s\S]+?\$\$|\\\([\s\S]+?\\\)|\$[^$\n]+?\$/g;

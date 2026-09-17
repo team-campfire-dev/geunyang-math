@@ -1,5 +1,5 @@
 // Public HTTP DTOs. Never import server content or grading answers into this module.
-import type { ConceptScope } from './rich-text';
+import type { ConceptScope, DefinitionRef } from './rich-text';
 export type Goal = 'daily-math' | 'foundation-recovery' | 'algebra-ready';
 export type GradeResult = { status: 'correct' | 'incorrect' | 'invalid'; message: string; assisted: boolean };
 export type ContentBlock = {
@@ -44,10 +44,13 @@ export type PublicLesson = {
 export type GlossaryEntry = {
   conceptKey: string; scopeKind: ConceptScope; scopeKey: string;
   label: string; summary: string;
+  usageNote?: string;
+  revision?: string;
   blocks: ContentBlock[];
   // The lesson that teaches this concept, when one is published.
   lessonKey: string | null;
 };
+export type DefinitionRequest = { lessonKey: string; lessonVersionId: string; path: DefinitionRef[] };
 export type LessonDocument = PublicLesson & { sections: LessonSection[]; problems: PublicProblem[]; glossary: GlossaryEntry[] };
 // Display-only concept names for the signed-out catalogue. Never carries answers or grading rules.
 export type PublicConcept = { key: string; label: string };
