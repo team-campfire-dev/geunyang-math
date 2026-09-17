@@ -360,6 +360,15 @@
   .editor-sheet .lesson-sheet { padding: 25px 20px; }
   .studio-heading h2 { font-size: 23px; }
 }
+/* The lesson's own settings, on a page rather than in the column beside the paragraph being
+   written. One column, read top to bottom, the way a form is read. */
+.editor-settings { max-width: 720px; display: flex; flex-direction: column; gap: 22px; }
+.editor-settings-head { display: flex; flex-direction: column; gap: 14px; }
+.editor-settings-head h2 { font-size: 25px; font-weight: 600; letter-spacing: -.8px; margin-top: 6px; }
+.editor-settings-head .back-button { margin-bottom: 0; align-self: flex-start; }
+.editor-settings .editor-panel { margin: 0; }
+.editor-settings .studio-inline-definitions { margin: 20px 0 0; }
+.editor-settings-end { padding-top: 6px; }
 .inspector-return { display: none; }
 @media (max-width: 1180px) { .inspector-return { display: inline-flex; } }
 
@@ -377,14 +386,28 @@
 .editor-actions .button, .studio-lesson .button { flex-shrink: 0; }
 .editor-concepts { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
 .editor-concepts .editor-field { margin-top: 0; }
+/* What is chosen is shown; what is not is searched for. The catalogue of concepts grows with the
+   service, so a list of all of them is a list that grows without end. */
+.editor-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
+.editor-chips > .editor-note { margin: 0; }
+.editor-chip { display: inline-flex; align-items: center; gap: 2px; padding: 6px 4px 6px 11px; font-size: 13px;
+  border: 1px solid var(--green); border-radius: 999px; background: var(--editor-active-bg); color: var(--editor-active-text);
+  overflow-wrap: anywhere; min-width: 0; }
+.authoring-page .editor-chip .icon-button { min-width: 26px; min-height: 26px; border-radius: 999px; color: inherit; }
 .editor-concept-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
-.editor-concept-buttons .editor-check { display: inline-flex; align-items: flex-start; padding: 9px 11px; border: 1px solid var(--line); border-radius: 7px; font-size: 13px; }
-.editor-concept-buttons .editor-check:has(:checked) { background: var(--editor-active-bg); border-color: var(--green); }
-.editor-concept-buttons .editor-check span { overflow-wrap: anywhere; min-width: 0; }
+.editor-chip-add { display: inline-flex; align-items: center; gap: 5px; padding: 8px 12px 8px 9px; font-size: 13px;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--white); color: var(--editor-label);
+  overflow-wrap: anywhere; min-width: 0; min-height: var(--editor-control); }
+.editor-chip-add:hover { border-color: var(--green); background: var(--editor-active-bg); color: var(--editor-active-text); }
 .editor-answer { display: block; }
 .editor-answer .editor-field + .editor-field { margin-top: 16px; }
-.answer-options { margin-top: 14px; font-size: 13px; }
-.answer-options summary { cursor: pointer; margin-bottom: 12px; }
+/* Settings a question rarely changes, and the solution the learning screen does not show yet: kept
+   reachable, kept out of the way of the answer and the hints. */
+.editor-fold { margin-top: 16px; font-size: 13px; border-top: 1px dashed var(--editor-rule); padding-top: 12px; }
+.editor-fold > summary { cursor: pointer; padding: 6px 0; color: var(--editor-label); font-weight: 500; }
+.editor-fold > summary:hover { color: var(--editor-active-text); }
+.editor-fold[open] > summary { margin-bottom: 4px; }
+.answer-options { font-size: 13px; }
 .editor-field [aria-invalid="true"], .sheet-inline[aria-invalid="true"] { border: 1px solid var(--editor-warn); background: var(--editor-warn-bg); }
 .scene-template-buttons, .concept-cards { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%, 140px),1fr)); gap: 10px; margin: 12px 0 20px; }
 .scene-template-buttons .button { display: flex; flex-direction: column; align-items: flex-start; text-align: left; white-space: normal; }
