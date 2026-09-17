@@ -48,5 +48,7 @@ export function lessonBundle(records: LessonRecord[], course: { key: string; tit
 export const seedProblemSets = deepFreeze(bundle.problemSets);
 export const seedLessons = deepFreeze(bundle.lessons.map((lesson) => assembleLesson(lesson, bundle.problemSets)));
 export const conceptLabels = deepFreeze(Object.fromEntries(bundle.concepts.map(s => [s.key, s.label])));
-export const diagnosticProblems = deepFreeze(bundle.diagnostics[0].problems);
+/** The questions the seeded diagnostic asks, in its order: it references a set, the way a lesson step does. */
+export const diagnosticProblems = deepFreeze(bundle.diagnostics[0].problemSet.problemVersionIds.map((id) =>
+  bundle.problemSets.find((set) => set.versionId === bundle.diagnostics[0].problemSet.problemSetVersionId)!.problems.find((problem) => problem.problemVersionId === id)!));
 export const diagnosticVersion = bundle.diagnostics[0].versionId;

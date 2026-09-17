@@ -1,18 +1,21 @@
 import 'server-only';
 import { z } from 'zod';
-import { diagnosticProblemSchema, definitionBlockSchema, definitionReferences, problemSetRefs, validateLesson, validateProblemSet, type LessonRecord, type StoredLesson, type StoredProblemSet } from './content';
+import { definitionBlockSchema, definitionReferences, problemSetRefSchema, problemSetRefs, validateLesson, validateProblemSet, type LessonRecord, type StoredLesson, type StoredProblem, type StoredProblemSet } from './content';
 import { definitionRefId } from '@/shared/rich-text';
 
 const id = z.string().min(1).max(191).regex(/^[a-zA-Z0-9:._-]+$/);
 /** A concept is global: its key never moves, and whether a question may assess it is its own. */
 export const conceptSchema = z.object({ key: id.max(100), label: z.string().trim().min(1).max(191), assessable: z.boolean() }).strict();
 export type ConceptRecord = z.infer<typeof conceptSchema>;
+/** A diagnostic names its questions the way a lesson step does: a frozen problem set version and the ones it picked, in order. */
 export const diagnosticDefinitionSchema = z.object({
   versionId: id, diagnosticKey: id.max(100), title: z.string().trim().min(1).max(191),
   description: z.string().trim().min(1).max(2000), estimatedMinutes: z.number().int().min(1).max(120),
-  problems: z.array(diagnosticProblemSchema).min(1).max(100),
+  problemSet: problemSetRefSchema,
 }).strict();
 export type DiagnosticDefinition = z.infer<typeof diagnosticDefinitionSchema>;
+/** A diagnostic with the questions its reference resolves to, the way the application reads one. */
+export type DiagnosticRecord = DiagnosticDefinition & { problems: StoredProblem[] };
 /**
  * How one scope calls and explains a concept. Not a version: a definition is written in place, since
  * it decides nothing and has no past to recover. A row with no blocks only renames the concept in
@@ -72,11 +75,7 @@ export function parseContentBundle(input: unknown): ContentBundle {
   for (const record of parsed.problemSets) validateProblemSet(record);
   const problemSets = parsed.problemSets as StoredProblemSet[];
   unique(problemSets.map(s => s.versionId), 'problem set version IDs');
-  for (const d of parsed.diagnostics) {
-    unique(d.problems.map(p => p.problemVersionId), 'diagnostic problem IDs');
-    unique(d.problems.flatMap(p => p.promptContent.map(b => b.blockId)), 'diagnostic block IDs');
-    for (const p of d.problems) unique(p.conceptKeys, 'diagnostic problem concept keys');
-  }
+  for (const d of parsed.diagnostics) unique(d.problemSet.problemVersionIds, 'diagnostic problem IDs');
   return { schemaVersion: 1, courses: parsed.courses, concepts: parsed.concepts, lessons, problemSets, diagnostics: parsed.diagnostics, definitions: parsed.definitions };
 }
 
@@ -114,16 +113,16 @@ export function validateReferences(bundle: ContentBundle) {
   for (const scope of new Set(bundle.definitions.map(t => `${t.scopeKind}:${t.scopeKey}`))) {
     consistentCase(bundle.definitions.filter(t => `${t.scopeKind}:${t.scopeKey}` === scope).map(t => t.conceptKey));
   }
-  consistentCase([...bundle.problemSets.flatMap(s => s.problems), ...bundle.diagnostics.flatMap(d => d.problems)].map(p => p.problemVersionId));
+  consistentCase(bundle.problemSets.flatMap(s => s.problems).map(p => p.problemVersionId));
   // Nothing floats outside a course: every published lesson, problem set and diagnostic is kept by one.
   const courseOf = new Map(bundle.courses.flatMap(c => c.lessons.map(l => [l.key, c.key] as const)));
   const courseKeys = new Set(bundle.courses.map(c => c.key));
-  const diagnosticCourses = new Set(bundle.courses.flatMap(c => c.diagnostics));
+  const diagnosticCourseOf = new Map(bundle.courses.flatMap(c => c.diagnostics.map(key => [key, c.key] as const)));
   for (const c of bundle.lessons) {
     if (!courseOf.has(c.public.lessonKey)) throw new ContentError(`Lesson belongs to no course: ${c.public.lessonKey}`);
   }
   for (const d of bundle.diagnostics) {
-    if (!diagnosticCourses.has(d.diagnosticKey)) throw new ContentError(`Diagnostic belongs to no course: ${d.diagnosticKey}`);
+    if (!diagnosticCourseOf.has(d.diagnosticKey)) throw new ContentError(`Diagnostic belongs to no course: ${d.diagnosticKey}`);
   }
   // A problem set has one course and one name across its versions, and a question has one set.
   const setCourse = new Map<string, string>();
@@ -158,6 +157,17 @@ export function validateReferences(bundle: ContentBundle) {
     }
     lessonProblems.set(c.public.versionId, { ...c, problems: [...problems.values()] });
   }
+  // A diagnostic's questions resolve the same way, from a set its own course keeps.
+  for (const d of bundle.diagnostics) {
+    const ref = d.problemSet;
+    const version = setVersions.get(ref.problemSetVersionId);
+    if (!version) throw new ContentError(`Missing problem set version: ${ref.problemSetVersionId} (${d.versionId})`);
+    if (version.problemSetId !== ref.problemSetId) throw new ContentError(`Problem set version belongs to another set: ${ref.problemSetVersionId} (${d.versionId})`);
+    if (version.courseKey !== diagnosticCourseOf.get(d.diagnosticKey)) throw new ContentError(`Problem set belongs to another course: ${ref.problemSetId} (${d.versionId})`);
+    for (const problemId of ref.problemVersionIds) {
+      if (!version.problems.some(p => p.problemVersionId === problemId)) throw new ContentError(`Problem is not in the problem set version: ${problemId} (${d.versionId})`);
+    }
+  }
   const concepts = new Map(bundle.concepts.map(s => [s.key, s]));
   const problems = new Map<string, string>();
   const assertConcept = (key: string) => { if (!concepts.has(key)) throw new ContentError(`Missing concept: `); };
@@ -190,10 +200,7 @@ export function validateReferences(bundle: ContentBundle) {
     // A definition of the very concept under assessment would answer the question.
     if (reference.problemConceptKeys?.includes(reference.conceptKey)) throw new ContentError(`A problem cannot explain the concept it assesses:  ()`);
   }
-  for (const d of bundle.diagnostics) for (const p of d.problems) {
-    if (setOfProblem.has(p.problemVersionId)) throw new ContentError(`Diagnostic problem overlaps lesson content: ${p.problemVersionId}`);
-  }
-  for (const p of [...bundle.problemSets.flatMap(s => s.problems), ...bundle.diagnostics.flatMap(d => d.problems)]) {
+  for (const p of bundle.problemSets.flatMap(s => s.problems)) {
     p.conceptKeys.forEach(assertAssessable);
     const value = canonicalJson(p);
     if (problems.has(p.problemVersionId) && problems.get(p.problemVersionId) !== value) throw new ContentError(`Problem version is immutable: ${p.problemVersionId}`);

@@ -203,6 +203,8 @@ DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVer
 
 `20260917040000_assignments`는 과제가 문제집 판본을 가리키게 한다. `Assignment`에 `problemSetId`·`problemSetVersionId`(FK)·`policy`·`schedule`이 생기고 `issuedAt`은 비울 수 있게 된다. 기존 과제는 모두 시스템이 낸 복습이므로 `sourceLessonVersionId`가 가리키는 수업 판본의 `metadata.review`에서 문제집 판본을 찾아 옮기고, 정책은 `{kind:'review', hints:true, results:'per-item', solutions:'never'}`, 기간 규칙은 빈 객체로 둔다. 수업 판본이 없어 자리를 못 찾는 과제는 그 기록(시도·제출·배정·항목)과 함께 지운다. `AssignmentRecipient`는 `assignmentPolicy`를 잃고 `opensAt`을 얻으며, `AssignmentItem.problemSnapshot`은 사라진다 — 문항 내용은 문제집 판본의 행에서 읽는다. 작업용 표 `unplaced`는 일반 표다.
 
+`20260917050000_diagnostic_problem_sets`는 진단이 문제집을 쓰게 한다. `DiagnosticVersion`에 `problemSetId`·`problemSetVersionId`(FK)·`problemVersionIds`(묻는 순서)가 생기고, 진단 판본이 갖고 있던 문항은 진단 키 이름의 문제집(`<진단키>`, 판본 `<진단키>:vN` — 발행 순서)으로 옮겨진다. `PublishedProblem`의 진단 행은 `problem_set` 소유가 되고 문항 블록도 따라간다. 씨앗은 같은 이름(`starting-point:v1`)을 쓰므로 migration 뒤 `db:seed`가 무변경으로 지나간다. 진행 중인 `DiagnosticRun`은 시작 시점의 문항 사본을 들고 있어 영향이 없다. 작업용 표 `placement`는 일반 표다.
+
 사본이 있는 동안 `content:verify`는 배포마다 행과 `document`를 대조했다 — 처음에는 문항 색인을, 그다음에는 블록을, 세 번째 단계부터는 행을 도로 맞춘 결과 전체를 한 글자도 다르지 않은지 봤다. 네 번의 배포(#27·#29·#30·#31)가 모두 같음을 확인한 뒤에 사본을 지웠다. 지금 `content:verify`가 보고하는 수는 운영 기준으로 `indexedProblems: 36`, `indexedBlocks: 148`이고, 어긋나면 배포가 그 자리에서 멈춘다.
 
 초기 인프라 점검에서는 앱 VM·포트·DNS·와일드카드 인증서, ARM64 non-root 이미지·revision·health, DB TLS 연결과 잘못된 CA/호스트 이름 거부, 앱 계정의 DB 한정 DML·호스트 제한·REQUIRE SSL을 확인했다. NPM Proxy Hosts 등록과 Google HTTPS callback 로그 제외, 배포 시크릿 6개와 자동 배포 활성화도 완료했다. 이 기록은 이후 인증서·권한·프록시 변경을 자동 검증한다는 뜻은 아니다.

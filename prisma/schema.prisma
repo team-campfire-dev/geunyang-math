@@ -146,6 +146,7 @@ model ProblemSetVersion {
   contentHash  String     @db.VarChar(64)
   publishedAt  DateTime   @default(now())
   assignments  Assignment[]
+  diagnostics  DiagnosticVersion[]
   @@index([problemSetId, publishedAt])
 }
 
@@ -190,6 +191,7 @@ model LessonVersion {
  * reason to read every published document. With its blocks it is also the whole of the question.
  */
 model PublishedProblem {
+  /// Always 'problem_set': every published question belongs to a problem set version.
   ownerKind        String @db.VarChar(20)
   ownerVersionId   String @db.VarChar(191)
   problemVersionId String @db.VarChar(191)
@@ -287,7 +289,11 @@ model DiagnosticVersion {
   title            String @db.VarChar(191)
   description      String @db.Text
   estimatedMinutes Int
-  /// The questions are rows of PublishedProblem, and their prompts rows of ContentBlock.
+  /// The questions come from one frozen problem set version, asked in this order.
+  problemSetId        String @db.VarChar(191)
+  problemSetVersionId String @db.VarChar(191)
+  problemSetVersion   ProblemSetVersion @relation(fields: [problemSetVersionId], references: [id])
+  problemVersionIds   Json
   contentHash      String @db.VarChar(64)
   publishedAt      DateTime @default(now())
   @@index([diagnosticKey, publishedAt])

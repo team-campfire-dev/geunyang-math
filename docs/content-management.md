@@ -19,17 +19,17 @@
 
 - `LessonVersion`: 수업 판본. `metadata`가 수업 자신에 대한 것(`public`)과 **복습 풀**(`review` — 복습 과제가 문제를 고르는 문제집 참조, 없으면 null)을 담는다. 문제는 여기 없다 — 단계의 `core.problem_set@2` 블록이 `{ problemSetId, problemSetVersionId, problemVersionIds }`로 문제집을 **참조**할 뿐이다. 순서도 여기 없다 — `Lesson.order`가 코스 안 자리다.
 - `ProblemSetVersion`: 문제집 판본. 문제는 `PublishedProblem` 행이고 블록은 `ContentBlock` 행이며, 둘 다 이 판본 ID에 매달린다. 판본 ID는 수업·진단과 같은 이름 공간을 쓴다.
-- `DiagnosticVersion`: 진단 이름·설명·예상 시간·발행 시각. `diagnosticKey=starting-point`의 최신 발행 판본을 새 진단에 사용한다.
+- `DiagnosticVersion`: 진단 이름·설명·예상 시간·발행 시각과, 문항을 가져오는 문제집 참조(`problemSetId`·`problemSetVersionId`·`problemVersionIds` — 묻는 순서). 문항은 여기 없다. `diagnosticKey=starting-point`의 최신 발행 판본을 새 진단에 사용한다.
 - `Concept`: **개념**. 전역이고 키는 불변이다. 공통 사전의 호칭(`label`)과 **문제가 이것을 평가할 수 있는가**(`assessable`)를 든다. 수업이 가르치고 전제하는 개념과 문제가 평가하는 개념은 `assessable`이어야 한다. 표시 순서는 없다 — 코스의 수업 순서(그 개념을 처음 가르치는 수업)에서 유도한다.
 - `ConceptDefinition`: 범위별 **뜻풀이**. `(conceptKey, scopeKind, scopeKey)`마다 한 행이고, 이 범위에서 부르는 이름(`label`, 비어 있으면 개념의 이름)과 한 줄 요약을 든다. 본문은 `ContentBlock` 행이다. **판본도 초안도 없다** — 어떤 판정에도 쓰이지 않으므로 되찾을 과거가 없고, 저장이 곧 최신이다. 블록이 없는 행은 호칭만 바꾼 것이라 본문에서 걸 수 없다.
 
 내용을 가진 세 표:
 
 - `LessonSection`: 수업의 섹션을 보여 주는 순서대로.
-- `PublishedProblem`: 발행된 판본이 가진 문항의 이름·순서와, 블록이 아닌 것(개념 키·응답 형식·채점 규칙·힌트 유무). 문제집 문항(`problem_set`)과 진단 문항(`diagnostic`)이 `ownerKind`로 갈린다.
-- `ContentBlock`: **발행된 판본이 가진 모든 블록과 뜻풀이의 본문.** 수업의 섹션 본문, 문항의 지문·힌트·해설, 진단 문항의 지문, 뜻풀이의 본문이 모두 여기 있고 `ownerKind`(`section`·`problem`·`definition`)와 `slot`으로 갈린다.
+- `PublishedProblem`: 문제집 판본이 가진 문항의 이름·순서와, 블록이 아닌 것(개념 키·응답 형식·채점 규칙·힌트 유무). 발행된 문항은 모두 문제집의 것이라 `ownerKind`는 `problem_set` 하나다. 진단도 문제집을 참조한다.
+- `ContentBlock`: **발행된 판본이 가진 모든 블록과 뜻풀이의 본문.** 수업의 섹션 본문, 문항의 지문·힌트·해설, 뜻풀이의 본문이 모두 여기 있고 `ownerKind`(`section`·`problem`·`definition`)와 `slot`으로 갈린다.
 
-문항 하나를 읽는다는 것은 `PublishedProblem` 한 행과 그 문항의 `ContentBlock` 행들을 합치는 일이고, 수업 하나를 읽는다는 것은 `metadata`와 `LessonSection`·섹션 블록을 읽은 뒤 블록이 참조하는 문제집 판본에서 고른 문제를 가져오는 일이다(`lessonRecords`). 카탈로그·수업 화면·진단·용어·초안 만들기·번들 내보내기가 모두 이 경로로 읽는다.
+문항 하나를 읽는다는 것은 `PublishedProblem` 한 행과 그 문항의 `ContentBlock` 행들을 합치는 일이고, 수업 하나를 읽는다는 것은 `metadata`와 `LessonSection`·섹션 블록을 읽은 뒤 블록이 참조하는 문제집 판본에서 고른 문제를 가져오는 일이다(`lessonRecords`). 진단도 같은 길로 문제집 판본에서 문항을 가져온다(`diagnosticRecords`). 문항의 형은 하나다 — 해설은 없어도 되고, 해설·힌트를 보여 줄지는 문항이 아니라 그것을 내는 쪽(수업·과제 정책·진단)이 정한다. 카탈로그·수업 화면·진단·용어·초안 만들기·번들 내보내기가 모두 이 경로로 읽는다.
 
 두 가지 규칙이 이 구조를 지탱한다.
 
@@ -294,22 +294,24 @@ npm run content:verify
 ```json
 {
   "schemaVersion": 1,
-  "skills": [],
+  "courses": [],
+  "concepts": [],
   "lessons": [],
+  "problemSets": [],
   "diagnostics": [],
-  "terms": []
+  "definitions": []
 }
 ```
 
-`terms`는 나중에 추가한 항목이라 생략할 수 있다. 이전에 내보낸 번들 파일도 그대로 다시 등록된다.
+`courses`·`problemSets`·`definitions`는 나중에 추가한 항목이라 생략할 수 있다. 진단은 `problemSet: { problemSetId, problemSetVersionId, problemVersionIds }`로 문제집 판본을 참조하고, 문항은 `problemSets`에 있다.
 
-필요한 항목만 넣는 부분 등록도 지원한다. 예를 들어 기존 개념을 참조하는 새 수업만 넣고 `skills`와 `diagnostics`는 빈 배열로 두어도 된다. 개념 키는 기존 DB 또는 같은 번들에 반드시 있어야 한다. 파일 크기는 최대 5 MiB이며 큰 번들은 나누어 등록한다.
+필요한 항목만 넣는 부분 등록도 지원한다. 예를 들어 기존 개념을 참조하는 새 수업만 넣고 `concepts`와 `diagnostics`는 빈 배열로 두어도 된다. 개념 키는 기존 DB 또는 같은 번들에 반드시 있어야 한다. 파일 크기는 최대 5 MiB이며 큰 번들은 나누어 등록한다.
 
 발행한 수업/진단은 덮어쓰지 않는다. 수정하려면 `versionId`를 새로 부여한다. 내용이 바뀐 문항도 `problemVersionId`를 새로 부여하고 섹션·숙제 참조를 함께 변경한다. 수업·진단의 같은 판본 ID에 동일 내용을 재등록하면 기존 판본을 변경하지 않는다. `Skill`은 같은 키로 이름·표시 순서를 갱신할 수 있다. MySQL이 JSON 객체 키 순서를 바꾸어도 의미가 같으면 동일한 내용으로 판단한다. 기존 해시는 다시 계산하지 않으며 새 판본 해시는 정렬된 JSON 키를 기준으로 계산한다.
 
 새 수업/진단 판본은 번들 배열 순서대로 발행된다. 같은 lessonKey/diagnosticKey를 가진 새 판본 중 마지막 항목이 최신이 된다. 내보내기도 발행 순서로 제공한다. 이미 있는 판본 재등록은 최신 판본을 되돌리지 않는다. 이전 내용으로 되돌리고 싶다면 새 판본 ID로 재발행한다.
 
-등록 전 전체 참조와 문서 형식을 검사한다. 알 수 없는 필수 블록, 중복 ID, 없는 개념, 바뀐 기존 판본, 기존 문제 ID의 다른 내용, 수업과 진단에 겹치는 문제 ID, 수식 `label`에 빠진 `labelAlt`, 수식 표기가 섞인 낭독용 이름은 거부한다. 용어에서는 없는 참조, 없는 `skillKey`, 판본마다 달라지는 용어의 개념(범위별로 센다), 본문에 없는 표층 문자열, 자신이 평가하는 개념을 문항 안에서 설명하는 주석, 다른 수업이 가진 용어를 가리키는 참조, 범위를 적고도 어디 것인지 밝히지 않은 용어를 거부한다. 쓰기는 한 DB 트랜잭션으로 처리하며 `--dry-run`은 쓰지 않는다.
+등록 전 전체 참조와 문서 형식을 검사한다. 알 수 없는 필수 블록, 중복 ID, 없는 개념, 바뀐 기존 판본, 기존 문제 ID의 다른 내용, 두 문제집에 든 문제 ID, 수업·진단이 가리키는 문제집 판본이 없거나 그 판본에 없는 문제이거나 다른 코스의 문제집인 참조, 수식 `label`에 빠진 `labelAlt`, 수식 표기가 섞인 낭독용 이름은 거부한다. 용어에서는 없는 참조, 없는 `skillKey`, 판본마다 달라지는 용어의 개념(범위별로 센다), 본문에 없는 표층 문자열, 자신이 평가하는 개념을 문항 안에서 설명하는 주석, 다른 수업이 가진 용어를 가리키는 참조, 범위를 적고도 어디 것인지 밝히지 않은 용어를 거부한다. 쓰기는 한 DB 트랜잭션으로 처리하며 `--dry-run`은 쓰지 않는다.
 
 ## 뜻풀이 걸기
 

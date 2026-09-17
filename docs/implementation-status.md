@@ -52,7 +52,7 @@
 
 ```text
 Concept                       → 개념(평가 여부), ConceptDefinition → 범위별 호칭·뜻풀이
-DiagnosticVersion             → DiagnosticRun.document + answers
+DiagnosticVersion → ProblemSetVersion(+ 문항 행) → DiagnosticRun.document(시작 시점 사본) + answers
 개인 LearningScope → Enrollment       → LessonVersion(+ 섹션·블록·문항 행)
 개인 LearningScope → Assignment       → ProblemSetVersion(+ 문항 행); AssignmentItem은 고른 문제 ID·순서
                 └─ AssignmentRecipient → Submission

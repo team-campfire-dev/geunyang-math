@@ -114,8 +114,9 @@ export function ProblemPanel({ problem, number, total, concepts, taken, definiti
       hint="힌트를 하나라도 두면 학습 화면에 힌트 버튼이 생겨요. 힌트를 열고 맞히면 도움을 받은 풀이로 기록합니다."
       onChange={(hints) => onChange({ ...problem, hints })} />
     <ProblemBlocks label="해설" part="solution" problem={problem} blocks={problem.solution} taken={taken} definitionChoices={definitionChoices}
-      hint="문항을 마친 뒤에만 보여 줍니다. 한 블록 이상 있어야 발행할 수 있어요."
+      hint="문항을 마친 뒤에만 보여 줍니다. 해설이 없어도 발행은 되지만, 학습자는 풀이를 확인할 수 없어요."
       onChange={(solution) => onChange({ ...problem, solution })} />
+    {problem.solution.length === 0 && <p className="editor-note editor-warn">해설이 없는 문제예요. 시작점 확인처럼 해설을 보여 주지 않는 곳이 아니라면 한 블록 이상 두는 편이 좋아요.</p>}
   </section>;
 }
 
