@@ -252,3 +252,57 @@
 .diagnostic-next .button { margin-top: 18px; }
 
 @media (max-width: 600px) { .class-card .course-art-shapes { min-width: 215px; transform: scale(.5); } }
+
+/* One concept reader: a reserved side column when prose still fits, a modal sheet otherwise. */
+.concept-reader{min-width:0;width:100%}
+.concept-reader-content{min-width:0}
+.concept-reader.has-concept-panel{padding-right:390px}
+.has-concept-panel .lesson-layout{grid-template-columns:minmax(0,1fr)}
+.has-concept-panel .lesson-outline{position:static;display:flex;gap:8px;overflow-x:auto}
+.has-concept-panel .lesson-outline>.eyebrow,.has-concept-panel .lesson-outline>p{display:none}
+.has-concept-panel .lesson-outline>button{min-width:110px;flex:1}
+.has-concept-panel .lesson-sheet{padding:26px}
+
+.concept-explorer-layer{position:fixed;z-index:80}
+.concept-wide{top:88px;right:24px;bottom:24px;width:360px;pointer-events:none}
+.concept-panel{pointer-events:auto;display:flex;flex-direction:column;max-height:100%;min-height:0;border:1px solid var(--line);border-radius:16px;background:var(--paper);box-shadow:0 12px 40px #24331f22;color:var(--ink);overflow:hidden}
+.concept-wide .concept-panel{height:100%}
+.concept-panel-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:16px 20px;border-bottom:1px solid var(--line);flex-shrink:0}
+.concept-panel-actions .text-button{min-height:40px;max-width:100%;overflow-wrap:anywhere;font-size:13px}
+.concept-close{margin-left:auto}
+.concept-panel-body{padding:22px;overflow-y:auto;overscroll-behavior:contain;min-height:0;scroll-behavior:auto}
+.concept-panel-body>h2{font-size:23px;line-height:1.5;overflow-wrap:anywhere;margin:0 0 10px}
+.concept-panel-body>h2:focus{outline:none}
+.concept-path{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;overflow-wrap:anywhere}
+.concept-usage,.term-usage{font-size:13px;line-height:1.7;color:var(--deep-green);margin-bottom:16px;overflow-wrap:anywhere}
+.concept-summary{margin-bottom:18px}
+.concept-panel .rich-text{font-size:15px;line-height:1.85;overflow-wrap:anywhere}
+.concept-panel .content-blocks{min-width:0}
+.concept-panel .katex-display{overflow-x:auto;max-width:100%;padding-bottom:6px}
+.concept-panel .display-math{max-width:100%;overflow-x:auto}
+.concept-panel .block{min-width:0}
+.concept-panel .term-mark{font-size:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:4px}
+.concept-loading{font-size:13px;color:var(--muted);margin-bottom:14px}
+.concept-related{border-top:1px solid var(--line);margin-top:24px;padding-top:18px;font-size:14px;line-height:1.7}
+.concept-related summary{cursor:pointer;color:var(--deep-green);min-height:36px}
+.concept-related h3{margin:8px 0;font-size:16px}
+.concept-related p{margin-bottom:12px}
+.concept-related small{display:block;margin-top:10px;color:var(--muted)}
+.concept-panel .error-banner{flex-wrap:wrap;overflow-wrap:anywhere;margin-bottom:18px}
+.concept-modal{inset:0;display:flex;align-items:flex-end;justify-content:center}
+.concept-scrim{position:absolute;inset:0;background:#16231566}
+.concept-modal .concept-panel{position:relative;width:100%;max-width:680px;max-height:80dvh;min-height:35dvh;border-radius:20px 20px 0 0;padding-bottom:env(safe-area-inset-bottom)}
+.concept-modal.concept-expanded .concept-panel{height:94dvh;max-height:94dvh}
+.concept-expand{align-self:flex-end;margin:6px 20px;font-size:12px;min-height:32px}
+.concept-panel-body .scene-figure{max-width:100%}
+.definition-preview{border-top:1px solid var(--line);padding-top:20px;margin-top:20px}
+.definition-preview>h3{font-size:16px;margin-bottom:12px}
+.definition-context-note{margin-bottom:14px;font-size:13px;line-height:1.7;color:var(--muted)}
+
+@media(max-width:520px){.concept-panel-actions{padding:10px 16px;gap:6px}
+.concept-panel-body{padding:18px}
+.concept-panel-actions .text-button{min-height:44px}
+.concept-panel .rich-text{font-size:16px}
+.concept-expand{min-height:40px;margin:0 16px}
+.concept-panel .term-mark{padding-block:6px}
+}

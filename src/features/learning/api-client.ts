@@ -1,4 +1,4 @@
-import type { ActionResponse, LessonDocument, LearningAction, LearningState, PublicCatalog } from '@/shared/api';
+import type { ActionResponse, DefinitionRequest, GlossaryEntry, LessonDocument, LearningAction, LearningState, PublicCatalog } from '@/shared/api';
 import { apiOrigin, apiRequest as request } from '../api-client';
 import { canUseWebAuthentication } from './auth-client';
 
@@ -14,6 +14,7 @@ export const learningApi = {
   catalog: () => request<PublicCatalog>('learning?catalog=1'),
   state: () => request<LearningState>('learning'),
   lesson: (key: string) => request<LessonDocument>(`learning?lessonKey=${encodeURIComponent(key)}`),
+  definition: (input: DefinitionRequest) => request<GlossaryEntry>('definitions', { method: 'POST', body: JSON.stringify(input) }),
   login: (displayName: string) => request<Session>('dev-session', { method: 'POST', body: JSON.stringify({ displayName }) }),
   logout: () => request<unknown>('session', { method: 'DELETE' }),
   action: (action: LearningAction, expectedUserId: string) => request<ActionResponse>('learning', {

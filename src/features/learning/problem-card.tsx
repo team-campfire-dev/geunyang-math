@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState, type FormEvent } from 'react';
+import { leafGlossary } from '@/shared/definition-exploration';
 import type { AttemptView, ContentBlock, PublicProblem } from '@/shared/api';
 import { ContentBlocks, unsupportedRequiredBlocks, type GlossaryContext } from './content-blocks';
 import { Icon } from './icons';
@@ -31,6 +32,7 @@ export function ProblemCard({ problem, attempt, actions, busy, disabled, ready =
   submitLabel?: string; recordsLearning?: boolean;
   onDraftChange?: (id: string, dirty: boolean) => void; glossary?: GlossaryContext;
 }) {
+  glossary = glossary ? { ...glossary, entries: leafGlossary(glossary.entries, problem.conceptKeys), onOpenDefinition: undefined, activeDefinition: undefined, panelId: undefined } : undefined;
   const [answer, setAnswer] = useState(attempt?.answer ?? '');
   const [hint, setHint] = useState<ContentBlock[] | null>(null);
   const [localError, setLocalError] = useState('');

@@ -623,24 +623,24 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const admin = await account('admin');
     const conceptKey = `lesson-word-${randomUUID()}`;
     const saved = await service.saveDefinition(admin.id, { conceptKey, scopeKind: 'lesson', scopeKey: lessonKey,
-      newConcept: { label: '이 수업의 낱말' }, label: '', summary: '이 수업에서만 쓰는 풀이예요.',
+      newConcept: { label: '이 수업의 낱말' }, label: '', summary: '이 수업에서만 쓰는 풀이예요.', usageNote: '실수 한 변수 함수',
       blocks: [{ blockId: 'definition:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '뜻을 풀어 썼어요.' } }] });
     expect(saved.savedDefinition).toEqual({ conceptKey });
-    // The concept came into being with its definition, and is not one a question may assess.
+    // A concept created with a definition is also available for assessment.
     expect(await db.concept.findUniqueOrThrow({ where: { key: conceptKey } })).toMatchObject({ label: '이 수업의 낱말', assessable: true });
     // Blocks are named after the row that holds them, so the editor never chose the ID.
     const row = await db.conceptDefinition.findUniqueOrThrow({ where: { conceptKey_scopeKind_scopeKey: { conceptKey, scopeKind: 'lesson', scopeKey: lessonKey } } });
     expect((await definitionRecords(db, [row]))[0].blocks[0].blockId).toBe(`lesson:${lessonKey}:${conceptKey}:b1`);
 
     const listed = saved.definitions!.find(definition => definition.conceptKey === conceptKey)!;
-    expect(listed).toMatchObject({ conceptLabel: '이 수업의 낱말', label: '', summary: '이 수업에서만 쓰는 풀이예요.' });
+    expect(listed).toMatchObject({ conceptLabel: '이 수업의 낱말', label: '', summary: '이 수업에서만 쓰는 풀이예요.', usageNote: '실수 한 변수 함수' });
     // Saving again rewrites the same row and the list shows the new wording. This goes through the
     // action the screen posts, so the shape the editor sends is the shape the server accepts.
     const again = await service.act(admin.id, { action: 'definition.save', edit: {
       conceptKey: listed.conceptKey, scopeKind: listed.scopeKind, scopeKey: listed.scopeKey,
-      label: '분모 맞추기', summary: '설명을 고쳐 썼어요.', blocks: listed.blocks } });
+      label: '분모 맞추기', summary: '설명을 고쳐 썼어요.', usageNote: '복소수 벡터공간', blocks: listed.blocks } });
     expect(again.definitions!.find(definition => definition.conceptKey === conceptKey))
-      .toMatchObject({ label: '분모 맞추기', summary: '설명을 고쳐 썼어요.' });
+      .toMatchObject({ label: '분모 맞추기', summary: '설명을 고쳐 썼어요.', usageNote: '복소수 벡터공간' });
     // One row per concept and scope: a definition has no versions.
     expect(await db.conceptDefinition.count({ where: { conceptKey } })).toBe(1);
     expect((await db.conceptDefinition.findUniqueOrThrow({ where: { id: row.id } })).summary).toBe('설명을 고쳐 썼어요.');
@@ -663,6 +663,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     await expect(service.saveDefinition(admin.id, { ...edit, scopeKind: 'lesson', scopeKey: 'no-such-lesson' })).rejects.toThrow(/그런 수업이 없어요/);
     // The dictionary and the lesson keep their own definitions of one concept.
     await service.saveDefinition(admin.id, edit);
+    expect((await service.listDefinitions(author.id, 'global', '')).definitions!.some(definition => definition.conceptKey === conceptKey)).toBe(true);
     expect((await service.listDefinitions(admin.id, 'global', '')).definitions!.some(definition => definition.conceptKey === conceptKey)).toBe(true);
     expect((await service.listDefinitions(admin.id, 'lesson', lessonKey)).definitions!.some(definition => definition.conceptKey === conceptKey)).toBe(true);
     expect(await db.conceptDefinition.count({ where: { conceptKey } })).toBe(2);

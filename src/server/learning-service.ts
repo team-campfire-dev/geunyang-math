@@ -4,6 +4,8 @@ import { lessonRecord, lessonRecords, currentDiagnostic, currentDefinitions, pub
 import { recommend, reviewSelection, conceptReadiness, type Evidence } from '@/core/personalization';
 import { assignmentWindow, parseAssignmentPolicy, parseAssignmentSchedule, recipientDates, reviewPolicy } from '@/core/assignment';
 import { glossaryEntries } from '@/core/glossary';
+import { canExploreDefinitions, leafGlossary } from '@/shared/definition-exploration';
+import { definitionRefId, mayReferenceDefinition } from '@/shared/rich-text';
 import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
 import { blockDefinitionRefs, getActivityProblemIds, definitionReferences, toPublicLesson, type LessonMetadata, type LessonRecord, type StoredProblem } from '@/core/content';
@@ -12,6 +14,15 @@ import type { ActionResponse, AssignmentView, AttemptView, GradeResult, Learning
 import { AppError } from './errors';
 
 const id = z.string().min(1).max(191);
+const definitionRef = z.object({
+  conceptKey: id.max(100), scopeKind: z.enum(['global', 'lesson', 'course', 'organization']).optional(),
+  scopeKey: z.string().max(100).optional(),
+}).strict().refine(ref => (ref.scopeKind ?? 'global') === 'global' ? !ref.scopeKey : !!ref.scopeKey);
+const explorationSchema = z.object({
+  lessonKey: id.max(100), lessonVersionId: id,
+  // A request budget, not recursive graph loading. Normal paths collapse on revisiting a definition.
+  path: z.array(definitionRef).min(1).max(128),
+}).strict();
 const context = z.enum(['lesson', 'assignment']);
 export const actionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('recommendation.choose'), lessonKey: z.string().min(1).max(100).nullable() }).strict(),
@@ -89,7 +100,36 @@ export class LearningService {
       this.db.lesson.findUnique({ where: { key: lessonKey }, select: { course: { select: { key: true } } } }),
     ]);
     if (!lesson) throw notFound();
-    return toPublicLesson(record, lesson.course.key, glossaryEntries(definitions, lessons));
+    return toPublicLesson(record, lesson.course.key, leafGlossary(glossaryEntries(definitions, lessons, lesson.course.key)));
+  }
+
+  /** Resolve only a path rooted in this reader's published lesson prose, never in a question. */
+  async exploreDefinition(input: unknown, userId?: string) {
+    const request = explorationSchema.parse(input);
+    const enrollment = userId ? await this.db.enrollment.findFirst({ where: { userId, lessonVersion: { lessonKey: request.lessonKey } }, select: { lessonVersionId: true } }) : null;
+    const versionId = enrollment?.lessonVersionId ?? (await this.db.lessonVersion.findFirst({
+      where: { lessonKey: request.lessonKey }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }], select: { id: true },
+    }))?.id;
+    if (!versionId || versionId !== request.lessonVersionId) throw conflict('수업이 바뀌었어요. 수업을 다시 연 뒤 뜻풀이를 확인해 주세요.');
+    const record = await lessonRecord(this.db, versionId);
+    const lesson = await this.db.lesson.findUnique({ where: { key: request.lessonKey }, select: { course: { select: { key: true } } } });
+    if (!record || !lesson) throw notFound();
+    const refs = request.path;
+    const roots = blockDefinitionRefs(record.sections.filter(section => canExploreDefinitions(section.role)).flatMap(section => section.contentBlocks));
+    const unavailable = () => new AppError(404, 'definition_unavailable', '이 경로의 뜻풀이를 사용할 수 없어요. 이전 설명이나 수업으로 돌아가 주세요.');
+    if (!roots.some(root => definitionRefId(root) === definitionRefId(refs[0]))) throw unavailable();
+    if (!mayReferenceDefinition({ conceptKey: '', scopeKind: 'lesson', scopeKey: request.lessonKey }, refs[0])) throw unavailable();
+    // Fetch the path in one batch, then validate every current edge. Mutable definitions cannot
+    // grant access through a stale client path, another lesson, an unpublished root, or a question.
+    const entries = new Map((await currentDefinitions(this.db, refs)).map(entry => [definitionRefId(entry), entry]));
+    for (let index = 0; index < refs.length; index++) {
+      if (!entries.has(definitionRefId(refs[index]))) throw unavailable();
+      if (!index) continue;
+      const parent = entries.get(definitionRefId(refs[index - 1]))!;
+      if (!mayReferenceDefinition(parent, refs[index]) || !blockDefinitionRefs(parent.blocks).some(ref => definitionRefId(ref) === definitionRefId(refs[index]))) throw unavailable();
+    }
+    const selected = entries.get(definitionRefId(refs.at(-1)!))!;
+    return glossaryEntries([selected], await this.catalog(), lesson.course.key)[0];
   }
 
   async state(userId: string, db: Tx = this.db): Promise<LearningState> {
@@ -167,7 +207,7 @@ export class LearningService {
       return { id: r.assignmentId, recipientId: r.id, title: r.assignment.title, lessonKey,
         recommendedAt: r.recommendedAt.toISOString(), opensAt: window.opensAt?.toISOString() ?? null, dueAt: window.dueAt?.toISOString() ?? null,
         policy, status: r.status as 'assigned' | 'submitted', items, submissionId: submission.id,
-        glossary: glossaryEntries(assignmentTerms, lessons),
+        glossary: leafGlossary(glossaryEntries(assignmentTerms, lessons)),
         reason: typeof (r.assignment.policySnapshot as { reviewReason?: string }).reviewReason === 'string' ? (r.assignment.policySnapshot as { reviewReason: string }).reviewReason : undefined };
     });
     for (const concept of concepts) {

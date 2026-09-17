@@ -121,11 +121,12 @@ export type EditableConceptScope = 'global' | 'lesson';
 export type DefinitionEdit = {
   conceptKey: string; scopeKind: EditableConceptScope; scopeKey: string;
   label: string; summary: string; blocks: ContentBlock[];
+  usageNote?: string;
   newConcept?: { label: string };
 };
 export type DefinitionSummary = Omit<DefinitionEdit, 'newConcept'> & { conceptLabel: string; updatedAt: string };
 /** Enough of a definition to offer it while writing: what it is called and where it is kept. */
-export type DefinitionChoice = { conceptKey: string; scopeKind: EditableConceptScope; scopeKey: string; label: string };
+export type DefinitionChoice = { conceptKey: string; scopeKind: EditableConceptScope; scopeKey: string; label: string; usageNote?: string };
 /** A concept as the pickers list it. Only an assessable one may be what a lesson teaches or a question asks. */
 export type ConceptChoice = { key: string; label: string; assessable: boolean };
 export type AuthoringWorkspace = {
@@ -244,8 +245,8 @@ export function nextSectionId(lessonKey: string, role: string, versionId: string
 /** A definition starts as one paragraph, which is what most of them stay. */
 export function newDefinition(scopeKind: EditableConceptScope, scopeKey: string): DefinitionEdit {
   return { conceptKey: '', scopeKind, scopeKey, label: '', summary: '',
-    blocks: [{ blockId: 'definition:block:1', kind: 'core.rich_text', typeVersion: 1, required: true,
-      payload: { text: '여기에 뜻을 풀어 씁니다.' } }] };
+    blocks: [{ blockId: 'definition:block:1', kind: 'core.rich_text', typeVersion: 3, required: true,
+      payload: { text: '여기에 뜻을 풀어 씁니다.', definitions: [] } }] };
 }
 
 export function nextProblemVersionId(lessonKey: string, role: string, versionId: string, taken: string[]): string {
@@ -598,8 +599,5 @@ const paragraph = (form: BlockForm, typeVersion: number) => form.kind === 'core.
 export const lessonBlockForms = blockForms.filter((form) => !paragraph(form, 1));
 /** A question holds no activity of its own, and a drawing inside one is read rather than arranged. */
 export const problemBlockForms = lessonBlockForms.filter((form) => form.kind !== 'core.problem_set');
-/**
- * Only the definition's own blocks: a definition never embeds a question, and never a definition inside a
- * definition, so its paragraph is the one that carries no links.
- */
-export const definitionBlockForms = blockForms.filter((form) => form.kind !== 'core.problem_set' && !paragraph(form, 3));
+/** Definitions explain and link other concepts; they never embed questions. */
+export const definitionBlockForms = problemBlockForms;

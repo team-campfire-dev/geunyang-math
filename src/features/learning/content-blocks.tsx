@@ -8,7 +8,7 @@ import {
   removeFromZone, sceneItemKinds, sceneLimits, stepFrameIndex, taskComplete, zoneAt, zoneOf,
   type ScenePlacement, type SceneFrame, type SceneItem, type SceneTask, type SceneZone,
 } from '@/shared/scene';
-import { locateTerms, splitRichText, definitionRefId, type DefinitionLink } from '@/shared/rich-text';
+import { locateTerms, splitRichText, definitionRefId, type DefinitionLink, type DefinitionRef } from '@/shared/rich-text';
 import { Icon } from './icons';
 
 /**
@@ -17,6 +17,10 @@ import { Icon } from './icons';
  */
 export type GlossaryContext = {
   entries: GlossaryEntry[];
+  onOpenDefinition?: (ref: DefinitionRef, trigger: HTMLButtonElement) => void;
+  activeDefinition?: string;
+  allowUnresolvedDefinitions?: boolean;
+  panelId?: string;
   /** Concepts the learner is still practising; their definitions get a stronger hint that help is there. */
   reviewConceptKeys?: string[];
   currentLessonKey?: string;
@@ -30,7 +34,7 @@ export function RichText({ text, definitions = [], glossary = noGlossary, asCapt
   const panelId = useId();
   const entryOf = (ref: string) => glossary.entries.find((entry) => definitionRefId(entry) === ref);
   // A caption renders inline inside figcaption, where an expanding panel has nowhere to open.
-  const spans = asCaption ? [] : locateTerms(text, definitions.filter((definition) => entryOf(definitionRefId(definition)))).spans;
+  const spans = asCaption ? [] : locateTerms(text, definitions.filter((definition) => ((glossary.onOpenDefinition && glossary.allowUnresolvedDefinitions) || entryOf(definitionRefId(definition))))).spans;
   const open = openDefinition ? entryOf(openDefinition) : undefined;
   // Only the math renderer creates HTML. Text and authored content remain React text nodes.
   const nodes: ReactNode[] = [];
@@ -47,12 +51,16 @@ export function RichText({ text, definitions = [], glossary = noGlossary, asCapt
     let cursor = segment.start;
     for (const span of spans) {
       if (span.start < cursor || span.end > segmentEnd) continue;
-      const entry = entryOf(span.ref)!;
-      const expanded = openDefinition === span.ref;
+      const entry = entryOf(span.ref);
+      const expanded = (glossary.onOpenDefinition ? glossary.activeDefinition : openDefinition) === span.ref;
       pushText(text.slice(cursor, span.start), cursor);
-      nodes.push(<button key={span.start} type="button" aria-expanded={expanded} aria-controls={expanded ? panelId : undefined}
-        className={`term-mark${glossary.reviewConceptKeys?.includes(entry.conceptKey) ? ' needs-review' : ''}${expanded ? ' open' : ''}`}
-        onClick={() => setOpenDefinition(expanded ? null : span.ref)}>{text.slice(span.start, span.end)}</button>);
+      nodes.push(<button key={span.start} type="button" aria-expanded={expanded} aria-controls={expanded ? glossary.panelId ?? panelId : undefined}
+        className={`term-mark${glossary.reviewConceptKeys?.includes(span.conceptKey) ? ' needs-review' : ''}${expanded ? ' open' : ''}`}
+        onClick={(event) => {
+          event.stopPropagation();
+          if (glossary.onOpenDefinition) glossary.onOpenDefinition(entry ?? definitions.find(ref => definitionRefId(ref) === span.ref)!, event.currentTarget);
+          else setOpenDefinition(expanded ? null : span.ref);
+        }}>{text.slice(span.start, span.end)}</button>);
       cursor = span.end;
     }
     pushText(text.slice(cursor, segmentEnd), cursor);
@@ -63,8 +71,8 @@ export function RichText({ text, definitions = [], glossary = noGlossary, asCapt
     {open && <aside className="term-panel" id={panelId}>
       <div className="term-panel-head"><strong>{open.label}</strong>
         <button type="button" className="icon-button" aria-label="뜻풀이 닫기" onClick={() => setOpenDefinition(null)}><Icon name="close" size={15} /></button></div>
-      <p className="term-summary">{open.summary}</p>
-      {/* Definitions never nest: the inner blocks render without a glossary of their own. */}
+      <p className="term-usage">{open.usageNote}</p><div className="term-summary"><RichText text={open.summary} /></div>
+      {/* Problem and legacy contexts remain leaves even if the stored definition has links. */}
       <ContentBlocks blocks={open.blocks} />
       {open.lessonKey && open.lessonKey !== glossary.currentLessonKey && glossary.onOpenLesson &&
         <button type="button" className="text-button" onClick={() => glossary.onOpenLesson!(open.lessonKey!)}>이 개념 다시 배우기<Icon name="arrow" size={15} /></button>}

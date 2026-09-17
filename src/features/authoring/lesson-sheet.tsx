@@ -7,6 +7,9 @@ import {
   type DraftIssue, type DraftMeta, type DraftProblem, type DefinitionChoice,
 } from '@/shared/authoring';
 import { ContentBlocks, type GlossaryContext } from '@/features/learning/content-blocks';
+import { ConceptExplorer } from '@/features/learning/concept-explorer';
+import { definitionRefId } from '@/shared/rich-text';
+import { canExploreDefinitions, leafGlossary } from '@/shared/definition-exploration';
 import { ProblemCard, type ProblemActions } from '@/features/learning/problem-card';
 import { Icon } from '@/features/learning/icons';
 import { useExpertMode } from './expert-mode';
@@ -120,7 +123,11 @@ export function LessonSheet({ meta, section, index, problems, definitions, gloss
     return 0;
   };
 
-  return <div className="editor-sheet" id="lesson-preview">
+  return <ConceptExplorer key={section.sectionId} glossary={glossary} browserHistory={false} loadDefinition={async (path) => {
+    const found = glossary.entries.find(entry => definitionRefId(entry) === definitionRefId(path.at(-1)!));
+    if (!found) throw new Error('이 뜻풀이를 불러올 수 없어요. 저장한 뒤 다시 확인해 주세요.');
+    return found;
+  }}>{(readingGlossary) => <div className="editor-sheet" id="lesson-preview">
     <div className="lesson-header sheet-header">
       <div>
         <span className="eyebrow">{courseTitle} · {meta.estimatedMinutes}분 수업</span>
@@ -140,7 +147,7 @@ export function LessonSheet({ meta, section, index, problems, definitions, gloss
         : <InlineText className="sheet-section-title" label="단계 제목" value={section.title} maxLength={500}
             placeholder="단계 제목" onChange={(title) => onSection({ ...section, title })} />}
 
-      <ContentBlocks glossary={glossary} blocks={section.contentBlocks} problems={publicProblems}
+      <ContentBlocks glossary={canExploreDefinitions(section.role) ? readingGlossary : glossary} blocks={section.contentBlocks} problems={publicProblems}
         renderProblem={(problem) => {
           if (trying) return <ProblemCard key={problem.problemVersionId} problem={problem} attempt={trying.attempts[problem.problemVersionId]}
             glossary={glossary} recordsLearning={false} actions={trying.actions(problem.problemVersionId)} busy={trying.busy} submitLabel="정답 확인" />;
@@ -159,7 +166,7 @@ export function LessonSheet({ meta, section, index, problems, definitions, gloss
               {numberOf(problem.problemVersionId)}번 문항</button>
             <div className="problem-card">
               <div className="problem-kicker"><Icon name="pencil" size={14} />문항 미리보기{expert && <span>{problem.problemVersionId}</span>}</div>
-              <ContentBlocks glossary={glossary} blocks={problem.promptContent}
+              <ContentBlocks glossary={{ ...glossary, entries: leafGlossary(glossary.entries, problem.conceptKeys) }} blocks={problem.promptContent}
                 wrap={(block, position, drawn, className) => (chosen && !published && held && block.kind === 'core.rich_text'
                   ? <div key={block.blockId} className={className}>
                     <Paragraph block={block} definitions={definitions} focus={position === first} onChange={(next) => writeProblem(position, next)} />
@@ -194,5 +201,5 @@ export function LessonSheet({ meta, section, index, problems, definitions, gloss
 
       {!fixed && <div className="sheet-add" onClick={(event) => event.stopPropagation()}>{add}</div>}
     </article>
-  </div>;
+  </div>}</ConceptExplorer>;
 }

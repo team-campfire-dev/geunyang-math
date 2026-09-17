@@ -14,7 +14,7 @@ import { importContent } from '../src/server/content-store';
  */
 async function seed() {
   const input = parseContentBundle(JSON.parse(readFileSync(new URL('./seed/fractions.json', import.meta.url), 'utf8')));
-  const dictionary = parseContentBundle(JSON.parse(readFileSync(new URL('../content/glossary-v2.json', import.meta.url), 'utf8')));
+  const dictionary = parseContentBundle(JSON.parse(readFileSync(new URL('../content/glossary-v3.json', import.meta.url), 'utf8')));
   const db = getDatabase();
   try {
     // The lessons link atomic concepts from their first publication. Install missing definitions
@@ -22,7 +22,7 @@ async function seed() {
     // Reviewed changes to the dictionary still go through content:publish and its checksum ledger.
     const existing = new Set((await db.conceptDefinition.findMany({ where: { scopeKind: 'global', scopeKey: '' }, select: { conceptKey: true } })).map(row => row.conceptKey));
     const definitions = dictionary.definitions.filter(definition => !existing.has(definition.conceptKey));
-    console.log(JSON.stringify({ seed: 'fractions', ...(await importContent(db, { ...input, definitions })) }));
+    console.log(JSON.stringify({ seed: 'fractions', ...(await importContent(db, { ...input, concepts: [...input.concepts, ...dictionary.concepts], definitions })) }));
   }
   finally { await db.$disconnect(); }
 }
