@@ -107,7 +107,7 @@ export const toPublicProblem = (problem: DraftProblem): PublicProblem => ({
   promptContent: problem.promptContent, responseSpec: responseSpecOf(problem.gradingSpec),
   hintAvailable: problem.hints.length > 0,
 });
-export type LessonChoice = { lessonKey: string; courseKey: string; title: string; latestVersionId: string | null; suggestedVersionId: string; hasDraft: boolean };
+export type LessonChoice = { conceptKeys?: string[]; lessonKey: string; courseKey: string; title: string; latestVersionId: string | null; suggestedVersionId: string; hasDraft: boolean };
 /** A course a new lesson may be started in. Every lesson has one from its first draft. */
 export type CourseChoice = { key: string; title: string; summary: string };
 /** The scopes this screen writes. The catalogue's other levels exist in the model, not yet here. */
@@ -116,7 +116,7 @@ export type EditableConceptScope = 'global' | 'lesson';
  * A definition as the editor holds it: how one scope calls and explains a concept. Saving writes it
  * in place — a definition decides nothing, so it has no versions and no draft. An empty label means
  * the concept's own name. A concept nobody has named yet is made with the definition (`newConcept`),
- * not assessable: whether a question may assess it is the operator's decision.
+ * available to lessons and questions as the same atomic concept.
  */
 export type DefinitionEdit = {
   conceptKey: string; scopeKind: EditableConceptScope; scopeKey: string;
@@ -146,6 +146,7 @@ export type AuthoringAction =
   | { action: 'course.reorder'; courseKey: string; lessonKeys: string[] }
   | { action: 'concept.create'; key: string; label: string }
   | { action: 'draft.create'; lessonKey: string }
+  | { action: 'lesson.read'; versionId: string }
   /** A lesson nobody has published yet. It belongs to a course from this moment and starts as a draft. */
   | { action: 'lesson.create'; courseKey: string; lessonKey: string; title: string; conceptKeys: string[] }
   | { action: 'draft.review'; draftId: string; asking: boolean }
@@ -338,16 +339,15 @@ export function problemsOfBlock(block: ContentBlock, problems: DraftProblem[]): 
   return ids.map((id) => problems.find((problem) => problem.problemVersionId === id)).filter((problem) => problem !== undefined);
 }
 
-/** A question a learner has to answer, so a new one starts with a prompt and an answer of 1/2. */
+/** A question a learner has to answer, so a new one starts with a prompt and a numeric answer that the author replaces. */
 export function newProblem(problemVersionId: string, conceptKeys: string[]): DraftProblem {
   return {
     problemVersionId, conceptKeys: [...conceptKeys],
     promptContent: [{ blockId: `${problemVersionId}:prompt`, kind: 'core.rich_text', typeVersion: 3, required: true,
       payload: { text: '여기에 문제를 씁니다.', definitions: [] } }],
-    gradingSpec: { kind: 'rational', numerator: 1, denominator: 2 },
+    gradingSpec: { kind: 'integer', value: 0 },
     hints: [],
-    solution: [{ blockId: `${problemVersionId}:solution`, kind: 'core.rich_text', typeVersion: 3, required: true,
-      payload: { text: '여기에 풀이를 씁니다.', definitions: [] } }],
+    solution: [],
   };
 }
 
@@ -484,9 +484,9 @@ export const blockForms: BlockForm[] = [
   },
   {
     kind: 'core.scene', typeVersion: 1, label: '그림',
-    hint: '도형을 마우스로 놓고 옮겨 그립니다. 그림 전체의 이름은 평문으로 따로 적어요.',
+    hint: '수직선·좌표평면·도형을 넣고 옮겨 그릴 수 있어요. 글 속 수식은 $...$로 작성합니다.',
     create: () => ({ alt: '설명을 담은 그림', caption: '', width: 320, height: 200,
-      items: [{ kind: 'rect', x: 100, y: 70, width: 120, height: 60, fill: 'fill-soft', stroke: 'fill', strokeWidth: 1, radius: 2 }] }),
+      items: [] }),
     fields: [
       { key: 'alt', label: '그림 이름', kind: 'text', hint: altHint },
       { key: 'caption', label: '캡션', kind: 'text', optional: true },

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { ContentBlock } from '@/shared/api';
+import { displayedAnswer, type AnswerInput } from '@/shared/authoring-checks';
 import { answerSpec, answerText, type AnswerSpec } from '@/shared/answer';
 import {
   copyProblem, insertAfter, moveBlock, newProblem, nextProblemBlockId, nextProblemVersionId, problemBlockForms,
@@ -16,33 +17,42 @@ import { useExpertMode } from './expert-mode';
  * An author writes the answer the way a learner will type it, and the same reader decides both. A
  * whole number asks for a whole number; a fraction or a decimal accepts any equivalent value.
  */
-function AnswerField({ spec, onChange }: { spec: AnswerSpec; onChange: (next: AnswerSpec) => void }) {
-  const [written, setWritten] = useState(() => answerText(spec));
+function AnswerField({ spec, input, onInput, onChange }: { spec: AnswerSpec; input?: AnswerInput; onInput: (input: AnswerInput) => void; onChange: (next: AnswerSpec) => void }) {
+  const written = displayedAnswer(spec, input);
   const requiredForm = spec.kind === 'rational' ? spec.requiredForm : undefined;
   const write = (next: string, form: 'reduced_fraction' | null) => {
-    setWritten(next);
-    const parsed = answerSpec(next, form);
+    const read = answerSpec(next, form);
+    const parsed: AnswerSpec | null = spec.kind === 'rational' && read?.kind === 'integer' ? { kind: 'rational', numerator: read.value, denominator: 1, ...(form ? { requiredForm: form } : {}) } : read;
+    onInput({ text: next, spec: JSON.stringify(parsed ?? spec) });
     if (parsed) onChange(parsed);
   };
   const parsed = answerSpec(written, requiredForm ?? null);
   return <div className="editor-answer">
     <label className="editor-field">
-      <span className="editor-label">정답</span>
-      <input value={written} onChange={(event) => write(event.target.value, requiredForm ?? null)} placeholder="3 또는 1/2" />
-      {parsed
-        ? <small>{parsed.kind === 'integer' ? '정수로 답하는 문항이에요. 1/2 같은 분수는 오답으로 봅니다.' : '값이 같으면 정답이에요. 0.5와 2/4도 1/2과 같은 값으로 봅니다.'}</small>
-        : <small className="editor-warn">정답으로 읽을 수 없어요. 3 또는 1/2처럼 써 주세요. 고치기 전까지는 이전 정답이 남아 있어요.</small>}
+      <span className="editor-label">정답 · 숫자</span>
+      <input value={written} aria-invalid={!parsed} onChange={event => write(event.target.value, requiredForm ?? null)} placeholder="예: -3, 2.5, 1/4" />
+      {parsed ? <small>{spec.kind === 'integer' ? '정수로 답하는 문제예요. 소수나 분수도 허용하려면 아래에서 답안 형식을 바꾸세요.' : '정수·소수·분수 중 값이 같은 답을 정답으로 인정해요.'}</small>
+        : <small className="editor-warn" role="alert">숫자 정답을 확인해 주세요. 이 입력을 고치기 전에는 저장하거나 발행할 수 없어요.</small>}
     </label>
-    {parsed?.kind === 'rational' && <label className="editor-check">
-      <input type="checkbox" checked={!!requiredForm}
-        onChange={(event) => write(written, event.target.checked ? 'reduced_fraction' : null)} />
-      <span className="editor-label">기약분수로 써야 정답</span>
-    </label>}
+    <label className="editor-field"><span className="editor-label">답안 형식</span>
+      <select value={spec.kind} disabled={!parsed} onChange={event => {
+        const next: AnswerSpec = event.target.value === 'rational'
+          ? spec.kind === 'integer' ? { kind: 'rational', numerator: spec.value, denominator: 1 } : spec
+          : { kind: 'integer', value: spec.kind === 'integer' ? spec.value : spec.numerator / spec.denominator };
+        onInput({ text: answerText(next), spec: JSON.stringify(next) }); onChange(next);
+      }}><option value="rational">숫자 · 정수, 소수, 분수</option><option value="integer" disabled={spec.kind === 'rational' && spec.numerator % spec.denominator !== 0}>정수만</option></select>
+    </label>
+    {spec.kind === 'rational' && <details className="answer-options"><summary>답의 표현 조건</summary><label className="editor-check">
+      <input type="checkbox" checked={!!requiredForm} disabled={!parsed} onChange={event => {
+        const next: AnswerSpec = { kind: 'rational', numerator: spec.numerator, denominator: spec.denominator, ...(event.target.checked ? {requiredForm: 'reduced_fraction' as const} : {}) };
+        onInput({text:written,spec:JSON.stringify(next)}); onChange(next);
+      }} /><span>기약분수로 쓴 답만 인정</span></label></details>}
+    <p className="editor-note">자동 채점은 숫자 답안을 지원해요. 문자식·좌표쌍·증명은 설명이나 예시로 작성해 주세요.</p>
   </div>;
 }
 
 /** The concepts this lesson teaches, named the way the catalogue names them rather than by key. */
-export function ConceptPicker({ concepts, chosen, onChange, label = '다루는 개념' }: {
+export function ConceptPicker({ concepts, chosen, onChange, label = '이 문제가 확인하는 개념' }: {
   concepts: ConceptChoice[]; chosen: string[]; onChange: (next: string[]) => void; label?: string;
 }) {
   const [query, setQuery] = useState('');
@@ -87,7 +97,8 @@ function ProblemBlocks({ label, hint, part, problem, blocks, taken, definitionCh
  * is left here is everything a prompt cannot show: the answer it accepts, the concepts it claims, and
  * the help that only appears when someone asks for it.
  */
-export function ProblemPanel({ problem, number, total, concepts, taken, definitionChoices, onChange, onMove, onCopy, onRemove }: {
+export function ProblemPanel({ problem, number, total, concepts, taken, definitionChoices, answerInput, onAnswerInput, onChange, onMove, onCopy, onRemove }: {
+  answerInput?: AnswerInput; onAnswerInput: (input: AnswerInput) => void;
   problem: DraftProblem; number: number; total: number; concepts: ConceptChoice[]; taken: string[]; definitionChoices: DefinitionChoice[];
   onChange: (next: DraftProblem) => void; onMove: (delta: number) => void; onCopy: () => void; onRemove: () => void;
 }) {
@@ -108,7 +119,7 @@ export function ProblemPanel({ problem, number, total, concepts, taken, definiti
       </div>
     </header>
     <p className="editor-note">문제 지문은 수업 화면에서 바로 씁니다. 여기에는 지문이 보여 주지 않는 것들이 있어요.</p>
-    <AnswerField spec={problem.gradingSpec} onChange={(gradingSpec) => onChange({ ...problem, gradingSpec })} />
+    <AnswerField spec={problem.gradingSpec} input={answerInput} onInput={onAnswerInput} onChange={(gradingSpec) => onChange({ ...problem, gradingSpec })} />
     <ConceptPicker concepts={concepts} chosen={problem.conceptKeys} onChange={(next) => onChange({ ...problem, conceptKeys: next })} />
     <ProblemBlocks label="문제" part="prompt" problem={problem} blocks={problem.promptContent} taken={taken} definitionChoices={definitionChoices}
       hint="글은 수업 화면에서 고치고, 그림처럼 지문에 더 넣을 것이 있으면 여기에서 더합니다."

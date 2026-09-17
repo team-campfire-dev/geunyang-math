@@ -1,11 +1,12 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import {
   changeFor, createSceneItem, createZone, emptyFrames, frameLimits, itemBounds, moveItem, nameItem, reorderItem,
   resizeItem, sceneColorLabels, sceneColors, sceneItemKinds, sceneItemLabels, sceneLimits, scenePalette, setChange, snap,
   type Scene, type SceneColor, type SceneFrame, type SceneItem, type SceneItemKind, type SceneZone,
 } from '@/shared/scene';
+import { sceneTemplates, templateItems } from '@/shared/scene-templates';
 import { SceneShapes } from '@/features/learning/content-blocks';
 import { Icon } from '@/features/learning/icons';
 import { useRemovalNotice } from './edit-history';
@@ -41,6 +42,7 @@ export function SceneEditor({ payload, onChange, arrangingRefusal }: {
   payload: Record<string, unknown>; onChange: (next: Record<string, unknown>) => void; arrangingRefusal?: string;
 }) {
   const scene = readScene(payload);
+  const gridId = useId();
   const notifyRemoval = useRemovalNotice();
   const [selected, setSelected] = useState<{ on: 'item' | 'zone'; index: number } | null>(null);
   const [frameIndex, setFrameIndex] = useState<number | null>(null);
@@ -48,7 +50,7 @@ export function SceneEditor({ payload, onChange, arrangingRefusal }: {
   const surface = useRef<SVGSVGElement>(null);
   const frames = scene.frames;
   const zones = scene.zones ?? [];
-  const task = scene.task;
+  const task = payload.task as Scene['task'];
   // While a frame is open the canvas shows that moment, and a drag records the move into it.
   const frame = frames && frameIndex !== null ? frames[Math.min(frameIndex, frames.length - 1)] : undefined;
 
@@ -113,9 +115,16 @@ export function SceneEditor({ payload, onChange, arrangingRefusal }: {
   const selectedShift = item ? changeFor(frame, item) : undefined;
 
   return <div className="scene-editor">
+    <div className="scene-templates"><span className="editor-label">바탕 추가</span><p className="editor-note">그림을 고르면 바탕이 추가돼요. 도형과 숫자는 각각 선택해 고칠 수 있어요.</p>
+      <div className="scene-template-buttons">{sceneTemplates.map(template => <button key={template.key} type="button" className="button secondary"
+        disabled={scene.items.length + templateItems(template.key, scene).length > sceneLimits.maxItems}
+        onClick={() => { write([...templateItems(template.key, scene), ...scene.items]); setSelected(null); }}>
+        <strong>{template.label}</strong><small>{template.description}</small>
+      </button>)}</div>
+    </div>
     <div className="scene-tools">
       <span className="editor-label">도형 추가</span>
-      {sceneItemKinds.map((kind) => <button key={kind} type="button" className="button secondary" onClick={() => add(kind)}>
+      {sceneItemKinds.map((kind) => <button key={kind} type="button" className="button secondary" disabled={scene.items.length >= sceneLimits.maxItems} onClick={() => add(kind)}>
         <Icon name="plus" size={13} />{sceneItemLabels[kind]}</button>)}
     </div>
 
@@ -123,9 +132,9 @@ export function SceneEditor({ payload, onChange, arrangingRefusal }: {
       <svg ref={surface} viewBox={`0 0 ${scene.width} ${scene.height}`} style={{ aspectRatio: `${scene.width} / ${scene.height}` }}
         onPointerMove={track} onPointerUp={() => setDrag(null)} onPointerCancel={() => setDrag(null)}
         onPointerDown={(event) => { if (event.target === surface.current) setSelected(null); }}>
-        <defs><pattern id="scene-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+        <defs><pattern id={gridId} width="20" height="20" patternUnits="userSpaceOnUse">
           <path d="M20 0 L0 0 0 20" fill="none" stroke="#dfe4d5" strokeWidth="0.5" /></pattern></defs>
-        <rect width={scene.width} height={scene.height} fill="url(#scene-grid)" />
+        <rect width={scene.width} height={scene.height} fill={`url(#${gridId})`} />
         <SceneShapes items={scene.items} frame={frame} />
         {/* A transparent hit area per shape: thin lines and hollow shapes stay easy to grab. It follows
             the shape into the open frame, so a moved shape is grabbed where it is drawn. */}

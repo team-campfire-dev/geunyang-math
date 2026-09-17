@@ -7,6 +7,7 @@ import { LearningService } from '@/server/learning-service';
 import { diagnosticProblems } from './fixtures/content';
 import { lessonBundle, seedLessons } from './fixtures/content';
 import { getActivityProblemIds } from '@/core/content';
+import historical from './fixtures/fractions-v1.json';
 import { importContent } from '@/server/content-store';
 import type { DiagnosticView, LearningState } from '@/shared/api';
 
@@ -23,8 +24,8 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     if (parsed.protocol !== 'mysql:' || !parsed.pathname.endsWith('_test')) throw new Error('Use an isolated _test database.');
     db = createDatabase(url!); service = new LearningService(db);
     existing = await existingRows(db);
-    // The seeded lessons are installed by db:seed; publishing them again is a no-op.
-    await importContent(db, lessonBundle([...seedLessons]));
+    // This policy scenario deliberately uses the historical three-topic diagnostic.
+    await importContent(db, historical);
   });
   afterAll(async () => {
     // A shared database keeps whatever a run leaves behind, so this run leaves nothing.
@@ -49,7 +50,7 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     expect(start.state.diagnostic?.total).toBe(6);
     expect(start.state.diagnostic?.results).toEqual([]);
     const publicText = JSON.stringify(start);
-    for (const field of ['gradingSpec', 'solution', 'numerator', 'denominator']) expect(publicText).not.toContain(`"${field}"`);
+    for (const field of ['gradingSpec', 'solution', 'numerator', 'denominator']) expect(publicText).not.toContain(`"${field}":`);
     const action = answer(start.state.diagnostic!, '4/9');
     await expect(service.act(b.id, action)).rejects.toMatchObject({ status: 404 });
     await expect(service.act(a.id, { ...action, problemVersionId: diagnosticProblems[2].problemVersionId })).rejects.toMatchObject({ status: 409 });

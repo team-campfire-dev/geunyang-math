@@ -31,7 +31,7 @@ function InlineText({ value, label, placeholder, className, maxLength, onChange 
 }) {
   const area = useRef<HTMLTextAreaElement>(null);
   useAutoHeight(area, value);
-  return <textarea ref={area} rows={1} className={`sheet-inline ${className}`} value={value} aria-label={label}
+  return <textarea ref={area} rows={1} className={`sheet-inline ${className}`} value={value} aria-label={label} aria-invalid={!value.trim()}
     placeholder={placeholder} maxLength={maxLength} spellCheck={false}
     onChange={(event) => onChange(event.target.value)} />;
 }
@@ -132,6 +132,7 @@ export function LessonSheet({ meta, section, index, problems, definitions, gloss
     </div>
 
     {/* Clicking the paper, rather than anything on it, is how a choice is let go of. */}
+    {issues.some(issue => issue.field === 'title' && !issue.sectionId && !issue.blockId && !issue.problemVersionId) && <p className="editor-warn" role="alert">수업 제목을 적어 주세요.</p>}
     <article className="lesson-sheet" onClick={() => !fixed && onSelect(null)}>
       <div className="lesson-step-label">{String(index + 1).padStart(2, '0')}<i />{sectionRoleLabels[section.role]}</div>
       {fixed
@@ -165,6 +166,7 @@ export function LessonSheet({ meta, section, index, problems, definitions, gloss
                   </div>
                   : <div key={block.blockId} className={className}>{drawn}</div>)} />
             </div>
+            {chosen && !published && <a className="sheet-edit-link text-button" href="#lesson-inspector" onClick={event => event.stopPropagation()}>정답·힌트 편집하기 ↓</a>}
           </div>;
         }}
         wrap={(block, position, drawn, className) => {
@@ -181,8 +183,12 @@ export function LessonSheet({ meta, section, index, problems, definitions, gloss
             <div className={className}>
               {writing
                 ? <Paragraph block={block} definitions={definitions} focus onChange={(next) => write(position, next)} />
-                : drawn}
+                : block.kind === 'core.scene' && Array.isArray(block.payload.items) && !block.payload.items.length
+                  ? <p className="sheet-empty">그림을 선택해 수직선·좌표평면·도형을 넣어 주세요.</p>
+                  : block.kind === 'core.problem_set' && Array.isArray(block.payload.problemVersionIds) && !block.payload.problemVersionIds.length
+                    ? <p className="sheet-empty">문제 묶음을 선택해 문항을 추가해 주세요.</p> : drawn}
             </div>
+            {chosen && !published && <a className="sheet-edit-link text-button" href="#lesson-inspector" onClick={event => event.stopPropagation()}>이 블록 편집하기 ↓</a>}
           </div>;
         }} />
 

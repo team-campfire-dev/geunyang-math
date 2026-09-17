@@ -215,3 +215,23 @@ describe('naming a colour for whoever is drawing', () => {
     expect(Object.keys(sceneColorLabels).sort()).toEqual([...sceneColors].sort());
   });
 });
+
+describe('general math drawing templates', () => {
+  it('renders as supported content at multiple canvas sizes without a new schema', async () => {
+    const { sceneTemplates, templateItems } = await import('@/shared/scene-templates');
+    for (const size of [{width:320,height:200},{width:640,height:480}]) {
+      for (const template of sceneTemplates) {
+        const items = templateItems(template.key, size);
+        expect(items.length).toBeGreaterThan(0);
+        expect(() => checkLesson(withScene(items, size))).not.toThrow();
+        for (const item of items) {
+          const bounds = itemBounds(item);
+          expect(bounds.x).toBeGreaterThanOrEqual(0);
+          expect(bounds.y).toBeGreaterThanOrEqual(0);
+          expect(bounds.x + bounds.width).toBeLessThanOrEqual(size.width);
+          expect(bounds.y + bounds.height).toBeLessThanOrEqual(size.height);
+        }
+      }
+    }
+  });
+});
