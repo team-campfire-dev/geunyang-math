@@ -507,7 +507,6 @@ export function AuthoringWorkspace() {
     </div>
     {error && <p className="error-banner" role="alert">{error}</p>}
     {notice && <p className="notice-banner">{notice}</p>}
-    <p className="editor-breadcrumb">{courseTitle} <span aria-hidden="true"> / </span> {edit.meta.title}</p>
     {published && <p className="notice-banner">발행한 판본은 고칠 수 없어요. 더 고치려면 새 초안을 만들어 주세요.</p>}
     {/* Said before anything is answered, because the card below says what a learner is told — and a
         learner is recorded, which is the one thing that is not true here. */}
@@ -776,14 +775,19 @@ function Shell({ role, expert = false, busy, onExpert, children }: {
     <header className="authoring-head">
       <div><span className="eyebrow">CONTENT STUDIO</span><h1>콘텐츠 편집</h1></div>
       <div className="authoring-head-side">
-        {onExpert && <label className="expert-toggle" title="블록과 판본의 이름, 앱 호환 설정을 함께 보여줘요.">
-          <input type="checkbox" checked={expert} disabled={busy} onChange={(event) => onExpert(event.target.checked)} />
-          <span>전문가 모드</span>
-        </label>}
         {role && <span className="pill">{role === 'admin' ? '관리자 · 발행 가능' : '작성자 · 발행은 관리자가'}</span>}
         <a className="text-button" href="/">학습 화면으로<Icon name="arrow" size={14} /></a>
       </div>
     </header>
     {children}
+    {/* An account preference, set once and then left alone. It stays reachable from every screen
+        without spending the corner every screen looks at first. */}
+    {onExpert && <footer className="authoring-foot">
+      <label className="expert-toggle">
+        <input type="checkbox" checked={expert} disabled={busy} onChange={(event) => onExpert(event.target.checked)} />
+        <span>전문가 모드</span>
+      </label>
+      <small>블록과 판본의 이름, 앱 호환 설정을 함께 보여줘요.</small>
+    </footer>}
   </main></ExpertMode.Provider>;
 }

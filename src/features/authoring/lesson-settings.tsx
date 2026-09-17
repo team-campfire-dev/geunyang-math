@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   looseProblems, problemGist, versionLabel,
   type ConceptChoice, type DefinitionEdit, type DefinitionSummary, type DraftDetail, type DraftEdit,
@@ -36,6 +37,7 @@ export function LessonSettings({
 }) {
   const expert = useExpertMode();
   const notifyRemoval = useRemovalNotice();
+  const [confirming, setConfirming] = useState(false);
   const assessable = concepts.filter((concept) => concept.assessable);
   /** Questions no activity in the lesson holds. They block publishing, so the lesson says so here. */
   const loose = looseProblems(edit);
@@ -122,12 +124,21 @@ export function LessonSettings({
       </div>}
     </fieldset>}
 
+    {/* Kept away from the writing screen's own actions: discarding an afternoon is not a thing to put
+        next to the button that saves it. It is asked about the way publishing is asked about, on the
+        page rather than in a window the browser draws — the more it undoes, the less it may borrow. */}
     {!published && <div className="editor-settings-end">
-      {/* Kept away from the writing screen's own actions: discarding an afternoon is not a thing to
-          put next to the button that saves it. */}
-      <button type="button" className="text-button editor-warn"
-        onClick={() => { if (confirm('이 초안을 삭제할까요? 발행한 판본은 남습니다.')) onDelete(); }}>
-        <Icon name="close" size={14} />이 초안 삭제</button>
+      {confirming
+        ? <div className="editor-confirm" role="alertdialog" aria-label="초안 삭제 확인">
+          <strong>이 초안을 삭제할까요?</strong>
+          <p>여기까지 쓴 내용은 사라지고 되돌릴 수 없어요. 이미 발행한 판본은 그대로 남고, 학습자가 보는 화면도 바뀌지 않습니다.</p>
+          <div className="editor-actions">
+            <button type="button" className="button primary" onClick={onDelete}>삭제할게요</button>
+            <button type="button" className="button secondary" onClick={() => setConfirming(false)}>취소</button>
+          </div>
+        </div>
+        : <button type="button" className="text-button editor-warn" onClick={() => setConfirming(true)}>
+          <Icon name="close" size={14} />이 초안 삭제</button>}
     </div>}
   </div>;
 }
