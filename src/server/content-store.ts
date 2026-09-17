@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { Prisma, type PrismaClient, type DiagnosticVersion } from '@prisma/client';
 import { canonicalJson, ContentError, diagnosticDefinitionSchema, parseContentBundle, definitionSchema, validateReferences, type ContentBundle, type CourseDefinition, type DiagnosticDefinition, type DefinitionRecord } from '@/core/content-bundle';
 import type { PublishedDefinition } from '@/core/glossary';
-import type { StoredLesson, StoredProblem } from '@/core/content';
+import { problemSetRefs, storedLessonOf, type LessonRecord, type StoredLesson, type StoredProblem, type StoredProblemSet } from '@/core/content';
 import type { ContentBlock } from '@/shared/api';
 import { definitionRefId, type DefinitionRef, type ConceptScope } from '@/shared/rich-text';
 
@@ -15,7 +15,7 @@ type IndexedProblem = StoredProblem | DiagnosticDefinition['problems'][number];
  * A published question as a row: what it is apart from its blocks. The blocks are rows of their own,
  * so reading a question back joins the two.
  */
-const problemRows = (ownerKind: 'lesson' | 'diagnostic', ownerVersionId: string, problems: IndexedProblem[]) =>
+const problemRows = (ownerKind: 'problem_set' | 'diagnostic', ownerVersionId: string, problems: IndexedProblem[]) =>
   problems.map((problem, order) => ({ ownerKind, ownerVersionId, problemVersionId: problem.problemVersionId,
     order, conceptKeys: json(problem.conceptKeys), responseSpec: json(problem.responseSpec),
     gradingSpec: json(problem.gradingSpec), hintAvailable: problem.hintAvailable }));
@@ -34,36 +34,43 @@ export const blockOf = (row: StoredBlockRow): ContentBlock => ({
   blockId: row.blockId, kind: row.kind, typeVersion: row.typeVersion, required: row.required,
   payload: row.payload as Record<string, unknown>, ...(row.fallback === null ? {} : { fallback: row.fallback }),
 });
-/** Everything a lesson says about itself that is not a section, a block or a question. */
-export const lessonMetadata = (record: StoredLesson) => ({ public: record.public, homeworkProblemIds: record.homeworkProblemIds });
+/** Everything a lesson says about itself that is not a section or a block. */
+export const lessonMetadata = (record: StoredLesson) => ({ public: record.public, review: record.review });
 /** Every section and block a published lesson holds, in the order the document holds them. */
 const lessonRows = (record: StoredLesson) => ({
   sections: record.sections.map((section, order) => ({ lessonVersionId: record.public.versionId,
     sectionId: section.sectionId, role: section.role, title: section.title, order })),
-  blocks: [
-    ...record.sections.flatMap(section => blockRows('section', record.public.versionId, section.sectionId, 'body', section.contentBlocks)),
-    ...record.problems.flatMap(problem => [
-      ...blockRows('problem', record.public.versionId, problem.problemVersionId, 'prompt', problem.promptContent),
-      ...blockRows('problem', record.public.versionId, problem.problemVersionId, 'hint', problem.hints),
-      ...blockRows('problem', record.public.versionId, problem.problemVersionId, 'solution', problem.solution),
-    ]),
-  ],
+  blocks: record.sections.flatMap(section => blockRows('section', record.public.versionId, section.sectionId, 'body', section.contentBlocks)),
 });
+/** Every block a problem set version holds: each question's prompt, hints and solution. */
+const problemSetRows = (record: StoredProblemSet) => record.problems.flatMap(problem => [
+  ...blockRows('problem', record.versionId, problem.problemVersionId, 'prompt', problem.promptContent),
+  ...blockRows('problem', record.versionId, problem.problemVersionId, 'hint', problem.hints),
+  ...blockRows('problem', record.versionId, problem.problemVersionId, 'solution', problem.solution),
+]);
+/** The frozen part of a problem set version: what its hash is taken over and what may not change. */
+export const frozenProblemSet = (record: StoredProblemSet) =>
+  ({ problemSetId: record.problemSetId, versionId: record.versionId, problems: record.problems });
 /**
- * Writes every row a published lesson is read from — what it says about itself, its sections, its
- * blocks and its questions. Whoever publishes a lesson owes these.
+ * Writes every row a published lesson is read from — what it says about itself, its sections and
+ * their blocks. Its questions are the problem sets' rows. Whoever publishes a lesson owes these.
  */
 export async function indexLessonDocument(db: Db, record: StoredLesson) {
   const { sections, blocks } = lessonRows(record);
   if (sections.length) await db.lessonSection.createMany({ data: sections, skipDuplicates: true });
   if (blocks.length) await db.contentBlock.createMany({ data: blocks, skipDuplicates: true });
-  await indexPublishedProblems(db, 'lesson', record.public.versionId, record.problems);
+}
+/** Writes the rows a published problem set version is read from: its questions and their blocks. */
+export async function indexProblemSetDocument(db: Db, record: StoredProblemSet) {
+  await indexPublishedProblems(db, 'problem_set', record.versionId, record.problems);
+  const blocks = problemSetRows(record);
+  if (blocks.length) await db.contentBlock.createMany({ data: blocks, skipDuplicates: true });
 }
 /**
  * Writes the question rows a published version owns. Whoever writes a version owes these, and
  * whoever removes one owes their removal; verifyProblemIndex is what says so out loud.
  */
-export async function indexPublishedProblems(db: Db, ownerKind: 'lesson' | 'diagnostic', ownerVersionId: string, problems: IndexedProblem[]) {
+export async function indexPublishedProblems(db: Db, ownerKind: 'problem_set' | 'diagnostic', ownerVersionId: string, problems: IndexedProblem[]) {
   const rows = problemRows(ownerKind, ownerVersionId, problems);
   if (rows.length) await db.publishedProblem.createMany({ data: rows, skipDuplicates: true });
 }
@@ -119,31 +126,58 @@ async function blockIndex(db: Db, versionIds: string[]): Promise<BlockIndex> {
   }
   return (versionId, ownerKind, ownerId, slot) => held.get(`${versionId}/${ownerKind}/${ownerId}/${slot}`) ?? [];
 }
-/** A published lesson, put back together out of the rows that are now all there is of it. */
-export async function lessonRecords(db: Db, versionIds: string[]): Promise<Map<string, StoredLesson>> {
+/** Published problem set versions, with the identity that keeps each: its course and its name. */
+export async function problemSetRecords(db: Db, versionIds: string[]): Promise<Map<string, StoredProblemSet>> {
   const wanted = [...new Set(versionIds)];
   if (!wanted.length) return new Map();
-  const [versions, sections, blocksOf, problems] = await Promise.all([
+  const [versions, blocksOf, problems] = await Promise.all([
+    db.problemSetVersion.findMany({ where: { id: { in: wanted } }, include: { problemSet: { include: { course: { select: { key: true } } } } } }),
+    blockIndex(db, wanted),
+    db.publishedProblem.findMany({ where: { ownerKind: 'problem_set', ownerVersionId: { in: wanted } }, orderBy: { order: 'asc' } }),
+  ]);
+  return new Map(versions.map(version => [version.id, {
+    problemSetId: version.problemSetId, courseKey: version.problemSet.course.key, name: version.problemSet.name, versionId: version.id,
+    problems: problems.filter(problem => problem.ownerVersionId === version.id).map(problem =>
+      problemOf(problem, slot => blocksOf(version.id, 'problem', problem.problemVersionId, slot))),
+  }]));
+}
+/**
+ * A published lesson, put back together out of the rows that are now all there is of it, with the
+ * questions its references resolve to — in the order the lesson names them, each once.
+ */
+export async function lessonRecords(db: Db, versionIds: string[]): Promise<Map<string, LessonRecord>> {
+  const wanted = [...new Set(versionIds)];
+  if (!wanted.length) return new Map();
+  const [versions, sections, blocksOf] = await Promise.all([
     db.lessonVersion.findMany({ where: { id: { in: wanted } }, select: { id: true, metadata: true } }),
     db.lessonSection.findMany({ where: { lessonVersionId: { in: wanted } }, orderBy: { order: 'asc' } }),
     blockIndex(db, wanted),
-    db.publishedProblem.findMany({ where: { ownerKind: 'lesson', ownerVersionId: { in: wanted } }, orderBy: { order: 'asc' } }),
   ]);
-  return new Map(versions.map(version => {
-    const metadata = version.metadata as { public: StoredLesson['public']; homeworkProblemIds: string[] };
-    return [version.id, {
+  const stored = versions.map(version => {
+    const metadata = version.metadata as { public: StoredLesson['public']; review: StoredLesson['review'] };
+    return { id: version.id, record: {
       public: metadata.public,
       sections: sections.filter(section => section.lessonVersionId === version.id).map(section => ({
         sectionId: section.sectionId, role: section.role as StoredLesson['sections'][number]['role'],
         title: section.title, contentBlocks: blocksOf(version.id, 'section', section.sectionId, 'body'),
       })),
-      problems: problems.filter(problem => problem.ownerVersionId === version.id).map(problem =>
-        problemOf(problem, slot => blocksOf(version.id, 'problem', problem.problemVersionId, slot))),
-      homeworkProblemIds: metadata.homeworkProblemIds,
-    }];
+      review: metadata.review ?? null,
+    } satisfies StoredLesson };
+  });
+  const sets = await problemSetRecords(db, stored.flatMap(({ record }) => problemSetRefs(record).map(ref => ref.problemSetVersionId)));
+  return new Map(stored.map(({ id, record }) => {
+    const problems = new Map<string, StoredProblem>();
+    for (const ref of problemSetRefs(record)) {
+      const set = sets.get(ref.problemSetVersionId);
+      for (const problemId of ref.problemVersionIds) {
+        const problem = set?.problems.find(item => item.problemVersionId === problemId);
+        if (problem && !problems.has(problemId)) problems.set(problemId, problem);
+      }
+    }
+    return [id, { ...record, problems: [...problems.values()] }];
   }));
 }
-export async function lessonRecord(db: Db, versionId: string): Promise<StoredLesson | null> {
+export async function lessonRecord(db: Db, versionId: string): Promise<LessonRecord | null> {
   return (await lessonRecords(db, [versionId])).get(versionId) ?? null;
 }
 
@@ -197,11 +231,12 @@ async function courseDefinitions(db: Db): Promise<CourseDefinition[]> {
     lessons: course.lessons, diagnostics: course.diagnostics.map(row => row.key) }));
 }
 export async function exportContent(db: Db): Promise<ContentBundle> {
-  const [courses, concepts, lessons, diagnostics, definitionRows] = await Promise.all([
+  const [courses, concepts, lessons, sets, diagnostics, definitionRows] = await Promise.all([
     courseDefinitions(db),
     db.concept.findMany({ orderBy: { key: 'asc' }, select: { key: true, label: true, assessable: true } }),
     db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }],
       select: { id: true, lessonKey: true, title: true } }),
+    db.problemSetVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }], select: { id: true } }),
     db.diagnosticVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }] }),
     db.conceptDefinition.findMany({ orderBy: [{ scopeKind: 'asc' }, { scopeKey: 'asc' }, { conceptKey: 'asc' }] }),
   ]);
@@ -211,7 +246,10 @@ export async function exportContent(db: Db): Promise<ContentBundle> {
     if (!record) throw new ContentError(`Published lesson has no rows to read it from: ${row.id}`);
     if (row.id !== record.public?.versionId || row.lessonKey !== record.public?.lessonKey || row.title !== record.public?.title) throw new ContentError(`Lesson metadata mismatch: ${row.id}`);
   }
-  return parseContentBundle({ schemaVersion: 1, courses, concepts, lessons: lessons.map(row => records.get(row.id)),
+  const setRecords = await problemSetRecords(db, sets.map(row => row.id));
+  for (const row of sets) if (!setRecords.has(row.id)) throw new ContentError(`Published problem set has no rows to read it from: ${row.id}`);
+  return parseContentBundle({ schemaVersion: 1, courses, concepts, lessons: lessons.map(row => storedLessonOf(records.get(row.id)!)),
+    problemSets: sets.map(row => setRecords.get(row.id)),
     diagnostics: await diagnosticDefinitions(db, diagnostics), definitions: await definitionRecords(db, definitionRows) });
 }
 
@@ -261,9 +299,10 @@ async function writeCourse(db: Db, course: CourseDefinition) {
 export async function verifyRowsBelongToVersions(db: Db, bundle: ContentBundle) {
   const expected = bundle.lessons.reduce((totals, record) => {
     const rows = lessonRows(record);
-    return { sections: totals.sections + rows.sections.length, blocks: totals.blocks + rows.blocks.length,
-      problems: totals.problems + record.problems.length };
+    return { sections: totals.sections + rows.sections.length, blocks: totals.blocks + rows.blocks.length, problems: totals.problems };
   }, { sections: 0, blocks: 0, problems: 0 });
+  expected.blocks += bundle.problemSets.reduce((n, s) => n + problemSetRows(s).length, 0);
+  expected.problems += bundle.problemSets.reduce((n, s) => n + s.problems.length, 0);
   expected.blocks += bundle.diagnostics.reduce((n, d) => n + d.problems.reduce((m, p) => m + p.promptContent.length, 0), 0);
   expected.blocks += bundle.definitions.reduce((n, t) => n + t.blocks.length, 0);
   expected.problems += bundle.diagnostics.reduce((n, d) => n + d.problems.length, 0);
@@ -279,7 +318,8 @@ export async function verifyContent(db: Db) {
   validateReferences(bundle);
   if (!bundle.lessons.length || !bundle.concepts.length || !bundle.diagnostics.some(d => d.diagnosticKey === 'starting-point')) throw new ContentError('Database content is incomplete. Apply database migrations or import a reviewed bundle.');
   const { blocks: indexedBlocks, problems: indexedProblems } = await verifyRowsBelongToVersions(db, bundle);
-  return { lessons: bundle.lessons.length, lessonProblems: bundle.lessons.reduce((n, c) => n + c.problems.length, 0), indexedProblems, indexedBlocks,
+  return { lessons: bundle.lessons.length, problemSets: bundle.problemSets.length,
+    problems: bundle.problemSets.reduce((n, s) => n + s.problems.length, 0), indexedProblems, indexedBlocks,
     concepts: bundle.concepts.length, diagnosticVersions: bundle.diagnostics.length, diagnosticProblems: bundle.diagnostics.reduce((n, d) => n + d.problems.length, 0),
     definitions: bundle.definitions.length };
 }
@@ -287,11 +327,19 @@ export async function verifyContent(db: Db) {
 type Ledger = { name: string; checksum: string };
 async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: boolean, ledger?: Ledger) {
   const existing = await exportContent(db);
-  const newLessons: StoredLesson[] = [], newDiagnostics: DiagnosticDefinition[] = [];
+  const newLessons: StoredLesson[] = [], newSets: StoredProblemSet[] = [], newDiagnostics: DiagnosticDefinition[] = [];
   for (const c of incoming.lessons) {
     const old = await lessonRecord(db, c.public.versionId);
-    if (old && canonicalJson(old) !== canonicalJson(c)) throw new ContentError(`Published lesson is immutable: ${c.public.versionId}. Use a new version ID.`);
+    if (old && canonicalJson(storedLessonOf(old)) !== canonicalJson(c)) throw new ContentError(`Published lesson is immutable: ${c.public.versionId}. Use a new version ID.`);
     if (!old) newLessons.push(c);
+  }
+  // A set's questions are frozen with the version; its name and the course that keeps it are not.
+  const oldSets = await problemSetRecords(db, incoming.problemSets.map(s => s.versionId));
+  for (const s of incoming.problemSets) {
+    const old = oldSets.get(s.versionId);
+    if (old && canonicalJson(frozenProblemSet(old)) !== canonicalJson(frozenProblemSet(s))) throw new ContentError(`Published problem set is immutable: ${s.versionId}. Use a new version ID.`);
+    if (old && old.courseKey !== s.courseKey) throw new ContentError(`Problem set cannot move between courses: ${s.problemSetId}`);
+    if (!old) newSets.push(s);
   }
   for (const d of incoming.diagnostics) {
     const old = await db.diagnosticVersion.findUnique({ where: { id: d.versionId } });
@@ -309,19 +357,32 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
   const definitions = new Map(existing.definitions.map(t => [definitionRefId(t), t]));
   for (const t of incoming.definitions) definitions.set(definitionRefId(t), t);
   const courses = mergeCourses(existing.courses, incoming.courses);
+  const problemSets = new Map(existing.problemSets.map(s => [s.versionId, s]));
+  for (const s of incoming.problemSets) problemSets.set(s.versionId, s);
   validateReferences({ schemaVersion: 1, courses, concepts: [...concepts.values()], lessons: [...existing.lessons, ...newLessons],
-    diagnostics: [...existing.diagnostics, ...newDiagnostics], definitions: [...definitions.values()] });
+    problemSets: [...problemSets.values()], diagnostics: [...existing.diagnostics, ...newDiagnostics], definitions: [...definitions.values()] });
   if (!dryRun) {
     // A version hangs off the identity that keeps it, so the course and its lessons come first.
     for (const course of incoming.courses) await writeCourse(db, course);
     // Bundle order is publication order. Millisecond ties must not select an arbitrary version.
-    const [lastLesson, lastDiagnostic] = await Promise.all([
+    const [lastLesson, lastSet, lastDiagnostic] = await Promise.all([
       db.lessonVersion.findFirst({ orderBy: { publishedAt: 'desc' }, select: { publishedAt: true } }),
+      db.problemSetVersion.findFirst({ orderBy: { publishedAt: 'desc' }, select: { publishedAt: true } }),
       db.diagnosticVersion.findFirst({ orderBy: { publishedAt: 'desc' }, select: { publishedAt: true } }),
     ]);
-    let publishedTime = Math.max(Date.now(), (lastLesson?.publishedAt.getTime() ?? 0) + 1, (lastDiagnostic?.publishedAt.getTime() ?? 0) + 1);
+    let publishedTime = Math.max(Date.now(), (lastLesson?.publishedAt.getTime() ?? 0) + 1, (lastSet?.publishedAt.getTime() ?? 0) + 1, (lastDiagnostic?.publishedAt.getTime() ?? 0) + 1);
     const publishedAt = () => new Date(publishedTime++);
     for (const s of incoming.concepts) await db.concept.upsert({ where: { key: s.key }, create: s, update: { label: s.label, assessable: s.assessable } });
+    // The identity of a set is written whenever the set is named; a version only when it is new. A
+    // lesson references set versions, so the sets go first.
+    const courseIds = new Map((await db.course.findMany({ select: { id: true, key: true } })).map(course => [course.key, course.id]));
+    for (const s of incoming.problemSets) {
+      await db.problemSet.upsert({ where: { id: s.problemSetId }, create: { id: s.problemSetId, courseId: courseIds.get(s.courseKey)!, name: s.name },
+        update: { name: s.name } });
+    }
+    for (const s of newSets) await db.problemSetVersion.create({ data: { id: s.versionId, problemSetId: s.problemSetId,
+      contentHash: hash(frozenProblemSet(s)), publishedAt: publishedAt() } });
+    for (const s of newSets) await indexProblemSetDocument(db, s);
     for (const c of newLessons) await db.lessonVersion.create({ data: { id: c.public.versionId, lessonKey: c.public.lessonKey,
       title: c.public.title, metadata: json(lessonMetadata(c)),
       contentHash: hash(c), publishedAt: publishedAt() } });
@@ -343,8 +404,9 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
     if (ledger) await db.appliedContentBundle.upsert({ where: { name: ledger.name }, create: { ...ledger },
       update: { checksum: ledger.checksum, appliedAt: new Date() } });
   }
-  return { dryRun, newLessons: newLessons.length, newDiagnostics: newDiagnostics.length, concepts: incoming.concepts.length, definitions: incoming.definitions.length,
-    unchangedVersions: incoming.lessons.length + incoming.diagnostics.length - newLessons.length - newDiagnostics.length };
+  return { dryRun, newLessons: newLessons.length, newProblemSets: newSets.length, newDiagnostics: newDiagnostics.length,
+    concepts: incoming.concepts.length, definitions: incoming.definitions.length,
+    unchangedVersions: incoming.lessons.length + incoming.problemSets.length + incoming.diagnostics.length - newLessons.length - newSets.length - newDiagnostics.length };
 }
 export async function importContent(db: PrismaClient, input: unknown, dryRun = false, ledger?: Ledger) {
   const incoming = parseContentBundle(input);

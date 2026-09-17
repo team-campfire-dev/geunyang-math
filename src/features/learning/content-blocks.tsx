@@ -354,7 +354,7 @@ const registry: Record<string, Renderer> = {
       frameMs={typeof block.payload.frameMs === 'number' ? block.payload.frameMs : undefined}
       loop={block.payload.loop === true} autoplay={block.payload.autoplay === true} />,
   },
-  'core.problem_set@1': {
+  'core.problem_set@2': {
     validate: (payload, context) => Array.isArray(payload.problemVersionIds) && payload.problemVersionIds.length > 0 && payload.problemVersionIds.every((id) => typeof id === 'string' && context.problems.some((problem) => problem.problemVersionId === id)),
     render: (block, context) => <div className="problem-set">{(block.payload.problemVersionIds as string[]).map((id) => <div key={id}>{context.renderProblem(context.problems.find((problem) => problem.problemVersionId === id)!)}</div>)}</div>,
   },

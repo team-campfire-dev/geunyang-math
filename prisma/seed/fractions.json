@@ -123,9 +123,11 @@
             {
               "blockId": "fraction-meaning:practice:problems:v1",
               "kind": "core.problem_set",
-              "typeVersion": 1,
+              "typeVersion": 2,
               "required": true,
               "payload": {
+                "problemSetId": "fraction-meaning:practice",
+                "problemSetVersionId": "fraction-meaning:practice:v1",
                 "problemVersionIds": [
                   "fraction-meaning:practice-1:v1",
                   "fraction-meaning:practice-2:v1"
@@ -142,9 +144,11 @@
             {
               "blockId": "fraction-meaning:check:problems:v1",
               "kind": "core.problem_set",
-              "typeVersion": 1,
+              "typeVersion": 2,
               "required": true,
               "payload": {
+                "problemSetId": "fraction-meaning:check",
+                "problemSetVersionId": "fraction-meaning:check:v1",
                 "problemVersionIds": [
                   "fraction-meaning:check-1:v1"
                 ]
@@ -169,6 +173,308 @@
           ]
         }
       ],
+      "review": {
+        "problemSetId": "fraction-meaning:review",
+        "problemSetVersionId": "fraction-meaning:review:v1",
+        "problemVersionIds": [
+          "fraction-meaning:homework-1:v1",
+          "fraction-meaning:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "fraction-equivalence",
+        "versionId": "fraction-equivalence:v1",
+        "title": "모양이 달라도 같은 분수",
+        "summary": "동치분수와 약분을 익히고, 같은 양을 다른 조각으로 표현해요.",
+        "estimatedMinutes": 15,
+        "conceptKeys": [
+          "fraction.equivalence"
+        ],
+        "prerequisiteConceptKeys": [
+          "fraction.meaning"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "fraction-equivalence:explanation:v1",
+          "role": "explanation",
+          "title": "조각 수가 달라도 양은 그대로",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-equivalence:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 전체를 기준으로 1/2과 2/4는 같은 양이에요. 반쪽 하나를 다시 둘로 나누면, 조각은 두 개가 되지만 실제 양은 그대로예요. 이렇게 크기가 같은 분수를 동치분수라고 해요.\n\n분자와 분모에 같은 0이 아닌 수를 곱하거나 나누면 분수의 값은 변하지 않아요. 분자와 분모를 공통된 자연수로 나누어 간단히 만드는 것을 약분이라고 해요."
+              }
+            },
+            {
+              "blockId": "fraction-equivalence:explanation:half:v1",
+              "kind": "math.fraction_strip",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "parts": 2,
+                "filled": 1,
+                "label": "1/2"
+              }
+            },
+            {
+              "blockId": "fraction-equivalence:explanation:quarters:v1",
+              "kind": "math.fraction_strip",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "parts": 4,
+                "filled": 2,
+                "label": "2/4 — 같은 전체에서 같은 양"
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-equivalence:worked_example:v1",
+          "role": "worked_example",
+          "title": "함께 보기: 4/6을 간단하게",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-equivalence:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "4/6을 약분해 볼게요.\n\n① 4와 6은 모두 2로 나누어떨어져요.\n② 분자와 분모를 함께 2로 나누면 (4 ÷ 2)/(6 ÷ 2) = 2/3이에요.\n③ 2와 3은 1 이외의 공약수가 없으므로 여기서 마쳐요.\n\n4/6과 2/3은 같은 값이지만, “더 이상 약분할 수 없는 분수”를 요구하는 문제에서는 2/3으로 써야 해요."
+              }
+            },
+            {
+              "blockId": "fraction-equivalence:example:strip:v1",
+              "kind": "math.fraction_strip",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "parts": 6,
+                "filled": 4,
+                "label": "4/6 = 2/3"
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-equivalence:practice:v1",
+          "role": "practice",
+          "title": "같은 양을 다르게 쓰기",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-equivalence:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "fraction-equivalence:practice",
+                "problemSetVersionId": "fraction-equivalence:practice:v1",
+                "problemVersionIds": [
+                  "fraction-equivalence:practice-1:v1",
+                  "fraction-equivalence:practice-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-equivalence:check:v1",
+          "role": "check",
+          "title": "약분 혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-equivalence:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "fraction-equivalence:check",
+                "problemSetVersionId": "fraction-equivalence:check:v1",
+                "problemVersionIds": [
+                  "fraction-equivalence:check-1:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-equivalence:summary:v1",
+          "role": "summary",
+          "title": "분자와 분모는 함께 바꿔요",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-equivalence:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분자와 분모에 같은 수를 곱하거나 나누면 크기가 같은 분수가 돼요. 한쪽만 바꾸면 일반적으로 값이 달라져요.\n\n약분한 뒤 분자와 분모를 함께 나눌 수 있는 1보다 큰 자연수가 없는지 확인해요. 값이 맞는 것과 문제에서 요구한 모양으로 쓰는 것은 모두 중요해요."
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "fraction-equivalence:review",
+        "problemSetVersionId": "fraction-equivalence:review:v1",
+        "problemVersionIds": [
+          "fraction-equivalence:homework-1:v1",
+          "fraction-equivalence:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "fraction-addition",
+        "versionId": "fraction-addition:v1",
+        "title": "분수 더하기, 조각 크기 맞추기",
+        "summary": "동치분수로 분모를 맞추고, 일상의 양을 더해 봐요.",
+        "estimatedMinutes": 18,
+        "conceptKeys": [
+          "fraction.addition"
+        ],
+        "prerequisiteConceptKeys": [
+          "fraction.meaning",
+          "fraction.equivalence"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "fraction-addition:explanation:v1",
+          "role": "explanation",
+          "title": "더하려면 단위가 같아야 해요",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-addition:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분수를 더할 때는 같은 전체를 기준으로 조각 크기를 맞춰요. 분모가 같으면 조각 크기가 같으므로 분자만 더해요. 예를 들어 1/5 + 2/5 = 3/5예요.\n\n분모가 다르면 동치분수로 바꾸어 분모를 같게 만들어요. 이것을 통분이라고 해요. 1/2 + 1/3에서 분모끼리 더해 2/5로 쓰면 안 돼요. 반 조각과 삼분의 일 조각은 크기가 다르기 때문이에요."
+              }
+            },
+            {
+              "blockId": "fraction-addition:explanation:strip:v1",
+              "kind": "math.fraction_strip",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "parts": 5,
+                "filled": 3,
+                "label": "1/5 조각 1개 + 2개 = 3개"
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-addition:worked_example:v1",
+          "role": "worked_example",
+          "title": "함께 보기: 1/2컵과 1/3컵",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-addition:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 계량컵으로 물 1/2컵과 1/3컵을 합쳐 볼게요.\n\n① 2와 3의 공통 배수인 6을 분모로 정해요.\n② 1/2 = 3/6, 1/3 = 2/6으로 바꿔요.\n③ 같은 크기의 1/6컵 조각을 세면 3개 + 2개 = 5개예요.\n④ 따라서 1/2 + 1/3 = 5/6컵이에요.\n\n분모는 조각의 크기를 나타내므로 그대로 두고 분자끼리 더해요."
+              }
+            },
+            {
+              "blockId": "fraction-addition:example:strip:v1",
+              "kind": "math.fraction_strip",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "parts": 6,
+                "filled": 5,
+                "label": "3/6 + 2/6 = 5/6"
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-addition:practice:v1",
+          "role": "practice",
+          "title": "조각 크기를 맞춰서 더하기",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-addition:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "fraction-addition:practice",
+                "problemSetVersionId": "fraction-addition:practice:v1",
+                "problemVersionIds": [
+                  "fraction-addition:practice-1:v1",
+                  "fraction-addition:practice-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-addition:check:v1",
+          "role": "check",
+          "title": "통분과 약분 혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-addition:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "fraction-addition:check",
+                "problemSetVersionId": "fraction-addition:check:v1",
+                "problemVersionIds": [
+                  "fraction-addition:check-1:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "fraction-addition:summary:v1",
+          "role": "summary",
+          "title": "통분 → 덧셈 → 약분",
+          "contentBlocks": [
+            {
+              "blockId": "fraction-addition:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "① 같은 전체를 기준으로 생각해요.\n② 분모가 다르면 통분해 조각 크기를 맞춰요.\n③ 분모는 그대로 두고 분자를 더해요.\n④ 더 이상 약분할 수 없는지 확인해요.\n\n틀린 문제는 힌트와 함께 다시 풀어도 괜찮아요. 힌트를 본 풀이와 혼자 푼 풀이는 구분해 기록해요."
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "fraction-addition:review",
+        "problemSetVersionId": "fraction-addition:review:v1",
+        "problemVersionIds": [
+          "fraction-addition:homework-1:v1",
+          "fraction-addition:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "fraction-meaning:practice",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-meaning:practice:v1",
       "problems": [
         {
           "problemVersionId": "fraction-meaning:practice-1:v1",
@@ -264,7 +570,15 @@
               }
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "problemSetId": "fraction-meaning:check",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-meaning:check:v1",
+      "problems": [
         {
           "problemVersionId": "fraction-meaning:check-1:v1",
           "conceptKeys": [
@@ -312,7 +626,15 @@
               }
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "problemSetId": "fraction-meaning:review",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-meaning:review:v1",
+      "problems": [
         {
           "problemVersionId": "fraction-meaning:homework-1:v1",
           "conceptKeys": [
@@ -409,147 +731,13 @@
             }
           ]
         }
-      ],
-      "homeworkProblemIds": [
-        "fraction-meaning:homework-1:v1",
-        "fraction-meaning:homework-2:v1"
       ]
     },
     {
-      "public": {
-        "lessonKey": "fraction-equivalence",
-        "versionId": "fraction-equivalence:v1",
-        "title": "모양이 달라도 같은 분수",
-        "summary": "동치분수와 약분을 익히고, 같은 양을 다른 조각으로 표현해요.",
-        "estimatedMinutes": 15,
-        "conceptKeys": [
-          "fraction.equivalence"
-        ],
-        "prerequisiteConceptKeys": [
-          "fraction.meaning"
-        ],
-        "sectionCount": 5
-      },
-      "sections": [
-        {
-          "sectionId": "fraction-equivalence:explanation:v1",
-          "role": "explanation",
-          "title": "조각 수가 달라도 양은 그대로",
-          "contentBlocks": [
-            {
-              "blockId": "fraction-equivalence:explanation:text:v1",
-              "kind": "core.rich_text",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "text": "같은 전체를 기준으로 1/2과 2/4는 같은 양이에요. 반쪽 하나를 다시 둘로 나누면, 조각은 두 개가 되지만 실제 양은 그대로예요. 이렇게 크기가 같은 분수를 동치분수라고 해요.\n\n분자와 분모에 같은 0이 아닌 수를 곱하거나 나누면 분수의 값은 변하지 않아요. 분자와 분모를 공통된 자연수로 나누어 간단히 만드는 것을 약분이라고 해요."
-              }
-            },
-            {
-              "blockId": "fraction-equivalence:explanation:half:v1",
-              "kind": "math.fraction_strip",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "parts": 2,
-                "filled": 1,
-                "label": "1/2"
-              }
-            },
-            {
-              "blockId": "fraction-equivalence:explanation:quarters:v1",
-              "kind": "math.fraction_strip",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "parts": 4,
-                "filled": 2,
-                "label": "2/4 — 같은 전체에서 같은 양"
-              }
-            }
-          ]
-        },
-        {
-          "sectionId": "fraction-equivalence:worked_example:v1",
-          "role": "worked_example",
-          "title": "함께 보기: 4/6을 간단하게",
-          "contentBlocks": [
-            {
-              "blockId": "fraction-equivalence:example:text:v1",
-              "kind": "core.rich_text",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "text": "4/6을 약분해 볼게요.\n\n① 4와 6은 모두 2로 나누어떨어져요.\n② 분자와 분모를 함께 2로 나누면 (4 ÷ 2)/(6 ÷ 2) = 2/3이에요.\n③ 2와 3은 1 이외의 공약수가 없으므로 여기서 마쳐요.\n\n4/6과 2/3은 같은 값이지만, “더 이상 약분할 수 없는 분수”를 요구하는 문제에서는 2/3으로 써야 해요."
-              }
-            },
-            {
-              "blockId": "fraction-equivalence:example:strip:v1",
-              "kind": "math.fraction_strip",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "parts": 6,
-                "filled": 4,
-                "label": "4/6 = 2/3"
-              }
-            }
-          ]
-        },
-        {
-          "sectionId": "fraction-equivalence:practice:v1",
-          "role": "practice",
-          "title": "같은 양을 다르게 쓰기",
-          "contentBlocks": [
-            {
-              "blockId": "fraction-equivalence:practice:problems:v1",
-              "kind": "core.problem_set",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "problemVersionIds": [
-                  "fraction-equivalence:practice-1:v1",
-                  "fraction-equivalence:practice-2:v1"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "sectionId": "fraction-equivalence:check:v1",
-          "role": "check",
-          "title": "약분 혼자 확인하기",
-          "contentBlocks": [
-            {
-              "blockId": "fraction-equivalence:check:problems:v1",
-              "kind": "core.problem_set",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "problemVersionIds": [
-                  "fraction-equivalence:check-1:v1"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "sectionId": "fraction-equivalence:summary:v1",
-          "role": "summary",
-          "title": "분자와 분모는 함께 바꿔요",
-          "contentBlocks": [
-            {
-              "blockId": "fraction-equivalence:summary:text:v1",
-              "kind": "core.rich_text",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "text": "분자와 분모에 같은 수를 곱하거나 나누면 크기가 같은 분수가 돼요. 한쪽만 바꾸면 일반적으로 값이 달라져요.\n\n약분한 뒤 분자와 분모를 함께 나눌 수 있는 1보다 큰 자연수가 없는지 확인해요. 값이 맞는 것과 문제에서 요구한 모양으로 쓰는 것은 모두 중요해요."
-              }
-            }
-          ]
-        }
-      ],
+      "problemSetId": "fraction-equivalence:practice",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-equivalence:practice:v1",
       "problems": [
         {
           "problemVersionId": "fraction-equivalence:practice-1:v1",
@@ -647,7 +835,15 @@
               }
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "problemSetId": "fraction-equivalence:check",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-equivalence:check:v1",
+      "problems": [
         {
           "problemVersionId": "fraction-equivalence:check-1:v1",
           "conceptKeys": [
@@ -697,7 +893,15 @@
               }
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "problemSetId": "fraction-equivalence:review",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-equivalence:review:v1",
+      "problems": [
         {
           "problemVersionId": "fraction-equivalence:homework-1:v1",
           "conceptKeys": [
@@ -795,137 +999,13 @@
             }
           ]
         }
-      ],
-      "homeworkProblemIds": [
-        "fraction-equivalence:homework-1:v1",
-        "fraction-equivalence:homework-2:v1"
       ]
     },
     {
-      "public": {
-        "lessonKey": "fraction-addition",
-        "versionId": "fraction-addition:v1",
-        "title": "분수 더하기, 조각 크기 맞추기",
-        "summary": "동치분수로 분모를 맞추고, 일상의 양을 더해 봐요.",
-        "estimatedMinutes": 18,
-        "conceptKeys": [
-          "fraction.addition"
-        ],
-        "prerequisiteConceptKeys": [
-          "fraction.meaning",
-          "fraction.equivalence"
-        ],
-        "sectionCount": 5
-      },
-      "sections": [
-        {
-          "sectionId": "fraction-addition:explanation:v1",
-          "role": "explanation",
-          "title": "더하려면 단위가 같아야 해요",
-          "contentBlocks": [
-            {
-              "blockId": "fraction-addition:explanation:text:v1",
-              "kind": "core.rich_text",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "text": "분수를 더할 때는 같은 전체를 기준으로 조각 크기를 맞춰요. 분모가 같으면 조각 크기가 같으므로 분자만 더해요. 예를 들어 1/5 + 2/5 = 3/5예요.\n\n분모가 다르면 동치분수로 바꾸어 분모를 같게 만들어요. 이것을 통분이라고 해요. 1/2 + 1/3에서 분모끼리 더해 2/5로 쓰면 안 돼요. 반 조각과 삼분의 일 조각은 크기가 다르기 때문이에요."
-              }
-            },
-            {
-              "blockId": "fraction-addition:explanation:strip:v1",
-              "kind": "math.fraction_strip",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "parts": 5,
-                "filled": 3,
-                "label": "1/5 조각 1개 + 2개 = 3개"
-              }
-            }
-          ]
-        },
-        {
-          "sectionId": "fraction-addition:worked_example:v1",
-          "role": "worked_example",
-          "title": "함께 보기: 1/2컵과 1/3컵",
-          "contentBlocks": [
-            {
-              "blockId": "fraction-addition:example:text:v1",
-              "kind": "core.rich_text",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "text": "같은 계량컵으로 물 1/2컵과 1/3컵을 합쳐 볼게요.\n\n① 2와 3의 공통 배수인 6을 분모로 정해요.\n② 1/2 = 3/6, 1/3 = 2/6으로 바꿔요.\n③ 같은 크기의 1/6컵 조각을 세면 3개 + 2개 = 5개예요.\n④ 따라서 1/2 + 1/3 = 5/6컵이에요.\n\n분모는 조각의 크기를 나타내므로 그대로 두고 분자끼리 더해요."
-              }
-            },
-            {
-              "blockId": "fraction-addition:example:strip:v1",
-              "kind": "math.fraction_strip",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "parts": 6,
-                "filled": 5,
-                "label": "3/6 + 2/6 = 5/6"
-              }
-            }
-          ]
-        },
-        {
-          "sectionId": "fraction-addition:practice:v1",
-          "role": "practice",
-          "title": "조각 크기를 맞춰서 더하기",
-          "contentBlocks": [
-            {
-              "blockId": "fraction-addition:practice:problems:v1",
-              "kind": "core.problem_set",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "problemVersionIds": [
-                  "fraction-addition:practice-1:v1",
-                  "fraction-addition:practice-2:v1"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "sectionId": "fraction-addition:check:v1",
-          "role": "check",
-          "title": "통분과 약분 혼자 확인하기",
-          "contentBlocks": [
-            {
-              "blockId": "fraction-addition:check:problems:v1",
-              "kind": "core.problem_set",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "problemVersionIds": [
-                  "fraction-addition:check-1:v1"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "sectionId": "fraction-addition:summary:v1",
-          "role": "summary",
-          "title": "통분 → 덧셈 → 약분",
-          "contentBlocks": [
-            {
-              "blockId": "fraction-addition:summary:text:v1",
-              "kind": "core.rich_text",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "text": "① 같은 전체를 기준으로 생각해요.\n② 분모가 다르면 통분해 조각 크기를 맞춰요.\n③ 분모는 그대로 두고 분자를 더해요.\n④ 더 이상 약분할 수 없는지 확인해요.\n\n틀린 문제는 힌트와 함께 다시 풀어도 괜찮아요. 힌트를 본 풀이와 혼자 푼 풀이는 구분해 기록해요."
-              }
-            }
-          ]
-        }
-      ],
+      "problemSetId": "fraction-addition:practice",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-addition:practice:v1",
       "problems": [
         {
           "problemVersionId": "fraction-addition:practice-1:v1",
@@ -1022,7 +1102,15 @@
               }
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "problemSetId": "fraction-addition:check",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-addition:check:v1",
+      "problems": [
         {
           "problemVersionId": "fraction-addition:check-1:v1",
           "conceptKeys": [
@@ -1072,7 +1160,15 @@
               }
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "problemSetId": "fraction-addition:review",
+      "courseKey": "fractions",
+      "name": null,
+      "versionId": "fraction-addition:review:v1",
+      "problems": [
         {
           "problemVersionId": "fraction-addition:homework-1:v1",
           "conceptKeys": [
@@ -1173,10 +1269,6 @@
             }
           ]
         }
-      ],
-      "homeworkProblemIds": [
-        "fraction-addition:homework-1:v1",
-        "fraction-addition:homework-2:v1"
       ]
     }
   ],

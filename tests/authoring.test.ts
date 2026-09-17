@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { supportedBlockTypes, definitionBlockSchema, validateLesson } from '@/core/content';
+import { supportedBlockTypes, definitionBlockSchema, storedLessonOf, validateLesson, validateProblemSet, type LessonRecord } from '@/core/content';
+/** Publishing validates the frozen half of a lesson: its steps, not the questions its sets hold. */
+const checkLesson = (record: unknown) => validateLesson(storedLessonOf(record as LessonRecord));
+import { setsOf } from './fixtures/content';
 import {
   blockForms, blockFormOf, lessonBlockForms, copyBlock, copyProblem, copySection, dropLooseProblems, insertAfter,
   looseProblems, moveBlock, newProblem,
   nextBlockId, nextProblemBlockId, nextProblemVersionId,
   nextSectionId, problemBlockForms, problemGist, problemsOfBlock, pruneBlock, pruneSections, renameProblem,
   renameProblemReferences, renamedProblemVersionId, responseSpecOf, scopeDefinitionLinks,
-  issueText, suggestVersionId, definitionBlockForms, toPublicProblem, versionLabel, writePath,
+  issueText, problemSetIdPattern, suggestVersionId, definitionBlockForms, toPublicProblem, versionLabel, writePath,
 } from '@/shared/authoring';
 import { seedLessons } from './fixtures/content';
 
@@ -33,7 +36,7 @@ describe('naming a new version and its parts', () => {
     const section = record.sections[0];
     section.contentBlocks.push({ ...block('core.rich_text', 1, { text: '새 문단이에요.' }),
       blockId: nextBlockId(record.public.lessonKey, section.sectionId, 'core.rich_text', 'fraction-meaning:v5', []) });
-    expect(() => validateLesson(record)).not.toThrow();
+    expect(() => checkLesson(record)).not.toThrow();
   });
 });
 
@@ -83,13 +86,19 @@ describe('what the editor sends is what publishing accepts', () => {
 
   it('starts every new block at a payload the validator already accepts', () => {
     for (const form of blockForms) {
-      // A question group is empty until an author writes a question, and writing one validates it.
-      if (form.editsProblems) { expect(form.create()).toEqual({ problemVersionIds: [] }); continue; }
+      // An activity is a new, empty problem set until an author writes a question; the set's version is a placeholder saving decides.
+      if (form.editsProblems) {
+        const made = form.create() as { problemSetId: string; problemSetVersionId: string; problemVersionIds: string[] };
+        expect(made.problemVersionIds).toEqual([]);
+        expect(made.problemSetVersionId).toBe(`${made.problemSetId}:v1`);
+        expect(problemSetIdPattern.test(made.problemSetId)).toBe(true);
+        continue;
+      }
       const record = structuredClone(seedLessons[0]);
       const section = record.sections[0];
       section.contentBlocks.push({ blockId: `draft:${form.kind}:v1`, kind: form.kind, typeVersion: form.typeVersion,
         required: true, payload: form.create() } as never);
-      expect(() => validateLesson(record), `${form.kind}@${form.typeVersion}`).not.toThrow();
+      expect(() => checkLesson(record), `${form.kind}@${form.typeVersion}`).not.toThrow();
     }
   });
 
@@ -113,8 +122,8 @@ describe('what the editor sends is what publishing accepts', () => {
       return { ...draft, sections: pruneSections(draft.sections) as typeof draft.sections };
     };
     // Pruned, a blank spoken name is absent, and a math caption without one is rejected by name.
-    expect(() => validateLesson(withBlank(''))).toThrow(/labelAlt/);
-    expect(() => validateLesson(withBlank('4분의 3'))).not.toThrow();
+    expect(() => checkLesson(withBlank(''))).toThrow(/labelAlt/);
+    expect(() => checkLesson(withBlank('4분의 3'))).not.toThrow();
   });
 });
 
@@ -170,7 +179,8 @@ describe('naming a question, and keeping an answered one as it was answered', ()
       record.problems.map((problem) => problem.problemVersionId)), record.problems[0].conceptKeys);
     record.problems.push({ ...created, responseSpec: responseSpecOf(created.gradingSpec), hintAvailable: created.hints.length > 0 });
     (activity.payload.problemVersionIds as string[]).push(created.problemVersionId);
-    expect(() => validateLesson(record)).not.toThrow();
+    expect(() => validateLesson(storedLessonOf(record))).not.toThrow();
+    for (const set of setsOf(record)) expect(() => validateProblemSet(set)).not.toThrow();
   });
 
   it('shows the preview the half of a question a learner may see', () => {
@@ -324,7 +334,11 @@ describe('copying what is already written', () => {
     record.sections = insertAfter(record.sections, index, made.section) as never;
     record.problems = [...record.problems, ...made.problems] as never;
     record.public.sectionCount = record.sections.length;
-    expect(() => validateLesson(record)).not.toThrow();
+    expect(() => validateLesson(storedLessonOf(record))).not.toThrow();
+    // The copied activity is a set of its own, so the copy's questions never share one with the original's.
+    const copied = made.section.contentBlocks.find((block) => block.kind === 'core.problem_set')!;
+    expect(copied.payload.problemSetId).not.toBe(section.contentBlocks.find((block) => block.kind === 'core.problem_set')!.payload.problemSetId);
+    for (const set of setsOf(record)) expect(() => validateProblemSet(set)).not.toThrow();
   });
 
   it('keeps every copy out of the names already spoken for, however many are made', () => {
@@ -384,7 +398,7 @@ describe('saying what a rule refused', () => {
 
 describe('what an activity holds leaves with it', () => {
   const activity = (blockId: string, ids: string[]) =>
-    ({ blockId, kind: 'core.problem_set', typeVersion: 1, required: true, payload: { problemVersionIds: ids } });
+    ({ blockId, kind: 'core.problem_set', typeVersion: 2, required: true, payload: { problemSetId: `set-${blockId}`, problemSetVersionId: '', problemVersionIds: ids } });
   const lesson = (blocks: ReturnType<typeof activity>[], problems: string[]) => ({
     meta: { versionId: 'c:v2', title: '수업', summary: '한 줄', estimatedMinutes: 10, conceptKeys: ['s'] },
     sections: [{ sectionId: 'c:practice:v2', role: 'practice' as const, title: '연습', contentBlocks: blocks }],
@@ -393,18 +407,15 @@ describe('what an activity holds leaves with it', () => {
 
   it('calls a question loose when no activity in the lesson holds it', () => {
     const edit = lesson([activity('c:set:v2', ['p1'])], ['p1', 'p2']);
-    expect(looseProblems(edit, []).map((problem) => problem.problemVersionId)).toEqual(['p2']);
-    // Homework holds questions no section shows, so those are held all the same.
-    expect(looseProblems(edit, ['p2'])).toEqual([]);
+    expect(looseProblems(edit).map((problem) => problem.problemVersionId)).toEqual(['p2']);
   });
 
   it('drops what nothing holds, and leaves the edit alone when everything is held', () => {
     const edit = lesson([activity('c:set:v2', ['p1'])], ['p1', 'p2']);
-    expect(dropLooseProblems(edit, []).problems.map((problem) => problem.problemVersionId)).toEqual(['p1']);
+    expect(dropLooseProblems(edit).problems.map((problem) => problem.problemVersionId)).toEqual(['p1']);
     // Nothing to drop means the very same value, so nothing downstream reads it as a change.
     const whole = lesson([activity('c:set:v2', ['p1'])], ['p1']);
-    expect(dropLooseProblems(whole, [])).toBe(whole);
-    expect(dropLooseProblems(edit, ['p2'])).toBe(edit);
+    expect(dropLooseProblems(whole)).toBe(whole);
   });
 
   it('leaves a lesson publishing accepts after an activity is taken out', () => {
@@ -417,12 +428,13 @@ describe('what an activity holds leaves with it', () => {
       problems: structuredClone(record.problems) as never,
     };
     const without = { ...edit, sections: edit.sections.filter((item) => item.sectionId !== section.sectionId) };
-    // Left as it is, the lesson carries questions nothing holds and publishing says so.
+    // The questions the step held are loose now, and leave with it; the review pool keeps its own.
+    // The record's questions include the review pool's, which no step shows, so those read as loose here too.
+    expect(looseProblems(without).map((problem) => problem.problemVersionId).sort())
+      .toEqual([...(section.contentBlocks[0].payload.problemVersionIds as string[]), ...record.review!.problemVersionIds].sort());
     record.sections = without.sections;
     record.public.sectionCount = record.sections.length;
-    expect(() => validateLesson(record)).toThrow(/Unreferenced problem version/);
-    // The questions leave with the step, and what is left is a lesson publishing takes.
-    record.problems = dropLooseProblems(without, record.homeworkProblemIds).problems as never;
-    expect(() => validateLesson(record)).not.toThrow();
+    record.problems = dropLooseProblems(without).problems as never;
+    expect(() => validateLesson(storedLessonOf(record))).not.toThrow();
   });
 });

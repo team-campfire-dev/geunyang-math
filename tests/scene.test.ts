@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { definitionBlockSchema, validateLesson } from '@/core/content';
+import { definitionBlockSchema, storedLessonOf, validateLesson, validateProblemSet, type LessonRecord } from '@/core/content';
+/** Publishing validates the frozen half of a lesson: its steps, not the questions its sets hold. */
+const checkLesson = (record: unknown) => validateLesson(storedLessonOf(record as LessonRecord));
 import {
   changeFor, createSceneItem, cssColor, emptyScene, isSceneColor, itemBounds, moveItem, nameItem, pathPattern,
   placeInZone, placementOffset, removeFromZone, reorderItem, resizeItem, sceneItemKinds, setChange, taskComplete,
   sceneColorLabels, sceneColors, zoneAt, type SceneItem, type SceneZone,
 } from '@/shared/scene';
-import { seedLessons } from './fixtures/content';
+import { seedLessons, setsOf } from './fixtures/content';
 
 const sceneBlock = (items: unknown[], extra: Record<string, unknown> = {}) => ({
   blockId: 'fraction-meaning:explanation:scene:v2', kind: 'core.scene', typeVersion: 1, required: true,
@@ -22,20 +24,20 @@ describe('a drawing given as data', () => {
     const scene = emptyScene();
     const items = sceneItemKinds.map((kind) => createSceneItem(kind, scene));
     expect(items.map((item) => item.kind)).toEqual(sceneItemKinds);
-    expect(() => validateLesson(withScene(items))).not.toThrow();
+    expect(() => checkLesson(withScene(items))).not.toThrow();
   });
 
   it('draws a fraction bar as one shape, so the bar-only blocks are no longer needed', () => {
     expect(sceneItemKinds).toContain('strip');
-    expect(() => validateLesson(withScene([{ kind: 'strip', x: 10, y: 10, width: 200, height: 40, parts: 4, filled: 3 }]))).not.toThrow();
-    expect(() => validateLesson(withScene([{ kind: 'strip', x: 10, y: 10, width: 200, height: 40, parts: 4, filled: 5 }]))).toThrow(/filled must not exceed parts/);
+    expect(() => checkLesson(withScene([{ kind: 'strip', x: 10, y: 10, width: 200, height: 40, parts: 4, filled: 3 }]))).not.toThrow();
+    expect(() => checkLesson(withScene([{ kind: 'strip', x: 10, y: 10, width: 200, height: 40, parts: 4, filled: 5 }]))).toThrow(/filled must not exceed parts/);
   });
 
   it('refuses anything in path data that is not a command or a number', () => {
     expect(pathPattern.test('M 0 0 L 10 10 Z')).toBe(true);
     expect(pathPattern.test('M0 0 url(#x)')).toBe(false);
-    expect(() => validateLesson(withScene([{ kind: 'path', d: 'M0 0 L10 10' }]))).not.toThrow();
-    expect(() => validateLesson(withScene([{ kind: 'path', d: 'M0 0 <script>' }]))).toThrow(/Invalid payload/);
+    expect(() => checkLesson(withScene([{ kind: 'path', d: 'M0 0 L10 10' }]))).not.toThrow();
+    expect(() => checkLesson(withScene([{ kind: 'path', d: 'M0 0 <script>' }]))).toThrow(/Invalid payload/);
   });
 
   it('takes palette names and plain hex, and nothing else, as a colour', () => {
@@ -47,17 +49,17 @@ describe('a drawing given as data', () => {
     expect(cssColor('#abc')).toBe('#abc');
     // An unknown colour draws nothing rather than being passed through to the document.
     expect(cssColor('javascript:alert(1)')).toBe('none');
-    expect(() => validateLesson(withScene([{ kind: 'rect', x: 0, y: 0, width: 10, height: 10, fill: 'expression(x)' }]))).toThrow(/Unknown colour/);
+    expect(() => checkLesson(withScene([{ kind: 'rect', x: 0, y: 0, width: 10, height: 10, fill: 'expression(x)' }]))).toThrow(/Unknown colour/);
   });
 
   it('names the drawing in plain words and keeps math for the caption', () => {
-    expect(() => validateLesson(withScene([], { caption: '$\\frac{3}{4}$만큼' }))).not.toThrow();
-    expect(() => validateLesson(withScene([], { alt: '$\\frac{3}{4}$ 그림' }))).toThrow(/math markup/);
+    expect(() => checkLesson(withScene([], { caption: '$\\frac{3}{4}$만큼' }))).not.toThrow();
+    expect(() => checkLesson(withScene([], { alt: '$\\frac{3}{4}$ 그림' }))).toThrow(/math markup/);
   });
 
   it('rejects a shape the renderer does not know and an unlisted field', () => {
-    expect(() => validateLesson(withScene([{ kind: 'spiral', x: 0, y: 0 }]))).toThrow(/Invalid payload/);
-    expect(() => validateLesson(withScene([{ kind: 'rect', x: 0, y: 0, width: 10, height: 10, onClick: 'boom' }]))).toThrow(/Invalid payload/);
+    expect(() => checkLesson(withScene([{ kind: 'spiral', x: 0, y: 0 }]))).toThrow(/Invalid payload/);
+    expect(() => checkLesson(withScene([{ kind: 'rect', x: 0, y: 0, width: 10, height: 10, onClick: 'boom' }]))).toThrow(/Invalid payload/);
   });
 });
 
@@ -95,20 +97,20 @@ describe('a drawing that moves', () => {
 
   it('animates the shapes that are already there, and refuses to name one that is not', () => {
     const frames = [{ changes: [] }, { changes: [{ id: 'a', dx: 40, opacity: 0.5 }] }];
-    expect(() => validateLesson(withScene([named('a')], { frames }))).not.toThrow();
-    expect(() => validateLesson(withScene([named('b')], { frames }))).toThrow(/changes a shape that is not in the drawing/);
-    expect(() => validateLesson(withScene([named('a'), named('a')], { frames }))).toThrow(/share one name/);
+    expect(() => checkLesson(withScene([named('a')], { frames }))).not.toThrow();
+    expect(() => checkLesson(withScene([named('b')], { frames }))).toThrow(/changes a shape that is not in the drawing/);
+    expect(() => checkLesson(withScene([named('a'), named('a')], { frames }))).toThrow(/share one name/);
   });
 
   it('asks for at least a pair of frames and bounds how fast they pass', () => {
-    expect(() => validateLesson(withScene([named('a')], { frames: [{ changes: [] }] }))).toThrow(/Invalid payload/);
-    expect(() => validateLesson(withScene([named('a')], { frames: [{ changes: [] }, { changes: [] }], frameMs: 50 }))).toThrow(/Invalid payload/);
-    expect(() => validateLesson(withScene([named('a')], { frames: [{ changes: [] }, { changes: [] }], frameMs: 1200, loop: true, autoplay: true }))).not.toThrow();
+    expect(() => checkLesson(withScene([named('a')], { frames: [{ changes: [] }] }))).toThrow(/Invalid payload/);
+    expect(() => checkLesson(withScene([named('a')], { frames: [{ changes: [] }, { changes: [] }], frameMs: 50 }))).toThrow(/Invalid payload/);
+    expect(() => checkLesson(withScene([named('a')], { frames: [{ changes: [] }, { changes: [] }], frameMs: 1200, loop: true, autoplay: true }))).not.toThrow();
   });
 
   it('carries the same colour rule into a frame, so movement cannot repaint freely', () => {
     const frames = [{ changes: [] }, { changes: [{ id: 'a', fill: 'url(#x)' }] }];
-    expect(() => validateLesson(withScene([named('a')], { frames }))).toThrow(/Unknown colour/);
+    expect(() => checkLesson(withScene([named('a')], { frames }))).toThrow(/Unknown colour/);
   });
 
   it('names a shape only when a frame needs it, and keeps the name unique', () => {
@@ -135,27 +137,27 @@ describe('a drawing the learner arranges', () => {
   const task = { prompt: '조각을 자리에 놓아 보세요.' };
 
   it('needs a task, a place to put something, and something to put there', () => {
-    expect(() => validateLesson(withScene([piece('a')], { zones: [zone('z1')], task }))).not.toThrow();
-    expect(() => validateLesson(withScene([piece('a')], { zones: [zone('z1')] }))).toThrow(/needs a task/);
-    expect(() => validateLesson(withScene([piece('a')], { task }))).toThrow(/needs at least one zone/);
-    expect(() => validateLesson(withScene([{ kind: 'rect', x: 0, y: 0, width: 10, height: 10 }], { zones: [zone('z1')], task })))
+    expect(() => checkLesson(withScene([piece('a')], { zones: [zone('z1')], task }))).not.toThrow();
+    expect(() => checkLesson(withScene([piece('a')], { zones: [zone('z1')] }))).toThrow(/needs a task/);
+    expect(() => checkLesson(withScene([piece('a')], { task }))).toThrow(/needs at least one zone/);
+    expect(() => checkLesson(withScene([{ kind: 'rect', x: 0, y: 0, width: 10, height: 10 }], { zones: [zone('z1')], task })))
       .toThrow(/needs a shape the learner can move/);
-    expect(() => validateLesson(withScene([piece('a')], {}))).toThrow(/needs somewhere to be put/);
+    expect(() => checkLesson(withScene([piece('a')], {}))).toThrow(/needs somewhere to be put/);
   });
 
   it('makes a movable shape say its own name', () => {
     const unnamed: SceneItem = { kind: 'rect', id: 'a', draggable: true, x: 0, y: 0, width: 10, height: 10 };
-    expect(() => validateLesson(withScene([unnamed], { zones: [zone('z1')], task }))).toThrow(/spoken label/);
+    expect(() => checkLesson(withScene([unnamed], { zones: [zone('z1')], task }))).toThrow(/spoken label/);
   });
 
   it('refuses a zone that waits for a shape nobody can move, and two zones with one name', () => {
-    expect(() => validateLesson(withScene([piece('a')], { zones: [zone('z1', ['ghost'])], task }))).toThrow(/accepts a shape that cannot be moved/);
-    expect(() => validateLesson(withScene([piece('a')], { zones: [zone('z1'), zone('z1')], task }))).toThrow(/Two zones share one name/);
+    expect(() => checkLesson(withScene([piece('a')], { zones: [zone('z1', ['ghost'])], task }))).toThrow(/accepts a shape that cannot be moved/);
+    expect(() => checkLesson(withScene([piece('a')], { zones: [zone('z1'), zone('z1')], task }))).toThrow(/Two zones share one name/);
   });
 
   it('keeps a drawing either playing or being played with, never both', () => {
     const frames = [{ changes: [] }, { changes: [] }];
-    expect(() => validateLesson(withScene([piece('a')], { zones: [zone('z1')], task, frames })))
+    expect(() => checkLesson(withScene([piece('a')], { zones: [zone('z1')], task, frames })))
       .toThrow(/move on its own or be arranged by hand, not both/);
   });
 
@@ -190,15 +192,16 @@ describe('a drawing the learner arranges', () => {
       blockId: 'draft:scene:v1', kind: 'core.scene', typeVersion: 1, required: true,
       payload: { alt: '조각을 놓는 그림', width: 320, height: 200, items: [piece('a')], zones: [zone('z1')], task },
     };
-    const record = structuredClone(seedLessons[0]);
-    record.problems[0].promptContent.push(block as never);
-    expect(() => validateLesson(record)).toThrow(/drawing to arrange is not allowed inside a problem/);
+    // Questions are a problem set's, so it is the set that refuses a drawing to arrange inside one.
+    const [set] = setsOf(structuredClone(seedLessons[0]));
+    set.problems[0].promptContent.push(block as never);
+    expect(() => validateProblemSet(set)).toThrow(/drawing to arrange is not allowed inside a problem/);
     expect(() => definitionBlockSchema.parse(block)).toThrow(/drawing to arrange/);
     // The same drawing without zones is just a picture, and a picture may go anywhere.
     const still = { ...block, payload: { ...block.payload, zones: undefined, task: undefined, items: [{ kind: 'rect', x: 0, y: 0, width: 10, height: 10 }] } };
-    const illustrated = structuredClone(seedLessons[0]);
+    const [illustrated] = setsOf(structuredClone(seedLessons[0]));
     illustrated.problems[0].promptContent.push(still as never);
-    expect(() => validateLesson(illustrated)).not.toThrow();
+    expect(() => validateProblemSet(illustrated)).not.toThrow();
   });
 });
 

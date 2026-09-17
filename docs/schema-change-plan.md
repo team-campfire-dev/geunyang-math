@@ -1,6 +1,6 @@
 # 용어 사전을 스키마와 코드에 반영하는 변경안
 
-기준일: 2026-09-16 · 상태: **확정(2026-09-17). 아래 「확정된 결정」의 권장안대로 진행한다.** 진척: A 개명, B 코스·정체 표, C 개념 반영.
+기준일: 2026-09-16 · 상태: **확정(2026-09-17). 아래 「확정된 결정」의 권장안대로 진행한다.** 진척: A 개명, B 코스·정체 표, C 개념, D 문제집 반영.
 
 [용어 사전](glossary.md)의 결정을 DB 스키마와 코드에 옮기는 순서다. 이름의 기준은 코드가 아니라 용어 사전이고, 지금 코드의 이름은 그 문서의 「옛 이름과의 대응」을 따른다.
 
@@ -219,7 +219,7 @@ model ContentDraft {
 | **A 개명** | `RENAME TABLE` 3개(`ClassVersion`→`LessonVersion`, `ClassSection`→`LessonSection`, `Scope`→`LearningScope`), `RENAME COLUMN` 5개, 인덱스·FK 이름 변경, `UPDATE PublishedProblem SET ownerKind='lesson'`, `UPDATE TermVersion SET scopeKind='lesson' WHERE 'class'`, `ContentBlock.payload`의 `"scopeKind":"class"` 치환(`REGEXP_REPLACE` 후 `CAST AS JSON`) | 그대로 옮겨진다(지우지 않음) | **DROP 권한이 먼저다.** 그 외 의존 없음. 첫 단계여야 뒤 단계가 새 이름으로 쓰인다 |
 | **B 코스·정체** | `Course`·`Lesson`·`Diagnostic` 표 생성. `LessonVersion.order` 칸 삭제, `metadata.public.order` `JSON_REMOVE`. `LessonVersion.lessonKey`·`DiagnosticVersion.diagnosticKey`에 FK | 행이 적어 SQL로 옮겼다(코스 하나 INSERT, 수업 키마다 `Lesson` 행). 씨앗 `prisma/seed/fractions.json`에 `courses`가 들어가고 `db:seed`가 진짜 씨앗이 된 것도 이 단계다 | A 뒤여야 한다(이름). C와는 순서를 바꿔도 된다 |
 | **C 개념** | `Concept`·`ConceptDefinition` 표 생성. `Skill`·`TermVersion` `DROP TABLE`. `PublishedProblem.skillKeys`→`conceptKeys` `RENAME COLUMN`. `ContentBlock.ownerKind 'term'`→`'definition'` | **SQL로 옮겼다** — 운영의 v4 수업(수식·용어 연결)이 씨앗(v1)에 없어, 지우면 작성된 콘텐츠가 사라지기 때문이다. 개념 3개는 평가하는 개념, 용어 6개는 각각 설명만 있는 개념(`term.` 접두어 제거), 범위별 마지막 판본이 뜻풀이 행, `rich_text@2`→`@3` 문자열 치환. 초안만 지운다. `약분`↔`동치분수와 약분` 병합은 하지 않는다(운영자의 사후 병합) | A 뒤. B와 독립 |
-| **D 문제집** | `ProblemSet`·`ProblemSetVersion` 표 생성. `ContentDraft`: `classKey`→`ownerKind`+`ownerKey`. `PublishedProblem.ownerKind`에 `'problem_set'` | 지우고 다시 심는다. 씨앗: 수업마다 연습·확인 활동이 문제집 2개, 숙제가 문제집 1개(모두 이름 없음). 문제 ID는 그대로 | B(코스가 문제집의 주인)·C(`assessable` 검사) 뒤. 가장 큰 단계 |
+| **D 문제집** | `ProblemSet`·`ProblemSetVersion` 표 생성. `ContentDraft`: `classKey`→`ownerKind`+`ownerKey`. `PublishedProblem.ownerKind`에 `'problem_set'` | **SQL로 옮겼다**(C와 같은 이유). 수업 판본의 활동 블록마다 `<수업키>:<역할>` 문제집과 `<수업키>:<역할>:<vN>` 판본, 숙제는 `<수업키>:review`. 씨앗도 같은 이름을 쓴다. 옛 형식의 초안만 지운다 | B(코스가 문제집의 주인)·C(`assessable` 검사) 뒤. 가장 큰 단계 |
 | **E 과제** | `Assignment`에 `problemSetId`·`problemSetVersionId`·`policy`·`schedule` 추가, `issuedAt` nullable. `AssignmentRecipient.assignmentPolicy` 삭제, `opensAt` 추가. `AssignmentItem.problemSnapshot` 삭제 | 학습 기록만 지운다(D 뒤라 남은 것이 거의 없다) | D 뒤 |
 | **F 진단** | `DiagnosticVersion`에 `problemSetId`·`problemSetVersionId`·`problemVersionIds` 추가. `PublishedProblem.ownerKind`에서 `'diagnostic'` 없어짐 | 지우고 다시 심는다. 씨앗: 진단 6문항이 이름 있는 문제집 `시작점 확인` 하나 | D 뒤. E와 독립 |
 | **G 정리(선택)** | migration 15+6개를 baseline 하나로 squash. 문서 정리 | 운영·테스트·개발 DB를 한 번 비우고 새로 만든다 | 모두 끝난 뒤 한 번. 하지 않아도 동작한다 |

@@ -2,7 +2,7 @@
 // offer a form for every published block kind without importing the server's validation schemas,
 // and so the server can prune the same optional fields before it validates what the editor sent.
 import type { AnswerSpec } from './answer';
-import type { LessonSection, ContentBlock, GradeResult, PublicProblem } from './api';
+import type { LessonSection, ContentBlock, GradeResult, ProblemSetRef, PublicProblem } from './api';
 
 /** A role on an account, not a property of one operator: a teacher system grants the same roles. */
 export type AuthoringRole = 'admin' | 'author';
@@ -74,12 +74,11 @@ export type DraftIssue = {
   field?: string;
 };
 /**
- * `homeworkProblemIds` are the questions the lesson sets as homework. They are not a lesson's to
- * write or to take away — this screen does not edit them yet — but it has to know which questions
- * they are, because those are held by something no section shows.
+ * `review` is the problem set the lesson's review assignments draw from. It is not a step's to show
+ * or this screen's to edit yet, but the screen says whether the lesson has one.
  */
 export type DraftDetail = DraftSummary & {
-  edit: DraftEdit; definitions: DefinitionChoice[]; issues: DraftIssue[]; homeworkProblemIds: string[];
+  edit: DraftEdit; definitions: DefinitionChoice[]; issues: DraftIssue[]; review: ProblemSetRef | null;
 };
 
 /**
@@ -305,18 +304,27 @@ export const problemIdsIn = (blocks: ContentBlock[]): string[] =>
  * lesson that carries one. Homework holds questions too, and those are held whether or not any
  * section shows them.
  */
-export function looseProblems(edit: DraftEdit, homework: string[]): DraftProblem[] {
-  const held = new Set([...problemIdsIn(edit.sections.flatMap((section) => section.contentBlocks)), ...homework]);
+export function looseProblems(edit: DraftEdit): DraftProblem[] {
+  const held = new Set(problemIdsIn(edit.sections.flatMap((section) => section.contentBlocks)));
   return edit.problems.filter((problem) => !held.has(problem.problemVersionId));
 }
 
 /** The same edit with those questions gone: what an activity held leaves with the activity. */
-export function dropLooseProblems(edit: DraftEdit, homework: string[]): DraftEdit {
-  const loose = looseProblems(edit, homework);
+export function dropLooseProblems(edit: DraftEdit): DraftEdit {
+  const loose = looseProblems(edit);
   if (!loose.length) return edit;
   const gone = new Set(loose.map((problem) => problem.problemVersionId));
   return { ...edit, problems: edit.problems.filter((problem) => !gone.has(problem.problemVersionId)) };
 }
+
+/**
+ * A problem set made in place while writing: unnamed, in the lesson's course, owned by nothing but
+ * the activity that made it until someone gives it a name. The server accepts the name the editor
+ * chose as long as it has this shape.
+ */
+export const problemSetIdPattern = /^[a-z0-9][a-z0-9:._-]{1,190}$/;
+export const newProblemSetId = () => `ps-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+// The version an unsaved activity names is a placeholder in the right shape; saving decides the real one.
 
 /** The questions one activity holds, in the order that activity names them. */
 export function problemsOfBlock(block: ContentBlock, problems: DraftProblem[]): DraftProblem[] {
@@ -357,7 +365,10 @@ export function copyBlock(input: {
     problemIds.push(made.problemVersionId);
     return made;
   });
-  copied.payload = { ...copied.payload, problemVersionIds: problems.map((problem) => problem.problemVersionId) };
+  // A copied activity is a new set: two activities may not hold the same question, so they cannot share one.
+  const problemSetId = newProblemSetId();
+  copied.payload = { ...copied.payload, problemSetId, problemSetVersionId: `${problemSetId}:v1`,
+    problemVersionIds: problems.map((problem) => problem.problemVersionId) };
   return { block: copied, problems };
 }
 
@@ -477,8 +488,9 @@ export const blockForms: BlockForm[] = [
     editsScene: true,
   },
   {
-    kind: 'core.problem_set', typeVersion: 1, label: '문항 묶음', hint: '이 활동에서 풀 문항을 여기에서 쓰고 고칩니다. 한 문항은 한 활동에만 들어가요.',
-    create: () => ({ problemVersionIds: [] }),
+    kind: 'core.problem_set', typeVersion: 2, label: '문제집',
+    hint: '이 활동에서 풀 문제를 여기에서 쓰고 고칩니다. 문제집은 그 자리에서 생기고, 한 문제는 한 문제집에만 들어가요.',
+    create: () => { const problemSetId = newProblemSetId(); return { problemSetId, problemSetVersionId: `${problemSetId}:v1`, problemVersionIds: [] }; },
     fields: [], editsProblems: true,
   },
 ];

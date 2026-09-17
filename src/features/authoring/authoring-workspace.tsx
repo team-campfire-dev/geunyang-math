@@ -293,7 +293,7 @@ export function AuthoringWorkspace() {
       : item));
   const problemIds = edit.problems.map((problem) => problem.problemVersionId);
   /** Questions no activity in the lesson holds. Homework holds some without any section showing them. */
-  const loose = looseProblems(edit, draft.homeworkProblemIds);
+  const loose = looseProblems(edit);
   const chosenBlock = selected?.kind === 'block' ? section.contentBlocks[selected.index] : undefined;
   const chosenProblem = selected?.kind === 'problem'
     ? edit.problems.find((problem) => problem.problemVersionId === selected.id) : undefined;
@@ -496,8 +496,7 @@ export function AuthoringWorkspace() {
                 // An activity holds its questions, so they leave with it. Left behind, nothing in the
                 // lesson would hold them and publishing refuses a lesson that carries one.
                 setEdit(dropLooseProblems({ ...edit, sections: edit.sections.map((item, position) => (position === sectionIndex
-                  ? { ...item, contentBlocks: item.contentBlocks.filter((_, place) => place !== selected.index) } : item)) },
-                draft.homeworkProblemIds));
+                  ? { ...item, contentBlocks: item.contentBlocks.filter((_, place) => place !== selected.index) } : item)) }));
                 setSelected(null);
               }} />
           </fieldset>
@@ -520,6 +519,9 @@ export function AuthoringWorkspace() {
             <ConceptPicker concepts={workspace.concepts.filter((concept) => concept.assessable)} chosen={edit.meta.conceptKeys} label="이 수업이 가르치는 개념"
               onChange={(conceptKeys) => setEdit({ ...edit, meta: { ...edit.meta, conceptKeys } })} />
             <p className="editor-note">문항은 여기 고른 개념 중에서만 고를 수 있어요. 하나 이상 있어야 발행할 수 있습니다.</p>
+            <p className="editor-note">{draft.review
+              ? `복습 풀: 문제 ${draft.review.problemVersionIds.length}개. 수업을 마친 학습자의 복습 과제가 여기서 고릅니다.`
+              : '복습 풀이 없어 수업을 마쳐도 복습 과제를 만들지 않아요.'}</p>
 
             {!!loose.length && <div className="editor-inspector-part">
               <span className="editor-label">어디에도 속하지 않은 문항</span>
@@ -550,8 +552,7 @@ export function AuthoringWorkspace() {
                 <button type="button" className="text-button" disabled={edit.sections.length >= 50}
                   onClick={copyThisSection}><Icon name="copy" size={14} />이 단계 복제</button>
                 {edit.sections.length > 1 && <button type="button" className="text-button" onClick={() => {
-                  setEdit(dropLooseProblems({ ...edit, sections: edit.sections.filter((_, index) => index !== sectionIndex) },
-                    draft.homeworkProblemIds));
+                  setEdit(dropLooseProblems({ ...edit, sections: edit.sections.filter((_, index) => index !== sectionIndex) }));
                   goToSection(Math.max(sectionIndex - 1, 0));
                   notifyRemoval('단계');
                 }}><Icon name="close" size={14} />이 단계 삭제</button>}

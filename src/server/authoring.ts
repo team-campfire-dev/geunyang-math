@@ -2,15 +2,15 @@ import 'server-only';
 import { z } from 'zod';
 import type { PrismaClient } from '@prisma/client';
 import { canonicalJson, ContentError } from '@/core/content-bundle';
-import { validateLesson, type StoredLesson, type StoredProblem } from '@/core/content';
+import { problemSetRefs, storedLessonOf, validateLesson, validateProblemSet, type StoredLesson, type StoredProblem, type StoredProblemSet } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
-import { lessonRecord, importContent, publishedProblemRecords, definitionRecords } from './content-store';
+import { frozenProblemSet, lessonRecord, importContent, problemSetRecords, publishedProblemRecords, definitionRecords } from './content-store';
 import { AppError } from './errors';
 import type { AnswerSpec } from '@/shared/answer';
-import type { ContentBlock } from '@/shared/api';
+import type { ContentBlock, LessonSection, ProblemSetRef } from '@/shared/api';
 import {
   lessonKeyPattern, mayEditEveryDraft, mayGrantRoles, mayPublish, newProblem, nextBlockId, nextProblemVersionId,
-  nextSectionId, pruneBlock, pruneProblems, pruneSections,
+  nextSectionId, problemSetIdPattern, pruneBlock, pruneProblems, pruneSections,
   renameProblem, renamedProblemVersionId, renameProblemReferences, responseSpecOf, scopeDefinitionLinks, suggestVersionId,
   type AccountRole, type AuthoringResponse, type AuthoringRole, type AuthoringWorkspace, type DraftDetail, type DraftIssue,
   type DraftEdit, type DraftProblem, type DraftSummary, type EditableConceptScope, type DefinitionChoice, type DefinitionEdit, type DefinitionSummary,
@@ -138,6 +138,9 @@ const draftProblem = (problem: StoredProblem): DraftProblem => ({
   solution: structuredClone(problem.solution),
 });
 
+/** What a problem set already is when a lesson draft is saved, so an activity can tell a change from a match. */
+type SetContext = Map<string, { name: string | null; latest: StoredProblemSet | null; versions: number; draft: DraftRow | null }>;
+
 /** The two fields an editor never writes: both follow from the answer and from the hints. */
 const storedProblem = (problem: DraftProblem): StoredProblem => ({
   problemVersionId: problem.problemVersionId,
@@ -188,9 +191,14 @@ function renameEditedProblems(problems: StoredProblem[], versionId: string, publ
   return { problems: next, renames };
 }
 
-type DraftRow = { id: string; lessonKey: string; versionId: string; baseVersionId: string | null; title: string;
+type DraftRow = { id: string; ownerKind: string; ownerKey: string; versionId: string; baseVersionId: string | null; title: string;
   document: unknown; status: string; authorId: string; publishedVersionId: string | null; updatedAt: Date;
   author: { displayName: string } };
+const withAuthor = { author: { select: { displayName: true } } } as const;
+/** What the editor sees of a lesson and its questions together, for placing a refusal beside its cause. */
+type DraftView = { sections: LessonSection[]; problems: StoredProblem[] };
+/** The problem set versions a lesson draft's activities reference, resolved to what they hold. */
+type ResolvedSets = { published: Map<string, StoredProblemSet>; drafted: Map<string, { row: DraftRow; document: StoredProblemSet }> };
 
 export class AuthoringService {
   constructor(private db: PrismaClient) {}
@@ -203,7 +211,7 @@ export class AuthoringService {
 
   private summary(row: DraftRow, userId: string): DraftSummary {
     return {
-      id: row.id, lessonKey: row.lessonKey, versionId: row.versionId, baseVersionId: row.baseVersionId, title: row.title,
+      id: row.id, lessonKey: row.ownerKey, versionId: row.versionId, baseVersionId: row.baseVersionId, title: row.title,
       status: row.status === 'published' ? 'published' : row.status === 'review' ? 'review' : 'draft',
       publishedVersionId: row.publishedVersionId,
       updatedAt: row.updatedAt.toISOString(), authorName: row.author.displayName, mine: row.authorId === userId,
@@ -211,20 +219,51 @@ export class AuthoringService {
   }
 
   /**
+   * The problem set versions a lesson draft references, each resolved to what it holds: a published
+   * version reads from its rows, an unpublished one from the draft that will publish with the lesson.
+   */
+  private async resolveSets(document: StoredLesson): Promise<ResolvedSets> {
+    const wanted = [...new Set(problemSetRefs(document).map((ref) => ref.problemSetVersionId))];
+    const [published, rows] = await Promise.all([
+      problemSetRecords(this.db, wanted),
+      this.db.contentDraft.findMany({ where: { ownerKind: 'problem_set', versionId: { in: wanted }, status: { not: 'published' } }, include: withAuthor }),
+    ]);
+    const drafted = new Map((rows as DraftRow[]).map((row) => [row.versionId, { row, document: row.document as unknown as StoredProblemSet }]));
+    return { published, drafted };
+  }
+  private setOf(sets: ResolvedSets, versionId: string): StoredProblemSet | undefined {
+    return sets.drafted.get(versionId)?.document ?? sets.published.get(versionId);
+  }
+  /** The questions a lesson's activities hold, in the order the activities name them, each once. */
+  private problemsOf(document: StoredLesson, sets: ResolvedSets): StoredProblem[] {
+    const held = new Map<string, StoredProblem>();
+    for (const ref of problemSetRefs(document)) {
+      if (!ref.blockId) continue;
+      const set = this.setOf(sets, ref.problemSetVersionId);
+      for (const problemId of ref.problemVersionIds) {
+        const problem = set?.problems.find((item) => item.problemVersionId === problemId);
+        if (problem && !held.has(problemId)) held.set(problemId, problem);
+      }
+    }
+    return [...held.values()];
+  }
+
+  /**
    * Writing a question means writing its answer, its hints and its solution, so an account that
    * holds a content role receives all of it. Nothing here is reachable without that role, and the
    * learning API still sends a learner only the public half.
    */
-  private async detail(row: DraftRow, userId: string, issues: DraftIssue[]): Promise<DraftDetail> {
+  private async detail(row: DraftRow, userId: string, issues: DraftIssue[], sets?: ResolvedSets): Promise<DraftDetail> {
     const document = row.document as unknown as StoredLesson;
+    const resolved = sets ?? await this.resolveSets(document);
     const edit: DraftEdit = {
       meta: { versionId: document.public.versionId, title: document.public.title, summary: document.public.summary,
         estimatedMinutes: document.public.estimatedMinutes, conceptKeys: [...document.public.conceptKeys] },
       sections: structuredClone(document.sections),
-      problems: document.problems.map(draftProblem),
+      problems: this.problemsOf(document, resolved).map(draftProblem),
     };
     return { ...this.summary(row, userId), edit, definitions: await this.definitionChoices(document.public.lessonKey), issues,
-      homeworkProblemIds: [...document.homeworkProblemIds] };
+      review: document.review ? structuredClone(document.review) : null };
   }
 
   /**
@@ -246,8 +285,9 @@ export class AuthoringService {
   }
 
   private async load(draftId: string, userId: string, role: AuthoringRole): Promise<DraftRow> {
-    const row = await this.db.contentDraft.findUnique({ where: { id: draftId }, include: { author: { select: { displayName: true } } } });
-    if (!row) throw new AppError(404, 'draft_missing', '초안을 찾을 수 없어요.');
+    const row = await this.db.contentDraft.findUnique({ where: { id: draftId }, include: withAuthor });
+    // The screen opens lesson drafts; a problem set draft is reached through the lesson that publishes it.
+    if (!row || row.ownerKind !== 'lesson') throw new AppError(404, 'draft_missing', '초안을 찾을 수 없어요.');
     if (row.authorId !== userId && !mayEditEveryDraft(role)) throw new AppError(403, 'draft_not_yours', '다른 사람이 만든 초안이에요.');
     return row as DraftRow;
   }
@@ -256,8 +296,8 @@ export class AuthoringService {
     const role = await authoringRole(this.db, userId);
     if (!role) return { role: null, drafts: [], courses: [], lessons: [], accounts: [], concepts: [], expertMode: false };
     const [drafts, versions, courses, accounts, concepts, account] = await Promise.all([
-      this.db.contentDraft.findMany({ where: mayEditEveryDraft(role) ? {} : { authorId: userId },
-        orderBy: { updatedAt: 'desc' }, take: 50, include: { author: { select: { displayName: true } } } }),
+      this.db.contentDraft.findMany({ where: { ownerKind: 'lesson', ...(mayEditEveryDraft(role) ? {} : { authorId: userId }) },
+        orderBy: { updatedAt: 'desc' }, take: 50, include: withAuthor }),
       this.db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }],
         select: { id: true, lessonKey: true, title: true, lesson: { select: { course: { select: { key: true } } } } } }),
       this.db.course.findMany({ orderBy: [{ createdAt: 'asc' }, { key: 'asc' }], select: { key: true, title: true } }),
@@ -265,7 +305,7 @@ export class AuthoringService {
       this.db.concept.findMany({ orderBy: [{ assessable: 'desc' }, { label: 'asc' }], select: { key: true, label: true, assessable: true } }),
       this.db.user.findUnique({ where: { id: userId }, select: { editorExpertMode: true } }),
     ]);
-    const openDrafts = new Set(drafts.filter((draft) => draft.status !== 'published').map((draft) => draft.lessonKey));
+    const openDrafts = new Set(drafts.filter((draft) => draft.status !== 'published').map((draft) => draft.ownerKey));
     const byKey = new Map<string, { title: string; courseKey: string; versions: string[] }>();
     for (const version of versions) {
       const entry = byKey.get(version.lessonKey) ?? { title: version.title, courseKey: version.lesson.course.key, versions: [] };
@@ -455,7 +495,7 @@ export class AuthoringService {
     const role = await this.require(userId);
     const row = await this.load(draftId, userId, role);
     const document = row.document as unknown as StoredLesson;
-    const problem = document.problems.find((item) => item.problemVersionId === problemVersionId);
+    const problem = this.problemsOf(document, await this.resolveSets(document)).find((item) => item.problemVersionId === problemVersionId);
     if (!problem) throw new AppError(404, 'problem_missing', '이 초안에 없는 문항이에요. 저장한 뒤 다시 해 보세요.');
     return problem;
   }
@@ -481,15 +521,24 @@ export class AuthoringService {
     const versions = await this.db.lessonVersion.findMany({ where: { lessonKey }, orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }], select: { id: true } });
     const base = versions[versions.length - 1];
     if (!base) throw new AppError(404, 'lesson_missing', '아직 발행된 적 없는 수업이에요. 새 수업 작성은 다음 단계예요.');
-    const document = await lessonRecord(this.db, base.id);
-    if (!document) throw new AppError(404, 'lesson_missing', '아직 발행된 적 없는 수업이에요. 새 수업 작성은 다음 단계예요.');
+    const record = await lessonRecord(this.db, base.id);
+    if (!record) throw new AppError(404, 'lesson_missing', '아직 발행된 적 없는 수업이에요. 새 수업 작성은 다음 단계예요.');
+    // The draft starts by referencing the published problem set versions; editing one is what makes a set draft.
+    const document = storedLessonOf(record);
     document.public.versionId = suggestVersionId(lessonKey, versions.map((version) => version.id));
     const row = await this.db.contentDraft.create({
-      data: { lessonKey, versionId: document.public.versionId, baseVersionId: base.id, title: document.public.title,
+      data: { ownerKind: 'lesson', ownerKey: lessonKey, versionId: document.public.versionId, baseVersionId: base.id, title: document.public.title,
         document: document as never, authorId: userId },
-      include: { author: { select: { displayName: true } } },
+      include: withAuthor,
     });
-    return { workspace: await this.workspace(userId), draft: await this.detail(row as DraftRow, userId, this.issues(document)) };
+    return this.opened(row as DraftRow, userId);
+  }
+
+  /** A draft as the screen receives it, with what is wrong in it found first. */
+  private async opened(row: DraftRow, userId: string): Promise<AuthoringResponse> {
+    const document = row.document as unknown as StoredLesson;
+    const sets = await this.resolveSets(document);
+    return { workspace: await this.workspace(userId), draft: await this.detail(row, userId, this.issues(document, sets), sets) };
   }
 
   /**
@@ -502,7 +551,7 @@ export class AuthoringService {
     const [course, taken, drafted, known] = await Promise.all([
       this.db.course.findUnique({ where: { key: courseKey }, select: { id: true } }),
       this.db.lesson.findUnique({ where: { key: lessonKey }, select: { key: true } }),
-      this.db.contentDraft.findFirst({ where: { lessonKey }, select: { id: true } }),
+      this.db.contentDraft.findFirst({ where: { ownerKind: 'lesson', ownerKey: lessonKey }, select: { id: true } }),
       this.db.concept.findMany({ where: { key: { in: conceptKeys }, assessable: true }, select: { key: true } }),
     ]);
     if (!course) throw new AppError(404, 'course_missing', '그런 코스가 없어요. 코스를 먼저 골라 주세요.');
@@ -515,11 +564,15 @@ export class AuthoringService {
     await this.db.lesson.create({ data: { key: lessonKey, courseId: course.id, order: (last._max.order ?? 0) + 1 } });
 
     // A lesson in this product explains and then asks, and publishing refuses one that never asks.
-    // So a new one starts as the smallest whole lesson rather than as something already invalid.
+    // So a new one starts as the smallest whole lesson rather than as something already invalid: one
+    // step of explanation and one of practice, whose problem set is made here, in place, unnamed.
     const versionId = `${lessonKey}:v1`;
     const explaining = nextSectionId(lessonKey, 'explanation', versionId, []);
     const practising = nextSectionId(lessonKey, 'practice', versionId, [explaining]);
-    const problem = newProblem(nextProblemVersionId(lessonKey, 'practice', versionId, []), conceptKeys.slice(0, 1));
+    const problem = storedProblem(newProblem(nextProblemVersionId(lessonKey, 'practice', versionId, []), conceptKeys.slice(0, 1)));
+    const problemSetId = `${lessonKey}:practice`;
+    await this.db.problemSet.create({ data: { id: problemSetId, courseId: course.id } });
+    const set: StoredProblemSet = { problemSetId, courseKey, name: null, versionId: `${problemSetId}:v1`, problems: [problem] };
     const document: StoredLesson = {
       public: { lessonKey, versionId, title, summary: '한 줄 소개를 적어 주세요.', estimatedMinutes: 10,
         conceptKeys: [...conceptKeys], prerequisiteConceptKeys: [], sectionCount: 2 },
@@ -530,17 +583,18 @@ export class AuthoringService {
         ] },
         { sectionId: practising, role: 'practice', title: '직접 풀어 보기', contentBlocks: [
           { blockId: nextBlockId(lessonKey, practising, 'core.problem_set', versionId, []), kind: 'core.problem_set',
-            typeVersion: 1, required: true, payload: { problemVersionIds: [problem.problemVersionId] } },
+            typeVersion: 2, required: true, payload: { problemSetId, problemSetVersionId: set.versionId, problemVersionIds: [problem.problemVersionId] } },
         ] },
       ],
-      problems: [storedProblem(problem)],
-      homeworkProblemIds: [],
+      review: null,
     };
+    await this.db.contentDraft.create({ data: { ownerKind: 'problem_set', ownerKey: problemSetId, versionId: set.versionId, baseVersionId: null,
+      title, document: set as never, authorId: userId } });
     const row = await this.db.contentDraft.create({
-      data: { lessonKey, versionId, baseVersionId: null, title, document: document as never, authorId: userId },
-      include: { author: { select: { displayName: true } } },
+      data: { ownerKind: 'lesson', ownerKey: lessonKey, versionId, baseVersionId: null, title, document: document as never, authorId: userId },
+      include: withAuthor,
     });
-    return { workspace: await this.workspace(userId), draft: await this.detail(row as DraftRow, userId, this.issues(document)) };
+    return this.opened(row as DraftRow, userId);
   }
 
   /**
@@ -551,27 +605,69 @@ export class AuthoringService {
     const role = await this.require(userId);
     const row = await this.load(draftId, userId, role);
     if (row.status === 'published') throw new AppError(409, 'draft_published', '이미 발행한 초안이에요.');
-    const saved = await this.db.contentDraft.update({ where: { id: draftId },
-      data: { status: asking ? 'review' : 'draft' },
-      include: { author: { select: { displayName: true } } } });
-    return { workspace: await this.workspace(userId),
-      draft: await this.detail(saved as DraftRow, userId, this.issues(saved.document as unknown as StoredLesson)) };
+    const saved = await this.db.contentDraft.update({ where: { id: draftId }, data: { status: asking ? 'review' : 'draft' }, include: withAuthor });
+    return this.opened(saved as DraftRow, userId);
   }
 
   async saveDraft(userId: string, draftId: string, edit: DraftEdit): Promise<AuthoringResponse> {
     const role = await this.require(userId);
     const row = await this.load(draftId, userId, role);
     if (row.status === 'published') throw new AppError(409, 'draft_published', '이미 발행한 초안이에요. 새 초안을 만들어 주세요.');
-    const document = this.merge(row.document as unknown as StoredLesson, edit,
-      await publishedProblems(this.db, edit.problems.map((problem) => problem.problemVersionId)));
+    const stored = row.document as unknown as StoredLesson;
+    const lesson = await this.db.lesson.findUnique({ where: { key: stored.public.lessonKey }, include: { course: { select: { id: true, key: true } } } });
+    if (!lesson) throw new AppError(404, 'lesson_missing', '이 초안의 수업이 없어요.');
+    const setIds = [...new Set(edit.sections.flatMap((section) => section.contentBlocks)
+      .filter((block) => block.kind === 'core.problem_set').map((block) => String(block.payload.problemSetId ?? '')))];
+    for (const setId of setIds) {
+      if (!problemSetIdPattern.test(setId)) throw new AppError(422, 'problem_set_id', `문제집 이름이 올바르지 않아요: ${setId}`);
+    }
+    // What each set already is: its published latest, how many versions it has, and its open draft.
+    const [rows, latestRows, counts, openDrafts] = await Promise.all([
+      this.db.problemSet.findMany({ where: { id: { in: setIds } }, select: { id: true, name: true, courseId: true } }),
+      Promise.all(setIds.map((problemSetId) => this.db.problemSetVersion.findFirst({ where: { problemSetId }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }], select: { id: true } }))),
+      Promise.all(setIds.map((problemSetId) => this.db.problemSetVersion.count({ where: { problemSetId } }))),
+      this.db.contentDraft.findMany({ where: { ownerKind: 'problem_set', ownerKey: { in: setIds }, status: { not: 'published' } }, include: withAuthor }),
+    ]);
+    for (const known of rows) {
+      if (known.courseId !== lesson.course.id) throw new AppError(422, 'problem_set_course', '다른 코스의 문제집은 이 수업에서 쓸 수 없어요.');
+    }
+    const latest = await problemSetRecords(this.db, latestRows.flatMap((version) => (version ? [version.id] : [])));
+    const context: SetContext = new Map(setIds.map((problemSetId, index) => [problemSetId, {
+      name: rows.find((known) => known.id === problemSetId)?.name ?? null,
+      latest: latestRows[index] ? latest.get(latestRows[index]!.id) ?? null : null,
+      versions: counts[index],
+      draft: (openDrafts as DraftRow[]).find((open) => open.ownerKey === problemSetId) ?? null,
+    }]));
+    const { document, sets } = this.merge(stored, edit, await publishedProblems(this.db, edit.problems.map((problem) => problem.problemVersionId)),
+      lesson.course.key, context);
+    // A set the lesson names for the first time comes into being here, in its course, unnamed.
+    for (const problemSetId of setIds) {
+      if (!rows.some((known) => known.id === problemSetId)) await this.db.problemSet.create({ data: { id: problemSetId, courseId: lesson.course.id } });
+    }
+    // Set drafts follow the lesson: one open draft per set, gone when the lesson no longer needs it.
+    const kept = new Set(sets.map((set) => set.versionId));
+    for (const set of sets) {
+      const open = context.get(set.problemSetId)?.draft;
+      if (open) await this.db.contentDraft.update({ where: { id: open.id }, data: { versionId: set.versionId, document: set as never, title: edit.meta.title } });
+      else await this.db.contentDraft.create({ data: { ownerKind: 'problem_set', ownerKey: set.problemSetId, versionId: set.versionId, baseVersionId: context.get(set.problemSetId)?.latest?.versionId ?? null,
+        title: edit.meta.title, document: set as never, authorId: userId } });
+    }
+    const stale = (openDrafts as DraftRow[]).filter((open) => !kept.has(open.versionId) && !sets.some((set) => set.problemSetId === open.ownerKey));
+    const previously = problemSetRefs(stored).filter((ref) => ref.blockId).map((ref) => ref.problemSetVersionId).filter((versionId) => !kept.has(versionId));
+    await this.db.contentDraft.deleteMany({ where: { ownerKind: 'problem_set', status: { not: 'published' },
+      OR: [{ id: { in: stale.map((open) => open.id) } }, { versionId: { in: previously } }] } });
     const saved = await this.db.contentDraft.update({ where: { id: draftId },
-      data: { document: document as never, versionId: document.public.versionId, title: document.public.title },
-      include: { author: { select: { displayName: true } } } });
-    return { workspace: await this.workspace(userId), draft: await this.detail(saved as DraftRow, userId, this.issues(document)) };
+      data: { document: document as never, versionId: document.public.versionId, title: document.public.title }, include: withAuthor });
+    return this.opened(saved as DraftRow, userId);
   }
 
-  /** Restates what the editor sent as a stored document, renaming the questions an edit changed. */
-  private merge(stored: StoredLesson, edit: DraftEdit, published: PublishedProblems): StoredLesson {
+  /**
+   * Restates what the editor sent as a stored lesson and the problem sets its activities hold,
+   * renaming the questions an edit changed. An activity whose questions match the set's latest
+   * published version references that version and needs no draft; otherwise the set gets its next
+   * version, drafted, to publish with the lesson.
+   */
+  private merge(stored: StoredLesson, edit: DraftEdit, published: PublishedProblems, courseKey: string, context: SetContext): { document: StoredLesson; sets: StoredProblemSet[] } {
     // A version belongs to its lesson. Without this, a draft could claim another lesson's version ID
     // and publish a record whose name says one lesson while its content teaches another.
     if (!edit.meta.versionId.startsWith(`${stored.public.lessonKey}:`)) {
@@ -583,40 +679,84 @@ export class AuthoringService {
       hints: scopeDefinitionLinks(problem.hints, lessonKey),
       solution: scopeDefinitionLinks(problem.solution, lessonKey) });
     const { problems, renames } = renameEditedProblems(pruneProblems(edit.problems).map(scoped).map(storedProblem), edit.meta.versionId, published);
+    const byId = new Map(problems.map((problem) => [problem.problemVersionId, problem]));
     const sections = renameProblemReferences(pruneSections(edit.sections), renames)
       .map((section) => ({ ...section, contentBlocks: scopeDefinitionLinks(section.contentBlocks, lessonKey) }));
-    return {
-      ...stored,
+    // The questions each set holds: what its activities name, in order, each once.
+    const holdings = new Map<string, StoredProblem[]>();
+    for (const block of sections.flatMap((section) => section.contentBlocks)) {
+      if (block.kind !== 'core.problem_set') continue;
+      const problemSetId = String(block.payload.problemSetId ?? '');
+      const held = holdings.get(problemSetId) ?? [];
+      for (const problemId of (block.payload.problemVersionIds as string[] | undefined) ?? []) {
+        const problem = byId.get(problemId);
+        if (problem && !held.some((item) => item.problemVersionId === problemId)) held.push(problem);
+      }
+      holdings.set(problemSetId, held);
+    }
+    const sets: StoredProblemSet[] = [];
+    const versionOf = new Map<string, string>();
+    for (const [problemSetId, held] of holdings) {
+      const state = context.get(problemSetId);
+      const latest = state?.latest ?? null;
+      if (latest && canonicalJson(latest.problems) === canonicalJson(held)) { versionOf.set(problemSetId, latest.versionId); continue; }
+      const versionId = state?.draft?.versionId ?? `${problemSetId}:v${(state?.versions ?? 0) + 1}`;
+      versionOf.set(problemSetId, versionId);
+      sets.push({ problemSetId, courseKey, name: state?.name ?? null, versionId, problems: held });
+    }
+    const referenced = sections.map((section) => ({ ...section, contentBlocks: section.contentBlocks.map((block) => (block.kind === 'core.problem_set'
+      ? { ...block, typeVersion: 2, payload: { problemSetId: String(block.payload.problemSetId ?? ''),
+          problemSetVersionId: versionOf.get(String(block.payload.problemSetId ?? '')) ?? '',
+          problemVersionIds: (block.payload.problemVersionIds as string[] | undefined) ?? [] } }
+      : block)) }));
+    return { sets, document: {
       public: { ...stored.public, versionId: edit.meta.versionId, title: edit.meta.title, summary: edit.meta.summary,
-        estimatedMinutes: edit.meta.estimatedMinutes, conceptKeys: [...edit.meta.conceptKeys], sectionCount: sections.length },
-      sections: sections as StoredLesson['sections'],
-      problems,
-      // Homework names questions without a block of its own, so its references move the same way.
-      homeworkProblemIds: stored.homeworkProblemIds.map((problemId) => renames.get(problemId) ?? problemId),
-    };
+        estimatedMinutes: edit.meta.estimatedMinutes, conceptKeys: [...edit.meta.conceptKeys], sectionCount: referenced.length },
+      sections: referenced as StoredLesson['sections'],
+      // The review pool is a published set the lesson keeps referencing; this screen does not edit it.
+      review: stored.review,
+    } };
   }
 
-  private issues(document: StoredLesson): DraftIssue[] {
-    try { validateLesson(document); return []; }
-    catch (error) { return describeContentError(error, document); }
+  /** What stops this draft from publishing: the lesson's own rules, and each set draft's. */
+  private issues(document: StoredLesson, sets: ResolvedSets): DraftIssue[] {
+    const found: DraftIssue[] = [];
+    try { validateLesson(document); }
+    catch (error) { found.push(...describeContentError(error, { sections: document.sections, problems: [] })); }
+    for (const ref of problemSetRefs(document)) {
+      if (!ref.blockId) continue;
+      const set = this.setOf(sets, ref.problemSetVersionId);
+      if (!set) { found.push({ message: `Missing problem set version: ${ref.problemSetVersionId} (${ref.blockId})`, blockId: ref.blockId }); continue; }
+      for (const problemId of ref.problemVersionIds) {
+        if (!set.problems.some((problem) => problem.problemVersionId === problemId)) found.push({ message: `Missing immutable problem version: ${problemId} (${ref.blockId})`, blockId: ref.blockId });
+      }
+    }
+    for (const { document: set } of sets.drafted.values()) {
+      try { validateProblemSet(set); }
+      catch (error) { found.push(...describeContentError(error, { sections: [], problems: set.problems })); }
+    }
+    return found;
   }
 
   async validateDraft(userId: string, draftId: string): Promise<AuthoringResponse> {
     const role = await this.require(userId);
     const row = await this.load(draftId, userId, role);
     const document = row.document as unknown as StoredLesson;
-    const issues = this.issues(document);
+    const sets = await this.resolveSets(document);
+    const issues = this.issues(document, sets);
     // A lesson validates on its own but may still collide with published records, so the same dry run
     // the publish command uses decides here too.
     if (!issues.length) {
-      try { await importContent(this.db, this.bundle(document), true); }
-      catch (error) { issues.push(...describeContentError(error, document)); }
+      try { await importContent(this.db, this.bundle(document, sets), true); }
+      catch (error) { issues.push(...describeContentError(error, { sections: document.sections, problems: this.problemsOf(document, sets) })); }
     }
-    return { workspace: await this.workspace(userId), draft: await this.detail(row, userId, issues) };
+    return { workspace: await this.workspace(userId), draft: await this.detail(row, userId, issues, sets) };
   }
 
-  private bundle(document: StoredLesson) {
-    return { schemaVersion: 1 as const, concepts: [], lessons: [document], diagnostics: [], definitions: [] };
+  /** The lesson and the set drafts it publishes with, as one bundle, so both land or neither does. */
+  private bundle(document: StoredLesson, sets: ResolvedSets) {
+    return { schemaVersion: 1 as const, concepts: [], lessons: [document], problemSets: [...sets.drafted.values()].map((entry) => entry.document),
+      diagnostics: [], definitions: [] };
   }
 
   async publishDraft(userId: string, draftId: string): Promise<AuthoringResponse> {
@@ -624,37 +764,54 @@ export class AuthoringService {
     if (!mayPublish(role)) throw new AppError(403, 'not_a_publisher', '발행은 관리자만 할 수 있어요. 검토를 요청해 주세요.');
     const row = await this.load(draftId, userId, role);
     const document = row.document as unknown as StoredLesson;
-    const issues = this.issues(document);
+    const sets = await this.resolveSets(document);
+    const issues = this.issues(document, sets);
     if (issues.length) throw new AppError(422, 'draft_invalid', '아직 고칠 곳이 있어 발행할 수 없어요.');
-    try { await importContent(this.db, this.bundle(document), false); }
+    try { await importContent(this.db, this.bundle(document, sets), false); }
     catch (error) {
-      const described = describeContentError(error, document);
+      const described = describeContentError(error, { sections: document.sections, problems: this.problemsOf(document, sets) });
       throw new AppError(422, 'publish_rejected', described[0]?.message ?? '발행 검증을 통과하지 못했어요.');
     }
     // Re-publishing the same version is accepted as unchanged, so a failed update is safe to retry.
+    for (const { row: setRow, document: set } of sets.drafted.values()) {
+      await this.db.contentDraft.update({ where: { id: setRow.id }, data: { status: 'published', publishedVersionId: set.versionId } });
+    }
     const published = await this.db.contentDraft.update({ where: { id: draftId },
-      data: { status: 'published', publishedVersionId: document.public.versionId },
-      include: { author: { select: { displayName: true } } } });
+      data: { status: 'published', publishedVersionId: document.public.versionId }, include: withAuthor });
     return { workspace: await this.workspace(userId), draft: await this.detail(published as DraftRow, userId, []), publishedVersionId: document.public.versionId };
   }
 
   async deleteDraft(userId: string, draftId: string): Promise<AuthoringResponse> {
     const role = await this.require(userId);
     const row = await this.load(draftId, userId, role);
+    const document = row.document as unknown as StoredLesson;
+    const sets = await this.resolveSets(document);
+    // The set drafts this lesson was going to publish with go with it.
+    await this.db.contentDraft.deleteMany({ where: { id: { in: [...sets.drafted.values()].map((entry) => entry.row.id) } } });
     await this.db.contentDraft.delete({ where: { id: row.id } });
-    // A lesson that was only ever this draft leaves with it, so its key can be chosen again.
+    // A lesson that was only ever this draft leaves with it, so its key can be chosen again; so does
+    // a problem set that was only ever a draft of it.
     const [versions, drafts] = await Promise.all([
-      this.db.lessonVersion.count({ where: { lessonKey: row.lessonKey } }),
-      this.db.contentDraft.count({ where: { lessonKey: row.lessonKey } }),
+      this.db.lessonVersion.count({ where: { lessonKey: row.ownerKey } }),
+      this.db.contentDraft.count({ where: { ownerKind: 'lesson', ownerKey: row.ownerKey } }),
     ]);
-    if (!versions && !drafts) await this.db.lesson.deleteMany({ where: { key: row.lessonKey } });
+    if (!versions && !drafts) await this.db.lesson.deleteMany({ where: { key: row.ownerKey } });
+    for (const problemSetId of new Set(problemSetRefs(document).map((ref) => ref.problemSetId))) {
+      const [setVersions, setDrafts] = await Promise.all([
+        this.db.problemSetVersion.count({ where: { problemSetId } }),
+        this.db.contentDraft.count({ where: { ownerKind: 'problem_set', ownerKey: problemSetId } }),
+      ]);
+      if (!setVersions && !setDrafts) await this.db.problemSet.deleteMany({ where: { id: problemSetId } });
+    }
     return { workspace: await this.workspace(userId) };
   }
 
   async draft(userId: string, draftId: string): Promise<DraftDetail> {
     const role = await this.require(userId);
     const row = await this.load(draftId, userId, role);
-    return this.detail(row, userId, this.issues(row.document as unknown as StoredLesson));
+    const document = row.document as unknown as StoredLesson;
+    const sets = await this.resolveSets(document);
+    return this.detail(row, userId, this.issues(document, sets), sets);
   }
 
   async act(userId: string, input: unknown): Promise<AuthoringResponse> {
@@ -684,20 +841,20 @@ export class AuthoringService {
  * — and positions move as a draft is written, so it is turned into the names the editor knows a
  * block by before it leaves the server.
  */
-function locate(document: StoredLesson, path: readonly PropertyKey[]): Omit<DraftIssue, 'message' | 'path'> {
+function locate(view: DraftView, path: readonly PropertyKey[]): Omit<DraftIssue, 'message' | 'path'> {
   const [root, index, ...rest] = path;
   const field = () => {
     const at = rest.indexOf('payload');
     return at >= 0 && at + 1 < rest.length ? rest.slice(at + 1).join('.') : undefined;
   };
   if (root === 'sections' && typeof index === 'number') {
-    const section = document.sections[index];
+    const section = view.sections[index];
     if (!section) return {};
     const block = rest[0] === 'contentBlocks' && typeof rest[1] === 'number' ? section.contentBlocks[rest[1]] : undefined;
     return { sectionId: section.sectionId, blockId: block?.blockId, field: block ? field() : undefined };
   }
   if (root === 'problems' && typeof index === 'number') {
-    const problem = document.problems[index];
+    const problem = view.problems[index];
     if (!problem) return {};
     const part = rest[0];
     const holds = part === 'promptContent' || part === 'hints' || part === 'solution';
@@ -712,7 +869,7 @@ function locate(document: StoredLesson, path: readonly PropertyKey[]): Omit<Draf
  * the question they refused, which is the only handle they give; a block's name is checked first
  * because it contains the question's, and the narrower answer is the useful one.
  */
-function named(document: StoredLesson, message: string): Omit<DraftIssue, 'message' | 'path'> {
+function named(document: DraftView, message: string): Omit<DraftIssue, 'message' | 'path'> {
   for (const section of document.sections) {
     for (const block of section.contentBlocks) {
       if (message.includes(block.blockId)) return { sectionId: section.sectionId, blockId: block.blockId };
@@ -732,7 +889,7 @@ function named(document: StoredLesson, message: string): Omit<DraftIssue, 'messa
  * about. Only the rules are quoted: anything else that failed is reported as a failure, not as its
  * own text.
  */
-export function describeContentError(error: unknown, document?: StoredLesson): DraftIssue[] {
+export function describeContentError(error: unknown, document?: DraftView): DraftIssue[] {
   const where = (message: string, path?: readonly PropertyKey[]) => {
     if (!document) return {};
     const found = path ? locate(document, path) : {};

@@ -5,7 +5,7 @@ import { recommend, reviewSelection, conceptReadiness, type Evidence } from '@/c
 import { glossaryEntries } from '@/core/glossary';
 import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
-import { blockDefinitionRefs, getActivityProblemIds, definitionReferences, toPublicLesson, validateLesson, type LessonMetadata, type StoredLesson, type StoredProblem } from '@/core/content';
+import { blockDefinitionRefs, getActivityProblemIds, definitionReferences, toPublicLesson, type LessonMetadata, type LessonRecord, type StoredProblem } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
 import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicCatalog, PublicLesson, PublicProblem, DiagnosticAnswer, Recommendation } from '@/shared/api';
 import { AppError } from './errors';
@@ -352,8 +352,9 @@ export class LearningService {
   }
 
   // Independent assignment boundary. The web API currently calls this only for self-study.
-  async createPersonalAssignment(tx: Tx, userId: string, scopeId: string, record: StoredLesson, sourceEnrollmentId?: string) {
-    validateLesson(record);
+  async createPersonalAssignment(tx: Tx, userId: string, scopeId: string, record: LessonRecord, sourceEnrollmentId?: string) {
+    // A lesson that sets no review pool asks for no review.
+    if (!record.review) return null;
     const scope = await tx.learningScope.findFirst({ where: { id: scopeId, ownerUserId: userId, kind: 'personal' } });
     if (!scope) throw notFound();
     const user = await tx.user.findUniqueOrThrow({ where: { id: userId } });
@@ -368,7 +369,7 @@ export class LearningService {
       seen.add(p.problemVersionId);
       evidence.push({ problemVersionId: p.problemVersionId, conceptKeys: p.conceptKeys, responseKind: p.responseSpec.kind, result, date: attempt.createdAt, check: checkIds.has(p.problemVersionId) });
     }
-    const selection = reviewSelection(record.homeworkProblemIds.map(id => record.problems.find(p => p.problemVersionId === id)!), evidence, user.dailyMinutes);
+    const selection = reviewSelection(record.review.problemVersionIds.map(id => record.problems.find(p => p.problemVersionId === id)!), evidence, user.dailyMinutes);
     return tx.assignment.create({ data: {
       ownerScopeId: scopeId, title: `${record.public.title} · 다시 풀기`, sourceLessonVersionId: record.public.versionId,
       policySnapshot: { version: 1, audience: 'self-study', hints: 'on-request-assisted', results: 'after-item-attempt', solutions: 'not-exposed', reviewVersion: selection.version, reviewReason: selection.reason, dailyMinutes: user.dailyMinutes, intervalDays: selection.intervalDays },

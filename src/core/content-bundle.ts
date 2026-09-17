@@ -1,6 +1,6 @@
 import 'server-only';
 import { z } from 'zod';
-import { diagnosticProblemSchema, definitionBlockSchema, definitionReferences, validateLesson, type StoredLesson } from './content';
+import { diagnosticProblemSchema, definitionBlockSchema, definitionReferences, problemSetRefs, validateLesson, validateProblemSet, type LessonRecord, type StoredLesson, type StoredProblemSet } from './content';
 import { definitionRefId } from '@/shared/rich-text';
 
 const id = z.string().min(1).max(191).regex(/^[a-zA-Z0-9:._-]+$/);
@@ -40,7 +40,7 @@ export const courseSchema = z.object({
   diagnostics: z.array(id.max(100)).max(50),
 }).strict();
 export type CourseDefinition = z.infer<typeof courseSchema>;
-export type ContentBundle = { schemaVersion: 1; courses: CourseDefinition[]; concepts: ConceptRecord[]; lessons: StoredLesson[]; diagnostics: DiagnosticDefinition[]; definitions: DefinitionRecord[] };
+export type ContentBundle = { schemaVersion: 1; courses: CourseDefinition[]; concepts: ConceptRecord[]; lessons: StoredLesson[]; problemSets: StoredProblemSet[]; diagnostics: DiagnosticDefinition[]; definitions: DefinitionRecord[] };
 export class ContentError extends Error {}
 function unique(values: string[], label: string) {
   if (new Set(values).size !== values.length) throw new ContentError(`Duplicate ${label}.`);
@@ -50,7 +50,8 @@ export function parseContentBundle(input: unknown): ContentBundle {
   // Courses too: a bundle written before courses existed names none, and may still add definitions.
   const parsed = z.object({ schemaVersion: z.literal(1), courses: z.array(courseSchema).max(200).optional().default([]),
     concepts: z.array(conceptSchema).max(1000),
-    lessons: z.array(z.unknown()).max(1000), diagnostics: z.array(diagnosticDefinitionSchema).max(100),
+    lessons: z.array(z.unknown()).max(1000), problemSets: z.array(z.unknown()).max(2000).optional().default([]),
+    diagnostics: z.array(diagnosticDefinitionSchema).max(100),
     definitions: z.array(definitionSchema).max(2000).optional().default([]),
   }).strict().parse(input);
   unique(parsed.courses.map(c => c.key), 'course keys');
@@ -68,12 +69,15 @@ export function parseContentBundle(input: unknown): ContentBundle {
   }
   const lessons = parsed.lessons as StoredLesson[];
   unique(lessons.map(c => c.public.versionId), 'lesson version IDs');
+  for (const record of parsed.problemSets) validateProblemSet(record);
+  const problemSets = parsed.problemSets as StoredProblemSet[];
+  unique(problemSets.map(s => s.versionId), 'problem set version IDs');
   for (const d of parsed.diagnostics) {
     unique(d.problems.map(p => p.problemVersionId), 'diagnostic problem IDs');
     unique(d.problems.flatMap(p => p.promptContent.map(b => b.blockId)), 'diagnostic block IDs');
     for (const p of d.problems) unique(p.conceptKeys, 'diagnostic problem concept keys');
   }
-  return { schemaVersion: 1, courses: parsed.courses, concepts: parsed.concepts, lessons, diagnostics: parsed.diagnostics, definitions: parsed.definitions };
+  return { schemaVersion: 1, courses: parsed.courses, concepts: parsed.concepts, lessons, problemSets, diagnostics: parsed.diagnostics, definitions: parsed.definitions };
 }
 
 // Object order in MySQL JSON differs from source files. Compare semantic content, not serialization order.
@@ -98,28 +102,64 @@ export function validateReferences(bundle: ContentBundle) {
   consistentCase(bundle.concepts.map(s => s.key));
   consistentCase(bundle.lessons.map(c => c.public.versionId));
   consistentCase(bundle.lessons.map(c => c.public.lessonKey));
+  consistentCase(bundle.problemSets.map(s => s.versionId));
+  consistentCase(bundle.problemSets.map(s => s.problemSetId));
   consistentCase(bundle.diagnostics.map(d => d.versionId));
   consistentCase(bundle.diagnostics.map(d => d.diagnosticKey));
   // Blocks hang off the version that holds them, named by that version's ID alone. Definitions hang
   // theirs off a generated row id, so they cannot collide with a name an author chose.
-  unique([...bundle.lessons.map(c => c.public.versionId), ...bundle.diagnostics.map(d => d.versionId)], 'version IDs across lessons and diagnostics');
+  unique([...bundle.lessons.map(c => c.public.versionId), ...bundle.problemSets.map(s => s.versionId), ...bundle.diagnostics.map(d => d.versionId)],
+    'version IDs across lessons, problem sets and diagnostics');
   // Keys only have to stay unambiguous inside their own scope; a lesson may reuse a dictionary word.
   for (const scope of new Set(bundle.definitions.map(t => `${t.scopeKind}:${t.scopeKey}`))) {
     consistentCase(bundle.definitions.filter(t => `${t.scopeKind}:${t.scopeKey}` === scope).map(t => t.conceptKey));
   }
-  consistentCase([...bundle.lessons.flatMap(c => c.problems), ...bundle.diagnostics.flatMap(d => d.problems)].map(p => p.problemVersionId));
-  // Nothing floats outside a course: every published lesson and diagnostic is kept by exactly one.
-  const lessonCourses = new Set(bundle.courses.flatMap(c => c.lessons.map(l => l.key)));
+  consistentCase([...bundle.problemSets.flatMap(s => s.problems), ...bundle.diagnostics.flatMap(d => d.problems)].map(p => p.problemVersionId));
+  // Nothing floats outside a course: every published lesson, problem set and diagnostic is kept by one.
+  const courseOf = new Map(bundle.courses.flatMap(c => c.lessons.map(l => [l.key, c.key] as const)));
+  const courseKeys = new Set(bundle.courses.map(c => c.key));
   const diagnosticCourses = new Set(bundle.courses.flatMap(c => c.diagnostics));
   for (const c of bundle.lessons) {
-    if (!lessonCourses.has(c.public.lessonKey)) throw new ContentError(`Lesson belongs to no course: ${c.public.lessonKey}`);
+    if (!courseOf.has(c.public.lessonKey)) throw new ContentError(`Lesson belongs to no course: ${c.public.lessonKey}`);
   }
   for (const d of bundle.diagnostics) {
     if (!diagnosticCourses.has(d.diagnosticKey)) throw new ContentError(`Diagnostic belongs to no course: ${d.diagnosticKey}`);
   }
+  // A problem set has one course and one name across its versions, and a question has one set.
+  const setCourse = new Map<string, string>();
+  const setOfProblem = new Map<string, string>();
+  const setVersions = new Map(bundle.problemSets.map(s => [s.versionId, s]));
+  for (const s of bundle.problemSets) {
+    if (!courseKeys.has(s.courseKey)) throw new ContentError(`Problem set belongs to no course: ${s.problemSetId} (${s.courseKey})`);
+    const course = setCourse.get(s.problemSetId);
+    if (course && course !== s.courseKey) throw new ContentError(`Problem set cannot move between courses: ${s.problemSetId}`);
+    setCourse.set(s.problemSetId, s.courseKey);
+    for (const p of s.problems) {
+      const owner = setOfProblem.get(p.problemVersionId);
+      if (owner && owner !== s.problemSetId) throw new ContentError(`Problem belongs to another problem set: ${p.problemVersionId} (${owner})`);
+      setOfProblem.set(p.problemVersionId, s.problemSetId);
+    }
+  }
+  // A lesson's questions are the ones its references resolve to; every reference must resolve.
+  const lessonProblems = new Map<string, LessonRecord>();
+  for (const c of bundle.lessons) {
+    const problems = new Map<string, StoredProblemSet['problems'][number]>();
+    for (const ref of problemSetRefs(c)) {
+      const where = ref.blockId ?? 'review';
+      const version = setVersions.get(ref.problemSetVersionId);
+      if (!version) throw new ContentError(`Missing problem set version: ${ref.problemSetVersionId} (${where})`);
+      if (version.problemSetId !== ref.problemSetId) throw new ContentError(`Problem set version belongs to another set: ${ref.problemSetVersionId} (${where})`);
+      if (version.courseKey !== courseOf.get(c.public.lessonKey)) throw new ContentError(`Problem set belongs to another course: ${ref.problemSetId} (${where})`);
+      for (const problemId of ref.problemVersionIds) {
+        const problem = version.problems.find(p => p.problemVersionId === problemId);
+        if (!problem) throw new ContentError(`Problem is not in the problem set version: ${problemId} (${where})`);
+        problems.set(problemId, problem);
+      }
+    }
+    lessonProblems.set(c.public.versionId, { ...c, problems: [...problems.values()] });
+  }
   const concepts = new Map(bundle.concepts.map(s => [s.key, s]));
   const problems = new Map<string, string>();
-  const lessonProblems = new Set(bundle.lessons.flatMap(c => c.problems.map(p => p.problemVersionId)));
   const assertConcept = (key: string) => { if (!concepts.has(key)) throw new ContentError(`Missing concept: `); };
   // Readiness travels on concepts a question can assess, so what a lesson teaches and presumes, and
   // what a question claims, must be assessable; a definition may explain any concept.
@@ -129,6 +169,10 @@ export function validateReferences(bundle: ContentBundle) {
   };
   for (const c of bundle.lessons) {
     [...c.public.conceptKeys, ...c.public.prerequisiteConceptKeys].forEach(assertAssessable);
+    // A lesson asks only about what it says it teaches.
+    for (const p of lessonProblems.get(c.public.versionId)!.problems) for (const concept of p.conceptKeys) {
+      if (!c.public.conceptKeys.includes(concept)) throw new ContentError(`Problem concept is absent from lesson concepts: ${concept} (${p.problemVersionId} in ${c.public.versionId})`);
+    }
   }
   // Only a definition with something to show can be linked; a row that merely renames a concept cannot.
   const linkable = new Set<string>();
@@ -136,7 +180,7 @@ export function validateReferences(bundle: ContentBundle) {
     assertConcept(t.conceptKey);
     if (t.blocks.length) linkable.add(definitionRefId(t));
   }
-  for (const c of bundle.lessons) for (const reference of definitionReferences(c)) {
+  for (const c of lessonProblems.values()) for (const reference of definitionReferences(c)) {
     // A lesson-scoped definition belongs to the lesson that keeps it. Reaching into another lesson's
     // definitions would make one lesson's wording depend on a document its author cannot see.
     if (reference.scopeKind === 'lesson' && reference.scopeKey !== c.public.lessonKey) {
@@ -147,9 +191,9 @@ export function validateReferences(bundle: ContentBundle) {
     if (reference.problemConceptKeys?.includes(reference.conceptKey)) throw new ContentError(`A problem cannot explain the concept it assesses:  ()`);
   }
   for (const d of bundle.diagnostics) for (const p of d.problems) {
-    if (lessonProblems.has(p.problemVersionId)) throw new ContentError(`Diagnostic problem overlaps lesson content: ${p.problemVersionId}`);
+    if (setOfProblem.has(p.problemVersionId)) throw new ContentError(`Diagnostic problem overlaps lesson content: ${p.problemVersionId}`);
   }
-  for (const p of [...bundle.lessons.flatMap(c => c.problems), ...bundle.diagnostics.flatMap(d => d.problems)]) {
+  for (const p of [...bundle.problemSets.flatMap(s => s.problems), ...bundle.diagnostics.flatMap(d => d.problems)]) {
     p.conceptKeys.forEach(assertAssessable);
     const value = canonicalJson(p);
     if (problems.has(p.problemVersionId) && problems.get(p.problemVersionId) !== value) throw new ContentError(`Problem version is immutable: ${p.problemVersionId}`);

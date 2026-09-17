@@ -2,13 +2,12 @@ import { createHash, randomUUID } from 'node:crypto';
 import { Prisma } from '@prisma/client';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
-import { getActivityProblemIds, validateLesson, type StoredLesson, type StoredProblem } from '@/core/content';
-import { seedLessons } from './fixtures/content';
-import { ensureLesson } from './fixtures/identity';
+import { getActivityProblemIds, type LessonRecord, type StoredProblem } from '@/core/content';
+import { lessonBundle, seedLessons } from './fixtures/content';
 import { developmentLoginEnabled, sessionUser } from '@/server/auth';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
-import { lessonMetadata, lessonRecord, indexLessonDocument, indexDefinitionBlocks } from '@/server/content-store';
+import { importContent, lessonRecord, indexDefinitionBlocks } from '@/server/content-store';
 import type { LearningAction } from '@/shared/api';
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
@@ -27,24 +26,10 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
   let existing: Existing;
   let service: LearningService;
 
-  async function publishImmutable(document: StoredLesson, publishedAt?: Date) {
-    validateLesson(document);
-    const serialized = JSON.stringify(document);
-    const contentHash = createHash('sha256').update(serialized).digest('hex');
-    const previous = await db.lessonVersion.findUnique({ where: { id: document.public.versionId } });
-    // A fixture publishes the way the application does, the question index included.
-    await indexLessonDocument(db, document);
-    if (previous) {
-      // A migration renamed the seeded rows in place, so the stored hash is historical; the content must still read back whole.
-      expect(await lessonRecord(db, document.public.versionId), `Published fixture ${document.public.versionId} must not change`).toEqual(document);
-      return previous;
-    }
-    await ensureLesson(db, document.public.lessonKey);
-    return db.lessonVersion.create({ data: {
-      id: document.public.versionId, lessonKey: document.public.lessonKey,
-      title: document.public.title,
-      metadata: asJson(lessonMetadata(document)), contentHash, ...(publishedAt ? { publishedAt } : {}),
-    } });
+  /** A fixture publishes the way the application does: the lesson and the sets it references, as one bundle. */
+  async function publishImmutable(document: LessonRecord) {
+    await importContent(db, lessonBundle([document]));
+    expect(await lessonRecord(db, document.public.versionId), `Published fixture ${document.public.versionId} must read back whole`).toEqual(document);
   }
 
   beforeAll(async () => {
@@ -101,7 +86,7 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
   }
 
   async function standaloneAssignment(learner: { userId: string; scopeId: string }) {
-    const assignment = await db.$transaction(tx => service.createPersonalAssignment(tx, learner.userId, learner.scopeId, record));
+    const assignment = (await db.$transaction(tx => service.createPersonalAssignment(tx, learner.userId, learner.scopeId, record)))!;
     return db.assignmentRecipient.findFirstOrThrow({ where: { assignmentId: assignment.id, learnerUserId: learner.userId },
       include: { assignment: { include: { items: { orderBy: { position: 'asc' } } } }, submissions: true } });
   }
@@ -130,7 +115,7 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     const { enrollmentId, problem } = await openPractice(learner.userId);
     const recipient = await standaloneAssignment(learner);
     await expect(service.act(learner.userId, { action: 'attempt.submit', context: 'lesson', contextId: enrollmentId,
-      problemVersionId: record.homeworkProblemIds[0], answer: '1', requestId: requestId() })).rejects.toMatchObject({ status: 404 });
+      problemVersionId: record.review!.problemVersionIds[0], answer: '1', requestId: requestId() })).rejects.toMatchObject({ status: 404 });
     await expect(service.act(learner.userId, { action: 'attempt.submit', context: 'lesson', contextId: enrollmentId,
       problemVersionId: seedLessons[1].problems[0].problemVersionId, answer: '1', requestId: requestId() })).rejects.toMatchObject({ status: 404 });
     await expect(service.act(learner.userId, { action: 'attempt.submit', context: 'assignment', contextId: recipient.id,
@@ -189,7 +174,7 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     expect(recipient.sourceEnrollmentId).toBe(enrollmentId);
     expect(recipient.recommendedAt.getTime()).toBeGreaterThanOrEqual(beforeCompletion + 86_400_000);
     expect(recipient.assignment.sourceLessonVersionId).toBe(record.public.versionId);
-    expect(recipient.assignment.items.map(item => item.problemVersionId).sort()).toEqual([...record.homeworkProblemIds].sort());
+    expect(recipient.assignment.items.map(item => item.problemVersionId).sort()).toEqual([...record.review!.problemVersionIds].sort());
     expect(recipient.submissions).toHaveLength(1);
     expect(recipient.submissions[0]).toMatchObject({ status: 'draft', submissionIndex: 1, finalizedAt: null });
   }, 30_000);
@@ -294,11 +279,11 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     const lessonKey = `integration-pin-${randomUUID()}`;
     const first = structuredClone(record);
     first.public = { ...first.public, lessonKey, versionId: `${lessonKey}:v1` };
-    await publishImmutable(first, new Date(Date.now() - 10_000));
+    await publishImmutable(first);
     const enrollmentId = await enroll(learner.userId, lessonKey);
     const second = structuredClone(first);
     second.public = { ...second.public, versionId: `${lessonKey}:v2`, title: `${second.public.title} · 두 번째 판본` };
-    await publishImmutable(second, new Date());
+    await publishImmutable(second);
     expect((await service.lessonDocument(lessonKey, learner.userId)).versionId).toBe(first.public.versionId);
     expect((await service.catalog()).find(item => item.lessonKey === lessonKey)?.versionId).toBe(second.public.versionId);
     expect(await enroll(learner.userId, lessonKey)).toBe(enrollmentId);
@@ -323,10 +308,10 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     for (const conceptKey of [earlier, primary, secondary]) await publishDefinition(conceptKey);
 
     // Fresh question IDs: a published problem version is immutable across every lesson in the database.
-    const custom = JSON.parse(JSON.stringify(record).replaceAll(record.public.lessonKey, lessonKey)) as StoredLesson;
+    const custom = JSON.parse(JSON.stringify(record).replaceAll(record.public.lessonKey, lessonKey)) as LessonRecord;
     custom.public = { ...custom.public, conceptKeys: [primary, secondary], prerequisiteConceptKeys: [earlier] };
     for (const problem of custom.problems) problem.conceptKeys = [primary];
-    const [firstHomework, secondHomework] = custom.homeworkProblemIds.map(id => custom.problems.find(p => p.problemVersionId === id)!);
+    const [firstHomework, secondHomework] = custom.review!.problemVersionIds.map(id => custom.problems.find(p => p.problemVersionId === id)!);
     secondHomework.conceptKeys = [secondary];
     const link = (conceptKey: string, surface: string) => ({ conceptKey, surface });
     const section = custom.sections[0];
@@ -357,7 +342,7 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     }
     const state = (await service.act(learner.userId, { action: 'lesson.complete', enrollmentId })).state;
     const assignment = state.assignments.find(item => item.lessonKey === lessonKey)!;
-    expect(assignment.items.map(item => item.problem.problemVersionId).sort()).toEqual([...custom.homeworkProblemIds].sort());
+    expect(assignment.items.map(item => item.problem.problemVersionId).sort()).toEqual([...custom.review!.problemVersionIds].sort());
     // The review carries what its own questions linked, and only that: the section's link to the
     // primary concept is not part of this assignment, so its definition is not sent here.
     expect(assignment.glossary.map(entry => entry.conceptKey).sort()).toEqual([earlier, secondary].sort());
