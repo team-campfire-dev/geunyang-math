@@ -19,6 +19,7 @@ import { AddBlock, BlockCard } from './block-editor';
 import { LessonSheet, type Picked } from './lesson-sheet';
 import { ProblemPanel, ProblemSetEditor, ConceptPicker } from './problem-editor';
 import { DefinitionPanel } from './definition-editor';
+import { LessonSettings } from './lesson-settings';
 import { invalidAnswers, unfinishedIssues, type AnswerInput } from '@/shared/authoring-checks';
 import { discardChanges } from './unsaved-form';
 import { ConceptLibrary } from './concept-library';
@@ -55,6 +56,8 @@ export function AuthoringWorkspace() {
   const [libraryPage, setLibraryPage] = useState<'courses' | 'concepts' | 'dictionary' | 'settings'>('courses');
   const [courseKey, setCourseKey] = useState<string | null>(null);
   const [showDefinitions, setShowDefinitions] = useState(false);
+  /** Writing the lesson, or saying what the lesson is. Two questions, so two screens. */
+  const [lessonPage, setLessonPage] = useState<'write' | 'settings'>('write');
   const [libraryDirty, setLibraryDirty] = useState(false);
   const [definitionDirty, setDefinitionDirty] = useState(false);
   const [answerInputs, setAnswerInputs] = useState<Record<string, AnswerInput>>({});
@@ -93,7 +96,7 @@ export function AuthoringWorkspace() {
     setTrying(false);
     setAttempts({});
     setAssisted({});
-    setConfirming(false); setShowDefinitions(false);
+    setConfirming(false); setShowDefinitions(false); setLessonPage('write');
   }, [openEdit, markSaved]);
   /**
    * Moving to another step starts at the top of it. The page is a lesson long, and keeping the old
@@ -271,10 +274,6 @@ export function AuthoringWorkspace() {
     closeDraft();
   };
 
-  useEffect(() => {
-    if (showDefinitions) window.document.getElementById('lesson-definitions')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, [showDefinitions]);
-
   // Invalidate a validation result as soon as the content being certified changes.
   useEffect(() => { setNotice(null); setConfirming(false); if (!dirty) { setSaving('idle'); setError(null); } }, [editJson, dirty]);
   useEffect(() => {
@@ -394,7 +393,20 @@ export function AuthoringWorkspace() {
     issues.filter((issue) => issue.problemVersionId === problemVersionId);
   /** Takes the screen to what a rule refused, rather than leaving an author to find it by its path. */
   const goToIssue = (issue: DraftIssue) => {
-    if (!issue.sectionId && !issue.blockId && !issue.problemVersionId) { setSelected(null); setTrying(false); window.requestAnimationFrame(() => { const name = issue.field === 'title' ? '수업 제목' : issue.field === 'summary' ? '한 줄 소개' : issue.field === 'estimatedMinutes' ? '예상 시간(분)' : '수업에서 다루는 개념 검색'; const node = document.querySelector<HTMLElement>(`[aria-label="${name}"]`); node?.scrollIntoView({block:'center'}); node?.focus(); }); return; }
+    if (!issue.sectionId && !issue.blockId && !issue.problemVersionId) {
+      setSelected(null); setTrying(false);
+      // The title is written on the sheet; everything else a lesson says about itself is a page away.
+      const onSheet = issue.field === 'title';
+      setLessonPage(onSheet ? 'write' : 'settings');
+      const name = onSheet ? '수업 제목'
+        : issue.field === 'summary' ? '한 줄 소개'
+        : issue.field === 'estimatedMinutes' ? '예상 시간(분)' : '수업에서 다루는 개념 검색';
+      window.requestAnimationFrame(() => {
+        const node = document.querySelector<HTMLElement>(`[aria-label="${name}"]`);
+        node?.scrollIntoView({ block: 'center' }); node?.focus();
+      });
+      return;
+    }
     const holds = (item: LessonSection) => (issue.sectionId ? item.sectionId === issue.sectionId : false)
       || (issue.blockId ? item.contentBlocks.some((block) => block.blockId === issue.blockId) : false)
       || (issue.problemVersionId ? item.contentBlocks.some((block) => Array.isArray(block.payload.problemVersionIds)
@@ -478,16 +490,18 @@ export function AuthoringWorkspace() {
       <button type="button" className="back-button" onClick={() => void leave()}><Icon name="back" size={16} />{courseTitle}</button>
       <div className="editor-bar-side">
         {/* Writing the lesson, or reading it the way it will be read. */}
-        {!published && <div className="editor-mode" role="group" aria-label="화면 모드">
+        {!published && lessonPage === 'write' && <div className="editor-mode" role="group" aria-label="화면 모드">
           <button type="button" className={trying ? '' : 'active'} aria-pressed={!trying}
             onClick={() => { setTrying(false); setAttempts({}); setAssisted({}); }}>편집</button>
           <button type="button" className={trying ? 'active' : ''} aria-pressed={trying}
             onClick={() => void enterTry()}>해보기</button>
         </div>}
-        {!published && !trying && <>
+        {!published && !trying && lessonPage === 'write' && <>
           <button type="button" className="icon-button" aria-label="되돌리기" title="되돌리기 (⌘Z)" disabled={!canUndo} onClick={undo}>↶</button>
           <button type="button" className="icon-button" aria-label="다시 실행" title="다시 실행 (⇧⌘Z)" disabled={!canRedo} onClick={redo}>↷</button>
         </>}
+        {!trying && lessonPage === 'write' && <button type="button" className="text-button" onClick={() => { setSelected(null); setLessonPage('settings'); }}>
+          <Icon name="settings" size={14} />수업 정보</button>}
         <span className={`pill${published ? ' green' : ''}${saving === 'failed' ? ' warn' : ''}`}>{savedLabel}</span>
       </div>
     </div>
@@ -501,19 +515,22 @@ export function AuthoringWorkspace() {
       학습자가 보는 그대로예요. 답은 학습 화면과 같은 규칙으로 서버가 채점하고, 여기서 푼 것은 아무 데도 기록되지 않아요.
       해설은 학습자에게 보여 주지 않으니 여기에도 나오지 않고, 「편집」에서 씁니다.</p>}
 
-    {!published && <div hidden={!showDefinitions || trying} id="lesson-definitions" className="studio-inline-definitions"><button className="text-button" onClick={() => {
-      setShowDefinitions(false); window.requestAnimationFrame(() => window.document.getElementById('lesson-preview')?.scrollIntoView({ behavior: 'smooth' }));
-    }}>뜻풀이 닫고 수업으로 ↓</button><DefinitionPanel
-      onDirty={setDefinitionDirty} key={draft.id} initialLessonKey={draft.lessonKey} lessons={workspace.lessons} concepts={workspace.concepts} mayEditDictionary={mayPublish(workspace.role)}
-      onList={async (scopeKind, scopeKey) => (await authoringApi.act({ action: 'definition.list', scopeKind, scopeKey }, session?.user?.id ?? '')).definitions ?? []}
-      onSave={async (definition) => {
-        const response = await authoringApi.act({ action: 'definition.save', edit: definition }, session?.user?.id ?? '');
-        setWorkspace(response.workspace);
-        const refreshed = (await authoringApi.draft(draft.id)).draft;
-        setDraft((current) => current?.id === refreshed.id ? { ...current, definitions: refreshed.definitions, glossary: refreshed.glossary } : current);
-        return response.definitions ?? [];
-      }} /></div>}
-    {!trying && <a className="inspector-jump text-button" href="#lesson-inspector">{selected ? '선택한 내용 편집하기 ↓' : '수업 설정 ↓'}</a>}
+    {lessonPage === 'settings'
+      ? <LessonSettings edit={edit} draft={draft} concepts={workspace.concepts} lessons={workspace.lessons}
+        published={published} issues={localIssues} showDefinitions={showDefinitions} mayEditDictionary={mayPublish(workspace.role)}
+        onEdit={setEdit} onShowDefinitions={setShowDefinitions} onDefinitionDirty={setDefinitionDirty}
+        onListDefinitions={async (scopeKind, scopeKey) => (await authoringApi.act({ action: 'definition.list', scopeKind, scopeKey }, session?.user?.id ?? '')).definitions ?? []}
+        onSaveDefinition={async (definition) => {
+          const response = await authoringApi.act({ action: 'definition.save', edit: definition }, session?.user?.id ?? '');
+          setWorkspace(response.workspace);
+          const refreshed = (await authoringApi.draft(draft.id)).draft;
+          setDraft((current) => current?.id === refreshed.id ? { ...current, definitions: refreshed.definitions, glossary: refreshed.glossary } : current);
+          return response.definitions ?? [];
+        }}
+        onDelete={() => void act({ action: 'draft.delete', draftId: draft.id }, closeDraft)}
+        onClose={() => { if (discardChanges(definitionDirty)) { setShowDefinitions(false); setLessonPage('write'); } }} />
+      : <>
+    {!trying && <a className="inspector-jump text-button" href="#lesson-inspector">{selected ? '선택한 내용 편집하기 ↓' : '이 단계 ↓'}</a>}
     <div className={`editor-layout${trying ? ' trying' : ''}`}>
       <aside className="editor-steps">
         <span className="eyebrow">수업 단계</span>
@@ -545,7 +562,7 @@ export function AuthoringWorkspace() {
 
       {/* What the chosen thing is made of. With nothing chosen, the lesson itself is what is chosen. */}
       {!trying && <aside className="editor-inspector" id="lesson-inspector" aria-label="수업 편집 도구">
-        <div className="inspector-heading"><strong>{selected ? '선택한 내용 편집' : '수업 설정'}</strong>{selected && <button className="text-button" onClick={() => setSelected(null)}>수업 설정으로</button>}<a className="inspector-return text-button" href="#lesson-preview">본문으로 ↑</a></div>
+        <div className="inspector-heading"><strong>{selected ? '선택한 내용' : '이 단계'}</strong>{selected && <button className="text-button" onClick={() => setSelected(null)}>선택 해제</button>}<a className="inspector-return text-button" href="#lesson-preview">본문으로 ↑</a></div>
         {chosenProblem && holder
           ? <fieldset className="editor-inspector-block" disabled={published}>
             <Amiss issues={issuesOfProblem(chosenProblem.problemVersionId)} describe={describe} expert={expert} />
@@ -589,100 +606,49 @@ export function AuthoringWorkspace() {
                 setSelected(null);
               }} />
           </fieldset>
+          // Nothing inside the step is chosen, so the step itself is what is being looked at.
           : <fieldset className="editor-panel" disabled={published}>
-            <legend>이 수업</legend>
-            {/* The name of the version being written. The server suggests it and nothing here needs
-                to be told it, so only an operator is shown the field. */}
-            {expert
-              ? <label className="editor-field"><span className="editor-label">새 판본 ID</span>
-                <input value={edit.meta.versionId} onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, versionId: event.target.value } })} />
-                <small>발행한 판본은 고칠 수 없어서, 수정은 늘 새 판본이 돼요. 기준 판본: {draft.baseVersionId ?? '없음'}</small></label>
-              : <p className="editor-note">{published ? `${versionLabel(edit.meta.versionId)} 발행판입니다.` : `발행하면 ${versionLabel(edit.meta.versionId)}이 돼요.`} 이미 발행한 판은 고칠 수 없어서,
-                수정은 늘 새 판이 됩니다. 수강 중인 사람은 시작한 판을 끝까지 봅니다.</p>}
-            <label className="editor-field"><span className="editor-label">한 줄 소개</span>
-              <input aria-label="한 줄 소개" aria-invalid={localIssues.some(issue => issue.field === 'summary')} value={edit.meta.summary} onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, summary: event.target.value } })} />
-              <small>{localIssues.find(issue => issue.field === 'summary')?.message ?? '수업을 고르는 화면에서 제목 아래에 보여요.'}</small></label>
-            <label className="editor-field"><span className="editor-label">예상 시간(분)</span>
-              <input aria-label="예상 시간(분)" type="number" min={1} max={240} value={edit.meta.estimatedMinutes}
-                onChange={(event) => setEdit({ ...edit, meta: { ...edit.meta, estimatedMinutes: Number(event.target.value) } })} /></label>
-            <ConceptPicker concepts={workspace.concepts.filter((concept) => concept.assessable)} chosen={edit.meta.conceptKeys} label="수업에서 다루는 개념"
-              onChange={(conceptKeys) => setEdit({ ...edit, meta: { ...edit.meta, conceptKeys, prerequisiteConceptKeys: edit.meta.prerequisiteConceptKeys?.filter((key) => !conceptKeys.includes(key)) } })} />
-            <p className="editor-note">분수·분자·분모처럼 수업에서 배우는 작은 단위를 골라 주세요. 개념마다 뜻풀이를 연결할 수 있고, 각 문제는 이 중 무엇을 확인하는지 선택합니다.</p>
-            <ConceptPicker concepts={workspace.concepts.filter((concept) => concept.assessable && !edit.meta.conceptKeys.includes(concept.key))}
-              chosen={edit.meta.prerequisiteConceptKeys ?? []} label="먼저 알아야 하는 개념"
-              onChange={(prerequisiteConceptKeys) => setEdit({ ...edit, meta: { ...edit.meta, prerequisiteConceptKeys } })} />
-            <label className="editor-field"><span className="editor-label">수업을 마친 뒤 복습</span>
-              <select value={edit.reviewBlockId === undefined ? 'keep' : edit.reviewBlockId ?? 'none'} onChange={(event) => setEdit({ ...edit, reviewBlockId: event.target.value === 'keep' ? undefined : event.target.value === 'none' ? null : event.target.value })}>
-                {draft.review && draft.edit.reviewBlockId === undefined && <option value="keep">기존 복습 문제 유지</option>}
-                <option value="none">복습 과제 만들지 않기</option>
-                {edit.sections.flatMap((section) => section.contentBlocks.filter((block) => block.kind === 'core.problem_set').map((block, index) => <option key={block.blockId} value={block.blockId}>{section.title} · 문제 {index + 1} 묶음</option>))}
-              </select><small>선택한 문제 중 학습자의 풀이와 목표에 맞게 복습 과제를 만들어요. 수업 안의 문제를 선택하면 이후 수정도 함께 반영됩니다.</small>
-            </label>
-            <button type="button" className="button secondary" onClick={() => setShowDefinitions((value) => !value)} aria-expanded={showDefinitions}>이 수업의 뜻풀이 {showDefinitions ? '닫기' : '관리'}</button>
-            <p className="editor-note">{draft.review
-              ? `저장된 복습 문제: ${draft.review.problemVersionIds.length}개.`
-              : '저장된 복습 문제가 없어요.'}</p>
-
-            {!!loose.length && <div className="editor-inspector-part">
-              <span className="editor-label">어디에도 속하지 않은 문항</span>
-              <p className="editor-note editor-warn">활동이 지워지면서 남은 문항이에요. 아무 단계에도 들어 있지 않아 이대로는 발행할 수 없어요.</p>
-              <div className="editor-problems">
-                {loose.map((problem) => <div key={problem.problemVersionId} className="editor-problem-row">
-                  <span className="editor-problem-open">
-                    <strong>{expert ? problem.problemVersionId : '문항'}</strong>
-                    <small>{problemGist(problem) || '아직 비어 있어요'}</small>
-                  </span>
-                  <button type="button" className="icon-button" aria-label="이 문항 지우기"
-                    onClick={() => {
-                      setEdit({ ...edit, problems: edit.problems.filter((item) => item.problemVersionId !== problem.problemVersionId) });
-                      notifyRemoval('문항');
-                    }}><Icon name="close" size={14} /></button>
-                </div>)}
-              </div>
-            </div>}
-
-            <div className="editor-inspector-part">
-              <span className="editor-label">이 단계</span>
-              <label className="editor-field"><span className="editor-label">역할</span>
-                <select value={section.role} onChange={(event) => writeSection({ ...section, role: event.target.value as LessonSection['role'] })}>
-                  {sectionRoles.map((role) => <option key={role} value={role}>{sectionRoleLabels[role]}</option>)}
-                </select>
-                <small>학습 화면의 단계 목록과 시트 머리에 이 이름으로 나와요.</small></label>
-              <div className="editor-actions">
-                <button type="button" className="text-button" disabled={edit.sections.length >= 50}
-                  onClick={copyThisSection}><Icon name="copy" size={14} />이 단계 복제</button>
-                {edit.sections.length > 1 && <button type="button" className="text-button" onClick={() => {
-                  setEdit(dropLooseProblems({ ...edit, sections: edit.sections.filter((_, index) => index !== sectionIndex) }));
-                  goToSection(Math.max(sectionIndex - 1, 0));
-                  notifyRemoval('단계');
-                }}><Icon name="close" size={14} />이 단계 삭제</button>}
-              </div>
+            <legend>이 단계</legend>
+            <label className="editor-field"><span className="editor-label">역할</span>
+              <select value={section.role} onChange={(event) => writeSection({ ...section, role: event.target.value as LessonSection['role'] })}>
+                {sectionRoles.map((role) => <option key={role} value={role}>{sectionRoleLabels[role]}</option>)}
+              </select>
+              <small>학습 화면의 단계 목록과 시트 머리에 이 이름으로 나와요.</small></label>
+            <p className="editor-note">본문의 글·그림·문제를 고르면 여기에서 고칩니다. 수업 전체의 소개·개념·복습은 위쪽 「수업 정보」에 있어요.</p>
+            <div className="editor-actions">
+              <button type="button" className="text-button" disabled={edit.sections.length >= 50}
+                onClick={copyThisSection}><Icon name="copy" size={14} />이 단계 복제</button>
+              {edit.sections.length > 1 && <button type="button" className="text-button" onClick={() => {
+                setEdit(dropLooseProblems({ ...edit, sections: edit.sections.filter((_, index) => index !== sectionIndex) }));
+                goToSection(Math.max(sectionIndex - 1, 0));
+                notifyRemoval('단계');
+              }}><Icon name="close" size={14} />이 단계 삭제</button>}
             </div>
           </fieldset>}
       </aside>}
     </div>
 
+    {/* One thing to press. Writing is saved as it is written, checking is what publishing already
+        does, and throwing the draft away sits on the settings page with the rest of the lesson. */}
     {!published && <div className="editor-actions">
-      <button type="button" className="button secondary" disabled={busy || published || !dirty || !!invalid.length || saving === 'saving'}
-        onClick={() => void saveNow()}>지금 저장</button>
-      <button type="button" className="button secondary" disabled={busy || dirty || !!invalid.length} onClick={() => void validateNow()}>검증</button>
-      {/* A writer hands the work on rather than publishing it; whoever may publish takes it from there. */}
+      {saving === 'failed' && <button type="button" className="button secondary" disabled={busy || saving !== 'failed'}
+        onClick={() => void saveNow()}>다시 저장</button>}
       {!published && draft.mine && (draft.status === 'review'
         ? <button type="button" className="button secondary" disabled={busy} onClick={() => void reviewNow(false)}>검토 요청 거두기</button>
-        : <button type="button" className="button secondary" disabled={busy || dirty || !!invalid.length || !!issues.length} onClick={() => void reviewNow(true)}>검토 요청</button>)}
+        // A writer hands the work on rather than publishing it; whoever may publish takes it from there.
+        : <button type="button" className={`button ${mayPublish(workspace.role) ? 'secondary' : 'primary'}`} disabled={busy || dirty || !!invalid.length || !!issues.length} onClick={() => void reviewNow(true)}>검토 요청</button>)}
       {!published && !draft.mine && draft.status === 'review' && mayPublish(workspace.role) &&
         <button type="button" className="button secondary" disabled={busy}
           onClick={() => void reviewNow(false)}>작성자에게 돌려보내기</button>}
       {mayPublish(workspace.role) && !published && <button type="button" className="button primary" disabled={busy || dirty || !!invalid.length || !!localIssues.length || !!draft.issues.length}
         onClick={() => setConfirming(true)}>발행<Icon name="arrow" size={16} /></button>}
-      <button type="button" className="text-button" disabled={busy}
-        onClick={() => { if (confirm('이 초안을 삭제할까요? 발행한 판본은 남습니다.')) void act({ action: 'draft.delete', draftId: draft.id }, closeDraft); }}>
-        초안 삭제</button>
-      {dirty && <span className="editor-note">검증과 발행은 저장한 내용으로 해요.</span>}
+      <button type="button" className="text-button" disabled={busy || dirty || !!invalid.length} onClick={() => void validateNow()}>발행 전 검사</button>
+      {dirty && <span className="editor-note">검사와 발행은 저장한 내용으로 해요.</span>}
     </div>}
 
     {(saving === 'failed' || invalid.length > 0) && <button className="text-button" onClick={() => { if (discardChanges(true)) { setError(null); closeDraft(); } }}>저장하지 않은 변경을 버리고 코스로</button>}
     {!!invalid.length && <div className="editor-amiss" role="alert">정답을 확인할 문항: {invalid.map(problem => <button key={problem.problemVersionId} className="text-button" onClick={() => goToIssue({message:'정답 확인',problemVersionId:problem.problemVersionId})}>{problemGist(problem) || '내용 없는 문항'}</button>)}</div>}
+    </>}
 
     {confirming && <div className="editor-confirm" role="alertdialog" aria-label="발행 확인">
       <strong>{expert ? edit.meta.versionId : versionLabel(edit.meta.versionId)} 판본을 발행할까요?</strong>

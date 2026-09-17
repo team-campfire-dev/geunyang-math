@@ -27,57 +27,78 @@ function AnswerField({ spec, input, onInput, onChange }: { spec: AnswerSpec; inp
     if (parsed) onChange(parsed);
   };
   const parsed = answerSpec(written, requiredForm ?? null);
+  // Said in the summary so the fold can stay shut: what a question accepts is worth knowing at a
+  // glance, while changing it is rare enough not to hold a place on the screen.
+  const range = spec.kind === 'integer' ? '정수만 인정'
+    : requiredForm ? '기약분수로 쓴 답만 인정' : '값이 같으면 정수·소수·분수 모두 인정';
   return <div className="editor-answer">
     <label className="editor-field">
       <span className="editor-label">정답 · 숫자</span>
       <input value={written} aria-invalid={!parsed} onChange={event => write(event.target.value, requiredForm ?? null)} placeholder="예: -3, 2.5, 1/4" />
-      {parsed ? <small>{spec.kind === 'integer' ? '정수로 답하는 문제예요. 소수나 분수도 허용하려면 아래에서 답안 형식을 바꾸세요.' : '정수·소수·분수 중 값이 같은 답을 정답으로 인정해요.'}</small>
+      {parsed ? <small>{range}</small>
         : <small className="editor-warn" role="alert">숫자 정답을 확인해 주세요. 이 입력을 고치기 전에는 저장하거나 발행할 수 없어요.</small>}
     </label>
-    <label className="editor-field"><span className="editor-label">답안 형식</span>
-      <select value={spec.kind} disabled={!parsed} onChange={event => {
-        const next: AnswerSpec = event.target.value === 'rational'
-          ? spec.kind === 'integer' ? { kind: 'rational', numerator: spec.value, denominator: 1 } : spec
-          : { kind: 'integer', value: spec.kind === 'integer' ? spec.value : spec.numerator / spec.denominator };
-        onInput({ text: answerText(next), spec: JSON.stringify(next) }); onChange(next);
-      }}><option value="rational">숫자 · 정수, 소수, 분수</option><option value="integer" disabled={spec.kind === 'rational' && spec.numerator % spec.denominator !== 0}>정수만</option></select>
-    </label>
-    {spec.kind === 'rational' && <details className="answer-options"><summary>답의 표현 조건</summary><label className="editor-check">
-      <input type="checkbox" checked={!!requiredForm} disabled={!parsed} onChange={event => {
-        const next: AnswerSpec = { kind: 'rational', numerator: spec.numerator, denominator: spec.denominator, ...(event.target.checked ? {requiredForm: 'reduced_fraction' as const} : {}) };
-        onInput({text:written,spec:JSON.stringify(next)}); onChange(next);
-      }} /><span>기약분수로 쓴 답만 인정</span></label></details>}
-    <p className="editor-note">자동 채점은 숫자 답안을 지원해요. 문자식·좌표쌍·증명은 설명이나 예시로 작성해 주세요.</p>
+    <details className="editor-fold answer-options">
+      <summary>답 인정 범위 바꾸기</summary>
+      <label className="editor-field"><span className="editor-label">답안 형식</span>
+        <select value={spec.kind} disabled={!parsed} onChange={event => {
+          const next: AnswerSpec = event.target.value === 'rational'
+            ? spec.kind === 'integer' ? { kind: 'rational', numerator: spec.value, denominator: 1 } : spec
+            : { kind: 'integer', value: spec.kind === 'integer' ? spec.value : spec.numerator / spec.denominator };
+          onInput({ text: answerText(next), spec: JSON.stringify(next) }); onChange(next);
+        }}><option value="rational">숫자 · 정수, 소수, 분수</option><option value="integer" disabled={spec.kind === 'rational' && spec.numerator % spec.denominator !== 0}>정수만</option></select>
+      </label>
+      {spec.kind === 'rational' && <label className="editor-check">
+        <input type="checkbox" checked={!!requiredForm} disabled={!parsed} onChange={event => {
+          const next: AnswerSpec = { kind: 'rational', numerator: spec.numerator, denominator: spec.denominator, ...(event.target.checked ? {requiredForm: 'reduced_fraction' as const} : {}) };
+          onInput({text:written,spec:JSON.stringify(next)}); onChange(next);
+        }} /><span>기약분수로 쓴 답만 인정</span></label>}
+      <p className="editor-note">자동 채점은 숫자 답안을 지원해요. 문자식·좌표쌍·증명은 설명이나 예시로 작성해 주세요.</p>
+    </details>
   </div>;
 }
 
-/** The concepts this lesson teaches, named the way the catalogue names them rather than by key. */
+/**
+ * The concepts this lesson teaches, named the way the catalogue names them rather than by key. What
+ * is chosen is shown; the rest is searched for. The catalogue grows with the service, and a list
+ * that grows with it turns choosing three concepts into reading thirty.
+ */
 export function ConceptPicker({ concepts, chosen, onChange, label = '이 문제가 확인하는 개념' }: {
   concepts: ConceptChoice[]; chosen: string[]; onChange: (next: string[]) => void; label?: string;
 }) {
   const [query, setQuery] = useState('');
-  const found = concepts.filter((concept) => chosen.includes(concept.key) || concept.label.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
+  const asked = query.trim().toLocaleLowerCase();
+  const picked = concepts.filter((concept) => chosen.includes(concept.key));
+  const offered = asked
+    ? concepts.filter((concept) => !chosen.includes(concept.key) && concept.label.toLocaleLowerCase().includes(asked)).slice(0, 8)
+    : [];
   return <div className="editor-concepts">
     <span className="editor-label">{label}</span>
-    <label className="editor-field"><input type="search" aria-label={`${label} 검색`} placeholder="개념 이름으로 찾기" value={query} onChange={(event) => setQuery(event.target.value)} /></label>
-    {!found.length && <p className="editor-note">{concepts.length ? '찾은 개념이 없어요.' : '선택할 수 있는 개념이 없어요.'}</p>}
-    <div className="editor-concept-buttons">
-      {found.map((concept) => <label key={concept.key} className="editor-check">
-        <input type="checkbox" checked={chosen.includes(concept.key)}
-          onChange={() => onChange(chosen.includes(concept.key) ? chosen.filter((item) => item !== concept.key) : [...chosen, concept.key])} />
-        <span>{concept.label}</span>
-      </label>)}
+    <div className="editor-chips">
+      {picked.length
+        ? picked.map((concept) => <span key={concept.key} className="editor-chip">{concept.label}
+          <button type="button" className="icon-button" aria-label={`${concept.label} 빼기`} title="빼기"
+            onClick={() => onChange(chosen.filter((item) => item !== concept.key))}><Icon name="close" size={12} /></button></span>)
+        : <span className="editor-note">{concepts.length ? '아직 고른 개념이 없어요.' : '선택할 수 있는 개념이 없어요.'}</span>}
     </div>
+    {!!concepts.length && <label className="editor-field">
+      <input type="search" aria-label={`${label} 검색`} placeholder="개념 이름으로 찾아 더하기" value={query}
+        onChange={(event) => setQuery(event.target.value)} /></label>}
+    {!!asked && !offered.length && <p className="editor-note">찾은 개념이 없어요.</p>}
+    {!!offered.length && <div className="editor-concept-buttons">
+      {offered.map((concept) => <button key={concept.key} type="button" className="editor-chip-add"
+        onClick={() => { onChange([...chosen, concept.key]); setQuery(''); }}><Icon name="plus" size={12} />{concept.label}</button>)}
+    </div>}
   </div>;
 }
 
-function ProblemBlocks({ label, hint, part, problem, blocks, taken, definitionChoices, omitText, onChange }: {
+function ProblemBlocks({ label, hint, part, problem, blocks, taken, definitionChoices, omitText, named = true, onChange }: {
   label: string; hint?: string; part: 'prompt' | 'hint' | 'solution'; problem: DraftProblem;
-  blocks: ContentBlock[]; taken: string[]; definitionChoices: DefinitionChoice[]; omitText?: boolean;
+  blocks: ContentBlock[]; taken: string[]; definitionChoices: DefinitionChoice[]; omitText?: boolean; named?: boolean;
   onChange: (next: ContentBlock[]) => void;
 }) {
   return <div className="editor-problem-part">
-    <span className="editor-label">{label}</span>
+    {named && <span className="editor-label">{label}</span>}
     {hint && <p className="editor-note">{hint}</p>}
     {blocks.map((block, index) => <BlockCard key={block.blockId} block={block} index={index} total={blocks.length}
       omit={omitText && block.kind === 'core.rich_text' ? ['text'] : undefined}
@@ -127,10 +148,16 @@ export function ProblemPanel({ problem, number, total, concepts, taken, definiti
     <ProblemBlocks label="힌트" part="hint" problem={problem} blocks={problem.hints} taken={taken} definitionChoices={definitionChoices}
       hint="힌트를 하나라도 두면 학습 화면에 힌트 버튼이 생겨요. 힌트를 열고 맞히면 도움을 받은 풀이로 기록합니다."
       onChange={(hints) => onChange({ ...problem, hints })} />
-    <ProblemBlocks label="해설" part="solution" problem={problem} blocks={problem.solution} taken={taken} definitionChoices={definitionChoices}
-      hint="해설을 작성해 보관할 수 있어요. 현재 학습 화면에서는 해설을 제공하지 않습니다."
-      onChange={(solution) => onChange({ ...problem, solution })} />
-    {problem.solution.length === 0 && <p className="editor-note editor-warn">해설이 없는 문제예요. 시작점 확인처럼 해설을 보여 주지 않는 곳이 아니라면 한 블록 이상 두는 편이 좋아요.</p>}
+    {/* Kept, and kept shut: the learning screen does not show a solution today, so it earns a line
+        rather than a third of the panel. */}
+    <details className="editor-fold">
+      <summary>해설 · {problem.solution.length ? `${problem.solution.length}개` : '없음'}</summary>
+      <p className="editor-note">해설을 작성해 보관할 수 있어요. 현재 학습 화면에서는 해설을 제공하지 않습니다.</p>
+      <ProblemBlocks label="해설" part="solution" problem={problem} blocks={problem.solution} taken={taken}
+        definitionChoices={definitionChoices} named={false}
+        onChange={(solution) => onChange({ ...problem, solution })} />
+      {problem.solution.length === 0 && <p className="editor-note editor-warn">해설이 없는 문제예요. 시작점 확인처럼 해설을 보여 주지 않는 곳이 아니라면 한 블록 이상 두는 편이 좋아요.</p>}
+    </details>
   </section>;
 }
 
