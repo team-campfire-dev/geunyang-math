@@ -174,6 +174,8 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 | [코스·개념 #40](https://github.com/team-campfire-dev/geunyang-math/pull/40) | `068c684` | 위 실패 기록 때문에 시작조차 하지 않았다(P3009). |
 | [문제집 #41](https://github.com/team-campfire-dev/geunyang-math/pull/41) | `7d0121a` | A·B·C는 적용됐다. D는 `CREATE TEMPORARY TABLE`에서 거부됐다(1044, migrator에 `CREATE TEMPORARY TABLES`가 없다). 그 앞의 `ProblemSet`·`ProblemSetVersion`은 만들어진 채 남았고, 되돌린 옛 앱은 개명된 표를 읽지 못해 health 503으로 서비스가 내려갔다. D를 일반 표로 고치고 반쯤 적용된 상태에서 다시 돌 수 있게 했다. |
 | [문제집 migration 수정 #42](https://github.com/team-campfire-dev/geunyang-math/pull/42) | `bde6491` | D의 실패 기록을 rolled back으로 표시한 뒤 배포. migration·씨앗·검증·기동·health·commit 확인까지 통과해 A~D가 운영에 적용됐다. 공개 주소의 health `ready`, commit 일치. |
+| [과제 #43](https://github.com/team-campfire-dev/geunyang-math/pull/43) | `bfdc2ea` | E. 배포 성공, health `ready`, commit 일치. 운영의 복습 과제는 migration이 복습 풀 문제집 판본으로 옮겼다. |
+| [진단이 문제집을 씀 #44](https://github.com/team-campfire-dev/geunyang-math/pull/44) | `48a35d4` | F. 배포 성공, health `ready`, commit 일치. 운영의 진단 문항은 문제집 `starting-point`로 옮겨졌고 씨앗은 무변경으로 지나갔다. 이로써 [용어 사전](glossary.md)의 저장 구조 A~F가 모두 운영에 있다. |
 
 여기서 배운 것 두 가지. migration은 migrator가 가진 권한(CREATE·ALTER·INDEX·REFERENCES·DROP)만 쓴다 — 임시 표는 쓰지 않는다. 그리고 MySQL DDL은 되돌아가지 않으므로 여러 문장으로 된 migration은 중간에 멈춘 자리에서 다시 돌 수 있게 쓴다(`DROP TABLE IF EXISTS`로 자기가 만든 것을 먼저 치운다).
 

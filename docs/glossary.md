@@ -1,6 +1,6 @@
 # 용어 사전
 
-기준일: 2026-09-16 · 상태: **결정 기록. 아직 구현 전이다.**
+기준일: 2026-09-16 · 상태: **결정 기록. 2026-09-17에 저장 구조와 코드에 모두 반영됐다** — 순서와 단계별 근거는 [스키마 변경안](schema-change-plan.md)에 있다.
 
 이 문서는 서비스가 다루는 단위의 이름을 하나로 맞춘 결과다. 교사용 코스·수업 관리 화면을 얹기 전에 정리했다. **여기 적힌 이름 중 상당수는 아직 코드에 없다** — 현재 구현은 [구현 현황](implementation-status.md)을, 지금 코드의 이름은 아래 [옛 이름과의 대응](#옛-이름과의-대응)을 따른다.
 
@@ -119,7 +119,7 @@
 
 ## 옛 이름과의 대응
 
-지금 코드에 있는 이름이다. 옮기기 전까지는 양쪽이 같이 보인다. 옮기는 순서는 [스키마 변경안](schema-change-plan.md)에 있고, 2026-09-17에 `Class*` → `Lesson*`, `Scope` → `LearningScope`, 범위 값 `class` → `lesson`이 먼저 반영됐고(A 단계), 코스와 `(코스, 수업)` 순서가 `Course`·`Lesson.order`로 들어갔고(B 단계), `Skill`과 `TermVersion`이 `Concept`·`ConceptDefinition`으로 합쳐졌으며(C 단계), 문제의 주인이 수업에서 문제집(`ProblemSet`·`ProblemSetVersion`)으로 옮겨가고 `homeworkProblemIds`가 복습 풀 참조 `review`가 됐으며(D 단계), 과제가 문제집 판본·정책·기간 규칙을 들고 배정은 시각만 들게 됐으며(E 단계 — `AssignmentItem.problemSnapshot`·`AssignmentRecipient.assignmentPolicy` 삭제), 진단도 문제집 판본을 참조하고 발행된 문항의 주인은 문제집 하나뿐이 됐다(F 단계 — 진단용 별도 문제형 삭제, 해설은 선택).
+옛 이름은 이제 코드에 없고, migration 이름과 [배포 기록](deployment.md)에만 남는다. 옮긴 순서는 [스키마 변경안](schema-change-plan.md)에 있고, 2026-09-17에 `Class*` → `Lesson*`, `Scope` → `LearningScope`, 범위 값 `class` → `lesson`이 먼저 반영됐고(A 단계), 코스와 `(코스, 수업)` 순서가 `Course`·`Lesson.order`로 들어갔고(B 단계), `Skill`과 `TermVersion`이 `Concept`·`ConceptDefinition`으로 합쳐졌으며(C 단계), 문제의 주인이 수업에서 문제집(`ProblemSet`·`ProblemSetVersion`)으로 옮겨가고 `homeworkProblemIds`가 복습 풀 참조 `review`가 됐으며(D 단계), 과제가 문제집 판본·정책·기간 규칙을 들고 배정은 시각만 들게 됐으며(E 단계 — `AssignmentItem.problemSnapshot`·`AssignmentRecipient.assignmentPolicy` 삭제), 진단도 문제집 판본을 참조하고 발행된 문항의 주인은 문제집 하나뿐이 됐다(F 단계 — 진단용 별도 문제형 삭제, 해설은 선택).
 
 | 옛 이름 | 새 이름 | 비고 |
 |---|---|---|
@@ -127,7 +127,10 @@
 | 섹션 | **단계** | 문서만 「섹션」을 썼다 |
 | 활동 · 문항 묶음 · `core.problem_set@1` | **문제집** | 블록에서 독립 엔티티로 올라간다 |
 | 문항 | **문제** | 교사 화면이 곧 학생 화면이라 한 낱말만 쓴다 |
-| `homeworkProblemIds` | **문제집** + `adaptive` 과제 | 숙제가 아니라 복습 후보 풀이었다 |
+| `homeworkProblemIds` | **복습 풀** — 수업 판본의 문제집 참조 `review` + 정책 `review`인 과제 | 숙제가 아니라 복습 후보 풀이었다 |
+| `AssignmentRecipient.assignmentPolicy`(`adaptive`/`fixed`) | 과제의 **정책** `Assignment.policy` | 정책은 배정이 아니라 과제의 것이다 |
+| `AssignmentItem.problemSnapshot` | 없어짐 | 문제집 판본이 불변이라 참조로 충분하다 |
+| 진단용 문제형(`diagnosticProblemSchema`) | 없어짐 — 문제형은 하나, 해설은 선택 | 힌트·해설을 보일지는 내는 쪽의 방식이다 |
 | 용어 · `TermVersion` | **개념** + **뜻풀이** | |
 | `Skill` | **개념**에 흡수 | `Skill.order` 전역 정수는 사라진다 |
 | `TermVersion.skillKey` | 없어짐 | 개념이 자기 자신이다 |
@@ -139,7 +142,7 @@
 
 - **수업·문제집·진단은 반드시 코스에 속한다.** 코스를 먼저 만들어야 수업을 만들 수 있다. 기존 수업 3개는 migration에서 코스 하나로 묶는다.
 - **코스 안 수업 순서는 교사가 정한다.** `(코스, 수업)` 연결이 순서를 들고, 전역 `order`는 없앤다. 선수 관계와 어긋나면 경고만 하고 막지 않는다.
-- **선수 관계는 수업의 속성으로 남긴다**(`prerequisiteSkillKeys`). 수학의 사실도 편성의 선택도 아니라, 그 수업 글이 무엇을 전제하고 쓰였는가이기 때문이다. 개념↔개념 선수 관계는 만들지 않는다.
+- **선수 관계는 수업의 속성으로 남긴다**(`prerequisiteConceptKeys`). 수학의 사실도 편성의 선택도 아니라, 그 수업 글이 무엇을 전제하고 쓰였는가이기 때문이다. 개념↔개념 선수 관계는 만들지 않는다.
 - **진단은 엔티티로 유지하고 소유만 코스로 내린다.** 문제집은 같이 쓴다. 진단 답안은 `Attempt`가 아니라 `DiagnosticRun.answers`에 쌓이고, 개인화가 진단 증거보다 실제 풀이를 우선하는 근거가 그 구분이다.
 - **문제집도 초안을 가지며, 수업과 같은 트랜잭션에서 함께 발행한다.** 그러지 않으면 발행된 수업이 초안 문제집을 가리키는 상태가 생긴다.
 - **문제집은 수업 편집기 안에서 그 자리에 만든다.** 별도 화면으로 갔다 오는 왕복을 두지 않는다. 자동으로 생긴 것은 이름이 없고, 이름을 주는 것이 재사용하겠다는 선언이다.
