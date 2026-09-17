@@ -119,7 +119,7 @@
 
 ## 옛 이름과의 대응
 
-지금 코드에 있는 이름이다. 옮기기 전까지는 양쪽이 같이 보인다. 옮기는 순서는 [스키마 변경안](schema-change-plan.md)에 있고, 2026-09-17에 `Class*` → `Lesson*`, `Scope` → `LearningScope`, 범위 값 `class` → `lesson`이 먼저 반영됐고(A 단계), 코스와 `(코스, 수업)` 순서가 `Course`·`Lesson.order`로 들어갔고(B 단계), `Skill`과 `TermVersion`이 `Concept`·`ConceptDefinition`으로 합쳐졌으며(C 단계), 문제의 주인이 수업에서 문제집(`ProblemSet`·`ProblemSetVersion`)으로 옮겨가고 `homeworkProblemIds`가 복습 풀 참조 `review`가 됐으며(D 단계), 과제가 문제집 판본·정책·기간 규칙을 들고 배정은 시각만 들게 됐다(E 단계 — `AssignmentItem.problemSnapshot`·`AssignmentRecipient.assignmentPolicy` 삭제).
+지금 코드에 있는 이름이다. 옮기기 전까지는 양쪽이 같이 보인다. 옮기는 순서는 [스키마 변경안](schema-change-plan.md)에 있고, 2026-09-17에 `Class*` → `Lesson*`, `Scope` → `LearningScope`, 범위 값 `class` → `lesson`이 먼저 반영됐고(A 단계), 코스와 `(코스, 수업)` 순서가 `Course`·`Lesson.order`로 들어갔고(B 단계), `Skill`과 `TermVersion`이 `Concept`·`ConceptDefinition`으로 합쳐졌으며(C 단계), 문제의 주인이 수업에서 문제집(`ProblemSet`·`ProblemSetVersion`)으로 옮겨가고 `homeworkProblemIds`가 복습 풀 참조 `review`가 됐으며(D 단계), 과제가 문제집 판본·정책·기간 규칙을 들고 배정은 시각만 들게 됐으며(E 단계 — `AssignmentItem.problemSnapshot`·`AssignmentRecipient.assignmentPolicy` 삭제), 진단도 문제집 판본을 참조하고 발행된 문항의 주인은 문제집 하나뿐이 됐다(F 단계 — 진단용 별도 문제형 삭제, 해설은 선택).
 
 | 옛 이름 | 새 이름 | 비고 |
 |---|---|---|

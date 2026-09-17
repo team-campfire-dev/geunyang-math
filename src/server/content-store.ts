@@ -1,7 +1,7 @@
 import 'server-only';
 import { createHash } from 'node:crypto';
 import { Prisma, type PrismaClient, type DiagnosticVersion } from '@prisma/client';
-import { canonicalJson, ContentError, diagnosticDefinitionSchema, parseContentBundle, definitionSchema, validateReferences, type ContentBundle, type CourseDefinition, type DiagnosticDefinition, type DefinitionRecord } from '@/core/content-bundle';
+import { canonicalJson, ContentError, diagnosticDefinitionSchema, parseContentBundle, definitionSchema, validateReferences, type ContentBundle, type CourseDefinition, type DiagnosticDefinition, type DiagnosticRecord, type DefinitionRecord } from '@/core/content-bundle';
 import type { PublishedDefinition } from '@/core/glossary';
 import { problemSetRefs, storedLessonOf, type LessonRecord, type StoredLesson, type StoredProblem, type StoredProblemSet } from '@/core/content';
 import type { ContentBlock } from '@/shared/api';
@@ -10,13 +10,12 @@ import { definitionRefId, type DefinitionRef, type ConceptScope } from '@/shared
 type Db = Prisma.TransactionClient;
 const json = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 const hash = (value: unknown) => createHash('sha256').update(canonicalJson(value)).digest('hex');
-type IndexedProblem = StoredProblem | DiagnosticDefinition['problems'][number];
 /**
  * A published question as a row: what it is apart from its blocks. The blocks are rows of their own,
- * so reading a question back joins the two.
+ * so reading a question back joins the two. Every question belongs to a problem set version.
  */
-const problemRows = (ownerKind: 'problem_set' | 'diagnostic', ownerVersionId: string, problems: IndexedProblem[]) =>
-  problems.map((problem, order) => ({ ownerKind, ownerVersionId, problemVersionId: problem.problemVersionId,
+const problemRows = (ownerVersionId: string, problems: StoredProblem[]) =>
+  problems.map((problem, order) => ({ ownerKind: 'problem_set', ownerVersionId, problemVersionId: problem.problemVersionId,
     order, conceptKeys: json(problem.conceptKeys), responseSpec: json(problem.responseSpec),
     gradingSpec: json(problem.gradingSpec), hintAvailable: problem.hintAvailable }));
 type BlockRow = { ownerKind: string; ownerVersionId: string; ownerId: string; slot: string; order: number;
@@ -62,7 +61,7 @@ export async function indexLessonDocument(db: Db, record: StoredLesson) {
 }
 /** Writes the rows a published problem set version is read from: its questions and their blocks. */
 export async function indexProblemSetDocument(db: Db, record: StoredProblemSet) {
-  await indexPublishedProblems(db, 'problem_set', record.versionId, record.problems);
+  await indexPublishedProblems(db, record.versionId, record.problems);
   const blocks = problemSetRows(record);
   if (blocks.length) await db.contentBlock.createMany({ data: blocks, skipDuplicates: true });
 }
@@ -70,19 +69,9 @@ export async function indexProblemSetDocument(db: Db, record: StoredProblemSet) 
  * Writes the question rows a published version owns. Whoever writes a version owes these, and
  * whoever removes one owes their removal; verifyProblemIndex is what says so out loud.
  */
-export async function indexPublishedProblems(db: Db, ownerKind: 'problem_set' | 'diagnostic', ownerVersionId: string, problems: IndexedProblem[]) {
-  const rows = problemRows(ownerKind, ownerVersionId, problems);
+export async function indexPublishedProblems(db: Db, ownerVersionId: string, problems: StoredProblem[]) {
+  const rows = problemRows(ownerVersionId, problems);
   if (rows.length) await db.publishedProblem.createMany({ data: rows, skipDuplicates: true });
-}
-/**
- * Writes the rows a published diagnostic is read from. Its questions carry no hint and no solution,
- * so a prompt is the whole of what a diagnostic question holds.
- */
-export async function indexDiagnosticDocument(db: Db, definition: DiagnosticDefinition) {
-  await indexPublishedProblems(db, 'diagnostic', definition.versionId, definition.problems);
-  const blocks = definition.problems.flatMap(problem =>
-    blockRows('problem', definition.versionId, problem.problemVersionId, 'prompt', problem.promptContent));
-  if (blocks.length) await db.contentBlock.createMany({ data: blocks, skipDuplicates: true });
 }
 /** Writes the blocks a definition is read from. A definition is saved in place, so what was there goes first. */
 export async function indexDefinitionBlocks(db: Db, definitionId: string, blocks: ContentBlock[]) {
@@ -182,17 +171,26 @@ export async function lessonRecord(db: Db, versionId: string): Promise<LessonRec
 }
 
 /** A diagnostic is its own columns and the questions the rows hold for it, in their order. */
-export async function diagnosticDefinitions(db: Db, rows: DiagnosticVersion[]): Promise<DiagnosticDefinition[]> {
-  if (!rows.length) return [];
-  const ids = rows.map(row => row.id);
-  const [blocksOf, problems] = await Promise.all([
-    blockIndex(db, ids),
-    db.publishedProblem.findMany({ where: { ownerKind: 'diagnostic', ownerVersionId: { in: ids } }, orderBy: { order: 'asc' } }),
-  ]);
+/** Diagnostics as a bundle carries them: the row, with the reference to the set version its questions come from. */
+export function diagnosticDefinitions(rows: DiagnosticVersion[]): DiagnosticDefinition[] {
   return rows.map(row => diagnosticDefinitionSchema.parse({ versionId: row.id, diagnosticKey: row.diagnosticKey,
     title: row.title, description: row.description, estimatedMinutes: row.estimatedMinutes,
-    problems: problems.filter(problem => problem.ownerVersionId === row.id)
-      .map(problem => problemOf(problem, slot => blocksOf(row.id, 'problem', problem.problemVersionId, slot))) }));
+    problemSet: { problemSetId: row.problemSetId, problemSetVersionId: row.problemSetVersionId, problemVersionIds: row.problemVersionIds } }));
+}
+/** Diagnostics with the questions their references resolve to, in the order the diagnostic asks them. */
+export async function diagnosticRecords(db: Db, rows: DiagnosticVersion[]): Promise<DiagnosticRecord[]> {
+  const definitions = diagnosticDefinitions(rows);
+  const sets = await problemSetRecords(db, definitions.map(d => d.problemSet.problemSetVersionId));
+  return definitions.map(d => {
+    const set = sets.get(d.problemSet.problemSetVersionId);
+    if (!set) throw new ContentError(`Missing problem set version: ${d.problemSet.problemSetVersionId} (${d.versionId})`);
+    const problems = d.problemSet.problemVersionIds.map(id => {
+      const problem = set.problems.find(p => p.problemVersionId === id);
+      if (!problem) throw new ContentError(`Problem is not in the problem set version: ${id} (${d.versionId})`);
+      return problem;
+    });
+    return { ...d, problems };
+  });
 }
 type DefinitionRow = { id: string; conceptKey: string; scopeKind: string; scopeKey: string; label: string | null; summary: string | null };
 const definitionWhere = (ref: DefinitionRef) => ({ conceptKey: ref.conceptKey, scopeKind: ref.scopeKind ?? 'global', scopeKey: ref.scopeKey ?? '' });
@@ -217,9 +215,9 @@ export async function currentDefinitions(db: Db, refs: DefinitionRef[]): Promise
     label: row.label ?? row.concept.label, summary: row.summary ?? '', blocks: blocksOf(row.id, 'definition', row.id, 'body') }))
     .filter(definition => definition.blocks.length);
 }
-export async function currentDiagnostic(db: Db) {
+export async function currentDiagnostic(db: Db): Promise<DiagnosticRecord | null> {
   const row = await db.diagnosticVersion.findFirst({ where: { diagnosticKey: 'starting-point' }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
-  return row ? (await diagnosticDefinitions(db, [row]))[0] : null;
+  return row ? (await diagnosticRecords(db, [row]))[0] : null;
 }
 /** Courses with the identities they keep, in the order the course gives them. */
 async function courseDefinitions(db: Db): Promise<CourseDefinition[]> {
@@ -250,7 +248,7 @@ export async function exportContent(db: Db): Promise<ContentBundle> {
   for (const row of sets) if (!setRecords.has(row.id)) throw new ContentError(`Published problem set has no rows to read it from: ${row.id}`);
   return parseContentBundle({ schemaVersion: 1, courses, concepts, lessons: lessons.map(row => storedLessonOf(records.get(row.id)!)),
     problemSets: sets.map(row => setRecords.get(row.id)),
-    diagnostics: await diagnosticDefinitions(db, diagnostics), definitions: await definitionRecords(db, definitionRows) });
+    diagnostics: diagnosticDefinitions(diagnostics), definitions: await definitionRecords(db, definitionRows) });
 }
 
 /**
@@ -303,9 +301,7 @@ export async function verifyRowsBelongToVersions(db: Db, bundle: ContentBundle) 
   }, { sections: 0, blocks: 0, problems: 0 });
   expected.blocks += bundle.problemSets.reduce((n, s) => n + problemSetRows(s).length, 0);
   expected.problems += bundle.problemSets.reduce((n, s) => n + s.problems.length, 0);
-  expected.blocks += bundle.diagnostics.reduce((n, d) => n + d.problems.reduce((m, p) => m + p.promptContent.length, 0), 0);
   expected.blocks += bundle.definitions.reduce((n, t) => n + t.blocks.length, 0);
-  expected.problems += bundle.diagnostics.reduce((n, d) => n + d.problems.length, 0);
   const [sections, blocks, problems] = await Promise.all([db.lessonSection.count(), db.contentBlock.count(), db.publishedProblem.count()]);
   if (sections !== expected.sections) throw new ContentError(`Section rows belong to no published lesson: ${sections - expected.sections} extra.`);
   if (blocks !== expected.blocks) throw new ContentError(`Block rows belong to no published version: ${blocks - expected.blocks} extra.`);
@@ -320,7 +316,7 @@ export async function verifyContent(db: Db) {
   const { blocks: indexedBlocks, problems: indexedProblems } = await verifyRowsBelongToVersions(db, bundle);
   return { lessons: bundle.lessons.length, problemSets: bundle.problemSets.length,
     problems: bundle.problemSets.reduce((n, s) => n + s.problems.length, 0), indexedProblems, indexedBlocks,
-    concepts: bundle.concepts.length, diagnosticVersions: bundle.diagnostics.length, diagnosticProblems: bundle.diagnostics.reduce((n, d) => n + d.problems.length, 0),
+    concepts: bundle.concepts.length, diagnosticVersions: bundle.diagnostics.length, diagnosticProblems: bundle.diagnostics.reduce((n, d) => n + d.problemSet.problemVersionIds.length, 0),
     definitions: bundle.definitions.length };
 }
 
@@ -343,7 +339,7 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
   }
   for (const d of incoming.diagnostics) {
     const old = await db.diagnosticVersion.findUnique({ where: { id: d.versionId } });
-    const published = old ? (await diagnosticDefinitions(db, [old]))[0] : null;
+    const published = old ? diagnosticDefinitions([old])[0] : null;
     if (published && canonicalJson(published) !== canonicalJson(d)) throw new ContentError(`Published diagnostic is immutable: ${d.versionId}. Use a new version ID.`);
     if (!old) newDiagnostics.push(d);
   }
@@ -386,12 +382,14 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
     for (const c of newLessons) await db.lessonVersion.create({ data: { id: c.public.versionId, lessonKey: c.public.lessonKey,
       title: c.public.title, metadata: json(lessonMetadata(c)),
       contentHash: hash(c), publishedAt: publishedAt() } });
+    // A diagnostic, like a lesson, only references the set version that holds its questions.
     for (const d of newDiagnostics) await db.diagnosticVersion.create({ data: { id: d.versionId, diagnosticKey: d.diagnosticKey,
-      title: d.title, description: d.description, estimatedMinutes: d.estimatedMinutes, contentHash: hash(d), publishedAt: publishedAt() } });
+      title: d.title, description: d.description, estimatedMinutes: d.estimatedMinutes,
+      problemSetId: d.problemSet.problemSetId, problemSetVersionId: d.problemSet.problemSetVersionId, problemVersionIds: d.problemSet.problemVersionIds,
+      contentHash: hash(d), publishedAt: publishedAt() } });
     // The index shares the transaction that publishes the version, so a question is never findable
     // by name before the document that holds it exists.
     for (const c of newLessons) await indexLessonDocument(db, c);
-    for (const d of newDiagnostics) await indexDiagnosticDocument(db, d);
     // A definition is written where it is: the row by its concept and scope, then its blocks anew.
     for (const t of incoming.definitions) {
       const row = await db.conceptDefinition.upsert({

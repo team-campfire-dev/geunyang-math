@@ -7,7 +7,7 @@ import { LearningService } from '@/server/learning-service';
 import { canonicalJson, parseContentBundle, validateReferences } from '@/core/content-bundle';
 import { blockOf, lessonRecord, currentDiagnostic, currentDefinitions, diagnosticDefinitions, exportContent, importContent, indexLessonDocument, publishBundle, verifyContent } from '@/server/content-store';
 import initial from '../prisma/seed/fractions.json';
-import { seedLessons, setsOf } from './fixtures/content';
+import { diagnosticProblems, seedLessons, setsOf } from './fixtures/content';
 import { storedLessonOf } from '@/core/content';
 
 const bundle = () => parseContentBundle(structuredClone(initial));
@@ -53,26 +53,34 @@ describe('content publishing contract', () => {
     expect(canonicalJson({ b: [2, 1], a: { d: 2, c: 1 } })).toBe(canonicalJson({ a: { c: 1, d: 2 }, b: [2, 1] }));
     expect(canonicalJson([1, 2])).not.toBe(canonicalJson([2, 1]));
   });
-  it('rejects unknown concepts, duplicate versions, and shared diagnostic/lesson question IDs', () => {
+  it('rejects unknown concepts, duplicate versions, and a diagnostic whose reference does not resolve', () => {
     const a = bundle(); a.concepts = [];
     expect(() => validateReferences(a)).toThrow(/Missing concept/);
     const b = bundle(); b.lessons.push(b.lessons[0]);
     expect(() => parseContentBundle(b)).toThrow(/Duplicate/);
-    const c = bundle(); c.diagnostics[0].problems[0].problemVersionId = c.problemSets[0].problems[0].problemVersionId;
-    expect(() => validateReferences(c)).toThrow(/overlaps lesson/);
+    const c = bundle(); c.diagnostics[0].problemSet.problemSetVersionId = 'starting-point:v9';
+    expect(() => validateReferences(c)).toThrow(/Missing problem set version/);
+    const d = bundle(); d.diagnostics[0].problemSet.problemVersionIds.push(d.problemSets[0].problems[0].problemVersionId);
+    expect(() => validateReferences(d)).toThrow(/not in the problem set version/);
+    // The set a diagnostic picks from is kept by the diagnostic's own course.
+    const e = bundle(); e.courses.push({ key: 'other', title: '다른 코스', lessons: [], diagnostics: ['starting-point'] }); e.courses[0].diagnostics = [];
+    expect(() => validateReferences(e)).toThrow(/belongs to another course/);
   });
-  it('validates private diagnostic grading and forbids hints and unsupported required blocks', () => {
-    const a = bundle(); a.diagnostics[0].problems[0].responseSpec.kind = 'integer';
+  it('validates private grading, hints that match, and required blocks of the questions a diagnostic asks', () => {
+    const placement = (b: ReturnType<typeof bundle>) => b.problemSets.find((set) => set.versionId === b.diagnostics[0].problemSet.problemSetVersionId)!;
+    const a = bundle(); placement(a).problems[0].responseSpec.kind = 'integer';
     expect(() => parseContentBundle(a)).toThrow(/must match/);
-    const b = structuredClone(initial); b.diagnostics[0].problems[0].hintAvailable = true;
-    expect(() => parseContentBundle(b)).toThrow();
-    const c = bundle(); c.diagnostics[0].problems[0].promptContent[0].kind = 'future.graph';
+    const b = bundle(); placement(b).problems[0].hintAvailable = true;
+    expect(() => parseContentBundle(b)).toThrow(/hintAvailable/);
+    const c = bundle(); placement(c).problems[0].promptContent[0].kind = 'future.graph';
     expect(() => parseContentBundle(c)).toThrow(/Unsupported block/);
+    // A question without a solution is a question; whether a solution is shown is the issuer's policy.
+    expect(placement(bundle()).problems.every((problem) => problem.solution.length === 0)).toBe(true);
   });
   it('rejects case-only identities that MySQL treats as equal', () => {
     const a = bundle(); a.concepts.push({ ...a.concepts[0], key: a.concepts[0].key.toUpperCase() });
     expect(() => validateReferences(a)).toThrow(/letter case/);
-    const b = bundle(); b.diagnostics[0].problems[0].problemVersionId = b.problemSets[0].problems[0].problemVersionId.toUpperCase();
+    const b = bundle(); b.problemSets[1].problems[0].problemVersionId = b.problemSets[0].problems[0].problemVersionId.toUpperCase();
     expect(() => validateReferences(b)).toThrow(/letter case/);
   });
   it('links lesson text to definitions and rejects a lesson that links to none', () => {
@@ -178,7 +186,8 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
       expect(await lessonRecord(db, c.public.versionId)).toEqual(c);
     }
     const diagnostic = await db.diagnosticVersion.findUniqueOrThrow({ where: { id: initial.diagnostics[0].versionId } });
-    expect((await diagnosticDefinitions(db, [diagnostic]))[0].problems).toEqual(initial.diagnostics[0].problems);
+    expect(diagnosticDefinitions([diagnostic])[0]).toEqual(bundle().diagnostics[0]);
+    expect((await currentDiagnostic(db))?.problems).toEqual(diagnosticProblems);
     expect((await verifyContent(db)).concepts).toBeGreaterThanOrEqual(3);
   });
   it('exports and reimports without rewriting any published content, hash or timestamp', async () => {
@@ -240,13 +249,14 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     const oldRun = await db.diagnosticRun.findUniqueOrThrow({ where: { id: oldState.diagnostic!.id } });
     const definition = bundle().diagnostics[0]; definition.versionId = `test-placement-${randomUUID()}`;
     definition.title = 'DB 진단'; definition.description = 'DB에서 제공하는 진단 설명'; definition.estimatedMinutes = 1;
-    definition.problems = [definition.problems[0]];
+    definition.problemSet = { ...definition.problemSet, problemVersionIds: [definition.problemSet.problemVersionIds[0]] };
     await importContent(db, { ...empty(), diagnostics: [definition] });
     try {
-      expect((await currentDiagnostic(db))?.versionId).toBe(definition.versionId);
-      // A diagnostic question is a prompt and nothing else, and that prompt is rows like any other.
-      expect((await db.contentBlock.findMany({ where: { ownerKind: 'problem', ownerVersionId: definition.versionId },
-        orderBy: { order: 'asc' } })).map(blockOf)).toEqual(definition.problems[0].promptContent);
+      const current = await currentDiagnostic(db);
+      expect(current?.versionId).toBe(definition.versionId);
+      // A diagnostic owns no question rows: it picks from the set version it names.
+      expect(current?.problems).toEqual([diagnosticProblems[0]]);
+      expect(await db.publishedProblem.count({ where: { ownerVersionId: definition.versionId } })).toBe(0);
       const fresh = await learner();
       const state = (await service.act(fresh.id, { action: 'diagnostic.start' })).state;
       expect(state.diagnosticOffering).toMatchObject({ title: 'DB 진단', total: 1, estimatedMinutes: 1 });
@@ -264,9 +274,6 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     } finally {
       // Remove only this test's offer so other suites still start the baseline diagnostic.
       // Runs have their own immutable snapshot, with no FK to the live offer.
-      // The rows a version is read from belong to it, so they go with it or verification fails.
-      await db.contentBlock.deleteMany({ where: { ownerVersionId: definition.versionId } });
-      await db.publishedProblem.deleteMany({ where: { ownerKind: 'diagnostic', ownerVersionId: definition.versionId } });
       await db.diagnosticVersion.delete({ where: { id: definition.versionId } });
     }
   });

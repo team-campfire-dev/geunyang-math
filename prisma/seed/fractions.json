@@ -1270,15 +1270,12 @@
           ]
         }
       ]
-    }
-  ],
-  "diagnostics": [
+    },
     {
-      "versionId": "fraction-placement-v1",
-      "diagnosticKey": "starting-point",
-      "title": "분수의 시작점 확인",
-      "description": "분수의 의미, 약분, 덧셈을 짧게 확인해요. 모르는 문제는 건너뛰어도 괜찮아요.",
-      "estimatedMinutes": 5,
+      "problemSetId": "starting-point",
+      "courseKey": "fractions",
+      "name": "분수의 시작점 확인",
+      "versionId": "starting-point:v1",
       "problems": [
         {
           "problemVersionId": "fraction-placement-v1:meaning-1",
@@ -1451,6 +1448,27 @@
           "solution": []
         }
       ]
+    }
+  ],
+  "diagnostics": [
+    {
+      "versionId": "fraction-placement-v1",
+      "diagnosticKey": "starting-point",
+      "title": "분수의 시작점 확인",
+      "description": "분수의 의미, 약분, 덧셈을 짧게 확인해요. 모르는 문제는 건너뛰어도 괜찮아요.",
+      "estimatedMinutes": 5,
+      "problemSet": {
+        "problemSetId": "starting-point",
+        "problemSetVersionId": "starting-point:v1",
+        "problemVersionIds": [
+          "fraction-placement-v1:meaning-1",
+          "fraction-placement-v1:meaning-2",
+          "fraction-placement-v1:equivalence-1",
+          "fraction-placement-v1:equivalence-2",
+          "fraction-placement-v1:addition-1",
+          "fraction-placement-v1:addition-2"
+        ]
+      }
     }
   ],
   "definitions": []

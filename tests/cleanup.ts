@@ -83,10 +83,11 @@ export async function removeRowsAddedSince(db: PrismaClient, before: Existing) {
   // A published version is its rows, so the rows go with it.
   await db.contentBlock.deleteMany({ where: { ownerVersionId: { in: versions } } });
   await db.lessonSection.deleteMany({ where: { lessonVersionId: { in: lessons } } });
-  await db.publishedProblem.deleteMany({ where: { ownerVersionId: { in: [...setVersions, ...diagnostics] } } });
+  await db.publishedProblem.deleteMany({ where: { ownerVersionId: { in: setVersions } } });
   await db.lessonVersion.deleteMany({ where: { id: { in: lessons } } });
-  await db.problemSetVersion.deleteMany({ where: { id: { in: setVersions } } });
+  // A diagnostic references a set version, so it goes before the version it names.
   await db.diagnosticVersion.deleteMany({ where: { id: { in: diagnostics } } });
+  await db.problemSetVersion.deleteMany({ where: { id: { in: setVersions } } });
   // A definition owns blocks under its own id, the way a version does.
   await db.contentBlock.deleteMany({ where: { ownerKind: 'definition', ownerVersionId: { in: definitions } } });
   await db.conceptDefinition.deleteMany({ where: { id: { in: definitions } } });

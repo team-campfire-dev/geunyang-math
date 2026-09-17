@@ -274,7 +274,9 @@ const problemShape = {
     z.object({ kind: z.literal('rational'), numerator: integer, denominator: integer.refine((value) => value > 0), requiredForm: z.literal('reduced_fraction').optional() }).strict(),
   ]),
   hints: z.array(problemContentBlockSchema).max(100, 'At most 100 blocks per content array'),
-  solution: z.array(problemContentBlockSchema).min(1).max(100, 'At most 100 blocks per content array'),
+  // A question may have no solution: a placement question is one, and whether a solution is shown is
+  // the policy of whatever issues the question, not a kind of question.
+  solution: z.array(problemContentBlockSchema).max(100, 'At most 100 blocks per content array'),
 };
 function validateProblemFields(problem: StoredProblem, ctx: z.RefinementCtx) {
   if (problem.responseSpec.kind !== problem.gradingSpec.kind) {
@@ -289,13 +291,9 @@ function validateProblemFields(problem: StoredProblem, ctx: z.RefinementCtx) {
   }
 }
 const problemSchema = z.object(problemShape).strict().superRefine(validateProblemFields);
-// Placement omits hints and solutions, while retaining the same block and grading validation.
-export const diagnosticProblemSchema = z.object({ ...problemShape,
-  hintAvailable: z.literal(false), hints: z.array(problemContentBlockSchema).max(0),
-  solution: z.array(problemContentBlockSchema).max(0),
-}).strict().superRefine(validateProblemFields);
 
-const problemSetRefSchema = z.object({
+/** A frozen problem set version and the questions picked from it — how a lesson step, a review pool and a diagnostic name their questions. */
+export const problemSetRefSchema = z.object({
   problemSetId: id, problemSetVersionId: id, problemVersionIds: z.array(id).min(1).max(50),
 }).strict();
 const storedLessonSchema = z.object({
