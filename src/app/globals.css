@@ -220,3 +220,35 @@
 .scene-task-caption { margin-top: 12px; text-align: center; font-size: 11px; line-height: 1.8; color: #92a17b; }
 .scene-task .builder-actions .editor-note { max-width: 60%; text-align: left; }
 @media (max-width: 520px) { .scene-task { padding: 15px; } }
+
+.course-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+.course-filters button { padding: 10px 18px; border: 1px solid var(--line); border-radius: 24px; background: var(--white); font-size: 13px; }
+.course-filters button.active { background: var(--deep-green); color: white; border-color: var(--deep-green); }
+.course-section .catalog-banner { margin-bottom: 20px; }
+.catalog-banner h2 { font-size: 20px; margin: 0 0 7px; }
+.course-preference { margin: 12px 0 0; padding: 5px 0; }
+.course-art-shapes { position: relative; width: 215px; height: 120px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; align-items: center; }
+.course-art-shapes i { display: block; width: 42px; height: 60px; border-radius: 40px 40px 8px 8px; background: #94a970; transform: rotate(-12deg); }
+.course-art-shapes i:nth-child(2) { height: 76px; background: #c7d4ad; transform: rotate(8deg); }
+.course-art-shapes i:nth-child(3) { height: 88px; background: #d4a67e; transform: rotate(-5deg); }
+.course-art-shapes i:nth-child(4) { height: 100px; background: #a1b888; transform: rotate(10deg); }
+.art-1 .course-art-shapes i { border-radius: 50%; }
+.art-2 .course-art-shapes i { border-radius: 8px 8px 30px 8px; }
+.class-art.large .course-art-shapes { transform: scale(1.15); }
+.readiness-details { margin-top: 16px; font-size: 13px; }
+.readiness-details summary { cursor: pointer; color: var(--deep-green); }
+.assignment-info small { line-height: 1.7; }
+@media (max-width: 600px) {
+  .catalog-banner { flex-wrap: wrap; }
+  .catalog-banner > div { min-width: 0; flex: 1; }
+  .catalog-banner > span { margin-left: 38px; }
+  .course-section .class-grid { grid-template-columns: minmax(0, 1fr); }
+  .course-filters button { padding: 10px 14px; }
+  .assignment-row { flex-wrap: wrap; }
+  .assignment-row > .assignment-info { flex: 1; min-width: 160px; }
+}
+.diagnostic-next { margin: 28px 0; padding: 22px; border: 1px solid var(--line); border-radius: 10px; background: var(--light-green); }
+.diagnostic-next h3 { margin: 10px 0; }
+.diagnostic-next .button { margin-top: 18px; }
+
+@media (max-width: 600px) { .class-card .course-art-shapes { min-width: 215px; transform: scale(.5); } }

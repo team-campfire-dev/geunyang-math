@@ -45,11 +45,14 @@ function AnswerField({ spec, onChange }: { spec: AnswerSpec; onChange: (next: An
 export function ConceptPicker({ concepts, chosen, onChange, label = '다루는 개념' }: {
   concepts: ConceptChoice[]; chosen: string[]; onChange: (next: string[]) => void; label?: string;
 }) {
-  if (!concepts.length) return null;
+  const [query, setQuery] = useState('');
+  const found = concepts.filter((concept) => chosen.includes(concept.key) || concept.label.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
   return <div className="editor-concepts">
     <span className="editor-label">{label}</span>
+    <label className="editor-field"><input type="search" aria-label={`${label} 검색`} placeholder="개념 이름으로 찾기" value={query} onChange={(event) => setQuery(event.target.value)} /></label>
+    {!found.length && <p className="editor-note">{concepts.length ? '찾은 개념이 없어요.' : '선택할 수 있는 개념이 없어요.'}</p>}
     <div className="editor-concept-buttons">
-      {concepts.map((concept) => <label key={concept.key} className="editor-check">
+      {found.map((concept) => <label key={concept.key} className="editor-check">
         <input type="checkbox" checked={chosen.includes(concept.key)}
           onChange={() => onChange(chosen.includes(concept.key) ? chosen.filter((item) => item !== concept.key) : [...chosen, concept.key])} />
         <span>{concept.label}</span>
@@ -114,7 +117,7 @@ export function ProblemPanel({ problem, number, total, concepts, taken, definiti
       hint="힌트를 하나라도 두면 학습 화면에 힌트 버튼이 생겨요. 힌트를 열고 맞히면 도움을 받은 풀이로 기록합니다."
       onChange={(hints) => onChange({ ...problem, hints })} />
     <ProblemBlocks label="해설" part="solution" problem={problem} blocks={problem.solution} taken={taken} definitionChoices={definitionChoices}
-      hint="문항을 마친 뒤에만 보여 줍니다. 해설이 없어도 발행은 되지만, 학습자는 풀이를 확인할 수 없어요."
+      hint="해설을 작성해 보관할 수 있어요. 현재 학습 화면에서는 해설을 제공하지 않습니다."
       onChange={(solution) => onChange({ ...problem, solution })} />
     {problem.solution.length === 0 && <p className="editor-note editor-warn">해설이 없는 문제예요. 시작점 확인처럼 해설을 보여 주지 않는 곳이 아니라면 한 블록 이상 두는 편이 좋아요.</p>}
   </section>;

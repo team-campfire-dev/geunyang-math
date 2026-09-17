@@ -2,7 +2,7 @@
 // offer a form for every published block kind without importing the server's validation schemas,
 // and so the server can prune the same optional fields before it validates what the editor sent.
 import type { AnswerSpec } from './answer';
-import type { LessonSection, ContentBlock, GradeResult, ProblemSetRef, PublicProblem } from './api';
+import type { LessonSection, ContentBlock, GradeResult, GlossaryEntry, ProblemSetRef, PublicProblem } from './api';
 
 /** A role on an account, not a property of one operator: a teacher system grants the same roles. */
 export type AuthoringRole = 'admin' | 'author';
@@ -35,7 +35,7 @@ export const draftStatusLabels: Record<DraftSummary['status'], string> = {
   draft: '작성 중', review: '검토 요청', published: '발행함',
 };
 /** `conceptKeys` are the concepts this lesson says it teaches; a question may only claim one of them. */
-export type DraftMeta = { versionId: string; title: string; summary: string; estimatedMinutes: number; conceptKeys: string[] };
+export type DraftMeta = { versionId: string; title: string; summary: string; estimatedMinutes: number; conceptKeys: string[]; prerequisiteConceptKeys?: string[] };
 /** What each step of a lesson is for, in the words the learner's outline uses for it too. */
 export const sectionRoleLabels: Record<LessonSection['role'], string> = {
   explanation: '설명', worked_example: '예시', practice: '연습', check: '확인', summary: '정리',
@@ -56,7 +56,10 @@ export type DraftProblem = {
   solution: ContentBlock[];
 };
 /** What an editor may change. Published questions are immutable, so the server renames what changed. */
-export type DraftEdit = { meta: DraftMeta; sections: LessonSection[]; problems: DraftProblem[] };
+export type DraftEdit = { meta: DraftMeta; sections: LessonSection[]; problems: DraftProblem[];
+  /** Undefined preserves a separate review pool; null disables review; a block id selects its questions. */
+  reviewBlockId?: string | null;
+};
 /** `definitions` are the definitions this lesson may link: the shared dictionary and its own. */
 /**
  * Something that stops a draft from publishing, and where in the draft it is. The rules speak in
@@ -74,11 +77,10 @@ export type DraftIssue = {
   field?: string;
 };
 /**
- * `review` is the problem set the lesson's review assignments draw from. It is not a step's to show
- * or this screen's to edit yet, but the screen says whether the lesson has one.
+ * `review` describes the saved pool; `edit.reviewBlockId` chooses whether to retain or replace it.
  */
 export type DraftDetail = DraftSummary & {
-  edit: DraftEdit; definitions: DefinitionChoice[]; issues: DraftIssue[]; review: ProblemSetRef | null;
+  edit: DraftEdit; definitions: DefinitionChoice[]; glossary: GlossaryEntry[]; issues: DraftIssue[]; review: ProblemSetRef | null;
 };
 
 /**
@@ -94,7 +96,7 @@ export function editShape(edit: DraftEdit): string {
   const sections = edit.sections.map((section) => `${section.sectionId}:${section.role}>${named(section.contentBlocks)}`).join('|');
   const problems = edit.problems.map((problem) =>
     `${problem.problemVersionId}>${named([...problem.promptContent, ...problem.hints, ...problem.solution])}`).join('|');
-  return `${sections}#${problems}`;
+  return `${sections}#${problems}#${edit.reviewBlockId === undefined ? 'keep' : edit.reviewBlockId ?? 'none'}`;
 }
 
 export const responseSpecOf = (spec: AnswerSpec): PublicProblem['responseSpec'] =>
@@ -105,9 +107,9 @@ export const toPublicProblem = (problem: DraftProblem): PublicProblem => ({
   promptContent: problem.promptContent, responseSpec: responseSpecOf(problem.gradingSpec),
   hintAvailable: problem.hints.length > 0,
 });
-export type LessonChoice = { lessonKey: string; courseKey: string; title: string; latestVersionId: string; suggestedVersionId: string; hasDraft: boolean };
+export type LessonChoice = { lessonKey: string; courseKey: string; title: string; latestVersionId: string | null; suggestedVersionId: string; hasDraft: boolean };
 /** A course a new lesson may be started in. Every lesson has one from its first draft. */
-export type CourseChoice = { key: string; title: string };
+export type CourseChoice = { key: string; title: string; summary: string };
 /** The scopes this screen writes. The catalogue's other levels exist in the model, not yet here. */
 export type EditableConceptScope = 'global' | 'lesson';
 /**
@@ -140,6 +142,9 @@ export type AuthoringWorkspace = {
 /** A key is what every name in a lesson is built from, so it stays to the letters a name may hold. */
 export const lessonKeyPattern = /^[a-z0-9][a-z0-9-]{1,63}$/;
 export type AuthoringAction =
+  | { action: 'course.save'; key: string; title: string; summary: string; creating: boolean }
+  | { action: 'course.reorder'; courseKey: string; lessonKeys: string[] }
+  | { action: 'concept.create'; key: string; label: string }
   | { action: 'draft.create'; lessonKey: string }
   /** A lesson nobody has published yet. It belongs to a course from this moment and starts as a draft. */
   | { action: 'lesson.create'; courseKey: string; lessonKey: string; title: string; conceptKeys: string[] }
@@ -312,9 +317,10 @@ export function looseProblems(edit: DraftEdit): DraftProblem[] {
 /** The same edit with those questions gone: what an activity held leaves with the activity. */
 export function dropLooseProblems(edit: DraftEdit): DraftEdit {
   const loose = looseProblems(edit);
-  if (!loose.length) return edit;
+  const reviewRemoved = !!edit.reviewBlockId && !edit.sections.some((section) => section.contentBlocks.some((block) => block.blockId === edit.reviewBlockId));
+  if (!loose.length && !reviewRemoved) return edit;
   const gone = new Set(loose.map((problem) => problem.problemVersionId));
-  return { ...edit, problems: edit.problems.filter((problem) => !gone.has(problem.problemVersionId)) };
+  return { ...edit, ...(reviewRemoved ? { reviewBlockId: null } : {}), problems: edit.problems.filter((problem) => !gone.has(problem.problemVersionId)) };
 }
 
 /**
@@ -488,8 +494,8 @@ export const blockForms: BlockForm[] = [
     editsScene: true,
   },
   {
-    kind: 'core.problem_set', typeVersion: 2, label: '문제집',
-    hint: '이 활동에서 풀 문제를 여기에서 쓰고 고칩니다. 문제집은 그 자리에서 생기고, 한 문제는 한 문제집에만 들어가요.',
+    kind: 'core.problem_set', typeVersion: 2, label: '문제',
+    hint: '학습자가 풀 문제를 추가하고 순서와 정답, 힌트를 고쳐요.',
     create: () => { const problemSetId = newProblemSetId(); return { problemSetId, problemSetVersionId: `${problemSetId}:v1`, problemVersionIds: [] }; },
     fields: [], editsProblems: true,
   },

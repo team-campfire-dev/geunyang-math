@@ -6,7 +6,7 @@ import {
   blockFormOf, sectionRoleLabels, toPublicProblem,
   type DraftIssue, type DraftMeta, type DraftProblem, type DefinitionChoice,
 } from '@/shared/authoring';
-import { ContentBlocks } from '@/features/learning/content-blocks';
+import { ContentBlocks, type GlossaryContext } from '@/features/learning/content-blocks';
 import { ProblemCard, type ProblemActions } from '@/features/learning/problem-card';
 import { Icon } from '@/features/learning/icons';
 import { useExpertMode } from './expert-mode';
@@ -90,8 +90,8 @@ export type Picked = { kind: 'block'; index: number } | { kind: 'problem'; id: s
  * puts a frame around each so it can be picked. A paragraph is the exception — chosen, it becomes
  * the text it is made of, because a paragraph is written by typing into it.
  */
-export function LessonSheet({ meta, section, index, problems, definitions, selected, published, issues, trying, onMeta, onSection, onBlocks, onProblem, onSelect, add }: {
-  meta: DraftMeta; section: LessonSection; index: number; problems: DraftProblem[]; definitions: DefinitionChoice[];
+export function LessonSheet({ meta, section, index, problems, definitions, glossary, courseTitle, selected, published, issues, trying, onMeta, onSection, onBlocks, onProblem, onSelect, add }: {
+  meta: DraftMeta; section: LessonSection; index: number; problems: DraftProblem[]; definitions: DefinitionChoice[]; glossary: GlossaryContext; courseTitle: string;
   selected: Picked | null; published: boolean;
   /** What publishing refused, so the lesson can show where rather than list it somewhere else. */
   issues: DraftIssue[];
@@ -120,10 +120,10 @@ export function LessonSheet({ meta, section, index, problems, definitions, selec
     return 0;
   };
 
-  return <div className="editor-sheet">
+  return <div className="editor-sheet" id="lesson-preview">
     <div className="lesson-header sheet-header">
       <div>
-        <span className="eyebrow">기초 수학 · {meta.estimatedMinutes}분 수업</span>
+        <span className="eyebrow">{courseTitle} · {meta.estimatedMinutes}분 수업</span>
         {fixed
           ? <h1>{meta.title}</h1>
           : <InlineText className="sheet-class-title" label="수업 제목" value={meta.title} maxLength={191}
@@ -139,10 +139,10 @@ export function LessonSheet({ meta, section, index, problems, definitions, selec
         : <InlineText className="sheet-section-title" label="단계 제목" value={section.title} maxLength={500}
             placeholder="단계 제목" onChange={(title) => onSection({ ...section, title })} />}
 
-      <ContentBlocks blocks={section.contentBlocks} problems={publicProblems}
+      <ContentBlocks glossary={glossary} blocks={section.contentBlocks} problems={publicProblems}
         renderProblem={(problem) => {
           if (trying) return <ProblemCard key={problem.problemVersionId} problem={problem} attempt={trying.attempts[problem.problemVersionId]}
-            actions={trying.actions(problem.problemVersionId)} busy={trying.busy} submitLabel="정답 확인" />;
+            glossary={glossary} recordsLearning={false} actions={trying.actions(problem.problemVersionId)} busy={trying.busy} submitLabel="정답 확인" />;
           // A question is picked and written the way a block is: it is a thing on the page, not a
           // row in a list that happens to appear somewhere else.
           const held = problems.find((item) => item.problemVersionId === problem.problemVersionId);
@@ -158,7 +158,7 @@ export function LessonSheet({ meta, section, index, problems, definitions, selec
               {numberOf(problem.problemVersionId)}번 문항</button>
             <div className="problem-card">
               <div className="problem-kicker"><Icon name="pencil" size={14} />문항 미리보기{expert && <span>{problem.problemVersionId}</span>}</div>
-              <ContentBlocks blocks={problem.promptContent}
+              <ContentBlocks glossary={glossary} blocks={problem.promptContent}
                 wrap={(block, position, drawn, className) => (chosen && !published && held && block.kind === 'core.rich_text'
                   ? <div key={block.blockId} className={className}>
                     <Paragraph block={block} definitions={definitions} focus={position === first} onChange={(next) => writeProblem(position, next)} />

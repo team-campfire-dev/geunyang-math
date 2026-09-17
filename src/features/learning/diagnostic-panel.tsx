@@ -1,9 +1,10 @@
 'use client';
 import { useState, type FormEvent } from 'react';
-import type { ActionResponse, DiagnosticOffering, DiagnosticView, LearningAction } from '@/shared/api';
+import type { ActionResponse, DiagnosticOffering, DiagnosticView, LearningAction, PublicLesson, ConceptReadiness } from '@/shared/api';
 import { ContentBlocks } from './content-blocks';
 
-export function DiagnosticPanel({ diagnostic, offering, dispatch, busy, onBack }: {
+export function DiagnosticPanel({ diagnostic, offering, dispatch, busy, onBack, nextLesson, readiness, onOpenLesson }: {
+  nextLesson?: PublicLesson; readiness: ConceptReadiness[]; onOpenLesson: (key: string) => void;
   diagnostic: DiagnosticView | null; offering: DiagnosticOffering | null; dispatch: (action: LearningAction) => Promise<ActionResponse>; busy: boolean; onBack: () => void;
 }) {
   const [answer, setAnswer] = useState('');
@@ -25,7 +26,9 @@ export function DiagnosticPanel({ diagnostic, offering, dispatch, busy, onBack }
     <button className="back-button" onClick={onBack} disabled={busy}>← 내 학습으로</button>
     <div className="page-heading"><div className="eyebrow">FIND YOUR STARTING POINT</div><h1>어디서 시작하면 편할까요?</h1><p>{!diagnostic && offering ? offering.description : "모르는 문제는 건너뛰어도 괜찮아요. 나의 속도로 확인해 보세요."}</p></div>
     {!diagnostic ? offering ? <div className="lesson-sheet"><h2>{offering.title} · {offering.total}문제</h2><p>약 {offering.estimatedMinutes}분이 걸려요. 점수를 매기기보다 지금 필요한 수업을 찾는 데 사용해요. 저장한 답은 변경할 수 없고, 결과는 마지막에 함께 확인해요.</p><p>나중에 돌아와도 저장한 문제 다음부터 이어갈 수 있어요. 진단 없이 수업에서 바로 시작해도 괜찮아요.</p><button className="button primary" disabled={busy} onClick={() => void start()}>시작점 확인하기</button></div> : <p>시작점 확인을 준비하고 있어요. 수업에서 학습을 시작할 수 있어요.</p>
-      : diagnostic.status === 'completed' ? <div className="lesson-sheet"><h2>시작점을 확인했어요.</h2><p>{diagnostic.total}문제 중 {diagnostic.results.filter(a => a.status === 'correct').length}문제에서 풀이를 확인했어요. 건너뛴 {diagnostic.results.filter(a => a.status === 'skipped').length}문제는 아직 모르는 상태로 두었어요.</p><p>이 결과는 잠정적인 추천에만 사용해요. 이후 실제 수업과 제출한 복습 기록을 우선 반영해요.</p><button className="button primary" onClick={onBack}>나에게 맞는 학습 보기</button></div>
+      : diagnostic.status === 'completed' ? <div className="lesson-sheet"><h2>시작점을 확인했어요.</h2><p>{diagnostic.total}문제 중 {diagnostic.results.filter(a => a.status === 'correct').length}문제에서 풀이를 확인했어요. 건너뛴 {diagnostic.results.filter(a => a.status === 'skipped').length}문제는 아직 모르는 상태로 두었어요.</p><p>이 결과는 잠정적인 추천에만 사용해요. 이후 실제 수업과 제출한 복습 기록을 우선 반영해요.</p><div className="readiness-list">{readiness.map((concept) => <span key={concept.key} className={`readiness ${concept.readiness}`}><strong>{concept.label}</strong> · {concept.readiness === 'ready' ? '다음 개념 준비' : concept.readiness === 'needs-practice' ? '한 번 더 연습' : '아직 확인 전'}</span>)}</div>
+          {nextLesson && <div className="diagnostic-next"><span className="eyebrow">다음 추천 수업</span><h3>{nextLesson.title}</h3><p>{nextLesson.summary}</p><button className="button primary" onClick={() => onOpenLesson(nextLesson.lessonKey)}>이 수업 펼치기</button></div>}
+          <button className="text-button" onClick={onBack}>내 학습으로 돌아가기</button></div>
         : diagnostic.currentProblem && <article className="lesson-sheet" key={diagnostic.currentProblem.problemVersionId}>
           <p className="eyebrow">{diagnostic.answered + 1} / {diagnostic.total} · {diagnostic.answered ? '앞의 답안은 저장됐어요' : '편하게 시작해 보세요'}</p>
           <progress aria-label="시작점 확인 진행" value={diagnostic.answered} max={diagnostic.total} />

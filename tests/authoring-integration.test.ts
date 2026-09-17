@@ -49,6 +49,82 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
       items: [{ kind: 'strip', x: 20, y: 80, width: 280, height: 40, parts: 4, filled: 3 }] },
   });
 
+  it('manages course information and complete lesson order only as an administrator', async () => {
+    const admin = await account('admin');
+    const author = await account('author');
+    const key = `ui-course-${randomUUID()}`;
+    await expect(service.act(author.id, { action: 'course.save', key, title: '새 코스', summary: '', creating: true })).rejects.toThrow(/관리자/);
+    await service.act(admin.id, { action: 'course.save', key, title: '새 코스', summary: '차근차근', creating: true });
+    await expect(service.act(admin.id, { action: 'course.save', key, title: '중복', summary: '', creating: true })).rejects.toThrow(/이미/);
+    const concept = (await service.workspace(admin.id)).concepts.find((item) => item.assessable)!;
+    const first = await service.createLesson(author.id, key, `first-${randomUUID()}`, '첫 수업', [concept.key]);
+    const second = await service.createLesson(author.id, key, `second-${randomUUID()}`, '둘째 수업', [concept.key]);
+    const keys = [second.draft!.lessonKey, first.draft!.lessonKey];
+    expect((await service.workspace(author.id)).lessons.find((item) => item.lessonKey === keys[0]))
+      .toMatchObject({ courseKey: key, latestVersionId: null, hasDraft: true, title: '둘째 수업' });
+    await expect(service.act(author.id, { action: 'course.reorder', courseKey: key, lessonKeys: keys })).rejects.toThrow(/관리자/);
+    await service.act(admin.id, { action: 'course.reorder', courseKey: key, lessonKeys: keys });
+    expect((await service.workspace(admin.id)).lessons.filter((item) => item.courseKey === key).map((item) => item.lessonKey)).toEqual(keys);
+    for (const invalid of [[keys[0]], [keys[0], keys[0]], [keys[0], lessonKey]]) {
+      await expect(service.act(admin.id, { action: 'course.reorder', courseKey: key, lessonKeys: invalid })).rejects.toThrow(/목록/);
+    }
+    await service.act(admin.id, { action: 'course.save', key, title: '수정한 코스', summary: '새 소개', creating: false });
+    expect((await service.workspace(admin.id)).courses.find((item) => item.key === key)).toMatchObject({ title: '수정한 코스', summary: '새 소개' });
+  });
+
+  it('lets administrators add an assessable concept without changing existing concepts', async () => {
+    const admin = await account('admin');
+    const author = await account('author');
+    const key = `concept-${randomUUID()}`;
+    await expect(service.act(author.id, { action: 'concept.create', key, label: '새 학습 개념' })).rejects.toThrow(/관리자/);
+    const response = await service.act(admin.id, { action: 'concept.create', key, label: '새 학습 개념' });
+    expect(response.workspace.concepts.find((item) => item.key === key)).toMatchObject({ label: '새 학습 개념', assessable: true });
+    await expect(service.act(admin.id, { action: 'concept.create', key, label: '덮어쓰기' })).rejects.toThrow(/이미/);
+  });
+
+  it('saves prerequisites and follows the selected activity through review publication and edits', async () => {
+    const admin = await account('admin');
+    const workspace = await service.workspace(admin.id);
+    const concepts = workspace.concepts.filter((item) => item.assessable);
+    const courseKey = workspace.lessons.find((item) => item.lessonKey === lessonKey)!.courseKey;
+    const made = await service.createLesson(admin.id, courseKey, `review-ui-${randomUUID()}`, '복습 설정 검사', [concepts[0].key]);
+    const draft = made.draft!;
+    const activity = draft.edit.sections[1].contentBlocks[0];
+    const edit = { ...draft.edit, meta: { ...draft.edit.meta, prerequisiteConceptKeys: [concepts[1].key] }, reviewBlockId: activity.blockId };
+    const saved = await service.act(admin.id, { action: 'draft.save', draftId: draft.id, edit });
+    expect(saved.draft!.review).toMatchObject({ problemVersionIds: [edit.problems[0].problemVersionId] });
+    expect(saved.draft!.edit.reviewBlockId).toBe(activity.blockId);
+    await service.publishDraft(admin.id, draft.id);
+    const published = await lessonRecord(db, draft.versionId);
+    expect(published!.public.prerequisiteConceptKeys).toEqual([concepts[1].key]);
+    const next = (await service.createDraft(admin.id, draft.lessonKey)).draft!;
+    const changed = structuredClone(next.edit);
+    changed.problems[0].gradingSpec = { kind: 'integer', value: 7 };
+    const rewritten = (await service.saveDraft(admin.id, next.id, changed)).draft!;
+    expect(rewritten.review!.problemVersionIds).toEqual([rewritten.edit.problems[0].problemVersionId]);
+    expect(rewritten.edit.problems[0].problemVersionId).not.toBe(edit.problems[0].problemVersionId);
+    const original = await lessonRecord(db, draft.versionId);
+    expect(original!.review!.problemVersionIds).toEqual([edit.problems[0].problemVersionId]);
+    const disabled = (await service.saveDraft(admin.id, next.id, { ...rewritten.edit, reviewBlockId: null })).draft!;
+    expect(disabled.review).toBeNull();
+    await expect(service.saveDraft(admin.id, next.id, { ...disabled.edit, reviewBlockId: 'missing-block' })).rejects.toThrow(/다시 골라/);
+    expect((await service.draft(admin.id, next.id)).review).toBeNull();
+  });
+
+  it('provides draft glossary bodies, including definitions on an unpublished lesson', async () => {
+    const admin = await account('admin');
+    const workspace = await service.workspace(admin.id);
+    const courseKey = workspace.lessons.find((item) => item.lessonKey === lessonKey)!.courseKey;
+    const concept = workspace.concepts.find((item) => item.assessable)!;
+    const draft = (await service.createLesson(admin.id, courseKey, `glossary-ui-${randomUUID()}`, '뜻풀이 검사', [concept.key])).draft!;
+    await service.saveDefinition(admin.id, { conceptKey: concept.key, scopeKind: 'lesson', scopeKey: draft.lessonKey,
+      label: '수업에서 부르는 이름', summary: '한 줄 설명', blocks: [{ blockId: 'definition:body', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '실제로 펼치는 설명' } }] });
+    const opened = await service.draft(admin.id, draft.id);
+    expect(opened.glossary.find((item) => item.scopeKey === draft.lessonKey)).toMatchObject({
+      label: '수업에서 부르는 이름', summary: '한 줄 설명', blocks: [{ payload: { text: '실제로 펼치는 설명' } }],
+    });
+  });
+
   it('grants content work by role, and treats an account without one as a learner', async () => {
     const learner = await account();
     const author = await account('author');

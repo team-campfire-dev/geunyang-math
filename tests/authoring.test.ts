@@ -410,6 +410,13 @@ describe('what an activity holds leaves with it', () => {
     expect(looseProblems(edit).map((problem) => problem.problemVersionId)).toEqual(['p2']);
   });
 
+  it('disables activity-based review when that activity is removed, without affecting a separate pool', () => {
+    const edit = { ...lesson([], ['p1']), reviewBlockId: 'removed' };
+    expect(dropLooseProblems(edit).reviewBlockId).toBeNull();
+    const separate = lesson([], []);
+    expect(dropLooseProblems(separate)).toBe(separate);
+  });
+
   it('drops what nothing holds, and leaves the edit alone when everything is held', () => {
     const edit = lesson([activity('c:set:v2', ['p1'])], ['p1', 'p2']);
     expect(dropLooseProblems(edit).problems.map((problem) => problem.problemVersionId)).toEqual(['p1']);
