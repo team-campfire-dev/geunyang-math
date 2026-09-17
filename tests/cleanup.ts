@@ -16,16 +16,20 @@ export type Existing = Awaited<ReturnType<typeof existingRows>>;
 const ids = <T, K extends keyof T>(rows: T[], key: K) => new Set(rows.map(row => String(row[key])));
 
 export async function existingRows(db: PrismaClient) {
-  const [users, lessons, diagnostics, terms, skills, bundles] = await Promise.all([
+  const [users, lessons, diagnostics, definitions, concepts, bundles, courses, lessonKeys, diagnosticKeys] = await Promise.all([
     db.user.findMany({ select: { id: true } }),
     db.lessonVersion.findMany({ select: { id: true } }),
     db.diagnosticVersion.findMany({ select: { id: true } }),
-    db.termVersion.findMany({ select: { id: true } }),
-    db.skill.findMany({ select: { key: true } }),
+    db.conceptDefinition.findMany({ select: { id: true } }),
+    db.concept.findMany({ select: { key: true } }),
     db.appliedContentBundle.findMany({ select: { name: true } }),
+    db.course.findMany({ select: { key: true } }),
+    db.lesson.findMany({ select: { key: true } }),
+    db.diagnostic.findMany({ select: { key: true } }),
   ]);
   return { users: ids(users, 'id'), lessons: ids(lessons, 'id'), diagnostics: ids(diagnostics, 'id'),
-    terms: ids(terms, 'id'), skills: ids(skills, 'key'), bundles: ids(bundles, 'name') };
+    definitions: ids(definitions, 'id'), concepts: ids(concepts, 'key'), bundles: ids(bundles, 'name'),
+    courses: ids(courses, 'key'), lessonKeys: ids(lessonKeys, 'key'), diagnosticKeys: ids(diagnosticKeys, 'key') };
 }
 
 /** What a suite adds is what it removes. Order follows the foreign keys, deepest first. */
@@ -35,11 +39,14 @@ export async function removeRowsAddedSince(db: PrismaClient, before: Existing) {
   const users = added(now.users, before.users);
   const lessons = added(now.lessons, before.lessons);
   const diagnostics = added(now.diagnostics, before.diagnostics);
-  const terms = added(now.terms, before.terms);
-  const skills = added(now.skills, before.skills);
+  const definitions = added(now.definitions, before.definitions);
+  const concepts = added(now.concepts, before.concepts);
   const bundles = added(now.bundles, before.bundles);
-  const versions = [...lessons, ...diagnostics, ...terms];
-  if (!users.length && !versions.length && !skills.length && !bundles.length) return;
+  const courses = added(now.courses, before.courses);
+  const lessonKeys = added(now.lessonKeys, before.lessonKeys);
+  const diagnosticKeys = added(now.diagnosticKeys, before.diagnosticKeys);
+  const versions = [...lessons, ...diagnostics, ...definitions];
+  if (!users.length && !versions.length && !concepts.length && !bundles.length && !courses.length && !lessonKeys.length && !diagnosticKeys.length) return;
 
   const collect = async <T extends { id: string }>(rows: Promise<T[]>) => (await rows).map(row => row.id);
   const scopes = await collect(db.learningScope.findMany({ where: { ownerUserId: { in: users } }, select: { id: true } }));
@@ -74,9 +81,17 @@ export async function removeRowsAddedSince(db: PrismaClient, before: Existing) {
   await db.publishedProblem.deleteMany({ where: { ownerVersionId: { in: [...lessons, ...diagnostics] } } });
   await db.lessonVersion.deleteMany({ where: { id: { in: lessons } } });
   await db.diagnosticVersion.deleteMany({ where: { id: { in: diagnostics } } });
-  await db.termVersion.deleteMany({ where: { id: { in: terms } } });
-  // A skill is named by the terms and lessons that use it, so it goes last.
-  await db.skill.deleteMany({ where: { key: { in: skills } } });
+  // A definition owns blocks under its own id, the way a version does.
+  await db.contentBlock.deleteMany({ where: { ownerKind: 'definition', ownerVersionId: { in: definitions } } });
+  await db.conceptDefinition.deleteMany({ where: { id: { in: definitions } } });
+  // Identities go after their versions, and a course after the identities it keeps. A draft of a
+  // lesson this run made was already removed with its author.
+  await db.contentDraft.deleteMany({ where: { lessonKey: { in: lessonKeys } } });
+  await db.lesson.deleteMany({ where: { key: { in: lessonKeys } } });
+  await db.diagnostic.deleteMany({ where: { key: { in: diagnosticKeys } } });
+  await db.course.deleteMany({ where: { key: { in: courses } } });
+  // A concept is named by the definitions and lessons that use it, so it goes last.
+  await db.concept.deleteMany({ where: { key: { in: concepts } } });
   // The ledger would otherwise claim a bundle is applied whose content has just been removed.
   await db.appliedContentBundle.deleteMany({ where: { name: { in: bundles } } });
 }

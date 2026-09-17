@@ -4,16 +4,16 @@ import type { PrismaClient } from '@prisma/client';
 import { canonicalJson, ContentError } from '@/core/content-bundle';
 import { validateLesson, type StoredLesson, type StoredProblem } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
-import { lessonRecord, importContent, publishedProblemRecords, termDefinitions } from './content-store';
+import { lessonRecord, importContent, publishedProblemRecords, definitionRecords } from './content-store';
 import { AppError } from './errors';
 import type { AnswerSpec } from '@/shared/answer';
 import type { ContentBlock } from '@/shared/api';
 import {
   lessonKeyPattern, mayEditEveryDraft, mayGrantRoles, mayPublish, newProblem, nextBlockId, nextProblemVersionId,
-  nextSectionId, nextTermVersionId, pruneBlock, pruneProblems, pruneSections,
-  renameProblem, renamedProblemVersionId, renameProblemReferences, responseSpecOf, scopeTermAnnotations, suggestVersionId,
+  nextSectionId, pruneBlock, pruneProblems, pruneSections,
+  renameProblem, renamedProblemVersionId, renameProblemReferences, responseSpecOf, scopeDefinitionLinks, suggestVersionId,
   type AccountRole, type AuthoringResponse, type AuthoringRole, type AuthoringWorkspace, type DraftDetail, type DraftIssue,
-  type DraftEdit, type DraftProblem, type DraftSummary, type EditableTermScope, type TermChoice, type TermEdit, type TermSummary,
+  type DraftEdit, type DraftProblem, type DraftSummary, type EditableConceptScope, type DefinitionChoice, type DefinitionEdit, type DefinitionSummary,
 } from '@/shared/authoring';
 
 const id = z.string().min(1).max(191);
@@ -33,7 +33,7 @@ const editSchema = z.object({
     title: z.string().trim().min(1).max(191),
     summary: z.string().trim().min(1).max(500),
     estimatedMinutes: z.number().int().min(1).max(240),
-    skillKeys: z.array(id.max(100)).min(1).max(50),
+    conceptKeys: z.array(id.max(100)).min(1).max(50),
   }).strict(),
   sections: z.array(z.object({
     sectionId: id,
@@ -45,7 +45,7 @@ const editSchema = z.object({
   // from it and from the hints, so the editor never sends either and the two cannot disagree.
   problems: z.array(z.object({
     problemVersionId: id,
-    skillKeys: z.array(id).max(50),
+    conceptKeys: z.array(id).max(50),
     promptContent: blockList,
     gradingSpec: z.discriminatedUnion('kind', [
       z.object({ kind: z.literal('integer'), value: answerNumber }).strict(),
@@ -59,8 +59,8 @@ const editSchema = z.object({
 
 export const authoringActionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('draft.create'), lessonKey: id }).strict(),
-  z.object({ action: z.literal('lesson.create'), lessonKey: z.string().regex(lessonKeyPattern),
-    title: z.string().trim().min(1).max(191), skillKeys: z.array(id.max(100)).min(1).max(50) }).strict(),
+  z.object({ action: z.literal('lesson.create'), courseKey: id.max(100), lessonKey: z.string().regex(lessonKeyPattern),
+    title: z.string().trim().min(1).max(191), conceptKeys: z.array(id.max(100)).min(1).max(50) }).strict(),
   z.object({ action: z.literal('draft.review'), draftId: id, asking: z.boolean() }).strict(),
   z.object({ action: z.literal('draft.save'), draftId: id, edit: editSchema }).strict(),
   z.object({ action: z.literal('draft.validate'), draftId: id }).strict(),
@@ -69,15 +69,15 @@ export const authoringActionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('account.search'), query: z.string().trim().min(2).max(80) }).strict(),
   z.object({ action: z.literal('role.grant'), userId: id, role: z.enum(['admin', 'author']) }).strict(),
   z.object({ action: z.literal('role.revoke'), userId: id }).strict(),
-  z.object({ action: z.literal('term.list'), scopeKind: z.enum(['global', 'lesson']), scopeKey: z.string().max(100) }).strict(),
-  z.object({ action: z.literal('term.save'), edit: z.object({
-    termKey: id.max(100).regex(/^[a-zA-Z0-9:._-]+$/),
+  z.object({ action: z.literal('definition.list'), scopeKind: z.enum(['global', 'lesson']), scopeKey: z.string().max(100) }).strict(),
+  z.object({ action: z.literal('definition.save'), edit: z.object({
+    conceptKey: id.max(100).regex(/^[a-zA-Z0-9:._-]+$/),
     scopeKind: z.enum(['global', 'lesson']),
     scopeKey: z.string().max(100),
-    skillKey: id.max(100),
-    label: z.string().trim().min(1).max(191),
-    summary: z.string().trim().min(1).max(500),
-    blocks: blockList.min(1).max(20),
+    label: z.string().trim().max(191),
+    summary: z.string().trim().max(500),
+    blocks: blockList.max(20),
+    newConcept: z.object({ label: z.string().trim().min(1).max(191) }).strict().optional(),
   }).strict() }).strict(),
   z.object({ action: z.literal('editor.expertMode'), on: z.boolean() }).strict(),
   z.object({ action: z.literal('draft.tryAnswer'), draftId: id, problemVersionId: id,
@@ -130,7 +130,7 @@ export async function authoringRole(db: PrismaClient, userId: string): Promise<A
 /** A stored question read back for editing; its response format is restated from the answer on save. */
 const draftProblem = (problem: StoredProblem): DraftProblem => ({
   problemVersionId: problem.problemVersionId,
-  skillKeys: [...problem.skillKeys],
+  conceptKeys: [...problem.conceptKeys],
   promptContent: structuredClone(problem.promptContent),
   // Checked when the base version was published, and again before this draft may be published.
   gradingSpec: structuredClone(problem.gradingSpec) as AnswerSpec,
@@ -141,7 +141,7 @@ const draftProblem = (problem: StoredProblem): DraftProblem => ({
 /** The two fields an editor never writes: both follow from the answer and from the hints. */
 const storedProblem = (problem: DraftProblem): StoredProblem => ({
   problemVersionId: problem.problemVersionId,
-  skillKeys: problem.skillKeys,
+  conceptKeys: problem.conceptKeys,
   promptContent: problem.promptContent,
   responseSpec: responseSpecOf(problem.gradingSpec),
   hintAvailable: problem.hints.length > 0,
@@ -219,34 +219,30 @@ export class AuthoringService {
     const document = row.document as unknown as StoredLesson;
     const edit: DraftEdit = {
       meta: { versionId: document.public.versionId, title: document.public.title, summary: document.public.summary,
-        estimatedMinutes: document.public.estimatedMinutes, skillKeys: [...document.public.skillKeys] },
+        estimatedMinutes: document.public.estimatedMinutes, conceptKeys: [...document.public.conceptKeys] },
       sections: structuredClone(document.sections),
       problems: document.problems.map(draftProblem),
     };
-    return { ...this.summary(row, userId), edit, terms: await this.termChoices(document.public.lessonKey), issues,
+    return { ...this.summary(row, userId), edit, definitions: await this.definitionChoices(document.public.lessonKey), issues,
       homeworkProblemIds: [...document.homeworkProblemIds] };
   }
 
   /**
-   * The definitions this lesson may link while writing: the shared dictionary and the ones the lesson
-   * keeps. Only what naming a term needs — a definition's own text is read from the term screen.
+   * The definitions this lesson may link while writing: the shared dictionary's and the lesson's own,
+   * and only those with something to show — a row that merely renames a concept cannot be linked.
    */
-  private async termChoices(lessonKey: string): Promise<TermChoice[]> {
-    const rows = await this.db.termVersion.findMany({
+  private async definitionChoices(lessonKey: string): Promise<DefinitionChoice[]> {
+    const rows = await this.db.conceptDefinition.findMany({
       where: { OR: [{ scopeKind: 'global' }, { scopeKind: 'lesson', scopeKey: lessonKey }] },
-      orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }],
-      select: { termKey: true, scopeKind: true, scopeKey: true, label: true, skillKey: true },
+      select: { id: true, conceptKey: true, scopeKind: true, scopeKey: true, label: true, concept: { select: { label: true } } },
     });
-    const seen = new Set<string>();
-    const choices: TermChoice[] = [];
-    for (const row of rows) {
-      const scopeKind = row.scopeKind === 'lesson' ? 'lesson' as const : 'global' as const;
-      const ref = `${scopeKind}:${row.scopeKey}:${row.termKey}`;
-      if (seen.has(ref)) continue;
-      seen.add(ref);
-      choices.push({ termKey: row.termKey, scopeKind, scopeKey: row.scopeKey, label: row.label, skillKey: row.skillKey });
-    }
-    return choices.sort((left, right) => left.label.localeCompare(right.label, 'ko'));
+    const withBody = new Set((await this.db.contentBlock.findMany({
+      where: { ownerKind: 'definition', ownerVersionId: { in: rows.map((row) => row.id) } },
+      distinct: ['ownerVersionId'], select: { ownerVersionId: true } })).map((row) => row.ownerVersionId));
+    return rows.filter((row) => withBody.has(row.id))
+      .map((row) => ({ conceptKey: row.conceptKey, scopeKind: row.scopeKind === 'lesson' ? 'lesson' as const : 'global' as const,
+        scopeKey: row.scopeKey, label: row.label ?? row.concept.label }))
+      .sort((left, right) => left.label.localeCompare(right.label, 'ko'));
   }
 
   private async load(draftId: string, userId: string, role: AuthoringRole): Promise<DraftRow> {
@@ -258,19 +254,21 @@ export class AuthoringService {
 
   async workspace(userId: string): Promise<AuthoringWorkspace> {
     const role = await authoringRole(this.db, userId);
-    if (!role) return { role: null, drafts: [], lessons: [], accounts: [], skills: [], expertMode: false };
-    const [drafts, versions, accounts, skills, account] = await Promise.all([
+    if (!role) return { role: null, drafts: [], courses: [], lessons: [], accounts: [], concepts: [], expertMode: false };
+    const [drafts, versions, courses, accounts, concepts, account] = await Promise.all([
       this.db.contentDraft.findMany({ where: mayEditEveryDraft(role) ? {} : { authorId: userId },
         orderBy: { updatedAt: 'desc' }, take: 50, include: { author: { select: { displayName: true } } } }),
-      this.db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }], select: { id: true, lessonKey: true, title: true } }),
+      this.db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }],
+        select: { id: true, lessonKey: true, title: true, lesson: { select: { course: { select: { key: true } } } } } }),
+      this.db.course.findMany({ orderBy: [{ createdAt: 'asc' }, { key: 'asc' }], select: { key: true, title: true } }),
       this.accounts(userId, role),
-      this.db.skill.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }], select: { key: true, label: true } }),
+      this.db.concept.findMany({ orderBy: [{ assessable: 'desc' }, { label: 'asc' }], select: { key: true, label: true, assessable: true } }),
       this.db.user.findUnique({ where: { id: userId }, select: { editorExpertMode: true } }),
     ]);
     const openDrafts = new Set(drafts.filter((draft) => draft.status !== 'published').map((draft) => draft.lessonKey));
-    const byKey = new Map<string, { title: string; versions: string[] }>();
+    const byKey = new Map<string, { title: string; courseKey: string; versions: string[] }>();
     for (const version of versions) {
-      const entry = byKey.get(version.lessonKey) ?? { title: version.title, versions: [] };
+      const entry = byKey.get(version.lessonKey) ?? { title: version.title, courseKey: version.lesson.course.key, versions: [] };
       entry.title = version.title;
       entry.versions.push(version.id);
       byKey.set(version.lessonKey, entry);
@@ -278,11 +276,12 @@ export class AuthoringService {
     return {
       role,
       accounts,
-      skills,
+      concepts,
+      courses,
       expertMode: account?.editorExpertMode ?? false,
       drafts: (drafts as DraftRow[]).map((row) => this.summary(row, userId)),
       lessons: [...byKey.entries()].map(([lessonKey, entry]) => ({
-        lessonKey, title: entry.title, latestVersionId: entry.versions[entry.versions.length - 1],
+        lessonKey, courseKey: entry.courseKey, title: entry.title, latestVersionId: entry.versions[entry.versions.length - 1],
         suggestedVersionId: suggestVersionId(lessonKey, entry.versions), hasDraft: openDrafts.has(lessonKey),
       })),
     };
@@ -390,56 +389,55 @@ export class AuthoringService {
    * The shared dictionary belongs to the operator, so only an administrator writes it. A definition
    * a lesson keeps is part of writing that lesson, which anyone holding a content role may do.
    */
-  private async requireTermScope(userId: string, scopeKind: EditableTermScope, scopeKey: string): Promise<void> {
+  private async requireDefinitionScope(userId: string, scopeKind: EditableConceptScope, scopeKey: string): Promise<void> {
     const role = await this.require(userId);
     if (scopeKind === 'global') {
       if (!mayPublish(role)) throw new AppError(403, 'not_a_publisher', '공통 사전은 관리자만 고칠 수 있어요.');
       if (scopeKey) throw new AppError(422, 'scope_key', '공통 사전에는 소속을 적지 않아요.');
       return;
     }
-    if (!scopeKey) throw new AppError(422, 'scope_key', '어느 수업의 용어인지 골라 주세요.');
-    const owner = await this.db.lessonVersion.findFirst({ where: { lessonKey: scopeKey }, select: { id: true } });
-    if (!owner) throw new AppError(404, 'lesson_missing', '아직 발행된 적 없는 수업이에요.');
+    if (!scopeKey) throw new AppError(422, 'scope_key', '어느 수업의 뜻풀이인지 골라 주세요.');
+    const owner = await this.db.lesson.findUnique({ where: { key: scopeKey }, select: { key: true } });
+    if (!owner) throw new AppError(404, 'lesson_missing', '그런 수업이 없어요.');
   }
 
-  /** The latest version of each term in one scope: what an author opens and what they change. */
-  async listTerms(userId: string, scopeKind: EditableTermScope, scopeKey: string): Promise<AuthoringResponse> {
-    await this.requireTermScope(userId, scopeKind, scopeKey);
-    const rows = await this.db.termVersion.findMany({ where: { scopeKind, scopeKey }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
-    const seen = new Set<string>();
-    const latest = rows.filter((row) => { if (seen.has(row.termKey)) return false; seen.add(row.termKey); return true; });
-    const definitions = await termDefinitions(this.db, latest);
-    const terms: TermSummary[] = latest.map((row, index) => ({
-      versionId: row.id, termKey: row.termKey, scopeKind, scopeKey, skillKey: row.skillKey,
-      label: row.label, summary: row.summary, blocks: definitions[index].blocks as ContentBlock[],
-      publishedAt: row.publishedAt.toISOString(),
+  /** Every definition one scope keeps: what an author opens and what they change. */
+  async listDefinitions(userId: string, scopeKind: EditableConceptScope, scopeKey: string): Promise<AuthoringResponse> {
+    await this.requireDefinitionScope(userId, scopeKind, scopeKey);
+    const rows = await this.db.conceptDefinition.findMany({ where: { scopeKind, scopeKey }, include: { concept: { select: { label: true } } } });
+    const records = await definitionRecords(this.db, rows);
+    const definitions: DefinitionSummary[] = rows.map((row, index) => ({
+      conceptKey: row.conceptKey, conceptLabel: row.concept.label, scopeKind, scopeKey,
+      label: row.label ?? '', summary: row.summary ?? '', blocks: records[index].blocks as ContentBlock[],
+      updatedAt: row.updatedAt.toISOString(),
     }));
-    terms.sort((left, right) => left.label.localeCompare(right.label, 'ko'));
-    return { workspace: await this.workspace(userId), terms };
+    definitions.sort((left, right) => (left.label || left.conceptLabel).localeCompare(right.label || right.conceptLabel, 'ko'));
+    return { workspace: await this.workspace(userId), definitions };
   }
 
   /**
-   * A definition is published, not drafted: saving writes the next version and every reader sees it
-   * at once. That is the same bargain the rest of the glossary already makes — a definition is
-   * carried by key rather than pinned, so a correction reaches the lessons that link it without
-   * republishing any of them. Publishing runs the CLI's own import, so a definition that would
-   * break a reference is refused here for the same reason it would be refused there.
+   * A definition is written in place: saving is the latest, and every lesson that links it reads the
+   * new wording at once. That is the bargain the glossary makes — a paragraph links a concept by key
+   * rather than pinning a text, so a correction republishes nothing. Saving runs the CLI's own import,
+   * so a definition that would break a reference is refused here for the same reason it would be
+   * there. A concept nobody has named yet is made along the way, not assessable.
    */
-  async saveTerm(userId: string, edit: TermEdit): Promise<AuthoringResponse> {
-    await this.requireTermScope(userId, edit.scopeKind, edit.scopeKey);
-    const existing = await this.db.termVersion.findMany({
-      where: { scopeKind: edit.scopeKind, scopeKey: edit.scopeKey, termKey: edit.termKey }, select: { id: true } });
-    const versionId = nextTermVersionId(edit, existing.map((row) => row.id));
-    // Blocks are named after the version that holds them, so the editor never chooses an ID.
-    const blocks = edit.blocks.map(pruneBlock).map((block, index) => ({ ...block, blockId: `${versionId}:b${index + 1}` }));
-    const definition = { versionId, termKey: edit.termKey, scopeKind: edit.scopeKind, scopeKey: edit.scopeKey,
-      skillKey: edit.skillKey, label: edit.label, summary: edit.summary, blocks };
+  async saveDefinition(userId: string, edit: DefinitionEdit): Promise<AuthoringResponse> {
+    await this.requireDefinitionScope(userId, edit.scopeKind, edit.scopeKey);
+    const known = await this.db.concept.findUnique({ where: { key: edit.conceptKey }, select: { key: true } });
+    if (!known && !edit.newConcept) throw new AppError(422, 'concept_missing', '없는 개념이에요. 새 개념이면 이름을 함께 적어 주세요.');
+    // Blocks are named after the row that holds them, so the editor never chooses an ID.
+    const stem = `${edit.scopeKind}:${edit.scopeKey || 'global'}:${edit.conceptKey}`;
+    const blocks = edit.blocks.map(pruneBlock).map((block, index) => ({ ...block, blockId: `${stem}:b${index + 1}` }));
+    const definition = { conceptKey: edit.conceptKey, scopeKind: edit.scopeKind, scopeKey: edit.scopeKey,
+      ...(edit.label.trim() ? { label: edit.label.trim() } : {}), ...(edit.summary.trim() ? { summary: edit.summary.trim() } : {}), blocks };
+    const concepts = !known && edit.newConcept ? [{ key: edit.conceptKey, label: edit.newConcept.label, assessable: false }] : [];
     try {
-      await importContent(this.db, { schemaVersion: 1, skills: [], lessons: [], diagnostics: [], terms: [definition] });
+      await importContent(this.db, { schemaVersion: 1, concepts, lessons: [], diagnostics: [], definitions: [definition] });
     } catch (error) {
-      throw new AppError(422, 'term_rejected', describeContentError(error)[0]?.message ?? '용어를 발행하지 못했어요.');
+      throw new AppError(422, 'definition_rejected', describeContentError(error)[0]?.message ?? '뜻풀이를 저장하지 못했어요.');
     }
-    return { ...await this.listTerms(userId, edit.scopeKind, edit.scopeKey), publishedTermVersionId: versionId };
+    return { ...await this.listDefinitions(userId, edit.scopeKind, edit.scopeKey), savedDefinition: { conceptKey: edit.conceptKey } };
   }
 
   /**
@@ -499,31 +497,36 @@ export class AuthoringService {
    * one door into a key that has none, so it is also the only place the key itself is chosen — every
    * name inside the lesson is built from it, and once a version is published the key cannot move.
    */
-  async createLesson(userId: string, lessonKey: string, title: string, skillKeys: string[]): Promise<AuthoringResponse> {
+  async createLesson(userId: string, courseKey: string, lessonKey: string, title: string, conceptKeys: string[]): Promise<AuthoringResponse> {
     await this.require(userId);
-    const [taken, drafted, known, last] = await Promise.all([
-      this.db.lessonVersion.findFirst({ where: { lessonKey }, select: { id: true } }),
+    const [course, taken, drafted, known] = await Promise.all([
+      this.db.course.findUnique({ where: { key: courseKey }, select: { id: true } }),
+      this.db.lesson.findUnique({ where: { key: lessonKey }, select: { key: true } }),
       this.db.contentDraft.findFirst({ where: { lessonKey }, select: { id: true } }),
-      this.db.skill.findMany({ where: { key: { in: skillKeys } }, select: { key: true } }),
-      this.db.lessonVersion.aggregate({ _max: { order: true } }),
+      this.db.concept.findMany({ where: { key: { in: conceptKeys }, assessable: true }, select: { key: true } }),
     ]);
+    if (!course) throw new AppError(404, 'course_missing', '그런 코스가 없어요. 코스를 먼저 골라 주세요.');
     if (taken || drafted) throw new AppError(409, 'lesson_exists', '이미 쓰이고 있는 수업 키예요. 다른 이름으로 지어 주세요.');
-    const missing = skillKeys.filter((key) => !known.some((skill) => skill.key === key));
-    if (missing.length) throw new AppError(422, 'skill_missing', `없는 개념이에요: ${missing.join(', ')}`);
+    const missing = conceptKeys.filter((key) => !known.some((concept) => concept.key === key));
+    if (missing.length) throw new AppError(422, 'concept_missing', `없거나 평가할 수 없는 개념이에요: ${missing.join(', ')}`);
+    // The lesson exists from here on — in its course, after the lessons already there — so a draft
+    // never floats outside a course and the course's order already has a place for it.
+    const last = await this.db.lesson.aggregate({ where: { courseId: course.id }, _max: { order: true } });
+    await this.db.lesson.create({ data: { key: lessonKey, courseId: course.id, order: (last._max.order ?? 0) + 1 } });
 
     // A lesson in this product explains and then asks, and publishing refuses one that never asks.
     // So a new one starts as the smallest whole lesson rather than as something already invalid.
     const versionId = `${lessonKey}:v1`;
     const explaining = nextSectionId(lessonKey, 'explanation', versionId, []);
     const practising = nextSectionId(lessonKey, 'practice', versionId, [explaining]);
-    const problem = newProblem(nextProblemVersionId(lessonKey, 'practice', versionId, []), skillKeys.slice(0, 1));
+    const problem = newProblem(nextProblemVersionId(lessonKey, 'practice', versionId, []), conceptKeys.slice(0, 1));
     const document: StoredLesson = {
       public: { lessonKey, versionId, title, summary: '한 줄 소개를 적어 주세요.', estimatedMinutes: 10,
-        skillKeys: [...skillKeys], prerequisiteSkillKeys: [], sectionCount: 2, order: (last._max.order ?? 0) + 1 },
+        conceptKeys: [...conceptKeys], prerequisiteConceptKeys: [], sectionCount: 2 },
       sections: [
         { sectionId: explaining, role: 'explanation', title: '새 단계', contentBlocks: [
           { blockId: nextBlockId(lessonKey, explaining, 'core.rich_text', versionId, []), kind: 'core.rich_text',
-            typeVersion: 2, required: true, payload: { text: '여기에 설명을 씁니다.', terms: [] } },
+            typeVersion: 3, required: true, payload: { text: '여기에 설명을 씁니다.', definitions: [] } },
         ] },
         { sectionId: practising, role: 'practice', title: '직접 풀어 보기', contentBlocks: [
           { blockId: nextBlockId(lessonKey, practising, 'core.problem_set', versionId, []), kind: 'core.problem_set',
@@ -576,16 +579,16 @@ export class AuthoringService {
     }
     const lessonKey = stored.public.lessonKey;
     const scoped = (problem: DraftProblem): DraftProblem => ({ ...problem,
-      promptContent: scopeTermAnnotations(problem.promptContent, lessonKey),
-      hints: scopeTermAnnotations(problem.hints, lessonKey),
-      solution: scopeTermAnnotations(problem.solution, lessonKey) });
+      promptContent: scopeDefinitionLinks(problem.promptContent, lessonKey),
+      hints: scopeDefinitionLinks(problem.hints, lessonKey),
+      solution: scopeDefinitionLinks(problem.solution, lessonKey) });
     const { problems, renames } = renameEditedProblems(pruneProblems(edit.problems).map(scoped).map(storedProblem), edit.meta.versionId, published);
     const sections = renameProblemReferences(pruneSections(edit.sections), renames)
-      .map((section) => ({ ...section, contentBlocks: scopeTermAnnotations(section.contentBlocks, lessonKey) }));
+      .map((section) => ({ ...section, contentBlocks: scopeDefinitionLinks(section.contentBlocks, lessonKey) }));
     return {
       ...stored,
       public: { ...stored.public, versionId: edit.meta.versionId, title: edit.meta.title, summary: edit.meta.summary,
-        estimatedMinutes: edit.meta.estimatedMinutes, skillKeys: [...edit.meta.skillKeys], sectionCount: sections.length },
+        estimatedMinutes: edit.meta.estimatedMinutes, conceptKeys: [...edit.meta.conceptKeys], sectionCount: sections.length },
       sections: sections as StoredLesson['sections'],
       problems,
       // Homework names questions without a block of its own, so its references move the same way.
@@ -613,7 +616,7 @@ export class AuthoringService {
   }
 
   private bundle(document: StoredLesson) {
-    return { schemaVersion: 1 as const, skills: [], lessons: [document], diagnostics: [], terms: [] };
+    return { schemaVersion: 1 as const, concepts: [], lessons: [document], diagnostics: [], definitions: [] };
   }
 
   async publishDraft(userId: string, draftId: string): Promise<AuthoringResponse> {
@@ -639,6 +642,12 @@ export class AuthoringService {
     const role = await this.require(userId);
     const row = await this.load(draftId, userId, role);
     await this.db.contentDraft.delete({ where: { id: row.id } });
+    // A lesson that was only ever this draft leaves with it, so its key can be chosen again.
+    const [versions, drafts] = await Promise.all([
+      this.db.lessonVersion.count({ where: { lessonKey: row.lessonKey } }),
+      this.db.contentDraft.count({ where: { lessonKey: row.lessonKey } }),
+    ]);
+    if (!versions && !drafts) await this.db.lesson.deleteMany({ where: { key: row.lessonKey } });
     return { workspace: await this.workspace(userId) };
   }
 
@@ -652,7 +661,7 @@ export class AuthoringService {
     const action = authoringActionSchema.parse(input);
     switch (action.action) {
       case 'draft.create': return this.createDraft(userId, action.lessonKey);
-      case 'lesson.create': return this.createLesson(userId, action.lessonKey, action.title, action.skillKeys);
+      case 'lesson.create': return this.createLesson(userId, action.courseKey, action.lessonKey, action.title, action.conceptKeys);
       case 'draft.review': return this.setReview(userId, action.draftId, action.asking);
       case 'draft.save': return this.saveDraft(userId, action.draftId, action.edit);
       case 'draft.validate': return this.validateDraft(userId, action.draftId);
@@ -661,8 +670,8 @@ export class AuthoringService {
       case 'account.search': return this.searchAccounts(userId, action.query);
       case 'role.grant': return this.grantRole(userId, action.userId, action.role);
       case 'role.revoke': return this.revokeRole(userId, action.userId);
-      case 'term.list': return this.listTerms(userId, action.scopeKind, action.scopeKey);
-      case 'term.save': return this.saveTerm(userId, action.edit);
+      case 'definition.list': return this.listDefinitions(userId, action.scopeKind, action.scopeKey);
+      case 'definition.save': return this.saveDefinition(userId, action.edit);
       case 'editor.expertMode': return this.setExpertMode(userId, action.on);
       case 'draft.tryAnswer': return this.tryAnswer(userId, action.draftId, action.problemVersionId, action.answer, action.assisted);
       case 'draft.openHint': return this.draftHint(userId, action.draftId, action.problemVersionId);

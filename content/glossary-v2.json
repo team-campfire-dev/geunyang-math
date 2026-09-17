@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "fraction",
+      "label": "분수",
+      "assessable": false
+    },
+    {
+      "key": "denominator",
+      "label": "분모",
+      "assessable": false
+    },
+    {
+      "key": "numerator",
+      "label": "분자",
+      "assessable": false
+    },
+    {
+      "key": "equivalent-fraction",
+      "label": "동치분수",
+      "assessable": false
+    },
+    {
+      "key": "reduce",
+      "label": "약분",
+      "assessable": false
+    },
+    {
+      "key": "common-denominator",
+      "label": "통분",
+      "assessable": false
+    }
+  ],
+  "lessons": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "fraction",
+      "summary": "전체를 똑같이 나눈 조각으로 수를 나타내는 방법이에요.",
+      "blocks": [
+        {
+          "blockId": "global:fraction:b1",
+          "kind": "core.rich_text",
+          "typeVersion": 1,
+          "required": true,
+          "payload": {
+            "text": "하나를 똑같은 크기로 나눈 다음, 그 조각을 몇 개 세었는지로 나타낸 수예요. $3/4$은 넷으로 나눈 조각 중 세 개를 뜻해요."
+          }
+        },
+        {
+          "blockId": "global:fraction:b2",
+          "kind": "core.figure",
+          "typeVersion": 1,
+          "required": false,
+          "fallback": "넷으로 나눈 조각 중 세 개를 칠한 그림이에요.",
+          "payload": {
+            "alt": "넷으로 나눈 막대에서 세 조각이 칠해진 그림",
+            "caption": "3/4",
+            "primitive": {
+              "kind": "fraction_strip",
+              "parts": 4,
+              "filled": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "conceptKey": "denominator",
+      "summary": "전체를 몇 조각으로 나누었는지 알려주는 아래쪽 수예요.",
+      "blocks": [
+        {
+          "blockId": "global:denominator:b1",
+          "kind": "core.rich_text",
+          "typeVersion": 1,
+          "required": true,
+          "payload": {
+            "text": "분수에서 가로줄 아래에 있는 수예요. 전체를 똑같이 몇 조각으로 나누었는지를 말해 줘요. 분모가 클수록 조각 하나는 작아져요."
+          }
+        },
+        {
+          "blockId": "global:denominator:b2",
+          "kind": "core.figure",
+          "typeVersion": 1,
+          "required": false,
+          "fallback": "전체를 네 조각으로 나눈 그림이에요.",
+          "payload": {
+            "alt": "네 조각으로 나뉜 빈 막대",
+            "caption": "분모 4 · 네 조각으로 나눈 전체",
+            "primitive": {
+              "kind": "fraction_strip",
+              "parts": 4,
+              "filled": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "conceptKey": "numerator",
+      "summary": "나눈 조각 중 몇 개를 세었는지 알려주는 위쪽 수예요.",
+      "blocks": [
+        {
+          "blockId": "global:numerator:b1",
+          "kind": "core.rich_text",
+          "typeVersion": 1,
+          "required": true,
+          "payload": {
+            "text": "분수에서 가로줄 위에 있는 수예요. 분모가 정한 크기의 조각을 몇 개 가지고 있는지를 말해 줘요."
+          }
+        }
+      ]
+    },
+    {
+      "conceptKey": "equivalent-fraction",
+      "summary": "생김새는 달라도 같은 크기를 나타내는 분수예요.",
+      "blocks": [
+        {
+          "blockId": "global:equivalent-fraction:b1",
+          "kind": "core.rich_text",
+          "typeVersion": 1,
+          "required": true,
+          "payload": {
+            "text": "$1/2$과 $2/4$처럼 조각을 세는 방식만 다르고 실제 크기는 같은 분수예요. 분모와 분자에 같은 수를 곱하거나 나누면 만들 수 있어요."
+          }
+        }
+      ]
+    },
+    {
+      "conceptKey": "reduce",
+      "summary": "분모와 분자를 같은 수로 나누어 더 간단하게 쓰는 일이에요.",
+      "blocks": [
+        {
+          "blockId": "global:reduce:b1",
+          "kind": "core.rich_text",
+          "typeVersion": 1,
+          "required": true,
+          "payload": {
+            "text": "크기는 그대로 두고 표현만 간단하게 만드는 일이에요. $6/8$의 분모와 분자를 각각 2로 나누면 $3/4$이 돼요. 더 나눌 수 없을 때까지 줄인 분수를 기약분수라고 해요."
+          }
+        }
+      ]
+    },
+    {
+      "conceptKey": "common-denominator",
+      "summary": "분모가 다른 분수들의 분모를 같게 맞추는 일이에요.",
+      "blocks": [
+        {
+          "blockId": "global:common-denominator:b1",
+          "kind": "core.rich_text",
+          "typeVersion": 1,
+          "required": true,
+          "payload": {
+            "text": "조각 크기가 다르면 그대로 더할 수 없어요. 동치분수를 이용해 분모를 같게 맞추면 조각 크기가 같아져서 분자끼리 더할 수 있어요."
+          }
+        }
+      ]
+    }
+  ]
+}

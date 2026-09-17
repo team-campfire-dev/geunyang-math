@@ -6,6 +6,7 @@ import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { diagnosticProblems } from './fixtures/content';
 import { seedLessons } from './fixtures/content';
+import { ensureLesson } from './fixtures/identity';
 import { getActivityProblemIds } from '@/core/content';
 import { lessonMetadata, indexLessonDocument } from '@/server/content-store';
 import type { DiagnosticView, LearningState } from '@/shared/api';
@@ -24,8 +25,9 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     db = createDatabase(url!); service = new LearningService(db);
     existing = await existingRows(db);
     for (const record of seedLessons) {
+      await ensureLesson(db, record.public.lessonKey);
       await db.lessonVersion.upsert({ where: { id: record.public.versionId }, update: {}, create: {
-        id: record.public.versionId, lessonKey: record.public.lessonKey, title: record.public.title, order: record.public.order,
+        id: record.public.versionId, lessonKey: record.public.lessonKey, title: record.public.title,
         metadata: json(lessonMetadata(record)),
         contentHash: createHash('sha256').update(JSON.stringify(record)).digest('hex'),
       } });
@@ -74,18 +76,18 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     const state = await place(user.id, Array(6).fill(null));
     expect(state.diagnostic).toMatchObject({ status: 'completed', answered: 6 });
     expect(state.plan.readiness.every(s => s.readiness === 'unknown')).toBe(true);
-    expect(state.skills.every(s => s.state === 'unknown')).toBe(true);
+    expect(state.concepts.every(s => s.state === 'unknown')).toBe(true);
     expect(state.enrollments).toEqual([]);
     const restart = await service.act(user.id, { action: 'diagnostic.start' });
     expect(restart.state.diagnostic?.id).toBe(state.diagnostic?.id);
     expect(restart.state.diagnostic?.status).toBe('completed');
     expect(await db.diagnosticRun.count({ where: { userId: user.id } })).toBe(1);
   });
-  it('selects the next unknown skill and retains a reason/history across reconnects without GET writes', async () => {
+  it('selects the next unknown concept and retains a reason/history across reconnects without GET writes', async () => {
     const user = await learner();
     const state = await place(user.id, [...answers.slice(0, 4), null, null]);
     const target = state.lessons.find(c => c.lessonKey === state.recommendations[0].lessonKey)!;
-    expect(target.skillKeys).toContain('fraction.addition');
+    expect(target.conceptKeys).toContain('fraction.addition');
     expect(state.plan.readiness[0]).toMatchObject({ readiness: 'ready', source: 'diagnostic' });
     const before = await db.recommendationHistory.count({ where: { userId: user.id } });
     const reconnect = await service.state(user.id);
@@ -107,7 +109,7 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     expect((await service.state(b.id)).plan.preferredLessonKey).toBeNull();
     const automatic = await service.act(a.id, { action: 'recommendation.choose', lessonKey: null });
     expect(automatic.state.plan.preferredLessonKey).toBeNull();
-    expect(automatic.state.lessons.find(c => c.lessonKey === automatic.state.recommendations[0].lessonKey)!.skillKeys).toContain('fraction.meaning');
+    expect(automatic.state.lessons.find(c => c.lessonKey === automatic.state.recommendations[0].lessonKey)!.conceptKeys).toContain('fraction.meaning');
   });
   async function finishLesson(userId: string, incorrectFirst = false) {
     const record = seedLessons[0];

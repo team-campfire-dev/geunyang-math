@@ -1,7 +1,7 @@
-import initial from './initial-content.json';
+import initial from '../../prisma/seed/fractions.json';
 import { parseContentBundle } from '@/core/content-bundle';
 
-// Historical fixture only. Application and deployment code never import these values.
+// The platform's own content, as db:seed installs it. Tests read it; the application never imports it.
 const bundle = parseContentBundle(initial);
 function deepFreeze<T>(value: T): T {
   if (value && typeof value === 'object' && !Object.isFrozen(value)) {
@@ -11,6 +11,6 @@ function deepFreeze<T>(value: T): T {
   return value;
 }
 export const seedLessons = deepFreeze(bundle.lessons);
-export const skillLabels = deepFreeze(Object.fromEntries(bundle.skills.map(s => [s.key, s.label])));
+export const conceptLabels = deepFreeze(Object.fromEntries(bundle.concepts.map(s => [s.key, s.label])));
 export const diagnosticProblems = deepFreeze(bundle.diagnostics[0].problems);
 export const diagnosticVersion = bundle.diagnostics[0].versionId;

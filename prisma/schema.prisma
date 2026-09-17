@@ -104,12 +104,48 @@ model Session {
   @@index([expiresAt])
 }
 
+/// A course is the bundle a lesson, a problem set or a diagnostic belongs to — nothing floats
+/// outside one. It is not frozen: its title and the order of its lessons change in place.
+model Course {
+  id          String   @id @default(cuid()) @db.VarChar(191)
+  key         String   @unique @db.VarChar(100)
+  title       String   @db.VarChar(191)
+  summary     String   @default("") @db.VarChar(500)
+  /// Who keeps the course. Null is the platform's own; organisations have no model yet.
+  ownerUserId String?  @db.VarChar(191)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  lessons     Lesson[]
+  diagnostics Diagnostic[]
+}
+
+/// The identity of a lesson, apart from any version of it: which course keeps it and where it
+/// stands in that course. A row exists from the first draft, so a lesson has a course before it
+/// has a version; a lesson with no version is one nobody has published yet.
+model Lesson {
+  key       String   @id @db.VarChar(100)
+  courseId  String   @db.VarChar(191)
+  course    Course   @relation(fields: [courseId], references: [id])
+  order     Int
+  createdAt DateTime @default(now())
+  versions  LessonVersion[]
+  @@index([courseId, order])
+}
+
+/// The identity of a diagnostic: which course keeps it. Versions hang off it as they do a lesson.
+model Diagnostic {
+  key      String @id @db.VarChar(100)
+  courseId String @db.VarChar(191)
+  course   Course @relation(fields: [courseId], references: [id])
+  versions DiagnosticVersion[]
+}
+
 model LessonVersion {
   id          String @id @db.VarChar(191)
-  lessonKey    String @db.VarChar(100)
+  lessonKey   String @db.VarChar(100)
+  lesson      Lesson @relation(fields: [lessonKey], references: [key])
   title       String @db.VarChar(191)
-  order       Int
-  /// Everything a class says about itself that is not a section, a block or a question — `public`
+  /// Everything a lesson says about itself that is not a section, a block or a question — `public`
   /// and `homeworkProblemIds`. The rest is in LessonSection, ContentBlock and PublishedProblem.
   metadata    Json
   contentHash String @db.VarChar(64)
@@ -130,7 +166,7 @@ model PublishedProblem {
   /// The position the version holds this question in. A question list is ordered, and an activity
   /// that names no question falls back to it.
   order            Int
-  skillKeys        Json
+  conceptKeys      Json
   /// What the question expects and how it is marked. Both follow from the answer, but they are
   /// stored as they were published rather than derived again at read time.
   responseSpec     Json
@@ -176,11 +212,36 @@ model ContentBlock {
   @@index([kind, typeVersion])
 }
 
-model Skill {
-  key   String @id @db.VarChar(100)
-  label String @db.VarChar(191)
-  order Int
-  terms TermVersion[]
+/// A concept: what mathematics named, and the axis a learner's readiness travels on across courses.
+/// The key is global and never moves; only how a scope calls it and explains it differs. Whether a
+/// question may assess it is the concept's own, not a scope's.
+model Concept {
+  key         String   @id @db.VarChar(100)
+  /// The shared dictionary's name for it; a scope may call it something else in its definition row.
+  label       String   @db.VarChar(191)
+  assessable  Boolean
+  createdAt   DateTime @default(now())
+  definitions ConceptDefinition[]
+}
+
+/// How one scope calls and explains a concept. Not frozen and without a draft: saving is the latest,
+/// because a definition decides nothing — it is not recorded as help and not used to personalise —
+/// so there is no past to recover. The body is rows of ContentBlock hanging off this row's id, which
+/// therefore shares the namespace of version ids.
+model ConceptDefinition {
+  id         String   @id @default(cuid()) @db.VarChar(191)
+  conceptKey String   @db.VarChar(100)
+  concept    Concept  @relation(fields: [conceptKey], references: [key])
+  /// ConceptScope: global | organization | course | lesson.
+  scopeKind  String   @db.VarChar(20)
+  scopeKey   String   @default("") @db.VarChar(100)
+  /// What this scope calls the concept. Null means the concept's own label.
+  label      String?  @db.VarChar(191)
+  /// One line of explanation. A row with neither summary nor blocks only renames the concept.
+  summary    String?  @db.VarChar(500)
+  updatedAt  DateTime @updatedAt
+  @@unique([conceptKey, scopeKind, scopeKey])
+  @@index([scopeKind, scopeKey])
 }
 
 /** Applied reviewed bundles, like a migration ledger: an unchanged file is never replayed. */
@@ -190,28 +251,10 @@ model AppliedContentBundle {
   appliedAt DateTime @default(now())
 }
 
-/// A definition, kept by whoever owns that part of the catalogue. `global` is the operator's shared
-/// dictionary; the others belong to an organisation, a course or one class. A class names the scope
-/// when it links a term, so a definition is resolved without knowing who is reading.
-model TermVersion {
-  id          String @id @db.VarChar(191)
-  termKey     String @db.VarChar(100)
-  scopeKind   String @default("global") @db.VarChar(20)
-  scopeKey    String @default("") @db.VarChar(100)
-  skillKey    String @db.VarChar(100)
-  skill       Skill @relation(fields: [skillKey], references: [key])
-  label       String @db.VarChar(191)
-  summary     String @db.VarChar(500)
-  /// The definition itself is blocks, and they are rows of ContentBlock.
-  contentHash String @db.VarChar(64)
-  publishedAt DateTime @default(now())
-  @@index([termKey, publishedAt])
-  @@index([scopeKind, scopeKey, termKey])
-}
-
 model DiagnosticVersion {
   id               String @id @db.VarChar(191)
   diagnosticKey    String @db.VarChar(100)
+  diagnostic       Diagnostic @relation(fields: [diagnosticKey], references: [key])
   title            String @db.VarChar(191)
   description      String @db.Text
   estimatedMinutes Int

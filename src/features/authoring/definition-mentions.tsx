@@ -1,8 +1,8 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import type { TermChoice } from '@/shared/authoring';
-import { occurrenceAt, termRefId, type TermAnnotation } from '@/shared/rich-text';
+import type { DefinitionChoice } from '@/shared/authoring';
+import { occurrenceAt, definitionRefId, type DefinitionLink } from '@/shared/rich-text';
 import { useExpertMode } from './expert-mode';
 
 /**
@@ -18,49 +18,49 @@ export function mentionAt(text: string, caret: number): { from: number; query: s
 }
 
 /**
- * Replaces the mention with the term's own name and records the link. The author never counts which
+ * Replaces the mention with the definition's own name and records the link. The author never counts which
  * mention they meant: the position they typed at decides it, counted the way the renderer resolves
- * it. One annotation per term in a block, so choosing the same term again moves the link rather
+ * it. One annotation per definition in a block, so choosing the same definition again moves the link rather
  * than adding a second one the publishing validator would reject.
  */
-export function linkTerm(text: string, mention: { from: number; query: string }, choice: TermChoice, annotations: TermAnnotation[]) {
+export function linkDefinition(text: string, mention: { from: number; query: string }, choice: DefinitionChoice, annotations: DefinitionLink[]) {
   const surface = choice.label;
   const next = `${text.slice(0, mention.from)}${surface}${text.slice(mention.from + 1 + mention.query.length)}`;
   const occurrence = occurrenceAt(next, surface, mention.from);
-  const annotation: TermAnnotation = {
-    termKey: choice.termKey, surface,
+  const annotation: DefinitionLink = {
+    conceptKey: choice.conceptKey, surface,
     ...(choice.scopeKind === 'lesson' ? { scopeKind: 'lesson' as const, scopeKey: choice.scopeKey } : {}),
     ...(occurrence > 1 ? { occurrence } : {}),
   };
-  return { text: next, terms: [...annotations.filter((item) => termRefId(item) !== termRefId(choice)), annotation] };
+  return { text: next, definitions: [...annotations.filter((item) => definitionRefId(item) !== definitionRefId(choice)), annotation] };
 }
 
-const choiceKey = (term: TermChoice) => `${term.scopeKind}:${term.scopeKey}:${term.termKey}`;
+const choiceKey = (definition: DefinitionChoice) => `${definition.scopeKind}:${definition.scopeKey}:${definition.conceptKey}`;
 
 /**
- * Writing a paragraph that may link terms. The caller draws its own text box — a lesson sheet wants
+ * Writing a paragraph that may link definitions. The caller draws its own text box — a lesson sheet wants
  * one that looks like the finished paragraph, a question wants a plain field — and this supplies
  * what makes `@` work: what to bind to the box, and the list that opens under it.
  */
-export function useTermMentions({ payload, terms, onChange }: {
-  payload: Record<string, unknown>; terms: TermChoice[]; onChange: (next: Record<string, unknown>) => void;
+export function useDefinitionMentions({ payload, definitions, onChange }: {
+  payload: Record<string, unknown>; definitions: DefinitionChoice[]; onChange: (next: Record<string, unknown>) => void;
 }) {
   const text = typeof payload.text === 'string' ? payload.text : '';
-  const annotations = Array.isArray(payload.terms) ? (payload.terms as TermAnnotation[]) : [];
+  const annotations = Array.isArray(payload.definitions) ? (payload.definitions as DefinitionLink[]) : [];
   const [mention, setMention] = useState<{ from: number; query: string } | null>(null);
   const [highlight, setHighlight] = useState(0);
   const expert = useExpertMode();
   const area = useRef<HTMLTextAreaElement>(null);
 
   const matches = mention
-    ? terms.filter((term) => !mention.query || term.label.includes(mention.query) || term.termKey.includes(mention.query)).slice(0, 8)
+    ? definitions.filter((definition) => !mention.query || definition.label.includes(mention.query) || definition.conceptKey.includes(mention.query)).slice(0, 8)
     : [];
   const at = matches.length ? Math.min(highlight, matches.length - 1) : 0;
 
   const look = (value: string, caret: number) => { setMention(mentionAt(value, caret)); setHighlight(0); };
-  const pick = (choice: TermChoice) => {
+  const pick = (choice: DefinitionChoice) => {
     if (!mention) return;
-    onChange({ ...payload, ...linkTerm(text, mention, choice, annotations) });
+    onChange({ ...payload, ...linkDefinition(text, mention, choice, annotations) });
     const caret = mention.from + choice.label.length;
     setMention(null);
     requestAnimationFrame(() => { area.current?.focus(); area.current?.setSelectionRange(caret, caret); });
@@ -88,29 +88,29 @@ export function useTermMentions({ payload, terms, onChange }: {
 
   const picker = mention && (matches.length
     ? <ul className="term-mentions" role="listbox">
-      {matches.map((term, index) => <li key={choiceKey(term)}>
+      {matches.map((definition, index) => <li key={choiceKey(definition)}>
         <button type="button" className={index === at ? 'active' : ''}
-          onMouseDown={(event) => event.preventDefault()} onClick={() => pick(term)}>
-          <strong>{term.label}</strong>
-          <small>{expert && `${term.termKey} · `}{term.scopeKind === 'lesson' ? '이 수업' : '공통 사전'}</small>
+          onMouseDown={(event) => event.preventDefault()} onClick={() => pick(definition)}>
+          <strong>{definition.label}</strong>
+          <small>{expert && `${definition.conceptKey} · `}{definition.scopeKind === 'lesson' ? '이 수업' : '공통 사전'}</small>
         </button>
       </li>)}
     </ul>
     : <p className="editor-note term-mentions-empty">
-      「{mention.query}」에 맞는 용어가 없어요. 「용어 풀이」에서 먼저 발행해 주세요.</p>);
+      「{mention.query}」에 맞는 뜻풀이가 없어요. 「개념과 뜻풀이」에서 먼저 써 주세요.</p>);
 
   return { bind, picker };
 }
 
-/** The body of a paragraph as a plain field, with the picker that puts a term in. */
-export function TermText({ payload, terms, onChange }: {
-  payload: Record<string, unknown>; terms: TermChoice[]; onChange: (next: Record<string, unknown>) => void;
+/** The body of a paragraph as a plain field, with the picker that puts a definition in. */
+export function TermText({ payload, definitions, onChange }: {
+  payload: Record<string, unknown>; definitions: DefinitionChoice[]; onChange: (next: Record<string, unknown>) => void;
 }) {
-  const { bind, picker } = useTermMentions({ payload, terms, onChange });
+  const { bind, picker } = useDefinitionMentions({ payload, definitions, onChange });
   return <label className="editor-field term-writing">
     <span className="editor-label">글</span>
     <textarea rows={4} {...bind} />
-    <small>용어를 걸려면 <code>@</code> 뒤에 이름을 적고 고르세요. 고른 이름이 글에 들어가고, 아래에 연결한 용어로 남습니다.</small>
+    <small>뜻풀이를 걸려면 <code>@</code> 뒤에 이름을 적고 고르세요. 고른 이름이 글에 들어가고, 아래에 연결한 뜻풀이로 남습니다.</small>
     {picker}
   </label>;
 }

@@ -71,6 +71,7 @@ jobs:
           # This runs before host-side migration, against the job's fresh MySQL service.
           docker run --rm --network host --env DATABASE_URL "$migrator_image"
       - run: npm run db:migrate
+      - run: npm run db:seed
       - run: npm run typecheck
       - run: npm test
       - run: npm run build

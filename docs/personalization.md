@@ -34,7 +34,7 @@
 ## 저장 및 API
 
 - `DiagnosticVersion`: DB에 발행한 진단 정의다. `diagnosticKey=starting-point`의 최신 판본으로 새 진단을 시작한다. 기존 active 진단이 있으면 최신 정의로 교체하지 않고 이어간다. 완료 후 재진단을 안내하는 UI는 아직 없다.
-- `Skill`: 개념 이름·표시 순서를 DB에서 읽어 학습 상태와 추천 이유에 사용한다.
+- `Concept`: 개념 이름과 평가 여부를 DB에서 읽어 학습 상태와 추천 이유에 사용한다. 평가할 수 있는 개념(`assessable`)만 준비도에 오르고, 순서는 코스의 수업 순서에서 유도한다.
 - `DiagnosticRun`: 사용자와 진단 판본별 1개. 시작 시점의 문항 전체를 복사한 서버 전용 snapshot, 저장한 답·건너뛰기, 진행·완료 시점을 보관한다. 수업·퀴즈·숙제 문항과 ID를 공유하지 않는다. 같은 판본을 다시 시작해 점수를 반복 올릴 수 없다.
 - `User.preferredLessonKey`: 직접 고른 추천. 서버가 공개 수업 존재를 확인하며 타인 설정을 수정할 수 없다.
 - `RecommendationHistory`: 학습/설정 mutation과 같은 serializable transaction 안에서 추천·준비 상태·시간·우선 복습 snapshot이 달라질 때만 추가한다. 답안 원문은 이 이력에 넣지 않는다. GET은 계산·조회만 하며 시각 경과만으로 이력 행을 쓰지 않는다. 화면은 최근 10개, DB에는 기존 이력을 보존한다.

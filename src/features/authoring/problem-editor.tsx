@@ -5,7 +5,7 @@ import type { ContentBlock } from '@/shared/api';
 import { answerSpec, answerText, type AnswerSpec } from '@/shared/answer';
 import {
   copyProblem, insertAfter, moveBlock, newProblem, nextProblemBlockId, nextProblemVersionId, problemBlockForms,
-  problemGist, problemsOfBlock, type DraftProblem, type SkillChoice, type TermChoice,
+  problemGist, problemsOfBlock, type DraftProblem, type ConceptChoice, type DefinitionChoice,
 } from '@/shared/authoring';
 import { Icon } from '@/features/learning/icons';
 import { AddBlock, BlockCard } from './block-editor';
@@ -42,25 +42,25 @@ function AnswerField({ spec, onChange }: { spec: AnswerSpec; onChange: (next: An
 }
 
 /** The concepts this lesson teaches, named the way the catalogue names them rather than by key. */
-export function SkillPicker({ skills, chosen, onChange, label = '다루는 개념' }: {
-  skills: SkillChoice[]; chosen: string[]; onChange: (next: string[]) => void; label?: string;
+export function ConceptPicker({ concepts, chosen, onChange, label = '다루는 개념' }: {
+  concepts: ConceptChoice[]; chosen: string[]; onChange: (next: string[]) => void; label?: string;
 }) {
-  if (!skills.length) return null;
-  return <div className="editor-skills">
+  if (!concepts.length) return null;
+  return <div className="editor-concepts">
     <span className="editor-label">{label}</span>
-    <div className="editor-skill-buttons">
-      {skills.map((skill) => <label key={skill.key} className="editor-check">
-        <input type="checkbox" checked={chosen.includes(skill.key)}
-          onChange={() => onChange(chosen.includes(skill.key) ? chosen.filter((item) => item !== skill.key) : [...chosen, skill.key])} />
-        <span>{skill.label}</span>
+    <div className="editor-concept-buttons">
+      {concepts.map((concept) => <label key={concept.key} className="editor-check">
+        <input type="checkbox" checked={chosen.includes(concept.key)}
+          onChange={() => onChange(chosen.includes(concept.key) ? chosen.filter((item) => item !== concept.key) : [...chosen, concept.key])} />
+        <span>{concept.label}</span>
       </label>)}
     </div>
   </div>;
 }
 
-function ProblemBlocks({ label, hint, part, problem, blocks, taken, termChoices, omitText, onChange }: {
+function ProblemBlocks({ label, hint, part, problem, blocks, taken, definitionChoices, omitText, onChange }: {
   label: string; hint?: string; part: 'prompt' | 'hint' | 'solution'; problem: DraftProblem;
-  blocks: ContentBlock[]; taken: string[]; termChoices: TermChoice[]; omitText?: boolean;
+  blocks: ContentBlock[]; taken: string[]; definitionChoices: DefinitionChoice[]; omitText?: boolean;
   onChange: (next: ContentBlock[]) => void;
 }) {
   return <div className="editor-problem-part">
@@ -69,7 +69,7 @@ function ProblemBlocks({ label, hint, part, problem, blocks, taken, termChoices,
     {blocks.map((block, index) => <BlockCard key={block.blockId} block={block} index={index} total={blocks.length}
       omit={omitText && block.kind === 'core.rich_text' ? ['text'] : undefined}
       arrangingRefusal="문항 안에서는 놓아 보게 만들 수 없어요. 놓은 결과는 채점되지 않는데 답 칸 옆에 있으면 답으로 읽혀요."
-      termChoices={termChoices}
+      definitionChoices={definitionChoices}
       onChange={(next) => onChange(blocks.map((item, position) => (position === index ? next : item)))}
       onMove={(delta) => onChange(moveBlock(blocks, index, delta))}
       onRemove={() => onChange(blocks.filter((_, position) => position !== index))} />)}
@@ -84,8 +84,8 @@ function ProblemBlocks({ label, hint, part, problem, blocks, taken, termChoices,
  * is left here is everything a prompt cannot show: the answer it accepts, the concepts it claims, and
  * the help that only appears when someone asks for it.
  */
-export function ProblemPanel({ problem, number, total, skills, taken, termChoices, onChange, onMove, onCopy, onRemove }: {
-  problem: DraftProblem; number: number; total: number; skills: SkillChoice[]; taken: string[]; termChoices: TermChoice[];
+export function ProblemPanel({ problem, number, total, concepts, taken, definitionChoices, onChange, onMove, onCopy, onRemove }: {
+  problem: DraftProblem; number: number; total: number; concepts: ConceptChoice[]; taken: string[]; definitionChoices: DefinitionChoice[];
   onChange: (next: DraftProblem) => void; onMove: (delta: number) => void; onCopy: () => void; onRemove: () => void;
 }) {
   const expert = useExpertMode();
@@ -106,14 +106,14 @@ export function ProblemPanel({ problem, number, total, skills, taken, termChoice
     </header>
     <p className="editor-note">문제 지문은 수업 화면에서 바로 씁니다. 여기에는 지문이 보여 주지 않는 것들이 있어요.</p>
     <AnswerField spec={problem.gradingSpec} onChange={(gradingSpec) => onChange({ ...problem, gradingSpec })} />
-    <SkillPicker skills={skills} chosen={problem.skillKeys} onChange={(next) => onChange({ ...problem, skillKeys: next })} />
-    <ProblemBlocks label="문제" part="prompt" problem={problem} blocks={problem.promptContent} taken={taken} termChoices={termChoices}
+    <ConceptPicker concepts={concepts} chosen={problem.conceptKeys} onChange={(next) => onChange({ ...problem, conceptKeys: next })} />
+    <ProblemBlocks label="문제" part="prompt" problem={problem} blocks={problem.promptContent} taken={taken} definitionChoices={definitionChoices}
       hint="글은 수업 화면에서 고치고, 그림처럼 지문에 더 넣을 것이 있으면 여기에서 더합니다."
       onChange={(promptContent) => onChange({ ...problem, promptContent })} omitText />
-    <ProblemBlocks label="힌트" part="hint" problem={problem} blocks={problem.hints} taken={taken} termChoices={termChoices}
+    <ProblemBlocks label="힌트" part="hint" problem={problem} blocks={problem.hints} taken={taken} definitionChoices={definitionChoices}
       hint="힌트를 하나라도 두면 학습 화면에 힌트 버튼이 생겨요. 힌트를 열고 맞히면 도움을 받은 풀이로 기록합니다."
       onChange={(hints) => onChange({ ...problem, hints })} />
-    <ProblemBlocks label="해설" part="solution" problem={problem} blocks={problem.solution} taken={taken} termChoices={termChoices}
+    <ProblemBlocks label="해설" part="solution" problem={problem} blocks={problem.solution} taken={taken} definitionChoices={definitionChoices}
       hint="문항을 마친 뒤에만 보여 줍니다. 한 블록 이상 있어야 발행할 수 있어요."
       onChange={(solution) => onChange({ ...problem, solution })} />
   </section>;
@@ -124,9 +124,9 @@ export function ProblemPanel({ problem, number, total, skills, taken, termChoice
  * question is written, changed and removed; removing one here drops it from the version being
  * written, while every published version keeps the question it was published with.
  */
-export function ProblemSetEditor({ block, problems, lessonKey, role, versionId, skills, onPick, onChange }: {
+export function ProblemSetEditor({ block, problems, lessonKey, role, versionId, concepts, onPick, onChange }: {
   block: ContentBlock; problems: DraftProblem[]; lessonKey: string; role: string; versionId: string;
-  skills: SkillChoice[]; onPick: (problemVersionId: string) => void;
+  concepts: ConceptChoice[]; onPick: (problemVersionId: string) => void;
   onChange: (block: ContentBlock, problems: DraftProblem[]) => void;
 }) {
   const notifyRemoval = useRemovalNotice();
@@ -138,7 +138,7 @@ export function ProblemSetEditor({ block, problems, lessonKey, role, versionId, 
     onChange({ ...block, payload: { ...block.payload, problemVersionIds: nextIds } }, nextProblems);
   const add = () => {
     const created = newProblem(nextProblemVersionId(lessonKey, role, versionId, problems.map((item) => item.problemVersionId)),
-      chosen[0]?.skillKeys ?? problems[0]?.skillKeys ?? skills.slice(0, 1).map((skill) => skill.key));
+      chosen[0]?.conceptKeys ?? problems[0]?.conceptKeys ?? concepts.slice(0, 1).map((concept) => concept.key));
     write([...ids, created.problemVersionId], [...problems, created]);
     onPick(created.problemVersionId);
   };

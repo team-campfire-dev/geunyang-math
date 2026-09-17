@@ -5,6 +5,7 @@ import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import * as database from '@/server/db';
 import { hashSessionToken } from '@/server/auth';
 import { seedLessons } from './fixtures/content';
+import { ensureLesson } from './fixtures/identity';
 import { lessonMetadata, lessonRecord, indexLessonDocument } from '@/server/content-store';
 import { POST } from '@/app/api/v1/learning/route';
 
@@ -26,11 +27,13 @@ describe.skipIf(!testDatabaseUrl)('learning HTTP account binding', () => {
     const previous = await db.lessonVersion.findUnique({ where: { id: document.public.versionId } });
     // The seeded rows were renamed in place by a migration, so their stored hash is historical; the content is what must hold.
     if (previous) expect(await lessonRecord(db, document.public.versionId)).toEqual(document);
-    else await db.lessonVersion.create({ data: {
+    else {
+      await ensureLesson(db, document.public.lessonKey);
+      await db.lessonVersion.create({ data: {
       id: document.public.versionId, lessonKey: document.public.lessonKey, title: document.public.title,
-      order: document.public.order,
       metadata: JSON.parse(JSON.stringify(lessonMetadata(document))) as Prisma.InputJsonValue, contentHash,
     } });
+    }
     await indexLessonDocument(db, document);
   });
   beforeEach(() => {

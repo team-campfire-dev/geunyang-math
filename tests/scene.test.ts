@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { termContentBlockSchema, validateLesson } from '@/core/content';
+import { definitionBlockSchema, validateLesson } from '@/core/content';
 import {
   changeFor, createSceneItem, cssColor, emptyScene, isSceneColor, itemBounds, moveItem, nameItem, pathPattern,
   placeInZone, placementOffset, removeFromZone, reorderItem, resizeItem, sceneItemKinds, setChange, taskComplete,
@@ -193,7 +193,7 @@ describe('a drawing the learner arranges', () => {
     const record = structuredClone(seedLessons[0]);
     record.problems[0].promptContent.push(block as never);
     expect(() => validateLesson(record)).toThrow(/drawing to arrange is not allowed inside a problem/);
-    expect(() => termContentBlockSchema.parse(block)).toThrow(/drawing to arrange/);
+    expect(() => definitionBlockSchema.parse(block)).toThrow(/drawing to arrange/);
     // The same drawing without zones is just a picture, and a picture may go anywhere.
     const still = { ...block, payload: { ...block.payload, zones: undefined, task: undefined, items: [{ kind: 'rect', x: 0, y: 0, width: 10, height: 10 }] } };
     const illustrated = structuredClone(seedLessons[0]);

@@ -12,7 +12,7 @@ export type ContentBlock = {
 };
 export type PublicProblem = {
   problemVersionId: string;
-  skillKeys: string[];
+  conceptKeys: string[];
   promptContent: ContentBlock[];
   responseSpec: { kind: 'integer' | 'rational'; requiredForm?: string };
   hintAvailable: boolean;
@@ -29,26 +29,29 @@ export type PublicLesson = {
   title: string;
   summary: string;
   estimatedMinutes: number;
-  skillKeys: string[];
-  prerequisiteSkillKeys: string[];
+  conceptKeys: string[];
+  prerequisiteConceptKeys: string[];
   sectionCount: number;
-  order: number;
+  // The course that keeps this lesson. Read from the lesson's identity, never from the version.
+  courseKey: string;
 };
 /**
- * A term the learner may review while reading. Only terms the server decided to reveal are sent,
- * so a definition for the concept currently being taught or assessed never reaches the client.
+ * A definition the learner may open while reading: the one the author linked, in the scope the
+ * author named. The server sends every linked definition and withholds none.
  */
 export type GlossaryEntry = {
-  termKey: string; scopeKind: ConceptScope; scopeKey: string;
-  label: string; summary: string; skillKey: string;
+  conceptKey: string; scopeKind: ConceptScope; scopeKey: string;
+  label: string; summary: string;
   blocks: ContentBlock[];
   // The lesson that teaches this concept, when one is published.
   lessonKey: string | null;
 };
 export type LessonDocument = PublicLesson & { sections: LessonSection[]; problems: PublicProblem[]; glossary: GlossaryEntry[] };
 // Display-only concept names for the signed-out catalogue. Never carries answers or grading rules.
-export type PublicSkill = { key: string; label: string };
-export type PublicCatalog = { lessons: PublicLesson[]; skills: PublicSkill[] };
+export type PublicConcept = { key: string; label: string };
+// A course as the catalogue lists it. Lessons arrive in the order the course gives them.
+export type PublicCourse = { key: string; title: string; summary: string };
+export type PublicCatalog = { courses: PublicCourse[]; lessons: PublicLesson[]; concepts: PublicConcept[] };
 export type AttemptView = {
   id: string; problemVersionId: string; answer: string; result: GradeResult; hintUsed: boolean;
 };
@@ -72,11 +75,11 @@ export type DiagnosticView = {
   // Only released after completion. Diagnostic items never expose hints or grading specifications.
   results: DiagnosticAnswer[];
 };
-export type SkillReadiness = { key: string; label: string; readiness: 'unknown' | 'needs-practice' | 'ready'; source: 'none' | 'diagnostic' | 'learning' };
+export type ConceptReadiness = { key: string; label: string; readiness: 'unknown' | 'needs-practice' | 'ready'; source: 'none' | 'diagnostic' | 'learning' };
 export type Recommendation = { lessonKey: string; reason: string; kind: 'start' | 'continue' | 'revisit'; suggestedMinutes: number };
 export type PersonalPlan = {
   version: string;
-  readiness: SkillReadiness[];
+  readiness: ConceptReadiness[];
   review: { recipientId: string; reason: string } | null;
   sessionMinutes: number;
   preferredLessonKey: string | null;
@@ -92,7 +95,7 @@ export type LearningState = {
   diagnosticOffering: DiagnosticOffering | null;
   plan: PersonalPlan;
   recommendationHistory: RecommendationHistoryView[];
-  skills: { key: string; label: string; state: 'unknown' | 'practicing' | 'independent' | 'retained' }[];
+  concepts: { key: string; label: string; state: 'unknown' | 'practicing' | 'independent' | 'retained' }[];
 };
 export type LearningAction =
   | { action: 'recommendation.choose'; lessonKey: string | null }

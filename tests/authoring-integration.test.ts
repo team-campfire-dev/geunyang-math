@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { createDatabase } from '@/server/db';
 import { AuthoringService, authoringRole, authoringRoleDetail, openAuthoring, openAuthoringAccount } from '@/server/authoring';
-import { lessonRecord, importContent, termDefinitions } from '@/server/content-store';
+import { lessonRecord, importContent, definitionRecords } from '@/server/content-store';
 import type { StoredLesson } from '@/core/content';
 import { newProblem, nextProblemVersionId, type DraftEdit, type DraftProblem } from '@/shared/authoring';
 import { seedLessons } from './fixtures/content';
@@ -24,8 +24,8 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     // A lesson of this suite's own, so drafts here never publish a version of a shared fixture.
     lessonKey = `authoring-${randomUUID()}`;
     const base = JSON.parse(JSON.stringify(seedLessons[0]).replaceAll('fraction-meaning', lessonKey)) as StoredLesson;
-    base.public.order = 2000;
-    await importContent(db, { schemaVersion: 1, skills: [], lessons: [base], diagnostics: [], terms: [] });
+
+    await importContent(db, { schemaVersion: 1, courses: [{ key: `course-${base.public.lessonKey}`, title: '검사 코스', lessons: [{ key: base.public.lessonKey, order: 1 }], diagnostics: [] }], concepts: [], lessons: [base], diagnostics: [], definitions: [] });
   });
   afterAll(async () => {
     // A shared database keeps whatever a run leaves behind, so this run leaves nothing.
@@ -56,7 +56,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     expect(await authoringRole(db, learner.id)).toBeNull();
     expect(await authoringRole(db, author.id)).toBe('author');
     expect(await authoringRole(db, admin.id)).toBe('admin');
-    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], lessons: [], accounts: [], skills: [], expertMode: false });
+    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], courses: [], lessons: [], accounts: [], concepts: [], expertMode: false });
     await expect(service.createDraft(learner.id, lessonKey)).rejects.toThrow(/권한/);
   });
 
@@ -108,23 +108,23 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
   it('starts a lesson nobody has published, and refuses a key already spoken for', async () => {
     const admin = await account('admin');
     const key = `fresh-${randomUUID()}`.toLowerCase().slice(0, 40);
-    const skillKey = (await lessonRecord(db, `${lessonKey}:v1`))!.public.skillKeys[0];
-    const created = await service.createLesson(admin.id, key, '처음부터 만든 수업', [skillKey]);
+    const conceptKey = (await lessonRecord(db, `${lessonKey}:v1`))!.public.conceptKeys[0];
+    const created = await service.createLesson(admin.id, 'fractions', key, '처음부터 만든 수업', [conceptKey]);
 
     expect(created.draft!.versionId).toBe(`${key}:v1`);
     // Nothing to carry over: there is no earlier version of this lesson to be the next one of.
     expect(created.draft!.baseVersionId).toBeNull();
-    expect(created.draft!.edit.meta.skillKeys).toEqual([skillKey]);
+    expect(created.draft!.edit.meta.conceptKeys).toEqual([conceptKey]);
     // It explains and then asks, which is the smallest thing publishing would accept.
     expect(created.draft!.edit.sections.map((section) => section.role)).toEqual(['explanation', 'practice']);
     expect(created.draft!.edit.problems).toHaveLength(1);
-    expect(created.draft!.edit.problems[0].skillKeys).toEqual([skillKey]);
+    expect(created.draft!.edit.problems[0].conceptKeys).toEqual([conceptKey]);
     // What it starts as is already a document publishing would take.
     expect(created.draft!.issues).toEqual([]);
 
-    await expect(service.createLesson(admin.id, key, '같은 키', [skillKey])).rejects.toThrow(/수업 키/);
-    await expect(service.createLesson(admin.id, lessonKey, '발행된 키', [skillKey])).rejects.toThrow(/수업 키/);
-    await expect(service.createLesson(admin.id, `other-${key}`, '없는 개념', ['no-such-skill'])).rejects.toThrow(/개념/);
+    await expect(service.createLesson(admin.id, 'fractions', key, '같은 키', [conceptKey])).rejects.toThrow(/수업 키/);
+    await expect(service.createLesson(admin.id, 'fractions', lessonKey, '발행된 키', [conceptKey])).rejects.toThrow(/수업 키/);
+    await expect(service.createLesson(admin.id, 'fractions', `other-${key}`, '없는 개념', ['no-such-concept'])).rejects.toThrow(/개념/);
     await service.deleteDraft(admin.id, created.draft!.id);
   });
 
@@ -132,17 +132,17 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const admin = await account('admin');
     const created = await service.createDraft(admin.id, lessonKey);
     const draftId = created.draft!.id;
-    const before = created.draft!.edit.meta.skillKeys;
+    const before = created.draft!.edit.meta.conceptKeys;
     expect(before.length).toBeGreaterThan(0);
 
     const widened = structuredClone(created.draft!.edit);
-    widened.meta.skillKeys = [...before, 'fraction.equivalence'];
+    widened.meta.conceptKeys = [...before, 'fraction.equivalence'];
     const saved = await service.saveDraft(admin.id, draftId, widened);
-    expect(saved.draft!.edit.meta.skillKeys).toEqual(widened.meta.skillKeys);
+    expect(saved.draft!.edit.meta.conceptKeys).toEqual(widened.meta.conceptKeys);
     expect(saved.draft!.issues).toEqual([]);
     // A lesson has to teach something, and what the editor may send is where that is enforced.
     const emptied = structuredClone(created.draft!.edit);
-    emptied.meta.skillKeys = [];
+    emptied.meta.conceptKeys = [];
     await expect(service.act(admin.id, { action: 'draft.save', draftId, edit: emptied })).rejects.toThrow();
     await service.deleteDraft(admin.id, draftId);
   });
@@ -223,7 +223,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     expect(draft!.issues).toEqual([]);
     // Writing a question means writing its answer, so an account holding the role receives all of it.
     for (const problem of draft!.edit.problems) expect(Object.keys(problem).sort())
-      .toEqual(['gradingSpec', 'hints', 'problemVersionId', 'promptContent', 'skillKeys', 'solution']);
+      .toEqual(['conceptKeys', 'gradingSpec', 'hints', 'problemVersionId', 'promptContent', 'solution']);
     // The two fields that follow from the rest are never sent, so they cannot come back disagreeing.
     const serialized = JSON.stringify(draft);
     expect(serialized).not.toContain('responseSpec');
@@ -275,7 +275,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
 
     // A rule that only names what it refused is placed by that name instead.
     const claimed = structuredClone(blank.draft!.edit);
-    claimed.problems[0].skillKeys = ['no-such-skill'];
+    claimed.problems[0].conceptKeys = ['no-such-concept'];
     const missing = await service.saveDraft(admin.id, draftId, claimed);
     expect(missing.draft!.issues.some((issue) => issue.problemVersionId === missing.draft!.edit.problems[0].problemVersionId)).toBe(true);
 
@@ -388,7 +388,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const versionId = created.draft!.versionId;
     const edit = structuredClone(created.draft!.edit);
     const written = newProblem(nextProblemVersionId(lessonKey, 'practice', versionId,
-      edit.problems.map((problem) => problem.problemVersionId)), edit.problems[0].skillKeys);
+      edit.problems.map((problem) => problem.problemVersionId)), edit.problems[0].conceptKeys);
     written.promptContent[0].payload.text = '새로 쓴 문제예요. 답은 3입니다.';
     written.gradingSpec = { kind: 'integer', value: 3 };
     edit.problems.push(written);
@@ -496,88 +496,93 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     await expect(service.searchAccounts(learner.id, '찾기')).rejects.toThrow(/권한/);
   });
 
-  it('writes a definition the lesson keeps, and rewrites it as the next version', async () => {
+  it('writes a definition the lesson keeps, and rewrites it in place', async () => {
     const admin = await account('admin');
-    const termKey = `term.lesson.${randomUUID()}`;
-    const skillKey = (await lessonRecord(db, `${lessonKey}:v1`))!.public.skillKeys[0];
-    const published = await service.saveTerm(admin.id, { termKey, scopeKind: 'lesson', scopeKey: lessonKey, skillKey,
-      label: '이 수업의 용어', summary: '이 수업에서만 쓰는 풀이예요.',
-      blocks: [{ blockId: 'term:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '뜻을 풀어 썼어요.' } }] });
-    expect(published.publishedTermVersionId).toBe(`${lessonKey}:${termKey}:v1`);
-    // Blocks are named after the version that holds them, so the editor never chose the ID.
-    const row = await db.termVersion.findUniqueOrThrow({ where: { id: `${lessonKey}:${termKey}:v1` } });
-    expect((await termDefinitions(db, [row]))[0].blocks[0].blockId).toBe(`${lessonKey}:${termKey}:v1:b1`);
-    expect(row.scopeKind).toBe('lesson');
-    expect(row.scopeKey).toBe(lessonKey);
+    const conceptKey = `lesson-word-${randomUUID()}`;
+    const saved = await service.saveDefinition(admin.id, { conceptKey, scopeKind: 'lesson', scopeKey: lessonKey,
+      newConcept: { label: '이 수업의 낱말' }, label: '', summary: '이 수업에서만 쓰는 풀이예요.',
+      blocks: [{ blockId: 'definition:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '뜻을 풀어 썼어요.' } }] });
+    expect(saved.savedDefinition).toEqual({ conceptKey });
+    // The concept came into being with its definition, and is not one a question may assess.
+    expect(await db.concept.findUniqueOrThrow({ where: { key: conceptKey } })).toMatchObject({ label: '이 수업의 낱말', assessable: false });
+    // Blocks are named after the row that holds them, so the editor never chose the ID.
+    const row = await db.conceptDefinition.findUniqueOrThrow({ where: { conceptKey_scopeKind_scopeKey: { conceptKey, scopeKind: 'lesson', scopeKey: lessonKey } } });
+    expect((await definitionRecords(db, [row]))[0].blocks[0].blockId).toBe(`lesson:${lessonKey}:${conceptKey}:b1`);
 
-    const listed = published.terms!.find(term => term.termKey === termKey)!;
-    expect(listed).toMatchObject({ label: '이 수업의 용어', versionId: `${lessonKey}:${termKey}:v1` });
-    // Saving again publishes the next version and the list shows the new one. This goes through the
+    const listed = saved.definitions!.find(definition => definition.conceptKey === conceptKey)!;
+    expect(listed).toMatchObject({ conceptLabel: '이 수업의 낱말', label: '', summary: '이 수업에서만 쓰는 풀이예요.' });
+    // Saving again rewrites the same row and the list shows the new wording. This goes through the
     // action the screen posts, so the shape the editor sends is the shape the server accepts.
-    const again = await service.act(admin.id, { action: 'term.save', edit: {
-      termKey: listed.termKey, scopeKind: listed.scopeKind, scopeKey: listed.scopeKey, skillKey: listed.skillKey,
-      label: listed.label, summary: '설명을 고쳐 썼어요.', blocks: listed.blocks } });
-    expect(again.publishedTermVersionId).toBe(`${lessonKey}:${termKey}:v2`);
-    expect(again.terms!.find(term => term.termKey === termKey)!.summary).toBe('설명을 고쳐 썼어요.');
-    // The earlier version stays where it was; nothing is rewritten in place.
-    expect((await db.termVersion.findUniqueOrThrow({ where: { id: `${lessonKey}:${termKey}:v1` } })).summary)
-      .toBe('이 수업에서만 쓰는 풀이예요.');
+    const again = await service.act(admin.id, { action: 'definition.save', edit: {
+      conceptKey: listed.conceptKey, scopeKind: listed.scopeKind, scopeKey: listed.scopeKey,
+      label: '분모 맞추기', summary: '설명을 고쳐 썼어요.', blocks: listed.blocks } });
+    expect(again.definitions!.find(definition => definition.conceptKey === conceptKey))
+      .toMatchObject({ label: '분모 맞추기', summary: '설명을 고쳐 썼어요.' });
+    // One row per concept and scope: a definition has no versions.
+    expect(await db.conceptDefinition.count({ where: { conceptKey } })).toBe(1);
+    expect((await db.conceptDefinition.findUniqueOrThrow({ where: { id: row.id } })).summary).toBe('설명을 고쳐 썼어요.');
   });
 
-  it('keeps the shared dictionary to administrators and asks a lesson term which lesson it belongs to', async () => {
+  it('keeps the shared dictionary to administrators and asks a lesson definition which lesson it belongs to', async () => {
     const admin = await account('admin');
     const author = await account('author');
     const learner = await account();
-    const termKey = `term.scope.${randomUUID()}`;
-    const skillKey = (await lessonRecord(db, `${lessonKey}:v1`))!.public.skillKeys[0];
-    const edit = { termKey, scopeKind: 'global' as const, scopeKey: '', skillKey, label: '사전 용어', summary: '사전이 쓴 풀이예요.',
-      blocks: [{ blockId: 'term:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '사전 정의' } }] };
-    await expect(service.saveTerm(author.id, edit)).rejects.toThrow(/공통 사전은 관리자만/);
-    await expect(service.listTerms(learner.id, 'global', '')).rejects.toThrow(/권한/);
-    // A lesson term is part of writing that lesson, so an author may write one.
-    await expect(service.saveTerm(author.id, { ...edit, scopeKind: 'lesson', scopeKey: lessonKey })).resolves.toBeTruthy();
+    const conceptKey = `scope-word-${randomUUID()}`;
+    const edit = { conceptKey, scopeKind: 'global' as const, scopeKey: '', newConcept: { label: '사전 낱말' }, label: '', summary: '사전이 쓴 풀이예요.',
+      blocks: [{ blockId: 'definition:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '사전 정의' } }] };
+    await expect(service.saveDefinition(author.id, edit)).rejects.toThrow(/공통 사전은 관리자만/);
+    await expect(service.listDefinitions(learner.id, 'global', '')).rejects.toThrow(/권한/);
+    // A lesson definition is part of writing that lesson, so an author may write one.
+    await expect(service.saveDefinition(author.id, { ...edit, scopeKind: 'lesson', scopeKey: lessonKey })).resolves.toBeTruthy();
 
-    await expect(service.saveTerm(admin.id, { ...edit, scopeKey: lessonKey })).rejects.toThrow(/소속을 적지 않아요/);
-    await expect(service.saveTerm(admin.id, { ...edit, scopeKind: 'lesson', scopeKey: '' })).rejects.toThrow(/어느 수업의 용어인지/);
-    await expect(service.saveTerm(admin.id, { ...edit, scopeKind: 'lesson', scopeKey: 'no-such-lesson' })).rejects.toThrow(/발행된 적 없는/);
-    // The dictionary and the lesson keep their own lists, even for the same key.
-    await service.saveTerm(admin.id, edit);
-    expect((await service.listTerms(admin.id, 'global', '')).terms!.some(term => term.termKey === termKey)).toBe(true);
-    const mine = (await service.listTerms(admin.id, 'lesson', lessonKey)).terms!.find(term => term.termKey === termKey)!;
-    expect(mine.versionId).toBe(`${lessonKey}:${termKey}:v1`);
+    await expect(service.saveDefinition(admin.id, { ...edit, scopeKey: lessonKey })).rejects.toThrow(/소속을 적지 않아요/);
+    await expect(service.saveDefinition(admin.id, { ...edit, scopeKind: 'lesson', scopeKey: '' })).rejects.toThrow(/어느 수업의 뜻풀이인지/);
+    await expect(service.saveDefinition(admin.id, { ...edit, scopeKind: 'lesson', scopeKey: 'no-such-lesson' })).rejects.toThrow(/그런 수업이 없어요/);
+    // The dictionary and the lesson keep their own definitions of one concept.
+    await service.saveDefinition(admin.id, edit);
+    expect((await service.listDefinitions(admin.id, 'global', '')).definitions!.some(definition => definition.conceptKey === conceptKey)).toBe(true);
+    expect((await service.listDefinitions(admin.id, 'lesson', lessonKey)).definitions!.some(definition => definition.conceptKey === conceptKey)).toBe(true);
+    expect(await db.conceptDefinition.count({ where: { conceptKey } })).toBe(2);
   });
 
   it('refuses a definition the publishing rules would not accept', async () => {
     const admin = await account('admin');
-    const termKey = `term.bad.${randomUUID()}`;
-    const base = { termKey, scopeKind: 'lesson' as const, scopeKey: lessonKey, label: '나쁜 용어', summary: '설명이에요.',
-      blocks: [{ blockId: 'term:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '정의' } }] };
-    await expect(service.saveTerm(admin.id, { ...base, skillKey: 'no.such.skill' })).rejects.toThrow(/Missing skill/);
-    expect(await db.termVersion.findUnique({ where: { id: `${lessonKey}:${termKey}:v1` } })).toBeNull();
+    const conceptKey = `bad-word-${randomUUID()}`;
+    const base = { conceptKey, scopeKind: 'lesson' as const, scopeKey: lessonKey, label: '', summary: '설명이에요.',
+      blocks: [{ blockId: 'definition:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '정의' } }] };
+    // A concept nobody named: without a name for it, there is nothing to make.
+    await expect(service.saveDefinition(admin.id, base)).rejects.toThrow(/없는 개념/);
+    // A definition never holds a question.
+    await expect(service.saveDefinition(admin.id, { ...base, newConcept: { label: '나쁜 낱말' },
+      blocks: [{ blockId: 'definition:block:1', kind: 'core.problem_set', typeVersion: 1, required: true, payload: { problemVersionIds: [`${lessonKey}:practice-1:v1`] } }] }))
+      .rejects.toThrow(/cannot embed/);
+    expect(await db.concept.findUnique({ where: { key: conceptKey } })).toBeNull();
   });
 
-  it('offers a draft the terms it may link, and no others', async () => {
+  it('offers a draft the definitions it may link, and no others', async () => {
     const admin = await account('admin');
     const suffix = randomUUID();
-    const skillKey = (await lessonRecord(db, `${lessonKey}:v1`))!.public.skillKeys[0];
-    const define = (termKey: string, scopeKind: 'global' | 'lesson', scopeKey: string, label: string) =>
-      service.saveTerm(admin.id, { termKey, scopeKind, scopeKey, skillKey, label, summary: `${label} 풀이예요.`,
-        blocks: [{ blockId: 'term:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: label } }] });
-    await define(`term.shared.${suffix}`, 'global', '', '사전 낱말');
-    await define(`term.mine.${suffix}`, 'lesson', lessonKey, '이 수업 낱말');
+    const define = (conceptKey: string, scopeKind: 'global' | 'lesson', scopeKey: string, label: string) =>
+      service.saveDefinition(admin.id, { conceptKey, scopeKind, scopeKey, newConcept: { label }, label: '', summary: `${label} 풀이예요.`,
+        blocks: [{ blockId: 'definition:block:1', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: label } }] });
+    await define(`shared-${suffix}`, 'global', '', '사전 낱말');
+    await define(`mine-${suffix}`, 'lesson', lessonKey, '이 수업 낱말');
+    // A definition with no body only renames the concept, and cannot be linked.
+    await service.saveDefinition(admin.id, { conceptKey: `nameonly-${suffix}`, scopeKind: 'lesson', scopeKey: lessonKey,
+      newConcept: { label: '이름만' }, label: '이 수업에서 부르는 이름', summary: '', blocks: [] });
     // Another lesson keeps one of its own; this draft must not be offered it.
     const other = `other-${randomUUID()}`;
     const record = JSON.parse(JSON.stringify(seedLessons[0]).replaceAll('fraction-meaning', other)) as StoredLesson;
-    record.public.order = 3000;
-    await importContent(db, { schemaVersion: 1, skills: [], lessons: [record], diagnostics: [], terms: [] });
-    await define(`term.other.${suffix}`, 'lesson', other, '남의 수업 낱말');
+    await importContent(db, { schemaVersion: 1, courses: [{ key: `course-${record.public.lessonKey}`, title: '검사 코스', lessons: [{ key: record.public.lessonKey, order: 1 }], diagnostics: [] }], concepts: [], lessons: [record], diagnostics: [], definitions: [] });
+    await define(`other-${suffix}`, 'lesson', other, '남의 수업 낱말');
 
     const { draft } = await service.createDraft(admin.id, lessonKey);
-    const offered = draft!.terms.map(term => term.termKey);
-    expect(offered).toContain(`term.shared.${suffix}`);
-    expect(offered).toContain(`term.mine.${suffix}`);
-    expect(offered).not.toContain(`term.other.${suffix}`);
-    expect(draft!.terms.find(term => term.termKey === `term.mine.${suffix}`))
+    const offered = draft!.definitions.map(definition => definition.conceptKey);
+    expect(offered).toContain(`shared-${suffix}`);
+    expect(offered).toContain(`mine-${suffix}`);
+    expect(offered).not.toContain(`nameonly-${suffix}`);
+    expect(offered).not.toContain(`other-${suffix}`);
+    expect(draft!.definitions.find(definition => definition.conceptKey === `mine-${suffix}`))
       .toMatchObject({ scopeKind: 'lesson', scopeKey: lessonKey, label: '이 수업 낱말' });
     await service.deleteDraft(admin.id, draft!.id);
   });

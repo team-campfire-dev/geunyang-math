@@ -5,33 +5,41 @@ import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { canonicalJson, parseContentBundle, validateReferences } from '@/core/content-bundle';
-import { blockOf, lessonRecord, currentDiagnostic, currentTerms, diagnosticDefinitions, exportContent, importContent, indexLessonDocument, publishBundle, verifyContent } from '@/server/content-store';
-import initial from './fixtures/initial-content.json';
+import { blockOf, lessonRecord, currentDiagnostic, currentDefinitions, diagnosticDefinitions, exportContent, importContent, indexLessonDocument, publishBundle, verifyContent } from '@/server/content-store';
+import initial from '../prisma/seed/fractions.json';
 import { seedLessons } from './fixtures/content';
 
 const bundle = () => parseContentBundle(structuredClone(initial));
-const empty = () => ({ schemaVersion: 1 as const, skills: [], lessons: [], diagnostics: [], terms: [] });
+const empty = () => ({ schemaVersion: 1 as const, courses: [], concepts: [], lessons: [], diagnostics: [], definitions: [] });
+/**
+ * A course of the test's own for the lessons it publishes, so the seeded course is never touched. It is
+ * named after the first lesson, so every version of one lesson lands in the same course.
+ */
+const inCourse = (...lessons: { public: { lessonKey: string } }[]) => [{ key: `course-${lessons[0].public.lessonKey}`, title: '검사 코스',
+  lessons: [...new Set(lessons.map((lesson) => lesson.public.lessonKey))].map((key, index) => ({ key, order: index + 1 })), diagnostics: [] }];
 function newLesson() {
   const key = `content-test-${randomUUID()}`;
   const c = JSON.parse(JSON.stringify(seedLessons[0]).replaceAll('fraction-meaning', key)) as typeof seedLessons[number];
-  c.public.order = 1000;
+
   return c;
 }
 
-const termFixture = {
-  versionId: 'term.denominator:v1', termKey: 'term.denominator',
-  scopeKind: 'global' as const, scopeKey: '', skillKey: 'fraction.meaning',
+const definitionFixture = {
+  conceptKey: 'denominator', scopeKind: 'global' as const, scopeKey: '',
   label: '분모', summary: '전체를 몇 조각으로 나누었는지 나타내는 수예요.',
-  blocks: [{ blockId: 'term.denominator:v1:b1', kind: 'core.rich_text', typeVersion: 1, required: true,
+  blocks: [{ blockId: 'global:denominator:b1', kind: 'core.rich_text', typeVersion: 1, required: true,
     payload: { text: '분모는 전체를 몇 조각으로 나누었는지 알려줘요.' } }],
 };
-/** The third lesson links a prerequisite term; its own concept must never link here. */
+/** The concept the fixture definition explains: one no question assesses, which is what most definitions are about. */
+const denominatorConcept = { key: 'denominator', label: '분모', assessable: false };
+/** The third lesson links a definition of a concept no question assesses. */
 function withTerms() {
   const b = bundle();
-  b.terms = [structuredClone(termFixture)];
+  b.concepts.push({ ...denominatorConcept });
+  b.definitions = [structuredClone(definitionFixture)];
   const block = b.lessons[2].sections[0].contentBlocks[0];
-  b.lessons[2].sections[0].contentBlocks[0] = { ...block, typeVersion: 2,
-    payload: { text: block.payload.text, terms: [{ termKey: 'term.denominator', surface: '분모' }] } };
+  b.lessons[2].sections[0].contentBlocks[0] = { ...block, typeVersion: 3,
+    payload: { text: block.payload.text, definitions: [{ conceptKey: 'denominator', surface: '분모' }] } };
   return b;
 }
 
@@ -41,9 +49,9 @@ describe('content publishing contract', () => {
     expect(canonicalJson({ b: [2, 1], a: { d: 2, c: 1 } })).toBe(canonicalJson({ a: { c: 1, d: 2 }, b: [2, 1] }));
     expect(canonicalJson([1, 2])).not.toBe(canonicalJson([2, 1]));
   });
-  it('rejects unknown skills, duplicate versions, and shared diagnostic/lesson question IDs', () => {
-    const a = bundle(); a.skills = [];
-    expect(() => validateReferences(a)).toThrow(/Missing skill/);
+  it('rejects unknown concepts, duplicate versions, and shared diagnostic/lesson question IDs', () => {
+    const a = bundle(); a.concepts = [];
+    expect(() => validateReferences(a)).toThrow(/Missing concept/);
     const b = bundle(); b.lessons.push(b.lessons[0]);
     expect(() => parseContentBundle(b)).toThrow(/Duplicate/);
     const c = bundle(); c.diagnostics[0].problems[0].problemVersionId = c.lessons[0].problems[0].problemVersionId;
@@ -58,79 +66,82 @@ describe('content publishing contract', () => {
     expect(() => parseContentBundle(c)).toThrow(/Unsupported block/);
   });
   it('rejects case-only identities that MySQL treats as equal', () => {
-    const a = bundle(); a.skills.push({ ...a.skills[0], key: a.skills[0].key.toUpperCase() });
+    const a = bundle(); a.concepts.push({ ...a.concepts[0], key: a.concepts[0].key.toUpperCase() });
     expect(() => validateReferences(a)).toThrow(/letter case/);
     const b = bundle(); b.diagnostics[0].problems[0].problemVersionId = b.lessons[0].problems[0].problemVersionId.toUpperCase();
     expect(() => validateReferences(b)).toThrow(/letter case/);
   });
-  it('links lesson text to published terms and rejects a lesson that links to none', () => {
+  it('links lesson text to definitions and rejects a lesson that links to none', () => {
     expect(() => validateReferences(withTerms())).not.toThrow();
-    const orphan = withTerms(); orphan.terms = [];
-    expect(() => validateReferences(orphan)).toThrow(/Missing term/);
-    const moved = withTerms(); moved.terms.push({ ...moved.terms[0], versionId: 'term.denominator:v2', skillKey: 'fraction.addition' });
-    expect(() => validateReferences(moved)).toThrow(/concept cannot change/);
-    const cased = withTerms(); cased.terms.push({ ...cased.terms[0], versionId: 'term.denominator:v2', termKey: 'TERM.denominator' });
+    const orphan = withTerms(); orphan.definitions = [];
+    expect(() => validateReferences(orphan)).toThrow(/Missing definition/);
+    // A definition with no body only renames the concept; there is nothing to open, so nothing to link.
+    const bodiless = withTerms(); bodiless.definitions[0].blocks = [];
+    expect(() => validateReferences(bodiless)).toThrow(/Missing definition/);
+    const unknown = withTerms(); unknown.concepts = unknown.concepts.filter(concept => concept.key !== 'denominator');
+    expect(() => validateReferences(unknown)).toThrow(/Missing concept/);
+    const cased = withTerms(); cased.concepts.push({ key: 'DENOMINATOR', label: '분모', assessable: false });
     expect(() => validateReferences(cased)).toThrow(/letter case/);
+    // What a lesson teaches, presumes or asks about must be a concept a question can assess.
+    const taught = withTerms(); taught.lessons[2].public.conceptKeys = ['denominator'];
+    expect(() => validateReferences(taught)).toThrow(/not assessable/);
   });
-  it('keeps a lesson term and a dictionary term apart even when they share a key', () => {
+  it('keeps a lesson definition and a dictionary definition apart even when they explain one concept', () => {
     const b = withTerms();
     const lessonKey = b.lessons[2].public.lessonKey;
-    // The same key, kept by the lesson itself: its own wording, not the operator's dictionary.
-    b.terms.push({ ...structuredClone(termFixture), versionId: `${lessonKey}:term.denominator:v1`,
-      scopeKind: 'lesson', scopeKey: lessonKey, summary: '이 수업에서만 쓰는 설명이에요.',
-      blocks: [{ ...termFixture.blocks[0], blockId: `${lessonKey}:term.denominator:v1:b1` }] });
+    // The same concept, kept by the lesson itself: its own name and wording, not the operator's dictionary.
+    b.definitions.push({ ...structuredClone(definitionFixture), scopeKind: 'lesson', scopeKey: lessonKey,
+      label: '아래 수', summary: '이 수업에서만 쓰는 설명이에요.',
+      blocks: [{ ...definitionFixture.blocks[0], blockId: `lesson:${lessonKey}:denominator:b1` }] });
     const block = b.lessons[2].sections[0].contentBlocks[0];
     b.lessons[2].sections[0].contentBlocks[0] = { ...block,
-      payload: { text: block.payload.text, terms: [{ termKey: 'term.denominator', surface: '분모', scopeKind: 'lesson', scopeKey: lessonKey }] } };
+      payload: { text: block.payload.text, definitions: [{ conceptKey: 'denominator', surface: '분모', scopeKind: 'lesson', scopeKey: lessonKey }] } };
     expect(() => validateReferences(b)).not.toThrow();
-    // Each scope keeps its own concept history, so one may be reworded without disturbing the other.
-    const moved = structuredClone(b);
-    moved.terms.push({ ...moved.terms[1], versionId: `${lessonKey}:term.denominator:v2`, skillKey: 'fraction.addition' });
-    expect(() => validateReferences(moved)).toThrow(/concept cannot change/);
-    const globalMoved = structuredClone(b);
-    globalMoved.terms.push({ ...globalMoved.terms[0], versionId: 'term.denominator:v2', skillKey: 'fraction.addition' });
-    expect(() => validateReferences(globalMoved)).toThrow(/concept cannot change/);
+    // One definition per concept in each scope: a definition has no versions to pile up.
+    const twice = structuredClone(b); twice.definitions.push(structuredClone(twice.definitions[1]));
+    expect(() => parseContentBundle(twice)).toThrow(/Duplicate definitions per concept and scope/);
   });
 
-  it('refuses a lesson that links a term another lesson keeps', () => {
+  it('refuses a lesson that links a definition another lesson keeps', () => {
     const b = withTerms();
     const owner = b.lessons[0].public.lessonKey, borrower = b.lessons[2].public.lessonKey;
-    b.terms.push({ ...structuredClone(termFixture), versionId: `${owner}:term.denominator:v1`,
-      scopeKind: 'lesson', scopeKey: owner,
-      blocks: [{ ...termFixture.blocks[0], blockId: `${owner}:term.denominator:v1:b1` }] });
+    b.definitions.push({ ...structuredClone(definitionFixture), scopeKind: 'lesson', scopeKey: owner,
+      blocks: [{ ...definitionFixture.blocks[0], blockId: `lesson:${owner}:denominator:b1` }] });
     const block = b.lessons[2].sections[0].contentBlocks[0];
     b.lessons[2].sections[0].contentBlocks[0] = { ...block,
-      payload: { text: block.payload.text, terms: [{ termKey: 'term.denominator', surface: '분모', scopeKind: 'lesson', scopeKey: owner }] } };
+      payload: { text: block.payload.text, definitions: [{ conceptKey: 'denominator', surface: '분모', scopeKind: 'lesson', scopeKey: owner }] } };
     expect(borrower).not.toBe(owner);
-    expect(() => validateReferences(b)).toThrow(/can only link its own terms/);
+    expect(() => validateReferences(b)).toThrow(/can only link its own definitions/);
   });
 
   it('refuses a scope that does not say what it belongs to', () => {
-    const missingKey = { ...structuredClone(initial), terms: [{ ...termFixture, scopeKind: 'lesson' as const, scopeKey: '' }] };
+    const missingKey = { ...structuredClone(initial), definitions: [{ ...definitionFixture, scopeKind: 'lesson' as const, scopeKey: '' }] };
     expect(() => parseContentBundle(missingKey)).toThrow(/scope it belongs to/);
-    const strayKey = { ...structuredClone(initial), terms: [{ ...termFixture, scopeKey: 'fraction-meaning' }] };
+    const strayKey = { ...structuredClone(initial), definitions: [{ ...definitionFixture, scopeKey: 'fraction-meaning' }] };
     expect(() => parseContentBundle(strayKey)).toThrow(/scope it belongs to/);
     // A bundle written before scopes existed still imports as the shared dictionary.
-    const older = { ...structuredClone(initial), terms: [{ versionId: termFixture.versionId, termKey: termFixture.termKey,
-      skillKey: termFixture.skillKey, label: termFixture.label, summary: termFixture.summary, blocks: termFixture.blocks }] };
-    expect(parseContentBundle(older).terms[0]).toMatchObject({ scopeKind: 'global', scopeKey: '' });
+    const older = { ...structuredClone(initial), definitions: [{ conceptKey: definitionFixture.conceptKey,
+      label: definitionFixture.label, summary: definitionFixture.summary, blocks: definitionFixture.blocks }] };
+    expect(parseContentBundle(older).definitions[0]).toMatchObject({ scopeKind: 'global', scopeKey: '' });
   });
 
   it('refuses a question that explains the concept it assesses', () => {
     const b = withTerms();
     const problem = b.lessons[0].problems[0];
-    problem.promptContent[0] = { ...problem.promptContent[0], typeVersion: 2,
-      payload: { text: '분모가 4인 분수를 고르세요.', terms: [{ termKey: 'term.denominator', surface: '분모' }] } };
-    expect(problem.skillKeys).toContain('fraction.meaning');
+    expect(problem.conceptKeys).toContain('fraction.meaning');
+    b.definitions.push({ ...structuredClone(definitionFixture), conceptKey: 'fraction.meaning', label: '분수의 의미',
+      blocks: [{ ...definitionFixture.blocks[0], blockId: 'global:fraction.meaning:b1' }] });
+    problem.promptContent[0] = { ...problem.promptContent[0], typeVersion: 3,
+      payload: { text: '분수의 의미를 떠올려 분모가 4인 분수를 고르세요.', definitions: [{ conceptKey: 'fraction.meaning', surface: '분수의 의미' }] } };
     expect(() => validateReferences(b)).toThrow(/cannot explain the concept it assesses/);
   });
-  it('keeps term definitions free of questions and of further term links', () => {
-    const withBlock = (block: unknown) => ({ ...structuredClone(initial), terms: [{ ...termFixture, blocks: [block] }] });
-    expect(() => parseContentBundle(withBlock({ blockId: 'term:bad:v1', kind: 'core.problem_set', typeVersion: 1, required: true,
+  it('keeps definition definitions free of questions and of further definition links', () => {
+    const withBlock = (block: unknown) => ({ ...structuredClone(initial), definitions: [{ ...definitionFixture, blocks: [block] }] });
+    expect(() => parseContentBundle(withBlock({ blockId: 'definition:bad:v1', kind: 'core.problem_set', typeVersion: 1, required: true,
       payload: { problemVersionIds: [initial.lessons[0].problems[0].problemVersionId] } }))).toThrow();
-    expect(() => parseContentBundle(withBlock({ blockId: 'term:bad:v1', kind: 'core.rich_text', typeVersion: 2, required: true,
-      payload: { text: '분모를 설명해요.', terms: [{ termKey: 'term.denominator', surface: '분모' }] } }))).toThrow();
-    expect(() => parseContentBundle(withBlock(termFixture.blocks[0]))).not.toThrow();
+    expect(() => parseContentBundle(withBlock({ blockId: 'definition:bad:v1', kind: 'core.rich_text', typeVersion: 3, required: true,
+      payload: { text: '분모를 설명해요.', definitions: [{ conceptKey: 'term.denominator', surface: '분모' }] } }))).toThrow();
+    expect(() => parseContentBundle(withBlock(definitionFixture.blocks[0]))).not.toThrow();
   });
   it('keeps fixture imports outside runtime and migrator code', () => {
     function visit(dir: string): string[] { return readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? visit(`${dir}/${e.name}`) : /\.[cm]?[jt]sx?$/.test(e.name) ? [`${dir}/${e.name}`] : []); }
@@ -164,7 +175,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     }
     const diagnostic = await db.diagnosticVersion.findUniqueOrThrow({ where: { id: initial.diagnostics[0].versionId } });
     expect((await diagnosticDefinitions(db, [diagnostic]))[0].problems).toEqual(initial.diagnostics[0].problems);
-    expect((await verifyContent(db)).skills).toBeGreaterThanOrEqual(3);
+    expect((await verifyContent(db)).concepts).toBeGreaterThanOrEqual(3);
   });
   it('exports and reimports without rewriting any published content, hash or timestamp', async () => {
     const before = await db.lessonVersion.findMany({ orderBy: { id: 'asc' } });
@@ -173,42 +184,42 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     expect(result).toMatchObject({ newLessons: 0, newDiagnostics: 0 });
     expect(await db.lessonVersion.findMany({ orderBy: { id: 'asc' } })).toEqual(before);
   });
-  it('publishes a DB-only lesson and skill atomically; dry run writes nothing and changed versions are rejected', async () => {
-    const c = newLesson(), skillKey = `test.${randomUUID()}`;
-    c.public.skillKeys = [skillKey]; c.public.prerequisiteSkillKeys = [];
-    c.problems.forEach(p => { p.skillKeys = [skillKey]; });
-    const input = { ...empty(), lessons: [c], skills: [{ key: skillKey, label: 'DB에서 등록한 개념', order: 999 }] };
+  it('publishes a DB-only lesson and concept atomically; dry run writes nothing and changed versions are rejected', async () => {
+    const c = newLesson(), conceptKey = `test.${randomUUID()}`;
+    c.public.conceptKeys = [conceptKey]; c.public.prerequisiteConceptKeys = [];
+    c.problems.forEach(p => { p.conceptKeys = [conceptKey]; });
+    const input = { ...empty(), courses: inCourse(c), lessons: [c], concepts: [{ key: conceptKey, label: 'DB에서 등록한 개념', assessable: true }] };
     expect(await importContent(db, input, true)).toMatchObject({ dryRun: true, newLessons: 1 });
     expect(await db.lessonVersion.findUnique({ where: { id: c.public.versionId } })).toBeNull();
-    expect(await db.skill.findUnique({ where: { key: skillKey } })).toBeNull();
+    expect(await db.concept.findUnique({ where: { key: conceptKey } })).toBeNull();
     await importContent(db, input);
     const user = await learner();
     const state = await service.state(user.id);
-    expect(state.lessons).toContainEqual(c.public);
-    expect(state.skills).toContainEqual({ key: skillKey, label: 'DB에서 등록한 개념', state: 'unknown' });
+    expect(state.lessons).toContainEqual({ ...c.public, courseKey: input.courses[0].key });
+    expect(state.concepts).toContainEqual({ key: conceptKey, label: 'DB에서 등록한 개념', state: 'unknown' });
     expect(JSON.stringify(await service.lessonDocument(c.public.lessonKey))).not.toContain('gradingSpec');
     const edited = structuredClone(c); edited.public.title = 'Cannot overwrite';
-    await expect(importContent(db, { ...input, lessons: [edited], skills: [{ ...input.skills[0], label: 'Must not persist' }] })).rejects.toThrow(/immutable/);
-    expect((await db.skill.findUniqueOrThrow({ where: { key: skillKey } })).label).toBe('DB에서 등록한 개념');
+    await expect(importContent(db, { ...input, lessons: [edited], concepts: [{ ...input.concepts[0], label: 'Must not persist' }] })).rejects.toThrow(/immutable/);
+    expect((await db.concept.findUniqueOrThrow({ where: { key: conceptKey } })).label).toBe('DB에서 등록한 개념');
   });
   it('rejects unknown references and changes to reused question versions without partial writes', async () => {
-    const bad = newLesson(); bad.public.skillKeys = ['missing.skill']; bad.problems.forEach(p => { p.skillKeys = ['missing.skill']; });
-    await expect(importContent(db, { ...empty(), lessons: [bad] })).rejects.toThrow(/Missing skill/);
+    const bad = newLesson(); bad.public.conceptKeys = ['missing.concept']; bad.problems.forEach(p => { p.conceptKeys = ['missing.concept']; });
+    await expect(importContent(db, { ...empty(), courses: inCourse(bad), lessons: [bad] })).rejects.toThrow(/Missing concept/);
     expect(await db.lessonVersion.findUnique({ where: { id: bad.public.versionId } })).toBeNull();
-    const first = newLesson(); await importContent(db, { ...empty(), lessons: [first] });
+    const first = newLesson(); await importContent(db, { ...empty(), courses: inCourse(first), lessons: [first] });
     const second = structuredClone(first); second.public.versionId += '-next'; second.problems[0].promptContent[0].payload.text = 'Changed problem';
-    await expect(importContent(db, { ...empty(), lessons: [second] })).rejects.toThrow(/Problem version is immutable/);
+    await expect(importContent(db, { ...empty(), courses: inCourse(second), lessons: [second] })).rejects.toThrow(/Problem version is immutable/);
     expect(await db.lessonVersion.findUnique({ where: { id: second.public.versionId } })).toBeNull();
   });
   it('selects the last newly published version while pinning existing enrollment and homework', async () => {
-    const first = newLesson(); await importContent(db, { ...empty(), lessons: [first] });
+    const first = newLesson(); await importContent(db, { ...empty(), courses: inCourse(first), lessons: [first] });
     const user = await learner(), scope = await db.learningScope.findUniqueOrThrow({ where: { ownerUserId: user.id } });
     await service.act(user.id, { action: 'enrollment.start', lessonKey: first.public.lessonKey });
     const assignment = await db.$transaction(tx => service.createPersonalAssignment(tx, user.id, scope.id, first));
     const before = await db.assignmentItem.findMany({ where: { assignmentId: assignment.id }, orderBy: { id: 'asc' } });
     const second = structuredClone(first); second.public.versionId += '-2'; second.public.title = 'Second edition';
     const third = structuredClone(first); third.public.versionId += '-3'; third.public.title = 'Third edition';
-    await importContent(db, { ...empty(), lessons: [second, third] });
+    await importContent(db, { ...empty(), courses: inCourse(second, third), lessons: [second, third] });
     expect((await service.lessonDocument(first.public.lessonKey)).versionId).toBe(third.public.versionId);
     expect((await service.lessonDocument(first.public.lessonKey, user.id)).versionId).toBe(first.public.versionId);
     expect((await service.catalog()).find(c => c.lessonKey === first.public.lessonKey)?.versionId).toBe(third.public.versionId);
@@ -254,10 +265,10 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     }
   });
   it('stores every published question as a row and refuses a lesson whose question went missing', async () => {
-    const c = newLesson(), skillKey = `test.${randomUUID()}`;
-    c.public.skillKeys = [skillKey]; c.public.prerequisiteSkillKeys = [];
-    c.problems.forEach(p => { p.skillKeys = [skillKey]; });
-    await importContent(db, { ...empty(), lessons: [c], skills: [{ key: skillKey, label: '색인 검사 개념', order: 998 }] });
+    const c = newLesson(), conceptKey = `test.${randomUUID()}`;
+    c.public.conceptKeys = [conceptKey]; c.public.prerequisiteConceptKeys = [];
+    c.problems.forEach(p => { p.conceptKeys = [conceptKey]; });
+    await importContent(db, { ...empty(), courses: inCourse(c), lessons: [c], concepts: [{ key: conceptKey, label: '색인 검사 개념', assessable: true }] });
     const rows = await db.publishedProblem.findMany({ where: { ownerKind: 'lesson', ownerVersionId: c.public.versionId }, orderBy: { order: 'asc' } });
     expect(rows.map(row => row.problemVersionId)).toEqual(c.problems.map(p => p.problemVersionId));
     expect(await lessonRecord(db, c.public.versionId)).toEqual(c);
@@ -270,21 +281,21 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
       await expect(verifyContent(db)).rejects.toThrow(/Missing immutable problem version/);
     } finally {
       await db.publishedProblem.create({ data: { ...removed,
-        skillKeys: removed.skillKeys as never, responseSpec: removed.responseSpec as never, gradingSpec: removed.gradingSpec as never } });
+        conceptKeys: removed.conceptKeys as never, responseSpec: removed.responseSpec as never, gradingSpec: removed.gradingSpec as never } });
     }
     expect((await verifyContent(db)).indexedProblems).toBeGreaterThanOrEqual(rows.length);
   });
 
   it('stores every section and block of a published lesson as rows that restore it unchanged', async () => {
-    const c = newLesson(), skillKey = `test.${randomUUID()}`;
-    c.public.skillKeys = [skillKey]; c.public.prerequisiteSkillKeys = [];
-    c.problems.forEach(p => { p.skillKeys = [skillKey]; });
+    const c = newLesson(), conceptKey = `test.${randomUUID()}`;
+    c.public.conceptKeys = [conceptKey]; c.public.prerequisiteConceptKeys = [];
+    c.problems.forEach(p => { p.conceptKeys = [conceptKey]; });
     // Published content has no optional block yet, and a row that restored `fallback` as null
     // rather than as no key at all would change the version's hash. So this lesson carries one.
     c.sections[0].contentBlocks.push({ blockId: `${c.sections[0].sectionId}:optional`, kind: 'core.rich_text',
       typeVersion: 1, required: false, payload: { text: '되돌아오는지 보려고 둔 블록이에요.' },
       fallback: '그림을 볼 수 없을 때 읽는 문장이에요.' });
-    await importContent(db, { ...empty(), lessons: [c], skills: [{ key: skillKey, label: '블록 표 검사 개념', order: 997 }] });
+    await importContent(db, { ...empty(), courses: inCourse(c), lessons: [c], concepts: [{ key: conceptKey, label: '블록 표 검사 개념', assessable: true }] });
 
     const sections = await db.lessonSection.findMany({ where: { lessonVersionId: c.public.versionId }, orderBy: { order: 'asc' } });
     expect(sections.map(section => section.sectionId)).toEqual(c.sections.map(section => section.sectionId));
@@ -318,10 +329,10 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
   });
 
   it('serves a lesson from its rows', async () => {
-    const c = newLesson(), skillKey = `test.${randomUUID()}`;
-    c.public.skillKeys = [skillKey]; c.public.prerequisiteSkillKeys = [];
-    c.problems.forEach(p => { p.skillKeys = [skillKey]; });
-    await importContent(db, { ...empty(), lessons: [c], skills: [{ key: skillKey, label: '행에서 읽는 개념', order: 996 }] });
+    const c = newLesson(), conceptKey = `test.${randomUUID()}`;
+    c.public.conceptKeys = [conceptKey]; c.public.prerequisiteConceptKeys = [];
+    c.problems.forEach(p => { p.conceptKeys = [conceptKey]; });
+    await importContent(db, { ...empty(), courses: inCourse(c), lessons: [c], concepts: [{ key: conceptKey, label: '행에서 읽는 개념', assessable: true }] });
     const published = await service.lessonDocument(c.public.lessonKey);
     expect(published.sections.map(section => section.title)).toEqual(c.sections.map(section => section.title));
     expect(published.problems.map(problem => problem.problemVersionId)).toEqual(c.problems.map(problem => problem.problemVersionId));
@@ -338,145 +349,141 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
   });
 
   it('reads a definition from its rows', async () => {
-    const key = `term.rows.${randomUUID()}`;
-    const term = { ...structuredClone(termFixture), versionId: `${key}:v1`, termKey: key };
-    term.blocks = [{ ...term.blocks[0], blockId: `${key}:v1:b1` }];
-    await importContent(db, { ...empty(), terms: [term] });
-    const where = { ownerKind_ownerVersionId_ownerId_slot_order: { ownerKind: 'term',
-      ownerVersionId: term.versionId, ownerId: term.versionId, slot: 'body', order: 0 } };
+    const key = `rows-${randomUUID()}`;
+    const definition = { ...structuredClone(definitionFixture), conceptKey: key, blocks: [{ ...definitionFixture.blocks[0], blockId: `global:${key}:b1` }] };
+    await importContent(db, { ...empty(), concepts: [{ key, label: '행 검사 개념', assessable: false }], definitions: [definition] });
+    const row = await db.conceptDefinition.findUniqueOrThrow({ where: { conceptKey_scopeKind_scopeKey: { conceptKey: key, scopeKind: 'global', scopeKey: '' } } });
+    const where = { ownerKind_ownerVersionId_ownerId_slot_order: { ownerKind: 'definition',
+      ownerVersionId: row.id, ownerId: row.id, slot: 'body', order: 0 } };
     const stored = await db.contentBlock.findUniqueOrThrow({ where });
-    expect(blockOf(stored)).toEqual(term.blocks[0]);
+    expect(blockOf(stored)).toEqual(definition.blocks[0]);
 
-    const asked = [{ termKey: key, scopeKind: 'global' as const, scopeKey: '' }];
+    const asked = [{ conceptKey: key, scopeKind: 'global' as const, scopeKey: '' }];
     try {
       await db.contentBlock.update({ where, data: { payload: { text: '행에서 고친 정의예요.' } } });
-      const [definition] = await currentTerms(db, asked);
-      expect((definition.blocks[0].payload as { text: string }).text).toBe('행에서 고친 정의예요.');
+      const [read] = await currentDefinitions(db, asked);
+      expect((read.blocks[0].payload as { text: string }).text).toBe('행에서 고친 정의예요.');
     } finally {
       await db.contentBlock.update({ where, data: { payload: stored.payload as never } });
     }
-    expect((await currentTerms(db, asked))[0].blocks).toEqual(term.blocks);
+    expect((await currentDefinitions(db, asked))[0]).toMatchObject({ label: '분모', blocks: definition.blocks });
   });
 
-  it('names published concepts for signed-out visitors and withholds skills without a released lesson', async () => {
+  it('names published concepts for signed-out visitors and withholds concepts without a released lesson', async () => {
     const c = newLesson(), taught = `test.taught.${randomUUID()}`, unreleased = `test.unreleased.${randomUUID()}`;
-    c.public.skillKeys = [taught]; c.public.prerequisiteSkillKeys = [];
-    c.problems.forEach(p => { p.skillKeys = [taught]; });
-    await importContent(db, { ...empty(), lessons: [c], skills: [
-      { key: taught, label: '공개 카탈로그 개념', order: 990 },
-      { key: unreleased, label: '아직 수업이 없는 개념', order: 991 },
+    c.public.conceptKeys = [taught]; c.public.prerequisiteConceptKeys = [];
+    c.problems.forEach(p => { p.conceptKeys = [taught]; });
+    await importContent(db, { ...empty(), courses: inCourse(c), lessons: [c], concepts: [
+      { key: taught, label: '공개 카탈로그 개념', assessable: true },
+      { key: unreleased, label: '아직 수업이 없는 개념', assessable: true },
     ] });
     const catalogue = await service.publicCatalog();
     expect(catalogue.lessons.map(item => item.lessonKey)).toContain(c.public.lessonKey);
-    expect(catalogue.skills).toContainEqual({ key: taught, label: '공개 카탈로그 개념' });
-    expect(catalogue.skills.map(skill => skill.key)).not.toContain(unreleased);
+    expect(catalogue.concepts).toContainEqual({ key: taught, label: '공개 카탈로그 개념' });
+    expect(catalogue.concepts.map(concept => concept.key)).not.toContain(unreleased);
     // Signed-out copy reads these labels, so the response must stay free of answers and grading rules.
     expect(JSON.stringify(catalogue)).not.toMatch(/"(?:gradingSpec|solution|hints)"/);
   });
 
-  it('publishes terms, explains what the lesson linked, and rewords a definition without a new lesson', async () => {
+  it('publishes definitions, explains what the lesson linked, and rewords a definition without a new lesson', async () => {
     const suffix = randomUUID();
     const earlier = `test.earlier.${suffix}`, current = `test.current.${suffix}`;
     const first = newLesson(), second = newLesson();
-    first.public.order = 1001; first.public.skillKeys = [earlier]; first.public.prerequisiteSkillKeys = [];
-    first.problems.forEach(p => { p.skillKeys = [earlier]; });
-    second.public.order = 1002; second.public.skillKeys = [current]; second.public.prerequisiteSkillKeys = [earlier];
-    second.problems.forEach(p => { p.skillKeys = [current]; });
-    const earlierTerm = { versionId: `term.earlier.${suffix}:v1`, termKey: `term.earlier.${suffix}`, skillKey: earlier,
-      label: '분모', summary: '전체를 나눈 조각 수예요.', blocks: [{ blockId: `term.earlier.${suffix}:v1:b1`,
-        kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '분모는 전체를 몇 조각으로 나누었는지 알려줘요.' } }] };
-    const currentTerm = { ...earlierTerm, versionId: `term.current.${suffix}:v1`, termKey: `term.current.${suffix}`,
-      skillKey: current, label: '통분', summary: '분모를 같게 맞추는 일이에요.',
-      blocks: [{ ...earlierTerm.blocks[0], blockId: `term.current.${suffix}:v1:b1` }] };
+    first.public.conceptKeys = [earlier]; first.public.prerequisiteConceptKeys = [];
+    first.problems.forEach(p => { p.conceptKeys = [earlier]; });
+    second.public.conceptKeys = [current]; second.public.prerequisiteConceptKeys = [earlier];
+    second.problems.forEach(p => { p.conceptKeys = [current]; });
+    const earlierDefinition = { conceptKey: earlier, label: '분모', summary: '전체를 나눈 조각 수예요.', blocks: [{ blockId: `global:${earlier}:b1`,
+      kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '분모는 전체를 몇 조각으로 나누었는지 알려줘요.' } }] };
+    const currentDefinition = { ...earlierDefinition, conceptKey: current, label: '통분', summary: '분모를 같게 맞추는 일이에요.',
+      blocks: [{ ...earlierDefinition.blocks[0], blockId: `global:${current}:b1` }] };
     const block = second.sections[0].contentBlocks[0];
-    second.sections[0].contentBlocks[0] = { ...block, typeVersion: 2, payload: { text: '분모가 다르면 통분을 해요.',
-      terms: [{ termKey: earlierTerm.termKey, surface: '분모' }, { termKey: currentTerm.termKey, surface: '통분' }] } };
-    const input = { ...empty(), lessons: [first, second], terms: [earlierTerm, currentTerm],
-      skills: [{ key: earlier, label: '앞선 개념', order: 1001 }, { key: current, label: '지금 개념', order: 1002 }] };
+    second.sections[0].contentBlocks[0] = { ...block, typeVersion: 3, payload: { text: '분모가 다르면 통분을 해요.',
+      definitions: [{ conceptKey: earlier, surface: '분모' }, { conceptKey: current, surface: '통분' }] } };
+    const input = { ...empty(), courses: inCourse(first, second), lessons: [first, second], definitions: [earlierDefinition, currentDefinition],
+      concepts: [{ key: earlier, label: '앞선 개념', assessable: true }, { key: current, label: '지금 개념', assessable: true }] };
 
-    await expect(importContent(db, { ...input, terms: [] })).rejects.toThrow(/Missing term/);
+    await expect(importContent(db, { ...input, definitions: [] })).rejects.toThrow(/Missing definition/);
     expect(await db.lessonVersion.findUnique({ where: { id: second.public.versionId } })).toBeNull();
-    expect(await importContent(db, input, true)).toMatchObject({ dryRun: true, newTerms: 2 });
-    expect(await db.termVersion.findUnique({ where: { id: earlierTerm.versionId } })).toBeNull();
+    expect(await importContent(db, input, true)).toMatchObject({ dryRun: true, definitions: 2 });
+    expect(await db.conceptDefinition.findFirst({ where: { conceptKey: earlier } })).toBeNull();
     await importContent(db, input);
-    expect((await verifyContent(db)).termVersions).toBeGreaterThanOrEqual(2);
+    expect((await verifyContent(db)).definitions).toBeGreaterThanOrEqual(2);
 
     const document = await service.lessonDocument(second.public.lessonKey);
     // Both linked words are explained; linking them was the author's decision to explain them.
-    expect(document.glossary.map(entry => entry.termKey).sort()).toEqual([earlierTerm.termKey, currentTerm.termKey].sort());
-    expect(document.glossary.find(entry => entry.termKey === earlierTerm.termKey))
-      .toMatchObject({ label: '분모', skillKey: earlier, lessonKey: first.public.lessonKey });
+    expect(document.glossary.map(entry => entry.conceptKey).sort()).toEqual([earlier, current].sort());
+    // The definition names the concept the way this scope does, and offers the lesson that teaches it.
+    expect(document.glossary.find(entry => entry.conceptKey === earlier))
+      .toMatchObject({ label: '분모', lessonKey: first.public.lessonKey });
 
-    const reworded = { ...currentTerm, versionId: `term.earlier.${suffix}:v2`, termKey: earlierTerm.termKey,
-      skillKey: earlier, label: '분모', summary: '다시 쓴 설명이에요.', blocks: [{ ...earlierTerm.blocks[0], blockId: `term.earlier.${suffix}:v2:b1` }] };
+    // Rewording is written in place: no lesson is republished and no new row appears.
     const lessonRows = await db.lessonVersion.findMany({ orderBy: { id: 'asc' } });
-    await importContent(db, { ...empty(), terms: [reworded] });
+    await importContent(db, { ...empty(), definitions: [{ ...earlierDefinition, summary: '다시 쓴 설명이에요.' }] });
     expect((await service.lessonDocument(second.public.lessonKey)).glossary
-      .find(entry => entry.termKey === earlierTerm.termKey)!.summary).toBe('다시 쓴 설명이에요.');
+      .find(entry => entry.conceptKey === earlier)!.summary).toBe('다시 쓴 설명이에요.');
     expect(await db.lessonVersion.findMany({ orderBy: { id: 'asc' } })).toEqual(lessonRows);
+    expect(await db.conceptDefinition.count({ where: { conceptKey: earlier } })).toBe(1);
 
-    const edited = { ...earlierTerm, summary: 'Cannot overwrite' };
-    await expect(importContent(db, { ...empty(), terms: [edited] })).rejects.toThrow(/Published term is immutable/);
-    expect((await db.termVersion.findUniqueOrThrow({ where: { id: earlierTerm.versionId } })).summary).toBe(earlierTerm.summary);
+    // Emptying a definition a published lesson links would leave the word with nothing to open.
+    await expect(importContent(db, { ...empty(), definitions: [{ ...earlierDefinition, blocks: [] }] })).rejects.toThrow(/Missing definition/);
+    expect((await db.conceptDefinition.findFirstOrThrow({ where: { conceptKey: earlier } })).summary).toBe('다시 쓴 설명이에요.');
     const exported = await exportContent(db);
-    expect(await importContent(db, JSON.parse(JSON.stringify(exported)))).toMatchObject({ newTerms: 0, newLessons: 0 });
+    expect(await importContent(db, JSON.parse(JSON.stringify(exported)))).toMatchObject({ newLessons: 0, newDiagnostics: 0 });
   });
 
-  it('lets a lesson keep its own wording for a word the shared dictionary already defines', async () => {
+  it('lets a lesson keep its own wording for a concept the shared dictionary already defines', async () => {
     const suffix = randomUUID();
     const earlier = `test.dict.earlier.${suffix}`, current = `test.dict.current.${suffix}`;
     const first = newLesson(), second = newLesson();
-    first.public.order = 1101; first.public.skillKeys = [earlier]; first.public.prerequisiteSkillKeys = [];
-    first.problems.forEach(p => { p.skillKeys = [earlier]; });
-    second.public.order = 1102; second.public.skillKeys = [current]; second.public.prerequisiteSkillKeys = [earlier];
-    second.problems.forEach(p => { p.skillKeys = [current]; });
-    const termKey = `term.shared.${suffix}`;
-    const shared = { versionId: `${termKey}:v1`, termKey, skillKey: earlier, label: '분모', summary: '사전이 쓴 설명이에요.',
-      blocks: [{ blockId: `${termKey}:v1:b1`, kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '사전 정의' } }] };
-    // Same key, kept by the lesson: its own wording, published and versioned on its own.
-    const mine = { ...shared, versionId: `${second.public.lessonKey}:${termKey}:v1`,
-      scopeKind: 'lesson' as const, scopeKey: second.public.lessonKey, summary: '이 수업이 쓴 설명이에요.',
-      blocks: [{ ...shared.blocks[0], blockId: `${second.public.lessonKey}:${termKey}:v1:b1`, payload: { text: '수업 정의' } }] };
+    first.public.conceptKeys = [earlier]; first.public.prerequisiteConceptKeys = [];
+    first.problems.forEach(p => { p.conceptKeys = [earlier]; });
+    second.public.conceptKeys = [current]; second.public.prerequisiteConceptKeys = [earlier];
+    second.problems.forEach(p => { p.conceptKeys = [current]; });
+    const shared = { conceptKey: earlier, label: '분모', summary: '사전이 쓴 설명이에요.',
+      blocks: [{ blockId: `global:${earlier}:b1`, kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '사전 정의' } }] };
+    // The same concept, kept by the lesson: its own name and wording, written on its own.
+    const mine = { ...shared, scopeKind: 'lesson' as const, scopeKey: second.public.lessonKey, label: '아래 수', summary: '이 수업이 쓴 설명이에요.',
+      blocks: [{ ...shared.blocks[0], blockId: `lesson:${second.public.lessonKey}:${earlier}:b1`, payload: { text: '수업 정의' } }] };
     const block = second.sections[0].contentBlocks[0];
-    second.sections[0].contentBlocks[0] = { ...block, typeVersion: 2, payload: { text: '분모가 무엇인지 떠올려 보세요.',
-      terms: [{ termKey, surface: '분모', scopeKind: 'lesson', scopeKey: second.public.lessonKey }] } };
-    const input = { ...empty(), lessons: [first, second], terms: [shared, mine],
-      skills: [{ key: earlier, label: '앞선 개념', order: 1101 }, { key: current, label: '지금 개념', order: 1102 }] };
+    second.sections[0].contentBlocks[0] = { ...block, typeVersion: 3, payload: { text: '분모가 무엇인지 떠올려 보세요.',
+      definitions: [{ conceptKey: earlier, surface: '분모', scopeKind: 'lesson', scopeKey: second.public.lessonKey }] } };
+    const input = { ...empty(), courses: inCourse(first, second), lessons: [first, second], definitions: [shared, mine],
+      concepts: [{ key: earlier, label: '앞선 개념', assessable: true }, { key: current, label: '지금 개념', assessable: true }] };
 
     // The dictionary alone does not answer for a reference that named the lesson.
-    await expect(importContent(db, { ...input, terms: [shared] })).rejects.toThrow(/Missing term/);
+    await expect(importContent(db, { ...input, definitions: [shared] })).rejects.toThrow(/Missing definition/);
     await importContent(db, input);
 
     const document = await service.lessonDocument(second.public.lessonKey);
     expect(document.glossary).toHaveLength(1);
-    expect(document.glossary[0]).toMatchObject({ termKey, scopeKind: 'lesson', scopeKey: second.public.lessonKey, summary: '이 수업이 쓴 설명이에요.' });
+    expect(document.glossary[0]).toMatchObject({ conceptKey: earlier, scopeKind: 'lesson', scopeKey: second.public.lessonKey,
+      label: '아래 수', summary: '이 수업이 쓴 설명이에요.' });
     // The dictionary definition was never asked for, so its text is absent from the payload.
     expect(JSON.stringify(document)).not.toContain('사전이 쓴 설명이에요.');
 
-    // Each scope is versioned on its own: rewording one leaves the other where it was.
-    const reworded = { ...mine, versionId: `${second.public.lessonKey}:${termKey}:v2`, summary: '수업 설명을 고쳤어요.',
-      blocks: [{ ...mine.blocks[0], blockId: `${second.public.lessonKey}:${termKey}:v2:b1` }] };
-    await importContent(db, { ...empty(), terms: [reworded] });
+    // Each scope is written on its own: rewording one leaves the other where it was.
+    await importContent(db, { ...empty(), definitions: [{ ...mine, summary: '수업 설명을 고쳤어요.' }] });
     expect((await service.lessonDocument(second.public.lessonKey)).glossary[0].summary).toBe('수업 설명을 고쳤어요.');
-    expect((await db.termVersion.findUniqueOrThrow({ where: { id: shared.versionId } })).summary).toBe('사전이 쓴 설명이에요.');
+    expect((await db.conceptDefinition.findUniqueOrThrow({ where: { conceptKey_scopeKind_scopeKey: { conceptKey: earlier, scopeKind: 'global', scopeKey: '' } } })).summary)
+      .toBe('사전이 쓴 설명이에요.');
     // Exporting and re-importing the whole database carries the scopes back unchanged.
-    expect(await importContent(db, JSON.parse(JSON.stringify(await exportContent(db))))).toMatchObject({ newTerms: 0, newLessons: 0 });
+    expect(await importContent(db, JSON.parse(JSON.stringify(await exportContent(db))))).toMatchObject({ newLessons: 0 });
   });
 
   it('publishes a reviewed bundle once and skips it while the file is unchanged', async () => {
     const suffix = randomUUID();
-    const skillKey = `test.bundle.${suffix}`;
-    await db.skill.create({ data: { key: skillKey, label: '번들 개념', order: 3000 } });
-    const term = (id: string, summary: string) => ({ versionId: `term.bundle.${suffix}:${id}`, termKey: `term.bundle.${suffix}`,
-      skillKey, label: '번들 용어', summary, blocks: [{ blockId: `term.bundle.${suffix}:${id}:b1`, kind: 'core.rich_text',
-        typeVersion: 1, required: true, payload: { text: summary } }] });
+    const conceptKey = `test.bundle.${suffix}`;
+    await db.concept.create({ data: { key: conceptKey, label: '번들 개념', assessable: false } });
+    const definition = (summary: string) => ({ conceptKey, label: '번들 낱말', summary,
+      blocks: [{ blockId: `global:${conceptKey}:b1`, kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: summary } }] });
     const name = `test-${suffix}.json`;
-    const bundle = { ...empty(), terms: [term('v1', '처음 발행한 설명이에요.')] };
+    const bundle = { ...empty(), definitions: [definition('처음 발행한 설명이에요.')] };
     const checksum = createHash('sha256').update(JSON.stringify(bundle)).digest('hex');
 
-    expect(await publishBundle(db, name, checksum, bundle, true)).toMatchObject({ skipped: false, dryRun: true, newTerms: 1 });
+    expect(await publishBundle(db, name, checksum, bundle, true)).toMatchObject({ skipped: false, dryRun: true, definitions: 1 });
     expect(await db.appliedContentBundle.findUnique({ where: { name } })).toBeNull();
-    expect(await publishBundle(db, name, checksum, bundle)).toMatchObject({ skipped: false, newTerms: 1 });
+    expect(await publishBundle(db, name, checksum, bundle)).toMatchObject({ skipped: false, definitions: 1 });
     const applied = await db.appliedContentBundle.findUniqueOrThrow({ where: { name } });
     expect(applied.checksum).toBe(checksum);
 
@@ -484,16 +491,17 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     expect(await publishBundle(db, name, checksum, bundle)).toMatchObject({ skipped: true });
     expect(await db.appliedContentBundle.findUniqueOrThrow({ where: { name } })).toEqual(applied);
 
-    // An edited file publishes only what it adds, and the ledger follows the new checksum.
-    const extended = { ...bundle, terms: [...bundle.terms, term('v2', '다시 쓴 설명이에요.')] };
-    const nextChecksum = createHash('sha256').update(JSON.stringify(extended)).digest('hex');
-    expect(await publishBundle(db, name, nextChecksum, extended)).toMatchObject({ skipped: false, newTerms: 1 });
+    // An edited file rewrites the definition in place, and the ledger follows the new checksum.
+    const reworded = { ...bundle, definitions: [definition('다시 쓴 설명이에요.')] };
+    const nextChecksum = createHash('sha256').update(JSON.stringify(reworded)).digest('hex');
+    expect(await publishBundle(db, name, nextChecksum, reworded)).toMatchObject({ skipped: false, definitions: 1 });
     expect((await db.appliedContentBundle.findUniqueOrThrow({ where: { name } })).checksum).toBe(nextChecksum);
+    expect((await db.conceptDefinition.findFirstOrThrow({ where: { conceptKey } })).summary).toBe('다시 쓴 설명이에요.');
 
     // A rejected bundle leaves the ledger on the last content that actually landed.
-    const edited = structuredClone(extended); edited.terms[0].summary = 'Cannot overwrite';
-    const badChecksum = createHash('sha256').update(JSON.stringify(edited)).digest('hex');
-    await expect(publishBundle(db, name, badChecksum, edited)).rejects.toThrow(/immutable/);
+    const broken = { ...reworded, definitions: [{ ...definition('없는 개념의 설명이에요.'), conceptKey: `${conceptKey}.missing` }] };
+    const badChecksum = createHash('sha256').update(JSON.stringify(broken)).digest('hex');
+    await expect(publishBundle(db, name, badChecksum, broken)).rejects.toThrow(/Missing concept/);
     expect((await db.appliedContentBundle.findUniqueOrThrow({ where: { name } })).checksum).toBe(nextChecksum);
   });
 });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { blockTermRefs, getActivityProblemIds, supportedBlockTypes, termContentBlockSchema, termReferences, toPublicLesson, validateLesson } from '@/core/content';
-import { seedLessons, skillLabels } from './fixtures/content';
+import { blockDefinitionRefs, getActivityProblemIds, supportedBlockTypes, definitionBlockSchema, definitionReferences, toPublicLesson, validateLesson } from '@/core/content';
+import { seedLessons, conceptLabels } from './fixtures/content';
 
 describe('versioned lesson content', () => {
   it('ships three complete sample lessons with separate practice, checks, and homework', () => {
@@ -15,17 +15,17 @@ describe('versioned lesson content', () => {
       expect(activityIds).toHaveLength(3);
       expect(activityIds.some((id) => record.homeworkProblemIds.includes(id))).toBe(false);
       expect([...activityIds, ...record.homeworkProblemIds].sort()).toEqual(record.problems.map((problem) => problem.problemVersionId).sort());
-      expect(record.public.skillKeys.every((skill) => skill in skillLabels)).toBe(true);
+      expect(record.public.conceptKeys.every((concept) => concept in conceptLabels)).toBe(true);
       allProblemIds.push(...record.problems.map((problem) => problem.problemVersionId));
     }
     expect(new Set(allProblemIds).size).toBe(15);
   });
 
   it('publishes explicit problem DTOs without answers, hints, or solutions', () => {
-    const publicLesson = toPublicLesson(seedLessons[0]);
+    const publicLesson = toPublicLesson(seedLessons[0], 'fractions');
     expect(publicLesson.problems).toHaveLength(5);
     for (const problem of publicLesson.problems) {
-      expect(Object.keys(problem).sort()).toEqual(['hintAvailable', 'problemVersionId', 'promptContent', 'responseSpec', 'skillKeys']);
+      expect(Object.keys(problem).sort()).toEqual(['conceptKeys', 'hintAvailable', 'problemVersionId', 'promptContent', 'responseSpec']);
       expect(problem).not.toHaveProperty('gradingSpec');
       expect(problem).not.toHaveProperty('hints');
       expect(problem).not.toHaveProperty('solution');
@@ -141,10 +141,10 @@ describe('versioned lesson content', () => {
     expect(() => validateLesson(record)).toThrow(/Reused problem version across activities/);
   });
 
-  it('rejects a lesson that requires a skill it is meant to teach', () => {
+  it('rejects a lesson that requires a concept it is meant to teach', () => {
     const record = structuredClone(seedLessons[1]);
-    record.public.prerequisiteSkillKeys.push(record.public.skillKeys[0]);
-    expect(() => validateLesson(record)).toThrow(/cannot require its own skill as a prerequisite/);
+    record.public.prerequisiteConceptKeys.push(record.public.conceptKeys[0]);
+    expect(() => validateLesson(record)).toThrow(/cannot require its own concept as a prerequisite/);
   });
 
   it('lets a figure caption carry math while the accessible name stays plain', () => {
@@ -225,44 +225,44 @@ describe('versioned lesson content', () => {
   });
 });
 
-describe('glossary term annotations in lesson text', () => {
-  const annotated = (terms: unknown[], blockIndex = 0) => {
+describe('glossary definition annotations in lesson text', () => {
+  const annotated = (definitions: unknown[], blockIndex = 0) => {
     const record = structuredClone(seedLessons[2]);
     const block = record.sections[0].contentBlocks[blockIndex];
-    block.typeVersion = 2;
-    block.payload = { text: block.payload.text, terms };
+    block.typeVersion = 3;
+    block.payload = { text: block.payload.text, definitions };
     return record;
   };
 
   it('registers the annotated text format alongside the plain one', () => {
     expect(supportedBlockTypes).toContainEqual({ kind: 'core.rich_text', typeVersion: 1 });
-    expect(supportedBlockTypes).toContainEqual({ kind: 'core.rich_text', typeVersion: 2 });
+    expect(supportedBlockTypes).toContainEqual({ kind: 'core.rich_text', typeVersion: 3 });
   });
 
   it('accepts an annotation that resolves in the block text', () => {
-    const record = annotated([{ termKey: 'term.denominator', surface: '분모' }, { termKey: 'term.equivalent', surface: '동치분수' }]);
+    const record = annotated([{ conceptKey: 'term.denominator', surface: '분모' }, { conceptKey: 'term.equivalent', surface: '동치분수' }]);
     expect(() => validateLesson(record)).not.toThrow();
-    expect(toPublicLesson(record).sections[0].contentBlocks[0].payload.terms).toHaveLength(2);
+    expect(toPublicLesson(record, 'fractions').sections[0].contentBlocks[0].payload.definitions).toHaveLength(2);
   });
 
   it('rejects an annotation the text does not carry', () => {
-    expect(() => validateLesson(annotated([{ termKey: 'term.decimal', surface: '소수점' }]))).toThrow(/does not occur/);
-    expect(() => validateLesson(annotated([{ termKey: 'term.denominator', surface: '분모', occurrence: 99 }]))).toThrow(/does not occur/);
+    expect(() => validateLesson(annotated([{ conceptKey: 'term.decimal', surface: '소수점' }]))).toThrow(/does not occur/);
+    expect(() => validateLesson(annotated([{ conceptKey: 'term.denominator', surface: '분모', occurrence: 99 }]))).toThrow(/does not occur/);
   });
 
   it('rejects a malformed annotation payload', () => {
-    expect(() => validateLesson(annotated([{ termKey: 'term.denominator' }]))).toThrow(/Invalid payload/);
-    expect(() => validateLesson(annotated([{ termKey: 'term.denominator', surface: '분모', note: '설명' }]))).toThrow(/Invalid payload/);
+    expect(() => validateLesson(annotated([{ conceptKey: 'term.denominator' }]))).toThrow(/Invalid payload/);
+    expect(() => validateLesson(annotated([{ conceptKey: 'term.denominator', surface: '분모', note: '설명' }]))).toThrow(/Invalid payload/);
   });
 
-  it('reports term references with the skills of the problem that holds them', () => {
+  it('reports definition references with the concepts of the problem that holds them', () => {
     const record = structuredClone(seedLessons[2]);
-    record.sections[0].contentBlocks[0] = { ...record.sections[0].contentBlocks[0], typeVersion: 2,
-      payload: { text: record.sections[0].contentBlocks[0].payload.text, terms: [{ termKey: 'term.denominator', surface: '분모' }] } };
+    record.sections[0].contentBlocks[0] = { ...record.sections[0].contentBlocks[0], typeVersion: 3,
+      payload: { text: record.sections[0].contentBlocks[0].payload.text, definitions: [{ conceptKey: 'term.denominator', surface: '분모' }] } };
     const problem = record.problems[0];
-    problem.hints[0] = { ...problem.hints[0], typeVersion: 2, payload: { text: problem.hints[0].payload.text, terms: [] } };
+    problem.hints[0] = { ...problem.hints[0], typeVersion: 3, payload: { text: problem.hints[0].payload.text, definitions: [] } };
     expect(() => validateLesson(record)).not.toThrow();
-    expect(termReferences(record)).toEqual([{ termKey: 'term.denominator', blockId: record.sections[0].contentBlocks[0].blockId, problemSkillKeys: null }]);
-    expect(blockTermRefs(record.sections[0].contentBlocks)).toEqual([{ termKey: 'term.denominator', scopeKind: undefined, scopeKey: undefined }]);
+    expect(definitionReferences(record)).toEqual([{ conceptKey: 'term.denominator', blockId: record.sections[0].contentBlocks[0].blockId, problemConceptKeys: null }]);
+    expect(blockDefinitionRefs(record.sections[0].contentBlocks)).toEqual([{ conceptKey: 'term.denominator', scopeKind: undefined, scopeKey: undefined }]);
   });
 });

@@ -1,20 +1,20 @@
 import { describe, expect, it } from 'vitest';
-import { recommend, reviewSelection, skillReadiness, type Evidence } from '@/core/personalization';
+import { recommend, reviewSelection, conceptReadiness, type Evidence } from '@/core/personalization';
 import { diagnosticProblems } from './fixtures/content';
-import { seedLessons, skillLabels } from './fixtures/content';
+import { seedLessons, conceptLabels } from './fixtures/content';
 import { gradeAnswer } from '@/core/grading';
 import type { DiagnosticAnswer, Goal } from '@/shared/api';
 
-const lessons = seedLessons.map(c => c.public);
+const lessons = seedLessons.map(c => ({ ...c.public, courseKey: 'fractions' }));
 const answers = ['4/9', '12', '10', '3/4', '7/11', '5/12'];
 const bank = diagnosticProblems;
 const diagnostic = (responses: (string | null)[]) => ({ problems: bank, answers: bank.map((p, i) => ({ problemVersionId: p.problemVersionId, answer: responses[i], status: responses[i] === null ? 'skipped' : gradeAnswer(responses[i]!, p.gradingSpec, false).status })) as DiagnosticAnswer[] });
 const now = new Date('2026-09-14T12:00:00Z');
 const evidence = (status: 'correct' | 'incorrect' | 'invalid', overrides: Partial<Evidence> = {}): Evidence => ({
-  problemVersionId: 'new-check', skillKeys: ['fraction.meaning'], result: { status, assisted: false, message: 'fixture' }, date: now, check: true, ...overrides,
+  problemVersionId: 'new-check', conceptKeys: ['fraction.meaning'], result: { status, assisted: false, message: 'fixture' }, date: now, check: true, ...overrides,
 });
 function plan(responses: (string | null)[], goal: Goal = 'foundation-recovery') {
-  return recommend({ lessons, enrollments: [], assignments: [], readiness: skillReadiness(skillLabels, diagnostic(responses), []), dailyMinutes: 10, goal, now });
+  return recommend({ lessons, enrollments: [], assignments: [], readiness: conceptReadiness(conceptLabels, diagnostic(responses), []), dailyMinutes: 10, goal, now });
 }
 
 describe('placement and prerequisite recommendations', () => {
@@ -41,32 +41,32 @@ describe('placement and prerequisite recommendations', () => {
     expect(plan(['0', ...answers.slice(1)], 'algebra-ready').recommendations[0].lessonKey).toBe('fraction-meaning');
   });
   it('prioritizes subsequent learning over provisional placement and does not treat assistance as readiness', () => {
-    expect(skillReadiness(skillLabels, diagnostic(answers), [evidence('incorrect')])[0]).toMatchObject({ source: 'learning', readiness: 'needs-practice' });
-    expect(skillReadiness(skillLabels, diagnostic(answers), [evidence('correct', { result: { status: 'correct', assisted: true, message: '' } })])[0].readiness).toBe('needs-practice');
-    expect(skillReadiness(skillLabels, diagnostic(answers), [evidence('invalid')])[0].source).toBe('diagnostic');
-    expect(skillReadiness(skillLabels, diagnostic(Array(6).fill(null)), [evidence('correct')])[0].readiness).toBe('ready');
+    expect(conceptReadiness(conceptLabels, diagnostic(answers), [evidence('incorrect')])[0]).toMatchObject({ source: 'learning', readiness: 'needs-practice' });
+    expect(conceptReadiness(conceptLabels, diagnostic(answers), [evidence('correct', { result: { status: 'correct', assisted: true, message: '' } })])[0].readiness).toBe('needs-practice');
+    expect(conceptReadiness(conceptLabels, diagnostic(answers), [evidence('invalid')])[0].source).toBe('diagnostic');
+    expect(conceptReadiness(conceptLabels, diagnostic(Array(6).fill(null)), [evidence('correct')])[0].readiness).toBe('ready');
   });
   it('requires all first answers in the latest submitted assessment for readiness', () => {
     const earlier = evidence('correct', { date: new Date(now.getTime() - 1000), assessmentId: 'lesson' });
     const incorrect = evidence('incorrect', { assessmentId: 'homework' });
     const correct = evidence('correct', { date: new Date(now.getTime() + 1000), assessmentId: 'homework', problemVersionId: 'another-item' });
-    expect(skillReadiness(skillLabels, null, [earlier, incorrect, correct])[0].readiness).toBe('needs-practice');
+    expect(conceptReadiness(conceptLabels, null, [earlier, incorrect, correct])[0].readiness).toBe('needs-practice');
   });
   it('offers a prerequisite without preventing a learner from continuing a chosen lesson', () => {
     const output = recommend({ lessons, enrollments: [{ lessonKey: 'fraction-addition', status: 'active' }], assignments: [],
-      readiness: skillReadiness(skillLabels, null, []), dailyMinutes: 5, goal: 'foundation-recovery', now });
+      readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 5, goal: 'foundation-recovery', now });
     expect(output.recommendations[0]).toMatchObject({ lessonKey: 'fraction-meaning', suggestedMinutes: 5 });
     expect(output.recommendations[0].reason).toContain('직접 선택');
   });
   it('honors an explicit lesson choice and returns to prerequisite rules when cleared', () => {
-    const input = { lessons, enrollments: [], assignments: [], readiness: skillReadiness(skillLabels, null, []), dailyMinutes: 10, goal: 'foundation-recovery' as const, now };
+    const input = { lessons, enrollments: [], assignments: [], readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 10, goal: 'foundation-recovery' as const, now };
     const chosen = recommend({ ...input, preferredLessonKey: 'fraction-addition' });
     expect(chosen.recommendations[0].lessonKey).toBe('fraction-addition');
     expect(chosen.recommendations[0].reason).toContain('선수 개념');
     expect(recommend({ ...input, preferredLessonKey: null }).recommendations[0].lessonKey).toBe('fraction-meaning');
   });
   it('prioritizes only due unfinished reviews without treating future or missing work as wrong', () => {
-    const output = recommend({ lessons, enrollments: [], readiness: skillReadiness(skillLabels, null, []), dailyMinutes: 10, goal: 'foundation-recovery', now,
+    const output = recommend({ lessons, enrollments: [], readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 10, goal: 'foundation-recovery', now,
       assignments: [{ recipientId: 'future', status: 'assigned', recommendedAt: '2026-09-17T12:00:00Z' }, { recipientId: 'done', status: 'submitted', recommendedAt: '2026-09-10T12:00:00Z' }, { recipientId: 'due', status: 'assigned', recommendedAt: now.toISOString() }] });
     expect(output.plan.review?.recipientId).toBe('due');
     expect(output.plan.readiness.every(s => s.readiness === 'unknown')).toBe(true);
@@ -84,7 +84,7 @@ describe('immutable adaptive review decisions', () => {
   });
   it('selects the response form that needs practice and never mutates the published pool', () => {
     const before = structuredClone(candidates);
-    const wrong = evidence('incorrect', { skillKeys: ['fraction.equivalence'], responseKind: 'rational' });
+    const wrong = evidence('incorrect', { conceptKeys: ['fraction.equivalence'], responseKind: 'rational' });
     expect(reviewSelection(candidates, [wrong], 5).items[0].problemVersionId).toBe(record.homeworkProblemIds[1]);
     expect(reviewSelection(candidates, [], 5).items[0].problemVersionId).toBe(record.homeworkProblemIds[0]);
     expect(candidates).toEqual(before);
