@@ -8,9 +8,15 @@ const lessonKey = 'fraction-meaning';
 const problemId = 'fraction-meaning:practice:p1:v2';
 const text = (blockId: string, value: string): ContentBlock =>
   ({ blockId, kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: value } });
+const laterKey = 'decimal-meaning';
 const catalogue: PublicLesson[] = [{
   lessonKey, versionId: 'fraction-meaning:v2', title: '분수의 의미', summary: '분자와 분모를 읽어요',
   estimatedMinutes: 10, conceptKeys: ['term.denominator'], prerequisiteConceptKeys: [], sectionCount: 2, courseKey: 'fractions',
+}];
+/** A second course, for the screens that are about choosing between lessons rather than reading one. */
+const twoCourses: PublicLesson[] = [...catalogue, {
+  lessonKey: laterKey, versionId: 'decimal-meaning:v1', title: '소수의 의미', summary: '자릿값을 읽어요',
+  estimatedMinutes: 10, conceptKeys: ['term.decimal'], prerequisiteConceptKeys: ['term.denominator'], sectionCount: 2, courseKey: 'decimals',
 }];
 const document = (blocks?: ContentBlock[]): LessonDocument => ({
   ...catalogue[0],
@@ -55,7 +61,7 @@ function serve(options: { signedIn?: boolean; state?: LearningState; lesson?: Le
   globalThis.fetch = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
     if (url.endsWith('/api/v1/session')) return reply({ user: state.signedIn ? { id: 'u1', displayName: '학습자' } : null, developmentLogin: false, googleLogin: true });
-    if (url.includes('/api/v1/learning?catalog=1')) return reply({ courses: [{ key: 'fractions', title: '분수', summary: '분수를 처음부터' }], lessons: catalogue, concepts: [{ key: 'term.denominator', label: '분모' }] });
+    if (url.includes('/api/v1/learning?catalog=1')) return reply({ courses: [{ key: 'fractions', title: '분수', summary: '분수를 처음부터' }, { key: 'decimals', title: '소수', summary: '소수를 처음부터' }], lessons: catalogue, concepts: [{ key: 'term.denominator', label: '분모' }] });
     if (url.includes('/api/v1/learning?lessonKey=')) return reply(state.lesson);
     if (url.endsWith('/api/v1/account') && init?.method === 'DELETE') {
       if (state.refuseDelete) return reply({ error: state.refuseDelete }, 409);
@@ -230,6 +236,37 @@ describe('finishing an assignment', () => {
     const [first, second] = server.of('assignment.submit') as { requestId: string }[];
     expect(second.requestId).toBe(first.requestId);
     expect(screen.getByText(/과제를 제출했어요/)).toBeDefined();
+  });
+});
+
+describe('the lessons the home screen puts nearest', () => {
+  const shelf = () => [...window.document.querySelectorAll('.page-home .class-grid .class-card h3')].map((node) => node.textContent);
+  const heading = () => [...window.document.querySelectorAll('.page-home .dashboard-section h2')][0]?.textContent;
+
+  it('does not offer the lesson the hero is already offering', async () => {
+    server = serve({ state: learningState({ lessons: twoCourses, recommendations: [{ lessonKey, reason: '여기부터요.', kind: 'start', suggestedMinutes: 10 }] }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(heading()).toBeDefined());
+    // The hero names 분수의 의미, so the shelf below it moves on to what comes next.
+    expect(shelf()).not.toContain('분수의 의미');
+    expect(shelf()).toContain('소수의 의미');
+  });
+
+  it('leads with what someone is in the middle of, and says so', async () => {
+    server = serve({ state: learningState({
+      lessons: twoCourses,
+      enrollments: [{ id: 'e2', lessonKey: laterKey, lessonVersionId: 'decimal-meaning:v1', completedSectionIds: [], status: 'active', attempts: [] }],
+      recommendations: [{ lessonKey, reason: '여기부터요.', kind: 'start', suggestedMinutes: 10 }],
+    }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(heading()).toBe('이어서 배울 수업'));
+    expect(shelf()[0]).toBe('소수의 의미');
+  });
+
+  it('calls the shelf a beginning only when there is no record at all', async () => {
+    server = serve({ signedIn: false });
+    render(<LearningWorkspace />);
+    await until(() => expect(heading()).toBe('차근차근, 기본부터'));
   });
 });
 
