@@ -1,6 +1,6 @@
 # Oracle 운영 배포
 
-2026-09-17 확인 기준 최근 기능 릴리스는 개념 탐색 `b8f635e` (#48)다. [해당 검증·배포 기록](#개념-탐색-48)에 확인 근거를 남겼으며, 이전 릴리스는 아래 기록으로 보존한다. 문서 변경 이후 최신 배포 commit은 `/api/version`과 GitHub Actions에서 확인한다.
+2026-09-18 확인 기준 최근 릴리스는 화면 렌더 테스트 `4a02874` (#58)다. [해당 검증·배포 기록](#2026-09-18-그림의-크기와-화면-렌더-테스트)에 확인 근거를 남겼으며, 이전 릴리스는 아래 기록으로 보존한다. 문서 변경 이후 최신 배포 commit은 `/api/version`과 GitHub Actions에서 확인한다.
 
 ## 대상과 범위
 
@@ -244,6 +244,23 @@ DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVer
 세 PR을 쌓아 올렸는데 #51이 main이 아니라 스택 아래 브랜치로 머지되어 그 내용이 main에 닿지 않았다. 닫힌 PR은 base를 옮길 수 없으므로 같은 브랜치를 main 위로 rebase해 **#53**으로 다시 열어 머지했다(rebase가 이미 squash된 커밋을 patch-id로 알아보고 떨군다). main에는 `c8233aa`(#50) → `ff14817`(#53) → `a984737`(#52) 순으로 올라갔다.
 
 각 단계에서 격리된 MySQL 테스트 DB로 24개 파일 392개 테스트, 웹·모바일 빌드가 통과했다. 세 번의 main 실행이 모두 검증·배포에 성공했고, 마지막 배포 후 공개 `/api/version`이 `a984737`, `/api/health`가 ready임을 확인했다. 화면 확인은 데스크톱 1440×900과 375px에서 직접 조작으로 했고 렌더 자동 테스트는 여전히 없다.
+
+### 2026-09-18 그림의 크기와 화면 렌더 테스트
+
+네 릴리스가 이어졌다. **DB 스키마도 콘텐츠 번들도 건드리지 않았으므로 migration도 콘텐츠 작업도 없다** — 새 앱 이미지만 올라가고, 되돌리려면 이전 이미지를 다시 띄우면 된다.
+
+| 릴리스 | commit | 검증·운영 결과 |
+|---|---|---|
+| [분수 막대가 옛 블록의 부드러움을 되찾는다 #55](https://github.com/team-campfire-dev/geunyang-math/pull/55) | `d3c2929` | 그림 안 분수 막대를 옛 블록이 그리던 비례로 되돌렸다. 24개 파일 392개 테스트. verify·배포 성공. [실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/35289884762) |
+| [그림과 글자가 화면에서 제 크기를 찾는다 #56](https://github.com/team-campfire-dev/geunyang-math/pull/56) | `f2d2120` | 도면 1단위를 1 CSS 픽셀로 맞춰 학습 화면과 편집 캔버스의 배율을 일치시키고, 그림 안 글자에 `$...$`를 열고, 읽는 글자에 12px 바닥을 놓았다. 24개 파일 396개 테스트(장면 검사 4개 추가). verify·배포 성공. [실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/35293207410) |
+| [개명과 제거가 남기고 간 이름들을 치운다 #57](https://github.com/team-campfire-dev/geunyang-math/pull/57) | `dfdf260` | 개명이 한쪽만 따라가 남은 CSS 이름을 맞췄다. 24개 파일 396개 테스트. verify·배포 성공. [실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/35293482164) |
+| [화면이 깨진 것을 스스로 말한다 #58](https://github.com/team-campfire-dev/geunyang-math/pull/58) | `4a02874` | jsdom 위의 화면 렌더 테스트를 들였다. 제품 코드는 바뀌지 않았다. 26개 파일 419개 테스트(화면 렌더 23개 추가). verify·배포 성공. [실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/35295136435) |
+
+앞의 세 릴리스는 화면만 바뀌었고, #58은 검사만 더해 공개 API·DB·콘텐츠에 닿지 않는다.
+
+#58 배포 뒤 세 군데가 모두 `4a02874`로 일치하는 것을 배포 잡의 검사와 따로 확인했다 — 공개 `/api/version`, VM의 컨테이너 이미지 태그(`geunyang-math:4a02874…`, healthy), 그리고 `current` 심링크다. `/api/health`는 `ready`다.
+
+**이미 지나간 릴리스의 상태는 지금 조회할 수 없다.** #55·#56·#57이 떠 있던 시점의 확인은 각 실행의 배포 성공 기록으로만 남는다 — 세 시간 안에 네 번을 덮었기 때문이다. 이 기록을 쓰기 시작할 때 떠 있던 것은 `dfdf260`(#57)이었고 곧 #58로 전환됐다. 릴리스마다 그 자리에서 두 군데(공개 API와 컨테이너 이미지)를 확인하지 않으면 뒤에 와서 되살릴 수 없다.
 
 ## 운영 후속 작업
 

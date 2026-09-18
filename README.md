@@ -2,7 +2,7 @@
 
 성인이 기초부터 자신의 속도로 수학을 다시 배우는 웹 서비스입니다. 수업·학습 기록·복습 과제와 콘텐츠 편집기를 제공하며, 다양한 수학 콘텐츠와 AI 수업 작성으로 확장합니다.
 
-현재 [운영 웹](https://geunyang-math.team-campfire.dev/)에서 **Google 로그인 → 선택형 진단 → 맞춤 추천 → 수업 학습 → 개인 복습 과제 → 제출·기록 복원**을 제공합니다. 2026-09-17 코드 기준은 [개념 탐색 #48](https://github.com/team-campfire-dev/geunyang-math/pull/48)까지 반영한 `b8f635e`입니다. MySQL 통합 검사를 포함한 392개 테스트와 웹·모바일 빌드를 통과했습니다. 실제 배포 버전은 아래 배포 기록에서 별도로 확인합니다. 기능별 구현·후속 범위는 [구현 현황](docs/implementation-status.md), 릴리스별 근거는 [배포 기록](docs/deployment.md#릴리스별-검증-기록)에서 확인합니다.
+현재 [운영 웹](https://geunyang-math.team-campfire.dev/)에서 **Google 로그인 → 선택형 진단 → 맞춤 추천 → 수업 학습 → 개인 복습 과제 → 제출·기록 복원**을 제공합니다. 2026-09-18 코드 기준은 [화면 렌더 테스트 #58](https://github.com/team-campfire-dev/geunyang-math/pull/58)까지 반영한 `4a02874`입니다. MySQL 통합 검사와 화면 렌더 검사를 포함한 419개 테스트와 웹·모바일 빌드를 통과했습니다. 실제 배포 버전은 아래 배포 기록에서 별도로 확인합니다. 기능별 구현·후속 범위는 [구현 현황](docs/implementation-status.md), 릴리스별 근거는 [배포 기록](docs/deployment.md#릴리스별-검증-기록)에서 확인합니다.
 
 ## 현재 구현
 
