@@ -47,6 +47,8 @@ function serve(options: { signedIn?: boolean; state?: LearningState; lesson?: Le
     learning: options.state ?? learningState(),
     lesson: options.lesson ?? document(),
     refuse: null as { action: LearningAction['action']; code: string; message: string; status?: number; then?: () => void } | null,
+    refuseDelete: null as { code: string; message: string } | null,
+    deletes: 0,
     after: undefined as ((action: LearningAction) => LearningState) | undefined,
   };
   const reply = (body: unknown, status = 200) => ({ ok: status < 400, status, json: async () => body }) as Response;
@@ -55,6 +57,12 @@ function serve(options: { signedIn?: boolean; state?: LearningState; lesson?: Le
     if (url.endsWith('/api/v1/session')) return reply({ user: state.signedIn ? { id: 'u1', displayName: '학습자' } : null, developmentLogin: false, googleLogin: true });
     if (url.includes('/api/v1/learning?catalog=1')) return reply({ courses: [{ key: 'fractions', title: '분수', summary: '분수를 처음부터' }], lessons: catalogue, concepts: [{ key: 'term.denominator', label: '분모' }] });
     if (url.includes('/api/v1/learning?lessonKey=')) return reply(state.lesson);
+    if (url.endsWith('/api/v1/account') && init?.method === 'DELETE') {
+      if (state.refuseDelete) return reply({ error: state.refuseDelete }, 409);
+      state.deletes += 1;
+      state.signedIn = false;
+      return reply({ removed: { attempts: 3, enrollments: 1, assignments: 1, submissions: 1, hints: 1, diagnostics: 0, recommendations: 0 } });
+    }
     if (url.endsWith('/api/v1/learning') && init?.method !== 'POST') {
       return state.signedIn ? reply(state.learning) : reply({ error: { code: 'unauthorized', message: '로그인이 필요해요.' } }, 401);
     }
@@ -71,7 +79,7 @@ function serve(options: { signedIn?: boolean; state?: LearningState; lesson?: Le
     }
     throw new Error(`아무도 답하지 않는 요청: ${url}`);
   }) as typeof fetch;
-  return { sent, state, of: (name: LearningAction['action']) => sent.filter((action) => action.action === name) };
+  return { sent, state, of: (name: LearningAction['action']) => sent.filter((action) => action.action === name), deletes: () => Array(state.deletes).fill(0) };
 }
 
 const tick = async (ms = 0) => { await act(async () => { await vi.advanceTimersByTimeAsync(ms); }); };
@@ -222,6 +230,55 @@ describe('finishing an assignment', () => {
     const [first, second] = server.of('assignment.submit') as { requestId: string }[];
     expect(second.requestId).toBe(first.requestId);
     expect(screen.getByText(/과제를 제출했어요/)).toBeDefined();
+  });
+});
+
+describe('leaving for good', () => {
+  const openProfile = async () => {
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByRole('button', { name: /학습자/ })).toBeDefined());
+    fireEvent.click(screen.getByRole('button', { name: /학습자/ }));
+    await until(() => expect(screen.getByRole('button', { name: /계정과 학습 기록 지우기/ })).toBeDefined());
+  };
+
+  it('says what goes before anything goes', async () => {
+    await openProfile();
+    fireEvent.click(screen.getByRole('button', { name: /계정과 학습 기록 지우기/ }));
+    expect(screen.getByText(/되돌릴 수 없고 복구해 드릴 방법도 없어요/)).toBeDefined();
+    expect(screen.getByText(/새 학습 공간으로 시작해요/)).toBeDefined();
+    // Asking is not doing: nothing has been sent yet.
+    expect(server.deletes()).toHaveLength(0);
+  });
+
+  it('lets the reader step back out of it', async () => {
+    await openProfile();
+    fireEvent.click(screen.getByRole('button', { name: /계정과 학습 기록 지우기/ }));
+    fireEvent.click(screen.getByRole('button', { name: '그만두기' }));
+    expect(screen.queryByText(/되돌릴 수 없고/)).toBeNull();
+    expect(server.deletes()).toHaveLength(0);
+  });
+
+  it('asks once, then lets go of everything it was holding', async () => {
+    await openProfile();
+    fireEvent.click(screen.getByRole('button', { name: /계정과 학습 기록 지우기/ }));
+    fireEvent.click(screen.getByRole('button', { name: /네, 지울게요/ }));
+    await until(() => expect(screen.getByText(/계정과 학습 기록을 지웠어요/)).toBeDefined());
+    expect(server.deletes()).toHaveLength(1);
+    // What is left is what anyone may see.
+    await until(() => expect(screen.getByRole('button', { name: /내 학습 시작/ })).toBeDefined());
+    expect(screen.queryByText('학습자')).toBeNull();
+  });
+
+  it('keeps the records when the server refuses', async () => {
+    server.state.refuseDelete = { code: 'content_role_held', message: '콘텐츠 편집 권한이 있는 계정이에요.' };
+    await openProfile();
+    fireEvent.click(screen.getByRole('button', { name: /계정과 학습 기록 지우기/ }));
+    fireEvent.click(screen.getByRole('button', { name: /네, 지울게요/ }));
+    // The refusal is said both in the dialog and behind it, so this counts rather than picks.
+    await until(() => expect(screen.getAllByText(/콘텐츠 편집 권한이 있는 계정이에요/).length).toBeGreaterThan(0));
+    // Still signed in, and the question is still open to answer or back out of.
+    expect(screen.getByRole('button', { name: /학습자/ })).toBeDefined();
+    expect(screen.getByRole('button', { name: '그만두기' })).toBeDefined();
   });
 });
 

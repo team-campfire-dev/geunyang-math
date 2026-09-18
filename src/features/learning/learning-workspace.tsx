@@ -87,6 +87,8 @@ export function LearningWorkspace() {
   const [goal, setGoal] = useState<Goal>('foundation-recovery');
   const [minutes, setMinutes] = useState(10);
   const [dirtyProblems, setDirtyProblems] = useState<string[]>([]);
+  /** Whether the profile dialog is asking about deletion rather than about goals. */
+  const [erasing, setErasing] = useState(false);
   const [notice, setNotice] = useState('');
   const submissionRequests = useRef(new Map<string, string>());
   const modalRef = useRef<HTMLDivElement>(null);
@@ -306,6 +308,21 @@ export function LearningWorkspace() {
     }
     finally { busyRef.current = false; setBusy(false); if (generation === loadGeneration.current) setLoading(false); }
   }
+  /**
+   * Leaving for good. What goes is said before it goes, and the same shared state that a logout
+   * clears is cleared here too — with the difference that there is nothing to come back to.
+   */
+  async function eraseAccount() {
+    if (busyRef.current) return;
+    busyRef.current = true; setBusy(true); setError(''); loadGeneration.current += 1;
+    try {
+      await learningApi.deleteAccount();
+      clearPersonalState(); setErasing(false); setAuthError(''); navigate('home');
+      setNotice('계정과 학습 기록을 지웠어요. 그동안 함께해 주셔서 고마워요.');
+    }
+    catch (reason) { setError(messageOf(reason)); }
+    finally { busyRef.current = false; setBusy(false); setLoading(false); }
+  }
   async function logout() {
     if (busyRef.current) return;
     busyRef.current = true; setBusy(true); loadGeneration.current += 1;
@@ -317,6 +334,7 @@ export function LearningWorkspace() {
     finally { busyRef.current = false; setBusy(false); setLoading(false); }
   }
   function openProfile() {
+    setErasing(false);
     if (!state) { setModal('login'); return; }
     setGoal(state.user.goal); setMinutes(state.user.dailyMinutes); setModal('profile');
   }
@@ -434,7 +452,7 @@ export function LearningWorkspace() {
         </form>}
         <p className="login-privacy-note">계정과 학습 기록을 사용하는 방법은 <Link href="/privacy/" target="_blank" rel="noopener noreferrer">개인정보 안내<span className="sr-only"> (새 창)</span></Link>에서 확인할 수 있어요.</p>
         <button className="text-button login-browse" disabled={busy || googleStarting} onClick={() => { setModal(null); navigate('lessons'); }}>수업 먼저 둘러보기<Icon name="arrow" size={16} /></button>
-      </> : <><span className="modal-symbol"><Icon name="spark" size={27} /></span><div className="eyebrow">SMALL STEPS, YOUR PACE</div><h2 id="modal-title">나에게 맞는 작은 목표.</h2><p>배우고 싶은 이유와 하루에 함께할 시간을 정해 보세요.</p><form onSubmit={saveProfile}><label className="form-label">무엇을 위해 배우고 싶나요?<select value={goal} onChange={(event) => setGoal(event.target.value as Goal)} disabled={busy}>{Object.entries(goalLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label><label className="form-label">하루에 얼마나 함께할까요?<select value={minutes} onChange={(event) => setMinutes(Number(event.target.value))} disabled={busy}>{[5, 10, 20].map((value) => <option key={value} value={value}>{value}분</option>)}</select></label>{error && <p role="alert" className="field-error">{error}</p>}<button className="button primary full-width" type="submit" disabled={busy}>{busy ? '저장 중…' : '나의 목표 저장하기'}<Icon name="check" size={17} /></button></form><button className="text-button profile-logout" disabled={busy || loading} onClick={() => void logout()}><Icon name="logout" size={16} />이 기기에서 로그아웃</button></>}</div></div>}</div>;
+      </> : <><span className="modal-symbol"><Icon name="spark" size={27} /></span><div className="eyebrow">SMALL STEPS, YOUR PACE</div><h2 id="modal-title">나에게 맞는 작은 목표.</h2><p>배우고 싶은 이유와 하루에 함께할 시간을 정해 보세요.</p><form onSubmit={saveProfile}><label className="form-label">무엇을 위해 배우고 싶나요?<select value={goal} onChange={(event) => setGoal(event.target.value as Goal)} disabled={busy}>{Object.entries(goalLabels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label><label className="form-label">하루에 얼마나 함께할까요?<select value={minutes} onChange={(event) => setMinutes(Number(event.target.value))} disabled={busy}>{[5, 10, 20].map((value) => <option key={value} value={value}>{value}분</option>)}</select></label>{error && <p role="alert" className="field-error">{error}</p>}<button className="button primary full-width" type="submit" disabled={busy}>{busy ? '저장 중…' : '나의 목표 저장하기'}<Icon name="check" size={17} /></button></form><button className="text-button profile-logout" disabled={busy || loading} onClick={() => void logout()}><Icon name="logout" size={16} />이 기기에서 로그아웃</button>{erasing ? <div className="account-erase asking" role="group" aria-label="계정 삭제 확인"><strong>계정과 학습 기록을 모두 지울까요?</strong><p>수업 진도와 풀이, 힌트 기록, 복습 과제와 제출, 시작점 확인, 추천 이력, 목표 설정이 함께 사라져요. <b>되돌릴 수 없고 복구해 드릴 방법도 없어요.</b></p><p className="muted small">같은 Google 계정으로 다시 로그인하면 아무 기록도 없는 새 학습 공간으로 시작해요.</p><div className="account-erase-actions"><button className="button danger" disabled={busy} onClick={() => void eraseAccount()}>{busy ? '지우는 중…' : '네, 지울게요'}</button><button className="text-button" disabled={busy} onClick={() => setErasing(false)}>그만두기</button></div></div> : <button className="text-button account-erase-open" disabled={busy || loading} onClick={() => { setError(''); setErasing(true); }}><Icon name="close" size={15} />계정과 학습 기록 지우기</button>}</>}</div></div>}</div>;
 }
 
 function EmptyState({ title, text, actionLabel, onAction }: { title: string; text: string; actionLabel?: string; onAction?: () => void }) {

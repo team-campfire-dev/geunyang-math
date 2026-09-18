@@ -17,6 +17,8 @@ export const learningApi = {
   definition: (input: DefinitionRequest) => request<GlossaryEntry>('definitions', { method: 'POST', body: JSON.stringify(input) }),
   login: (displayName: string) => request<Session>('dev-session', { method: 'POST', body: JSON.stringify({ displayName }) }),
   logout: () => request<unknown>('session', { method: 'DELETE' }),
+  /** Removes the account and everything kept about it. There is no undo and no id to point elsewhere. */
+  deleteAccount: () => request<unknown>('account', { method: 'DELETE' }),
   action: (action: LearningAction, expectedUserId: string) => request<ActionResponse>('learning', {
     method: 'POST', body: JSON.stringify(action), headers: { 'X-Learning-User-Id': expectedUserId },
   }),
