@@ -15,6 +15,18 @@ if (!window.matchMedia) {
   })) as typeof window.matchMedia;
 }
 
+// Nothing in jsdom has a size, so the pieces that measure themselves get an observer that never fires
+// and scrolling that goes nowhere. A screen test is about what is on the screen, not where it sits.
+if (!window.ResizeObserver) {
+  window.ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  } as unknown as typeof ResizeObserver;
+}
+window.scrollTo = (() => {}) as typeof window.scrollTo;
+Element.prototype.scrollIntoView = function scrollIntoView() {};
+
 afterEach(cleanup);
 
 export * from '@testing-library/react';
