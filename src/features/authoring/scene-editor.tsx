@@ -129,7 +129,7 @@ export function SceneEditor({ payload, onChange, arrangingRefusal }: {
     </div>
 
     <div className="scene-canvas">
-      <svg ref={surface} viewBox={`0 0 ${scene.width} ${scene.height}`} style={{ aspectRatio: `${scene.width} / ${scene.height}` }}
+      <svg ref={surface} viewBox={`0 0 ${scene.width} ${scene.height}`} style={{ aspectRatio: `${scene.width} / ${scene.height}`, maxWidth: scene.width }}
         onPointerMove={track} onPointerUp={() => setDrag(null)} onPointerCancel={() => setDrag(null)}
         onPointerDown={(event) => { if (event.target === surface.current) setSelected(null); }}>
         <defs><pattern id={gridId} width="20" height="20" patternUnits="userSpaceOnUse">
@@ -353,7 +353,8 @@ function ItemPanel({ item, index, total, arrangeable, onChange, onName, onReorde
 
       {item.kind === 'text' && <>
         <label className="editor-field"><span className="editor-label">글자</span>
-          <input value={item.text} maxLength={sceneLimits.maxText} onChange={(event) => onChange({ ...item, text: event.target.value })} /></label>
+          <input value={item.text} maxLength={sceneLimits.maxText} onChange={(event) => onChange({ ...item, text: event.target.value })} />
+          <small>수식은 본문과 같이 $...$로 씁니다. 예: $\frac{3}{4}$</small></label>
         <label className="editor-field"><span className="editor-label">크기</span>
           <input type="number" min={sceneLimits.minFontSize} max={sceneLimits.maxFontSize} value={item.size ?? 14}
             onChange={(event) => onChange({ ...item, size: Number(event.target.value) })} /></label>

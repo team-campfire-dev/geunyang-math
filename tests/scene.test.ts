@@ -7,6 +7,9 @@ import {
   placeInZone, placementOffset, removeFromZone, reorderItem, resizeItem, sceneItemKinds, setChange, taskComplete,
   sceneColorLabels, sceneColors, zoneAt, type SceneItem, type SceneZone,
 } from '@/shared/scene';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { SceneShapes } from '@/features/learning/content-blocks';
 import { seedLessons, setsOf } from './fixtures/content';
 
 const sceneBlock = (items: unknown[], extra: Record<string, unknown> = {}) => ({
@@ -89,6 +92,43 @@ describe('arranging shapes on the canvas', () => {
     expect(reorderItem(items, 0, 1).map((item) => item.kind)).toEqual(['text', 'rect']);
     expect(reorderItem(items, 1, 1)).toBe(items);
     expect(reorderItem(items, 0, -1)).toBe(items);
+  });
+});
+
+describe('a label that carries a formula', () => {
+  const label = (text: string, extra: Partial<SceneItem> = {}): SceneItem =>
+    ({ kind: 'text', x: 100, y: 50, text, size: 14, ...extra } as SceneItem);
+
+  it('measures a fraction by what it draws, not by how it is written', () => {
+    // "\\frac{3}{4}" is eleven characters and draws about one wide; the box must not follow the source.
+    const written = itemBounds(label('$\\frac{3}{4}$'));
+    const literal = itemBounds(label('\\frac{3}{4}'));
+    expect(written.width).toBeLessThan(literal.width / 3);
+    // A stacked fraction asks for a second row, and resizing hands that row back rather than
+    // reading the taller box as a bigger font.
+    expect(written.height).toBe(14 * 1.25 * 2);
+    expect(resizeItem(label('$\\frac{3}{4}$'), 60, 35)).toMatchObject({ size: 17.5 });
+    expect(resizeItem(label('넷 중 셋'), 60, 35)).toMatchObject({ size: 35 });
+  });
+
+  it('measures prose around the formula too', () => {
+    expect(itemBounds(label('전체의 $\\frac{3}{4}$')).width)
+      .toBeGreaterThan(itemBounds(label('$\\frac{3}{4}$')).width);
+  });
+
+  it('draws the formula as KaTeX and escapes everything around it', () => {
+    const html = renderToStaticMarkup(createElement(SceneShapes, { items: [label('<b>전체</b>의 $\\frac{3}{4}$')] }));
+    expect(html).toContain('<foreignObject');
+    expect(html).toContain('katex');
+    // The prose half never becomes markup, however it was written.
+    expect(html).toContain('&lt;b&gt;');
+    expect(html).not.toContain('<b>');
+  });
+
+  it('leaves a label without a formula as plain SVG text', () => {
+    const html = renderToStaticMarkup(createElement(SceneShapes, { items: [label('전체를 넷으로')] }));
+    expect(html).toContain('<text');
+    expect(html).not.toContain('foreignObject');
   });
 });
 
