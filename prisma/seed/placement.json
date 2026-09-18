@@ -1,0 +1,1261 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "placement",
+      "title": "시작점 확인",
+      "summary": "학습자가 어디쯤 있는지 확인하는 문항을 모아 둔 곳이에요. 수업은 없고, 수업 목록에도 나오지 않아요.",
+      "lessons": [],
+      "diagnostics": [
+        "catalogue-placement"
+      ]
+    }
+  ],
+  "concepts": [
+    {
+      "key": "absolute-value",
+      "label": "절댓값",
+      "assessable": true
+    },
+    {
+      "key": "addition",
+      "label": "덧셈",
+      "assessable": true
+    },
+    {
+      "key": "common-denominator",
+      "label": "통분",
+      "assessable": true
+    },
+    {
+      "key": "decimal",
+      "label": "소수",
+      "assessable": true
+    },
+    {
+      "key": "decimal-addition",
+      "label": "소수의 덧셈",
+      "assessable": true
+    },
+    {
+      "key": "decimal-fraction",
+      "label": "소수와 분수의 관계",
+      "assessable": true
+    },
+    {
+      "key": "decimal-place",
+      "label": "소수의 자릿값",
+      "assessable": true
+    },
+    {
+      "key": "denominator",
+      "label": "분모",
+      "assessable": true
+    },
+    {
+      "key": "equivalent-fraction",
+      "label": "동치분수",
+      "assessable": true
+    },
+    {
+      "key": "fraction",
+      "label": "분수",
+      "assessable": true
+    },
+    {
+      "key": "integer",
+      "label": "정수",
+      "assessable": true
+    },
+    {
+      "key": "negative-number",
+      "label": "음수",
+      "assessable": true
+    },
+    {
+      "key": "numerator",
+      "label": "분자",
+      "assessable": true
+    },
+    {
+      "key": "percentage",
+      "label": "백분율",
+      "assessable": true
+    },
+    {
+      "key": "percentage-of",
+      "label": "비율만큼의 양",
+      "assessable": true
+    },
+    {
+      "key": "rate",
+      "label": "비율",
+      "assessable": true
+    },
+    {
+      "key": "ratio",
+      "label": "비",
+      "assessable": true
+    },
+    {
+      "key": "rational-number",
+      "label": "유리수",
+      "assessable": true
+    },
+    {
+      "key": "reduce",
+      "label": "약분",
+      "assessable": true
+    },
+    {
+      "key": "signed-addition",
+      "label": "부호가 있는 수의 덧셈",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [
+    {
+      "problemSetId": "placement",
+      "courseKey": "placement",
+      "name": "시작점 확인",
+      "versionId": "placement:v1",
+      "problems": [
+        {
+          "problemVersionId": "placement-v4:q1",
+          "conceptKeys": [
+            "fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 크기로 나눈 케이크 9조각 중 4조각이 남았어요. 전체 케이크에서 남은 양을 분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 4,
+            "denominator": 9
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q2",
+          "conceptKeys": [
+            "fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "물 1리터를 똑같은 컵 5개에 남김없이 나눠 담았어요. 한 컵에 담긴 물은 전체의 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q3",
+          "conceptKeys": [
+            "denominator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q3:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{5}{12}$의 분모는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q4",
+          "conceptKeys": [
+            "denominator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q4:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "색종이 한 장을 똑같은 크기로 8조각 냈어요. 이 상황을 분수로 나타낼 때 분모는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q5",
+          "conceptKeys": [
+            "numerator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q5:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{5}{12}$의 분자는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q6",
+          "conceptKeys": [
+            "numerator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q6:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "똑같이 9조각 낸 색종이에서 4조각을 썼어요. 쓴 양을 분수로 나타낼 때 분자는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q7",
+          "conceptKeys": [
+            "equivalent-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q7:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{2}{3}=\\frac{\\square}{15}$의 빈칸에 들어갈 정수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q8",
+          "conceptKeys": [
+            "equivalent-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q8:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{3}{4}=\\frac{\\square}{20}$의 빈칸에 들어갈 정수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q9",
+          "conceptKeys": [
+            "reduce"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q9:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{18}{24}$를 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 4,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q10",
+          "conceptKeys": [
+            "reduce"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q10:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{20}{45}$를 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 4,
+            "denominator": 9,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q11",
+          "conceptKeys": [
+            "common-denominator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q11:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{4}$과 $\\frac{1}{6}$을 분모가 12가 되도록 통분할 때, $\\frac{1}{4}$은 $\\frac{\\square}{12}$이 돼요. 빈칸에 들어갈 정수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q12",
+          "conceptKeys": [
+            "addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q12:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{2}{11}+\\frac{5}{11}$은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 7,
+            "denominator": 11
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q13",
+          "conceptKeys": [
+            "common-denominator",
+            "addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q13:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{4}+\\frac{1}{6}$은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 12
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q14",
+          "conceptKeys": [
+            "decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q14:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.1$이 $7$개 모이면 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 7,
+            "denominator": 10
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q15",
+          "conceptKeys": [
+            "decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q15:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$을 똑같이 $10$으로 나눈 것 중 $3$만큼을 소수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 10
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q16",
+          "conceptKeys": [
+            "decimal-place"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q16:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3.472$에서 소수 둘째 자리 숫자는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q17",
+          "conceptKeys": [
+            "decimal-place"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q17:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.085$에서 소수 셋째 자리 숫자는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q18",
+          "conceptKeys": [
+            "decimal-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q18:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.25$를 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 4,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q19",
+          "conceptKeys": [
+            "decimal-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q19:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{7}{20}$과 같은 수를 소수로 썼을 때, 소수 둘째 자리 숫자는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q20",
+          "conceptKeys": [
+            "decimal-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q20:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.4+0.35$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q21",
+          "conceptKeys": [
+            "decimal-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q21:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1.2+0.85$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 41,
+            "denominator": 20
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q22",
+          "conceptKeys": [
+            "ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q22:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빨간 구슬 $6$개와 파란 구슬 $8$개가 있어요. 빨간 구슬과 파란 구슬의 비를 가장 간단한 자연수의 비로 나타낼 때, 빨간 구슬 쪽의 수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q23",
+          "conceptKeys": [
+            "ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q23:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "사과 $9$개와 배 $12$개의 비를 가장 간단한 자연수의 비로 나타낼 때, 배 쪽의 수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q24",
+          "conceptKeys": [
+            "rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q24:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 $20$명 중 $8$명이 안경을 썼어요. 안경을 쓴 사람의 비율을 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 2,
+            "denominator": 5,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q25",
+          "conceptKeys": [
+            "rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q25:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기준량이 $25$이고 비교하는 양이 $15$일 때, 비율은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q26",
+          "conceptKeys": [
+            "percentage"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q26:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.45$를 백분율로 나타내면 몇 퍼센트인가요? 수만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 45
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q27",
+          "conceptKeys": [
+            "percentage"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q27:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 $50$개 중 $13$개예요. 백분율로 나타내면 몇 퍼센트인가요? 수만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 26
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q28",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q28:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$800$원의 $15\\%$는 몇 원인가요? 수만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 120
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q29",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q29:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$60$명의 $35\\%$는 몇 명인가요? 수만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 21
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q30",
+          "conceptKeys": [
+            "negative-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q30:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "수직선에서 $0$보다 $4$만큼 왼쪽에 있는 수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q31",
+          "conceptKeys": [
+            "negative-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q31:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "영하 $7$도를 부호를 붙인 수로 써 주세요. 단위는 빼고 수만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -7
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q32",
+          "conceptKeys": [
+            "integer"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q32:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-3$보다 $1$만큼 큰 정수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -2
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q33",
+          "conceptKeys": [
+            "integer"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q33:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-6$과 $2$ 사이에 있는 정수 중 가장 작은 것은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q34",
+          "conceptKeys": [
+            "absolute-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q34:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-9$의 절댓값은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q35",
+          "conceptKeys": [
+            "absolute-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q35:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "절댓값이 $6$인 수 중 $0$보다 작은 수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -6
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q36",
+          "conceptKeys": [
+            "signed-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q36:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-5+3$은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -2
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q37",
+          "conceptKeys": [
+            "signed-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q37:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-4+(-6)$은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -10
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q38",
+          "conceptKeys": [
+            "rational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q38:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-0.5$를 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": -1,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q39",
+          "conceptKeys": [
+            "rational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q39:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-\\frac{3}{4}+\\frac{1}{4}$은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": -1,
+            "denominator": 2
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [
+    {
+      "versionId": "placement-v4",
+      "diagnosticKey": "catalogue-placement",
+      "title": "시작점 확인",
+      "description": "분수에서 소수·비와 비율·정수와 유리수까지, 배우려는 곳까지 가는 데 필요한 개념만 확인해요. 답에 따라 다음 문제가 달라지고, 모르는 문제는 건너뛰어도 괜찮아요.",
+      "estimatedMinutes": 10,
+      "problemSet": {
+        "problemSetId": "placement",
+        "problemSetVersionId": "placement:v1",
+        "problemVersionIds": [
+          "placement-v4:q1",
+          "placement-v4:q2",
+          "placement-v4:q3",
+          "placement-v4:q4",
+          "placement-v4:q5",
+          "placement-v4:q6",
+          "placement-v4:q7",
+          "placement-v4:q8",
+          "placement-v4:q9",
+          "placement-v4:q10",
+          "placement-v4:q11",
+          "placement-v4:q12",
+          "placement-v4:q13",
+          "placement-v4:q14",
+          "placement-v4:q15",
+          "placement-v4:q16",
+          "placement-v4:q17",
+          "placement-v4:q18",
+          "placement-v4:q19",
+          "placement-v4:q20",
+          "placement-v4:q21",
+          "placement-v4:q22",
+          "placement-v4:q23",
+          "placement-v4:q24",
+          "placement-v4:q25",
+          "placement-v4:q26",
+          "placement-v4:q27",
+          "placement-v4:q28",
+          "placement-v4:q29",
+          "placement-v4:q30",
+          "placement-v4:q31",
+          "placement-v4:q32",
+          "placement-v4:q33",
+          "placement-v4:q34",
+          "placement-v4:q35",
+          "placement-v4:q36",
+          "placement-v4:q37",
+          "placement-v4:q38",
+          "placement-v4:q39"
+        ]
+      }
+    }
+  ],
+  "definitions": []
+}

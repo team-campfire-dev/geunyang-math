@@ -260,7 +260,7 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
       expect(await db.publishedProblem.count({ where: { ownerVersionId: definition.versionId } })).toBe(0);
       const fresh = await learner();
       const state = (await service.act(fresh.id, { action: 'diagnostic.start' })).state;
-      expect(state.diagnosticOffering).toMatchObject({ title: 'DB 진단', total: 1, estimatedMinutes: 1 });
+      expect(state.diagnosticOffering).toMatchObject({ title: 'DB 진단', estimatedMinutes: 1 });
       expect(state.diagnostic).toMatchObject({ answered: 0, settled: 0, version: definition.versionId });
       expect(JSON.stringify(state)).not.toMatch(/"(?:gradingSpec|solution|hints)"/);
       const resumed = (await service.act(oldUser.id, { action: 'diagnostic.start' })).state;

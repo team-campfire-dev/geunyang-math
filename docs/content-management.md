@@ -19,7 +19,7 @@
 
 - `LessonVersion`: 수업 판본. `metadata`가 수업 자신에 대한 것(`public`)과 **복습 풀**(`review` — 복습 과제가 문제를 고르는 문제집 참조, 없으면 null)을 담는다. 문제는 여기 없다 — 단계의 `core.problem_set@2` 블록이 `{ problemSetId, problemSetVersionId, problemVersionIds }`로 문제집을 **참조**할 뿐이다. 순서도 여기 없다 — `Lesson.order`가 코스 안 자리다.
 - `ProblemSetVersion`: 문제집 판본. 문제는 `PublishedProblem` 행이고 블록은 `ContentBlock` 행이며, 둘 다 이 판본 ID에 매달린다. 판본 ID는 수업·진단과 같은 이름 공간을 쓴다.
-- `DiagnosticVersion`: 진단 이름·설명·예상 시간·발행 시각과, 문항을 가져오는 문제집 참조(`problemSetId`·`problemSetVersionId`·`problemVersionIds` — 묻는 순서). 문항은 여기 없다. `diagnosticKey=starting-point`의 최신 발행 판본을 새 진단에 사용한다.
+- `DiagnosticVersion`: 진단 이름·설명·예상 시간·발행 시각과, 문항을 가져오는 문제집 참조(`problemSetId`·`problemSetVersionId`·`problemVersionIds` — 묻는 순서). 문항은 여기 없다. **가장 최근에 발행된 판본**을 새 진단에 사용한다. 카탈로그 전체를 묻는 은행은 어느 과정의 것도 아니라 수업 없는 `placement` 과정이 갖고 있으며, 분수 과정의 옛 진단은 발행된 채 남아 있다.
 - `Concept`: **개념**. 전역이고 키는 불변이다. 공통 사전의 호칭(`label`)과 **문제가 이것을 평가할 수 있는가**(`assessable`)를 든다. 수업이 가르치고 전제하는 개념과 문제가 평가하는 개념은 `assessable`이어야 한다. 표시 순서는 없다 — 코스의 수업 순서(그 개념을 처음 가르치는 수업)에서 유도한다.
 - `ConceptDefinition`: 범위별 **뜻풀이**. `(conceptKey, scopeKind, scopeKey)`마다 한 행이고, 이 범위에서 부르는 이름(`label`, 비어 있으면 개념의 이름)과 선택 요약·설명 맥락(`usageNote`)을 든다. 본문은 `ContentBlock` 행이다. **판본도 초안도 없다** — 어떤 판정에도 쓰이지 않으므로 되찾을 과거가 없고, 저장이 곧 최신이다. 블록이 없는 행은 호칭만 바꾼 것이라 본문에서 걸 수 없다.
 

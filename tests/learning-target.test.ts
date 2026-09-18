@@ -23,7 +23,9 @@ const lessons: PublicLesson[] = seeds.flatMap((seed) => (seed.lessons as StoredL
   .sort((a, b) => inCatalogueOrder.indexOf(a.lessonKey) - inCatalogueOrder.indexOf(b.lessonKey));
 const labels = Object.fromEntries(seeds.flatMap((seed) => seed.concepts).map((concept) => [concept.key, concept.label]));
 const graph = conceptGraph(lessons);
-const courses = seeds.flatMap((seed) => seed.courses).map((course) => course.key);
+// Only courses somebody could be sent to. The placement's own course holds the question bank and
+// no lessons, which is what keeps it out of the catalogue and out of this list.
+const courses = seeds.flatMap((seed) => seed.courses).filter((course) => course.lessons.length).map((course) => course.key);
 const scopeFor = (courseKey: string | null) =>
   placementScope(graph, lessons.filter((lesson) => lesson.courseKey === courseKey).flatMap((lesson) => lesson.conceptKeys));
 const advise = (targetCourseKey: string | null) => recommend({
@@ -38,6 +40,12 @@ const bank: PlacementProblem[] = seeds.flatMap((seed) => seed.problemSets)
   .map((problem) => ({ problemVersionId: problem.problemVersionId, conceptKeys: problem.conceptKeys }));
 
 describe('naming the course someone came for', () => {
+  it('is not offered a course with no lessons, which is where the question bank lives', () => {
+    const empty = seeds.flatMap((seed) => seed.courses).filter((course) => !course.lessons.length);
+    expect(empty.map((course) => course.key)).toEqual(['placement']);
+    expect(courses).not.toContain('placement');
+  });
+
   it('bounds the placement to what that course stands on', () => {
     const everything = scopeFor(null);
     expect(courses.length).toBeGreaterThan(1);

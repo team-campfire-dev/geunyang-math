@@ -240,7 +240,8 @@ export class LearningService {
       user: { id: user.id, displayName: user.displayName, targetCourseKey: user.targetCourseKey, dailyMinutes: user.dailyMinutes },
       lessons, assignments, recommendations, concepts, plan,
       diagnosticOffering: offering ? { version: offering.versionId, title: offering.title, description: offering.description,
-        total: offering.problems.length, estimatedMinutes: offering.estimatedMinutes } : null,
+        scope: placementScope(conceptGraph(lessons), lessons.filter(l => l.courseKey === user.targetCourseKey).flatMap(l => l.conceptKeys)).length,
+        estimatedMinutes: offering.estimatedMinutes } : null,
       diagnostic: diagnostic && diagnosticBank && stored ? { id: diagnostic.id, version: diagnostic.version, status: diagnostic.status as 'active' | 'completed',
         completedAt: diagnostic.completedAt?.toISOString() ?? null, answered: diagnosticAnswers.length,
         ...placementProgress({ scope: stored.scope, placed: stored.placed, source: stored.source }),
@@ -352,8 +353,9 @@ export class LearningService {
               return {};
             }
             case 'profile.update': {
-              // A course nobody published is not a destination. Clearing it is always allowed.
-              if (action.targetCourseKey && !(await tx.course.findFirst({ where: { key: action.targetCourseKey } }))) throw notFound();
+              // A course with nothing published in it is not a destination — the placement's own
+              // course holds the question bank and no lessons. Clearing it is always allowed.
+              if (action.targetCourseKey && !(await tx.lessonVersion.findFirst({ where: { lesson: { course: { key: action.targetCourseKey } } } }))) throw notFound();
               await tx.user.update({ where: { id: userId }, data: { targetCourseKey: action.targetCourseKey, dailyMinutes: action.dailyMinutes } });
               return {};
             }
