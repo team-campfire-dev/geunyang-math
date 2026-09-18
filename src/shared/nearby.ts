@@ -1,4 +1,4 @@
-import type { ConceptReadiness, PublicLesson } from './api';
+import type { AssignmentView, ConceptReadiness, PublicLesson } from './api';
 
 /**
  * Which lessons the home screen puts in front of someone. It used to be the first three of the
@@ -37,4 +37,38 @@ export function nearbyLessons(input: {
   // Leaving the hero's lesson out is a courtesy, not a rule. On a catalogue of one it would leave an
   // empty shelf, and an empty shelf reads as something broken rather than as nothing to add.
   return (withoutHero.length ? withoutHero : ranked).slice(0, limit).map((entry) => entry.lesson);
+}
+
+/**
+ * Which assignments the home screen puts in front of someone. The server already hands them back
+ * oldest recommendation first, which is close but blind to the two dates an assignment can carry:
+ * a window that has not opened yet, and a deadline. A homework due tomorrow belongs above a review
+ * that has been waiting a week with no deadline at all, and one that has not opened cannot be first.
+ *
+ * Nothing here decides whether an assignment may be answered — the server does that. This only
+ * decides the order of what is shown.
+ */
+export function nearbyAssignments(input: {
+  assignments: AssignmentView[];
+  now: Date;
+  /** The assignment the review callout is already offering, so it is not offered twice. */
+  exclude?: string | null;
+  limit?: number;
+}): AssignmentView[] {
+  const { assignments, now, exclude = null, limit = 2 } = input;
+  const at = (value: string | null) => (value ? new Date(value).getTime() : null);
+  const urgency = (item: AssignmentView) => {
+    const opens = at(item.opensAt);
+    if (opens !== null && opens > now.getTime()) return 3;
+    if (item.dueAt) return 0;
+    return (at(item.recommendedAt) ?? 0) <= now.getTime() ? 1 : 2;
+  };
+  /** Within one urgency the nearer date decides: a deadline if there is one, else the recommendation. */
+  const when = (item: AssignmentView) => at(item.dueAt) ?? at(item.opensAt) ?? at(item.recommendedAt) ?? 0;
+  const ranked = assignments.filter((item) => item.status === 'assigned')
+    .map((item, order) => ({ item, order, urgency: urgency(item) }))
+    .sort((a, b) => a.urgency - b.urgency || when(a.item) - when(b.item) || a.order - b.order);
+  const withoutCallout = ranked.filter((entry) => entry.item.recipientId !== exclude);
+  // The same courtesy as the lessons: leaving one out must not leave an empty shelf.
+  return (withoutCallout.length ? withoutCallout : ranked).slice(0, limit).map((entry) => entry.item);
 }

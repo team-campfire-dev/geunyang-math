@@ -11,7 +11,7 @@ import { ServiceFooter } from './service-footer';
 import { ContentBlocks, unsupportedRequiredBlocks, type GlossaryContext } from './content-blocks';
 import { ConceptExplorer } from './concept-explorer';
 import { canExploreDefinitions } from '@/shared/definition-exploration';
-import { nearbyLessons } from '@/shared/catalogue';
+import { nearbyAssignments, nearbyLessons } from '@/shared/nearby';
 import { ProblemCard, type ProblemActions } from './problem-card';
 import { Icon, type IconName } from './icons';
 
@@ -357,6 +357,10 @@ export function LearningWorkspace() {
       lessons, enrollments: state?.enrollments ?? [], readiness: state?.plan.readiness ?? [],
       exclude: recommended?.lessonKey ?? null,
     });
+    // The review callout below already offers one, so the shelf moves on to the next.
+    const nextAssignments = nearbyAssignments({
+      assignments: pendingAssignments, now: new Date(), exclude: state?.plan.review?.recipientId ?? null,
+    });
     // The heading says what the first card actually is, not what the hero above it is doing.
     const shelfTitle = state?.enrollments.some((entry) => entry.lessonKey === nearby[0]?.lessonKey && entry.status === 'active')
       ? '이어서 배울 수업'
@@ -374,7 +378,7 @@ export function LearningWorkspace() {
       </section>}
       <div className="learning-overview"><div><span className="overview-icon"><Icon name="book" size={20} /></span><span><small>나의 학습</small><strong>{completedCount}<em>개 수업 완료</em></strong></span></div><div><span className="overview-icon"><Icon name="pencil" size={20} /></span><span><small>한 번 더 생각하기</small><strong>{pendingAssignments.length}<em>개 과제 남음</em></strong></span></div><button onClick={openProfile}><span className="overview-icon orange"><Icon name="clock" size={20} /></span><span><small>꾸준함을 위한 작은 약속</small><strong>하루 {state?.user.dailyMinutes ?? 10}<em>분씩 학습</em></strong></span><Icon name="chevron" size={16} /></button></div>
       <section className="dashboard-section"><div className="section-heading"><div><span className="eyebrow">BUILD YOUR FOUNDATION</span><h2>{shelfTitle}</h2></div><button className="text-button" onClick={() => navigate('lessons')}>전체 수업<Icon name="arrow" size={16} /></button></div><div className="class-grid">{nearby.map((item) => <LessonCard key={item.lessonKey} item={item} index={courseIndex(item)} courseTitle={courseTitle(item)} enrollment={state?.enrollments.find((entry) => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />)}</div>{!loading && !lessons.length && <div className="empty-inline">{error ? '수업을 불러오지 못했어요. 상단에서 다시 시도해 주세요.' : '첫 번째 수업을 준비하고 있어요.'}</div>}</section>
-      <section className="dashboard-section"><div className="section-heading"><div><span className="eyebrow">MAKE IT YOURS</span><h2>배운 것을 내 것으로</h2></div><button className="text-button" onClick={() => navigate('practice')}>연습장<Icon name="arrow" size={16} /></button></div>{pendingAssignments.length ? <div className="assignment-list">{pendingAssignments.slice(0, 2).map(assignmentRow)}</div> : <div className="gentle-empty"><span className="empty-drawing"><Icon name="pencil" size={28} /></span><div><h3>오늘의 이해가 내일도 남도록</h3><p>복습이 있는 수업을 마치면 여기에 과제가 모여요. 지금은 배우고 싶은 수업부터 골라 보세요.</p></div><span className="small-note">한 번 더, 천천히.</span></div>}</section>
+      <section className="dashboard-section"><div className="section-heading"><div><span className="eyebrow">MAKE IT YOURS</span><h2>배운 것을 내 것으로</h2></div><button className="text-button" onClick={() => navigate('practice')}>연습장<Icon name="arrow" size={16} /></button></div>{nextAssignments.length ? <div className="assignment-list">{nextAssignments.map(assignmentRow)}</div> : <div className="gentle-empty"><span className="empty-drawing"><Icon name="pencil" size={28} /></span><div><h3>오늘의 이해가 내일도 남도록</h3><p>복습이 있는 수업을 마치면 여기에 과제가 모여요. 지금은 배우고 싶은 수업부터 골라 보세요.</p></div><span className="small-note">한 번 더, 천천히.</span></div>}</section>
       <div className="page-footnote"><span>∴</span> 조금씩 이해하는 즐거움. <b>geunyang math</b></div>
     </>;
   }
