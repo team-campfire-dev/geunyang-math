@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "variable",
+      "label": "문자",
+      "assessable": true
+    },
+    {
+      "key": "term",
+      "label": "항",
+      "assessable": true
+    },
+    {
+      "key": "coefficient",
+      "label": "계수",
+      "assessable": true
+    },
+    {
+      "key": "expression-value",
+      "label": "식의 값",
+      "assessable": true
+    },
+    {
+      "key": "like-term",
+      "label": "동류항",
+      "assessable": true
+    },
+    {
+      "key": "linear-expression",
+      "label": "일차식",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "variable",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "문자",
+      "summary": "아직 정해지지 않은 수를 대신 세워 두는 글자예요.",
+      "blocks": [
+        {
+          "blockId": "global:variable:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "수를 하나로 정하지 않고 자리만 잡아 두고 싶을 때 $x$나 $a$ 같은 글자를 세워 써요. 연필 한 자루가 500원일 때 자루 수를 $x$라 하면 값은 $500x$원이고, 자루 수가 몇이든 이 한 줄이 그대로 맞아요. 곱셈 기호는 생략하고 수를 글자 앞에 적는 것이 약속이에요 — $500 \\times x$는 $500x$라고 씁니다. 글자는 특별한 수가 아니라 아직 정해지지 않은 수일 뿐이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "바뀌는 수의 자리를 잡아 둘 때"
+    },
+    {
+      "conceptKey": "term",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "항",
+      "summary": "덧셈과 뺄셈으로 더 쪼갤 수 없는 덩어리 하나예요.",
+      "blocks": [
+        {
+          "blockId": "global:term:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "식을 $+$와 $-$에서 끊었을 때 남는 덩어리 하나하나예요. $3x + 2$는 $3x$와 $2$ 둘로 끊어지니 항이 둘이고, $3x$는 곱으로만 이어져 있어 더 끊기지 않아요. 뺄셈은 음수를 더하는 것과 같으니 $5x - 4$의 항은 $5x$와 $-4$예요 — 부호는 그 덩어리의 것입니다.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "식을 낱낱으로 끊어 볼 때"
+    },
+    {
+      "conceptKey": "coefficient",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "계수",
+      "summary": "항에서 문자 앞에 붙은 수예요.",
+      "blocks": [
+        {
+          "blockId": "global:coefficient:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$3x$에서 $3$처럼 문자와 곱해져 있는 수를 가리켜요. 그 문자가 몇 개인지를 말하는 수라고 보면 됩니다. $x$는 $1x$를 줄여 쓴 것이라 계수가 $1$이고, $-x$는 계수가 $-1$이에요. $\\frac{x}{2}$처럼 나눗셈으로 쓰여 있으면 $\\frac{1}{2}x$와 같으니 계수는 $\\frac{1}{2}$입니다.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "문자가 몇 개인지 셀 때"
+    },
+    {
+      "conceptKey": "expression-value",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "식의 값",
+      "summary": "문자 자리에 수를 넣어 계산한 결과예요.",
+      "blocks": [
+        {
+          "blockId": "global:expression-value:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "식에 들어 있는 문자에 수를 하나씩 넣고 계산하면 값이 하나 나와요. $2x+1$에서 $x$에 $3$을 넣으면 $7$, $-2$를 넣으면 $-3$입니다. 음수를 넣을 때는 괄호로 감싸 두는 편이 안전해요 — $2 \\times (-2) + 1$처럼요. 넣는 수가 달라지면 값도 달라지므로, 식의 값은 언제나 어떤 수를 넣었는지와 함께 말해야 합니다.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "문자에 수를 넣어 볼 때"
+    },
+    {
+      "conceptKey": "like-term",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "동류항",
+      "summary": "문자와 그 차수가 똑같은 항끼리를 부르는 이름이에요.",
+      "blocks": [
+        {
+          "blockId": "global:like-term:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$3x$와 $2x$처럼 문자 부분이 똑같은 항들이에요. 같은 물건끼리만 개수를 합칠 수 있듯이, 동류항끼리만 계수를 더하거나 뺄 수 있어요 — $3x + 2x = 5x$입니다. $3x$와 $2$는 문자 부분이 다르니 합쳐지지 않고 $3x+2$로 그대로 둡니다. $x$와 $x^2$도 차수가 달라 동류항이 아니에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "합칠 수 있는 항을 가려낼 때"
+    },
+    {
+      "conceptKey": "linear-expression",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "일차식",
+      "summary": "문자가 한 번만 곱해진 항으로 이루어진 식이에요.",
+      "blocks": [
+        {
+          "blockId": "global:linear-expression:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$2x+3$처럼 가장 높은 차수가 $1$인 식이에요. $x^2$이 들어 있으면 일차식이 아니고, 문자가 아예 없어도 일차식이라 부르지 않아요. 일차식을 정리한다는 것은 동류항끼리 모아 항의 수를 줄인다는 뜻입니다. 괄호가 있으면 먼저 분배해서 풀고 — $2(x+3) = 2x+6$ — 그다음에 모읍니다.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "문자가 한 번만 곱해진 식을 다룰 때"
+    }
+  ]
+}

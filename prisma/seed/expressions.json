@@ -1,0 +1,2081 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "expressions",
+      "title": "문자와 식",
+      "summary": "아직 모르는 수를 문자로 세워 규칙을 한 줄로 적고, 수를 넣어 값을 구하고, 같은 것끼리 모아 정리해요.",
+      "order": 5,
+      "lessons": [
+        {
+          "key": "variable-expression",
+          "order": 1
+        },
+        {
+          "key": "expression-value",
+          "order": 2
+        },
+        {
+          "key": "linear-expression",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "variable",
+      "label": "문자",
+      "assessable": true
+    },
+    {
+      "key": "term",
+      "label": "항",
+      "assessable": true
+    },
+    {
+      "key": "coefficient",
+      "label": "계수",
+      "assessable": true
+    },
+    {
+      "key": "expression-value",
+      "label": "식의 값",
+      "assessable": true
+    },
+    {
+      "key": "like-term",
+      "label": "동류항",
+      "assessable": true
+    },
+    {
+      "key": "linear-expression",
+      "label": "일차식",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "variable-expression",
+        "versionId": "variable-expression:v1",
+        "title": "문자로 나타내기: 모르는 수에 이름 붙이기",
+        "summary": "아직 모르는 수를 문자로 세워 식을 만들고, 항과 계수라는 이름으로 그 식을 읽어요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "variable",
+          "term",
+          "coefficient"
+        ],
+        "prerequisiteConceptKeys": [
+          "signed-addition"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "variable-expression:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "variable-expression:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "연필 한 자루가 500원이에요. 3자루면 $500 \\times 3$원, 5자루면 $500 \\times 5$원이죠. 자루 수만 바뀌고 나머지는 그대로예요.\n\n바뀌는 자리에 글자를 하나 세워 두면 이 규칙을 한 줄로 적을 수 있어요. 자루 수를 $x$라 하면 값은 $500 \\times x$원이고, 줄여서 $500x$라고 써요. 곱셈 기호는 생략하고 수를 문자 앞에 적는 것이 약속이에요.\n\n$500x$처럼 덧셈과 뺄셈으로 더 쪼갤 수 없는 덩어리 하나를 항이라고 해요. $3x+2$는 $3x$와 $2$로 끊어지니 항이 둘이에요. 그리고 항에서 문자 앞에 붙은 수를 계수라고 하는데, $3x$의 계수는 $3$이에요.\n\n$x$가 특별한 수인 것은 아니에요. 3이 들어갈 수도 있고 $-2$가 들어갈 수도 있는, 아직 정해지지 않은 수일 뿐이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "variable",
+                    "surface": "문자",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "term",
+                    "surface": "항",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "coefficient",
+                    "surface": "계수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "variable-expression:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "연필 세 자루, 다섯 자루, 그리고 자루 수를 문자로 둔 식이 차례로 나타나는 그림",
+                "caption": "바뀌는 자리에 문자를 세운다",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 24,
+                    "text": "연필 한 자루에 500원",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 40,
+                    "y": 48,
+                    "width": 12,
+                    "height": 44,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "p1"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 74,
+                    "y": 48,
+                    "width": 12,
+                    "height": 44,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "p2"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 108,
+                    "y": 48,
+                    "width": 12,
+                    "height": 44,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "p3"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 142,
+                    "y": 48,
+                    "width": 12,
+                    "height": 44,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "p4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 176,
+                    "y": 48,
+                    "width": 12,
+                    "height": 44,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "p5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 120,
+                    "text": "$500 \\times 3 = 1500$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "c3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 120,
+                    "text": "$500 \\times 5 = 2500$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "c5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 126,
+                    "y": 138,
+                    "width": 68,
+                    "height": 26,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 4,
+                    "id": "box",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 156,
+                    "text": "$x$자루",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "boxtext",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 186,
+                    "text": "$500 \\times x = 500x$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "cx",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "3자루면 $500 \\times 3$원이에요.",
+                    "changes": [
+                      {
+                        "id": "c3",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "p4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "p5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "box",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "boxtext",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "5자루면 $500 \\times 5$원이에요.",
+                    "changes": [
+                      {
+                        "id": "c3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "p4",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "p5",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "box",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "boxtext",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c5",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "자루 수를 $x$라 두면 한 줄로 적을 수 있어요.",
+                    "changes": [
+                      {
+                        "id": "c3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "p4",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "p5",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "box",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "boxtext",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "c5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "cx",
+                        "opacity": 1.0
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1500
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "variable-expression:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "variable-expression:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "한 권에 $a$원인 공책 4권과 800원짜리 필통 하나를 샀을 때 낸 돈을 식으로 써 볼게요.\n\n공책값은 $a \\times 4$인데, 수를 앞에 적기로 했으니 $4a$라고 씁니다. 여기에 필통값 800원을 더하면 $4a + 800$이에요.\n\n이 식의 항은 $4a$와 $800$ 둘이에요. $+$에서 끊으면 두 덩어리가 되니까요. $4a$의 계수는 $4$이고, $800$은 문자가 없는 항이라 계수라는 말을 쓰지 않아요.\n\n$-x$처럼 수가 안 보이는 경우도 있어요. 이건 $-1 \\times x$를 줄여 쓴 것이라 계수가 $-1$이에요. 안 보인다고 없는 것이 아니라 $1$이 숨어 있는 거예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "term",
+                    "surface": "항",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "coefficient",
+                    "surface": "계수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "variable-expression:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "variable-expression:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "variable-expression:practice",
+                "problemSetVersionId": "variable-expression:practice:v1",
+                "problemVersionIds": [
+                  "variable-expression:practice-1:v1",
+                  "variable-expression:practice-2:v1",
+                  "variable-expression:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "variable-expression:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "variable-expression:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "variable-expression:check",
+                "problemSetVersionId": "variable-expression:check:v1",
+                "problemVersionIds": [
+                  "variable-expression:check-1:v1",
+                  "variable-expression:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "variable-expression:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "variable-expression:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "바뀌는 수의 자리에 문자를 세우면 규칙을 한 줄로 적을 수 있어요. 곱셈 기호는 생략하고 수를 앞에 씁니다.\n\n식을 $+$와 $-$에서 끊은 덩어리가 항이고, 항에서 문자 앞에 붙은 수가 계수예요. $x$의 계수는 보이지 않아도 $1$이에요.\n\n이 수업의 개념은 문자, 항, 계수예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "term",
+                    "surface": "항",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "coefficient",
+                    "surface": "계수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "variable",
+                    "surface": "문자",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "variable-expression:review",
+        "problemSetVersionId": "variable-expression:review:v1",
+        "problemVersionIds": [
+          "variable-expression:homework-1:v1",
+          "variable-expression:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "expression-value",
+        "versionId": "expression-value:v1",
+        "title": "식의 값: 문자 자리에 수를 넣기",
+        "summary": "문자 자리에 수를 넣어 값을 구하고, 음수를 넣을 때 괄호로 감싸는 이유를 알아봐요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "expression-value"
+        ],
+        "prerequisiteConceptKeys": [
+          "variable",
+          "signed-addition"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "expression-value:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "expression-value:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$2x+1$은 아직 값이 정해지지 않은 식이에요. $x$가 무엇인지 말해 주지 않았으니까요.\n\n$x$에 수를 하나 넣으면 값이 하나 나와요. $x=3$이면 $2 \\times 3 + 1 = 7$이고, $x=-2$이면 $2 \\times (-2) + 1 = -3$이에요. 이렇게 나온 결과를 식의 값이라고 해요.\n\n음수를 넣을 때는 괄호로 감싸 두는 편이 안전해요. $2x$의 $x$에 $-2$를 넣으면서 괄호를 빼면 $2-2$처럼 보여 뺄셈으로 읽히거든요. $2 \\times (-2)$라고 적으면 헷갈리지 않아요.\n\n넣는 수가 달라지면 값도 달라져요. 그래서 식의 값은 언제나 어떤 수를 넣었는지와 함께 말해야 해요.",
+                "definitions": [
+                  {
+                    "conceptKey": "expression-value",
+                    "surface": "식의 값",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "expression-value:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "식이 적힌 상자에 수를 넣으면 값이 하나 나오는 그림",
+                "caption": "넣는 수가 달라지면 값도 달라진다",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "x": 110,
+                    "y": 78,
+                    "width": 100,
+                    "height": 46,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 6
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 106,
+                    "text": "$2x+1$",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 34,
+                    "y1": 101,
+                    "x2": 104,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "arrow": "end"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 216,
+                    "y1": 101,
+                    "x2": 286,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "arrow": "end"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 60,
+                    "y": 78,
+                    "text": "넣는 수",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 262,
+                    "y": 78,
+                    "text": "식의 값",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 60,
+                    "y": 122,
+                    "text": "$3$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "in3"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 60,
+                    "y": 122,
+                    "text": "$-2$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "in2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 262,
+                    "y": 122,
+                    "text": "$7$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "out7",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 262,
+                    "y": 122,
+                    "text": "$-3$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "out3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 166,
+                    "text": "$x$ 자리에 수를 넣으면 값 하나가 나와요.",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$x$에 $3$을 넣으면 $2 \\times 3 + 1 = 7$이에요.",
+                    "changes": [
+                      {
+                        "id": "in3",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "out7",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "in2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "out3",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$x$에 $-2$를 넣으면 $2 \\times (-2) + 1 = -3$이에요.",
+                    "changes": [
+                      {
+                        "id": "in3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "out7",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "in2",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "out3",
+                        "opacity": 1.0
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1500
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "expression-value:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "expression-value:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$a=-3$일 때 $a^2 - 4a$의 식의 값을 구해 볼게요.\n\n먼저 자리마다 괄호를 넣어 써요. $(-3)^2 - 4 \\times (-3)$이에요.\n\n$(-3)^2$은 $-3$을 두 번 곱한 것이라 $9$예요. 괄호 없이 $-3^2$이라고 쓰면 $3$만 제곱하고 부호를 붙인 $-9$가 되니 아주 다른 값이에요.\n\n$-4 \\times (-3)$은 $+12$이고요. 그래서 $9 + 12 = 21$이에요.\n\n수를 넣기 전에 식을 먼저 정리해 두면 계산이 줄어요. 예를 들어 $3x + 2x$에 수를 넣기보다 $5x$로 모아 놓고 넣는 편이 빠릅니다.",
+                "definitions": [
+                  {
+                    "conceptKey": "expression-value",
+                    "surface": "식의 값",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "expression-value:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "expression-value:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "expression-value:practice",
+                "problemSetVersionId": "expression-value:practice:v1",
+                "problemVersionIds": [
+                  "expression-value:practice-1:v1",
+                  "expression-value:practice-2:v1",
+                  "expression-value:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "expression-value:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "expression-value:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "expression-value:check",
+                "problemSetVersionId": "expression-value:check:v1",
+                "problemVersionIds": [
+                  "expression-value:check-1:v1",
+                  "expression-value:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "expression-value:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "expression-value:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "문자 자리에 수를 넣어 계산한 결과가 식의 값이에요.\n\n음수를 넣을 때는 괄호로 감싸요. $-3$을 제곱하는 것과 $3$을 제곱하고 부호를 붙이는 것은 다른 계산이에요.\n\n이 수업의 개념은 식의 값이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "expression-value",
+                    "surface": "식의 값",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "expression-value:review",
+        "problemSetVersionId": "expression-value:review:v1",
+        "problemVersionIds": [
+          "expression-value:homework-1:v1",
+          "expression-value:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "linear-expression",
+        "versionId": "linear-expression:v1",
+        "title": "일차식의 계산: 같은 것끼리 모으기",
+        "summary": "문자 부분이 같은 항끼리 계수를 더해 식을 줄이고, 괄호를 먼저 푼 뒤에 모으는 순서를 익혀요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "like-term",
+          "linear-expression"
+        ],
+        "prerequisiteConceptKeys": [
+          "term",
+          "coefficient",
+          "signed-addition"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "linear-expression:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-expression:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "사과 3개와 사과 2개는 사과 5개예요. 사과 3개와 귤 2개는 그냥 사과 3개와 귤 2개고요. 같은 것끼리만 합쳐집니다.\n\n식에서도 똑같아요. $3x$와 $2x$는 문자 부분이 같으니 $5x$로 합쳐지고, $3x$와 $2$는 합쳐지지 않아요. 이렇게 문자 부분이 똑같은 항끼리를 동류항이라고 해요.\n\n합칠 때 바뀌는 것은 계수뿐이에요. $3x + 2x$에서 $x$는 그대로 두고 $3+2$만 계산해 $5x$가 돼요.\n\n$2x+3$처럼 문자가 한 번만 곱해진 항으로 이루어진 식을 일차식이라고 해요. 일차식을 정리한다는 것은 동류항을 모아 항의 수를 줄인다는 뜻이에요.\n\n괄호가 있으면 먼저 풀어요. $2(x+3)$은 $2$를 안쪽 두 항에 각각 곱해 $2x+6$이 되고, 그다음에 모읍니다.",
+                "definitions": [
+                  {
+                    "conceptKey": "like-term",
+                    "surface": "동류항",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "coefficient",
+                    "surface": "계수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "linear-expression",
+                    "surface": "일차식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "linear-expression:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 180,
+                "alt": "같은 모양의 타일끼리 모여 다섯 개와 여섯 개가 되는 그림",
+                "caption": "같은 것끼리만 모을 수 있다",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 24,
+                    "text": "$3x + 2 + 2x + 4$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 40,
+                    "y": 60,
+                    "width": 28,
+                    "height": 38,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "x1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 54,
+                    "y": 84,
+                    "text": "$x$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "white",
+                    "id": "x1t"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 76,
+                    "y": 60,
+                    "width": 28,
+                    "height": 38,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "x2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 90,
+                    "y": 84,
+                    "text": "$x$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "white",
+                    "id": "x2t"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 112,
+                    "y": 60,
+                    "width": 28,
+                    "height": 38,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "x3"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 126,
+                    "y": 84,
+                    "text": "$x$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "white",
+                    "id": "x3t"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 190,
+                    "y": 60,
+                    "width": 28,
+                    "height": 38,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "x4"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 204,
+                    "y": 84,
+                    "text": "$x$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "white",
+                    "id": "x4t"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 226,
+                    "y": 60,
+                    "width": 28,
+                    "height": 38,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "x5"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 240,
+                    "y": 84,
+                    "text": "$x$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "white",
+                    "id": "x5t"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 148,
+                    "y": 73,
+                    "width": 12,
+                    "height": 12,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "o1"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 162,
+                    "y": 73,
+                    "width": 12,
+                    "height": 12,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "o2"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 244,
+                    "y": 73,
+                    "width": 12,
+                    "height": 12,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "o3"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 258,
+                    "y": 73,
+                    "width": 12,
+                    "height": 12,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "o4"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 272,
+                    "y": 73,
+                    "width": 12,
+                    "height": 12,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "o5"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 286,
+                    "y": 73,
+                    "width": 12,
+                    "height": 12,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "o6"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 152,
+                    "text": "$5x + 6$",
+                    "size": 18,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "result",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$x$ 타일과 낱개 타일이 섞여 있어요.",
+                    "changes": []
+                  },
+                  {
+                    "caption": "같은 모양끼리 모아요.",
+                    "changes": [
+                      {
+                        "id": "x4",
+                        "dx": -42
+                      },
+                      {
+                        "id": "x4t",
+                        "dx": -42
+                      },
+                      {
+                        "id": "x5",
+                        "dx": -42
+                      },
+                      {
+                        "id": "x5t",
+                        "dx": -42
+                      },
+                      {
+                        "id": "o1",
+                        "dx": 76
+                      },
+                      {
+                        "id": "o2",
+                        "dx": 76
+                      },
+                      {
+                        "id": "o3",
+                        "dx": 8
+                      },
+                      {
+                        "id": "o4",
+                        "dx": 8
+                      },
+                      {
+                        "id": "o5",
+                        "dx": 8
+                      },
+                      {
+                        "id": "o6",
+                        "dx": 8
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "모아 놓으면 $5x + 6$이에요.",
+                    "changes": [
+                      {
+                        "id": "x4",
+                        "dx": -42
+                      },
+                      {
+                        "id": "x4t",
+                        "dx": -42
+                      },
+                      {
+                        "id": "x5",
+                        "dx": -42
+                      },
+                      {
+                        "id": "x5t",
+                        "dx": -42
+                      },
+                      {
+                        "id": "o1",
+                        "dx": 76
+                      },
+                      {
+                        "id": "o2",
+                        "dx": 76
+                      },
+                      {
+                        "id": "o3",
+                        "dx": 8
+                      },
+                      {
+                        "id": "o4",
+                        "dx": 8
+                      },
+                      {
+                        "id": "o5",
+                        "dx": 8
+                      },
+                      {
+                        "id": "o6",
+                        "dx": 8
+                      },
+                      {
+                        "id": "result",
+                        "opacity": 1.0
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "linear-expression:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-expression:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$4(x+1) - 3x$를 정리해 볼게요.\n\n괄호부터 풀어요. $4$를 $x$와 $1$에 각각 곱하면 $4x + 4$예요. 안쪽 한 항에만 곱하는 실수가 흔한데, 괄호 안 모든 항에 곱해야 해요.\n\n이제 식은 $4x + 4 - 3x$예요. 동류항은 $4x$와 $-3x$이고, 계수를 더하면 $4 - 3 = 1$이라 $1x$, 즉 $x$가 남아요.\n\n$4$는 문자가 없어 $x$와 합쳐지지 않으니 그대로 둡니다. 답은 $x+4$예요.\n\n빼기 괄호는 특히 조심해요. $-(x-2)$는 $-1$을 두 항에 모두 곱한 $-x+2$예요. 뒤쪽 부호까지 바뀝니다.",
+                "definitions": [
+                  {
+                    "conceptKey": "like-term",
+                    "surface": "동류항",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "coefficient",
+                    "surface": "계수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "linear-expression:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-expression:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "linear-expression:practice",
+                "problemSetVersionId": "linear-expression:practice:v1",
+                "problemVersionIds": [
+                  "linear-expression:practice-1:v1",
+                  "linear-expression:practice-2:v1",
+                  "linear-expression:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "linear-expression:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-expression:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "linear-expression:check",
+                "problemSetVersionId": "linear-expression:check:v1",
+                "problemVersionIds": [
+                  "linear-expression:check-1:v1",
+                  "linear-expression:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "linear-expression:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-expression:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "문자 부분이 똑같은 항이 동류항이고, 동류항끼리만 계수를 더해 합칠 수 있어요.\n\n문자가 한 번만 곱해진 식이 일차식이에요. 괄호가 있으면 안쪽 모든 항에 곱해 먼저 풀고, 그다음 동류항을 모아요.\n\n이 수업의 개념은 동류항과 일차식이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "like-term",
+                    "surface": "동류항",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "linear-expression",
+                    "surface": "일차식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "linear-expression:review",
+        "problemSetVersionId": "linear-expression:review:v1",
+        "problemVersionIds": [
+          "linear-expression:homework-1:v1",
+          "linear-expression:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "variable-expression:practice",
+      "courseKey": "expressions",
+      "name": "문자로 나타내기 연습",
+      "versionId": "variable-expression:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "variable-expression:practice-1:v1",
+          "conceptKeys": [
+            "variable"
+          ],
+          "promptContent": [
+            {
+              "blockId": "variable-expression:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 개에 700원인 사탕을 $x$개 샀어요. 사탕값을 $700x$처럼 쓸 때, $x$ 앞에 오는 수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 700
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "variable-expression:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 개 값이 그대로 앞에 옵니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "variable-expression:practice-2:v1",
+          "conceptKeys": [
+            "coefficient"
+          ],
+          "promptContent": [
+            {
+              "blockId": "variable-expression:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-6y$의 계수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "variable-expression:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부호까지 계수에 포함됩니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "variable-expression:practice-3:v1",
+          "conceptKeys": [
+            "term"
+          ],
+          "promptContent": [
+            {
+              "blockId": "variable-expression:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4a + 7 - 2b$의 항은 모두 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "variable-expression:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$+$와 $-$에서 끊어 세어 보세요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "variable-expression:check",
+      "courseKey": "expressions",
+      "name": "문자로 나타내기 확인",
+      "versionId": "variable-expression:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "variable-expression:check-1:v1",
+          "conceptKeys": [
+            "coefficient"
+          ],
+          "promptContent": [
+            {
+              "blockId": "variable-expression:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$의 계수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "variable-expression:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$는 $1x$를 줄여 쓴 것이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "variable-expression:check-2:v1",
+          "conceptKeys": [
+            "term"
+          ],
+          "promptContent": [
+            {
+              "blockId": "variable-expression:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5m - 3$의 항 중에서 문자가 없는 항의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "variable-expression:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "뺄셈은 음수를 더하는 것과 같아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "variable-expression:review",
+      "courseKey": "expressions",
+      "name": "문자로 나타내기 복습",
+      "versionId": "variable-expression:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "variable-expression:homework-1:v1",
+          "conceptKeys": [
+            "variable"
+          ],
+          "promptContent": [
+            {
+              "blockId": "variable-expression:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로가 $x$cm, 세로가 5cm인 직사각형의 넓이를 $\\square x$ 꼴로 쓸 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "variable-expression:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "넓이는 가로와 세로를 곱한 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "variable-expression:homework-2:v1",
+          "conceptKeys": [
+            "coefficient"
+          ],
+          "promptContent": [
+            {
+              "blockId": "variable-expression:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{a}{3}$을 $\\square a$ 꼴로 볼 때 계수를 분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "variable-expression:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$으로 나누는 것은 $\\frac{1}{3}$을 곱하는 것과 같아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "expression-value:practice",
+      "courseKey": "expressions",
+      "name": "식의 값 연습",
+      "versionId": "expression-value:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "expression-value:practice-1:v1",
+          "conceptKeys": [
+            "expression-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "expression-value:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x=4$일 때 $3x-5$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "expression-value:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3 \\times 4$를 먼저 계산해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "expression-value:practice-2:v1",
+          "conceptKeys": [
+            "expression-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "expression-value:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$a=-2$일 때 $5a+3$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "expression-value:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5 \\times (-2)$는 $-10$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "expression-value:practice-3:v1",
+          "conceptKeys": [
+            "expression-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "expression-value:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x=-1$일 때 $x^2+6$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "expression-value:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(-1)^2$은 $-1$을 두 번 곱한 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "expression-value:check",
+      "courseKey": "expressions",
+      "name": "식의 값 확인",
+      "versionId": "expression-value:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "expression-value:check-1:v1",
+          "conceptKeys": [
+            "expression-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "expression-value:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y=3$일 때 $\\frac{12}{y} - 1$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "expression-value:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "먼저 $12$를 $3$으로 나눕니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "expression-value:check-2:v1",
+          "conceptKeys": [
+            "expression-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "expression-value:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$a=-3$일 때 $-2a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "expression-value:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "음수끼리 곱하면 양수예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "expression-value:review",
+      "courseKey": "expressions",
+      "name": "식의 값 복습",
+      "versionId": "expression-value:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "expression-value:homework-1:v1",
+          "conceptKeys": [
+            "expression-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "expression-value:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x=2$, $y=-5$일 때 $x-y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "expression-value:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-(-5)$는 $+5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "expression-value:homework-2:v1",
+          "conceptKeys": [
+            "expression-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "expression-value:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$a=\\frac{1}{2}$일 때 $6a+1$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "expression-value:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6 \\times \\frac{1}{2}$은 $3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "linear-expression:practice",
+      "courseKey": "expressions",
+      "name": "일차식의 계산 연습",
+      "versionId": "linear-expression:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "linear-expression:practice-1:v1",
+          "conceptKeys": [
+            "like-term"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-expression:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$7x + 2x$를 정리하면 $\\square x$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-expression:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$는 그대로 두고 계수만 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "linear-expression:practice-2:v1",
+          "conceptKeys": [
+            "like-term"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-expression:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5a - 8a$를 정리하면 $\\square a$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-expression:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5-8$을 계산해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "linear-expression:practice-3:v1",
+          "conceptKeys": [
+            "linear-expression"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-expression:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3(x+2)$를 풀어 쓰면 $3x + \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-expression:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호 안 두 항에 모두 $3$을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "linear-expression:check",
+      "courseKey": "expressions",
+      "name": "일차식의 계산 확인",
+      "versionId": "linear-expression:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "linear-expression:check-1:v1",
+          "conceptKeys": [
+            "linear-expression"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-expression:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2(x+4) - 2x$를 정리한 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-expression:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$항끼리 먼저 모아 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "linear-expression:check-2:v1",
+          "conceptKeys": [
+            "like-term"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-expression:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6y - y$를 정리하면 $\\square y$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-expression:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$의 계수는 $1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "linear-expression:review",
+      "courseKey": "expressions",
+      "name": "일차식의 계산 복습",
+      "versionId": "linear-expression:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "linear-expression:homework-1:v1",
+          "conceptKeys": [
+            "linear-expression"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-expression:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-(x-5) + x$를 정리한 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-expression:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빼기 괄호는 안쪽 부호를 모두 바꿔요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "linear-expression:homework-2:v1",
+          "conceptKeys": [
+            "like-term"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-expression:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4x + 3 - 9x$를 정리하면 $\\square x + 3$이에요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-expression:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$항끼리만 모읍니다."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}

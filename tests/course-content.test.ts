@@ -25,6 +25,32 @@ describe('the installed courses', () => {
     }
   });
 
+  it('puts the courses in an order nothing has to be learned out of', () => {
+    // Somebody who has chosen nothing is recommended by the catalogue's order alone, so a course
+    // that stands on another has to come after it. Install order used to decide this, which meant a
+    // database seeded today and one that grew over weeks disagreed.
+    const courses = seeds.flatMap((seed) => seed.bundle.courses);
+    const places = courses.map((course) => course.order);
+    expect(places.every((place) => typeof place === 'number'), '자리를 적지 않은 과정이 있다').toBe(true);
+    expect(new Set(places).size, '같은 자리를 쓰는 과정이 있다').toBe(courses.length);
+    const courseOf = new Map(courses.flatMap((course) => course.lessons.map((lesson) => [lesson.key, course])));
+    const teaches = new Map<string, typeof courses>();
+    for (const lesson of lessons) {
+      const course = courseOf.get(lesson.public.lessonKey)!;
+      for (const key of lesson.public.conceptKeys) teaches.set(key, [...(teaches.get(key) ?? []), course]);
+    }
+    for (const lesson of lessons) {
+      const course = courseOf.get(lesson.public.lessonKey)!;
+      for (const key of lesson.public.prerequisiteConceptKeys) {
+        // A concept taught in the same course is fine; the lessons inside it are already in order.
+        const elsewhere = (teaches.get(key) ?? []).filter((home) => home.key !== course.key);
+        if (!elsewhere.length) continue;
+        expect(Math.min(...elsewhere.map((home) => home.order!)), `${course.key}이(가) ${key}을(를) 가르치는 과정보다 앞에 있다`)
+          .toBeLessThan(course.order!);
+      }
+    }
+  });
+
   it('gives every lesson something to read, something to see and something to answer', () => {
     for (const lesson of lessons) {
       const kinds = new Set(blocksOf(lesson).map((block) => block.kind));
@@ -47,6 +73,26 @@ describe('the installed courses', () => {
       const alive = drawings.some((block) => Array.isArray(block.payload.frames) && block.payload.frames.length > 1)
         || drawings.some((block) => Array.isArray(block.payload.zones) && block.payload.zones.length > 0);
       expect(alive, `${lesson.public.lessonKey}에 움직이거나 놓아 보는 그림이 없다`).toBe(true);
+    }
+  });
+
+  it('keeps a drawing\'s numbers short enough to survive being stored', () => {
+    // MySQL hands a JSON double back a bit different from the one it was given, and the seed then
+    // reads a published lesson as changed and refuses to install it again — on every deployment.
+    // Two decimals round-trip, and nothing in a drawing needs more. One coordinate predates the
+    // rule and is published, so it cannot be shortened; it is named rather than exempted quietly.
+    const published = new Set([23.19999999999999]);
+    const numbers = (value: unknown): number[] =>
+      typeof value === 'number' ? [value]
+        : Array.isArray(value) ? value.flatMap(numbers)
+        : value && typeof value === 'object' ? Object.values(value).flatMap(numbers) : [];
+    for (const lesson of lessons) {
+      for (const block of scenes(lesson)) {
+        for (const value of numbers(block.payload)) {
+          if (published.has(value)) continue;
+          expect(Math.round(value * 100) / 100, `${block.blockId}의 좌표 ${value}`).toBe(value);
+        }
+      }
     }
   });
 

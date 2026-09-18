@@ -90,7 +90,7 @@ export class LearningService {
     const published = new Set(lessons.map(item => item.courseKey));
     const [rows, courses] = await Promise.all([
       db.concept.findMany({ where: { assessable: true } }),
-      db.course.findMany({ orderBy: [{ createdAt: 'asc' }, { key: 'asc' }], select: { key: true, title: true, summary: true } }),
+      db.course.findMany({ orderBy: [{ order: 'asc' }, { createdAt: 'asc' }, { key: 'asc' }], select: { key: true, title: true, summary: true } }),
     ]);
     // A course with nothing published yet is not in the catalogue either.
     return { courses: courses.filter(course => published.has(course.key)), lessons,

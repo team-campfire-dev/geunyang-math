@@ -123,6 +123,9 @@ model Course {
   key         String   @unique @db.VarChar(100)
   title       String   @db.VarChar(191)
   summary     String   @default("") @db.VarChar(500)
+  /// Where the course sits in the catalogue. The catalogue's order is the only thing a learner who
+  /// has chosen nothing is recommended by, so it is written down rather than left to install order.
+  order       Int      @default(0)
   /// Who keeps the course. Null is the platform's own; organisations have no model yet.
   ownerUserId String?  @db.VarChar(191)
   createdAt   DateTime @default(now())

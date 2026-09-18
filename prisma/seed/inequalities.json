@@ -1,0 +1,2347 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "inequalities",
+      "title": "일차부등식",
+      "summary": "같다가 아니라 크다·작다를 묻는 식을 세우고, 음수를 곱하거나 나눌 때 방향이 뒤집힌다는 것에 주의하며 풀어요.",
+      "order": 8,
+      "lessons": [
+        {
+          "key": "inequality-meaning",
+          "order": 1
+        },
+        {
+          "key": "inequality-property",
+          "order": 2
+        },
+        {
+          "key": "linear-inequality",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "inequality",
+      "label": "부등식",
+      "assessable": true
+    },
+    {
+      "key": "inequality-solution",
+      "label": "부등식의 해",
+      "assessable": true
+    },
+    {
+      "key": "inequality-property",
+      "label": "부등식의 성질",
+      "assessable": true
+    },
+    {
+      "key": "linear-inequality",
+      "label": "일차부등식",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "inequality-meaning",
+        "versionId": "inequality-meaning:v1",
+        "title": "부등식과 그 해: 답이 하나가 아닐 때",
+        "summary": "크고 작음을 부등호로 적고, 답이 하나가 아니라 범위로 나온다는 것을 수직선에서 확인해요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "inequality",
+          "inequality-solution"
+        ],
+        "prerequisiteConceptKeys": [
+          "variable",
+          "expression-value",
+          "negative-number"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "inequality-meaning:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "inequality-meaning:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "놀이기구에 키 $130$cm 이상만 탈 수 있다는 안내가 붙어 있어요. 키를 $x$라 하면 $x \\geq 130$이라고 적을 수 있어요.\n\n이렇게 두 식의 크고 작음을 부등호로 이은 식을 부등식이라고 해요. 등식이 양쪽이 같다고 말한다면, 부등식은 어느 쪽이 큰지를 말해요.\n\n부등호는 넷이에요. $<$와 $>$는 같은 경우를 빼고, $\\leq$와 $\\geq$는 같은 경우까지 넣어요. 「이상」과 「이하」는 같은 경우를 포함하고, 「초과」와 「미만」은 포함하지 않아요. $130$cm인 사람이 탈 수 있는지가 여기서 갈려요.\n\n$x>3$에 수를 넣어 볼게요. $2$를 넣으면 $2>3$이라 거짓이고, $5$를 넣으면 참이에요. 참이 되게 하는 수를 부등식의 해라고 해요.\n\n방정식과 달리 해가 하나가 아니에요. $3$보다 큰 수는 모두 해라서 수없이 많아요. 그래서 답을 수 하나가 아니라 범위로 적고 수직선에 칠해 나타내요.",
+                "definitions": [
+                  {
+                    "conceptKey": "inequality",
+                    "surface": "부등식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "inequality-solution",
+                    "surface": "부등식의 해",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "inequality-meaning:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "수직선 위에서 3보다 큰 쪽이 굵게 칠해지는 그림",
+                "caption": "해가 구간으로 나온다",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 26,
+                    "text": "$x > 3$",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 26,
+                    "y1": 96,
+                    "x2": 294,
+                    "y2": 96,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 40.0,
+                    "y1": 90,
+                    "x2": 40.0,
+                    "y2": 102,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 40.0,
+                    "y": 120,
+                    "text": "0",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 80.0,
+                    "y1": 90,
+                    "x2": 80.0,
+                    "y2": 102,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 80.0,
+                    "y": 120,
+                    "text": "1",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 120.0,
+                    "y1": 90,
+                    "x2": 120.0,
+                    "y2": 102,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 120.0,
+                    "y": 120,
+                    "text": "2",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160.0,
+                    "y1": 90,
+                    "x2": 160.0,
+                    "y2": 102,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160.0,
+                    "y": 120,
+                    "text": "3",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 200.0,
+                    "y1": 90,
+                    "x2": 200.0,
+                    "y2": 102,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 200.0,
+                    "y": 120,
+                    "text": "4",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 240.0,
+                    "y1": 90,
+                    "x2": 240.0,
+                    "y2": 102,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 240.0,
+                    "y": 120,
+                    "text": "5",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 280.0,
+                    "y1": 90,
+                    "x2": 280.0,
+                    "y2": 102,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 280.0,
+                    "y": 120,
+                    "text": "6",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160.0,
+                    "y1": 96,
+                    "x2": 292,
+                    "y2": 96,
+                    "stroke": "green",
+                    "strokeWidth": 4,
+                    "id": "ray",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160.0,
+                    "cy": 96,
+                    "rx": 6,
+                    "ry": 6,
+                    "fill": "white",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "open",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 120.0,
+                    "cy": 96,
+                    "rx": 7,
+                    "ry": 7,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "p2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 240.0,
+                    "cy": 96,
+                    "rx": 7,
+                    "ry": 7,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "p5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 152,
+                    "text": "$2 > 3$은 거짓이라 $2$는 해가 아니에요",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "n2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 152,
+                    "text": "$5 > 3$은 참이라 $5$는 해예요",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "n5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 178,
+                    "text": "해는 하나가 아니라 $3$보다 큰 수 전부예요",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "n3",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$x$에 $2$를 넣어 봐요.",
+                    "changes": [
+                      {
+                        "id": "p2",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$x$에 $5$를 넣어 봐요.",
+                    "changes": [
+                      {
+                        "id": "p2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "p5",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "n5",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$3$보다 큰 수는 모두 해예요.",
+                    "changes": [
+                      {
+                        "id": "p2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "p5",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "n5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ray",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "open",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 1.0
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1500
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "inequality-meaning:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "inequality-meaning:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$-2 \\leq x < 3$을 읽고 수직선에 나타내 볼게요.\n\n이건 부등식 둘을 한 줄로 묶어 쓴 거예요. $x$가 $-2$보다 크거나 같고, 동시에 $3$보다 작다는 뜻이에요.\n\n$-2$는 $\\leq$로 이어져 있으니 포함돼요. 수직선에는 속을 채운 점으로 그려요. $3$은 $<$라 포함되지 않으니 속이 빈 점으로 그리고요. 그 사이를 굵게 칠하면 끝이에요.\n\n여기 들어가는 정수를 세어 보면 $-2, -1, 0, 1, 2$로 다섯 개예요. $3$은 빠져 있다는 것을 잊지 마세요.\n\n「$x$는 $5$ 이하의 자연수」 같은 말도 부등식의 해를 묻는 거예요. $x \\leq 5$이면서 자연수이니 $1, 2, 3, 4, 5$입니다.",
+                "definitions": [
+                  {
+                    "conceptKey": "inequality",
+                    "surface": "부등식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "inequality-solution",
+                    "surface": "부등식의 해",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "inequality-meaning:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "inequality-meaning:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "inequality-meaning:practice",
+                "problemSetVersionId": "inequality-meaning:practice:v1",
+                "problemVersionIds": [
+                  "inequality-meaning:practice-1:v1",
+                  "inequality-meaning:practice-2:v1",
+                  "inequality-meaning:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "inequality-meaning:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "inequality-meaning:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "inequality-meaning:check",
+                "problemSetVersionId": "inequality-meaning:check:v1",
+                "problemVersionIds": [
+                  "inequality-meaning:check-1:v1",
+                  "inequality-meaning:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "inequality-meaning:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "inequality-meaning:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "크고 작음을 부등호로 이은 식이 부등식이에요. $\\leq$와 $\\geq$는 같은 경우를 포함하고 $<$와 $>$는 포함하지 않아요.\n\n참이 되게 하는 수 전부가 부등식의 해이고, 보통 하나가 아니라 범위로 나와요. 수직선에 칠할 때 경계를 포함하면 채운 점, 아니면 빈 점으로 그려요.\n\n이 수업의 개념은 부등식과 부등식의 해예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "inequality",
+                    "surface": "부등식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "inequality-solution",
+                    "surface": "부등식의 해",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "inequality-meaning:review",
+        "problemSetVersionId": "inequality-meaning:review:v1",
+        "problemVersionIds": [
+          "inequality-meaning:homework-1:v1",
+          "inequality-meaning:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "inequality-property",
+        "versionId": "inequality-property:v1",
+        "title": "부등식의 성질: 음수를 곱하면 뒤집힌다",
+        "summary": "양변에 무엇을 해도 되는지 살펴보고, 음수를 곱하거나 나눌 때만 방향이 뒤집히는 이유를 봐요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "inequality-property"
+        ],
+        "prerequisiteConceptKeys": [
+          "inequality",
+          "inequality-solution",
+          "signed-addition"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "inequality-property:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "inequality-property:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$2<5$에서 시작해 볼게요. 양변에 $3$을 더하면 $5<8$이라 여전히 맞아요. 빼도 마찬가지고요. 더하고 빼는 것은 두 수를 나란히 옮기는 일이라 앞뒤가 바뀌지 않아요.\n\n양수를 곱해도 그대로예요. $2<5$의 양변에 $3$을 곱하면 $6<15$이에요.\n\n그런데 음수를 곱하면 달라져요. $-1$을 곱하면 $-2$와 $-5$가 되는데, 수직선에서 $-2$가 $-5$보다 오른쪽이라 $-2>-5$예요. 부등호가 뒤집혔어요.\n\n이유는 수직선에서 보면 분명해요. 음수를 곱하면 두 수가 $0$을 넘어 반대쪽으로 옮겨 가고, 그러면서 앞뒤 순서가 뒤바뀌어요. 게다가 절댓값이 큰 쪽이 더 멀리 가니 순서가 확실히 뒤집힙니다.\n\n이것을 부등식의 성질이라고 해요. 등식과 다른 점은 이 하나뿐이고, 틀리는 자리도 거의 여기뿐이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "inequality-property",
+                    "surface": "부등식의 성질",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "negative-number",
+                    "surface": "음수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "inequality-property:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "수직선 위의 두 점이 0 반대쪽으로 옮겨 가며 앞뒤가 바뀌는 그림",
+                "caption": "음수를 곱하면 부등호가 뒤집힌다",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 24,
+                    "text": "$2 < 5$의 양변에 $-1$을 곱하면?",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 20,
+                    "y1": 100,
+                    "x2": 300,
+                    "y2": 100,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 34.0,
+                    "y1": 94,
+                    "x2": 34.0,
+                    "y2": 106,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 34.0,
+                    "y": 124,
+                    "text": "-5",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 59.2,
+                    "y1": 94,
+                    "x2": 59.2,
+                    "y2": 106,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 59.2,
+                    "y": 124,
+                    "text": "-4",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 84.4,
+                    "y1": 94,
+                    "x2": 84.4,
+                    "y2": 106,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 84.4,
+                    "y": 124,
+                    "text": "-3",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 109.6,
+                    "y1": 94,
+                    "x2": 109.6,
+                    "y2": 106,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 109.6,
+                    "y": 124,
+                    "text": "-2",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 134.8,
+                    "y1": 94,
+                    "x2": 134.8,
+                    "y2": 106,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 134.8,
+                    "y": 124,
+                    "text": "-1",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160.0,
+                    "y1": 94,
+                    "x2": 160.0,
+                    "y2": 106,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160.0,
+                    "y": 124,
+                    "text": "0",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 185.2,
+                    "y1": 94,
+                    "x2": 185.2,
+                    "y2": 106,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 185.2,
+                    "y": 124,
+                    "text": "1",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 210.4,
+                    "y1": 94,
+                    "x2": 210.4,
+                    "y2": 106,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 210.4,
+                    "y": 124,
+                    "text": "2",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 235.6,
+                    "y1": 94,
+                    "x2": 235.6,
+                    "y2": 106,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 235.6,
+                    "y": 124,
+                    "text": "3",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 260.8,
+                    "y1": 94,
+                    "x2": 260.8,
+                    "y2": 106,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 260.8,
+                    "y": 124,
+                    "text": "4",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 286.0,
+                    "y1": 94,
+                    "x2": 286.0,
+                    "y2": 106,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 286.0,
+                    "y": 124,
+                    "text": "5",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 210.4,
+                    "cy": 100,
+                    "rx": 7,
+                    "ry": 7,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "a"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 286.0,
+                    "cy": 100,
+                    "rx": 7,
+                    "ry": 7,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 210.4,
+                    "y": 74,
+                    "text": "$2$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "at"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 286.0,
+                    "y": 74,
+                    "text": "$5$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "bt"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 152,
+                    "text": "$-1$을 곱하면 둘 다 0 반대쪽으로 옮겨 가요",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "n1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 178,
+                    "text": "$-2 > -5$ — 부등호의 방향이 뒤집혔어요",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "n2",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "왼쪽이 작고 오른쪽이 커요.",
+                    "changes": []
+                  },
+                  {
+                    "caption": "양변에 $-1$을 곱해요.",
+                    "changes": [
+                      {
+                        "id": "a",
+                        "dx": -100.8
+                      },
+                      {
+                        "id": "at",
+                        "dx": -100.8
+                      },
+                      {
+                        "id": "b",
+                        "dx": -252.0
+                      },
+                      {
+                        "id": "bt",
+                        "dx": -252.0
+                      },
+                      {
+                        "id": "n1",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "앞뒤가 바뀌었으니 부등호도 뒤집어야 해요.",
+                    "changes": [
+                      {
+                        "id": "a",
+                        "dx": -100.8
+                      },
+                      {
+                        "id": "at",
+                        "dx": -100.8
+                      },
+                      {
+                        "id": "b",
+                        "dx": -252.0
+                      },
+                      {
+                        "id": "bt",
+                        "dx": -252.0
+                      },
+                      {
+                        "id": "n1",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 1.0
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "inequality-property:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "inequality-property:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$-3x < 12$의 양변을 $-3$으로 나눠 볼게요.\n\n$x$만 남기려면 $-3$으로 나눠야 해요. 그런데 $-3$은 음수니까 부등호를 뒤집어야 합니다.\n\n$12 \\div (-3) = -4$이고 방향을 뒤집으면 $x > -4$예요.\n\n정말 맞는지 확인해 볼게요. $x=0$을 원래 식에 넣으면 $0<12$로 참이고, $x>-4$에도 맞아요. $x=-5$를 넣으면 원래 식은 $15<12$로 거짓이고, $x>-4$에도 안 맞아요. 잘 들어맞습니다.\n\n뒤집는 것을 잊으면 $x<-4$라는 정반대의 답이 나와요. 나눌 때마다 「나누는 수가 음수인가」를 한 번만 확인하면 막을 수 있는 실수예요.\n\n더하고 빼는 이항에서는 뒤집지 않아요. 부등식의 성질 중 방향을 바꾸는 것은 음수를 곱하거나 나누는 경우 하나뿐입니다.",
+                "definitions": [
+                  {
+                    "conceptKey": "inequality-property",
+                    "surface": "부등식의 성질",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "inequality-property:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "inequality-property:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "inequality-property:practice",
+                "problemSetVersionId": "inequality-property:practice:v1",
+                "problemVersionIds": [
+                  "inequality-property:practice-1:v1",
+                  "inequality-property:practice-2:v1",
+                  "inequality-property:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "inequality-property:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "inequality-property:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "inequality-property:check",
+                "problemSetVersionId": "inequality-property:check:v1",
+                "problemVersionIds": [
+                  "inequality-property:check-1:v1",
+                  "inequality-property:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "inequality-property:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "inequality-property:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "양변에 같은 수를 더하거나 빼면 부등호의 방향은 그대로예요. 양수를 곱하거나 나눌 때도 그대로고요.\n\n음수를 곱하거나 나눌 때만 방향이 뒤집혀요. 수직선에서 두 수가 $0$ 반대쪽으로 옮겨 가며 앞뒤가 바뀌기 때문이에요. 이것이 부등식의 성질입니다.\n\n이 수업의 개념은 부등식의 성질이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "inequality-property",
+                    "surface": "부등식의 성질",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "inequality-property:review",
+        "problemSetVersionId": "inequality-property:review:v1",
+        "problemVersionIds": [
+          "inequality-property:homework-1:v1",
+          "inequality-property:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "linear-inequality",
+        "versionId": "linear-inequality:v1",
+        "title": "일차부등식 풀기: 방정식과 같되 한 곳만 다르다",
+        "summary": "일차방정식과 같은 순서로 풀되, 계수가 음수일 때 부등호를 뒤집는 것을 챙겨요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "linear-inequality"
+        ],
+        "prerequisiteConceptKeys": [
+          "inequality-property",
+          "linear-equation",
+          "linear-expression"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "linear-inequality:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-inequality:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$2x+1 \\leq 7$처럼 정리하면 문자가 한 번만 곱해진 꼴이 되는 부등식을 일차부등식이라고 해요.\n\n푸는 순서는 일차방정식과 똑같아요. 괄호를 풀고, 이항하고, 양변을 계수로 나눕니다.\n\n$2x+1 \\leq 7$로 해 볼게요. $1$을 이항하면 $2x \\leq 6$이고, 양변을 $2$로 나누면 $x \\leq 3$이에요. $2$는 양수라 방향은 그대로예요.\n\n다른 점은 마지막 나눗셈 하나뿐이에요. 계수가 음수이면 부등호를 뒤집습니다. 이항할 때는 뒤집지 않아요 — 그건 더하고 빼는 일이니까요.\n\n답은 범위로 나오니 수직선에 칠해 두면 확인하기 쉬워요. 경계를 포함하면 채운 점, 아니면 빈 점이에요.\n\n풀고 나서 범위 안의 수 하나를 원래 식에 넣어 보세요. 방향을 잘못 뒤집었다면 바로 드러나요.",
+                "definitions": [
+                  {
+                    "conceptKey": "linear-inequality",
+                    "surface": "일차부등식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "transposition",
+                    "surface": "이항",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "linear-inequality:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "부등식이 한 줄씩 정리되고 마지막에 수직선의 왼쪽이 칠해지는 그림",
+                "caption": "방정식과 같은 순서로 풀고, 나눌 때만 부호를 본다",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 30,
+                    "text": "$2x + 1 \\leq 7$",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "s1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 30,
+                    "text": "$2x \\leq 6$",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "s2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 30,
+                    "text": "$x \\leq 3$",
+                    "size": 18,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "s3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 60,
+                    "text": "$1$을 이항해요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "n1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 60,
+                    "text": "양변을 $2$로 나눠요 — 양수라 방향은 그대로",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "n2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 30,
+                    "y1": 120,
+                    "x2": 290,
+                    "y2": 120,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 44.0,
+                    "y1": 114,
+                    "x2": 44.0,
+                    "y2": 126,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 44.0,
+                    "y": 144,
+                    "text": "0",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 82.67,
+                    "y1": 114,
+                    "x2": 82.67,
+                    "y2": 126,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 82.67,
+                    "y": 144,
+                    "text": "1",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 121.33,
+                    "y1": 114,
+                    "x2": 121.33,
+                    "y2": 126,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 121.33,
+                    "y": 144,
+                    "text": "2",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160.0,
+                    "y1": 114,
+                    "x2": 160.0,
+                    "y2": 126,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160.0,
+                    "y": 144,
+                    "text": "3",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 198.67,
+                    "y1": 114,
+                    "x2": 198.67,
+                    "y2": 126,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 198.67,
+                    "y": 144,
+                    "text": "4",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 237.33,
+                    "y1": 114,
+                    "x2": 237.33,
+                    "y2": 126,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 237.33,
+                    "y": 144,
+                    "text": "5",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 276.0,
+                    "y1": 114,
+                    "x2": 276.0,
+                    "y2": 126,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 276.0,
+                    "y": 144,
+                    "text": "6",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 38,
+                    "y1": 120,
+                    "x2": 160.0,
+                    "y2": 120,
+                    "stroke": "green",
+                    "strokeWidth": 4,
+                    "id": "ray",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160.0,
+                    "cy": 120,
+                    "rx": 6,
+                    "ry": 6,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "closed",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 178,
+                    "text": "$3$과 그보다 작은 수가 모두 해예요",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "n3",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "수 항을 먼저 옮겨요.",
+                    "changes": [
+                      {
+                        "id": "n1",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$2x \\leq 6$이 됐어요.",
+                    "changes": [
+                      {
+                        "id": "n1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s2",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "양수로 나눴으니 방향은 그대로예요.",
+                    "changes": [
+                      {
+                        "id": "n1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "해를 수직선에 칠해요.",
+                    "changes": [
+                      {
+                        "id": "n1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "ray",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "closed",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 1.0
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "linear-inequality:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-inequality:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "괄호가 있는 일차부등식 $3(x-2) \\geq 5x$를 풀어 볼게요.\n\n괄호부터 풀어요. $3x-6 \\geq 5x$예요.\n\n문자는 왼쪽, 수는 오른쪽으로 이항해요. $3x-5x \\geq 6$이고, 정리하면 $-2x \\geq 6$이에요.\n\n이제 양변을 $-2$로 나눠요. 음수니까 부등호를 뒤집습니다. $x \\leq -3$이에요.\n\n확인해 볼게요. $x=-4$를 원래 식에 넣으면 왼쪽은 $3 \\times (-6) = -18$, 오른쪽은 $-20$이라 $-18 \\geq -20$으로 참이에요. $x=0$을 넣으면 $-6 \\geq 0$이라 거짓이고요. $x \\leq -3$과 잘 맞아요.\n\n문자를 오른쪽에 모으는 방법도 있어요. $-6 \\geq 2x$에서 $-3 \\geq x$가 되는데, 이건 $x \\leq -3$과 같은 말이에요. 양수로 나누게 되니 뒤집을 일이 없다는 점에서 더 안전한 길이기도 해요.",
+                "definitions": [
+                  {
+                    "conceptKey": "linear-inequality",
+                    "surface": "일차부등식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "linear-inequality:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-inequality:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "linear-inequality:practice",
+                "problemSetVersionId": "linear-inequality:practice:v1",
+                "problemVersionIds": [
+                  "linear-inequality:practice-1:v1",
+                  "linear-inequality:practice-2:v1",
+                  "linear-inequality:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "linear-inequality:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-inequality:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "linear-inequality:check",
+                "problemSetVersionId": "linear-inequality:check:v1",
+                "problemVersionIds": [
+                  "linear-inequality:check-1:v1",
+                  "linear-inequality:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "linear-inequality:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-inequality:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "일차부등식은 일차방정식과 같은 순서로 풀어요. 괄호 풀기, 이항, 계수로 나누기예요.\n\n다른 점은 마지막 하나뿐이에요. 계수가 음수이면 부등호를 뒤집습니다. 문자를 계수가 양수인 쪽에 모으면 뒤집을 일 자체가 없어요.\n\n이 수업의 개념은 일차부등식이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "linear-inequality",
+                    "surface": "일차부등식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "linear-inequality:review",
+        "problemSetVersionId": "linear-inequality:review:v1",
+        "problemVersionIds": [
+          "linear-inequality:homework-1:v1",
+          "linear-inequality:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "inequality-meaning:practice",
+      "courseKey": "inequalities",
+      "name": "부등식과 해 연습",
+      "versionId": "inequality-meaning:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "inequality-meaning:practice-1:v1",
+          "conceptKeys": [
+            "inequality-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequality-meaning:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x > 3$을 만족하는 가장 작은 정수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequality-meaning:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$은 포함되지 않아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequality-meaning:practice-2:v1",
+          "conceptKeys": [
+            "inequality-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequality-meaning:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x \\leq -2$를 만족하는 가장 큰 정수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequality-meaning:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\leq$는 같은 경우를 포함해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequality-meaning:practice-3:v1",
+          "conceptKeys": [
+            "inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequality-meaning:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "키가 $130$cm 이상이어야 탈 수 있어요. 탈 수 있는 가장 작은 키를 수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 130
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequality-meaning:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「이상」은 같은 경우를 포함해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "inequality-meaning:check",
+      "courseKey": "inequalities",
+      "name": "부등식과 해 확인",
+      "versionId": "inequality-meaning:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "inequality-meaning:check-1:v1",
+          "conceptKeys": [
+            "inequality-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequality-meaning:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-2 \\leq x < 3$을 만족하는 정수는 모두 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequality-meaning:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$은 빠진다는 것에 주의하세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequality-meaning:check-2:v1",
+          "conceptKeys": [
+            "inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequality-meaning:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$가 $7$ 미만의 자연수일 때, 가장 큰 $x$를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequality-meaning:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「미만」은 같은 경우를 포함하지 않아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "inequality-meaning:review",
+      "courseKey": "inequalities",
+      "name": "부등식과 해 복습",
+      "versionId": "inequality-meaning:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "inequality-meaning:homework-1:v1",
+          "conceptKeys": [
+            "inequality-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequality-meaning:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x \\geq -4$를 만족하는 가장 작은 정수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequality-meaning:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\geq$는 경계를 포함해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequality-meaning:homework-2:v1",
+          "conceptKeys": [
+            "inequality-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequality-meaning:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0 < x \\leq 4$를 만족하는 자연수는 모두 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequality-meaning:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$부터 세어 보세요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "inequality-property:practice",
+      "courseKey": "inequalities",
+      "name": "부등식의 성질 연습",
+      "versionId": "inequality-property:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "inequality-property:practice-1:v1",
+          "conceptKeys": [
+            "inequality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequality-property:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 < 5$의 양변에 $-1$을 곱하면 왼쪽은 $-2$, 오른쪽은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequality-property:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5$에 $-1$을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequality-property:practice-2:v1",
+          "conceptKeys": [
+            "inequality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequality-property:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-2x < 8$의 양변을 $-2$로 나누면 $x > \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequality-property:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "음수로 나누면 부등호가 뒤집혀요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequality-property:practice-3:v1",
+          "conceptKeys": [
+            "inequality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequality-property:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x - 3 > 2$의 양변에 $3$을 더하면 $x > \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequality-property:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "더할 때는 방향이 그대로예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "inequality-property:check",
+      "courseKey": "inequalities",
+      "name": "부등식의 성질 확인",
+      "versionId": "inequality-property:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "inequality-property:check-1:v1",
+          "conceptKeys": [
+            "inequality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequality-property:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-x \\geq 6$의 양변을 $-1$로 나누면 $x \\leq \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequality-property:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "방향이 뒤집힙니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequality-property:check-2:v1",
+          "conceptKeys": [
+            "inequality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequality-property:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x < 21$의 양변을 $3$으로 나누면 $x < \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequality-property:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "양수로 나누면 그대로예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "inequality-property:review",
+      "courseKey": "inequalities",
+      "name": "부등식의 성질 복습",
+      "versionId": "inequality-property:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "inequality-property:homework-1:v1",
+          "conceptKeys": [
+            "inequality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequality-property:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-4 < -1$의 양변에 $-2$를 곱하면 왼쪽은 $8$, 오른쪽은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequality-property:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-1$에 $-2$를 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequality-property:homework-2:v1",
+          "conceptKeys": [
+            "inequality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequality-property:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{x}{-2} > 3$의 양변에 $-2$를 곱하면 $x < \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequality-property:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "음수를 곱하니 방향이 뒤집혀요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "linear-inequality:practice",
+      "courseKey": "inequalities",
+      "name": "일차부등식 풀기 연습",
+      "versionId": "linear-inequality:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "linear-inequality:practice-1:v1",
+          "conceptKeys": [
+            "linear-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-inequality:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x+1 \\leq 7$을 풀면 $x \\leq \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-inequality:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$을 이항한 뒤 $2$로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "linear-inequality:practice-2:v1",
+          "conceptKeys": [
+            "linear-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-inequality:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-x + 4 > 1$을 풀면 $x < \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-inequality:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-1$로 나누며 방향을 뒤집어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "linear-inequality:practice-3:v1",
+          "conceptKeys": [
+            "linear-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-inequality:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x - 5 < x + 1$을 풀면 $x < \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-inequality:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "문자는 왼쪽, 수는 오른쪽으로 모아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "linear-inequality:check",
+      "courseKey": "inequalities",
+      "name": "일차부등식 풀기 확인",
+      "versionId": "linear-inequality:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "linear-inequality:check-1:v1",
+          "conceptKeys": [
+            "linear-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-inequality:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3(x-2) \\geq 5x$를 풀면 $x \\leq \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-inequality:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호를 푼 뒤 음수로 나눕니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "linear-inequality:check-2:v1",
+          "conceptKeys": [
+            "linear-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-inequality:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4x \\geq 2x + 10$을 만족하는 가장 작은 정수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-inequality:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x \\geq 5$가 됩니다."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "linear-inequality:review",
+      "courseKey": "inequalities",
+      "name": "일차부등식 풀기 복습",
+      "versionId": "linear-inequality:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "linear-inequality:homework-1:v1",
+          "conceptKeys": [
+            "linear-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-inequality:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{x}{2} + 1 < 4$를 만족하는 가장 큰 정수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-inequality:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "양변에 $2$를 곱해 분수를 없애요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "linear-inequality:homework-2:v1",
+          "conceptKeys": [
+            "linear-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-inequality:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-2(x+1) \\geq 4$를 풀면 $x \\leq \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-inequality:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호를 풀면 $-2x-2 \\geq 4$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}

@@ -5,6 +5,7 @@
       "key": "ratios",
       "title": "비와 비율",
       "summary": "두 양을 견주어 비율로 나타내고, 백분율로 바꿔 할인과 이자를 계산해요.",
+      "order": 3,
       "lessons": [
         {
           "key": "ratio-meaning",

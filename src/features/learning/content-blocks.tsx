@@ -263,7 +263,11 @@ export function SceneShapes({ items, frame, animated = false, offsetOf }:
     {items.map((item, index) => {
       const change = changeFor(frame, item);
       const placed = offsetOf?.(item);
-      const painted = change?.fill ? { ...item, fill: change.fill } : item;
+      // A frame that names an opacity replaces the shape's own rather than dimming it further, which
+      // is what lets a shape be authored hidden and revealed later. The two multiply in SVG, so a
+      // shape left at its authored 0 would stay invisible however bright the frame made the group.
+      const painted = { ...item, ...(change?.fill ? { fill: change.fill } : {}),
+        ...(change && (change.opacity !== undefined || change.hidden) ? { opacity: undefined } : {}) };
       const style = paint(painted);
       const shift = placed ?? { dx: change?.dx ?? 0, dy: change?.dy ?? 0 };
       const moved = (shape: ReactNode) => change || animated || (placed && (placed.dx || placed.dy))
@@ -330,7 +334,11 @@ export function SceneShapes({ items, frame, animated = false, offsetOf }:
           justifyContent: anchor === 'middle' ? 'center' : anchor === 'end' ? 'flex-end' : 'flex-start',
           fontSize: size, lineHeight: 1.2, fontWeight: item.weight === 'bold' ? 600 : 400,
           color: cssColor(item.fill, 'var(--ink)'),
-        }} dangerouslySetInnerHTML={{ __html: labelHtml(item.text) }} />
+        }}>
+          {/* One span, so the label is one flex item: a flex box drops the space on either side of
+              each of its anonymous text items, which ate the space before every inline formula. */}
+          <span dangerouslySetInnerHTML={{ __html: labelHtml(item.text) }} />
+        </div>
       </foreignObject>;
     }
     return <text key={index} x={item.x} y={item.y} textAnchor={anchor} fontSize={size}

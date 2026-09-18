@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "exponent-law",
+      "label": "지수법칙",
+      "assessable": true
+    },
+    {
+      "key": "monomial",
+      "label": "단항식",
+      "assessable": true
+    },
+    {
+      "key": "polynomial",
+      "label": "다항식",
+      "assessable": true
+    },
+    {
+      "key": "polynomial-arithmetic",
+      "label": "다항식의 덧셈과 뺄셈",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "exponent-law",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "지수법칙",
+      "summary": "거듭제곱끼리 곱하고 나눌 때 지수를 어떻게 다루는지에 대한 규칙이에요.",
+      "blocks": [
+        {
+          "blockId": "global:exponent-law:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$a^2$은 $a$를 두 번 곱한 것이고 $a^3$은 세 번 곱한 것이니, 둘을 곱하면 $a$를 다섯 번 곱한 $a^5$이 돼요 — 곱하면 지수가 더해집니다. 나누면 반대로 빼지고요. $(a^2)^3$처럼 거듭제곱을 다시 거듭제곱하면 지수끼리 곱해져 $a^6$이에요. 외울 것이 아니라 풀어 써 보면 매번 확인되는 규칙입니다. 밑이 다르면 쓸 수 없어요 — $a^2 \\times b^3$은 더 줄일 수 없습니다.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "같은 문자의 거듭제곱을 곱하고 나눌 때"
+    },
+    {
+      "conceptKey": "monomial",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "단항식",
+      "summary": "수와 문자의 곱 하나로만 이루어진 식이에요.",
+      "blocks": [
+        {
+          "blockId": "global:monomial:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$3x^2$이나 $-5ab$처럼 덧셈과 뺄셈 없이 곱으로만 이어진 식이에요. 항이 하나뿐이라는 뜻입니다. 단항식끼리 곱할 때는 수는 수끼리, 문자는 문자끼리 갈라 계산한 뒤 다시 붙여요 — $3x^2 \\times 4x = 12x^3$입니다. 나눗셈도 같은 방식으로 갈라서 하고, 문자 부분은 지수를 뺍니다.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "곱으로만 이어진 식을 다룰 때"
+    },
+    {
+      "conceptKey": "polynomial",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "다항식",
+      "summary": "단항식을 덧셈과 뺄셈으로 이어 붙인 식이에요.",
+      "blocks": [
+        {
+          "blockId": "global:polynomial:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$2x+3$이나 $x^2-4x+1$처럼 항이 여럿인 식이에요. 항이 하나뿐인 단항식도 다항식에 포함됩니다. 가장 높은 차수가 그 다항식의 차수이고, $x^2-4x+1$은 이차식이에요. 항을 차수가 높은 것부터 늘어놓아 두면 견주기도 계산하기도 쉬워집니다.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "항이 여럿인 식을 부를 때"
+    },
+    {
+      "conceptKey": "polynomial-arithmetic",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "다항식의 덧셈과 뺄셈",
+      "summary": "괄호를 풀고 동류항끼리 모으는 계산이에요.",
+      "blocks": [
+        {
+          "blockId": "global:polynomial-arithmetic:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "두 다항식을 더하거나 뺄 때는 괄호를 먼저 풀고 같은 항끼리 계수를 더합니다. 더할 때는 괄호 안이 그대로 나오지만, 뺄 때는 뒤쪽 괄호의 모든 항의 부호가 바뀌어요 — $(2x+3)-(x-1) = 2x+3-x+1$입니다. 뒤쪽 두 번째 항의 부호를 놓치는 것이 가장 흔한 실수예요. 차수가 다른 항은 끝까지 합쳐지지 않습니다.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "다항식을 더하고 뺄 때"
+    }
+  ]
+}

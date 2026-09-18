@@ -5,6 +5,7 @@
       "key": "placement",
       "title": "시작점 확인",
       "summary": "학습자가 어디쯤 있는지 확인하는 문항을 모아 둔 곳이에요. 수업은 없고, 수업 목록에도 나오지 않아요.",
+      "order": 1000,
       "lessons": [],
       "diagnostics": [
         "catalogue-placement"
@@ -20,6 +21,11 @@
     {
       "key": "addition",
       "label": "덧셈",
+      "assessable": true
+    },
+    {
+      "key": "coefficient",
+      "label": "계수",
       "assessable": true
     },
     {
@@ -53,8 +59,38 @@
       "assessable": true
     },
     {
+      "key": "elimination-method",
+      "label": "가감법",
+      "assessable": true
+    },
+    {
+      "key": "equality-property",
+      "label": "등식의 성질",
+      "assessable": true
+    },
+    {
+      "key": "equation",
+      "label": "방정식",
+      "assessable": true
+    },
+    {
+      "key": "equation-solution",
+      "label": "방정식의 해",
+      "assessable": true
+    },
+    {
       "key": "equivalent-fraction",
       "label": "동치분수",
+      "assessable": true
+    },
+    {
+      "key": "exponent-law",
+      "label": "지수법칙",
+      "assessable": true
+    },
+    {
+      "key": "expression-value",
+      "label": "식의 값",
       "assessable": true
     },
     {
@@ -63,8 +99,68 @@
       "assessable": true
     },
     {
+      "key": "function",
+      "label": "함수",
+      "assessable": true
+    },
+    {
+      "key": "function-value",
+      "label": "함숫값",
+      "assessable": true
+    },
+    {
+      "key": "inequality",
+      "label": "부등식",
+      "assessable": true
+    },
+    {
+      "key": "inequality-property",
+      "label": "부등식의 성질",
+      "assessable": true
+    },
+    {
+      "key": "inequality-solution",
+      "label": "부등식의 해",
+      "assessable": true
+    },
+    {
       "key": "integer",
       "label": "정수",
+      "assessable": true
+    },
+    {
+      "key": "intercept",
+      "label": "절편",
+      "assessable": true
+    },
+    {
+      "key": "like-term",
+      "label": "동류항",
+      "assessable": true
+    },
+    {
+      "key": "linear-equation",
+      "label": "일차방정식",
+      "assessable": true
+    },
+    {
+      "key": "linear-expression",
+      "label": "일차식",
+      "assessable": true
+    },
+    {
+      "key": "linear-function",
+      "label": "일차함수",
+      "assessable": true
+    },
+    {
+      "key": "linear-inequality",
+      "label": "일차부등식",
+      "assessable": true
+    },
+    {
+      "key": "monomial",
+      "label": "단항식",
       "assessable": true
     },
     {
@@ -85,6 +181,16 @@
     {
       "key": "percentage-of",
       "label": "비율만큼의 양",
+      "assessable": true
+    },
+    {
+      "key": "polynomial",
+      "label": "다항식",
+      "assessable": true
+    },
+    {
+      "key": "polynomial-arithmetic",
+      "label": "다항식의 덧셈과 뺄셈",
       "assessable": true
     },
     {
@@ -110,6 +216,41 @@
     {
       "key": "signed-addition",
       "label": "부호가 있는 수의 덧셈",
+      "assessable": true
+    },
+    {
+      "key": "simultaneous-equations",
+      "label": "연립방정식",
+      "assessable": true
+    },
+    {
+      "key": "slope",
+      "label": "기울기",
+      "assessable": true
+    },
+    {
+      "key": "substitution-method",
+      "label": "대입법",
+      "assessable": true
+    },
+    {
+      "key": "term",
+      "label": "항",
+      "assessable": true
+    },
+    {
+      "key": "transposition",
+      "label": "이항",
+      "assessable": true
+    },
+    {
+      "key": "two-variable-equation",
+      "label": "미지수가 두 개인 일차방정식",
+      "assessable": true
+    },
+    {
+      "key": "variable",
+      "label": "문자",
       "assessable": true
     }
   ],
@@ -1201,6 +1342,2606 @@
           "solution": []
         }
       ]
+    },
+    {
+      "problemSetId": "placement",
+      "courseKey": "placement",
+      "name": "시작점 확인",
+      "versionId": "placement:v2",
+      "problems": [
+        {
+          "problemVersionId": "placement-v4:q1",
+          "conceptKeys": [
+            "fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 크기로 나눈 케이크 9조각 중 4조각이 남았어요. 전체 케이크에서 남은 양을 분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 4,
+            "denominator": 9
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q2",
+          "conceptKeys": [
+            "fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "물 1리터를 똑같은 컵 5개에 남김없이 나눠 담았어요. 한 컵에 담긴 물은 전체의 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q3",
+          "conceptKeys": [
+            "denominator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q3:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{5}{12}$의 분모는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q4",
+          "conceptKeys": [
+            "denominator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q4:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "색종이 한 장을 똑같은 크기로 8조각 냈어요. 이 상황을 분수로 나타낼 때 분모는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q5",
+          "conceptKeys": [
+            "numerator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q5:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{5}{12}$의 분자는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q6",
+          "conceptKeys": [
+            "numerator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q6:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "똑같이 9조각 낸 색종이에서 4조각을 썼어요. 쓴 양을 분수로 나타낼 때 분자는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q7",
+          "conceptKeys": [
+            "equivalent-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q7:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{2}{3}=\\frac{\\square}{15}$의 빈칸에 들어갈 정수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q8",
+          "conceptKeys": [
+            "equivalent-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q8:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{3}{4}=\\frac{\\square}{20}$의 빈칸에 들어갈 정수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q9",
+          "conceptKeys": [
+            "reduce"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q9:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{18}{24}$를 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 4,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q10",
+          "conceptKeys": [
+            "reduce"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q10:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{20}{45}$를 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 4,
+            "denominator": 9,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q11",
+          "conceptKeys": [
+            "common-denominator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q11:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{4}$과 $\\frac{1}{6}$을 분모가 12가 되도록 통분할 때, $\\frac{1}{4}$은 $\\frac{\\square}{12}$이 돼요. 빈칸에 들어갈 정수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q12",
+          "conceptKeys": [
+            "addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q12:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{2}{11}+\\frac{5}{11}$은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 7,
+            "denominator": 11
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q13",
+          "conceptKeys": [
+            "common-denominator",
+            "addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q13:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{4}+\\frac{1}{6}$은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 12
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q14",
+          "conceptKeys": [
+            "decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q14:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.1$이 $7$개 모이면 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 7,
+            "denominator": 10
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q15",
+          "conceptKeys": [
+            "decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q15:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$을 똑같이 $10$으로 나눈 것 중 $3$만큼을 소수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 10
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q16",
+          "conceptKeys": [
+            "decimal-place"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q16:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3.472$에서 소수 둘째 자리 숫자는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q17",
+          "conceptKeys": [
+            "decimal-place"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q17:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.085$에서 소수 셋째 자리 숫자는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q18",
+          "conceptKeys": [
+            "decimal-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q18:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.25$를 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 4,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q19",
+          "conceptKeys": [
+            "decimal-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q19:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{7}{20}$과 같은 수를 소수로 썼을 때, 소수 둘째 자리 숫자는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q20",
+          "conceptKeys": [
+            "decimal-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q20:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.4+0.35$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q21",
+          "conceptKeys": [
+            "decimal-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q21:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1.2+0.85$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 41,
+            "denominator": 20
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q22",
+          "conceptKeys": [
+            "ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q22:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빨간 구슬 $6$개와 파란 구슬 $8$개가 있어요. 빨간 구슬과 파란 구슬의 비를 가장 간단한 자연수의 비로 나타낼 때, 빨간 구슬 쪽의 수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q23",
+          "conceptKeys": [
+            "ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q23:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "사과 $9$개와 배 $12$개의 비를 가장 간단한 자연수의 비로 나타낼 때, 배 쪽의 수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q24",
+          "conceptKeys": [
+            "rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q24:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 $20$명 중 $8$명이 안경을 썼어요. 안경을 쓴 사람의 비율을 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 2,
+            "denominator": 5,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q25",
+          "conceptKeys": [
+            "rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q25:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기준량이 $25$이고 비교하는 양이 $15$일 때, 비율은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q26",
+          "conceptKeys": [
+            "percentage"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q26:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.45$를 백분율로 나타내면 몇 퍼센트인가요? 수만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 45
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q27",
+          "conceptKeys": [
+            "percentage"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q27:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 $50$개 중 $13$개예요. 백분율로 나타내면 몇 퍼센트인가요? 수만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 26
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q28",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q28:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$800$원의 $15\\%$는 몇 원인가요? 수만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 120
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q29",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q29:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$60$명의 $35\\%$는 몇 명인가요? 수만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 21
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q30",
+          "conceptKeys": [
+            "negative-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q30:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "수직선에서 $0$보다 $4$만큼 왼쪽에 있는 수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q31",
+          "conceptKeys": [
+            "negative-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q31:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "영하 $7$도를 부호를 붙인 수로 써 주세요. 단위는 빼고 수만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -7
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q32",
+          "conceptKeys": [
+            "integer"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q32:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-3$보다 $1$만큼 큰 정수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -2
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q33",
+          "conceptKeys": [
+            "integer"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q33:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-6$과 $2$ 사이에 있는 정수 중 가장 작은 것은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q34",
+          "conceptKeys": [
+            "absolute-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q34:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-9$의 절댓값은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q35",
+          "conceptKeys": [
+            "absolute-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q35:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "절댓값이 $6$인 수 중 $0$보다 작은 수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -6
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q36",
+          "conceptKeys": [
+            "signed-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q36:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-5+3$은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -2
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q37",
+          "conceptKeys": [
+            "signed-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q37:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-4+(-6)$은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -10
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q38",
+          "conceptKeys": [
+            "rational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q38:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-0.5$를 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": -1,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v4:q39",
+          "conceptKeys": [
+            "rational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v4:q39:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-\\frac{3}{4}+\\frac{1}{4}$은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": -1,
+            "denominator": 2
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q40",
+          "conceptKeys": [
+            "variable"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q40:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 자루에 600원인 연필 $x$자루의 값을 $\\square x$원이라고 쓸 때, $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 600
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q41",
+          "conceptKeys": [
+            "variable"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q41:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로가 $a$cm, 세로가 7cm인 직사각형의 넓이를 $\\square a$로 쓸 때, $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q42",
+          "conceptKeys": [
+            "term"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q42:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x + 5 - 2y$의 항은 모두 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q43",
+          "conceptKeys": [
+            "term"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q43:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$7a - 4$의 항 중에서 문자가 없는 항의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q44",
+          "conceptKeys": [
+            "coefficient"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q44:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-8y$의 계수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -8
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q45",
+          "conceptKeys": [
+            "coefficient"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q45:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{a}{5}$를 $\\square a$ 꼴로 볼 때, $\\square$에 들어갈 수를 분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q46",
+          "conceptKeys": [
+            "expression-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q46:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x=5$일 때 $2x-3$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q47",
+          "conceptKeys": [
+            "expression-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q47:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$a=-4$일 때 $3a+2$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -10
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q48",
+          "conceptKeys": [
+            "like-term"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q48:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$8x - 3x$를 정리하면 $\\square x$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q49",
+          "conceptKeys": [
+            "like-term"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q49:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-2y + 9y$를 정리하면 $\\square y$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q50",
+          "conceptKeys": [
+            "linear-expression"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q50:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4(x+2) - 4x$를 정리한 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q51",
+          "conceptKeys": [
+            "linear-expression"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q51:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-(x-6) + x$를 정리한 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q52",
+          "conceptKeys": [
+            "equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q52:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x = 18$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q53",
+          "conceptKeys": [
+            "equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q53:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + 5 = 1$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q54",
+          "conceptKeys": [
+            "equation-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q54:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x - 4 = 11$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q55",
+          "conceptKeys": [
+            "equation-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q55:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$7 - x = 10$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q56",
+          "conceptKeys": [
+            "equality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q56:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-3x = 21$의 양변을 $-3$으로 나누면 $x$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -7
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q57",
+          "conceptKeys": [
+            "equality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q57:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{x}{4} = -3$의 양변에 $4$를 곱하면 $x$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -12
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q58",
+          "conceptKeys": [
+            "transposition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q58:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + 9 = 4$에서 $9$를 이항하면 $x = 4 - \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q59",
+          "conceptKeys": [
+            "transposition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q59:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5x - 7 = 2x$에서 문자를 왼쪽으로 모으면 $\\square x = 7$이에요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q60",
+          "conceptKeys": [
+            "linear-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q60:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5x + 3 = 23$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q61",
+          "conceptKeys": [
+            "linear-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q61:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2(x - 4) = x$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q62",
+          "conceptKeys": [
+            "exponent-law"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q62:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$a^5 \\times a^2 = a^{\\square}$일 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q63",
+          "conceptKeys": [
+            "exponent-law"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q63:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x^3)^4 = x^{\\square}$일 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q64",
+          "conceptKeys": [
+            "monomial"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q64:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x \\times 6x = \\square x^2$일 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 18
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q65",
+          "conceptKeys": [
+            "monomial"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q65:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$20a^5 \\div 4a^2 = \\square a^3$일 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q66",
+          "conceptKeys": [
+            "polynomial"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q66:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x^2 - 5x + 1$의 차수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q67",
+          "conceptKeys": [
+            "polynomial"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q67:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-9b$의 차수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q68",
+          "conceptKeys": [
+            "polynomial-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q68:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(3x + 4) + (2x - 9)$를 정리하면 $5x + \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q69",
+          "conceptKeys": [
+            "polynomial-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q69:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(6y - 1) - (6y + 3)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q70",
+          "conceptKeys": [
+            "inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q70:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$가 $9$ 미만의 자연수일 때, 가장 큰 $x$를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q71",
+          "conceptKeys": [
+            "inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q71:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "몸무게가 $40$kg 이상이어야 참가할 수 있어요. 참가할 수 있는 가장 가벼운 몸무게를 수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 40
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q72",
+          "conceptKeys": [
+            "inequality-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q72:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x > 6$을 만족하는 가장 작은 정수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q73",
+          "conceptKeys": [
+            "inequality-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q73:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-3 \\leq x < 2$를 만족하는 정수는 모두 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q74",
+          "conceptKeys": [
+            "inequality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q74:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-5x < 20$의 양변을 $-5$로 나누면 $x > \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q75",
+          "conceptKeys": [
+            "inequality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q75:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3 < 8$의 양변에 $-2$를 곱하면 왼쪽은 $-6$이에요. 오른쪽은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -16
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q76",
+          "conceptKeys": [
+            "linear-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q76:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x - 2 \\leq 10$을 만족하는 가장 큰 정수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q77",
+          "conceptKeys": [
+            "linear-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q77:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-2x + 1 > 7$을 풀면 $x < \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q78",
+          "conceptKeys": [
+            "two-variable-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q78:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + y = 9$에서 $x = 4$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q79",
+          "conceptKeys": [
+            "two-variable-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q79:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x + y = 11$에서 $x = 4$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q80",
+          "conceptKeys": [
+            "simultaneous-equations"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q80:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + y = 8$과 $x - y = 2$를 모두 만족하는 짝에서 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q81",
+          "conceptKeys": [
+            "simultaneous-equations"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q81:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + y = 8$과 $x - y = 2$를 모두 만족하는 짝에서 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q82",
+          "conceptKeys": [
+            "substitution-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q82:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = x + 2$와 $3x + y = 10$을 풀었을 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q83",
+          "conceptKeys": [
+            "substitution-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q83:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x = 3y$와 $x + y = 12$를 풀었을 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q84",
+          "conceptKeys": [
+            "elimination-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q84:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + y = 7$과 $x - y = 3$을 더해서 구한 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q85",
+          "conceptKeys": [
+            "elimination-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q85:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x + y = 14$와 $x + y = 6$을 빼서 구한 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q86",
+          "conceptKeys": [
+            "function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q86:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = 5x$일 때 $f(x) = 20$이 되는 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q87",
+          "conceptKeys": [
+            "function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q87:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x - 3$일 때 $f(x) = 0$이 되는 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q88",
+          "conceptKeys": [
+            "function-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q88:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = 4x - 1$일 때 $f(2)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q89",
+          "conceptKeys": [
+            "function-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q89:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = -2x + 5$일 때 $f(4)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q90",
+          "conceptKeys": [
+            "linear-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q90:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 3x - 5$에서 $x = 4$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q91",
+          "conceptKeys": [
+            "linear-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q91:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = -2x + 8$의 그래프가 가로축과 만나는 점의 $x$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q92",
+          "conceptKeys": [
+            "slope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q92:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = -4x + 2$의 기울기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q93",
+          "conceptKeys": [
+            "slope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q93:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(1,2)$와 $(4,8)$을 지나는 직선의 기울기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q94",
+          "conceptKeys": [
+            "intercept"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q94:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 7x - 6$의 $y$절편을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -6
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "placement-v5:q95",
+          "conceptKeys": [
+            "intercept"
+          ],
+          "promptContent": [
+            {
+              "blockId": "placement-v5:q95:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 2x + 10$의 그래프가 가로축과 만나는 점의 $x$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        }
+      ]
     }
   ],
   "diagnostics": [
@@ -1253,6 +3994,114 @@
           "placement-v4:q37",
           "placement-v4:q38",
           "placement-v4:q39"
+        ]
+      }
+    },
+    {
+      "versionId": "placement-v5",
+      "diagnosticKey": "catalogue-placement",
+      "title": "시작점 확인",
+      "description": "분수에서 중학교 2학년 과정까지, 배우려는 곳까지 가는 데 필요한 개념만 확인해요. 답에 따라 다음 문제가 달라지므로 모든 문항을 풀지 않아요. 모르는 문제는 건너뛰어도 괜찮아요.",
+      "estimatedMinutes": 12,
+      "problemSet": {
+        "problemSetId": "placement",
+        "problemSetVersionId": "placement:v2",
+        "problemVersionIds": [
+          "placement-v4:q1",
+          "placement-v4:q2",
+          "placement-v4:q3",
+          "placement-v4:q4",
+          "placement-v4:q5",
+          "placement-v4:q6",
+          "placement-v4:q7",
+          "placement-v4:q8",
+          "placement-v4:q9",
+          "placement-v4:q10",
+          "placement-v4:q11",
+          "placement-v4:q12",
+          "placement-v4:q13",
+          "placement-v4:q14",
+          "placement-v4:q15",
+          "placement-v4:q16",
+          "placement-v4:q17",
+          "placement-v4:q18",
+          "placement-v4:q19",
+          "placement-v4:q20",
+          "placement-v4:q21",
+          "placement-v4:q22",
+          "placement-v4:q23",
+          "placement-v4:q24",
+          "placement-v4:q25",
+          "placement-v4:q26",
+          "placement-v4:q27",
+          "placement-v4:q28",
+          "placement-v4:q29",
+          "placement-v4:q30",
+          "placement-v4:q31",
+          "placement-v4:q32",
+          "placement-v4:q33",
+          "placement-v4:q34",
+          "placement-v4:q35",
+          "placement-v4:q36",
+          "placement-v4:q37",
+          "placement-v4:q38",
+          "placement-v4:q39",
+          "placement-v5:q40",
+          "placement-v5:q41",
+          "placement-v5:q42",
+          "placement-v5:q43",
+          "placement-v5:q44",
+          "placement-v5:q45",
+          "placement-v5:q46",
+          "placement-v5:q47",
+          "placement-v5:q48",
+          "placement-v5:q49",
+          "placement-v5:q50",
+          "placement-v5:q51",
+          "placement-v5:q52",
+          "placement-v5:q53",
+          "placement-v5:q54",
+          "placement-v5:q55",
+          "placement-v5:q56",
+          "placement-v5:q57",
+          "placement-v5:q58",
+          "placement-v5:q59",
+          "placement-v5:q60",
+          "placement-v5:q61",
+          "placement-v5:q62",
+          "placement-v5:q63",
+          "placement-v5:q64",
+          "placement-v5:q65",
+          "placement-v5:q66",
+          "placement-v5:q67",
+          "placement-v5:q68",
+          "placement-v5:q69",
+          "placement-v5:q70",
+          "placement-v5:q71",
+          "placement-v5:q72",
+          "placement-v5:q73",
+          "placement-v5:q74",
+          "placement-v5:q75",
+          "placement-v5:q76",
+          "placement-v5:q77",
+          "placement-v5:q78",
+          "placement-v5:q79",
+          "placement-v5:q80",
+          "placement-v5:q81",
+          "placement-v5:q82",
+          "placement-v5:q83",
+          "placement-v5:q84",
+          "placement-v5:q85",
+          "placement-v5:q86",
+          "placement-v5:q87",
+          "placement-v5:q88",
+          "placement-v5:q89",
+          "placement-v5:q90",
+          "placement-v5:q91",
+          "placement-v5:q92",
+          "placement-v5:q93",
+          "placement-v5:q94",
+          "placement-v5:q95"
         ]
       }
     }
