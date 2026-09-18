@@ -1,6 +1,6 @@
 # DB 콘텐츠 관리
 
-2026-09-18 · 코드 기준: [화면 렌더 테스트 #58](https://github.com/team-campfire-dev/geunyang-math/pull/58), `4a02874`. 릴리스별 검증은 [배포 기록](deployment.md#릴리스별-검증-기록)을 따른다.
+2026-09-18 · 코드 기준: [남은 세 수업의 움직임 #72](https://github.com/team-campfire-dev/geunyang-math/pull/72), `a9a966d`. 릴리스별 검증은 [배포 기록](deployment.md#릴리스별-검증-기록)을 따른다.
 
 기본 콘텐츠와 이후 발행한 콘텐츠의 운영 원본은 MySQL이다. 수업·진단 문항·개념 이름을 TypeScript/JSON 파일에서 불러오는 런타임 경로는 없다.
 
@@ -418,7 +418,7 @@ npm run content:import -- --file content/glossary-v3.json
 
 편집 화면 쪽은 `tests/authoring.test.ts`(블록 폼·이름 짓기·정답 읽기·범위 채우기·복제·고아 문항·판과 지문의 표기)와 `tests/authoring-integration.test.ts`(MySQL에서 초안·문항 개명·역할 부여·용어 발행·새 수업·검토 요청·해보기 채점·거부의 자리)가 맡는다. 편집 기록(되돌리기)이 무엇을 한 걸음으로 묶는지는 `tests/edit-history.test.ts`가 순수 리듀서로 본다. `@`로 용어를 거는 계산은 `tests/term-mentions.test.ts`가 보고, 그 결과를 다시 `locateTerms`에 넣어 같은 자리를 가리키는지까지 확인한다. 본문 표시 위치 계산은 `tests/rich-text.test.ts`, 수업·과제 응답에 실제로 실리는 용어는 `tests/learning-integration.test.ts`에서 본다. 기존 채점·개인화·인증 테스트도 함께 실행한다. 코스 생성·권한·순서 검사, 선행 개념 저장, 복습 참조의 판본 변경과 미발행 수업의 뜻풀이 본문도 통합 검사에 포함한다.
 
-**통합 검사는 `TEST_DATABASE_URL` 없이는 통째로 건너뛴다**(`describe.skipIf`). 서버나 스키마를 고쳤다면 그 변수를 준 상태로 실행하고 skipped 수를 함께 확인한다. #58 기준 전체 26개 파일·419개 테스트가 통과했다. 초기 설치와 해당 릴리스의 보존/초기화 범위는 [배포 기록](deployment.md#릴리스별-검증-기록)에 구분한다. 과거 릴리스의 보존 검증을 이후의 명시적인 콘텐츠 초기화까지 일반화하지 않는다. 이 검증은 수학 콘텐츠의 전문가 검수를 대신하지 않는다.
+**통합 검사는 `TEST_DATABASE_URL` 없이는 통째로 건너뛴다**(`describe.skipIf`). 서버나 스키마를 고쳤다면 그 변수를 준 상태로 실행하고 skipped 수를 함께 확인한다. #72 기준 전체 34개 파일·490개 테스트가 통과했다. 초기 설치와 해당 릴리스의 보존/초기화 범위는 [배포 기록](deployment.md#릴리스별-검증-기록)에 구분한다. 과거 릴리스의 보존 검증을 이후의 명시적인 콘텐츠 초기화까지 일반화하지 않는다. 이 검증은 수학 콘텐츠의 전문가 검수를 대신하지 않는다.
 
 
 ### 2026-09-17 편집 화면 정리
