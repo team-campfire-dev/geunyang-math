@@ -115,7 +115,7 @@ export function SceneEditor({ payload, onChange, arrangingRefusal }: {
   const selectedShift = item ? changeFor(frame, item) : undefined;
 
   return <div className="scene-editor">
-    <div className="scene-templates"><span className="editor-label">바탕 추가</span><p className="editor-note">그림을 고르면 바탕이 추가돼요. 도형과 숫자는 각각 선택해 고칠 수 있어요.</p>
+    <div><span className="editor-label">바탕 추가</span><p className="editor-note">그림을 고르면 바탕이 추가돼요. 도형과 숫자는 각각 선택해 고칠 수 있어요.</p>
       <div className="scene-template-buttons">{sceneTemplates.map(template => <button key={template.key} type="button" className="button secondary"
         disabled={scene.items.length + templateItems(template.key, scene).length > sceneLimits.maxItems}
         onClick={() => { write([...templateItems(template.key, scene), ...scene.items]); setSelected(null); }}>
@@ -151,7 +151,7 @@ export function SceneEditor({ payload, onChange, arrangingRefusal }: {
           <rect x={current.x} y={current.y} width={current.width} height={current.height} fill="transparent"
             style={{ cursor: 'move' }} onPointerDown={(event) => start(event, index, 'move', 'zone')} />
         </g>)}
-        {bounds && selected && <g className="scene-selection" transform={`translate(${selectedShift?.dx ?? 0}, ${selectedShift?.dy ?? 0})`}>
+        {bounds && selected && <g transform={`translate(${selectedShift?.dx ?? 0}, ${selectedShift?.dy ?? 0})`}>
           <rect x={bounds.x - 2} y={bounds.y - 2} width={Math.max(bounds.width + 4, 6)} height={Math.max(bounds.height + 4, 6)}
             fill="none" stroke="var(--green)" strokeWidth="1" strokeDasharray="4 3" pointerEvents="none" />
           <rect x={bounds.x + Math.max(bounds.width, 4) - 3} y={bounds.y + Math.max(bounds.height, 4) - 3} width="7" height="7"
@@ -277,7 +277,7 @@ function ZonePanel({ zone, items, onChange, onRemove }: {
     <label className="editor-field"><span className="editor-label">이 자리의 이름</span>
       <input value={zone.label} maxLength={80} onChange={(event) => onChange({ ...zone, label: event.target.value })} />
       <small>화면 낭독에서 이 자리를 부르는 이름이에요.</small></label>
-    <div className="editor-picker">
+    <div>
       <span className="editor-label">받을 도형<em>선택</em></span>
       {movable.length
         ? movable.map((item) => {
