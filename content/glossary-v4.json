@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "decimal",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "소수",
+      "summary": "소수점을 찍어 1보다 작은 부분까지 나타낸 수예요.",
+      "blocks": [
+        {
+          "blockId": "global:decimal:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "하나를 열, 백, 천으로 나눈 조각을 소수점 오른쪽에 적어 나타낸 수예요. $0.1$은 $\\frac{1}{10}$과 같은 양이고, $0.25$는 $\\frac{25}{100}$과 같은 양이에요. 분모가 10을 거듭 곱한 수인 분수는 소수로 그대로 옮겨 쓸 수 있어요. 소수는 1보다 클 수도 있어요 — $2.5$는 2와 $\\frac{5}{10}$을 합한 수예요.",
+            "definitions": [
+              {
+                "conceptKey": "fraction",
+                "surface": "분수"
+              }
+            ]
+          }
+        }
+      ],
+      "usageNote": "소수점으로 나타낸 수와 그 계산"
+    },
+    {
+      "conceptKey": "decimal-place",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "소수의 자릿값",
+      "summary": "소수점 오른쪽 각 자리가 얼마를 세는 자리인지를 말해요.",
+      "blocks": [
+        {
+          "blockId": "global:decimal-place:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "소수점 오른쪽으로 첫째 자리는 $\\frac{1}{10}$이 몇 개인지, 둘째 자리는 $\\frac{1}{100}$이 몇 개인지를 세는 자리예요. 오른쪽으로 갈수록 한 자리마다 열 배씩 작아져요. $0.35$에서 3은 $\\frac{3}{10}$, 5는 $\\frac{5}{100}$을 뜻해요. 오른쪽 끝에 붙은 0은 세는 개수가 0이라는 뜻이라 값을 바꾸지 않아요 — $0.5$와 $0.50$은 같은 수예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "소수를 읽고 자리를 맞추는 일"
+    },
+    {
+      "conceptKey": "decimal-fraction",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "소수와 분수의 관계",
+      "summary": "같은 양을 소수로도 분수로도 쓸 수 있다는 것을 말해요.",
+      "blocks": [
+        {
+          "blockId": "global:decimal-fraction:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "소수를 분수로 바꿀 때는 자릿값을 분모로 써요. $0.4$는 소수 첫째 자리까지 있으니 $\\frac{4}{10}$이고, 약분하면 $\\frac{2}{5}$예요. 분수를 소수로 바꿀 때는 분모를 10이나 100으로 만들어요. $\\frac{3}{4}$은 분자와 분모에 25를 곱해 $\\frac{75}{100}=0.75$예요. 분모를 10을 거듭 곱한 수로 만들 수 없는 분수도 있어요. 그때는 나누어떨어지지 않아 소수가 끝나지 않는데, 그것은 나중에 다뤄요.",
+            "definitions": [
+              {
+                "conceptKey": "reduce",
+                "surface": "약분"
+              }
+            ]
+          }
+        }
+      ],
+      "usageNote": "소수와 분수를 서로 바꾸는 일"
+    },
+    {
+      "conceptKey": "decimal-addition",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "소수의 덧셈",
+      "summary": "같은 자릿값끼리 더하고 빼는 계산이에요.",
+      "blocks": [
+        {
+          "blockId": "global:decimal-addition:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$\\frac{1}{10}$은 $\\frac{1}{10}$끼리, $\\frac{1}{100}$은 $\\frac{1}{100}$끼리 더해요. 분수를 더할 때 분모를 맞추는 것과 같은 이유예요 — 조각의 크기가 다르면 개수만 세어서는 더할 수 없으니까요. 그래서 세로로 쓸 때 소수점을 나란히 맞추고, 자리가 모자라면 오른쪽에 0을 붙여요. $1.2+0.45$는 $1.20+0.45=1.65$예요.",
+            "definitions": [
+              {
+                "conceptKey": "common-denominator",
+                "surface": "분모를 맞추는"
+              }
+            ]
+          }
+        }
+      ],
+      "usageNote": "소수끼리 더하고 빼는 계산"
+    }
+  ]
+}

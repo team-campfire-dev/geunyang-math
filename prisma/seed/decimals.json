@@ -1,0 +1,1607 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "decimals",
+      "title": "소수",
+      "summary": "소수점으로 쓴 수를 읽고, 분수와 오가며, 자리를 맞춰 더해요.",
+      "lessons": [
+        {
+          "key": "decimal-meaning",
+          "order": 1
+        },
+        {
+          "key": "decimal-fraction",
+          "order": 2
+        },
+        {
+          "key": "decimal-addition",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "decimal",
+      "label": "소수",
+      "assessable": true
+    },
+    {
+      "key": "decimal-place",
+      "label": "소수의 자릿값",
+      "assessable": true
+    },
+    {
+      "key": "decimal-fraction",
+      "label": "소수와 분수의 관계",
+      "assessable": true
+    },
+    {
+      "key": "decimal-addition",
+      "label": "소수의 덧셈",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "decimal-meaning",
+        "versionId": "decimal-meaning:v1",
+        "title": "소수의 의미: 자릿값 읽기",
+        "summary": "십분의 일을 소수점으로 쓰는 방법과 소수 자릿값을 읽는 법을 알아봐요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "decimal",
+          "decimal-place"
+        ],
+        "prerequisiteConceptKeys": [
+          "fraction",
+          "numerator",
+          "denominator"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "decimal-meaning:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "decimal-meaning:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "하나를 똑같이 열로 나눈 조각 하나가 $\\frac{1}{10}$이에요. 이것을 소수점을 찍어 $0.1$이라고도 써요. 같은 양을 부르는 두 가지 이름이에요.\n\n소수점 오른쪽 첫 자리는 $\\frac{1}{10}$이 몇 개인지를, 둘째 자리는 $\\frac{1}{100}$이 몇 개인지를 나타내요. 이것을 자릿값이라고 해요.\n\n$0.7$은 $\\frac{1}{10}$이 일곱 개, 곧 $\\frac{7}{10}$이에요. 분모가 10, 100처럼 10을 거듭 곱한 수일 때 분수는 소수로 바로 옮겨 쓸 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "decimal",
+                    "surface": "소수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "decimal-place",
+                    "surface": "자릿값",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "fraction",
+                    "surface": "분수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "decimal-meaning:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "열 칸으로 나눈 막대에서 일곱 칸을 채운 그림",
+                "caption": "열 칸 중 일곱 칸 · $0.7=\\frac{7}{10}$",
+                "items": [
+                  {
+                    "kind": "strip",
+                    "x": 40,
+                    "y": 60,
+                    "width": 240,
+                    "height": 40,
+                    "parts": 10,
+                    "filled": 7,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 125,
+                    "text": "$0.7 = \\frac{7}{10}$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "decimal-meaning:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "decimal-meaning:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$0.35$를 읽어 볼게요. 소수점 오른쪽으로 첫째 자리는 3, 둘째 자리는 5예요.\n\n첫째 자리의 3은 $\\frac{1}{10}$이 세 개, 둘째 자리의 5는 $\\frac{1}{100}$이 다섯 개예요. 합치면 $\\frac{30}{100}+\\frac{5}{100}=\\frac{35}{100}$이에요.\n\n자릿값을 세는 순서가 왼쪽에서 오른쪽으로 갈수록 열 배씩 작아진다는 것만 기억하면, 자리가 늘어나도 읽는 방법은 같아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "decimal-place",
+                    "surface": "자릿값",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "decimal-meaning:example:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "0.35의 3과 5를 자릿값 자리에 놓아 보는 그림",
+                "caption": "숫자를 끌거나 눌러서 자기 자리에 놓아 보세요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "id": "three",
+                    "label": "숫자 3",
+                    "draggable": true,
+                    "x": 60,
+                    "y": 40,
+                    "text": "3",
+                    "size": 26,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "five",
+                    "label": "숫자 5",
+                    "draggable": true,
+                    "x": 130,
+                    "y": 40,
+                    "text": "5",
+                    "size": 26,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 95,
+                    "y": 170,
+                    "text": "$0.35$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ],
+                "zones": [
+                  {
+                    "id": "tenths",
+                    "x": 175,
+                    "y": 60,
+                    "width": 60,
+                    "height": 60,
+                    "label": "십분의 일 자리",
+                    "accepts": [
+                      "three"
+                    ]
+                  },
+                  {
+                    "id": "hundredths",
+                    "x": 245,
+                    "y": 60,
+                    "width": 60,
+                    "height": 60,
+                    "label": "백분의 일 자리",
+                    "accepts": [
+                      "five"
+                    ]
+                  }
+                ],
+                "task": {
+                  "prompt": "$0.35$의 두 숫자를 각각 맞는 자리에 놓아 보세요.",
+                  "promptAlt": "0.35의 두 숫자를 각각 맞는 자리에 놓아 보세요.",
+                  "successText": "3은 십분의 일 자리, 5는 백분의 일 자리예요."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "decimal-meaning:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "decimal-meaning:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "decimal-meaning:practice",
+                "problemSetVersionId": "decimal-meaning:practice:v1",
+                "problemVersionIds": [
+                  "decimal-meaning:practice-1:v1",
+                  "decimal-meaning:practice-2:v1",
+                  "decimal-meaning:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "decimal-meaning:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "decimal-meaning:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "decimal-meaning:check",
+                "problemSetVersionId": "decimal-meaning:check:v1",
+                "problemVersionIds": [
+                  "decimal-meaning:check-1:v1",
+                  "decimal-meaning:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "decimal-meaning:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "decimal-meaning:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "소수는 하나를 열, 백으로 나눈 조각을 소수점으로 쓴 수예요. 소수점 오른쪽 첫째 자리는 $\\frac{1}{10}$의 개수, 둘째 자리는 $\\frac{1}{100}$의 개수예요.\n\n이 수업의 개념은 소수·자릿값이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "decimal",
+                    "surface": "소수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "decimal-place",
+                    "surface": "자릿값",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "decimal-meaning:review",
+        "problemSetVersionId": "decimal-meaning:review:v1",
+        "problemVersionIds": [
+          "decimal-meaning:homework-1:v1",
+          "decimal-meaning:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "decimal-fraction",
+        "versionId": "decimal-fraction:v1",
+        "title": "소수와 분수: 같은 양의 두 이름",
+        "summary": "소수를 분수로, 분수를 소수로 바꾸며 같은 양임을 확인해요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "decimal-fraction"
+        ],
+        "prerequisiteConceptKeys": [
+          "decimal",
+          "decimal-place",
+          "equivalent-fraction",
+          "reduce"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "decimal-fraction:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "decimal-fraction:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "소수를 분수로 바꾸는 것은 자릿값을 그대로 분모로 쓰는 일이에요. $0.4$는 소수 첫째 자리까지 있으니 분모가 10이고, $\\frac{4}{10}$이에요.\n\n여기서 분자와 분모를 둘 다 2로 나누면 $\\frac{2}{5}$가 돼요. 약분해서 더 간단한 이름으로 부른 것이고 값은 그대로예요.\n\n반대로 분수를 소수로 바꿀 때는 분모를 10이나 100으로 만들어요. $\\frac{3}{5}$은 분자와 분모에 2를 곱해 $\\frac{6}{10}=0.6$이에요. 값을 그대로 두고 이름만 바꾼 동치분수예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "decimal",
+                    "surface": "소수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "reduce",
+                    "surface": "약분",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "equivalent-fraction",
+                    "surface": "동치분수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "decimal-fraction:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "열 칸 중 네 칸과 다섯 칸 중 두 칸을 위아래로 견준 막대",
+                "caption": "$0.4=\\frac{4}{10}=\\frac{2}{5}$",
+                "items": [
+                  {
+                    "kind": "strip",
+                    "x": 40,
+                    "y": 40,
+                    "width": 240,
+                    "height": 32,
+                    "parts": 10,
+                    "filled": 4,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 90,
+                    "text": "$0.4=\\frac{4}{10}$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "strip",
+                    "x": 40,
+                    "y": 110,
+                    "width": 240,
+                    "height": 32,
+                    "parts": 5,
+                    "filled": 2,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 162,
+                    "text": "$\\frac{2}{5}$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "decimal-fraction:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "decimal-fraction:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$0.25$를 가장 간단한 분수로 바꿔 볼게요.\n\n소수 둘째 자리까지 있으니 분모는 100이에요. $0.25=\\frac{25}{100}$.\n\n분자와 분모를 25로 나누면 $\\frac{25\\div25}{100\\div25}=\\frac{1}{4}$이에요. 1과 4는 더 이상 같은 수로 나눌 수 없으니 여기서 멈춰요.\n\n분모를 100으로 두고 멈춰도 값은 같지만, 더 이상 약분할 수 없는 꼴로 쓰면 크기를 한눈에 보기 쉬워요.",
+                "definitions": [
+                  {
+                    "conceptKey": "irreducible-fraction",
+                    "surface": "더 이상 약분할 수 없는",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "decimal-fraction:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "decimal-fraction:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "decimal-fraction:practice",
+                "problemSetVersionId": "decimal-fraction:practice:v1",
+                "problemVersionIds": [
+                  "decimal-fraction:practice-1:v1",
+                  "decimal-fraction:practice-2:v1",
+                  "decimal-fraction:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "decimal-fraction:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "decimal-fraction:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "decimal-fraction:check",
+                "problemSetVersionId": "decimal-fraction:check:v1",
+                "problemVersionIds": [
+                  "decimal-fraction:check-1:v1",
+                  "decimal-fraction:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "decimal-fraction:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "decimal-fraction:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "소수를 분수로 바꿀 때는 자릿값을 분모로 쓰고, 분수를 소수로 바꿀 때는 분모를 10이나 100으로 만들어요. 약분해도 값은 그대로예요.\n\n이 수업의 개념은 소수와 분수의 관계예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "decimal-fraction",
+                    "surface": "소수와 분수의 관계",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "decimal-fraction:review",
+        "problemSetVersionId": "decimal-fraction:review:v1",
+        "problemVersionIds": [
+          "decimal-fraction:homework-1:v1",
+          "decimal-fraction:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "decimal-addition",
+        "versionId": "decimal-addition:v1",
+        "title": "소수의 덧셈과 뺄셈: 자리를 맞춰 더하기",
+        "summary": "소수점을 맞춰 같은 자릿값끼리 더하고 빼는 법을 익혀요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "decimal-addition"
+        ],
+        "prerequisiteConceptKeys": [
+          "decimal",
+          "decimal-place",
+          "addition"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "decimal-addition:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "decimal-addition:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "소수를 더할 때는 같은 자릿값끼리 더해요. $\\frac{1}{10}$은 $\\frac{1}{10}$끼리, $\\frac{1}{100}$은 $\\frac{1}{100}$끼리요.\n\n분수를 더할 때 분모를 맞춘 것과 같은 이유예요. 조각의 크기가 다르면 개수만으로 더할 수 없으니까요.\n\n그래서 세로로 쓸 때 소수점을 세로로 나란히 맞춰요. 자리가 모자라면 오른쪽에 0을 붙여 길이를 맞춰도 값은 달라지지 않아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "decimal-addition",
+                    "surface": "소수를 더할 때",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "common-denominator",
+                    "surface": "분모를 맞춘",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "decimal-place",
+                    "surface": "자릿값",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "decimal-addition:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "소수점을 세로로 맞춰 두 수를 더하는 세로셈을 한 줄씩 채워 가는 그림",
+                "caption": "먼저 자리를 맞추고, 그 다음 같은 자리끼리 더한다",
+                "items": [
+                  {
+                    "kind": "text",
+                    "id": "first",
+                    "x": 200,
+                    "y": 60,
+                    "text": "$0.3 \\; 0$",
+                    "size": 17,
+                    "anchor": "end",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "second",
+                    "x": 200,
+                    "y": 92,
+                    "text": "$+\\; 0.4 \\; 5$",
+                    "size": 17,
+                    "anchor": "end",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "id": "rule",
+                    "x1": 95,
+                    "y1": 106,
+                    "x2": 205,
+                    "y2": 106,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "total",
+                    "x": 200,
+                    "y": 134,
+                    "text": "$0.7 \\; 5$",
+                    "size": 17,
+                    "anchor": "end",
+                    "fill": "green",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "line",
+                    "id": "point",
+                    "x1": 168,
+                    "y1": 45,
+                    "x2": 168,
+                    "y2": 145,
+                    "stroke": "orange",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "kind": "text",
+                    "x": 168,
+                    "y": 172,
+                    "text": "소수점을 맞춘 자리",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$0.3$을 $0.30$으로 써서 자리를 맞춰요.",
+                    "changes": [
+                      {
+                        "id": "second",
+                        "hidden": true
+                      },
+                      {
+                        "id": "rule",
+                        "hidden": true
+                      },
+                      {
+                        "id": "total",
+                        "hidden": true
+                      },
+                      {
+                        "id": "point",
+                        "opacity": 0.35
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "더할 수를 소수점에 맞춰 아래에 써요.",
+                    "changes": [
+                      {
+                        "id": "total",
+                        "hidden": true
+                      },
+                      {
+                        "id": "point",
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "같은 자리끼리 더하면 $0.75$예요.",
+                    "changes": []
+                  }
+                ],
+                "frameMs": 1100
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "decimal-addition:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "decimal-addition:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$1.2+0.45$를 더해 볼게요.\n\n$1.2$는 소수 첫째 자리까지, $0.45$는 둘째 자리까지 있어요. $1.2$를 $1.20$으로 쓰면 자리가 맞아요. 오른쪽 끝의 0은 값을 바꾸지 않아요.\n\n$1.20+0.45$에서 둘째 자리는 $0+5=5$, 첫째 자리는 $2+4=6$, 일의 자리는 $1+0=1$이에요. 그래서 $1.65$예요.\n\n뺄셈도 같아요. $1.65-0.45$는 자리를 맞춰 빼면 $1.2$가 돼요.",
+                "definitions": [
+                  {
+                    "conceptKey": "decimal-addition",
+                    "surface": "더해",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "decimal-place",
+                    "surface": "자리",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "decimal-addition:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "decimal-addition:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "decimal-addition:practice",
+                "problemSetVersionId": "decimal-addition:practice:v1",
+                "problemVersionIds": [
+                  "decimal-addition:practice-1:v1",
+                  "decimal-addition:practice-2:v1",
+                  "decimal-addition:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "decimal-addition:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "decimal-addition:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "decimal-addition:check",
+                "problemSetVersionId": "decimal-addition:check:v1",
+                "problemVersionIds": [
+                  "decimal-addition:check-1:v1",
+                  "decimal-addition:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "decimal-addition:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "decimal-addition:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "소수의 덧셈과 뺄셈은 같은 자릿값끼리 계산해요. 소수점을 세로로 맞추고, 자리가 모자라면 오른쪽에 0을 붙여요.\n\n이 수업의 개념은 소수의 덧셈이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "decimal-addition",
+                    "surface": "소수의 덧셈",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "decimal-addition:review",
+        "problemSetVersionId": "decimal-addition:review:v1",
+        "problemVersionIds": [
+          "decimal-addition:homework-1:v1",
+          "decimal-addition:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "decimal-meaning:practice",
+      "courseKey": "decimals",
+      "name": "소수의 의미와 자릿값 연습",
+      "versionId": "decimal-meaning:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "decimal-meaning:practice-1:v1",
+          "conceptKeys": [
+            "decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-meaning:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{9}{10}$을 소수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 9,
+            "denominator": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimal-meaning:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{10}$이 아홉 개예요. 소수점 오른쪽 첫째 자리에 9를 씁니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimal-meaning:practice-2:v1",
+          "conceptKeys": [
+            "decimal-place"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-meaning:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.48$에서 소수 둘째 자리의 숫자는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimal-meaning:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소수점 오른쪽으로 첫째 자리는 4, 그 다음 자리를 봅니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimal-meaning:practice-3:v1",
+          "conceptKeys": [
+            "decimal",
+            "decimal-place"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-meaning:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{100}$이 스물세 개 있어요. 이것을 소수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 23,
+            "denominator": 100
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimal-meaning:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{23}{100}$이에요. 분모가 100이면 소수 둘째 자리까지 씁니다."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "decimal-meaning:check",
+      "courseKey": "decimals",
+      "name": "소수의 의미와 자릿값 확인",
+      "versionId": "decimal-meaning:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "decimal-meaning:check-1:v1",
+          "conceptKeys": [
+            "decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-meaning:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.6$을 분모가 10인 분수로 쓸 때 분자는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimal-meaning:check-2:v1",
+          "conceptKeys": [
+            "decimal-place"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-meaning:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3.07$에서 소수 첫째 자리의 숫자는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "decimal-meaning:review",
+      "courseKey": "decimals",
+      "name": "소수의 의미와 자릿값 복습",
+      "versionId": "decimal-meaning:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "decimal-meaning:homework-1:v1",
+          "conceptKeys": [
+            "decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-meaning:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{4}{10}$을 소수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 2,
+            "denominator": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimal-meaning:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{10}$이 네 개예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimal-meaning:homework-2:v1",
+          "conceptKeys": [
+            "decimal-place"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-meaning:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.52$는 $\\frac{1}{100}$이 몇 개인 수인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 52
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimal-meaning:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.52=\\frac{52}{100}$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "decimal-fraction:practice",
+      "courseKey": "decimals",
+      "name": "소수와 분수 바꾸기 연습",
+      "versionId": "decimal-fraction:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "decimal-fraction:practice-1:v1",
+          "conceptKeys": [
+            "decimal-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-fraction:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.5$를 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimal-fraction:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.5=\\frac{5}{10}$이고, 분자와 분모를 5로 나눕니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimal-fraction:practice-2:v1",
+          "conceptKeys": [
+            "decimal-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-fraction:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{7}{10}$을 소수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 7,
+            "denominator": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimal-fraction:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모가 10이면 소수 첫째 자리에 분자를 씁니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimal-fraction:practice-3:v1",
+          "conceptKeys": [
+            "decimal-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-fraction:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{3}{4}$을 소수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimal-fraction:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분자와 분모에 25를 곱하면 분모가 100이 돼요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "decimal-fraction:check",
+      "courseKey": "decimals",
+      "name": "소수와 분수 바꾸기 확인",
+      "versionId": "decimal-fraction:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "decimal-fraction:check-1:v1",
+          "conceptKeys": [
+            "decimal-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-fraction:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.2$를 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimal-fraction:check-2:v1",
+          "conceptKeys": [
+            "decimal-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-fraction:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{2}$을 소수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 2
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "decimal-fraction:review",
+      "courseKey": "decimals",
+      "name": "소수와 분수 바꾸기 복습",
+      "versionId": "decimal-fraction:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "decimal-fraction:homework-1:v1",
+          "conceptKeys": [
+            "decimal-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-fraction:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.75$를 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimal-fraction:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{75}{100}$에서 분자와 분모를 25로 나눕니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimal-fraction:homework-2:v1",
+          "conceptKeys": [
+            "decimal-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-fraction:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{2}{5}$을 소수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 2,
+            "denominator": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimal-fraction:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분자와 분모에 2를 곱해 분모를 10으로 만듭니다."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "decimal-addition:practice",
+      "courseKey": "decimals",
+      "name": "소수의 덧셈과 뺄셈 연습",
+      "versionId": "decimal-addition:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "decimal-addition:practice-1:v1",
+          "conceptKeys": [
+            "decimal-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-addition:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.3+0.4$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 7,
+            "denominator": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimal-addition:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{10}$이 세 개와 네 개를 더합니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimal-addition:practice-2:v1",
+          "conceptKeys": [
+            "decimal-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-addition:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1.2+0.35$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 31,
+            "denominator": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimal-addition:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1.2$를 $1.20$으로 보고 자리를 맞춥니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimal-addition:practice-3:v1",
+          "conceptKeys": [
+            "decimal-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-addition:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.8-0.25$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 11,
+            "denominator": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimal-addition:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.8$을 $0.80$으로 보고 자리를 맞춥니다."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "decimal-addition:check",
+      "courseKey": "decimals",
+      "name": "소수의 덧셈과 뺄셈 확인",
+      "versionId": "decimal-addition:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "decimal-addition:check-1:v1",
+          "conceptKeys": [
+            "decimal-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-addition:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.25+0.5$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimal-addition:check-2:v1",
+          "conceptKeys": [
+            "decimal-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-addition:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2.4-1.15$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "decimal-addition:review",
+      "courseKey": "decimals",
+      "name": "소수의 덧셈과 뺄셈 복습",
+      "versionId": "decimal-addition:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "decimal-addition:homework-1:v1",
+          "conceptKeys": [
+            "decimal-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-addition:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.6+0.25$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 17,
+            "denominator": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimal-addition:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.6$을 $0.60$으로 보고 자리를 맞춥니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimal-addition:homework-2:v1",
+          "conceptKeys": [
+            "decimal-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimal-addition:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1.5-0.75$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimal-addition:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1.5$를 $1.50$으로 보고 자리를 맞춥니다."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}
