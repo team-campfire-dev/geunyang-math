@@ -216,8 +216,15 @@ export async function currentDefinitions(db: Db, refs: DefinitionRef[]): Promise
     label: row.label ?? row.concept.label, summary: row.summary ?? '', usageNote: row.usageNote ?? '', revision: row.updatedAt.toISOString(), blocks: blocksOf(row.id, 'definition', row.id, 'body') }))
     .filter(definition => definition.blocks.length);
 }
+/**
+ * The placement a learner starting today would take: the most recently published one, whatever key
+ * it was published under. It used to name `starting-point`, which was the fractions course's own
+ * placement; the bank that replaced it spans the catalogue and belongs to no course, so it is
+ * published under its own. A service with one placement has nothing to choose between, and the newer
+ * definition is the one that replaces the older — which is what the key-scoped lookup already meant.
+ */
 export async function currentDiagnostic(db: Db): Promise<DiagnosticRecord | null> {
-  const row = await db.diagnosticVersion.findFirst({ where: { diagnosticKey: 'starting-point' }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
+  const row = await db.diagnosticVersion.findFirst({ orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
   return row ? (await diagnosticRecords(db, [row]))[0] : null;
 }
 /** Courses with the identities they keep, in the order the course gives them. */

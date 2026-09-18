@@ -13,7 +13,7 @@ import type { ConceptReadiness, DiagnosticOffering, DiagnosticView, PublicProble
  * that actually moves, and which jumps when one answer carries several.
  */
 const problem: PublicProblem = { problemVersionId: 'q1', promptContent: [], responseSpec: { kind: 'rational' }, hintAvailable: false, hints: [], conceptKeys: ['fraction'] } as unknown as PublicProblem;
-const offering: DiagnosticOffering = { version: 'v3', title: '시작점 확인', description: '지금 어디쯤인지 봐요', total: 13, estimatedMinutes: 6 };
+const offering: DiagnosticOffering = { version: 'v3', title: '시작점 확인', description: '지금 어디쯤인지 봐요', scope: 13, estimatedMinutes: 6 };
 const run = (over: Partial<DiagnosticView> = {}): DiagnosticView => ({
   id: 'run', version: 'v3', status: 'active', completedAt: null,
   scope: 20, settled: 6, asked: 2, inferred: 4, answered: 3, currentProblem: problem, results: [], ...over,
@@ -37,9 +37,11 @@ describe('the placement screen', () => {
     expect(screen.getByRole('button', { name: '저장하고 다음으로' })).toBeTruthy();
   });
 
-  it('offers a ceiling rather than a count, since most people answer far fewer', () => {
+  it('offers what it will settle, not how many questions it holds', () => {
+    // A bank of 39 promises nothing: the placement picks its questions and stops when it can.
     panel({ diagnostic: null });
-    expect(screen.getByText(/최대 13문제/)).toBeTruthy();
+    expect(screen.getByText(/개념 13개/)).toBeTruthy();
+    expect(screen.queryByText(/문제/)?.textContent).not.toMatch(/최대 \d+문제/);
     expect(screen.getByText(/한 문제를 풀면 그 위나 아래의 개념까지 함께 정해지기/)).toBeTruthy();
   });
 

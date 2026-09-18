@@ -8,17 +8,16 @@ import type { StoredLesson } from '@/core/content';
 /**
  * Running a placement against the bank that is actually published.
  *
- * The bank asks about fractions only — thirteen questions, two per concept — and the first placement
- * put every one of them to every learner in a fixed order. These tests hold the replacement to
- * asking fewer while deciding the same way: two right answers still make a concept ready, and a
- * question that was never asked is never counted as one that was.
+ * The first placement put every question of the bank to every learner in a fixed order. These tests
+ * hold the replacement to asking fewer while deciding the same way: two right answers still make a
+ * concept ready, and a question that was never asked is never counted as one that was.
  */
 const seeds = readdirSync('prisma/seed').filter((name) => name.endsWith('.json')).sort()
   .map((name) => parseContentBundle(JSON.parse(readFileSync(`prisma/seed/${name}`, 'utf8'))));
 const lessons = seeds.flatMap((seed) => (seed.lessons as StoredLesson[]).map((lesson) => lesson.public));
 const graph = conceptGraph(lessons);
 const scope = placementScope(graph, []);
-const definition = seeds.flatMap((seed) => seed.diagnostics).at(-1)!;
+const definition = seeds.flatMap((seed) => seed.diagnostics).find((item) => item.diagnosticKey === 'catalogue-placement')!;
 const bank: PlacementProblem[] = seeds.flatMap((seed) => seed.problemSets)
   .find((set) => set.versionId === definition.problemSet.problemSetVersionId)!
   .problems.filter((problem) => definition.problemSet.problemVersionIds.includes(problem.problemVersionId))
@@ -38,10 +37,10 @@ const settledAs = (state: { placed: Record<string, string> }, outcome: string) =
   Object.entries(state.placed).filter(([, value]) => value === outcome).map(([key]) => key).sort();
 
 describe('placing someone against the published bank', () => {
-  it('puts fewer questions to a learner than the bank holds', () => {
+  it('puts far fewer questions to a learner than the bank holds', () => {
     const { answers } = play(() => 'correct');
-    expect(bank.length).toBe(13);
-    expect(answers.length, `${answers.length}문항을 물었다`).toBeLessThan(bank.length);
+    expect(bank.length).toBeGreaterThan(30);
+    expect(answers.length * 2, `${bank.length}문항 중 ${answers.length}문항을 물었다`).toBeLessThan(bank.length);
     // Never the same question twice, however the descent moved.
     expect(new Set(answers.map((answer) => answer.problemVersionId)).size).toBe(answers.length);
   });
@@ -109,19 +108,30 @@ describe('placing someone against the published bank', () => {
     }
   });
 
-  it('places the concepts the bank cannot ask about, by what it can', () => {
-    const { state } = play(() => 'incorrect');
-    // Nothing in the bank is about decimals, yet failing fractions still settles what stands on them.
-    expect(bank.some((problem) => problem.conceptKeys.includes('decimal'))).toBe(false);
-    expect(state.placed.decimal).toBe('needs-practice');
-    expect(state.source.decimal).toBe('inferred');
+  it('places the concepts a bank cannot ask about, by the ones it can', () => {
+    // The published bank asks about every concept now, so this is checked against one that does not:
+    // a bank with nothing about decimals still has to place them, or a gap in the questions becomes
+    // a gap in the placement. It was the published bank's own shape until this version.
+    const withoutDecimals = bank.filter((problem) => !problem.conceptKeys.some((key) => key.startsWith('decimal')));
+    expect(withoutDecimals.length).toBeLessThan(bank.length);
+    const answers: PlacementAnswer[] = [];
+    for (let guard = 0; guard <= withoutDecimals.length; guard += 1) {
+      const { state, next } = placement(graph, scope, withoutDecimals, answers);
+      if (!next) {
+        expect(state.placed.decimal).toBe('needs-practice');
+        expect(state.source.decimal).toBe('inferred');
+        return;
+      }
+      answers.push({ problemVersionId: next.problemVersionId, status: 'incorrect' });
+    }
+    throw new Error('배치가 끝나지 않는다');
   });
 
-  it('gives up on what it can neither ask about nor reach', () => {
-    const { state } = play(() => 'correct');
-    // A right answer carries upward only, so what sits above fractions stays unasked and unknown.
-    expect(state.placed['decimal-addition']).toBeUndefined();
-    expect(placementProgress(state).settled).toBeLessThan(scope.length);
+  it('leaves nothing in the scope undecided, now that the bank reaches every concept', () => {
+    for (const status of ['correct', 'incorrect'] as const) {
+      const { state } = play(() => status);
+      expect(placementProgress(state).settled, `모두 ${status}일 때`).toBe(scope.length);
+    }
   });
 
   it('counts what it asked apart from what it worked out', () => {

@@ -203,6 +203,11 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     // A destination has to be somewhere the catalogue goes; clearing it is always allowed.
     await expect(service.act(narrow.id, { action: 'profile.update', targetCourseKey: 'no-such-course', dailyMinutes: 10 }))
       .rejects.toMatchObject({ status: 404 });
+    // Including the course that holds the placement's own question bank: it has no lessons, so it is
+    // not in the catalogue, and heading for it would mean heading nowhere.
+    expect(await db.course.findFirst({ where: { key: 'placement' } })).not.toBeNull();
+    await expect(service.act(narrow.id, { action: 'profile.update', targetCourseKey: 'placement', dailyMinutes: 10 }))
+      .rejects.toMatchObject({ status: 404 });
     expect((await service.act(narrow.id, { action: 'profile.update', targetCourseKey: null, dailyMinutes: 10 })).state.user.targetCourseKey).toBeNull();
     // The placement already under way keeps the scope it started with.
     expect((await service.state(narrow.id)).diagnostic!.scope).toBe(narrowRun.scope);

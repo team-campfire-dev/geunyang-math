@@ -88,7 +88,9 @@ export type AssignmentView = {
   glossary: GlossaryEntry[];
 };
 export type DiagnosticAnswer = { problemVersionId: string; answer: string | null; status: 'correct' | 'incorrect' | 'skipped' };
-export type DiagnosticOffering = { version: string; title: string; description: string; total: number; estimatedMinutes: number };
+// `scope` is how many concepts this learner's placement would settle, not how many questions it
+// would ask — a placement chooses those as it goes, so the bank's size promises nothing useful.
+export type DiagnosticOffering = { version: string; title: string; description: string; scope: number; estimatedMinutes: number };
 export type DiagnosticView = {
   id: string; version: string; status: 'active' | 'completed'; completedAt: string | null;
   // A placement asks only what it has to, so its length is not known when it starts. What a screen
