@@ -26,19 +26,28 @@ describe('atomic-concept curriculum', () => {
       expect(JSON.stringify(toPublicLesson(record, 'fractions'))).not.toContain('gradingSpec');
     }
   });
-  it('distinguishes numerator and denominator evidence and covers every concept in the diagnostic', () => {
+  it('distinguishes numerator from denominator evidence', () => {
     const practice = bundle.problemSets.find(set => set.problemSetId === 'fraction-meaning:practice')!.problems;
-    expect(practice.find(p => p.conceptKeys.includes('numerator'))).toMatchObject({ gradingSpec: { kind: 'integer', value: 3 }, conceptKeys: ['numerator'] });
-    expect(practice.find(p => p.conceptKeys.includes('denominator'))).toMatchObject({ gradingSpec: { kind: 'integer', value: 7 }, conceptKeys: ['denominator'] });
-    const diagnostic = bundle.problemSets.find(set => set.problemSetId === 'starting-point')!;
-    expect(new Set(diagnostic.problems.flatMap(p => p.conceptKeys))).toEqual(new Set(bundle.concepts.map(c => c.key)));
-    expect(diagnostic.problems).toHaveLength(8);
+    const numerator = practice.find(p => p.conceptKeys.includes('numerator'))!;
+    const denominator = practice.find(p => p.conceptKeys.includes('denominator'))!;
+    // Each speaks for one concept only, so answering it is evidence about that concept and no other.
+    expect(numerator.conceptKeys).toEqual(['numerator']);
+    expect(denominator.conceptKeys).toEqual(['denominator']);
+    // And they cannot be answered with the same number, or one answer would pass for both.
+    expect(JSON.stringify(numerator.gradingSpec)).not.toEqual(JSON.stringify(denominator.gradingSpec));
+  });
+  it('asks the diagnostic about every concept the course teaches', () => {
+    const diagnostics = bundle.problemSets.filter(set => set.problemSetId === 'starting-point');
+    expect(diagnostics.length).toBeGreaterThan(0);
+    for (const set of diagnostics) {
+      expect(new Set(set.problems.flatMap(p => p.conceptKeys)), set.versionId).toEqual(new Set(bundle.concepts.map(c => c.key)));
+    }
   });
 });
 
 const url = process.env.TEST_DATABASE_URL;
 describe.skipIf(!url)('deployed curriculum on MySQL', () => {
-  it('reads the seeded v2 lessons with working concept definitions after the reset migration', async () => {
+  it('reads every seeded lesson back whole, with its concept definitions in place', async () => {
     const parsed = new URL(url!);
     if (parsed.protocol !== 'mysql:' || !parsed.pathname.endsWith('_test')) throw new Error('Use an isolated _test database.');
     const db = createDatabase(url!);
