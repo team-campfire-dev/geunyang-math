@@ -1,7 +1,11 @@
 // A drawing described as data rather than as markup. The publishing validator, the learner's
 // renderer and the editor's canvas all read these rules, so a picture that saves is a picture that
 // draws. Nothing here becomes markup: every value lands in an attribute of an element we create,
-// which is what lets an authoring tool — or later a generator — emit a drawing safely.
+// which is what lets an authoring tool — or later a generator — emit a drawing safely. A label's
+// `$...$` is no exception: what is stored is the same plain string prose stores, and the renderer
+// hands it to the same hardened KaTeX call. The author writes TeX, never markup.
+
+import { splitRichText } from './rich-text';
 
 export const sceneLimits = {
   minSize: 20, maxSize: 2000, defaultWidth: 320, defaultHeight: 200,
@@ -120,6 +124,27 @@ export const snap = (value: number, step = 1) => Math.round(value / step) * step
 const round = (value: number) => Math.round(value * 100) / 100;
 
 /** The box a shape occupies, used for selection outlines and for keeping a drag on the canvas. */
+/**
+ * How much room a label asks for, as characters across and rows down. A formula's source says
+ * nothing about its size — `\\frac{3}{4}` is eleven characters and draws about one wide and two
+ * tall — so the stacked parts are measured by their widest half and the control words collapse to
+ * a single glyph. It stays the same class of guess the plain case always made: enough for the
+ * editor's handles to sit near the drawing, never a claim about the typesetting.
+ */
+const stacked = /\\[dt]?frac|\\binom|\\over(?![a-zA-Z])/;
+export function textMetrics(text: string): { characters: number; lines: number } {
+  let characters = 0;
+  let lines = 1;
+  for (const segment of splitRichText(text)) {
+    if (segment.kind !== 'math') { characters += segment.value.length; continue; }
+    const halves = segment.equation.replace(/\\[dt]?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g,
+      (_match, top: string, bottom: string) => (top.length >= bottom.length ? top : bottom));
+    characters += halves.replace(/\\[a-zA-Z]+/g, 'x').replace(/[{}$^_\s]/g, '').length;
+    if (stacked.test(segment.equation)) lines = 2;
+  }
+  return { characters: Math.max(characters, 1), lines };
+}
+
 export function itemBounds(item: SceneItem): { x: number; y: number; width: number; height: number } {
   switch (item.kind) {
     case 'rect': case 'strip': return { x: item.x, y: item.y, width: item.width, height: item.height };
@@ -137,9 +162,10 @@ export function itemBounds(item: SceneItem): { x: number; y: number; width: numb
     }
     case 'text': {
       const size = item.size ?? 14;
-      const width = item.text.length * size * 0.62;
+      const { characters, lines } = textMetrics(item.text);
+      const width = characters * size * 0.62;
       const left = item.anchor === 'middle' ? item.x - width / 2 : item.anchor === 'end' ? item.x - width : item.x;
-      return { x: left, y: item.y - size, width, height: size * 1.25 };
+      return { x: left, y: item.y - size, width, height: size * 1.25 * lines };
     }
   }
 }
@@ -170,7 +196,7 @@ export function resizeItem(item: SceneItem, width: number, height: number): Scen
     case 'rect': case 'strip': return { ...item, width: next.width, height: next.height };
     case 'ellipse': return { ...item, rx: round(next.width / 2), ry: round(next.height / 2), cx: round(bounds.x + next.width / 2), cy: round(bounds.y + next.height / 2) };
     case 'line': return { ...item, x2: round(item.x1 + (item.x2 >= item.x1 ? next.width : -next.width)), y2: round(item.y1 + (item.y2 >= item.y1 ? next.height : -next.height)) };
-    case 'text': return { ...item, size: Math.min(sceneLimits.maxFontSize, Math.max(sceneLimits.minFontSize, round(next.height))) };
+    case 'text': return { ...item, size: Math.min(sceneLimits.maxFontSize, Math.max(sceneLimits.minFontSize, round(next.height / textMetrics(item.text).lines))) };
     case 'polygon': {
       const scaleX = bounds.width ? next.width / bounds.width : 1;
       const scaleY = bounds.height ? next.height / bounds.height : 1;

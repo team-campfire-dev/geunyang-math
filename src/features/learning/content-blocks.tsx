@@ -42,7 +42,7 @@ export function RichText({ text, definitions = [], glossary = noGlossary, asCapt
   for (const segment of splitRichText(text)) {
     if (segment.kind === 'math') {
       try {
-        const html = katex.renderToString(segment.equation, { displayMode: segment.display, throwOnError: false, trust: false, strict: 'error', maxExpand: 1000 });
+        const html = katex.renderToString(segment.equation, { ...mathOptions, displayMode: segment.display });
         nodes.push(<span key={segment.start} className={segment.display ? 'display-math' : undefined} dangerouslySetInnerHTML={{ __html: html }} />);
       } catch { pushText(segment.value, segment.start); }
       continue;
@@ -85,6 +85,28 @@ export function RichText({ text, definitions = [], glossary = noGlossary, asCapt
  * markup ever reaches the document — so an arbitrary drawing stays as safe as a fixed one. The
  * figure carries the accessible name and the shapes themselves are hidden from a reader.
  */
+/** The one KaTeX call the app makes. Prose and a drawing's label share it so a formula cannot
+ *  come out one way in a sentence and another way in the picture below it. `trust` stays off, so
+ *  no TeX an author writes can reach `\\href`, `\\url` or raw HTML. */
+const mathOptions = { throwOnError: false, trust: false, strict: 'error' as const, maxExpand: 1000 };
+
+const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (character) =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]!);
+
+/**
+ * A drawing's label as HTML. The stored value is the same plain string prose stores, so a scene
+ * still carries no markup; only this renderer turns `$...$` into a formula, and every character
+ * around it is escaped on the way. A label is never display math — it sits beside a shape, not on
+ * a line of its own.
+ */
+function labelHtml(text: string): string {
+  return splitRichText(text).map((segment) => {
+    if (segment.kind !== 'math') return escapeHtml(segment.value);
+    try { return katex.renderToString(segment.equation, { ...mathOptions, displayMode: false }); }
+    catch { return escapeHtml(segment.value); }
+  }).join('');
+}
+
 export function SceneFigure({ width, height, items, alt, caption, frames, frameMs = frameLimits.defaultMs, loop = false, autoplay = false }:
 { width: number; height: number; items: SceneItem[]; alt: string; caption?: string; frames?: SceneFrame[]; frameMs?: number; loop?: boolean; autoplay?: boolean }) {
   const [index, setIndex] = useState(0);
@@ -113,7 +135,7 @@ export function SceneFigure({ width, height, items, alt, caption, frames, frameM
   };
   // A drawing that moves is still one picture: alt names the whole movement, as it named the still.
   return <figure className="scene-figure" role={total ? undefined : 'img'} aria-label={alt}>
-    <svg viewBox={`0 0 ${width} ${height}`} style={{ aspectRatio: `${width} / ${height}` }} aria-hidden="true" focusable="false">
+    <svg viewBox={`0 0 ${width} ${height}`} style={{ aspectRatio: `${width} / ${height}`, maxWidth: width }} aria-hidden="true" focusable="false">
       <SceneShapes items={items} frame={frame} animated={!!total} />
     </svg>
     {(caption || frame?.caption) && <figcaption><RichText text={frame?.caption || caption || ''} asCaption /></figcaption>}
@@ -168,7 +190,7 @@ export function SceneTaskFigure({ width, height, items, zones, task, alt, captio
   return <div className="scene-task" role="group" aria-label={task.promptAlt ?? task.prompt}>
     <div className="builder-prompt"><RichText text={task.prompt} asCaption /></div>
     <div className="scene-figure">
-      <svg ref={surface} viewBox={`0 0 ${width} ${height}`} style={{ aspectRatio: `${width} / ${height}` }}
+      <svg ref={surface} viewBox={`0 0 ${width} ${height}`} style={{ aspectRatio: `${width} / ${height}`, maxWidth: width }}
         onPointerMove={(event) => {
           if (!drag) return;
           const point = at(event);
@@ -294,7 +316,24 @@ export function SceneShapes({ items, frame, animated = false, offsetOf }:
               strokeWidth={item.strokeWidth ?? 0.5} />)}
           </g>;
         }
-    return <text key={index} x={item.x} y={item.y} textAnchor={item.anchor ?? 'start'} fontSize={item.size ?? 14}
+    const size = item.size ?? 14;
+    const anchor = item.anchor ?? 'start';
+    // A label carrying a formula cannot be an SVG <text>: KaTeX lays out HTML. The box comes from
+    // the same estimate the editor draws its handles from, and overflow stays visible so a formula
+    // wider than the guess is still drawn whole rather than clipped.
+    if (splitRichText(item.text).some((segment) => segment.kind === 'math')) {
+      const box = itemBounds(item);
+      return <foreignObject key={index} x={box.x} y={box.y} width={Math.max(box.width, 1)} height={Math.max(box.height, 1)}
+        transform={style.transform} opacity={item.opacity} style={{ overflow: 'visible' }}>
+        <div style={{
+          display: 'flex', height: '100%', alignItems: 'center', whiteSpace: 'nowrap',
+          justifyContent: anchor === 'middle' ? 'center' : anchor === 'end' ? 'flex-end' : 'flex-start',
+          fontSize: size, lineHeight: 1.2, fontWeight: item.weight === 'bold' ? 600 : 400,
+          color: cssColor(item.fill, 'var(--ink)'),
+        }} dangerouslySetInnerHTML={{ __html: labelHtml(item.text) }} />
+      </foreignObject>;
+    }
+    return <text key={index} x={item.x} y={item.y} textAnchor={anchor} fontSize={size}
       fontWeight={item.weight === 'bold' ? 600 : 400} {...style} stroke="none" fill={cssColor(item.fill, 'var(--ink)')}>{item.text}</text>;
   }
 }

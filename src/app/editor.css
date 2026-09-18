@@ -1,9 +1,9 @@
 /*
  * The content editor's own stylesheet, loaded by the authoring route rather than by every page.
- * It is separate for two reasons. The learning screens are read on a phone at arm's length and are
- * sized for that; this screen is written at, for an hour at a time, and wants a bigger, plainer
- * scale than a lesson does. And keeping it here means the editor can grow without every learner
- * paying for the bytes.
+ * It is separate for two reasons. The learning screens are read; this screen is written at, for an
+ * hour at a time, and wants a bigger, plainer scale than a lesson does — 15px for a value against
+ * the lesson's 14px prose. Both now share the same floor: nothing a person reads is under 12px.
+ * And keeping it here means the editor can grow without every learner paying for the bytes.
  *
  * Every rule is scoped to .authoring-page. The route's stylesheet outlives a client navigation away
  * from it, so scoping is what keeps a screen the editor does not own from ever inheriting its look.
@@ -47,7 +47,7 @@
 .authoring-foot small { font-size: var(--editor-help-size); color: var(--editor-help); }
 .expert-toggle input { width: 18px; height: 18px; accent-color: var(--green); }
 .expert-toggle span { white-space: nowrap; }
-.authoring-page .eyebrow { font-size: 10px; }
+.authoring-page .eyebrow { font-size: var(--editor-help-size); }
 .authoring-page .icon-button { min-width: var(--editor-control); min-height: var(--editor-control); font-size: 14px; }
 .authoring-page .text-button { font-size: 12px; }
 
@@ -83,7 +83,7 @@
 .editor-step-open { display: flex; flex-direction: column; gap: 4px; width: 100%; padding: 12px 13px; border-radius: 7px;
   text-align: left; font-size: var(--editor-label-size); color: var(--editor-label); line-height: 1.5; }
 .editor-step.active .editor-step-open { color: var(--editor-active-text); font-weight: 600; }
-.editor-step small { font-size: 11px; color: var(--editor-help); }
+.editor-step small { font-size: var(--editor-help-size); color: var(--editor-help); }
 .editor-step.active small { color: var(--editor-active-text); }
 .editor-step-tools { display: flex; gap: 4px; padding: 0 9px 8px; }
 .editor-steps .text-button { margin-top: 8px; padding-left: 13px; }
@@ -121,7 +121,7 @@
 .sheet-problem.chosen { outline-offset: 3px; }
 .sheet-problem .sheet-block-pick { top: -11px; left: 10px; }
 .sheet-block-pick { position: absolute; top: -13px; left: -6px; z-index: 2; padding: 3px 9px; border-radius: 999px;
-  background: var(--editor-active-bg); color: var(--editor-active-text); font-size: 11px; font-weight: 600;
+  background: var(--editor-active-bg); color: var(--editor-active-text); font-size: var(--editor-help-size); font-weight: 600;
   opacity: 0; transition: opacity .12s ease; }
 .sheet-block:hover .sheet-block-pick, .sheet-block.chosen .sheet-block-pick, .sheet-block-pick:focus-visible { opacity: 1; }
 
@@ -147,7 +147,7 @@
 .editor-field { display: flex; flex-direction: column; gap: 7px; margin-top: 16px; min-width: 0; }
 .editor-label { font-size: var(--editor-label-size); font-weight: 500; color: var(--editor-label);
   display: inline-flex; align-items: center; gap: 6px; }
-.editor-label em { font-style: normal; font-size: 11px; color: var(--editor-help); border: 1px solid #d3dbc6;
+.editor-label em { font-style: normal; font-size: var(--editor-help-size); color: var(--editor-help); border: 1px solid #d3dbc6;
   border-radius: 3px; padding: 1px 5px; }
 .editor-field input, .editor-field textarea, .editor-field select { width: 100%; min-height: 42px; padding: 10px 12px;
   border: 1px solid var(--editor-field-line); border-radius: 6px; background: var(--editor-field-bg);
@@ -173,7 +173,7 @@
 .editor-block > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px;
   padding-bottom: 12px; border-bottom: 1px solid var(--editor-panel-line); }
 .editor-block > header strong { display: block; font-size: 14px; font-weight: 600; color: var(--editor-label); }
-.editor-block > header small { display: block; font-size: 11px; color: var(--editor-help); margin-top: 4px; word-break: break-all; }
+.editor-block > header small { display: block; font-size: var(--editor-help-size); color: var(--editor-help); margin-top: 4px; word-break: break-all; }
 .editor-block-tools { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .editor-rows { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--editor-rule); }
 .editor-rows-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
@@ -205,7 +205,7 @@
 .editor-problem-open { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0;
   min-height: var(--editor-control); justify-content: center; text-align: left; color: var(--editor-label); }
 .editor-problem-open strong { display: block; font-size: 13px; font-weight: 600; }
-.editor-problem-open small { display: block; font-size: 11px; color: var(--editor-help); line-height: 1.6;
+.editor-problem-open small { display: block; font-size: var(--editor-help-size); color: var(--editor-help); line-height: 1.6;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .editor-problem-part { display: flex; flex-direction: column; gap: 10px; padding-top: 14px; }
 .editor-problem-part > .editor-note { margin: -4px 0 0; }
@@ -228,7 +228,7 @@
   border: 1px solid var(--line); border-radius: 8px; background: var(--editor-sunken); }
 .role-who { flex: 1 1 180px; min-width: 0; }
 .role-who strong { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--editor-label); }
-.role-who em { font-style: normal; font-size: 11px; color: var(--editor-help); border: 1px solid #d3dbc6;
+.role-who em { font-style: normal; font-size: var(--editor-help-size); color: var(--editor-help); border: 1px solid #d3dbc6;
   border-radius: 3px; padding: 1px 6px; }
 .role-who small { display: block; font-size: var(--editor-help-size); color: var(--editor-help); margin-top: 4px; }
 .role-row select { width: auto; min-height: var(--editor-control); padding: 8px 11px; border: 1px solid var(--editor-field-line);
@@ -246,14 +246,14 @@
 .editor-issues li { font-size: var(--editor-label-size); line-height: 1.9; color: var(--editor-warn); word-break: keep-all; }
 .authoring-page .editor-issues .text-button { color: var(--editor-warn); text-decoration: underline; text-align: left;
   font-size: var(--editor-label-size); padding: 2px 0; }
-.editor-issues li small { display: block; font-size: 11px; opacity: .75; word-break: break-all; }
+.editor-issues li small { display: block; font-size: var(--editor-help-size); opacity: .75; word-break: break-all; }
 /* What was refused, said beside the thing it was refused about. */
 .editor-amiss { margin-bottom: 14px; padding: 12px 14px; border: 1px solid var(--editor-warn-line); border-radius: 9px;
   background: var(--editor-warn-bg); color: var(--editor-warn); font-size: var(--editor-help-size); line-height: 1.8; }
 .editor-amiss strong { display: block; font-size: var(--editor-label-size); margin-bottom: 6px; }
 .editor-amiss ul { margin: 0; padding-left: 17px; }
 .editor-amiss li { word-break: keep-all; }
-.editor-amiss li small { display: block; font-size: 11px; opacity: .75; word-break: break-all; }
+.editor-amiss li small { display: block; font-size: var(--editor-help-size); opacity: .75; word-break: break-all; }
 
 /* A drawing arranged by hand. The canvas itself is the learner's renderer; everything around it is
    this screen's, so it moves with this screen's scale. */
@@ -262,7 +262,7 @@
 .scene-tools .editor-label { width: 100%; }
 .authoring-page .scene-tools .button { font-size: 12px; min-height: var(--editor-control); padding: 6px 11px; }
 .scene-canvas { margin-top: 12px; border: 1px solid #cdd8bd; border-radius: 8px; background: var(--white); overflow: hidden; }
-.scene-canvas svg { display: block; width: 100%; height: auto; touch-action: none; }
+.scene-canvas svg { display: block; width: 100%; height: auto; margin: 0 auto; touch-action: none; }
 .scene-size { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin-top: 12px; }
 .scene-size .editor-field { margin-top: 0; width: 108px; }
 .scene-size .editor-note { margin: 0 0 8px auto; }
@@ -417,7 +417,7 @@
 .editor-field [aria-invalid="true"], .sheet-inline[aria-invalid="true"] { border: 1px solid var(--editor-warn); background: var(--editor-warn-bg); }
 .scene-template-buttons, .concept-cards { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%, 140px),1fr)); gap: 10px; margin: 12px 0 20px; }
 .scene-template-buttons .button { display: flex; flex-direction: column; align-items: flex-start; text-align: left; white-space: normal; }
-.scene-template-buttons small { font-size: 11px; color: var(--editor-help); }
+.scene-template-buttons small { font-size: var(--editor-help-size); color: var(--editor-help); }
 .concept-card { padding: 18px; border: 1px solid var(--line); border-radius: 9px; text-align: left; background: var(--white); }
 .concept-card strong, .concept-card span { display: block; }
 .concept-card span { margin-top: 8px; font-size: 12px; color: var(--editor-help); }
