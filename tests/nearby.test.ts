@@ -76,7 +76,7 @@ describe('the lessons the home screen puts nearest', () => {
 const now = new Date('2026-10-10T09:00:00.000Z');
 const day = (offset: number) => new Date(now.getTime() + offset * 86400000).toISOString();
 const assignment = (recipientId: string, dates: Partial<Pick<AssignmentView, 'recommendedAt' | 'opensAt' | 'dueAt' | 'status'>>): AssignmentView => ({
-  id: recipientId, recipientId, title: recipientId, lessonKey: null,
+  id: recipientId, recipientId, title: recipientId, lessonKey: null, problemSetId: recipientId,
   recommendedAt: day(-1), opensAt: null, dueAt: null, status: 'assigned',
   policy: { kind: 'review', hints: true, results: 'per-item', solutions: 'never' },
   items: [], submissionId: `s-${recipientId}`, glossary: [], ...dates,

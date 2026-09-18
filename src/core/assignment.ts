@@ -4,7 +4,7 @@ import type { AssignmentPolicy, AssignmentSchedule } from '@/shared/api';
 export type { AssignmentPolicy, AssignmentSchedule } from '@/shared/api';
 
 export const assignmentPolicySchema = z.object({
-  kind: z.enum(['homework', 'exam', 'review']),
+  kind: z.enum(['homework', 'exam', 'review', 'practice']),
   hints: z.boolean(),
   results: z.enum(['per-item', 'after-submission']),
   solutions: z.enum(['never', 'after-submission']),
@@ -16,6 +16,14 @@ export const assignmentScheduleSchema = z.object({ opens: moment.optional(), due
 
 /** The review a lesson issues for itself: hints allowed, each answer graded as it is saved, solutions kept back. */
 export const reviewPolicy: AssignmentPolicy = { kind: 'review', hints: true, results: 'per-item', solutions: 'never' };
+/**
+ * A problem set the learner picked for themselves, to solve without the lesson around it.
+ *
+ * It is taken exactly like a review — hints allowed, each answer graded as it is saved — and is a
+ * separate value only because nobody assigned it. A screen that says「배정된 과제」would be lying
+ * about work somebody chose, and a recommended moment means nothing for work started just now.
+ */
+export const practicePolicy: AssignmentPolicy = { kind: 'practice', hints: true, results: 'per-item', solutions: 'never' };
 
 export function parseAssignmentPolicy(value: unknown): AssignmentPolicy {
   return assignmentPolicySchema.parse(value);

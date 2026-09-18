@@ -8,7 +8,7 @@ import { developmentLoginEnabled, sessionUser } from '@/server/auth';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { importContent, lessonRecord, indexDefinitionBlocks } from '@/server/content-store';
-import type { LearningAction } from '@/shared/api';
+import type { LearningAction, ProblemSetRef } from '@/shared/api';
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
 const record = seedLessons[0];
@@ -314,6 +314,113 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     expect(nextEnrollment.lessonVersionId).toBe(second.public.versionId);
     // The version a learner started stays exactly what it was published as.
     expect(await lessonRecord(db, first.public.versionId)).toEqual(first);
+  });
+
+  /** The same lesson under fresh identities, so a test may publish it again beside the fixture. */
+  function derive(source: LessonRecord, suffix: string): LessonRecord {
+    const rename = (id: string) => `${id}.${suffix}`;
+    const clone = structuredClone(source) as LessonRecord;
+    clone.public = { ...clone.public, lessonKey: rename(clone.public.lessonKey), versionId: rename(clone.public.versionId) };
+    for (const section of clone.sections) {
+      section.sectionId = rename(section.sectionId);
+      for (const block of section.contentBlocks) {
+        block.blockId = rename(block.blockId);
+        if (block.kind !== 'core.problem_set') continue;
+        const ref = block.payload as unknown as ProblemSetRef;
+        block.payload = { problemSetId: rename(ref.problemSetId), problemSetVersionId: rename(ref.problemSetVersionId),
+          problemVersionIds: ref.problemVersionIds.map(rename) } as unknown as typeof block.payload;
+      }
+    }
+    if (clone.review) clone.review = { problemSetId: rename(clone.review.problemSetId), problemSetVersionId: rename(clone.review.problemSetVersionId),
+      problemVersionIds: clone.review.problemVersionIds.map(rename) };
+    const block = <T extends { blockId: string }>(item: T) => ({ ...item, blockId: rename(item.blockId) });
+    clone.problems = clone.problems.map(problem => ({ ...problem, problemVersionId: rename(problem.problemVersionId),
+      promptContent: problem.promptContent.map(block), hints: problem.hints.map(block), solution: problem.solution.map(block) }));
+    return clone;
+  }
+
+  /** Publishes a lesson whose sets carry names, which is what puts them on the practice shelf. */
+  async function publishNamed(source: LessonRecord, suffix: string) {
+    const lesson = derive(source, suffix);
+    const bundle = lessonBundle([lesson]);
+    await importContent(db, { ...bundle, problemSets: bundle.problemSets.map(set => ({ ...set, name: `${set.problemSetId} 문제집` })) });
+    return lesson;
+  }
+
+  it('lists lessons in the order the catalogue gives their courses, not the order they were installed', async () => {
+    // Install order used to decide this, so a database seeded today and one that grew over weeks
+    // disagreed about what comes after what — and the catalogue's order is what a learner who has
+    // chosen nothing is recommended by.
+    const suffix = randomUUID().slice(0, 8);
+    const [second, first] = [`b-${suffix}`, `a-${suffix}`].map(name => derive(record, name));
+    const publish = async (lesson: LessonRecord, key: string, place: number) => {
+      const bundle = lessonBundle([lesson], { key, title: key });
+      await importContent(db, { ...bundle, courses: bundle.courses.map(course => ({ ...course, order: place })) });
+    };
+    // The one installed first is placed last, so the two orders cannot agree by accident.
+    await publish(second, `course-late-${suffix}`, 9001);
+    await publish(first, `course-early-${suffix}`, 9000);
+    const catalogue = (await service.catalog()).filter(lesson => lesson.courseKey.endsWith(suffix));
+    expect(catalogue.map(lesson => lesson.lessonKey)).toEqual([first.public.lessonKey, second.public.lessonKey]);
+  });
+
+  it('lets a learner pick a named problem set and solve it without opening the lesson', async () => {
+    const learner = await newLearner();
+    const suffix = `pick-${randomUUID().slice(0, 8)}`;
+    const lesson = await publishNamed(record, suffix);
+    const shelf = await service.publicProblemSets();
+    const mine = shelf.filter(set => set.problemSetId.endsWith(suffix));
+    expect(mine.length, '이름을 준 문제집이 목록에 없다').toBeGreaterThan(0);
+    expect(mine.every(set => set.courseKey === 'fractions' && set.lessonKey === lesson.public.lessonKey)).toBe(true);
+    // The catalogue never carries an answer, whatever else it carries.
+    expect(JSON.stringify(mine)).not.toContain('gradingSpec');
+
+    const chosen = mine[0];
+    const started = await service.act(learner.userId, { action: 'problemSet.start', problemSetId: chosen.problemSetId });
+    expect(started.recipientId).toBeTruthy();
+    const opened = started.state.assignments.find(item => item.recipientId === started.recipientId)!;
+    expect(opened.policy.kind).toBe('practice');
+    expect(opened.problemSetId).toBe(chosen.problemSetId);
+    expect(opened.items).toHaveLength(chosen.questionCount);
+    // Nobody assigned it, so nothing is due and the home screen has no review to point at.
+    expect(opened.dueAt).toBeNull();
+    expect(started.state.plan.review).toBeNull();
+    // No enrollment was created: picking a set is not starting the lesson that uses it.
+    expect(started.state.enrollments).toEqual([]);
+
+    // Opening it again while it is unsubmitted is the same run, not a second copy of it.
+    const again = await service.act(learner.userId, { action: 'problemSet.start', problemSetId: chosen.problemSetId });
+    expect(again.recipientId).toBe(started.recipientId);
+    expect(again.state.assignments.filter(item => item.problemSetId === chosen.problemSetId)).toHaveLength(1);
+
+    for (const item of opened.items) {
+      const answer = fixtureAnswer(lesson.problems.find(problem => problem.problemVersionId === item.problem.problemVersionId)!);
+      await service.act(learner.userId, { action: 'attempt.submit', context: 'assignment', contextId: started.recipientId!,
+        problemVersionId: item.problem.problemVersionId, answer, requestId: requestId() });
+    }
+    const finished = await service.act(learner.userId, { action: 'assignment.submit', recipientId: started.recipientId!, requestId: requestId() });
+    const solved = finished.state.assignments.find(entry => entry.recipientId === started.recipientId)!;
+    expect(solved.status).toBe('submitted');
+    expect(solved.items.every(entry => entry.attempt?.result.status === 'correct')).toBe(true);
+    // Work counts as work: the concepts it asked about are no longer untouched.
+    expect(finished.state.concepts.filter(concept => chosen.conceptKeys.includes(concept.key)).every(concept => concept.state !== 'unknown')).toBe(true);
+
+    // Once submitted, picking it again is a new sitting rather than a reopened one.
+    const second = await service.act(learner.userId, { action: 'problemSet.start', problemSetId: chosen.problemSetId });
+    expect(second.recipientId).not.toBe(started.recipientId);
+  });
+
+  it('offers no set a diagnostic asks from, and none a course keeps unnamed', async () => {
+    const shelf = await service.publicProblemSets();
+    // The fixture course keeps its lesson sets unnamed and its placement bank named; neither is
+    // offered. A learner who has rehearsed the placement bank has made their own placement useless.
+    const asked = new Set((await db.diagnosticVersion.findMany({ select: { problemSetId: true } })).map(row => row.problemSetId));
+    expect(shelf.some(set => asked.has(set.problemSetId)), '진단이 묻는 은행이 목록에 있다').toBe(false);
+    expect(shelf.some(set => set.problemSetId === 'fraction-meaning:practice'), '이름 없는 문제집이 목록에 있다').toBe(false);
+    for (const set of shelf) expect(set.questionCount, set.problemSetId).toBeGreaterThan(0);
+    // Picking something that is not on the shelf is not a set this learner can pick.
+    const learner = await newLearner();
+    await expect(service.act(learner.userId, { action: 'problemSet.start', problemSetId: 'starting-point' })).rejects.toMatchObject({ status: 404 });
   });
 
   it('explains every definition a lesson linked, wherever the author linked it', async () => {

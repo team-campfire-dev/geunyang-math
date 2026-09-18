@@ -2,13 +2,20 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, screen } from './render';
 import { LearningWorkspace } from '@/features/learning/learning-workspace';
-import type { AssignmentView, ContentBlock, LearningAction, LearningState, LessonDocument, PublicLesson } from '@/shared/api';
+import type { AssignmentView, ContentBlock, LearningAction, LearningState, LessonDocument, PublicLesson, PublicProblemSet } from '@/shared/api';
 
 const lessonKey = 'fraction-meaning';
 const problemId = 'fraction-meaning:practice:p1:v2';
 const text = (blockId: string, value: string): ContentBlock =>
   ({ blockId, kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: value } });
 const laterKey = 'decimal-meaning';
+/** What the practice shelf offers: named sets, in the order the lessons show them. */
+const shelf: PublicProblemSet[] = [
+  { problemSetId: 'fraction-meaning:practice', versionId: 'fraction-meaning:practice:v1', name: '분수의 의미 연습',
+    courseKey: 'fractions', lessonKey: 'fraction-meaning', questionCount: 3, conceptKeys: ['term.denominator'] },
+  { problemSetId: 'fraction-meaning:check', versionId: 'fraction-meaning:check:v1', name: '분수의 의미 확인',
+    courseKey: 'fractions', lessonKey: 'fraction-meaning', questionCount: 2, conceptKeys: ['term.denominator'] },
+];
 const catalogue: PublicLesson[] = [{
   lessonKey, versionId: 'fraction-meaning:v2', title: '분수의 의미', summary: '분자와 분모를 읽어요',
   estimatedMinutes: 10, conceptKeys: ['term.denominator'], prerequisiteConceptKeys: [], sectionCount: 2, courseKey: 'fractions',
@@ -29,7 +36,7 @@ const document = (blocks?: ContentBlock[]): LessonDocument => ({
   glossary: [],
 });
 const assignment = (overrides: Partial<AssignmentView> = {}): AssignmentView => ({
-  id: 'a1', recipientId: 'r1', title: '분수의 의미 복습', lessonKey,
+  id: 'a1', recipientId: 'r1', title: '분수의 의미 복습', lessonKey, problemSetId: 'fraction-meaning:review',
   recommendedAt: '2026-09-19T00:00:00.000Z', opensAt: null, dueAt: null,
   policy: { kind: 'review', hints: true, results: 'per-item', solutions: 'never' }, status: 'assigned',
   items: [{ id: 'i1', problem: { problemVersionId: problemId, conceptKeys: ['term.denominator'], promptContent: [text('p1', '분모는 얼마인가요?')], responseSpec: { kind: 'integer' }, hintAvailable: true }, attempt: null }],
@@ -61,7 +68,7 @@ function serve(options: { signedIn?: boolean; state?: LearningState; lesson?: Le
   globalThis.fetch = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
     if (url.endsWith('/api/v1/session')) return reply({ user: state.signedIn ? { id: 'u1', displayName: '학습자' } : null, developmentLogin: false, googleLogin: true });
-    if (url.includes('/api/v1/learning?catalog=1')) return reply({ courses: [{ key: 'fractions', title: '분수', summary: '분수를 처음부터' }, { key: 'decimals', title: '소수', summary: '소수를 처음부터' }], lessons: catalogue, concepts: [{ key: 'term.denominator', label: '분모' }] });
+    if (url.includes('/api/v1/learning?catalog=1')) return reply({ courses: [{ key: 'fractions', title: '분수', summary: '분수를 처음부터' }, { key: 'decimals', title: '소수', summary: '소수를 처음부터' }], lessons: catalogue, concepts: [{ key: 'term.denominator', label: '분모' }], problemSets: shelf });
     if (url.includes('/api/v1/learning?lessonKey=')) return reply(state.lesson);
     if (url.endsWith('/api/v1/account') && init?.method === 'DELETE') {
       if (state.refuseDelete) return reply({ error: state.refuseDelete }, 409);
@@ -362,5 +369,42 @@ describe('the account behind the records', () => {
     // It is let go of and reloaded, and what is left is what anyone may see.
     await until(() => expect(screen.getByRole('button', { name: /내 학습 시작/ })).toBeDefined());
     expect(screen.queryByText('학습자')).toBeNull();
+  });
+});
+
+describe('picking a problem set to solve', () => {
+  it('opens the course, starts the set, and lands on its questions', async () => {
+    const server = serve();
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: '연습장' }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: '연습장' })[0]);
+    await until(() => expect(screen.getByText('문제집 골라 풀기')).toBeDefined());
+    // A course is closed until it is opened, so no set is offered before somebody asks for one.
+    expect(screen.queryByText('분수의 의미 연습')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: /문제집 2개/ }));
+    await until(() => expect(screen.getByText('분수의 의미 연습')).toBeDefined());
+    // The sets arrive in lesson order, and the lesson they belong to names the group.
+    expect(screen.getAllByText(/분수의 의미 (연습|확인)/).map((node) => node.textContent))
+      .toEqual(['분수의 의미 연습', '분수의 의미 확인']);
+    fireEvent.click(screen.getByRole('button', { name: /분수의 의미 연습/ }));
+    await until(() => expect(server.of('problemSet.start')).toHaveLength(1));
+    expect(server.of('problemSet.start')[0]).toEqual({ action: 'problemSet.start', problemSetId: 'fraction-meaning:practice' });
+  });
+
+  it('calls work the learner chose their own, not an assignment', async () => {
+    const own: AssignmentView = assignment({ recipientId: 'r-own', title: '분수의 의미 연습',
+      problemSetId: 'fraction-meaning:practice', lessonKey: null,
+      policy: { kind: 'practice', hints: true, results: 'per-item', solutions: 'never' } });
+    serve({ state: { ...learningState(), assignments: [own], plan: { ...learningState().plan, review: null } } });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: '연습장' }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: '연습장' })[0]);
+    await until(() => expect(screen.getByText('풀던 문제집')).toBeDefined());
+    // Nobody assigned it, so the assigned list stays empty and says so.
+    expect(screen.getByText('남아 있는 과제가 없어요')).toBeDefined();
+    fireEvent.click(screen.getByRole('button', { name: /분수의 의미 연습/ }));
+    await until(() => expect(screen.getByRole('heading', { level: 1, name: '분수의 의미 연습' })).toBeDefined());
+    expect(screen.getByText(/다 풀었어요/)).toBeDefined();
+    expect(screen.queryByText('과제 제출하기')).toBeNull();
   });
 });

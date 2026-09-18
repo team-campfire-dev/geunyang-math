@@ -25,7 +25,8 @@ export function gradeAnswer(answer: string, spec: StoredProblem['gradingSpec'], 
     return { status: 'invalid', message: '이 문제는 정수로 답해 주세요. 예: 3', assisted };
   }
   const equivalent = parsed.numerator * expected.denominator === expected.numerator * parsed.denominator;
-  if (!equivalent) return { status: 'incorrect', message: '아직 답이 맞지 않아요. 같은 크기의 조각을 기준으로 다시 생각해 보세요.', assisted };
+  // The catalogue is no longer only fractions, so what to reconsider is the question's to say.
+  if (!equivalent) return { status: 'incorrect', message: '아직 답이 맞지 않아요. 풀이를 한 번 더 확인해 보세요.', assisted };
   if (spec.requiredForm === 'reduced_fraction' && (!parsed.fraction || !parsed.reduced)) {
     return { status: 'incorrect', message: '값은 맞아요. 분모를 양수로 하고 더 이상 약분할 수 없는 분수로 써 주세요. 예: 1/2', assisted };
   }

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { recommend, reviewSelection, conceptReadiness, type Evidence } from '@/core/personalization';
+import { practicePolicy, reviewPolicy } from '@/core/assignment';
 import { diagnosticProblems } from './fixtures/content';
 import { seedLessons, conceptLabels } from './fixtures/content';
 import { gradeAnswer } from '@/core/grading';
@@ -93,9 +94,23 @@ describe('placement and prerequisite recommendations', () => {
   });
   it('prioritizes only due unfinished reviews without treating future or missing work as wrong', () => {
     const output = recommend({ lessons, enrollments: [], readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 10, targetCourseKey: null, now,
-      assignments: [{ recipientId: 'future', status: 'assigned', recommendedAt: '2026-09-17T12:00:00Z' }, { recipientId: 'done', status: 'submitted', recommendedAt: '2026-09-10T12:00:00Z' }, { recipientId: 'due', status: 'assigned', recommendedAt: now.toISOString() }] });
+      assignments: [{ recipientId: 'future', status: 'assigned', recommendedAt: '2026-09-17T12:00:00Z', policy: reviewPolicy },
+        { recipientId: 'done', status: 'submitted', recommendedAt: '2026-09-10T12:00:00Z', policy: reviewPolicy },
+        { recipientId: 'due', status: 'assigned', recommendedAt: now.toISOString(), policy: reviewPolicy }] });
     expect(output.plan.review?.recipientId).toBe('due');
     expect(output.plan.readiness.every(s => s.readiness === 'unknown')).toBe(true);
+  });
+
+  it('never reminds a learner about a problem set they opened themselves', () => {
+    // A set somebody picked is already where they left it. Calling it a due review would turn their
+    // own choice into an obligation, and would push an actual review off the home screen.
+    const output = recommend({ lessons, enrollments: [], readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 10, targetCourseKey: null, now,
+      assignments: [{ recipientId: 'mine', status: 'assigned', recommendedAt: '2026-09-10T12:00:00Z', policy: practicePolicy }] });
+    expect(output.plan.review).toBeNull();
+    const withReview = recommend({ lessons, enrollments: [], readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 10, targetCourseKey: null, now,
+      assignments: [{ recipientId: 'mine', status: 'assigned', recommendedAt: '2026-09-10T12:00:00Z', policy: practicePolicy },
+        { recipientId: 'review', status: 'assigned', recommendedAt: '2026-09-11T12:00:00Z', policy: reviewPolicy }] });
+    expect(withReview.plan.review?.recipientId).toBe('review');
   });
 });
 
