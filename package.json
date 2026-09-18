@@ -19,7 +19,8 @@
     "content:import": "node --conditions=react-server --import tsx scripts/content.ts import",
     "content:export": "node --conditions=react-server --import tsx scripts/content.ts export",
     "content:publish": "node --conditions=react-server --import tsx scripts/content.ts publish",
-    "content:verify": "node --conditions=react-server --import tsx scripts/content.ts verify"
+    "content:verify": "node --conditions=react-server --import tsx scripts/content.ts verify",
+    "pilot:report": "node --conditions=react-server --import tsx scripts/pilot.ts"
   },
   "dependencies": {
     "@prisma/adapter-mariadb": "7.10.0",
