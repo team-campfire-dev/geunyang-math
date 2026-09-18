@@ -137,9 +137,22 @@ export type DefinitionSummary = Omit<DefinitionEdit, 'newConcept'> & { conceptLa
 export type DefinitionChoice = { conceptKey: string; scopeKind: EditableConceptScope; scopeKey: string; label: string; usageNote?: string };
 /** A concept as the pickers list it. Only an assessable one may be what a lesson teaches or a question asks. */
 export type ConceptChoice = { key: string; label: string; assessable: boolean };
+/**
+ * A problem set as the editor needs to know it: what it is called, where it lives, and **which
+ * lessons are using it now**. A set nothing else uses is this lesson's own and is changed without a
+ * word; one that several lessons hold is shared, and a change to it is a change to a shared thing.
+ */
+export type ProblemSetChoice = {
+  problemSetId: string; name: string | null; courseKey: string;
+  latestVersionId: string | null;
+  /** The lessons whose latest published version references it, in the catalogue's order. */
+  lessonKeys: string[];
+};
+/** A published set as the editor takes it up: what it holds, and the questions as they are written. */
+export type ProblemSetDetail = { problemSetId: string; versionId: string; name: string | null; problems: DraftProblem[] };
 export type AuthoringWorkspace = {
   role: AuthoringRole | null; drafts: DraftSummary[]; courses: CourseChoice[]; lessons: LessonChoice[];
-  accounts: AccountRole[]; concepts: ConceptChoice[];
+  accounts: AccountRole[]; concepts: ConceptChoice[]; problemSets: ProblemSetChoice[];
   /**
    * Whether this account reads the editor as someone who also operates the service. It decides what
    * the screen shows, never what it may do: identifiers, the compatibility switches and the
@@ -163,6 +176,8 @@ export type AuthoringAction =
   | { action: 'draft.validate'; draftId: string }
   | { action: 'draft.publish'; draftId: string }
   | { action: 'draft.delete'; draftId: string }
+  | { action: 'problemSet.name'; problemSetId: string; name: string }
+  | { action: 'problemSet.read'; versionId: string }
   | { action: 'account.search'; query: string }
   | { action: 'role.grant'; userId: string; role: AuthoringRole }
   | { action: 'role.revoke'; userId: string }
@@ -179,6 +194,10 @@ export type AuthoringAction =
 export type AuthoringResponse = {
   workspace: AuthoringWorkspace; draft?: DraftDetail; publishedVersionId?: string;
   matches?: AccountRole[]; definitions?: DefinitionSummary[];
+  /** The set a lesson asked to take up, with its questions as the editor writes them. */
+  problemSet?: ProblemSetDetail;
+  /** Other lessons a shared set took with it when this one published, so the screen can say so. */
+  carriedLessons?: { lessonKey: string; title: string; versionId: string }[];
   /** What the grader said about an answer tried in the editor, and the hint a question carries. */
   tried?: GradeResult; hint?: ContentBlock[];
   /** The definition a save wrote, so the screen can say so. */
@@ -340,6 +359,35 @@ export function dropLooseProblems(edit: DraftEdit): DraftEdit {
  */
 export const problemSetIdPattern = /^[a-z0-9][a-z0-9:._-]{1,190}$/;
 export const newProblemSetId = () => `ps-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+
+/**
+ * This lesson's activity on a set of its own, leaving the shared one as it was.
+ *
+ * A question belongs to exactly one problem set, so a set cannot be taken apart by pointing a second
+ * one at the same questions — the copy has to carry copies. What the learner reads is the same; what
+ * changes is that editing it here stops being a change to every lesson that held the shared set.
+ */
+export function splitProblemSet(block: ContentBlock, problems: DraftProblem[], lessonKey: string, role: string, versionId: string): {
+  block: ContentBlock; problems: DraftProblem[];
+} {
+  const ids = Array.isArray(block.payload.problemVersionIds) ? (block.payload.problemVersionIds as string[]) : [];
+  const problemSetId = newProblemSetId();
+  const taken = problems.map((problem) => problem.problemVersionId);
+  const copies = new Map<string, DraftProblem>();
+  for (const problemId of ids) {
+    const source = problems.find((problem) => problem.problemVersionId === problemId);
+    if (!source) continue;
+    // Each copy has to see the names the copies before it took, or two of them take the same one.
+    const made = copyProblem(source, lessonKey, role, versionId, [...taken, ...[...copies.values()].map((copy) => copy.problemVersionId)]);
+    copies.set(problemId, made);
+  }
+  return {
+    block: { ...block, payload: { ...block.payload, problemSetId, problemSetVersionId: `${problemSetId}:v1`,
+      problemVersionIds: ids.map((problemId) => copies.get(problemId)?.problemVersionId ?? problemId) } },
+    // The shared set's questions stay in the document only if something else still names them.
+    problems: [...problems.filter((problem) => !copies.has(problem.problemVersionId)), ...copies.values()],
+  };
+}
 // The version an unsaved activity names is a placeholder in the right shape; saving decides the real one.
 
 /** The questions one activity holds, in the order that activity names them. */

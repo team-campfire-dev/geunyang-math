@@ -5,9 +5,9 @@ import type { AttemptView, LessonSection, ContentBlock } from '@/shared/api';
 import {
   blockFormOf, copyBlock, copyProblem, copySection, dropLooseProblems, editShape,
   insertAfter, issueText, looseProblems, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId,
-  problemGist, sectionRoleLabels, sectionRoles, versionLabel,
+  problemGist, sectionRoleLabels, sectionRoles, splitProblemSet, versionLabel,
   type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail,
-  type DraftEdit, type DraftIssue, type DraftProblem, type ConceptChoice,
+  type DraftEdit, type DraftIssue, type DraftProblem, type ConceptChoice, type ProblemSetChoice,
 } from '@/shared/authoring';
 import { ApiError, learningApi, type Session } from '@/features/learning/api-client';
 import { Icon } from '@/features/learning/icons';
@@ -17,7 +17,7 @@ import { RemovalNotice, useEditHistory } from './edit-history';
 import { ExpertMode, useExpertMode } from './expert-mode';
 import { AddBlock, BlockCard } from './block-editor';
 import { LessonSheet, type Picked } from './lesson-sheet';
-import { ProblemPanel, ProblemSetEditor, ConceptPicker } from './problem-editor';
+import { ProblemPanel, ProblemSetEditor, ProblemSetPanel, ConceptPicker } from './problem-editor';
 import { DefinitionPanel } from './definition-editor';
 import { LessonSettings } from './lesson-settings';
 import { invalidAnswers, unfinishedIssues, type AnswerInput } from '@/shared/authoring-checks';
@@ -380,6 +380,24 @@ export function AuthoringWorkspace() {
     problems });
   const writeProblem = (next: DraftProblem) => setEdit({ ...edit,
     problems: edit.problems.map((item) => (item.problemVersionId === next.problemVersionId ? next : item)) });
+  /**
+   * Point this activity at a set somebody already wrote. Its questions have to come across with it:
+   * the document carries every question it names, and a set whose questions were left behind would
+   * publish as an empty one.
+   */
+  const takeUpProblemSet = (index: number, block: ContentBlock, set: ProblemSetChoice) =>
+    act({ action: 'problemSet.read', versionId: set.latestVersionId! }, (response) => {
+      const taken = response.problemSet;
+      if (!taken) return;
+      const names = new Set(taken.problems.map((problem) => problem.problemVersionId));
+      setEdit({
+        ...edit,
+        sections: writeSectionBlock(index, { ...block, payload: { ...block.payload, problemSetId: taken.problemSetId,
+          problemSetVersionId: taken.versionId, problemVersionIds: taken.problems.map((problem) => problem.problemVersionId) } }),
+        problems: [...edit.problems.filter((problem) => !names.has(problem.problemVersionId)), ...taken.problems],
+      });
+      setSelected(null);
+    });
 
   /** Every block the document holds, wherever it sits, so a rule's anchor can be read back. */
   const blockAt = (blockId?: string) => (blockId
@@ -588,10 +606,22 @@ export function AuthoringWorkspace() {
               definitionChoices={draft.definitions}
               // A paragraph is written in the sheet, so the form does not ask for its body again.
               omit={chosenBlock.kind === 'core.rich_text' ? ['text'] : undefined}
-              problems={blockFormOf(chosenBlock)?.editsProblems && <ProblemSetEditor block={chosenBlock} problems={edit.problems}
-                concepts={draftConcepts} lessonKey={draft.lessonKey} role={section.role} versionId={edit.meta.versionId}
-                onPick={(id) => setSelected({ kind: 'problem', id })}
-                onChange={(next, problems) => setEdit({ ...edit, sections: writeSectionBlock(selected.index, next), problems })} />}
+              problems={blockFormOf(chosenBlock)?.editsProblems && <>
+                <ProblemSetPanel block={chosenBlock} sets={workspace.problemSets} mayName={mayPublish(workspace.role)}
+                  courseKey={workspace.lessons.find((lesson) => lesson.lessonKey === draft.lessonKey)?.courseKey ?? null}
+                  lessonTitle={(lessonKey) => workspace.lessons.find((lesson) => lesson.lessonKey === lessonKey)?.title ?? lessonKey}
+                  onName={(name) => void act({ action: 'problemSet.name', problemSetId: String(chosenBlock.payload.problemSetId ?? ''), name })}
+                  onTakeUp={(set) => void takeUpProblemSet(selected.index, chosenBlock, set)}
+                  onSplit={() => {
+                    const apart = splitProblemSet(chosenBlock, edit.problems, draft.lessonKey, section.role, edit.meta.versionId);
+                    setEdit({ ...edit, sections: writeSectionBlock(selected.index, apart.block), problems: apart.problems });
+                    setSelected(null);
+                  }} />
+                <ProblemSetEditor block={chosenBlock} problems={edit.problems}
+                  concepts={draftConcepts} lessonKey={draft.lessonKey} role={section.role} versionId={edit.meta.versionId}
+                  onPick={(id) => setSelected({ kind: 'problem', id })}
+                  onChange={(next, problems) => setEdit({ ...edit, sections: writeSectionBlock(selected.index, next), problems })} />
+              </>}
               onChange={(next) => writeBlocks(section.contentBlocks.map((item, position) => (position === selected.index ? next : item)))}
               onMove={(delta) => {
                 writeBlocks(moveBlock(section.contentBlocks, selected.index, delta));

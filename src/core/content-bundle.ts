@@ -145,7 +145,8 @@ export function validateReferences(bundle: ContentBundle) {
   for (const c of bundle.lessons) {
     const problems = new Map<string, StoredProblemSet['problems'][number]>();
     for (const ref of problemSetRefs(c)) {
-      const where = ref.blockId ?? 'review';
+      // Which lesson version asked, as well as where in it: the same block id can be in several.
+      const where = `${ref.blockId ?? 'review'} in ${c.public.versionId}`;
       const version = setVersions.get(ref.problemSetVersionId);
       if (!version) throw new ContentError(`Missing problem set version: ${ref.problemSetVersionId} (${where})`);
       if (version.problemSetId !== ref.problemSetId) throw new ContentError(`Problem set version belongs to another set: ${ref.problemSetVersionId} (${where})`);

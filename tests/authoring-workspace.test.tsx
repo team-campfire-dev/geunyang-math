@@ -10,6 +10,7 @@ const workspace: Workspace = {
   courses: [{ key: 'fractions', title: '분수', summary: '분수를 처음부터' }],
   lessons: [{ lessonKey: 'fraction-meaning', courseKey: 'fractions', title: '분수의 의미', latestVersionId: null, suggestedVersionId: 'fraction-meaning:v3', hasDraft: true }],
   accounts: [],
+  problemSets: [],
   concepts: [{ key: 'term.denominator', label: '분모', assessable: true }],
   expertMode: false,
 };

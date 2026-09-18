@@ -197,6 +197,11 @@
    away until it is opened, and using the same block cards as the lesson text around it. */
 /* What an activity holds, as a list of what each question asks. A question itself is opened from
    the lesson, where it can be read; this is only for putting them in order and adding more. */
+/* What a set is, above the questions it holds: its name, and who else is holding it. */
+.editor-problem-set { display: grid; gap: 10px; margin-bottom: 14px; }
+.editor-problem-set .editor-note { display: grid; gap: 6px; }
+.editor-problem-set .editor-note .button { justify-self: start; margin-top: 4px; }
+
 .editor-problems { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
 .editor-problems > .button { align-self: flex-start; margin-top: 4px; }
 .editor-problem-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 9px 11px;

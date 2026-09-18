@@ -6,7 +6,7 @@ import { displayedAnswer, type AnswerInput } from '@/shared/authoring-checks';
 import { answerSpec, answerText, type AnswerSpec } from '@/shared/answer';
 import {
   copyProblem, insertAfter, moveBlock, newProblem, nextProblemBlockId, nextProblemVersionId, problemBlockForms,
-  problemGist, type DraftProblem, type ConceptChoice, type DefinitionChoice,
+  problemGist, type DraftProblem, type ConceptChoice, type DefinitionChoice, type ProblemSetChoice,
 } from '@/shared/authoring';
 import { Icon } from '@/features/learning/icons';
 import { AddBlock, BlockCard } from './block-editor';
@@ -232,4 +232,60 @@ export function ProblemSetEditor({ block, onChange, ...rest }: {
   const ids = Array.isArray(block.payload.problemVersionIds) ? (block.payload.problemVersionIds as string[]) : [];
   return <ProblemList {...rest} ids={ids} note="문항은 수업 화면에서 눌러 고칩니다. 여기에서는 순서를 바꾸고, 더하고, 복제하고, 뺍니다."
     onChange={(nextIds, problems) => onChange({ ...block, payload: { ...block.payload, problemVersionIds: nextIds } }, problems)} />;
+}
+
+/**
+ * What a problem set is, above the questions it holds.
+ *
+ * Most sets are made in place and used by one lesson; nothing here matters for those beyond a name.
+ * A set several lessons hold is a shared thing, and this is where that is said — because editing its
+ * questions changes it for all of them, and the alternative has to be one click away rather than a
+ * thing an author discovers afterwards.
+ */
+export function ProblemSetPanel({ block, sets, courseKey, lessonTitle, mayName, onName, onTakeUp, onSplit }: {
+  block: ContentBlock; sets: ProblemSetChoice[]; lessonTitle: (lessonKey: string) => string;
+  /** The course this lesson is in. A set belongs to one course and is offered to no other. */
+  courseKey: string | null;
+  mayName: boolean;
+  onName: (name: string) => void;
+  onTakeUp: (set: ProblemSetChoice) => void;
+  onSplit: () => void;
+}) {
+  const problemSetId = String(block.payload.problemSetId ?? '');
+  const mine = sets.find((set) => set.problemSetId === problemSetId);
+  const [name, setName] = useState(mine?.name ?? '');
+  const [takingUp, setTakingUp] = useState(false);
+  // Sharing is what the lessons say, not what the name says: a set with a name nobody else took up
+  // is this lesson's own, and one without a name that two lessons hold is shared all the same.
+  const others = (mine?.lessonKeys ?? []).filter((lessonKey) => lessonKey !== undefined);
+  const shared = others.length > 1;
+  const reusable = sets.filter((set) => set.problemSetId !== problemSetId && set.name && set.latestVersionId && set.courseKey === courseKey);
+  return <div className="editor-problem-set">
+    {mayName && <label className="editor-field">
+      <span className="editor-label">문제집 이름</span>
+      <input value={name} maxLength={191} placeholder="이름을 지으면 다른 수업에서 가져다 쓸 수 있어요"
+        onChange={(event) => setName(event.target.value)}
+        onBlur={() => { if ((mine?.name ?? '') !== name.trim()) onName(name.trim()); }} />
+      <small>이름은 판본이 아니라 문제집의 것이라, 바꿔도 발행된 것은 그대로예요.</small>
+    </label>}
+    {shared && <div className="editor-note editor-warn" role="status">
+      <strong>이 문제집은 수업 {others.length}개가 함께 써요.</strong>
+      <span>{others.map(lessonTitle).join(' · ')}</span>
+      <span>여기에서 문항을 고치면 그 수업들도 새 판본으로 함께 발행돼요. 이 수업에서만 고치려면 따로 두세요.</span>
+      <button type="button" className="button secondary" onClick={onSplit}>이 수업만 따로 두기</button>
+    </div>}
+    {reusable.length > 0 && (takingUp
+      ? <label className="editor-field">
+        <span className="editor-label">가져다 쓸 문제집</span>
+        <select defaultValue="" onChange={(event) => {
+          const chosen = reusable.find((set) => set.problemSetId === event.target.value);
+          if (chosen) { onTakeUp(chosen); setTakingUp(false); }
+        }}>
+          <option value="" disabled>문제집을 고르세요</option>
+          {reusable.map((set) => <option key={set.problemSetId} value={set.problemSetId}>{set.name}</option>)}
+        </select>
+        <small>지금 이 활동의 문항 대신 그 문제집의 문항이 들어와요. 두 수업이 같은 문제집을 쓰게 됩니다.</small>
+      </label>
+      : <button type="button" className="text-button" onClick={() => setTakingUp(true)}>다른 문제집 가져다 쓰기</button>)}
+  </div>;
 }
