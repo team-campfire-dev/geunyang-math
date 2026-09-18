@@ -14,6 +14,7 @@
 | [스키마 변경안](schema-change-plan.md) | 용어 사전을 DB 스키마와 코드에 옮긴 순서와 단계별 migration·PR, 확정된 결정 (2026-09-17 완료) |
 | [코스·수업 UI 점검 기록](course-lesson-ui-audit-2026-09-17.md) | #47 이전 재현 문제와 수정·검증 결과. 당시 기록으로 보존 |
 | [좁은 파일럿 계획](pilot-plan.md) | 분수 코스 하나로 무엇을 잴 수 있고 무엇은 지금 구조로 잴 수 없는지, 참가자·개인정보·선행 조건 |
+| [시작점 재설계](placement-redesign.md) | 배치가 카탈로그에 정비례해 길어지던 것을 범위와 개념 그래프로 바꾼 설계, 잰 값, 남은 단계 |
 | [개인화](personalization.md) | 진단·추천·학습 증거·복습 분량과 간격의 규칙 |
 | [DB 콘텐츠 관리](content-management.md) | 콘텐츠 저장·내보내기·등록·불변 판본과 기존 기록 보존 |
 | [운영 배포](deployment.md) | Oracle·DB·NPM·Google 설정, 배포·복구 절차와 릴리스별 근거 |
