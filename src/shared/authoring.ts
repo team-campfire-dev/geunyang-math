@@ -148,11 +148,43 @@ export type ProblemSetChoice = {
   /** The lessons whose latest published version references it, in the catalogue's order. */
   lessonKeys: string[];
 };
+/**
+ * A diagnostic as the studio lists it. There is one placement in the service and its questions are
+ * the only ones no lesson holds, so the studio needed somewhere of its own to write them — until now
+ * the only way to change what a placement asks was to edit a file and redeploy.
+ */
+export type DiagnosticChoice = {
+  diagnosticKey: string; courseKey: string; title: string;
+  latestVersionId: string | null; suggestedVersionId: string;
+  problemCount: number;
+  /** The one a learner starting today would take: the most recently published of them all. */
+  current: boolean;
+  hasDraft: boolean;
+};
+/** What an editor may change about a diagnostic: what it says, and the questions it asks. */
+export type DiagnosticEdit = {
+  versionId: string; title: string; description: string; estimatedMinutes: number;
+  /** The questions it asks, in the order it asks them. The set it publishes holds exactly these. */
+  problemVersionIds: string[];
+  problems: DraftProblem[];
+};
+export type DiagnosticDraft = {
+  id: string; diagnosticKey: string; versionId: string; baseVersionId: string | null;
+  status: DraftSummary['status']; mine: boolean; authorName: string; updatedAt: string;
+  edit: DiagnosticEdit; issues: DraftIssue[];
+};
+
+/** The next version of a diagnostic, named the way its published versions are. */
+export function suggestDiagnosticVersionId(diagnosticKey: string, existing: string[]): string {
+  const numbers = existing.map((id) => /-v(\d+)$/.exec(id)).filter((match) => match !== null).map((match) => Number(match[1]));
+  return `${diagnosticKey.replace(/-v\d+$/, '')}-v${Math.max(0, ...numbers) + 1}`;
+}
+
 /** A published set as the editor takes it up: what it holds, and the questions as they are written. */
 export type ProblemSetDetail = { problemSetId: string; versionId: string; name: string | null; problems: DraftProblem[] };
 export type AuthoringWorkspace = {
   role: AuthoringRole | null; drafts: DraftSummary[]; courses: CourseChoice[]; lessons: LessonChoice[];
-  accounts: AccountRole[]; concepts: ConceptChoice[]; problemSets: ProblemSetChoice[];
+  accounts: AccountRole[]; concepts: ConceptChoice[]; problemSets: ProblemSetChoice[]; diagnostics: DiagnosticChoice[];
   /**
    * Whether this account reads the editor as someone who also operates the service. It decides what
    * the screen shows, never what it may do: identifiers, the compatibility switches and the
@@ -176,6 +208,10 @@ export type AuthoringAction =
   | { action: 'draft.validate'; draftId: string }
   | { action: 'draft.publish'; draftId: string }
   | { action: 'draft.delete'; draftId: string }
+  | { action: 'diagnostic.draft'; diagnosticKey: string }
+  | { action: 'diagnostic.save'; draftId: string; edit: DiagnosticEdit }
+  | { action: 'diagnostic.publish'; draftId: string }
+  | { action: 'diagnostic.delete'; draftId: string }
   | { action: 'problemSet.name'; problemSetId: string; name: string }
   | { action: 'problemSet.read'; versionId: string }
   | { action: 'account.search'; query: string }
@@ -198,6 +234,8 @@ export type AuthoringResponse = {
   problemSet?: ProblemSetDetail;
   /** Other lessons a shared set took with it when this one published, so the screen can say so. */
   carriedLessons?: { lessonKey: string; title: string; versionId: string }[];
+  /** The diagnostic draft an action opened, saved or published. */
+  diagnostic?: DiagnosticDraft;
   /** What the grader said about an answer tried in the editor, and the hint a question carries. */
   tried?: GradeResult; hint?: ContentBlock[];
   /** The definition a save wrote, so the screen can say so. */
