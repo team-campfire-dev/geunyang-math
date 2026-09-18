@@ -1,9 +1,18 @@
-import type { AssignmentView, DiagnosticAnswer, Goal, GradeResult, PersonalPlan, PublicLesson, Recommendation, ConceptReadiness } from '@/shared/api';
+import type { AssignmentView, Goal, GradeResult, PersonalPlan, PublicLesson, Recommendation, ConceptReadiness } from '@/shared/api';
+import type { PlacementState } from './placement';
 
 export const personalizationVersion = 'rules-v1';
 export type Evidence = { problemVersionId: string; conceptKeys: string[]; result: GradeResult; date: Date; responseKind?: string; check: boolean; assessmentId?: string };
 
-export function conceptReadiness(labels: Record<string, string>, diagnostic: { answers: DiagnosticAnswer[]; problems: { problemVersionId: string; conceptKeys: string[] }[] } | null, evidence: Evidence[]): ConceptReadiness[] {
+/**
+ * Where a learner stands on each concept: what their own work shows, and where the placement put
+ * them until there is work to go on.
+ *
+ * The placement is read as it was recorded, not worked out again — the graph it descended is derived
+ * from the catalogue, and a catalogue that grows afterwards must not move a learner who has since
+ * stopped answering. A concept it carried rather than asked about says so, so a screen can too.
+ */
+export function conceptReadiness(labels: Record<string, string>, placement: PlacementState | null, evidence: Evidence[]): ConceptReadiness[] {
   return Object.entries(labels).map(([key, label]) => {
     const observed = evidence.filter(e => e.conceptKeys.includes(key) && e.result.status !== 'invalid');
     // First attempts only arrive here. A later check supersedes practice, while a later
@@ -12,11 +21,9 @@ export function conceptReadiness(labels: Record<string, string>, diagnostic: { a
     const latest = [...(assessments.length ? assessments : observed)].sort((a, b) => b.date.getTime() - a.date.getTime())[0];
     const latestGroup = latest?.assessmentId ? observed.filter(e => e.assessmentId === latest.assessmentId && e.check === latest.check) : latest ? [latest] : [];
     if (latest) return { key, label, source: 'learning', readiness: latestGroup.every(e => e.result.status === 'correct' && !e.result.assisted) ? 'ready' : 'needs-practice' };
-    const ids = diagnostic?.problems.filter(p => p.conceptKeys.includes(key)).map(p => p.problemVersionId) ?? [];
-    const answers = diagnostic?.answers.filter(a => ids.includes(a.problemVersionId)) ?? [];
-    const readiness = answers.some(a => a.status === 'incorrect') ? 'needs-practice'
-      : ids.length >= 2 && answers.length === ids.length && answers.every(a => a.status === 'correct') ? 'ready' : 'unknown';
-    return { key, label, source: answers.some(a => a.status !== 'skipped') ? 'diagnostic' : 'none', readiness };
+    const settled = placement?.placed[key];
+    if (!settled || settled === 'unknown') return { key, label, source: 'none', readiness: 'unknown' };
+    return { key, label, readiness: settled, source: placement!.source[key] === 'inferred' ? 'inferred' : 'diagnostic' };
   });
 }
 

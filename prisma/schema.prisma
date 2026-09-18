@@ -70,6 +70,9 @@ model DiagnosticRun {
   version     String @db.VarChar(80)
   document    Json
   answers     Json
+  /// What the run settled and how, frozen as it was decided. Null for a run started before
+  /// placement descended a graph, which reads as having settled nothing.
+  placement   Json?
   status      String @default("active") @db.VarChar(20)
   createdAt   DateTime @default(now())
   completedAt DateTime?

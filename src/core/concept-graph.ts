@@ -94,7 +94,8 @@ export function conceptGraph(lessons: LessonShape[]): ConceptGraph {
   };
 }
 
-export type Placement = Record<string, 'ready' | 'needs-practice'>;
+export type Outcome = 'ready' | 'needs-practice' | 'unknown';
+export type Placement = Record<string, Outcome>;
 /** Whether a concept was settled by its own question or by one above or below it. */
 export type PlacementSource = Record<string, 'asked' | 'inferred'>;
 
@@ -128,16 +129,22 @@ export function placementScope(graph: ConceptGraph, targets: string[]): string[]
  * rather than creep. Ties go to the question that settles more in total, then to the name, so that
  * the same answers always produce the same next question.
  */
-export function nextConcept(graph: ConceptGraph, scope: string[], placed: Placement): string | null {
+export function nextConcept(
+  graph: ConceptGraph, scope: string[], placed: Placement, options: { among?: string[] } = {},
+): string | null {
   const open = scope.filter((key) => !(key in placed));
   if (!open.length) return null;
+  // What a question is worth is measured against everything still open, but only a concept there is
+  // something to ask about can be the question. Settling the rest by inference is the point.
   const remaining = new Set(open);
+  const candidates = options.among ? open.filter((key) => options.among!.includes(key)) : open;
+  if (!candidates.length) return null;
   const settles = (key: string) => {
     const above = [...graph.ancestors(key)].filter((other) => remaining.has(other)).length + 1;
     const below = [...graph.dependents(key)].filter((other) => remaining.has(other)).length + 1;
     return { even: Math.min(above, below), total: above + below };
   };
-  return open.reduce((best, key) => {
+  return candidates.reduce((best, key) => {
     const a = settles(key);
     const b = settles(best);
     if (a.even !== b.even) return a.even > b.even ? key : best;
@@ -147,27 +154,26 @@ export function nextConcept(graph: ConceptGraph, scope: string[], placed: Placem
 }
 
 /**
- * What one answer settles. A right answer carries up the prerequisites it was built on; a wrong one
- * defers everything built on top of it.
+ * What settling one concept settles. A concept someone can do carries up the concepts it was built
+ * on; one they cannot defers everything built on top of it. A concept left unknown — skipped, or
+ * asked without enough answers to be sure — carries nowhere, because nothing was learned about it.
  *
- * Deferring is an inference, not an observation — nobody was asked whether they can add decimals
- * once they could not say what a decimal is. The answer that would have come back is not in doubt
- * enough to be worth a learner's time, but it was not heard, so it is recorded as inferred and a
- * screen can say so rather than claiming to have checked.
+ * Carrying is an inference, not an observation: nobody was asked whether they can add decimals once
+ * they could not say what a decimal is. The answer that would have come back is not in doubt enough
+ * to be worth a learner's time, but it was not heard, so it is recorded as inferred and a screen can
+ * say so rather than claiming to have checked.
  */
-export function applyAnswer(
-  graph: ConceptGraph, scope: string[], placed: Placement, source: PlacementSource, key: string, correct: boolean,
+export function settleConcept(
+  graph: ConceptGraph, scope: string[], placed: Placement, source: PlacementSource, key: string, outcome: Outcome,
 ): { placed: Placement; source: PlacementSource } {
   const within = new Set(scope);
   if (!within.has(key) || key in placed) return { placed, source };
-  const reached = correct ? graph.ancestors(key) : graph.dependents(key);
-  const next = { ...placed };
-  const from = { ...source };
-  next[key] = correct ? 'ready' : 'needs-practice';
-  from[key] = 'asked';
+  const next = { ...placed, [key]: outcome };
+  const from = { ...source, [key]: 'asked' as const };
+  const reached = outcome === 'ready' ? graph.ancestors(key) : outcome === 'needs-practice' ? graph.dependents(key) : new Set<string>();
   for (const other of reached) {
     if (!within.has(other) || other in next) continue;
-    next[other] = correct ? 'ready' : 'needs-practice';
+    next[other] = outcome;
     from[other] = 'inferred';
   }
   return { placed: next, source: from };

@@ -147,6 +147,9 @@
 .readiness { border-radius: 8px; background: #f1f1eb; padding: 9px 12px; font-size: 13px; line-height: 1.7; color: #606a58; }
 .readiness.ready { background: #edf3e5; color: #3c6334; }
 .readiness.needs-practice { background: #fbefdf; color: #875e32; }
+/* A concept the placement never asked about says so, rather than reading as one that was checked. */
+.readiness-source { opacity: 0.7; font-style: italic; }
+.readiness-source::before { content: "· "; }
 .review-callout { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
 .review-callout p { color: #586852; font-size: 13px; line-height: 1.9; }
 .review-callout button { flex-shrink: 0; }
