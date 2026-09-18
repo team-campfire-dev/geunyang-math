@@ -1,0 +1,1605 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "ratios",
+      "title": "비와 비율",
+      "summary": "두 양을 견주어 비율로 나타내고, 백분율로 바꿔 할인과 이자를 계산해요.",
+      "lessons": [
+        {
+          "key": "ratio-meaning",
+          "order": 1
+        },
+        {
+          "key": "percentage-meaning",
+          "order": 2
+        },
+        {
+          "key": "percentage-of",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "ratio",
+      "label": "비",
+      "assessable": true
+    },
+    {
+      "key": "rate",
+      "label": "비율",
+      "assessable": true
+    },
+    {
+      "key": "percentage",
+      "label": "백분율",
+      "assessable": true
+    },
+    {
+      "key": "percentage-of",
+      "label": "비율만큼의 양",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "ratio-meaning",
+        "versionId": "ratio-meaning:v1",
+        "title": "비와 비율: 두 양을 견주기",
+        "summary": "두 양을 비로 나타내고, 기준량에 대한 비율을 하나의 수로 구해요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "ratio",
+          "rate"
+        ],
+        "prerequisiteConceptKeys": [
+          "fraction",
+          "numerator",
+          "denominator"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "ratio-meaning:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "ratio-meaning:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 양을 견주어 나타낸 것을 비라고 해요. 물 200 mL와 원액 50 mL를 견주면 $200:50$이라고 써요. 앞의 수가 기준이 아니라, 콜론 뒤의 수를 기준으로 삼아 읽어요.\n\n기준량에 대해 비교하는 양이 얼마인지를 하나의 수로 나타낸 것이 비율이에요. 비율은 비교하는 양을 기준량으로 나눈 몫이에요.\n\n$200:50$의 비율은 $\\frac{200}{50}=4$예요. 원액 1만큼에 물이 4만큼이라는 뜻이에요. 비율은 분수로도 소수로도 쓸 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "ratio",
+                    "surface": "비",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "rate",
+                    "surface": "비율",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "fraction",
+                    "surface": "분수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ratio-meaning:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "원액 한 칸에 물 네 칸을 견준 막대",
+                "caption": "원액 1에 물 4 · 비율은 $\\frac{200}{50}=4$",
+                "items": [
+                  {
+                    "kind": "strip",
+                    "x": 40,
+                    "y": 45,
+                    "width": 48,
+                    "height": 32,
+                    "parts": 1,
+                    "filled": 1,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 64,
+                    "y": 95,
+                    "text": "원액",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "strip",
+                    "x": 104,
+                    "y": 45,
+                    "width": 176,
+                    "height": 32,
+                    "parts": 4,
+                    "filled": 4,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 192,
+                    "y": 95,
+                    "text": "물",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 140,
+                    "text": "$200:50 \\rightarrow 4$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ratio-meaning:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ratio-meaning:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "주스 12잔을 만드는 데 컵 3개가 쓰였어요. 컵 수에 대한 주스 잔 수의 비율을 구해 볼게요.\n\n기준량은 「에 대한」 앞에 오는 컵 3개예요. 비교하는 양은 주스 12잔이에요.\n\n비율은 $\\frac{12}{3}=4$예요. 컵 하나마다 주스 4잔이라는 뜻이에요.\n\n기준량과 비교하는 양을 바꿔 쓰면 $\\frac{3}{12}=\\frac{1}{4}$로 값이 달라져요. 무엇을 기준으로 삼았는지가 비율의 절반이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "rate",
+                    "surface": "비율",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ratio-meaning:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ratio-meaning:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ratio-meaning:practice",
+                "problemSetVersionId": "ratio-meaning:practice:v1",
+                "problemVersionIds": [
+                  "ratio-meaning:practice-1:v1",
+                  "ratio-meaning:practice-2:v1",
+                  "ratio-meaning:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ratio-meaning:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ratio-meaning:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ratio-meaning:check",
+                "problemSetVersionId": "ratio-meaning:check:v1",
+                "problemVersionIds": [
+                  "ratio-meaning:check-1:v1",
+                  "ratio-meaning:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ratio-meaning:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ratio-meaning:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "비는 두 양을 견주어 나타낸 것이고, 비율은 비교하는 양을 기준량으로 나눈 하나의 수예요. 무엇이 기준량인지 먼저 정해야 해요.\n\n이 수업의 개념은 비·비율이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "ratio",
+                    "surface": "비",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "rate",
+                    "surface": "비율",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ratio-meaning:review",
+        "problemSetVersionId": "ratio-meaning:review:v1",
+        "problemVersionIds": [
+          "ratio-meaning:homework-1:v1",
+          "ratio-meaning:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "percentage-meaning",
+        "versionId": "percentage-meaning:v1",
+        "title": "백분율: 기준량을 100으로 보기",
+        "summary": "비율을 기준량 100에 대한 수로 바꿔 %로 나타내요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "percentage"
+        ],
+        "prerequisiteConceptKeys": [
+          "ratio",
+          "rate",
+          "decimal",
+          "decimal-fraction"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "percentage-meaning:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "percentage-meaning:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "기준량을 100으로 보았을 때 비교하는 양이 얼마인지를 백분율이라고 해요. 기호 %를 붙여 써요.\n\n비율 $0.25$는 기준량 100에 대해 25예요. 그래서 25%라고 써요. 비율에 100을 곱하면 백분율이 되고, 백분율을 100으로 나누면 비율이 돼요.\n\n$\\frac{1}{4}$, $0.25$, 25%는 모두 같은 양의 다른 이름이에요. 어느 쪽으로 쓰든 견주는 크기는 달라지지 않아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "percentage",
+                    "surface": "백분율",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "rate",
+                    "surface": "비율",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "percentage-meaning:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "비율 0.25가 분모 100인 분수를 거쳐 25퍼센트가 되는 과정",
+                "caption": "$0.25 \\rightarrow \\frac{25}{100} \\rightarrow 25\\%$",
+                "items": [
+                  {
+                    "kind": "text",
+                    "id": "rate",
+                    "x": 160,
+                    "y": 60,
+                    "text": "$0.25$",
+                    "size": 22,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "hundredth",
+                    "x": 160,
+                    "y": 105,
+                    "text": "$\\frac{25}{100}$",
+                    "size": 22,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "percent",
+                    "x": 160,
+                    "y": 155,
+                    "text": "$25\\%$",
+                    "size": 24,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "weight": "bold"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "비율을 소수로 써요.",
+                    "changes": [
+                      {
+                        "id": "hundredth",
+                        "hidden": true
+                      },
+                      {
+                        "id": "percent",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "기준량을 100으로 바꿔요.",
+                    "changes": [
+                      {
+                        "id": "percent",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "분자에 기호 %를 붙이면 백분율이에요.",
+                    "changes": []
+                  }
+                ],
+                "frameMs": 1100
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "percentage-meaning:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "percentage-meaning:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "20문제 중 17문제를 맞혔어요. 몇 %를 맞혔는지 구해 볼게요.\n\n기준량은 전체 20문제예요. 비율은 $\\frac{17}{20}$이에요.\n\n분모를 100으로 만들면 백분율이 바로 보여요. 분자와 분모에 5를 곱해 $\\frac{85}{100}$이니 85%예요.\n\n소수로 먼저 바꿔도 같아요. $\\frac{17}{20}=0.85$이고, 여기에 100을 곱하면 85예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "percentage",
+                    "surface": "백분율",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "percentage-meaning:example:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "4분의 1과 0.25와 25퍼센트를 각각의 이름 자리에 놓아 보는 그림",
+                "caption": "같은 양의 세 이름을 제자리에 놓아 보세요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "id": "as-fraction",
+                    "label": "4분의 1",
+                    "draggable": true,
+                    "x": 55,
+                    "y": 40,
+                    "text": "$\\frac{1}{4}$",
+                    "size": 20,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "as-decimal",
+                    "label": "0.25",
+                    "draggable": true,
+                    "x": 130,
+                    "y": 40,
+                    "text": "$0.25$",
+                    "size": 20,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "as-percent",
+                    "label": "25퍼센트",
+                    "draggable": true,
+                    "x": 215,
+                    "y": 40,
+                    "text": "$25\\%$",
+                    "size": 20,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "weight": "bold"
+                  }
+                ],
+                "zones": [
+                  {
+                    "id": "fraction-seat",
+                    "x": 25,
+                    "y": 95,
+                    "width": 80,
+                    "height": 55,
+                    "label": "분수",
+                    "accepts": [
+                      "as-fraction"
+                    ]
+                  },
+                  {
+                    "id": "decimal-seat",
+                    "x": 120,
+                    "y": 95,
+                    "width": 80,
+                    "height": 55,
+                    "label": "소수",
+                    "accepts": [
+                      "as-decimal"
+                    ]
+                  },
+                  {
+                    "id": "percent-seat",
+                    "x": 215,
+                    "y": 95,
+                    "width": 80,
+                    "height": 55,
+                    "label": "백분율",
+                    "accepts": [
+                      "as-percent"
+                    ]
+                  }
+                ],
+                "task": {
+                  "prompt": "같은 양을 부르는 세 이름을 각각 제자리에 놓아 보세요.",
+                  "promptAlt": "같은 양을 부르는 세 이름을 각각 제자리에 놓아 보세요.",
+                  "successText": "셋 다 같은 양이에요. 부르는 방식만 달라요."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "percentage-meaning:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "percentage-meaning:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "percentage-meaning:practice",
+                "problemSetVersionId": "percentage-meaning:practice:v1",
+                "problemVersionIds": [
+                  "percentage-meaning:practice-1:v1",
+                  "percentage-meaning:practice-2:v1",
+                  "percentage-meaning:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "percentage-meaning:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "percentage-meaning:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "percentage-meaning:check",
+                "problemSetVersionId": "percentage-meaning:check:v1",
+                "problemVersionIds": [
+                  "percentage-meaning:check-1:v1",
+                  "percentage-meaning:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "percentage-meaning:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "percentage-meaning:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "백분율은 기준량을 100으로 보았을 때의 비율이에요. 비율에 100을 곱하면 백분율, 백분율을 100으로 나누면 비율이에요.\n\n이 수업의 개념은 백분율이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "percentage",
+                    "surface": "백분율",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "percentage-meaning:review",
+        "problemSetVersionId": "percentage-meaning:review:v1",
+        "problemVersionIds": [
+          "percentage-meaning:homework-1:v1",
+          "percentage-meaning:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "percentage-of",
+        "versionId": "percentage-of:v1",
+        "title": "비율만큼의 양: 할인과 이자",
+        "summary": "기준량에 비율을 곱해 깎이는 양과 내는 양을 구해요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "percentage-of"
+        ],
+        "prerequisiteConceptKeys": [
+          "percentage",
+          "rate",
+          "decimal-addition"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "percentage-of:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "percentage-of:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "비율을 알고 기준량을 알면 비교하는 양을 구할 수 있어요. 기준량에 비율을 곱하면 돼요.\n\n20000원의 30%는 얼마일까요? 30%는 비율로 $0.3$이에요. $20000 \\times 0.3 = 6000$이니 6000원이에요.\n\n할인과 이자가 모두 이 계산이에요. 30% 할인이면 깎이는 금액이 6000원이고, 내는 금액은 $20000-6000=14000$원이에요. 깎이는 양과 남는 양을 헷갈리지 않는 것이 요령이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "percentage-of",
+                    "surface": "비율을 곱하면",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "percentage",
+                    "surface": "30%",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "rate",
+                    "surface": "비율",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "percentage-of:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "전체 열 칸 중 세 칸이 할인, 일곱 칸이 내는 금액인 막대",
+                "caption": "20000원의 30%는 6000원 · 내는 금액은 14000원",
+                "items": [
+                  {
+                    "kind": "strip",
+                    "x": 40,
+                    "y": 55,
+                    "width": 240,
+                    "height": 38,
+                    "parts": 10,
+                    "filled": 3,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 112,
+                    "y": 118,
+                    "text": "할인 6000원",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 232,
+                    "y": 118,
+                    "text": "내는 금액 14000원",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 40,
+                    "y1": 100,
+                    "x2": 112,
+                    "y2": 100,
+                    "stroke": "orange",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 112,
+                    "y1": 100,
+                    "x2": 280,
+                    "y2": 100,
+                    "stroke": "green",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 155,
+                    "text": "$20000 \\times 0.3 = 6000$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "percentage-of:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "percentage-of:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "15000원짜리 물건이 20% 할인해요. 얼마를 내야 할까요?\n\n20%는 비율로 $0.2$예요. 깎이는 금액은 $15000 \\times 0.2 = 3000$원이에요.\n\n내는 금액은 $15000-3000=12000$원이에요.\n\n한 번에 구할 수도 있어요. 20%를 깎으면 80%를 내는 것이니 $15000 \\times 0.8 = 12000$원이에요. 두 방법의 답은 언제나 같아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "percentage-of",
+                    "surface": "비율로",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "percentage-of:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "percentage-of:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "percentage-of:practice",
+                "problemSetVersionId": "percentage-of:practice:v1",
+                "problemVersionIds": [
+                  "percentage-of:practice-1:v1",
+                  "percentage-of:practice-2:v1",
+                  "percentage-of:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "percentage-of:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "percentage-of:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "percentage-of:check",
+                "problemSetVersionId": "percentage-of:check:v1",
+                "problemVersionIds": [
+                  "percentage-of:check-1:v1",
+                  "percentage-of:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "percentage-of:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "percentage-of:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "기준량에 비율을 곱하면 비교하는 양이 나와요. 할인에서는 깎이는 양과 내는 양을 나눠 생각하면 헷갈리지 않아요.\n\n이 수업의 개념은 비율만큼의 양이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "percentage-of",
+                    "surface": "비율만큼의 양",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "percentage-of:review",
+        "problemSetVersionId": "percentage-of:review:v1",
+        "problemVersionIds": [
+          "percentage-of:homework-1:v1",
+          "percentage-of:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "ratio-meaning:practice",
+      "courseKey": "ratios",
+      "name": "비와 비율 연습",
+      "versionId": "ratio-meaning:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ratio-meaning:practice-1:v1",
+          "conceptKeys": [
+            "rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratio-meaning:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$8:2$의 비율은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratio-meaning:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비교하는 양 8을 기준량 2로 나눕니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratio-meaning:practice-2:v1",
+          "conceptKeys": [
+            "rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratio-meaning:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "학생 20명 중 안경을 쓴 학생이 5명이에요. 전체 학생 수에 대한 안경 쓴 학생 수의 비율을 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratio-meaning:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기준량은 전체 20명이에요. $\\frac{5}{20}$을 약분합니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratio-meaning:practice-3:v1",
+          "conceptKeys": [
+            "ratio",
+            "rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratio-meaning:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 6 cm, 세로 4 cm인 직사각형이 있어요. 세로에 대한 가로의 비율을 소수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratio-meaning:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기준량은 세로 4예요. $\\frac{6}{4}$을 소수로 바꿉니다."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ratio-meaning:check",
+      "courseKey": "ratios",
+      "name": "비와 비율 확인",
+      "versionId": "ratio-meaning:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ratio-meaning:check-1:v1",
+          "conceptKeys": [
+            "rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratio-meaning:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$15:5$의 비율은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratio-meaning:check-2:v1",
+          "conceptKeys": [
+            "rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratio-meaning:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "공책 3권이 2400원이에요. 권수에 대한 금액의 비율은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 800
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ratio-meaning:review",
+      "courseKey": "ratios",
+      "name": "비와 비율 복습",
+      "versionId": "ratio-meaning:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ratio-meaning:homework-1:v1",
+          "conceptKeys": [
+            "rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratio-meaning:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$9:3$의 비율은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratio-meaning:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "9를 3으로 나눕니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratio-meaning:homework-2:v1",
+          "conceptKeys": [
+            "ratio",
+            "rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratio-meaning:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금 3 g이 물 60 g에 녹아 있어요. 물의 양에 대한 소금의 양의 비율을 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratio-meaning:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기준량은 물 60 g이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "percentage-meaning:practice",
+      "courseKey": "ratios",
+      "name": "백분율 연습",
+      "versionId": "percentage-meaning:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "percentage-meaning:practice-1:v1",
+          "conceptKeys": [
+            "percentage"
+          ],
+          "promptContent": [
+            {
+              "blockId": "percentage-meaning:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비율 $0.4$는 몇 %인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 40
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "percentage-meaning:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비율에 100을 곱합니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "percentage-meaning:practice-2:v1",
+          "conceptKeys": [
+            "percentage"
+          ],
+          "promptContent": [
+            {
+              "blockId": "percentage-meaning:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{3}{5}$은 몇 %인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "percentage-meaning:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모를 100으로 만들면 분자가 백분율이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "percentage-meaning:practice-3:v1",
+          "conceptKeys": [
+            "percentage"
+          ],
+          "promptContent": [
+            {
+              "blockId": "percentage-meaning:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "30%를 소수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "percentage-meaning:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "백분율을 100으로 나눕니다."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "percentage-meaning:check",
+      "courseKey": "ratios",
+      "name": "백분율 확인",
+      "versionId": "percentage-meaning:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "percentage-meaning:check-1:v1",
+          "conceptKeys": [
+            "percentage"
+          ],
+          "promptContent": [
+            {
+              "blockId": "percentage-meaning:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{7}{20}$은 몇 %인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 35
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "percentage-meaning:check-2:v1",
+          "conceptKeys": [
+            "percentage"
+          ],
+          "promptContent": [
+            {
+              "blockId": "percentage-meaning:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "8%를 소수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 2,
+            "denominator": 25
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "percentage-meaning:review",
+      "courseKey": "ratios",
+      "name": "백분율 복습",
+      "versionId": "percentage-meaning:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "percentage-meaning:homework-1:v1",
+          "conceptKeys": [
+            "percentage"
+          ],
+          "promptContent": [
+            {
+              "blockId": "percentage-meaning:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비율 $0.75$는 몇 %인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 75
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "percentage-meaning:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "100을 곱합니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "percentage-meaning:homework-2:v1",
+          "conceptKeys": [
+            "percentage"
+          ],
+          "promptContent": [
+            {
+              "blockId": "percentage-meaning:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "45%를 소수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 9,
+            "denominator": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "percentage-meaning:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "100으로 나눕니다."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "percentage-of:practice",
+      "courseKey": "ratios",
+      "name": "비율만큼의 양 연습",
+      "versionId": "percentage-of:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "percentage-of:practice-1:v1",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "percentage-of:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "5000원의 20%는 얼마인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "percentage-of:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5000 \\times 0.2$를 계산합니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "percentage-of:practice-2:v1",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "percentage-of:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "30000원짜리 물건을 10% 할인해서 사면 얼마를 내나요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 27000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "percentage-of:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "깎이는 금액은 3000원이에요. 아니면 90%를 내는 것으로 봐도 됩니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "percentage-of:practice-3:v1",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "percentage-of:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "학생 40명 중 25%가 자전거로 등교해요. 몇 명인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "percentage-of:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$40 \\times 0.25$를 계산합니다."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "percentage-of:check",
+      "courseKey": "ratios",
+      "name": "비율만큼의 양 확인",
+      "versionId": "percentage-of:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "percentage-of:check-1:v1",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "percentage-of:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "8000원의 15%는 얼마인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1200
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "percentage-of:check-2:v1",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "percentage-of:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "24000원짜리 물건을 25% 할인해서 사면 얼마를 내나요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 18000
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "percentage-of:review",
+      "courseKey": "ratios",
+      "name": "비율만큼의 양 복습",
+      "versionId": "percentage-of:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "percentage-of:homework-1:v1",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "percentage-of:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "6000원의 30%는 얼마인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1800
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "percentage-of:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6000 \\times 0.3$을 계산합니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "percentage-of:homework-2:v1",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "percentage-of:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "50000원짜리 물건을 20% 할인해서 사면 얼마를 내나요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 40000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "percentage-of:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "80%를 내는 것으로 봐도 됩니다."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}

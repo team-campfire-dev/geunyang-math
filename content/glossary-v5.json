@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "ratio",
+      "label": "비",
+      "assessable": true
+    },
+    {
+      "key": "rate",
+      "label": "비율",
+      "assessable": true
+    },
+    {
+      "key": "percentage",
+      "label": "백분율",
+      "assessable": true
+    },
+    {
+      "key": "percentage-of",
+      "label": "비율만큼의 양",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "ratio",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "비",
+      "summary": "두 양을 견주어 $a:b$처럼 나타낸 것이에요.",
+      "blocks": [
+        {
+          "blockId": "global:ratio:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "두 양을 견주어 $a:b$처럼 나타낸 것이에요. $200:50$은 앞의 양이 200, 기준이 되는 뒤의 양이 50이라는 뜻이에요. 비 자체는 아직 하나의 수가 아니에요 — 두 양을 나란히 적어 둔 것이고, 그것을 하나의 수로 만든 것이 비율이에요. $200:50$과 $4:1$은 견주는 크기가 같아서 같은 비예요.",
+            "definitions": [
+              {
+                "conceptKey": "rate",
+                "surface": "비율"
+              }
+            ]
+          }
+        }
+      ],
+      "usageNote": "두 양을 견주어 적는 일"
+    },
+    {
+      "conceptKey": "rate",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "비율",
+      "summary": "비교하는 양을 기준량으로 나눈 하나의 수예요.",
+      "blocks": [
+        {
+          "blockId": "global:rate:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "비교하는 양을 기준량으로 나눈 몫이에요. $a:b$의 비율은 $\\frac{a}{b}$예요. 분수로도 소수로도 쓸 수 있어요. 무엇을 기준량으로 삼았는지에 따라 값이 달라져요 — 「세로에 대한 가로」는 세로가 기준이고, 「가로에 대한 세로」는 가로가 기준이에요. 「…에 대한」 앞에 오는 것이 기준량이에요.",
+            "definitions": [
+              {
+                "conceptKey": "fraction",
+                "surface": "분수"
+              }
+            ]
+          }
+        }
+      ],
+      "usageNote": "기준량에 대한 크기를 하나의 수로 나타내는 일"
+    },
+    {
+      "conceptKey": "percentage",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "백분율",
+      "summary": "기준량을 100으로 보았을 때의 비율이고 기호 %로 써요.",
+      "blocks": [
+        {
+          "blockId": "global:percentage:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "기준량을 100으로 보았을 때 비교하는 양이 얼마인지를 나타낸 비율이에요. 기호 %를 붙여 써요. 비율에 100을 곱하면 백분율이고, 백분율을 100으로 나누면 비율이에요. $\\frac{1}{4}$, $0.25$, 25%는 같은 양의 세 이름이에요. 기준량이 무엇인지 말하지 않은 백분율은 크기를 알 수 없어요 — 「20% 늘었다」는 무엇의 20%인지가 함께 있어야 뜻이 생겨요.",
+            "definitions": [
+              {
+                "conceptKey": "rate",
+                "surface": "비율"
+              }
+            ]
+          }
+        }
+      ],
+      "usageNote": "기준량을 100으로 맞춰 견주는 일"
+    },
+    {
+      "conceptKey": "percentage-of",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "비율만큼의 양",
+      "summary": "기준량에 비율을 곱해 구한 비교하는 양이에요.",
+      "blocks": [
+        {
+          "blockId": "global:percentage-of:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "기준량에 비율을 곱하면 비교하는 양이 나와요. 20000원의 30%는 $20000 \\times 0.3 = 6000$원이에요. 할인과 이자가 모두 이 계산이에요. 30% 할인이면 깎이는 양이 30%이고 내는 양은 70%예요 — 어느 쪽을 묻는지 먼저 정하면 헷갈리지 않아요. 백분율은 계산하기 전에 비율(소수나 분수)로 바꿔요.",
+            "definitions": [
+              {
+                "conceptKey": "percentage",
+                "surface": "백분율"
+              },
+              {
+                "conceptKey": "rate",
+                "surface": "비율"
+              }
+            ]
+          }
+        }
+      ],
+      "usageNote": "비율을 아는 채로 실제 양을 구하는 일"
+    }
+  ]
+}
