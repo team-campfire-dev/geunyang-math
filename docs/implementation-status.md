@@ -90,7 +90,7 @@ Google 웹 로그인과 같은 계정의 설정 저장·로그아웃·재로그�
 
 ## 검증 기준
 
-[#72의 main 검증](https://github.com/team-campfire-dev/geunyang-math/actions/runs/35303272616)에서 타입 검사, MySQL 통합 검사와 화면 렌더 검사를 포함한 **34개 파일 490개 테스트**, 웹 빌드와 모바일 정적 export가 통과했다. 이 문서 정리는 별도 기능 검증이나 학습 효과 검증을 뜻하지 않는다.
+[#76의 검증 실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/35311782222)에서 타입 검사, MySQL 통합 검사와 화면 렌더 검사를 포함한 **38개 파일 534개 테스트**, 웹 빌드와 모바일 정적 export가 통과했다. 이 문서 정리는 별도 기능 검증이나 학습 효과 검증을 뜻하지 않는다.
 
 | 확인 | 결과와 한계 |
 |---|---|
