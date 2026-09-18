@@ -10,7 +10,7 @@ import { POST } from '@/app/api/v1/learning/route';
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
 const origin = 'https://math.example.com';
-const profileAction = { action: 'profile.update', goal: 'daily-math', dailyMinutes: 20 };
+const profileAction = { action: 'profile.update', targetCourseKey: null, dailyMinutes: 20 };
 
 describe.skipIf(!testDatabaseUrl)('learning HTTP account binding', () => {
   let db: ReturnType<typeof database.createDatabase>;
@@ -61,7 +61,7 @@ describe.skipIf(!testDatabaseUrl)('learning HTTP account binding', () => {
   it('rejects profile edits from A’s stale screen after the browser cookie switches to B', async () => {
     const a = await learner(); const b = await learner();
     await expectAccountChanged(await POST(post(b.cookie, a.user.id, profileAction)));
-    for (const owner of [a, b]) expect(await db.user.findUniqueOrThrow({ where: { id: owner.user.id } })).toMatchObject({ goal: 'foundation-recovery', dailyMinutes: 10 });
+    for (const owner of [a, b]) expect(await db.user.findUniqueOrThrow({ where: { id: owner.user.id } })).toMatchObject({ targetCourseKey: null, dailyMinutes: 10 });
   });
 
   it('does not start a lesson for B from A’s stale screen', async () => {

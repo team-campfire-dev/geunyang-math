@@ -123,7 +123,7 @@ describe('learning account changes across asynchronous requests', () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response('{}', { status: 200 }));
     vi.stubGlobal('fetch', fetchMock);
     try {
-      await learningApi.action({ action: 'profile.update', goal: 'foundation-recovery', dailyMinutes: 10 }, 'learner-A');
+      await learningApi.action({ action: 'profile.update', targetCourseKey: null, dailyMinutes: 10 }, 'learner-A');
       const [, options] = fetchMock.mock.calls[0];
       expect(options.credentials).toBe('include');
       expect(new Headers(options.headers).get('X-Learning-User-Id')).toBe('learner-A');

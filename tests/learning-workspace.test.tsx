@@ -36,7 +36,7 @@ const assignment = (overrides: Partial<AssignmentView> = {}): AssignmentView => 
   submissionId: 's1', glossary: [], ...overrides,
 });
 const learningState = (overrides: Partial<LearningState> = {}): LearningState => ({
-  user: { id: 'u1', displayName: '학습자', goal: 'foundation-recovery', dailyMinutes: 10 },
+  user: { id: 'u1', displayName: '학습자', targetCourseKey: null, dailyMinutes: 10 },
   lessons: catalogue, enrollments: [], assignments: [], recommendations: [],
   diagnostic: null, diagnosticOffering: null,
   plan: { version: '1', readiness: [], review: null, sessionMinutes: 10, preferredLessonKey: null },

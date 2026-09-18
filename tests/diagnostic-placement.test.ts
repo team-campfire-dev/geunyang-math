@@ -29,8 +29,8 @@ const conceptsOf = (problemVersionId: string) => questions.find((question) => qu
 /** Plays a whole placement, deciding each question from the concepts it asks about. */
 const answering = (decide: (conceptKeys: string[]) => PlacementAnswer['status']) =>
   playPlacement(lessons, questions, (id) => decide(conceptsOf(id)));
-const advise = (placed: PlacementState | null, goal: 'foundation-recovery' | 'algebra-ready' = 'foundation-recovery') => recommend({
-  lessons, enrollments: [], assignments: [], dailyMinutes: 10, goal, now: new Date(),
+const advise = (placed: PlacementState | null, targetCourseKey: string | null = null) => recommend({
+  lessons, enrollments: [], assignments: [], dailyMinutes: 10, targetCourseKey, now: new Date(),
   readiness: conceptReadiness(labels, placed, []),
 }).recommendations[0];
 const suggest = (placed: PlacementState | null) => advise(placed)?.lessonKey;
@@ -60,9 +60,9 @@ describe('the starting-point diagnostic', () => {
     expect(nothing!.reason).toMatch(/아직 충분히 확인하지 않았어요/);
     expect(everything!.reason).not.toBe(nothing!.reason);
     expect(everything!.reason).toMatch(/확인한 기초/);
-    // And with the other goal the diagnostic now moves the lesson itself.
-    expect(advise(perfect, 'algebra-ready')!.lessonKey).toBe('fraction-addition');
-    expect(advise(null, 'algebra-ready')!.lessonKey).toBe('fraction-meaning');
+    // Naming the course changes what the screen says about why, on a catalogue of one course.
+    expect(advise(perfect, 'fractions')!.reason).toMatch(/배우려던 과정/);
+    expect(advise(null, 'fractions')!.lessonKey).toBe('fraction-meaning');
   });
 
   it('sends someone to the first lesson whose concepts they have not shown', () => {

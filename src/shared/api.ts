@@ -1,6 +1,5 @@
 // Public HTTP DTOs. Never import server content or grading answers into this module.
 import type { ConceptScope, DefinitionRef } from './rich-text';
-export type Goal = 'daily-math' | 'foundation-recovery' | 'algebra-ready';
 export type GradeResult = { status: 'correct' | 'incorrect' | 'invalid'; message: string; assisted: boolean };
 export type ContentBlock = {
   blockId: string;
@@ -112,7 +111,7 @@ export type PersonalPlan = {
 };
 export type RecommendationHistoryView = { id: string; createdAt: string; trigger: string; recommendations: Recommendation[] };
 export type LearningState = {
-  user: { id: string; displayName: string; goal: Goal; dailyMinutes: number };
+  user: { id: string; displayName: string; targetCourseKey: string | null; dailyMinutes: number };
   lessons: PublicLesson[];
   enrollments: EnrollmentView[];
   assignments: AssignmentView[];
@@ -127,7 +126,7 @@ export type LearningAction =
   | { action: 'recommendation.choose'; lessonKey: string | null }
   | { action: 'diagnostic.start' }
   | { action: 'diagnostic.answer'; diagnosticId: string; problemVersionId: string; answer: string | null }
-  | { action: 'profile.update'; goal: Goal; dailyMinutes: number }
+  | { action: 'profile.update'; targetCourseKey: string | null; dailyMinutes: number }
   | { action: 'enrollment.start'; lessonKey: string }
   | { action: 'section.complete'; enrollmentId: string; sectionId: string }
   | { action: 'attempt.submit'; context: 'lesson' | 'assignment'; contextId: string; problemVersionId: string; answer: string; requestId: string }

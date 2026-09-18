@@ -49,7 +49,7 @@ describe.skipIf(!testDatabaseUrl)('MySQL account deletion', () => {
   async function learnerWithRecords() {
     const learner = await newLearner();
     const { userId } = learner;
-    await service.act(userId, { action: 'profile.update', goal: 'daily-math', dailyMinutes: 20 });
+    await service.act(userId, { action: 'profile.update', targetCourseKey: null, dailyMinutes: 20 });
     const started = await service.act(userId, { action: 'enrollment.start', lessonKey: record.public.lessonKey });
     const enrollmentId = started.enrollmentId!;
     for (const section of record.sections) {

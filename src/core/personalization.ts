@@ -1,5 +1,6 @@
-import type { AssignmentView, Goal, GradeResult, PersonalPlan, PublicLesson, Recommendation, ConceptReadiness } from '@/shared/api';
+import type { AssignmentView, GradeResult, PersonalPlan, PublicLesson, Recommendation, ConceptReadiness } from '@/shared/api';
 import type { PlacementState } from './placement';
+import { conceptGraph, placementScope } from './concept-graph';
 
 export const personalizationVersion = 'rules-v1';
 export type Evidence = { problemVersionId: string; conceptKeys: string[]; result: GradeResult; date: Date; responseKind?: string; check: boolean; assessmentId?: string };
@@ -30,22 +31,28 @@ export function conceptReadiness(labels: Record<string, string>, placement: Plac
 export function recommend(input: {
   lessons: PublicLesson[]; enrollments: { lessonKey: string; status: string }[];
   assignments: Pick<AssignmentView, 'recipientId' | 'recommendedAt' | 'status'>[];
-  readiness: ConceptReadiness[]; dailyMinutes: number; goal: Goal; now: Date; preferredLessonKey?: string | null;
+  readiness: ConceptReadiness[]; dailyMinutes: number; targetCourseKey: string | null; now: Date; preferredLessonKey?: string | null;
 }): { recommendations: Recommendation[]; plan: PersonalPlan } {
-  const { lessons, enrollments, readiness, dailyMinutes, goal } = input;
+  const { lessons, enrollments, readiness, dailyMinutes, targetCourseKey } = input;
   const ready = (key: string) => readiness.some(s => s.key === key && s.readiness === 'ready');
   const known = (c: PublicLesson) => c.conceptKeys.every(ready);
   const prerequisitesMet = (c: PublicLesson) => c.prerequisiteConceptKeys.every(ready);
   const active = lessons.find(c => enrollments.some(e => e.lessonKey === c.lessonKey && e.status === 'active'));
   const weak = lessons.filter(c => !known(c));
-  const remedial = weak.filter(prerequisitesMet);
+  // Everything that leads to what the learner came for. Without a course named, that is everything —
+  // and then the first lesson of the catalogue is what a beginner gets, whatever they came for.
+  const wanted = lessons.filter(c => c.courseKey === targetCourseKey).flatMap(c => c.conceptKeys);
+  const onTheWay = new Set(placementScope(conceptGraph(lessons), wanted));
+  // The course they came for first, then what it stands on, then the rest. Somebody who came for
+  // integers can start at negative numbers today, even though fractions also lie on the way.
+  const nearness = (c: PublicLesson) => !wanted.length ? 0 : c.courseKey === targetCourseKey ? 0 : c.conceptKeys.some(key => onTheWay.has(key)) ? 1 : 2;
+  // Sorting is stable, so each group keeps the catalogue's own order inside it.
+  const remedial = weak.filter(prerequisitesMet).sort((a, b) => nearness(a) - nearness(b));
   // An unfinished chosen lesson remains available, but unknown prerequisites are recommended first.
   let target: PublicLesson | undefined = active && prerequisitesMet(active) ? active : remedial[0];
   if (!target && active) target = active;
-  if (!target) {
-    // All available concepts are provisionally ready: choose a goal-relevant consolidation lesson.
-    target = goal === 'algebra-ready' ? lessons.at(-1) : lessons[0];
-  }
+  // Every available concept is provisionally ready: open the course they came for, or the catalogue.
+  if (!target) target = lessons.find(c => c.courseKey === targetCourseKey) ?? lessons[0];
   const chosen = lessons.find(c => c.lessonKey === input.preferredLessonKey);
   if (chosen) target = chosen;
   const recommendations: Recommendation[] = [];
@@ -58,8 +65,10 @@ export function recommend(input: {
       ? `이어가던 수업에 필요한 ${focus?.label ?? target.title}부터 확인해요. 원래 수업도 직접 선택할 수 있어요.`
       : kind === 'continue' ? '진행 중인 수업을 이어가요. 새 풀이 기록으로 다음 추천을 조정해요.'
       : focus?.readiness === 'needs-practice' ? `${focus.label}에서 다시 연습할 부분을 찾았어요. 설명과 예제로 한 번 더 확인해요.`
+      : focus && targetCourseKey && target.courseKey !== targetCourseKey
+      ? `배우려는 과정이 딛고 선 ${focus.label}부터 확인해요. 여기를 지나면 그 과정으로 이어져요.`
       : focus ? `${focus.label} 개념을 아직 충분히 확인하지 않았어요. 이 수업부터 시작해 보세요.`
-      : goal === 'algebra-ready' ? '확인한 기초를 바탕으로 분수 계산을 다져 대수 학습을 준비해요.'
+      : targetCourseKey ? '확인한 기초 위에서 배우려던 과정을 이어가요. 목록에서 다른 수업을 골라도 괜찮아요.'
       : '확인한 기초를 일상의 예제에 적용해요. 이미 아는 수업은 목록에서 자유롭게 바꿀 수 있어요.';
     recommendations.push({ lessonKey: target.lessonKey, kind, reason, suggestedMinutes: Math.min(dailyMinutes, target.estimatedMinutes) });
   }
