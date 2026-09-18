@@ -1,28 +1,43 @@
 import 'dotenv/config';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { z } from 'zod';
 import { ContentError, parseContentBundle } from '../src/core/content-bundle';
 import { getDatabase } from '../src/server/db';
 import { importContent } from '../src/server/content-store';
 
 /**
- * Installs the platform's own content — the fraction course, its lessons, the starting-point
- * diagnostic and the concepts they name — through the same import every other bundle takes. A
- * version already published is left as it is, so this runs on every deployment and does nothing
- * when nothing changed; after a migration has cleared the content tables it puts the content back.
- * The file carries answer keys, as the migration that first installed this content did.
+ * Installs the platform's own content — its courses, their lessons, the starting-point diagnostic
+ * and the concepts they name — through the same import every other bundle takes. A version already
+ * published is left as it is, so this runs on every deployment and does nothing when nothing
+ * changed; after a migration has cleared the content tables it puts the content back.
+ *
+ * Every file in `seed/` is a course's own bundle, applied in name order so a course may rest on the
+ * concepts of one that came before it. **These are the only files that carry answer keys** — the
+ * bundles in `content/` hold definitions and nothing a learner could be marked against.
  */
+const bundlesIn = (directory: string, keep: (name: string) => boolean) =>
+  readdirSync(new URL(directory, import.meta.url)).filter(name => name.endsWith('.json') && keep(name)).sort()
+    .map(name => ({ name, bundle: parseContentBundle(JSON.parse(readFileSync(new URL(`${directory}${name}`, import.meta.url), 'utf8'))) }));
+
 async function seed() {
-  const input = parseContentBundle(JSON.parse(readFileSync(new URL('./seed/fractions.json', import.meta.url), 'utf8')));
-  const dictionary = parseContentBundle(JSON.parse(readFileSync(new URL('../content/glossary-v3.json', import.meta.url), 'utf8')));
+  const seeds = bundlesIn('./seed/', () => true);
+  const dictionary = bundlesIn('../content/', name => name.startsWith('glossary-'));
   const db = getDatabase();
   try {
-    // The lessons link atomic concepts from their first publication. Install missing definitions
-    // in the same transaction; later seeds must preserve explanations edited in the authoring UI.
-    // Reviewed changes to the dictionary still go through content:publish and its checksum ledger.
-    const existing = new Set((await db.conceptDefinition.findMany({ where: { scopeKind: 'global', scopeKey: '' }, select: { conceptKey: true } })).map(row => row.conceptKey));
-    const definitions = dictionary.definitions.filter(definition => !existing.has(definition.conceptKey));
-    console.log(JSON.stringify({ seed: 'fractions', ...(await importContent(db, { ...input, concepts: [...input.concepts, ...dictionary.concepts], definitions })) }));
+    for (const { name, bundle } of seeds) {
+      // The lessons link atomic concepts from their first publication. Install missing definitions
+      // in the same transaction; later seeds must preserve explanations edited in the authoring UI.
+      // Reviewed changes to the dictionary still go through content:publish and its checksum ledger.
+      const existing = new Set((await db.conceptDefinition.findMany({ where: { scopeKind: 'global', scopeKey: '' }, select: { conceptKey: true } })).map(row => row.conceptKey));
+      // A dictionary file may restate a concept an earlier one named, and a course names its own.
+      // The later word wins, which is what a v3 that revises v2 means.
+      const concepts = new Map(dictionary.flatMap(entry => entry.bundle.concepts).map(concept => [concept.key, concept]));
+      for (const concept of bundle.concepts) concepts.set(concept.key, concept);
+      const definitions = [...new Map(dictionary.flatMap(entry => entry.bundle.definitions)
+        .map(definition => [definition.conceptKey, definition])).values()]
+        .filter(definition => !existing.has(definition.conceptKey));
+      console.log(JSON.stringify({ seed: name.replace(/\.json$/, ''), ...(await importContent(db, { ...bundle, concepts: [...concepts.values()], definitions })) }));
+    }
   }
   finally { await db.$disconnect(); }
 }
