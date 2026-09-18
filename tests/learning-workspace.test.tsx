@@ -270,6 +270,37 @@ describe('the lessons the home screen puts nearest', () => {
   });
 });
 
+describe('the assignments the home screen puts nearest', () => {
+  const rows = () => [...window.document.querySelectorAll('.page-home .assignment-row .assignment-info strong')].map((node) => node.textContent);
+  const withDates = (recipientId: string, title: string, dates: Partial<AssignmentView>): AssignmentView =>
+    ({ ...assignment(), id: recipientId, recipientId, title, submissionId: `s-${recipientId}`, ...dates });
+
+  it('puts a deadline above a review that has waited longer', async () => {
+    const soon = new Date(Date.now() + 2 * 86400000).toISOString();
+    const longAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+    server = serve({ state: learningState({ assignments: [
+      withDates('r1', '오래 기다린 복습', { recommendedAt: longAgo }),
+      withDates('r2', '마감이 있는 숙제', { dueAt: soon }),
+    ] }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(rows().length).toBe(2));
+    expect(rows()).toEqual(['마감이 있는 숙제', '오래 기다린 복습']);
+  });
+
+  it('does not repeat the one the review callout is already offering', async () => {
+    const state = learningState({ assignments: [
+      withDates('r1', '복습 안내가 고른 과제', {}), withDates('r2', '그 다음 과제', {}),
+    ] });
+    state.plan = { ...state.plan, review: { recipientId: 'r1', reason: '권장 복습 시점이 되었어요.' } };
+    server = serve({ state });
+    render(<LearningWorkspace />);
+    await until(() => expect(rows().length).toBeGreaterThan(0));
+    // The callout above the shelf already names it, so the shelf moves on.
+    expect(rows()).toEqual(['그 다음 과제']);
+    expect(screen.getByText(/권장 복습 시점이 되었어요/)).toBeDefined();
+  });
+});
+
 describe('leaving for good', () => {
   const openProfile = async () => {
     render(<LearningWorkspace />);
