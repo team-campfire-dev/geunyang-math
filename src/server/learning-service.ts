@@ -38,7 +38,7 @@ export const actionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('recommendation.choose'), lessonKey: z.string().min(1).max(100).nullable() }).strict(),
   z.object({ action: z.literal('diagnostic.start') }).strict(),
   z.object({ action: z.literal('diagnostic.answer'), diagnosticId: id, problemVersionId: id, answer: z.string().trim().min(1).max(128).nullable() }).strict(),
-  z.object({ action: z.literal('profile.update'), goal: z.enum(['daily-math', 'foundation-recovery', 'algebra-ready']), dailyMinutes: z.union([z.literal(5), z.literal(10), z.literal(20)]) }).strict(),
+  z.object({ action: z.literal('profile.update'), targetCourseKey: z.string().trim().min(1).max(100).nullable(), dailyMinutes: z.union([z.literal(5), z.literal(10), z.literal(20)]) }).strict(),
   z.object({ action: z.literal('enrollment.start'), lessonKey: id }).strict(),
   z.object({ action: z.literal('section.complete'), enrollmentId: id, sectionId: id }).strict(),
   z.object({ action: z.literal('attempt.submit'), context, contextId: id, problemVersionId: id, answer: z.string().max(128), requestId: z.string().min(8).max(100) }).strict(),
@@ -235,9 +235,9 @@ export class LearningService {
     const asking = stored && diagnosticBank ? placement(conceptGraph(stored.lessons), stored.scope, diagnosticBank, diagnosticAnswers) : null;
     const readiness = conceptReadiness(conceptLabels, completedDiagnostic ? stored : null, evidence);
     const { recommendations, plan } = recommend({ lessons, enrollments: enrollments.map(e => ({ lessonKey: e.lessonVersion.lessonKey, status: e.status })),
-      assignments, readiness, dailyMinutes: user.dailyMinutes, goal: user.goal as LearningState['user']['goal'], now: new Date(), preferredLessonKey: user.preferredLessonKey });
+      assignments, readiness, dailyMinutes: user.dailyMinutes, targetCourseKey: user.targetCourseKey, now: new Date(), preferredLessonKey: user.preferredLessonKey });
     return {
-      user: { id: user.id, displayName: user.displayName, goal: user.goal as LearningState['user']['goal'], dailyMinutes: user.dailyMinutes },
+      user: { id: user.id, displayName: user.displayName, targetCourseKey: user.targetCourseKey, dailyMinutes: user.dailyMinutes },
       lessons, assignments, recommendations, concepts, plan,
       diagnosticOffering: offering ? { version: offering.versionId, title: offering.title, description: offering.description,
         total: offering.problems.length, estimatedMinutes: offering.estimatedMinutes } : null,
@@ -311,10 +311,13 @@ export class LearningService {
               else if (open) return {};
               const definition = await currentDiagnostic(tx);
               if (!definition) throw new AppError(503, 'content_unavailable', '시작점 확인을 준비하고 있어요. 잠시 후 다시 시도해 주세요.');
-              // Nothing narrows the scope yet — what a learner came to learn is not asked for, so a
-              // placement still has to settle the whole catalogue. Narrowing it is the next step.
-              const shapes = (await this.catalog(tx)).map(l => ({ conceptKeys: l.conceptKeys, prerequisiteConceptKeys: l.prerequisiteConceptKeys }));
-              const scope = placementScope(conceptGraph(shapes), []);
+              // Only what the course they came for stands on. Without one it is the whole catalogue,
+              // which is the length this was replacing — so the question is worth asking first.
+              const published = await this.catalog(tx);
+              const shapes = published.map(l => ({ conceptKeys: l.conceptKeys, prerequisiteConceptKeys: l.prerequisiteConceptKeys }));
+              const learner = await tx.user.findUniqueOrThrow({ where: { id: userId }, select: { targetCourseKey: true } });
+              const wanted = published.filter(l => l.courseKey === learner.targetCourseKey).flatMap(l => l.conceptKeys);
+              const scope = placementScope(conceptGraph(shapes), wanted);
               await tx.diagnosticRun.upsert({ where: { userId_version: { userId, version: definition.versionId } }, update: {},
                 create: { userId, version: definition.versionId, document: asJson(definition.problems), answers: [],
                   placement: asJson({ scope, lessons: shapes, placed: {}, source: {} } satisfies StoredPlacement) } });
@@ -348,8 +351,12 @@ export class LearningService {
                 status: completed ? 'completed' : 'active', completedAt: completed ? new Date() : null } });
               return {};
             }
-            case 'profile.update':
-              await tx.user.update({ where: { id: userId }, data: { goal: action.goal, dailyMinutes: action.dailyMinutes } }); return {};
+            case 'profile.update': {
+              // A course nobody published is not a destination. Clearing it is always allowed.
+              if (action.targetCourseKey && !(await tx.course.findFirst({ where: { key: action.targetCourseKey } }))) throw notFound();
+              await tx.user.update({ where: { id: userId }, data: { targetCourseKey: action.targetCourseKey, dailyMinutes: action.dailyMinutes } });
+              return {};
+            }
             case 'enrollment.start': {
               const version = await tx.lessonVersion.findFirst({ where: { lessonKey: action.lessonKey }, orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }] });
               if (!version) throw notFound();

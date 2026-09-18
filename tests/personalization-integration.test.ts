@@ -116,10 +116,10 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     expect(reconnect.recommendations).toEqual(state.recommendations);
     expect(await db.recommendationHistory.count({ where: { userId: user.id } })).toBe(before);
     expect(reconnect.recommendationHistory[0].trigger).toBe('diagnostic.answer');
-    await service.act(user.id, { action: 'profile.update', dailyMinutes: 5, goal: 'foundation-recovery' });
+    await service.act(user.id, { action: 'profile.update', dailyMinutes: 5, targetCourseKey: null });
     expect((await service.state(user.id)).recommendations[0].suggestedMinutes).toBe(5);
     expect(await db.recommendationHistory.count({ where: { userId: user.id } })).toBe(before + 1);
-    await service.act(user.id, { action: 'profile.update', dailyMinutes: 5, goal: 'foundation-recovery' });
+    await service.act(user.id, { action: 'profile.update', dailyMinutes: 5, targetCourseKey: null });
     expect(await db.recommendationHistory.count({ where: { userId: user.id } })).toBe(before + 1);
   });
   it('persists explicit choices per account, validates the catalogue, and can return to automatic recommendations', async () => {
@@ -161,7 +161,7 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     expect(weakState.plan.readiness[0].readiness).toBe('needs-practice');
     expect(new Date(strongAssignment.recommendedAt).getTime() - Date.now()).toBeGreaterThan(2 * 86_400_000);
     expect(new Date(weakAssignment.recommendedAt).getTime() - Date.now()).toBeLessThanOrEqual(86_400_000);
-    const changed = (await service.act(needsPractice.id, { action: 'profile.update', goal: 'algebra-ready', dailyMinutes: 20 })).state;
+    const changed = (await service.act(needsPractice.id, { action: 'profile.update', targetCourseKey: 'fractions', dailyMinutes: 20 })).state;
     expect(changed.assignments).toEqual(weakState.assignments);
   }, 30_000);
   it('does not use draft homework as assessment; submitted difficulty supersedes diagnostic success', async () => {
@@ -188,6 +188,24 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     // A concept no lesson teaches has nowhere to be learned, so 「아직 확인 전」would be permanent.
     expect(listed.filter(key => !taught.has(key)), '가르치는 수업이 없는 개념이 준비도에 있다').toEqual([]);
     expect(state.concepts.map(item => item.key).filter(key => !taught.has(key))).toEqual([]);
+  });
+
+  it('bounds a placement by the course someone named, and refuses a course nobody published', async () => {
+    const wide = await learner();
+    const wideRun = (await service.act(wide.id, { action: 'diagnostic.start' })).state.diagnostic!;
+
+    const narrow = await learner();
+    const named = (await service.act(narrow.id, { action: 'profile.update', targetCourseKey: 'fractions', dailyMinutes: 10 })).state;
+    expect(named.user.targetCourseKey).toBe('fractions');
+    const narrowRun = (await service.act(narrow.id, { action: 'diagnostic.start' })).state.diagnostic!;
+    expect(narrowRun.scope, '과정을 골라도 카탈로그 전체를 확인한다').toBeLessThan(wideRun.scope);
+
+    // A destination has to be somewhere the catalogue goes; clearing it is always allowed.
+    await expect(service.act(narrow.id, { action: 'profile.update', targetCourseKey: 'no-such-course', dailyMinutes: 10 }))
+      .rejects.toMatchObject({ status: 404 });
+    expect((await service.act(narrow.id, { action: 'profile.update', targetCourseKey: null, dailyMinutes: 10 })).state.user.targetCourseKey).toBeNull();
+    // The placement already under way keeps the scope it started with.
+    expect((await service.state(narrow.id)).diagnostic!.scope).toBe(narrowRun.scope);
   });
 
   it('reads the placement a run recorded rather than working it out again', async () => {

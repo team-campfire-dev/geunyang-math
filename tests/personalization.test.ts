@@ -3,7 +3,6 @@ import { recommend, reviewSelection, conceptReadiness, type Evidence } from '@/c
 import { diagnosticProblems } from './fixtures/content';
 import { seedLessons, conceptLabels } from './fixtures/content';
 import { gradeAnswer } from '@/core/grading';
-import type { Goal } from '@/shared/api';
 import { playPlacement } from './fixtures/placement';
 
 const lessons = seedLessons.map(c => ({ ...c.public, courseKey: 'fractions' }));
@@ -23,8 +22,8 @@ const now = new Date('2026-09-14T12:00:00Z');
 const evidence = (status: 'correct' | 'incorrect' | 'invalid', overrides: Partial<Evidence> = {}): Evidence => ({
   problemVersionId: 'new-check', conceptKeys: ['fraction.meaning'], result: { status, assisted: false, message: 'fixture' }, date: now, check: true, ...overrides,
 });
-function plan(responses: (string | null)[], goal: Goal = 'foundation-recovery') {
-  return recommend({ lessons, enrollments: [], assignments: [], readiness: conceptReadiness(conceptLabels, diagnostic(responses), []), dailyMinutes: 10, goal, now });
+function plan(responses: (string | null)[], targetCourseKey: string | null = null) {
+  return recommend({ lessons, enrollments: [], assignments: [], readiness: conceptReadiness(conceptLabels, diagnostic(responses), []), dailyMinutes: 10, targetCourseKey, now });
 }
 
 describe('placement and prerequisite recommendations', () => {
@@ -56,11 +55,14 @@ describe('placement and prerequisite recommendations', () => {
     expect(placed.source['fraction.meaning']).toBe('inferred');
     expect(placed.source['fraction.equivalence']).toBe('asked');
   });
-  it('uses goals for consolidation without bypassing missing prerequisites', () => {
-    expect(plan(answers, 'daily-math').recommendations[0].lessonKey).toBe('fraction-meaning');
-    expect(plan(answers, 'algebra-ready').recommendations[0].lessonKey).toBe('fraction-addition');
+  it('opens the course someone came for without bypassing missing prerequisites', () => {
+    // This fixture holds one course, so what a target changes here is what the screen says. That it
+    // changes which lesson is offered needs a catalogue with somewhere else to go.
+    expect(plan(answers, null).recommendations[0].reason).toMatch(/일상의 예제/);
+    expect(plan(answers, 'fractions').recommendations[0].reason).toMatch(/배우려던 과정/);
+    expect(plan(answers, 'fractions').recommendations[0].lessonKey).toBe('fraction-meaning');
     // Wrong on what the placement actually asks about, not on a question it never reaches.
-    expect(plan([null, null, '0', '0', ...answers.slice(4)], 'algebra-ready').recommendations[0].lessonKey).toBe('fraction-meaning');
+    expect(plan([null, null, '0', '0', ...answers.slice(4)], 'fractions').recommendations[0].lessonKey).toBe('fraction-meaning');
   });
   it('prioritizes subsequent learning over provisional placement and does not treat assistance as readiness', () => {
     expect(conceptReadiness(conceptLabels, diagnostic(answers), [evidence('incorrect')])[0]).toMatchObject({ source: 'learning', readiness: 'needs-practice' });
@@ -78,19 +80,19 @@ describe('placement and prerequisite recommendations', () => {
   });
   it('offers a prerequisite without preventing a learner from continuing a chosen lesson', () => {
     const output = recommend({ lessons, enrollments: [{ lessonKey: 'fraction-addition', status: 'active' }], assignments: [],
-      readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 5, goal: 'foundation-recovery', now });
+      readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 5, targetCourseKey: null, now });
     expect(output.recommendations[0]).toMatchObject({ lessonKey: 'fraction-meaning', suggestedMinutes: 5 });
     expect(output.recommendations[0].reason).toContain('직접 선택');
   });
   it('honors an explicit lesson choice and returns to prerequisite rules when cleared', () => {
-    const input = { lessons, enrollments: [], assignments: [], readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 10, goal: 'foundation-recovery' as const, now };
+    const input = { lessons, enrollments: [], assignments: [], readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 10, targetCourseKey: null as string | null, now };
     const chosen = recommend({ ...input, preferredLessonKey: 'fraction-addition' });
     expect(chosen.recommendations[0].lessonKey).toBe('fraction-addition');
     expect(chosen.recommendations[0].reason).toContain('선수 개념');
     expect(recommend({ ...input, preferredLessonKey: null }).recommendations[0].lessonKey).toBe('fraction-meaning');
   });
   it('prioritizes only due unfinished reviews without treating future or missing work as wrong', () => {
-    const output = recommend({ lessons, enrollments: [], readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 10, goal: 'foundation-recovery', now,
+    const output = recommend({ lessons, enrollments: [], readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 10, targetCourseKey: null, now,
       assignments: [{ recipientId: 'future', status: 'assigned', recommendedAt: '2026-09-17T12:00:00Z' }, { recipientId: 'done', status: 'submitted', recommendedAt: '2026-09-10T12:00:00Z' }, { recipientId: 'due', status: 'assigned', recommendedAt: now.toISOString() }] });
     expect(output.plan.review?.recipientId).toBe('due');
     expect(output.plan.readiness.every(s => s.readiness === 'unknown')).toBe(true);
