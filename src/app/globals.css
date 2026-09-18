@@ -205,7 +205,9 @@
 /* A drawing described as data. The learner's figure and the editor's canvas draw the same shapes,
    so arranging a picture here is arranging the picture that ships. */
 .scene-figure { padding: 18px; background: #f7f8f1; border: 1px solid #e6edd9; border-radius: 8px; }
-.scene-figure svg { display: block; width: 100%; height: auto; margin: 0 auto; }
+/* The drawing itself, and only it: the play and step buttons keep icons of their own inside
+   this figure, and a descendant rule stretched those to whatever the button's box was. */
+.scene-figure > svg { display: block; width: 100%; height: auto; margin: 0 auto; }
 .scene-figure figcaption { font-size: 13px; line-height: 1.8; text-align: center; margin-top: 13px; color: #92a17b; word-break: keep-all; }
 @media (max-width: 520px) { .scene-figure { padding: 12px; } }
 

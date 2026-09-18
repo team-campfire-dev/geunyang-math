@@ -258,7 +258,7 @@
 .scene-tools .editor-label { width: 100%; }
 .authoring-page .scene-tools .button { font-size: 12px; min-height: var(--editor-control); padding: 6px 11px; }
 .scene-canvas { margin-top: 12px; border: 1px solid #cdd8bd; border-radius: 8px; background: var(--white); overflow: hidden; }
-.scene-canvas svg { display: block; width: 100%; height: auto; margin: 0 auto; touch-action: none; }
+.scene-canvas > svg { display: block; width: 100%; height: auto; margin: 0 auto; touch-action: none; }
 .scene-size { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin-top: 12px; }
 .scene-size .editor-field { margin-top: 0; width: 108px; }
 .scene-size .editor-note { margin: 0 0 8px auto; }
