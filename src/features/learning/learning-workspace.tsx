@@ -6,6 +6,7 @@ import type { ActionResponse, AssignmentView, AttemptView, LessonDocument, Conte
 import { ApiError, learningApi, supportsWebAuthentication, type Session } from './api-client';
 import { assertLearningResponseAccount, clearAuthReturn, GOOGLE_LOGIN_PATH, isNativeBrowser, LearningResponseError, parseAuthError, readAuthReturn, saveAuthReturn, type AuthReturn } from './auth-client';
 import { DiagnosticPanel } from './diagnostic-panel';
+import { ReadinessList } from './readiness-list';
 import { GoogleLoginButton } from './google-login-button';
 import { ServiceFooter } from './service-footer';
 import { ContentBlocks, unsupportedRequiredBlocks, type GlossaryContext } from './content-blocks';
@@ -373,7 +374,7 @@ export function LearningWorkspace() {
           <button className="button secondary" disabled={busy} onClick={() => navigate('diagnostic')}>{state.diagnostic?.status === 'completed' ? '진단 결과' : state.diagnostic ? `개념 ${state.diagnostic.settled}/${state.diagnostic.scope} · 이어서 확인` : state.diagnosticOffering ? `최대 ${state.diagnosticOffering.total}문제로 확인하기` : '시작점 확인 안내'}</button></div>
         <p className="muted">진단 없이 바로 시작해도 괜찮아요. 실제 풀이와 제출한 복습을 반영해 추천이 달라져요.</p>
         <div className="recommendation-choice"><button className="text-button" disabled={busy} onClick={() => navigate('lessons')}>다른 수업 직접 고르기 →</button>{state.plan.preferredLessonKey && <button className="text-button" disabled={busy} onClick={() => { void dispatch({ action: 'recommendation.choose', lessonKey: null }).catch(() => {}); }}>자동 추천으로 돌아가기</button>}</div>
-        <details className="readiness-details"><summary>개념별 추천 근거 보기</summary><div className="readiness-list">{state.plan.readiness.map(concept => <span key={concept.key} className={`readiness ${concept.readiness}`}><strong>{concept.label}</strong> · {concept.readiness === 'ready' ? '다음 개념 준비' : concept.readiness === 'needs-practice' ? '한 번 더 연습' : '아직 확인 전'}{concept.source === 'diagnostic' ? ' (진단 기준)' : ''}</span>)}</div></details>
+        <details className="readiness-details"><summary>개념별 추천 근거 보기</summary><ReadinessList readiness={state.plan.readiness} explainSource /></details>
         {state.plan.review && <div className="review-callout"><p>{state.plan.review.reason}</p><button className="button primary" disabled={busy} onClick={() => { const review = state.assignments.find(a => a.recipientId === state.plan.review?.recipientId); if (review) openAssignment(review); }}>복습부터 시작하기</button></div>}
       </section>}
       <div className="learning-overview"><div><span className="overview-icon"><Icon name="book" size={20} /></span><span><small>나의 학습</small><strong>{completedCount}<em>개 수업 완료</em></strong></span></div><div><span className="overview-icon"><Icon name="pencil" size={20} /></span><span><small>한 번 더 생각하기</small><strong>{pendingAssignments.length}<em>개 과제 남음</em></strong></span></div><button onClick={openProfile}><span className="overview-icon orange"><Icon name="clock" size={20} /></span><span><small>꾸준함을 위한 작은 약속</small><strong>하루 {state?.user.dailyMinutes ?? 10}<em>분씩 학습</em></strong></span><Icon name="chevron" size={16} /></button></div>

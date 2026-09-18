@@ -54,6 +54,30 @@ describe('the placement screen', () => {
     expect(screen.getByText(/개념 8개의 자리를 찾았어요/).textContent).toMatch(/5개는 직접 묻지 않고/);
   });
 
+  it('folds away what it could not settle instead of listing it all', () => {
+    // The scope is the whole catalogue, so most concepts end a placement untouched. Twenty chips of
+    // 「아직 확인 전」bury the handful that say something.
+    const readiness: ConceptReadiness[] = [
+      { key: 'fraction', label: '분수', readiness: 'ready', source: 'diagnostic' },
+      ...Array.from({ length: 12 }, (_, index) => ({ key: `far-${index}`, label: `먼 개념 ${index}`, readiness: 'unknown' as const, source: 'none' as const })),
+    ];
+    panel({ diagnostic: run({ status: 'completed' }), readiness });
+    const lists = document.querySelectorAll('.readiness-list');
+    expect(lists).toHaveLength(2);
+    expect(lists[0].textContent).toContain('분수');
+    expect(lists[0].textContent, '정해지지 않은 개념이 함께 펼쳐져 있다').not.toContain('먼 개념');
+    // Present in the document but folded away, so it can be read on purpose and not by accident.
+    const folded = screen.getByText('먼 개념 0').closest('details')!;
+    expect(folded.hasAttribute('open')).toBe(false);
+    expect(screen.getByText('아직 확인하지 않은 개념 12개')).toBeTruthy();
+  });
+
+  it('shows nothing about what it settled when it settled nothing, rather than an empty row', () => {
+    panel({ diagnostic: run({ status: 'completed' }), readiness: [{ key: 'a', label: '가', readiness: 'unknown', source: 'none' }] });
+    expect(document.querySelectorAll('.readiness-list')).toHaveLength(1);
+    expect(screen.getByText('아직 확인하지 않은 개념 1개')).toBeTruthy();
+  });
+
   it('sends the answer for the question it is showing, whichever one that is', () => {
     const dispatch = vi.fn(async () => ({}) as never);
     panel({ dispatch, diagnostic: run({ currentProblem: { ...problem, problemVersionId: 'q7' } }) });

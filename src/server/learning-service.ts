@@ -156,7 +156,10 @@ export class LearningService {
       db.concept.findMany({ where: { assessable: true } }), currentDiagnostic(db),
     ]);
     if (!user) throw notFound();
-    const conceptRows = orderConcepts(assessable, lessons);
+    // Only what a published lesson teaches. A concept with nowhere to learn it can never be settled
+    // by a placement or by any work, so listing it forever as「아직 확인 전」says nothing true.
+    const taughtKeys = new Set(lessons.flatMap(lesson => lesson.conceptKeys));
+    const conceptRows = orderConcepts(assessable.filter(row => taughtKeys.has(row.key)), lessons);
     const conceptLabels = Object.fromEntries(conceptRows.map(s => [s.key, s.label]));
     const concepts: LearningState['concepts'] = Object.entries(conceptLabels).map(([key, label]) => ({ key, label, state: 'unknown' }));
     const firstEvidence = new Map<string, { result: GradeResult; date: Date; conceptKeys: string[]; delayed: boolean }>();

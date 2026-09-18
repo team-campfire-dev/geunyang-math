@@ -179,6 +179,17 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     expect(finalized.state.plan.readiness[0]).toMatchObject({ readiness: 'needs-practice', source: 'learning' });
   }, 30_000);
 
+  it('names only the concepts a published lesson teaches, since the rest can never be settled', async () => {
+    const user = await learner();
+    const state = await service.state(user.id);
+    const taught = new Set(state.lessons.flatMap(lesson => lesson.conceptKeys));
+    const listed = state.plan.readiness.map(item => item.key);
+    expect(listed.length).toBeGreaterThan(0);
+    // A concept no lesson teaches has nowhere to be learned, so 「아직 확인 전」would be permanent.
+    expect(listed.filter(key => !taught.has(key)), '가르치는 수업이 없는 개념이 준비도에 있다').toEqual([]);
+    expect(state.concepts.map(item => item.key).filter(key => !taught.has(key))).toEqual([]);
+  });
+
   it('reads the placement a run recorded rather than working it out again', async () => {
     const user = await learner();
     const done = await place(user.id, answers);

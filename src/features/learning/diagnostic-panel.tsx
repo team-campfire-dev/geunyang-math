@@ -2,6 +2,7 @@
 import { useState, type FormEvent } from 'react';
 import type { ActionResponse, DiagnosticOffering, DiagnosticView, LearningAction, PublicLesson, ConceptReadiness } from '@/shared/api';
 import { ContentBlocks } from './content-blocks';
+import { ReadinessList } from './readiness-list';
 
 export function DiagnosticPanel({ diagnostic, offering, dispatch, busy, onBack, nextLesson, readiness, onOpenLesson }: {
   nextLesson?: PublicLesson; readiness: ConceptReadiness[]; onOpenLesson: (key: string) => void;
@@ -26,7 +27,7 @@ export function DiagnosticPanel({ diagnostic, offering, dispatch, busy, onBack, 
     <button className="back-button" onClick={onBack} disabled={busy}>← 내 학습으로</button>
     <div className="page-heading"><div className="eyebrow">FIND YOUR STARTING POINT</div><h1>어디서 시작하면 편할까요?</h1><p>{!diagnostic && offering ? offering.description : "모르는 문제는 건너뛰어도 괜찮아요. 나의 속도로 확인해 보세요."}</p></div>
     {!diagnostic ? offering ? <div className="lesson-sheet"><h2>{offering.title} · 최대 {offering.total}문제</h2><p>답에 따라 다음 문제가 달라져요. 한 문제를 풀면 그 위나 아래의 개념까지 함께 정해지기 때문에, 대개 훨씬 적게 풀고 끝나요.</p><p>점수를 매기기보다 지금 필요한 수업을 찾는 데 사용해요. 저장한 답은 변경할 수 없고, 결과는 마지막에 함께 확인해요. 나중에 돌아와도 이어갈 수 있고, 확인 없이 수업에서 바로 시작해도 괜찮아요.</p><button className="button primary" disabled={busy} onClick={() => void start()}>시작점 확인하기</button></div> : <p>시작점 확인을 준비하고 있어요. 수업에서 학습을 시작할 수 있어요.</p>
-      : diagnostic.status === 'completed' ? <div className="lesson-sheet"><h2>시작점을 확인했어요.</h2><p>{diagnostic.results.length}문제로 개념 {diagnostic.settled}개의 자리를 찾았어요. 그중 {diagnostic.inferred}개는 직접 묻지 않고 앞의 답에서 이어진 것이에요. 건너뛴 {diagnostic.results.filter(a => a.status === 'skipped').length}문제는 아직 모르는 상태로 두었어요.</p><p>이 결과는 잠정적인 추천에만 사용해요. 이후 실제 수업과 제출한 복습 기록을 우선 반영해요.</p><div className="readiness-list">{readiness.map((concept) => <span key={concept.key} className={`readiness ${concept.readiness}`}><strong>{concept.label}</strong> · {concept.readiness === 'ready' ? '다음 개념 준비' : concept.readiness === 'needs-practice' ? '한 번 더 연습' : '아직 확인 전'}{concept.source === 'inferred' && <span className="readiness-source"> 앞의 답에서</span>}</span>)}</div>
+      : diagnostic.status === 'completed' ? <div className="lesson-sheet"><h2>시작점을 확인했어요.</h2><p>{diagnostic.results.length}문제로 개념 {diagnostic.settled}개의 자리를 찾았어요. 그중 {diagnostic.inferred}개는 직접 묻지 않고 앞의 답에서 이어진 것이에요. 건너뛴 {diagnostic.results.filter(a => a.status === 'skipped').length}문제는 아직 모르는 상태로 두었어요.</p><p>이 결과는 잠정적인 추천에만 사용해요. 이후 실제 수업과 제출한 복습 기록을 우선 반영해요.</p><ReadinessList readiness={readiness} />
           {nextLesson && <div className="diagnostic-next"><span className="eyebrow">다음 추천 수업</span><h3>{nextLesson.title}</h3><p>{nextLesson.summary}</p><button className="button primary" onClick={() => onOpenLesson(nextLesson.lessonKey)}>이 수업 펼치기</button></div>}
           <button className="text-button" onClick={onBack}>내 학습으로 돌아가기</button></div>
         : diagnostic.currentProblem && <article className="lesson-sheet" key={diagnostic.currentProblem.problemVersionId}>
