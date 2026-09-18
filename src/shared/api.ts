@@ -92,11 +92,16 @@ export type DiagnosticAnswer = { problemVersionId: string; answer: string | null
 export type DiagnosticOffering = { version: string; title: string; description: string; total: number; estimatedMinutes: number };
 export type DiagnosticView = {
   id: string; version: string; status: 'active' | 'completed'; completedAt: string | null;
-  total: number; answered: number; currentProblem: PublicProblem | null;
+  // A placement asks only what it has to, so its length is not known when it starts. What a screen
+  // can say instead is how many concepts it has to settle and how many of those it already has —
+  // `asked` for the ones put to the learner, `inferred` for the ones an answer settled on its own.
+  scope: number; settled: number; asked: number; inferred: number;
+  answered: number; currentProblem: PublicProblem | null;
   // Only released after completion. Diagnostic items never expose hints or grading specifications.
   results: DiagnosticAnswer[];
 };
-export type ConceptReadiness = { key: string; label: string; readiness: 'unknown' | 'needs-practice' | 'ready'; source: 'none' | 'diagnostic' | 'learning' };
+// `inferred`: the placement did not ask about this concept, it followed from an answer above or below it.
+export type ConceptReadiness = { key: string; label: string; readiness: 'unknown' | 'needs-practice' | 'ready'; source: 'none' | 'diagnostic' | 'inferred' | 'learning' };
 export type Recommendation = { lessonKey: string; reason: string; kind: 'start' | 'continue' | 'revisit'; suggestedMinutes: number };
 export type PersonalPlan = {
   version: string;

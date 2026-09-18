@@ -3,12 +3,22 @@ import { recommend, reviewSelection, conceptReadiness, type Evidence } from '@/c
 import { diagnosticProblems } from './fixtures/content';
 import { seedLessons, conceptLabels } from './fixtures/content';
 import { gradeAnswer } from '@/core/grading';
-import type { DiagnosticAnswer, Goal } from '@/shared/api';
+import type { Goal } from '@/shared/api';
+import { playPlacement } from './fixtures/placement';
 
 const lessons = seedLessons.map(c => ({ ...c.public, courseKey: 'fractions' }));
 const answers = ['4/9', '12', '10', '3/4', '7/11', '5/12'];
 const bank = diagnosticProblems;
-const diagnostic = (responses: (string | null)[]) => ({ problems: bank, answers: bank.map((p, i) => ({ problemVersionId: p.problemVersionId, answer: responses[i], status: responses[i] === null ? 'skipped' : gradeAnswer(responses[i]!, p.gradingSpec, false).status })) as DiagnosticAnswer[] });
+/** What the learner would answer to each question, whichever order the placement puts them in. */
+const diagnostic = (responses: (string | null)[]) => {
+  const intended = new Map(bank.map((problem, index) => [problem.problemVersionId, responses[index]]));
+  return playPlacement(lessons, bank, (id) => {
+    const response = intended.get(id) ?? null;
+    if (response === null) return 'skipped';
+    // These fixtures are readable answers; an unreadable one never reaches a placement in any case.
+    return gradeAnswer(response, bank.find(p => p.problemVersionId === id)!.gradingSpec, false).status === 'correct' ? 'correct' : 'incorrect';
+  }).state;
+};
 const now = new Date('2026-09-14T12:00:00Z');
 const evidence = (status: 'correct' | 'incorrect' | 'invalid', overrides: Partial<Evidence> = {}): Evidence => ({
   problemVersionId: 'new-check', conceptKeys: ['fraction.meaning'], result: { status, assisted: false, message: 'fixture' }, date: now, check: true, ...overrides,
@@ -35,15 +45,29 @@ describe('placement and prerequisite recommendations', () => {
     expect(plan([...answers.slice(0, 4), '0', null]).recommendations[0].lessonKey).toBe('fraction-addition');
     expect(plan([answers[0], null, ...answers.slice(2)]).recommendations[0].lessonKey).toBe('fraction-meaning');
   });
+  it('carries a right answer to a prerequisite it never asked about, right or wrong for this learner', () => {
+    // The saving and the risk are the same thing. Someone who can find an equivalent fraction is
+    // taken to know what a fraction is, so the two questions about meaning are never put to them —
+    // even to someone who would have got them wrong. Their own work overrides it as soon as there is
+    // any, which is why a placement is provisional and not a score.
+    const placed = diagnostic([null, null, ...answers.slice(2, 4), null, null]);
+    expect(placed.placed['fraction.equivalence']).toBe('ready');
+    expect(placed.placed['fraction.meaning']).toBe('ready');
+    expect(placed.source['fraction.meaning']).toBe('inferred');
+    expect(placed.source['fraction.equivalence']).toBe('asked');
+  });
   it('uses goals for consolidation without bypassing missing prerequisites', () => {
     expect(plan(answers, 'daily-math').recommendations[0].lessonKey).toBe('fraction-meaning');
     expect(plan(answers, 'algebra-ready').recommendations[0].lessonKey).toBe('fraction-addition');
-    expect(plan(['0', ...answers.slice(1)], 'algebra-ready').recommendations[0].lessonKey).toBe('fraction-meaning');
+    // Wrong on what the placement actually asks about, not on a question it never reaches.
+    expect(plan([null, null, '0', '0', ...answers.slice(4)], 'algebra-ready').recommendations[0].lessonKey).toBe('fraction-meaning');
   });
   it('prioritizes subsequent learning over provisional placement and does not treat assistance as readiness', () => {
     expect(conceptReadiness(conceptLabels, diagnostic(answers), [evidence('incorrect')])[0]).toMatchObject({ source: 'learning', readiness: 'needs-practice' });
     expect(conceptReadiness(conceptLabels, diagnostic(answers), [evidence('correct', { result: { status: 'correct', assisted: true, message: '' } })])[0].readiness).toBe('needs-practice');
-    expect(conceptReadiness(conceptLabels, diagnostic(answers), [evidence('invalid')])[0].source).toBe('diagnostic');
+    // An unreadable attempt is no evidence, so the placement still speaks — here by inference,
+    // because answering equivalence carried meaning without ever asking about it.
+    expect(conceptReadiness(conceptLabels, diagnostic(answers), [evidence('invalid')])[0]).toMatchObject({ source: 'inferred', readiness: 'ready' });
     expect(conceptReadiness(conceptLabels, diagnostic(Array(6).fill(null)), [evidence('correct')])[0].readiness).toBe('ready');
   });
   it('requires all first answers in the latest submitted assessment for readiness', () => {

@@ -1,6 +1,6 @@
 # DB 콘텐츠 관리
 
-2026-09-18 · 코드 기준: [남은 세 수업의 움직임 #72](https://github.com/team-campfire-dev/geunyang-math/pull/72), `a9a966d`. 릴리스별 검증은 [배포 기록](deployment.md#릴리스별-검증-기록)을 따른다.
+2026-09-18 · 코드 기준: [배치가 앞의 답을 따라간다 #76](https://github.com/team-campfire-dev/geunyang-math/pull/76). 릴리스별 검증은 [배포 기록](deployment.md#릴리스별-검증-기록)을 따른다.
 
 기본 콘텐츠와 이후 발행한 콘텐츠의 운영 원본은 MySQL이다. 수업·진단 문항·개념 이름을 TypeScript/JSON 파일에서 불러오는 런타임 경로는 없다.
 

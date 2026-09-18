@@ -4,6 +4,8 @@ import { lessonRecord, lessonRecords, currentDiagnostic, currentDefinitions, pub
 import { recommend, reviewSelection, conceptReadiness, type Evidence } from '@/core/personalization';
 import { assignmentWindow, parseAssignmentPolicy, parseAssignmentSchedule, recipientDates, reviewPolicy } from '@/core/assignment';
 import { glossaryEntries } from '@/core/glossary';
+import { conceptGraph, placementScope } from '@/core/concept-graph';
+import { placement, placementProgress, type PlacementState } from '@/core/placement';
 import { canExploreDefinitions, leafGlossary } from '@/shared/definition-exploration';
 import { definitionRefId, mayReferenceDefinition } from '@/shared/rich-text';
 import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
@@ -12,6 +14,14 @@ import { blockDefinitionRefs, getActivityProblemIds, definitionReferences, toPub
 import { gradeAnswer } from '@/core/grading';
 import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicCatalog, PublicLesson, PublicProblem, DiagnosticAnswer, Recommendation } from '@/shared/api';
 import { AppError } from './errors';
+
+/**
+ * A placement as a run keeps it: what it has to settle, what it has settled, and **the shape of the
+ * catalogue it is descending.** The lessons are frozen with the run for the same reason the question
+ * bank already is — a lesson published halfway through must not change which question comes next, or
+ * move a learner who has stopped answering.
+ */
+type StoredPlacement = PlacementState & { lessons: { conceptKeys: string[]; prerequisiteConceptKeys: string[] }[] };
 
 const id = z.string().min(1).max(191);
 const definitionRef = z.object({
@@ -218,7 +228,9 @@ export class LearningService {
     const diagnosticBank = diagnostic?.document as unknown as StoredProblem[] | undefined;
     const diagnosticAnswers = (diagnostic?.answers ?? []) as unknown as DiagnosticAnswer[];
     const completedDiagnostic = diagnostic?.status === 'completed';
-    const readiness = conceptReadiness(conceptLabels, completedDiagnostic && diagnosticBank ? { answers: diagnosticAnswers, problems: diagnosticBank } : null, evidence);
+    const stored = (diagnostic?.placement ?? null) as StoredPlacement | null;
+    const asking = stored && diagnosticBank ? placement(conceptGraph(stored.lessons), stored.scope, diagnosticBank, diagnosticAnswers) : null;
+    const readiness = conceptReadiness(conceptLabels, completedDiagnostic ? stored : null, evidence);
     const { recommendations, plan } = recommend({ lessons, enrollments: enrollments.map(e => ({ lessonKey: e.lessonVersion.lessonKey, status: e.status })),
       assignments, readiness, dailyMinutes: user.dailyMinutes, goal: user.goal as LearningState['user']['goal'], now: new Date(), preferredLessonKey: user.preferredLessonKey });
     return {
@@ -226,9 +238,10 @@ export class LearningService {
       lessons, assignments, recommendations, concepts, plan,
       diagnosticOffering: offering ? { version: offering.versionId, title: offering.title, description: offering.description,
         total: offering.problems.length, estimatedMinutes: offering.estimatedMinutes } : null,
-      diagnostic: diagnostic && diagnosticBank ? { id: diagnostic.id, version: diagnostic.version, status: diagnostic.status as 'active' | 'completed',
-        completedAt: diagnostic.completedAt?.toISOString() ?? null, total: diagnosticBank.length, answered: diagnosticAnswers.length,
-        currentProblem: !completedDiagnostic && diagnosticBank[diagnosticAnswers.length] ? publicProblem(diagnosticBank[diagnosticAnswers.length]) : null,
+      diagnostic: diagnostic && diagnosticBank && stored ? { id: diagnostic.id, version: diagnostic.version, status: diagnostic.status as 'active' | 'completed',
+        completedAt: diagnostic.completedAt?.toISOString() ?? null, answered: diagnosticAnswers.length,
+        ...placementProgress({ scope: stored.scope, placed: stored.placed, source: stored.source }),
+        currentProblem: !completedDiagnostic && asking?.next ? publicProblem(diagnosticBank.find(p => p.problemVersionId === asking.next!.problemVersionId)!) : null,
         results: completedDiagnostic ? diagnosticAnswers : [] } : null,
       recommendationHistory: history.map(h => ({ id: h.id, createdAt: h.createdAt.toISOString(), trigger: h.trigger,
         recommendations: (h.snapshot as unknown as { recommendations: Recommendation[] }).recommendations })),
@@ -286,11 +299,22 @@ export class LearningService {
             }
             case 'diagnostic.start': {
               // A published bank never replaces an in-progress learner snapshot.
-              if (await tx.diagnosticRun.findFirst({ where: { userId, status: 'active' } })) return {};
+              const open = await tx.diagnosticRun.findFirst({ where: { userId, status: 'active' } });
+              // A run started before placement descended a graph cannot be continued — its questions
+              // were chosen by walking the bank, and this one chooses them. Rather than keep a second
+              // way of running a placement forever, an unfinished one of those starts again. There
+              // are none in production; a finished run is never touched.
+              if (open && !open.placement) await tx.diagnosticRun.delete({ where: { id: open.id } });
+              else if (open) return {};
               const definition = await currentDiagnostic(tx);
               if (!definition) throw new AppError(503, 'content_unavailable', '시작점 확인을 준비하고 있어요. 잠시 후 다시 시도해 주세요.');
+              // Nothing narrows the scope yet — what a learner came to learn is not asked for, so a
+              // placement still has to settle the whole catalogue. Narrowing it is the next step.
+              const shapes = (await this.catalog(tx)).map(l => ({ conceptKeys: l.conceptKeys, prerequisiteConceptKeys: l.prerequisiteConceptKeys }));
+              const scope = placementScope(conceptGraph(shapes), []);
               await tx.diagnosticRun.upsert({ where: { userId_version: { userId, version: definition.versionId } }, update: {},
-                create: { userId, version: definition.versionId, document: asJson(definition.problems), answers: [] } });
+                create: { userId, version: definition.versionId, document: asJson(definition.problems), answers: [],
+                  placement: asJson({ scope, lessons: shapes, placed: {}, source: {} } satisfies StoredPlacement) } });
               return {};
             }
             case 'diagnostic.answer': {
@@ -304,13 +328,20 @@ export class LearningService {
                 return {};
               }
               if (run.status !== 'active') throw conflict('이미 마친 진단이에요.');
-              const problem = bank[answers.length];
-              if (!problem || problem.problemVersionId !== action.problemVersionId) throw conflict('현재 진단 문제부터 확인해 주세요.');
+              const held = run.placement as StoredPlacement | null;
+              if (!held) throw conflict('예전 방식으로 시작한 시작점 확인이에요. 새로 시작해 주세요.');
+              const graph = conceptGraph(held.lessons);
+              const asked = placement(graph, held.scope, bank, answers).next;
+              if (!asked || asked.problemVersionId !== action.problemVersionId) throw conflict('현재 진단 문제부터 확인해 주세요.');
+              const problem = bank.find(p => p.problemVersionId === asked.problemVersionId)!;
               const result = action.answer === null ? null : gradeAnswer(action.answer, problem.gradingSpec, false);
               if (result?.status === 'invalid') return { result };
-              const next = [...answers, { problemVersionId: problem.problemVersionId, answer: action.answer, status: result?.status ?? 'skipped' }];
-              const completed = next.length === bank.length;
+              const next: DiagnosticAnswer[] = [...answers, { problemVersionId: problem.problemVersionId, answer: action.answer, status: result?.status ?? 'skipped' }];
+              // A placement ends when the descent has nothing left it can ask, not at a fixed length.
+              const after = placement(graph, held.scope, bank, next);
+              const completed = !after.next;
               await tx.diagnosticRun.update({ where: { id: run.id }, data: { answers: asJson(next),
+                placement: asJson({ ...held, placed: after.state.placed, source: after.state.source } satisfies StoredPlacement),
                 status: completed ? 'completed' : 'active', completedAt: completed ? new Date() : null } });
               return {};
             }

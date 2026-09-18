@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { applyAnswer, conceptGraph, nextConcept, placementScope, type Placement, type PlacementSource } from '@/core/concept-graph';
+import { conceptGraph, nextConcept, placementScope, settleConcept, type Placement, type PlacementSource } from '@/core/concept-graph';
 import { parseContentBundle } from '@/core/content-bundle';
 import type { StoredLesson } from '@/core/content';
 
@@ -26,7 +26,7 @@ function place(scope: string[], known: Set<string>) {
     if (!key) break;
     asked += 1;
     // One question per concept here. A real run may need a second to be sure of a right answer.
-    ({ placed, source } = applyAnswer(graph, scope, placed, source, key, known.has(key)));
+    ({ placed, source } = settleConcept(graph, scope, placed, source, key, known.has(key) ? "ready" : "needs-practice"));
     // Every question must settle at least itself, or the loop is not descending anywhere.
     expect(Object.keys(placed).length, `${key}가 아무것도 정하지 못했다`).toBeGreaterThanOrEqual(asked);
     if (asked > scope.length) throw new Error('하강이 끝나지 않는다');

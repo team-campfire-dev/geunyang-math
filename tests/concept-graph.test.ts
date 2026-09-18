@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { applyAnswer, conceptGraph, nextConcept, placementScope, type Placement, type PlacementSource } from '@/core/concept-graph';
+import { conceptGraph, nextConcept, placementScope, settleConcept, type Placement, type PlacementSource } from '@/core/concept-graph';
 
 /**
  * A small catalogue to reason about by hand: `half` stands on `whole`, `quarter` stands on `half`,
@@ -94,11 +94,11 @@ describe('the question a placement asks next', () => {
   });
 });
 
-describe('what one answer settles', () => {
+describe('what settling one concept settles', () => {
   const scope = placementScope(graph, ['quarter']);
 
   it('carries a right answer up the prerequisites it was built on', () => {
-    const { placed, source } = applyAnswer(graph, scope, {}, {}, 'half', true);
+    const { placed, source } = settleConcept(graph, scope, {}, {}, 'half', 'ready');
     expect(placed).toEqual({ half: 'ready', whole: 'ready' });
     expect(source).toEqual({ half: 'asked', whole: 'inferred' });
     // Nothing is claimed about what stands on it — that is still to be asked.
@@ -106,14 +106,14 @@ describe('what one answer settles', () => {
   });
 
   it('defers everything that stands on a wrong answer, and says it was not asked', () => {
-    const { placed, source } = applyAnswer(graph, scope, {}, {}, 'half', false);
+    const { placed, source } = settleConcept(graph, scope, {}, {}, 'half', 'needs-practice');
     expect(placed).toEqual({ half: 'needs-practice', quarter: 'needs-practice' });
     expect(source).toEqual({ half: 'asked', quarter: 'inferred' });
     expect(placed.whole).toBeUndefined();
   });
 
   it('stays inside the scope, so an untargeted branch is never claimed', () => {
-    const { placed } = applyAnswer(graph, scope, {}, {}, 'whole', false);
+    const { placed } = settleConcept(graph, scope, {}, {}, 'whole', 'needs-practice');
     expect(placed.share).toBeUndefined();
     expect(placed).toEqual({ whole: 'needs-practice', half: 'needs-practice', quarter: 'needs-practice' });
   });
@@ -121,7 +121,7 @@ describe('what one answer settles', () => {
   it('never rewrites an answer already settled, whichever way it came', () => {
     const placed: Placement = { whole: 'needs-practice' };
     const source: PlacementSource = { whole: 'asked' };
-    const after = applyAnswer(graph, scope, placed, source, 'half', true);
+    const after = settleConcept(graph, scope, placed, source, 'half', 'ready');
     expect(after.placed.whole).toBe('needs-practice');
     expect(after.source.whole).toBe('asked');
     expect(after.placed.half).toBe('ready');
@@ -129,7 +129,7 @@ describe('what one answer settles', () => {
 
   it('ignores a concept outside the scope or already settled', () => {
     const placed: Placement = { half: 'ready' };
-    expect(applyAnswer(graph, scope, placed, { half: 'asked' }, 'half', false).placed).toBe(placed);
-    expect(applyAnswer(graph, scope, placed, { half: 'asked' }, 'share', true).placed).toBe(placed);
+    expect(settleConcept(graph, scope, placed, { half: 'asked' }, 'half', 'needs-practice').placed).toBe(placed);
+    expect(settleConcept(graph, scope, placed, { half: 'asked' }, 'share', 'ready').placed).toBe(placed);
   });
 });

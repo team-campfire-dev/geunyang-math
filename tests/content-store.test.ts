@@ -261,11 +261,13 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
       const fresh = await learner();
       const state = (await service.act(fresh.id, { action: 'diagnostic.start' })).state;
       expect(state.diagnosticOffering).toMatchObject({ title: 'DB 진단', total: 1, estimatedMinutes: 1 });
-      expect(state.diagnostic).toMatchObject({ total: 1, version: definition.versionId });
+      expect(state.diagnostic).toMatchObject({ answered: 0, settled: 0, version: definition.versionId });
       expect(JSON.stringify(state)).not.toMatch(/"(?:gradingSpec|solution|hints)"/);
       const resumed = (await service.act(oldUser.id, { action: 'diagnostic.start' })).state;
       expect(resumed.diagnostic?.id).toBe(oldRun.id);
-      expect(resumed.diagnostic?.total).toBe(6);
+      // The run keeps asking from the bank it started with, not the single question just published.
+      expect(resumed.diagnostic?.version).toBe(oldState.diagnostic!.version);
+      expect(resumed.diagnostic?.currentProblem?.problemVersionId).toBe(oldState.diagnostic!.currentProblem!.problemVersionId);
       expect(await db.diagnosticRun.findUniqueOrThrow({ where: { id: oldRun.id } })).toEqual(oldRun);
       const completed = await service.act(fresh.id, { action: 'diagnostic.answer', diagnosticId: state.diagnostic!.id,
         problemVersionId: state.diagnostic!.currentProblem!.problemVersionId, answer: '4/9' });
