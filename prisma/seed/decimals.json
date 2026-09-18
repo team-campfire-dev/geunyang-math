@@ -317,7 +317,7 @@
     {
       "public": {
         "lessonKey": "decimal-fraction",
-        "versionId": "decimal-fraction:v1",
+        "versionId": "decimal-fraction:v2",
         "title": "소수와 분수: 같은 양의 두 이름",
         "summary": "소수를 분수로, 분수를 소수로 바꾸며 같은 양임을 확인해요.",
         "estimatedMinutes": 10,
@@ -334,12 +334,12 @@
       },
       "sections": [
         {
-          "sectionId": "decimal-fraction:explanation:v1",
+          "sectionId": "decimal-fraction:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "decimal-fraction:explanation:text:v1",
+              "blockId": "decimal-fraction:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -365,7 +365,7 @@
               }
             },
             {
-              "blockId": "decimal-fraction:explanation:drawing:v1",
+              "blockId": "decimal-fraction:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -373,7 +373,7 @@
                 "width": 320,
                 "height": 200,
                 "alt": "열 칸 중 네 칸과 다섯 칸 중 두 칸을 위아래로 견준 막대",
-                "caption": "$0.4=\\frac{4}{10}=\\frac{2}{5}$",
+                "caption": "자릿값을 분모로 쓰고, 묶어서 더 간단한 이름으로",
                 "items": [
                   {
                     "kind": "strip",
@@ -385,7 +385,8 @@
                     "filled": 4,
                     "fill": "green",
                     "stroke": "ink",
-                    "strokeWidth": 1
+                    "strokeWidth": 1,
+                    "id": "tenths"
                   },
                   {
                     "kind": "text",
@@ -394,7 +395,8 @@
                     "text": "$0.4=\\frac{4}{10}$",
                     "size": 14,
                     "anchor": "middle",
-                    "fill": "ink"
+                    "fill": "ink",
+                    "id": "as-tenths"
                   },
                   {
                     "kind": "strip",
@@ -406,7 +408,8 @@
                     "filled": 2,
                     "fill": "green",
                     "stroke": "ink",
-                    "strokeWidth": 1
+                    "strokeWidth": 1,
+                    "id": "fifths"
                   },
                   {
                     "kind": "text",
@@ -415,20 +418,58 @@
                     "text": "$\\frac{2}{5}$",
                     "size": 14,
                     "anchor": "middle",
-                    "fill": "ink"
+                    "fill": "ink",
+                    "id": "as-fifths"
                   }
-                ]
+                ],
+                "frames": [
+                  {
+                    "caption": "$0.4$는 열 칸 중 네 칸이에요.",
+                    "changes": [
+                      {
+                        "id": "as-tenths",
+                        "hidden": true
+                      },
+                      {
+                        "id": "fifths",
+                        "hidden": true
+                      },
+                      {
+                        "id": "as-fifths",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "자릿값을 분모로 쓰면 $\\frac{4}{10}$이에요.",
+                    "changes": [
+                      {
+                        "id": "fifths",
+                        "hidden": true
+                      },
+                      {
+                        "id": "as-fifths",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "두 칸씩 묶어 약분하면 $\\frac{2}{5}$, 양은 그대로예요.",
+                    "changes": []
+                  }
+                ],
+                "frameMs": 1100
               }
             }
           ]
         },
         {
-          "sectionId": "decimal-fraction:example:v1",
+          "sectionId": "decimal-fraction:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "decimal-fraction:example:text:v1",
+              "blockId": "decimal-fraction:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -446,12 +487,12 @@
           ]
         },
         {
-          "sectionId": "decimal-fraction:practice:v1",
+          "sectionId": "decimal-fraction:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "decimal-fraction:practice:problems:v1",
+              "blockId": "decimal-fraction:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -468,12 +509,12 @@
           ]
         },
         {
-          "sectionId": "decimal-fraction:check:v1",
+          "sectionId": "decimal-fraction:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "decimal-fraction:check:problems:v1",
+              "blockId": "decimal-fraction:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -489,12 +530,12 @@
           ]
         },
         {
-          "sectionId": "decimal-fraction:summary:v1",
+          "sectionId": "decimal-fraction:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "decimal-fraction:summary:text:v1",
+              "blockId": "decimal-fraction:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,

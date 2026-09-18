@@ -40,6 +40,16 @@ describe('the installed courses', () => {
     expect(arranged.length, '학습자가 놓아 보는 그림이 하나도 없다').toBeGreaterThan(0);
   });
 
+  it('gives every lesson something that moves or something to arrange', () => {
+    // Reached 12 of 12 once; a lesson added without either is a lesson that only talks.
+    for (const lesson of lessons) {
+      const drawings = scenes(lesson);
+      const alive = drawings.some((block) => Array.isArray(block.payload.frames) && block.payload.frames.length > 1)
+        || drawings.some((block) => Array.isArray(block.payload.zones) && block.payload.zones.length > 0);
+      expect(alive, `${lesson.public.lessonKey}에 움직이거나 놓아 보는 그림이 없다`).toBe(true);
+    }
+  });
+
   it('never asks a learner to arrange a drawing that is also moving on its own', () => {
     for (const block of arranged) {
       expect(block.payload.frames, block.blockId).toBeUndefined();
