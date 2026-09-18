@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import Link from 'next/link';
-import type { ActionResponse, AssignmentView, AttemptView, LessonDocument, ContentBlock, EnrollmentView, LearningAction, LearningState, PublicLesson, PublicProblem, PublicConcept, PublicCourse } from '@/shared/api';
+import type { ActionResponse, AssignmentView, AttemptView, LessonDocument, ContentBlock, EnrollmentView, LearningAction, LearningState, PublicLesson, PublicProblem, PublicProblemSet, PublicConcept, PublicCourse } from '@/shared/api';
 import { ApiError, learningApi, supportsWebAuthentication, type Session } from './api-client';
 import { assertLearningResponseAccount, clearAuthReturn, GOOGLE_LOGIN_PATH, isNativeBrowser, LearningResponseError, parseAuthError, readAuthReturn, saveAuthReturn, type AuthReturn } from './auth-client';
 import { DiagnosticPanel } from './diagnostic-panel';
@@ -24,14 +24,20 @@ const navItems: { page: Page; label: string; icon: IconName }[] = [
   { page: 'practice', label: '연습장', icon: 'pencil' }, { page: 'history', label: '학습 기록', icon: 'chart' },
 ];
 const formatDate = (value: string) => new Intl.DateTimeFormat('ko-KR', { month: 'long', day: 'numeric' }).format(new Date(value));
-const assignmentKindLabel: Record<AssignmentView['policy']['kind'], string> = { review: '복습', homework: '숙제', exam: '시험' };
+const assignmentKindLabel: Record<AssignmentView['policy']['kind'], string> = { review: '복습', homework: '숙제', exam: '시험', practice: '직접 고른 문제집' };
 const formatMoment = (value: string) => new Intl.DateTimeFormat('ko-KR', { month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(value));
-/** Opening, deadline, and recommendation are separate promises. */
-const assignmentTiming = (item: Pick<AssignmentView, 'recommendedAt' | 'opensAt' | 'dueAt'>) => [
-  item.opensAt ? `${formatMoment(item.opensAt)} 시작` : null,
-  item.dueAt ? `${formatMoment(item.dueAt)} 마감` : null,
-  !item.dueAt ? `${formatDate(item.recommendedAt)} 권장 · 마감 없음` : null,
-].filter(Boolean).join(' · ');
+/**
+ * Opening, deadline, and recommendation are separate promises.
+ *
+ * A set the learner opened themselves has none of them — it was recommended by nobody and is due
+ * never — so it says when it was started instead of promising anything about when to do it.
+ */
+const assignmentTiming = (item: Pick<AssignmentView, 'recommendedAt' | 'opensAt' | 'dueAt' | 'policy'>) =>
+  item.policy.kind === 'practice' ? `${formatDate(item.recommendedAt)} 시작` : [
+    item.opensAt ? `${formatMoment(item.opensAt)} 시작` : null,
+    item.dueAt ? `${formatMoment(item.dueAt)} 마감` : null,
+    !item.dueAt ? `${formatDate(item.recommendedAt)} 권장 · 마감 없음` : null,
+  ].filter(Boolean).join(' · ');
 const messageOf = (error: unknown) => error instanceof Error ? error.message : '문제가 생겼어요. 다시 시도해 주세요.';
 
 function Brand() {
@@ -67,6 +73,8 @@ export function LearningWorkspace() {
   const [courses, setCourses] = useState<PublicCourse[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<string>('all');
   const [taughtConcepts, setTaughtConcepts] = useState<PublicConcept[]>([]);
+  const [problemSets, setProblemSets] = useState<PublicProblemSet[]>([]);
+  const [openShelf, setOpenShelf] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const busyRef = useRef(false);
@@ -116,7 +124,7 @@ export function LearningWorkspace() {
     authenticatedUserId.current = null;
     setState(null);
     setSession((previous) => previous ? { ...previous, user: null } : null);
-    setSelectedAssignment(null); setDirtyProblems([]); submissionRequests.current.clear();
+    setSelectedAssignment(null); setDirtyProblems([]); setOpenShelf(null); submissionRequests.current.clear();
     lessonRequest.current += 1; setDocument(null); setLessonLoading(false);
     setSectionIndex(0); setFinishedLesson(false); setDisplayName('');
     setTarget(''); setMinutes(10); setModal(null); setPage('home');
@@ -145,7 +153,7 @@ export function LearningWorkspace() {
         { userId: authenticatedUserId.current, generation: loadGeneration.current },
         nextState?.user.id ?? null,
       );
-      setCatalog(publicCatalog.lessons); setCourses(publicCatalog.courses); setTaughtConcepts(publicCatalog.concepts); setState(nextState);
+      setCatalog(publicCatalog.lessons); setCourses(publicCatalog.courses); setTaughtConcepts(publicCatalog.concepts); setProblemSets(publicCatalog.problemSets); setState(nextState);
       const pending = authReturn.current;
       const hasAuthDestination = !!pending?.returnTo;
       if (restoreAfterLogin && pending?.returnTo && (nextState || pending.message)) {
@@ -281,11 +289,22 @@ export function LearningWorkspace() {
     } catch { /* Completion only advances after the server accepted the action. */ }
   }
   function openAssignment(item: AssignmentView) { setDirtyProblems([]); setSelectedAssignment(item.recipientId); navigate('assignment'); }
+  /** Opens a problem set on its own. The run that comes back may be one already in progress. */
+  async function startProblemSet(problemSetId: string) {
+    if (!state) { setModal('login'); return; }
+    try {
+      const response = await dispatch({ action: 'problemSet.start', problemSetId });
+      if (!response.recipientId) return;
+      setDirtyProblems([]); setSelectedAssignment(response.recipientId); navigate('assignment');
+    } catch { /* dispatch has already said what went wrong. */ }
+  }
   async function submitAssignment() {
     if (!assignment || dirtyProblems.length) return;
     const requestId = submissionRequests.current.get(assignment.recipientId) ?? crypto.randomUUID();
     submissionRequests.current.set(assignment.recipientId, requestId);
-    try { await dispatch({ action: 'assignment.submit', recipientId: assignment.recipientId, requestId }); submissionRequests.current.delete(assignment.recipientId); setNotice('과제를 제출했어요. 풀이 결과는 학습 기록에서 확인할 수 있어요.'); }
+    const own = assignment.policy.kind === 'practice';
+    try { await dispatch({ action: 'assignment.submit', recipientId: assignment.recipientId, requestId }); submissionRequests.current.delete(assignment.recipientId);
+      setNotice(own ? '문제집을 다 풀었어요. 풀이 결과는 학습 기록에도 남아요.' : '과제를 제출했어요. 풀이 결과는 학습 기록에서 확인할 수 있어요.'); }
     catch { /* Keep the same idempotency key for retries. */ }
   }
   async function login(event: FormEvent) {
@@ -397,14 +416,52 @@ export function LearningWorkspace() {
       {!lessons.length && <EmptyState title="수업을 준비하고 있어요" text="잠시 후 다시 확인해 주세요." />}</>;
   }
 
+  /** The shelf a learner picks from: every course's problem sets, one course opened at a time. */
+  function renderShelf() {
+    const shelves = courses.map((course) => ({ course, sets: problemSets.filter((set) => set.courseKey === course.key) })).filter((shelf) => shelf.sets.length);
+    if (!shelves.length) return <p className="empty-inline">고를 수 있는 문제집이 아직 없어요.</p>;
+    const started = new Map((state?.assignments ?? []).filter((item) => item.policy.kind === 'practice')
+      .map((item) => [item.problemSetId, item] as const));
+    return <div className="problem-shelf">{shelves.map(({ course, sets }) => {
+      const open = openShelf === course.key;
+      const questions = sets.reduce((sum, set) => sum + set.questionCount, 0);
+      return <section key={course.key} className={open ? 'shelf-course is-open' : 'shelf-course'}>
+        <button className="shelf-course-head" aria-expanded={open} onClick={() => setOpenShelf(open ? null : course.key)}>
+          <span className="shelf-course-title"><strong>{course.title}</strong><small>문제집 {sets.length}개 · 문제 {questions}개</small></span>
+          <Icon name="chevron" size={18} />
+        </button>
+        {open && <ul className="shelf-set-list">{sets.map((set, index) => {
+          const run = started.get(set.problemSetId);
+          const labels = set.conceptKeys.map((key) => taughtConcepts.find((concept) => concept.key === key)?.label).filter(Boolean);
+          // The sets arrive in lesson order, so a heading is drawn wherever the lesson changes.
+          const heading = set.lessonKey && set.lessonKey !== sets[index - 1]?.lessonKey
+            ? lessons.find((lesson) => lesson.lessonKey === set.lessonKey)?.title : null;
+          return <li key={set.problemSetId}>
+            {heading && <p className="shelf-lesson">{heading}</p>}
+            <button className="shelf-set" disabled={busy} onClick={() => void startProblemSet(set.problemSetId)}>
+              <span className="shelf-set-info"><strong>{set.name}</strong><small>{set.questionCount}문제{labels.length ? ` · ${labels.join(' · ')}` : ''}</small></span>
+              <span className="shelf-set-action">{run?.status === 'submitted' ? '다시 풀기' : run ? '이어서 풀기' : '풀어보기'}<Icon name="arrow" size={16} /></span>
+            </button>
+          </li>;
+        })}</ul>}
+      </section>;
+    })}</div>;
+  }
+
   function renderPractice() {
     const submitted = state?.assignments.filter((item) => item.status === 'submitted') ?? [];
-    return <><div className="page-heading"><div className="eyebrow">A LITTLE PRACTICE GOES A LONG WAY</div><h1>이해를 오래 남기는 연습장.</h1><p>어제 배운 내용을 오늘 다시 떠올려보세요. 답안을 저장한 뒤 과제를 제출해요.</p></div><div className="section-heading"><h2>나에게 배정된 과제 <span className="count-label">{pendingAssignments.length}</span></h2></div>{pendingAssignments.length ? <div className="assignment-list">{pendingAssignments.map(assignmentRow)}</div> : <EmptyState title={state ? '남아 있는 과제가 없어요' : '나의 연습을 시작해 볼까요?'} text={state ? '복습이 있는 수업을 마치면 과제가 배정돼요. 다른 수업을 둘러보거나 배운 내용을 다시 읽어 보세요.' : '학습 공간을 시작하면 수업과 연결된 과제를 풀고 기록할 수 있어요.'} actionLabel={state ? '수업 둘러보기' : '내 학습 시작하기'} onAction={() => state ? navigate('lessons') : setModal('login')} />}{submitted.length > 0 && <section className="dashboard-section"><div className="section-heading"><h2>제출한 과제 <span className="count-label">{submitted.length}</span></h2></div><div className="assignment-list">{submitted.map(assignmentRow)}</div></section>}</>;
+    // Work somebody issued and work the learner picked are listed apart, so neither screen has to
+    // call the other's thing by its name.
+    const issued = pendingAssignments.filter((item) => item.policy.kind !== 'practice');
+    const chosen = pendingAssignments.filter((item) => item.policy.kind === 'practice');
+    const done = submitted.filter((item) => item.policy.kind !== 'practice');
+    const solved = submitted.filter((item) => item.policy.kind === 'practice');
+    return <><div className="page-heading"><div className="eyebrow">A LITTLE PRACTICE GOES A LONG WAY</div><h1>이해를 오래 남기는 연습장.</h1><p>어제 배운 내용을 오늘 다시 떠올려보세요. 문제집을 직접 골라 풀 수도 있어요.</p></div><div className="section-heading"><h2>나에게 배정된 과제 <span className="count-label">{issued.length}</span></h2></div>{issued.length ? <div className="assignment-list">{issued.map(assignmentRow)}</div> : <EmptyState title={state ? '남아 있는 과제가 없어요' : '나의 연습을 시작해 볼까요?'} text={state ? '복습이 있는 수업을 마치면 과제가 배정돼요. 아래에서 문제집을 직접 골라 풀어도 좋아요.' : '학습 공간을 시작하면 수업과 연결된 과제를 풀고 기록할 수 있어요.'} actionLabel={state ? '문제집 고르기' : '내 학습 시작하기'} onAction={() => state ? setOpenShelf(courses[0]?.key ?? null) : setModal('login')} />}{chosen.length > 0 && <section className="dashboard-section"><div className="section-heading"><h2>풀던 문제집 <span className="count-label">{chosen.length}</span></h2></div><div className="assignment-list">{chosen.map(assignmentRow)}</div></section>}<section className="dashboard-section"><div className="section-heading"><div><h2>문제집 골라 풀기</h2></div></div><p className="muted small">설명 없이 문제만 풀고 싶을 때. 수업에서 쓰는 문제집을 그대로 골라 풀 수 있고, 푼 기록은 수업에서 푼 것과 똑같이 남아요.</p>{renderShelf()}</section>{done.length > 0 && <section className="dashboard-section"><div className="section-heading"><h2>제출한 과제 <span className="count-label">{done.length}</span></h2></div><div className="assignment-list">{done.map(assignmentRow)}</div></section>}{solved.length > 0 && <section className="dashboard-section"><div className="section-heading"><h2>다 푼 문제집 <span className="count-label">{solved.length}</span></h2></div><div className="assignment-list">{solved.map(assignmentRow)}</div></section>}</>;
   }
 
   function renderHistory() {
     const labels = { unknown: '아직 확인 전', practicing: '연습하는 중', independent: '스스로 해결', retained: '꾸준히 기억' };
-    return <><div className="page-heading"><div className="eyebrow">EVERY SMALL STEP COUNTS</div><h1>조금씩 쌓이는 나의 이해.</h1><p>빠르기보다, 어제보다 조금 더 이해하는 것. 여기까지 온 걸음을 확인해요.</p></div>{!state ? <EmptyState title="첫 걸음을 기록해 보세요" text="내 학습을 시작하면 수업 진도와 개념별 학습 기록이 여기에 모여요." actionLabel="내 학습 시작하기" onAction={() => setModal('login')} /> : <><div className="history-stats"><div><small>완료한 수업</small><strong>{completedCount}<span>개</span></strong></div><div><small>제출한 과제</small><strong>{state.assignments.filter((item) => item.status === 'submitted').length}<span>개</span></strong></div><div><small>풀어본 문제</small><strong>{state.enrollments.reduce((sum, item) => sum + new Set(item.attempts.map((attempt) => attempt.problemVersionId)).size, 0) + state.assignments.reduce((sum, item) => sum + item.items.filter((entry) => entry.attempt).length, 0)}<span>개</span></strong></div></div><section className="dashboard-section"><div className="section-heading"><h2>개념별 학습 상태</h2><span className="muted small">힌트 사용과 이후 복습까지 반영한 상태예요</span></div><p className="muted small">「스스로 해결」은 힌트 없이 푼 기록, 「꾸준히 기억」은 이후 복습에서도 확인한 기록이에요. 아직 확인 전이라고 해서 모른다는 뜻은 아니에요.</p><div className="concept-list">{state.concepts.map((concept) => <div key={concept.key}><span className={`concept-dot ${concept.state}`} /><strong>{concept.label}</strong><span className={`concept-state ${concept.state}`}>{labels[concept.state]}</span></div>)}</div></section><section className="dashboard-section"><div className="section-heading"><h2>추천이 바뀐 기록</h2></div><p className="muted small">학습과 설정을 저장할 때 달라진 추천을 최근 10개까지 보여줘요.</p><div className="recommendation-history">{state.recommendationHistory.map(entry => <article key={entry.id}><small>{formatDate(entry.createdAt)}</small>{entry.recommendations.map(item => <div key={item.lessonKey}><strong>{lessons.find(c => c.lessonKey === item.lessonKey)?.title ?? '이전 수업'}</strong><p>{item.reason}</p><small>하루 계획 {item.suggestedMinutes}분</small></div>)}</article>)}</div>{!state.recommendationHistory.length && <p className="empty-inline">아직 추천이 바뀐 기록이 없어요.</p>}</section>{(['active', 'completed'] as const).map((status) => <section key={status} className="dashboard-section"><div className="section-heading"><h2>{status === 'active' ? '이어서 배울 수업' : '완료한 수업'}</h2></div><div className="class-grid">{lessons.filter((item) => state.enrollments.some((enrollment) => enrollment.lessonKey === item.lessonKey && enrollment.status === status)).map((item) => <LessonCard key={item.lessonKey} item={item} index={courseIndex(item)} courseTitle={courseTitle(item)} enrollment={state.enrollments.find((entry) => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />)}</div>{!state.enrollments.some((item) => item.status === status) && <p className="empty-inline">{status === 'active' ? '현재 이어서 배울 수업이 없어요.' : '완료한 수업이 여기에 모여요.'}</p>}</section>)}</>}</>;
+    return <><div className="page-heading"><div className="eyebrow">EVERY SMALL STEP COUNTS</div><h1>조금씩 쌓이는 나의 이해.</h1><p>빠르기보다, 어제보다 조금 더 이해하는 것. 여기까지 온 걸음을 확인해요.</p></div>{!state ? <EmptyState title="첫 걸음을 기록해 보세요" text="내 학습을 시작하면 수업 진도와 개념별 학습 기록이 여기에 모여요." actionLabel="내 학습 시작하기" onAction={() => setModal('login')} /> : <><div className="history-stats"><div><small>완료한 수업</small><strong>{completedCount}<span>개</span></strong></div><div><small>제출한 과제</small><strong>{state.assignments.filter((item) => item.status === 'submitted' && item.policy.kind !== 'practice').length}<span>개</span></strong></div><div><small>다 푼 문제집</small><strong>{state.assignments.filter((item) => item.status === 'submitted' && item.policy.kind === 'practice').length}<span>개</span></strong></div><div><small>풀어본 문제</small><strong>{state.enrollments.reduce((sum, item) => sum + new Set(item.attempts.map((attempt) => attempt.problemVersionId)).size, 0) + state.assignments.reduce((sum, item) => sum + item.items.filter((entry) => entry.attempt).length, 0)}<span>개</span></strong></div></div><section className="dashboard-section"><div className="section-heading"><h2>개념별 학습 상태</h2><span className="muted small">힌트 사용과 이후 복습까지 반영한 상태예요</span></div><p className="muted small">「스스로 해결」은 힌트 없이 푼 기록, 「꾸준히 기억」은 이후 복습에서도 확인한 기록이에요. 아직 확인 전이라고 해서 모른다는 뜻은 아니에요.</p><div className="concept-list">{state.concepts.map((concept) => <div key={concept.key}><span className={`concept-dot ${concept.state}`} /><strong>{concept.label}</strong><span className={`concept-state ${concept.state}`}>{labels[concept.state]}</span></div>)}</div></section><section className="dashboard-section"><div className="section-heading"><h2>추천이 바뀐 기록</h2></div><p className="muted small">학습과 설정을 저장할 때 달라진 추천을 최근 10개까지 보여줘요.</p><div className="recommendation-history">{state.recommendationHistory.map(entry => <article key={entry.id}><small>{formatDate(entry.createdAt)}</small>{entry.recommendations.map(item => <div key={item.lessonKey}><strong>{lessons.find(c => c.lessonKey === item.lessonKey)?.title ?? '이전 수업'}</strong><p>{item.reason}</p><small>하루 계획 {item.suggestedMinutes}분</small></div>)}</article>)}</div>{!state.recommendationHistory.length && <p className="empty-inline">아직 추천이 바뀐 기록이 없어요.</p>}</section>{(['active', 'completed'] as const).map((status) => <section key={status} className="dashboard-section"><div className="section-heading"><h2>{status === 'active' ? '이어서 배울 수업' : '완료한 수업'}</h2></div><div className="class-grid">{lessons.filter((item) => state.enrollments.some((enrollment) => enrollment.lessonKey === item.lessonKey && enrollment.status === status)).map((item) => <LessonCard key={item.lessonKey} item={item} index={courseIndex(item)} courseTitle={courseTitle(item)} enrollment={state.enrollments.find((entry) => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />)}</div>{!state.enrollments.some((item) => item.status === status) && <p className="empty-inline">{status === 'active' ? '현재 이어서 배울 수업이 없어요.' : '완료한 수업이 여기에 모여요.'}</p>}</section>)}</>}</>;
   }
 
   function renderLesson() {
@@ -438,7 +495,12 @@ export function LearningWorkspace() {
       submit: (answer, requestId) => dispatch({ action: 'attempt.submit', context: 'assignment', contextId: recipient, problemVersionId, answer, requestId }).then(() => undefined),
       openHint: () => dispatch({ action: 'hint.open', context: 'assignment', contextId: recipient, problemVersionId }).then((response) => response.hint ?? []),
     });
-    return <><button className="back-button" onClick={() => navigate('practice')}><Icon name="back" size={17} />연습장으로</button><div className="page-heading"><div className="eyebrow">MAKE WHAT YOU LEARNED YOURS</div><h1>{assignment.title}</h1><p>{assignmentTiming(assignment)} · {assignment.items.length}문제 · {assignmentKindLabel[assignment.policy.kind]}{assignment.policy.hints ? '' : ' · 힌트 없이'}</p></div><div className={`assignment-instruction ${submitted ? 'is-submitted' : ''}`}><Icon name={submitted ? 'check' : 'pencil'} size={23} /><div><strong>{submitted ? '과제 제출을 완료했어요.' : '문제마다 답안을 저장하고, 마지막에 제출해 주세요.'}</strong><p>{submitted ? '제출한 답안과 풀이 결과를 아래에서 다시 확인할 수 있어요.' : assignment.policy.hints ? '막히면 힌트를 확인하고 다시 생각해 보세요. 저장한 답안은 제출 전까지 바꿀 수 있어요.' : '이 과제는 힌트 없이 풀어요. 저장한 답안은 제출 전까지 바꿀 수 있어요.'}</p></div><span>{submitted ? '제출 완료' : `${answered} / ${assignment.items.length} 저장`}</span></div>{assignment.reason && <p className="session-guidance">{assignment.reason}</p>}<div className="assignment-problems">{assignment.items.map((item, index) => <section key={item.id}><div className="assignment-number">문제 {String(index + 1).padStart(2, '0')}</div><ProblemCard problem={{ ...item.problem, hintAvailable: item.problem.hintAvailable && assignment.policy.hints }} attempt={item.attempt} actions={assignmentActions(item.problem.problemVersionId)} ready={!!assignment.recipientId} submitLabel="답안 저장" glossary={{ entries: assignment.glossary, reviewConceptKeys, onOpenLesson: (key) => void openLesson(key) }} busy={busy} disabled={submitted} onReady={() => setModal('login')} readyNote="수업을 시작하면 풀이와 진도가 저장돼요." onDraftChange={(id, dirty) => setDirtyProblems((previous) => dirty ? previous.includes(id) ? previous : [...previous, id] : previous.filter((item) => item !== id))} /></section>)}</div>{!submitted && <div className="assignment-submit"><div><strong>연습을 마무리해 볼까요?</strong><p>{dirtyProblems.length ? `아직 저장하지 않은 답안이 ${dirtyProblems.length}개 있어요. 먼저 답안을 저장해 주세요.` : '모든 문제의 답안을 저장하면 제출할 수 있어요.'}</p></div><button className="button primary" disabled={busy || unsupported || dirtyProblems.length > 0 || answered !== assignment.items.length || !assignment.items.length} onClick={() => void submitAssignment()}>{busy ? '제출 중…' : '과제 제출하기'}<Icon name="check" size={18} /></button></div>}</>;
+    // A set the learner picked is their own work, so it is never called an assignment to their face.
+    const own = assignment.policy.kind === 'practice';
+    // Where to go next when this was a set they chose: the one after it in the same course.
+    const shelf = problemSets.filter((set) => set.courseKey === problemSets.find((entry) => entry.problemSetId === assignment.problemSetId)?.courseKey);
+    const next = shelf[shelf.findIndex((set) => set.problemSetId === assignment.problemSetId) + 1] ?? null;
+    return <><button className="back-button" onClick={() => navigate('practice')}><Icon name="back" size={17} />연습장으로</button><div className="page-heading"><div className="eyebrow">{own ? 'PICK A SET AND SOLVE' : 'MAKE WHAT YOU LEARNED YOURS'}</div><h1>{assignment.title}</h1><p>{assignmentTiming(assignment)} · {assignment.items.length}문제 · {assignmentKindLabel[assignment.policy.kind]}{assignment.policy.hints ? '' : ' · 힌트 없이'}</p></div><div className={`assignment-instruction ${submitted ? 'is-submitted' : ''}`}><Icon name={submitted ? 'check' : 'pencil'} size={23} /><div><strong>{submitted ? own ? '이 문제집을 다 풀었어요.' : '과제 제출을 완료했어요.' : own ? '문제마다 답안을 저장하고, 다 풀면 마무리해 주세요.' : '문제마다 답안을 저장하고, 마지막에 제출해 주세요.'}</strong><p>{submitted ? '저장한 답안과 풀이 결과를 아래에서 다시 확인할 수 있어요.' : assignment.policy.hints ? '막히면 힌트를 확인하고 다시 생각해 보세요. 저장한 답안은 마무리 전까지 바꿀 수 있어요.' : '이 과제는 힌트 없이 풀어요. 저장한 답안은 제출 전까지 바꿀 수 있어요.'}</p></div><span>{submitted ? own ? '풀이 완료' : '제출 완료' : `${answered} / ${assignment.items.length} 저장`}</span></div>{assignment.reason && <p className="session-guidance">{assignment.reason}</p>}<div className="assignment-problems">{assignment.items.map((item, index) => <section key={item.id}><div className="assignment-number">문제 {String(index + 1).padStart(2, '0')}</div><ProblemCard problem={{ ...item.problem, hintAvailable: item.problem.hintAvailable && assignment.policy.hints }} attempt={item.attempt} actions={assignmentActions(item.problem.problemVersionId)} ready={!!assignment.recipientId} submitLabel="답안 저장" glossary={{ entries: assignment.glossary, reviewConceptKeys, onOpenLesson: (key) => void openLesson(key) }} busy={busy} disabled={submitted} onReady={() => setModal('login')} readyNote="수업을 시작하면 풀이와 진도가 저장돼요." onDraftChange={(id, dirty) => setDirtyProblems((previous) => dirty ? previous.includes(id) ? previous : [...previous, id] : previous.filter((item) => item !== id))} /></section>)}</div>{!submitted && <div className="assignment-submit"><div><strong>{own ? '이 문제집을 마무리해 볼까요?' : '연습을 마무리해 볼까요?'}</strong><p>{dirtyProblems.length ? `아직 저장하지 않은 답안이 ${dirtyProblems.length}개 있어요. 먼저 답안을 저장해 주세요.` : own ? '모든 문제의 답안을 저장하면 마무리할 수 있어요.' : '모든 문제의 답안을 저장하면 제출할 수 있어요.'}</p></div><button className="button primary" disabled={busy || unsupported || dirtyProblems.length > 0 || answered !== assignment.items.length || !assignment.items.length} onClick={() => void submitAssignment()}>{busy ? (own ? '저장 중…' : '제출 중…') : own ? '다 풀었어요' : '과제 제출하기'}<Icon name="check" size={18} /></button></div>}{submitted && own && <div className="assignment-submit"><div><strong>{next ? '한 문제집 더 풀어 볼까요?' : '이 과정의 문제집을 모두 풀었어요.'}</strong><p>{next ? `다음은 「${next.name}」이에요. ${next.questionCount}문제예요.` : '다른 과정의 문제집을 골라 이어가도 좋아요.'}</p></div><button className="button primary" disabled={busy} onClick={() => next ? void startProblemSet(next.problemSetId) : navigate('practice')}>{next ? '이어서 풀기' : '문제집 고르기'}<Icon name="arrow" size={18} /></button></div>}</>;
   }
 
   return <div className="app-shell"><a href="#main-content" className="skip-link">본문으로 이동</a><aside className="sidebar"><button className="brand-button" aria-label="geunyang math 홈" onClick={() => navigate('home')}><Brand /></button><div className="sidebar-caption">그냥, 나의 속도로.</div><nav aria-label="주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'nav-item active' : 'nav-item'} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={19} /><span>{item.label}</span>{item.page === 'practice' && pendingAssignments.length > 0 && <span className="nav-badge">{pendingAssignments.length}</span>}</button>)}</nav><div className="sidebar-bottom"><button className="learning-goal" onClick={openProfile}><span className="goal-overline"><Icon name="spark" size={14} />배우려는 과정</span><strong>{courses.find((course) => course.key === state?.user.targetCourseKey)?.title ?? '아직 고르지 않음'}</strong><span>하루 {state?.user.dailyMinutes ?? 10}분, 꾸준히<Icon name="chevron" size={14} /></span><div className="goal-line"><i /><i /><i /><i /><i /><i /><i /></div></button><div className="sidebar-signature">수학을 이해하는 즐거움<span>geunyang math © 2026</span></div></div></aside><div className="workspace"><header className="topbar"><div className="mobile-brand"><button className="brand-button" onClick={() => navigate('home')} aria-label="홈으로"><Brand /></button></div><div className="breadcrumb"><span>나의 학습 공간</span><Icon name="chevron" size={13} /><strong>{navItems.find((item) => item.page === activeNav)?.label}</strong></div><div className="account-controls">{session?.developmentLogin && <span className="dev-label">개발 미리보기</span>}{state ? <><button className="account-button" onClick={openProfile}><span className="avatar">{state.user.displayName.slice(0, 1)}</span><span>{state.user.displayName}</span></button><button className="icon-button logout" onClick={() => void logout()} disabled={busy || loading} aria-label="로그아웃" title="로그아웃"><Icon name="logout" size={17} /></button></> : <button className="login-link" onClick={() => setModal('login')} disabled={loading}>내 학습 시작<Icon name="arrow" size={15} /></button>}</div></header><nav className="mobile-nav" aria-label="모바일 주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'active' : ''} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={18} />{item.label}</button>)}</nav><main id="main-content" className={`main-content page-${page}`} tabIndex={-1}>{authError && <div className="auth-error-banner" role="alert"><Icon name="lightbulb" size={18} /><span>{authError}</span><button className="text-button" disabled={loading || busy} onClick={() => setModal('login')}>로그인 다시 하기</button><button className="icon-button" aria-label="로그인 안내 닫기" onClick={() => setAuthError('')}><Icon name="close" size={16} /></button></div>}{error && <div className="error-banner" role="alert"><span>{error}</span><button className="text-button" disabled={busy || loading} onClick={() => void refresh()}>다시 불러오기</button><button className="icon-button" aria-label="오류 알림 닫기" onClick={() => setError('')}><Icon name="close" size={16} /></button></div>}{notice && <div className="notice-banner" role="status"><Icon name="check" size={18} /><span>{notice}</span><button className="icon-button" aria-label="알림 닫기" onClick={() => setNotice('')}><Icon name="close" size={16} /></button></div>}{loading ? <div className="loading-panel" role="status"><span className="loader" />나의 학습 공간을 준비하고 있어요…</div> : page === 'home' ? renderHome() : page === 'lessons' ? renderLessons() : page === 'practice' ? renderPractice() : page === 'history' ? renderHistory() : page === 'lesson' ? renderLesson() : page === 'diagnostic' ? state ? <DiagnosticPanel key={`${state.user.id}:${state.diagnostic?.currentProblem?.problemVersionId ?? state.diagnostic?.status ?? 'new'}`} diagnostic={state.diagnostic} offering={state.diagnosticOffering} nextLesson={recommended} readiness={state.plan.readiness} onOpenLesson={(key) => void openLesson(key)} dispatch={dispatch} busy={busy} onBack={() => navigate('home')} targetTitle={courses.find((course) => course.key === state.user.targetCourseKey)?.title ?? null} onChooseTarget={openProfile} /> : null : renderAssignment()}</main><ServiceFooter /></div>{modal && <div className="modal-backdrop" onClick={(event) => { if (event.target === event.currentTarget && !busy) setModal(null); }}><div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" ref={modalRef}><button className="icon-button modal-close" aria-label="닫기" disabled={busy} onClick={() => setModal(null)}><Icon name="close" /></button>{modal === 'login' ? <>

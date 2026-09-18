@@ -55,7 +55,21 @@ export type LessonDocument = PublicLesson & { sections: LessonSection[]; problem
 export type PublicConcept = { key: string; label: string };
 // A course as the catalogue lists it. Lessons arrive in the order the course gives them.
 export type PublicCourse = { key: string; title: string; summary: string };
-export type PublicCatalog = { courses: PublicCourse[]; lessons: PublicLesson[]; concepts: PublicConcept[] };
+/**
+ * A problem set a learner can pick and solve on its own, without opening the lesson that uses it.
+ *
+ * Only sets a course keeps under a name are listed — a name is the declaration that the set is meant
+ * to be used on its own (docs/glossary.md) — and never the bank a placement asks from. Nothing here
+ * carries an answer: the count and the concepts are all a chooser needs.
+ */
+export type PublicProblemSet = {
+  problemSetId: string; versionId: string; name: string; courseKey: string;
+  // The lesson that shows this set, when a published one does. Sets arrive in the order a learner
+  // would meet them, so a screen can group them by lesson without working the order out again.
+  lessonKey: string | null;
+  questionCount: number; conceptKeys: string[];
+};
+export type PublicCatalog = { courses: PublicCourse[]; lessons: PublicLesson[]; concepts: PublicConcept[]; problemSets: PublicProblemSet[] };
 export type AttemptView = {
   id: string; problemVersionId: string; answer: string; result: GradeResult; hintUsed: boolean;
 };
@@ -68,7 +82,7 @@ export type EnrollmentView = {
  * thing but values here (docs/glossary.md): the same problem set can be issued under any of them.
  */
 export type AssignmentPolicy = {
-  kind: 'homework' | 'exam' | 'review';
+  kind: 'homework' | 'exam' | 'review' | 'practice';
   hints: boolean;
   results: 'per-item' | 'after-submission';
   solutions: 'never' | 'after-submission';
@@ -80,6 +94,9 @@ export type AssignmentSchedule = {
 };
 export type AssignmentView = {
   id: string; recipientId: string; title: string; lessonKey: string | null;
+  // The set the questions were taken from, so a screen can say which one this is without matching
+  // on its title. Two courses may name a set the same thing; only the id is the set.
+  problemSetId: string;
   recommendedAt: string; opensAt: string | null; dueAt: string | null;
   policy: AssignmentPolicy; status: 'assigned' | 'submitted';
   items: { id: string; problem: PublicProblem; attempt: AttemptView | null }[];
@@ -134,5 +151,6 @@ export type LearningAction =
   | { action: 'attempt.submit'; context: 'lesson' | 'assignment'; contextId: string; problemVersionId: string; answer: string; requestId: string }
   | { action: 'hint.open'; context: 'lesson' | 'assignment'; contextId: string; problemVersionId: string }
   | { action: 'lesson.complete'; enrollmentId: string }
-  | { action: 'assignment.submit'; recipientId: string; requestId: string };
-export type ActionResponse = { state: LearningState; result?: GradeResult; hint?: ContentBlock[]; enrollmentId?: string };
+  | { action: 'assignment.submit'; recipientId: string; requestId: string }
+  | { action: 'problemSet.start'; problemSetId: string };
+export type ActionResponse = { state: LearningState; result?: GradeResult; hint?: ContentBlock[]; enrollmentId?: string; recipientId?: string };

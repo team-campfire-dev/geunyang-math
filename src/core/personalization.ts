@@ -30,7 +30,7 @@ export function conceptReadiness(labels: Record<string, string>, placement: Plac
 
 export function recommend(input: {
   lessons: PublicLesson[]; enrollments: { lessonKey: string; status: string }[];
-  assignments: Pick<AssignmentView, 'recipientId' | 'recommendedAt' | 'status'>[];
+  assignments: Pick<AssignmentView, 'recipientId' | 'recommendedAt' | 'status' | 'policy'>[];
   readiness: ConceptReadiness[]; dailyMinutes: number; targetCourseKey: string | null; now: Date; preferredLessonKey?: string | null;
 }): { recommendations: Recommendation[]; plan: PersonalPlan } {
   const { lessons, enrollments, readiness, dailyMinutes, targetCourseKey } = input;
@@ -72,7 +72,10 @@ export function recommend(input: {
       : '확인한 기초를 일상의 예제에 적용해요. 이미 아는 수업은 목록에서 자유롭게 바꿀 수 있어요.';
     recommendations.push({ lessonKey: target.lessonKey, kind, reason, suggestedMinutes: Math.min(dailyMinutes, target.estimatedMinutes) });
   }
-  const due = [...input.assignments].filter(a => a.status === 'assigned' && new Date(a.recommendedAt) <= input.now)
+  // Only work somebody issued to this learner is worth reminding them of. A problem set they opened
+  // themselves is already where they left it, and calling it a due review would be nagging them
+  // about their own choice.
+  const due = [...input.assignments].filter(a => a.status === 'assigned' && a.policy.kind !== 'practice' && new Date(a.recommendedAt) <= input.now)
     .sort((a, b) => a.recommendedAt.localeCompare(b.recommendedAt))[0];
   return { recommendations, plan: { version: personalizationVersion, readiness, sessionMinutes: dailyMinutes, preferredLessonKey: chosen?.lessonKey ?? null,
     review: due ? { recipientId: due.recipientId, reason: '권장 복습 시점이 되었어요. 새 수업 전에 배운 내용을 다시 떠올려 보세요. 늦게 풀어도 괜찮아요.' } : null } };

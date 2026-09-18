@@ -2,7 +2,7 @@ import 'server-only';
 import { createHash } from 'node:crypto';
 import { lessonRecord, lessonRecords, currentDiagnostic, currentDefinitions, publishedProblemRecords } from './content-store';
 import { recommend, reviewSelection, conceptReadiness, type Evidence } from '@/core/personalization';
-import { assignmentWindow, parseAssignmentPolicy, parseAssignmentSchedule, recipientDates, reviewPolicy } from '@/core/assignment';
+import { assignmentWindow, parseAssignmentPolicy, parseAssignmentSchedule, practicePolicy, recipientDates, reviewPolicy } from '@/core/assignment';
 import { glossaryEntries } from '@/core/glossary';
 import { conceptGraph, placementScope } from '@/core/concept-graph';
 import { placement, placementProgress, type PlacementState } from '@/core/placement';
@@ -12,7 +12,7 @@ import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
 import { blockDefinitionRefs, getActivityProblemIds, definitionReferences, toPublicLesson, type LessonMetadata, type LessonRecord, type StoredProblem } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
-import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicCatalog, PublicLesson, PublicProblem, DiagnosticAnswer, Recommendation } from '@/shared/api';
+import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicCatalog, PublicLesson, PublicProblem, PublicProblemSet, DiagnosticAnswer, Recommendation } from '@/shared/api';
 import { AppError } from './errors';
 
 /**
@@ -45,6 +45,7 @@ export const actionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('hint.open'), context, contextId: id, problemVersionId: id }).strict(),
   z.object({ action: z.literal('lesson.complete'), enrollmentId: id }).strict(),
   z.object({ action: z.literal('assignment.submit'), recipientId: id, requestId: z.string().min(8).max(100) }).strict(),
+  z.object({ action: z.literal('problemSet.start'), problemSetId: id }).strict(),
 ]);
 type Tx = Prisma.TransactionClient;
 const asJson = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
@@ -74,10 +75,11 @@ export class LearningService {
   /** The latest version of every published lesson, in the order its course gives it. */
   async catalog(db: Tx = this.db): Promise<PublicLesson[]> {
     const rows = await db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }],
-      select: { lessonKey: true, metadata: true, lesson: { select: { order: true, course: { select: { key: true, createdAt: true } } } } } });
+      select: { lessonKey: true, metadata: true, lesson: { select: { order: true, course: { select: { key: true, order: true, createdAt: true } } } } } });
     const seen = new Set<string>();
     return rows.filter(row => { if (seen.has(row.lessonKey)) return false; seen.add(row.lessonKey); return true; })
-      .sort((a, b) => a.lesson.course.createdAt.getTime() - b.lesson.course.createdAt.getTime()
+      .sort((a, b) => a.lesson.course.order - b.lesson.course.order
+        || a.lesson.course.createdAt.getTime() - b.lesson.course.createdAt.getTime()
         || a.lesson.course.key.localeCompare(b.lesson.course.key) || a.lesson.order - b.lesson.order || a.lessonKey.localeCompare(b.lessonKey))
       .map(row => ({ ...(row.metadata as { public: LessonMetadata }).public, courseKey: row.lesson.course.key }));
   }
@@ -94,7 +96,72 @@ export class LearningService {
     ]);
     // A course with nothing published yet is not in the catalogue either.
     return { courses: courses.filter(course => published.has(course.key)), lessons,
-      concepts: orderConcepts(rows.filter(row => taught.has(row.key)), lessons).map(row => ({ key: row.key, label: row.label })) };
+      concepts: orderConcepts(rows.filter(row => taught.has(row.key)), lessons).map(row => ({ key: row.key, label: row.label })),
+      problemSets: await this.publicProblemSets(db, lessons) };
+  }
+
+  /**
+   * The problem sets a learner may pick and solve on their own, newest version of each.
+   *
+   * A set is listed when its course has something published, when it carries a name — the
+   * declaration that it is meant to be used on its own — and when no diagnostic asks from it. That
+   * last rule is what keeps a placement bank off the practice shelf: its questions are for finding
+   * out where somebody is, and a learner who has rehearsed them has made that answer worthless.
+   *
+   * They come back in the order a learner would meet them: the course's order, then the lesson's
+   * place in it, then the order that lesson shows them — practice before check, with the review pool
+   * last because no step shows it. That order is read from the lessons, not guessed from names.
+   */
+  async publicProblemSets(db: Tx = this.db, lessons?: PublicLesson[]): Promise<PublicProblemSet[]> {
+    const catalogue = lessons ?? await this.catalog(db);
+    const courses = [...new Set(catalogue.map(lesson => lesson.courseKey))];
+    const versionIds = catalogue.map(lesson => lesson.versionId);
+    const [sets, diagnostics, sections, blocks, versions] = await Promise.all([
+      db.problemSet.findMany({ where: { course: { key: { in: courses } }, NOT: { name: null } },
+        select: { id: true, name: true, course: { select: { key: true } },
+          versions: { orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }], take: 1, select: { id: true } } } }),
+      db.diagnosticVersion.findMany({ select: { problemSetId: true } }),
+      db.lessonSection.findMany({ where: { lessonVersionId: { in: versionIds } }, select: { lessonVersionId: true, sectionId: true, order: true } }),
+      db.contentBlock.findMany({ where: { ownerKind: 'section', ownerVersionId: { in: versionIds }, kind: 'core.problem_set' },
+        select: { ownerVersionId: true, ownerId: true, order: true, payload: true } }),
+      db.lessonVersion.findMany({ where: { id: { in: versionIds } }, select: { id: true, lessonKey: true, metadata: true } }),
+    ]);
+    const lessonAt = new Map(catalogue.map((lesson, index) => [lesson.versionId, { index, key: lesson.lessonKey }]));
+    const sectionAt = new Map(sections.map(row => [`${row.lessonVersionId}:${row.sectionId}`, row.order]));
+    // Lesson, then where in the lesson. A review pool is shown by no step, so it sorts after them all.
+    const place = new Map<string, { lesson: number; step: number; order: number; lessonKey: string }>();
+    const put = (setId: string, versionId: string, step: number, order: number) => {
+      const lesson = lessonAt.get(versionId);
+      if (!lesson || place.has(setId)) return;
+      place.set(setId, { lesson: lesson.index, step, order, lessonKey: lesson.key });
+    };
+    for (const block of blocks) {
+      const setId = (block.payload as { problemSetId?: unknown }).problemSetId;
+      if (typeof setId === 'string') put(setId, block.ownerVersionId, sectionAt.get(`${block.ownerVersionId}:${block.ownerId}`) ?? 0, block.order);
+    }
+    for (const version of versions) {
+      const review = (version.metadata as { review?: { problemSetId?: unknown } }).review;
+      if (review && typeof review.problemSetId === 'string') put(review.problemSetId, version.id, Number.MAX_SAFE_INTEGER, 0);
+    }
+    const asked = new Set(diagnostics.map(row => row.problemSetId));
+    const listed = sets.filter(set => set.versions.length && !asked.has(set.id));
+    // Questions hang off the version by id rather than by a relation, so they are read in one pass.
+    const problems = await db.publishedProblem.findMany({
+      where: { ownerKind: 'problem_set', ownerVersionId: { in: listed.map(set => set.versions[0].id) } },
+      orderBy: { order: 'asc' }, select: { ownerVersionId: true, conceptKeys: true },
+    });
+    const byVersion = new Map<string, string[][]>();
+    for (const row of problems) byVersion.set(row.ownerVersionId, [...(byVersion.get(row.ownerVersionId) ?? []), row.conceptKeys as string[]]);
+    // A named set no published lesson shows is still a set somebody may pick; it follows the rest.
+    const unplaced = { lesson: Number.MAX_SAFE_INTEGER, step: 0, order: 0, lessonKey: '' };
+    return listed.map(set => {
+      const keys = byVersion.get(set.versions[0].id) ?? [];
+      const at = place.get(set.id) ?? unplaced;
+      return { problemSetId: set.id, versionId: set.versions[0].id, name: set.name!, courseKey: set.course.key,
+        lessonKey: at.lessonKey || null, questionCount: keys.length, conceptKeys: [...new Set(keys.flat())], at };
+    }).filter(set => set.questionCount > 0)
+      .sort((a, b) => a.at.lesson - b.at.lesson || a.at.step - b.at.step || a.at.order - b.at.order || a.problemSetId.localeCompare(b.problemSetId))
+      .map(({ at: _at, ...set }) => set);
   }
 
   async lessonDocument(lessonKey: string, userId?: string) {
@@ -217,7 +284,7 @@ export class LearningService {
         // A policy without hints hides them the way a question without hints does.
         return { id: item.id, problem: { ...publicProblem(p), hintAvailable: policy.hints && p.hintAvailable }, attempt: visibleAttempt ? attemptView(visibleAttempt) : null };
       });
-      return { id: r.assignmentId, recipientId: r.id, title: r.assignment.title, lessonKey,
+      return { id: r.assignmentId, recipientId: r.id, title: r.assignment.title, lessonKey, problemSetId: r.assignment.problemSetId,
         recommendedAt: r.recommendedAt.toISOString(), opensAt: window.opensAt?.toISOString() ?? null, dueAt: window.dueAt?.toISOString() ?? null,
         policy, status: r.status as 'assigned' | 'submitted', items, submissionId: submission.id,
         glossary: leafGlossary(glossaryEntries(assignmentTerms, lessons)),
@@ -426,6 +493,7 @@ export class LearningService {
               await tx.submission.update({ where: { id: submission.id }, data: { status: 'submitted', finalizedAt: new Date(), requestId: action.requestId } });
               await tx.assignmentRecipient.update({ where: { id: recipient.id }, data: { status: 'submitted' } }); return {};
             }
+            case 'problemSet.start': return { recipientId: await this.startProblemSet(tx, userId, scope.id, action.problemSetId) };
           }
           })();
           const nextState = await this.state(userId, tx);
@@ -442,6 +510,42 @@ export class LearningService {
       }
     }
     return { state: await this.state(userId), ...extra };
+  }
+
+  /**
+   * A problem set the learner picked, opened as work of their own.
+   *
+   * It is an assignment nobody assigned: same items, same attempts, same submission, so solving and
+   * submitting are the paths that already exist. Starting the same set again while it is unsubmitted
+   * returns the run already open rather than a second copy — a learner who navigates away and comes
+   * back means「이어서」, not「처음부터」. After submitting, starting it again is a new sitting.
+   */
+  async startProblemSet(tx: Tx, userId: string, scopeId: string, problemSetId: string) {
+    const listed = await this.publicProblemSets(tx);
+    const set = listed.find(item => item.problemSetId === problemSetId);
+    // Not found rather than forbidden: what is not on the shelf is not a set this learner can pick.
+    if (!set) throw notFound();
+    const open = await tx.assignmentRecipient.findFirst({
+      where: { learnerUserId: userId, status: 'assigned',
+        assignment: { ownerScopeId: scopeId, issuerType: 'self', problemSetVersionId: set.versionId } },
+      orderBy: { recommendedAt: 'desc' },
+    });
+    if (open) return open.id;
+    const problems = await tx.publishedProblem.findMany({
+      where: { ownerKind: 'problem_set', ownerVersionId: set.versionId }, orderBy: { order: 'asc' }, select: { problemVersionId: true },
+    });
+    if (!problems.length) throw notFound();
+    const now = new Date();
+    // No schedule and no interval: the learner opened this now, so now is when it is recommended.
+    const recipient = await tx.assignment.create({ data: {
+      ownerScopeId: scopeId, title: set.name, issuerType: 'self',
+      problemSetId: set.problemSetId, problemSetVersionId: set.versionId,
+      policy: practicePolicy, schedule: {}, issuedAt: now,
+      policySnapshot: { version: 1, audience: 'self-study', chosenBy: 'learner' },
+      items: { create: problems.map((problem, position) => ({ problemVersionId: problem.problemVersionId, position })) },
+      recipients: { create: { learnerUserId: userId, recommendedAt: now, submissions: { create: { submissionIndex: 1 } } } },
+    }, select: { recipients: { select: { id: true } } } });
+    return recipient.recipients[0].id;
   }
 
   // Independent assignment boundary. The web API currently calls this only for self-study.
