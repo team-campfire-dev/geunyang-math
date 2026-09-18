@@ -5,7 +5,7 @@ import type { PrismaClient } from '@prisma/client';
 import { canonicalJson, ContentError } from '@/core/content-bundle';
 import { problemSetRefs, storedLessonOf, validateLesson, validateProblemSet, type StoredLesson, type StoredProblem, type StoredProblemSet } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
-import { frozenProblemSet, lessonRecord, importContent, problemSetRecords, publishedProblemRecords, definitionRecords, currentDefinitions } from './content-store';
+import { frozenProblemSet, lessonRecord, importContent, problemSetRecords, lessonRecords, publishedProblemRecords, definitionRecords, currentDefinitions } from './content-store';
 import { AppError } from './errors';
 import type { AnswerSpec } from '@/shared/answer';
 import type { ContentBlock, LessonSection, ProblemSetRef } from '@/shared/api';
@@ -108,6 +108,8 @@ export const authoringActionSchema = z.discriminatedUnion('action', [
     blocks: blockList.max(20),
     newConcept: z.object({ label: z.string().trim().min(1).max(191) }).strict().optional(),
   }).strict() }).strict(),
+  z.object({ action: z.literal('problemSet.name'), problemSetId: id, name: z.string().trim().max(191) }).strict(),
+  z.object({ action: z.literal('problemSet.read'), versionId: id }).strict(),
   z.object({ action: z.literal('editor.expertMode'), on: z.boolean() }).strict(),
   z.object({ action: z.literal('draft.tryAnswer'), draftId: id, problemVersionId: id,
     answer: z.string().trim().min(1).max(100), assisted: z.boolean() }).strict(),
@@ -330,8 +332,8 @@ export class AuthoringService {
 
   async workspace(userId: string): Promise<AuthoringWorkspace> {
     const role = await authoringRole(this.db, userId);
-    if (!role) return { role: null, drafts: [], courses: [], lessons: [], accounts: [], concepts: [], expertMode: false };
-    const [drafts, versions, courses, accounts, concepts, account, identities] = await Promise.all([
+    if (!role) return { role: null, drafts: [], courses: [], lessons: [], accounts: [], concepts: [], problemSets: [], expertMode: false };
+    const [drafts, versions, courses, accounts, concepts, account, identities, setRows, setVersions, setBlocks] = await Promise.all([
       this.db.contentDraft.findMany({ where: { ownerKind: 'lesson', ...(mayEditEveryDraft(role) ? {} : { authorId: userId }) },
         orderBy: { updatedAt: 'desc' }, select: { id: true, ownerKey: true, versionId: true, baseVersionId: true, title: true,
           status: true, authorId: true, publishedVersionId: true, updatedAt: true, document: true, ...withAuthor } }),
@@ -342,16 +344,41 @@ export class AuthoringService {
       this.db.concept.findMany({ orderBy: [{ assessable: 'desc' }, { label: 'asc' }], select: { key: true, label: true, assessable: true } }),
       this.db.user.findUnique({ where: { id: userId }, select: { editorExpertMode: true } }),
       this.db.lesson.findMany({ orderBy: [{ order: 'asc' }, { key: 'asc' }], select: { key: true, course: { select: { key: true } } } }),
+      this.db.problemSet.findMany({ orderBy: { id: 'asc' }, select: { id: true, name: true, course: { select: { key: true } } } }),
+      this.db.problemSetVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }], select: { id: true, problemSetId: true } }),
+      // A version's metadata holds what the lesson says about itself and its review pool; the
+      // activities that name a set are block rows, so the references are read from there.
+      this.db.contentBlock.findMany({ where: { ownerKind: 'section', kind: 'core.problem_set' }, select: { ownerVersionId: true, payload: true } }),
     ]);
     const openDrafts = new Set(drafts.filter((draft) => draft.status !== 'published').map((draft) => draft.ownerKey));
-    const byKey = new Map<string, { title: string; courseKey: string; versions: string[]; conceptKeys: string[] }>();
+    const byKey = new Map<string, { title: string; courseKey: string; versions: string[]; conceptKeys: string[]; review?: ProblemSetRef | null }>();
     for (const version of versions) {
       const entry = byKey.get(version.lessonKey) ?? { title: version.title, courseKey: version.lesson.course.key, versions: [], conceptKeys: [] };
       entry.title = version.title;
       entry.conceptKeys = (version.metadata as unknown as { public: { conceptKeys: string[] } }).public.conceptKeys;
       entry.versions.push(version.id);
+      entry.review = (version.metadata as unknown as { review?: ProblemSetRef | null }).review ?? null;
       byKey.set(version.lessonKey, entry);
     }
+    // Who holds each set now. Only the latest published version of a lesson counts: an older one is
+    // pinned to the version of the set it was published with and nothing an author does moves it.
+    const setsOfVersion = new Map<string, Set<string>>();
+    for (const block of setBlocks) {
+      const problemSetId = String((block.payload as { problemSetId?: string }).problemSetId ?? '');
+      if (!problemSetId) continue;
+      setsOfVersion.set(block.ownerVersionId, (setsOfVersion.get(block.ownerVersionId) ?? new Set()).add(problemSetId));
+    }
+    const heldBy = new Map<string, string[]>();
+    for (const identity of identities) {
+      const entry = byKey.get(identity.key);
+      const latest = entry?.versions.at(-1);
+      if (!entry || !latest) continue;
+      for (const problemSetId of new Set([...(setsOfVersion.get(latest) ?? []), ...(entry.review ? [entry.review.problemSetId] : [])])) {
+        heldBy.set(problemSetId, [...(heldBy.get(problemSetId) ?? []), identity.key]);
+      }
+    }
+    const latestOfSet = new Map<string, string>();
+    for (const version of setVersions) latestOfSet.set(version.problemSetId, version.id);
     return {
       role,
       accounts,
@@ -359,6 +386,8 @@ export class AuthoringService {
       courses,
       expertMode: account?.editorExpertMode ?? false,
       drafts: drafts.map((row) => this.summary(row, userId)),
+      problemSets: setRows.map((set) => ({ problemSetId: set.id, name: set.name, courseKey: set.course.key,
+        latestVersionId: latestOfSet.get(set.id) ?? null, lessonKeys: heldBy.get(set.id) ?? [] })),
       lessons: identities.flatMap((identity) => {
         const entry = byKey.get(identity.key);
         const draft = drafts.find((item) => item.ownerKey === identity.key);
@@ -875,9 +904,103 @@ export class AuthoringService {
   }
 
   /** The lesson and the set drafts it publishes with, as one bundle, so both land or neither does. */
-  private bundle(document: StoredLesson, sets: ResolvedSets) {
-    return { schemaVersion: 1 as const, concepts: [], lessons: [document], problemSets: [...sets.drafted.values()].map((entry) => entry.document),
+  private bundle(document: StoredLesson, sets: ResolvedSets, carried: StoredLesson[] = []) {
+    return { schemaVersion: 1 as const, concepts: [], lessons: [document, ...carried], problemSets: [...sets.drafted.values()].map((entry) => entry.document),
       diagnostics: [], definitions: [] };
+  }
+
+  /**
+   * The other lessons a shared set takes with it.
+   *
+   * A set several lessons hold is a shared thing, and changing its questions changes it for all of
+   * them — otherwise the set's newest version would be what only one lesson uses, and «the set» would
+   * no longer mean one list of questions. So each of those lessons gets its next version here,
+   * identical but for the set version it names. An author who wanted the change to stay in one lesson
+   * takes the set apart first, which gives this lesson a set of its own and leaves the shared one be.
+   *
+   * A lesson somebody else is in the middle of writing is not carried: their draft was started from a
+   * version this would replace, and moving it under them is not this author's to do.
+   */
+  private async carryShared(document: StoredLesson, sets: ResolvedSets): Promise<StoredLesson[]> {
+    const moved = new Map([...sets.drafted.values()].map((entry) => [entry.document.problemSetId, entry.document]));
+    if (!moved.size) return [];
+    const [versions, openDrafts] = await Promise.all([
+      this.db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }], select: { id: true, lessonKey: true } }),
+      this.db.contentDraft.findMany({ where: { ownerKind: 'lesson', status: { not: 'published' } }, select: { ownerKey: true } }),
+    ]);
+    const ids = new Map<string, string[]>();
+    for (const version of versions) ids.set(version.lessonKey, [...(ids.get(version.lessonKey) ?? []), version.id]);
+    const records = await lessonRecords(this.db, [...ids.values()].flatMap((list) => list.slice(-1)));
+    const latest = new Map([...ids].flatMap(([lessonKey, list]) => {
+      const record = records.get(list.at(-1)!);
+      return record ? [[lessonKey, { ids: list, document: storedLessonOf(record) }] as const] : [];
+    }));
+    const writing = new Set(openDrafts.map((open) => open.ownerKey));
+    const carried: StoredLesson[] = [];
+    for (const [lessonKey, entry] of latest) {
+      if (lessonKey === document.public.lessonKey) continue;
+      const refs = problemSetRefs(entry.document);
+      // Already on the version this publishes? Then it is not left behind and needs no new version.
+      const behind = refs.filter((ref) => moved.has(ref.problemSetId) && ref.problemSetVersionId !== moved.get(ref.problemSetId)!.versionId);
+      if (!behind.length) continue;
+      if (writing.has(lessonKey)) {
+        throw new AppError(409, 'shared_set_busy',
+          `${entry.document.public.title}이(가) 같은 문제집을 쓰고 있고 지금 누군가 쓰는 중이에요. 그 초안을 정리한 뒤에 발행하거나, 이 수업만 따로 두세요.`);
+      }
+      // A question that was edited is published under a new name, so the carried lesson has to ask
+      // for it by that name. The set holds its questions in order and an edit keeps a question where
+      // it was, so old and new line up — unless questions were added or removed, and then which
+      // question this lesson meant is not something to guess at.
+      const naming = new Map<string, string>();
+      for (const ref of behind) {
+        const before = (await problemSetRecords(this.db, [ref.problemSetVersionId])).get(ref.problemSetVersionId);
+        const after = moved.get(ref.problemSetId)!;
+        if (!before) continue;
+        if (before.problems.length !== after.problems.length) {
+          throw new AppError(409, 'shared_set_reshaped',
+            `${entry.document.public.title}도 같은 문제집을 쓰는데, 문항을 더하거나 빼면 그 수업이 어느 문항을 물어야 할지 정할 수 없어요. 이 수업만 따로 두거나, 그 수업을 직접 열어 고쳐 주세요.`);
+        }
+        before.problems.forEach((problem, index) => naming.set(problem.problemVersionId, after.problems[index].problemVersionId));
+      }
+      const next = structuredClone(entry.document);
+      next.public.versionId = suggestVersionId(lessonKey, entry.ids);
+      const repoint = <T extends ProblemSetRef>(ref: T): T => (moved.has(ref.problemSetId)
+        ? { ...ref, problemSetVersionId: moved.get(ref.problemSetId)!.versionId,
+            problemVersionIds: ref.problemVersionIds.map((problemId) => naming.get(problemId) ?? problemId) }
+        : ref);
+      next.sections = next.sections.map((section) => ({ ...section, contentBlocks: section.contentBlocks.map((block) => (block.kind === 'core.problem_set'
+        ? { ...block, payload: repoint(block.payload as unknown as ProblemSetRef) as unknown as ContentBlock['payload'] } : block)) })) as StoredLesson['sections'];
+      if (next.review) next.review = repoint(next.review);
+      carried.push(next);
+    }
+    return carried;
+  }
+
+  /**
+   * What a problem set is called. The name is the set's, not a version's, so renaming it changes
+   * nothing that was published and needs no new version — but an open draft of the set carries the
+   * old name in the document it will publish, so that copy is corrected too.
+   */
+  async nameProblemSet(userId: string, problemSetId: string, name: string): Promise<AuthoringResponse> {
+    const role = await this.require(userId);
+    if (!mayPublish(role)) throw new AppError(403, 'not_a_publisher', '문제집 이름은 관리자가 정해요.');
+    const set = await this.db.problemSet.findUnique({ where: { id: problemSetId } });
+    if (!set) throw new AppError(404, 'problem_set_missing', '아직 저장되지 않은 문제집이에요. 저장한 뒤에 이름을 지어 주세요.');
+    const named = name.trim() || null;
+    await this.db.problemSet.update({ where: { id: problemSetId }, data: { name: named } });
+    for (const open of await this.db.contentDraft.findMany({ where: { ownerKind: 'problem_set', ownerKey: problemSetId, status: { not: 'published' } } })) {
+      await this.db.contentDraft.update({ where: { id: open.id },
+        data: { document: { ...(open.document as object), name: named } as never } });
+    }
+    return { workspace: await this.workspace(userId) };
+  }
+
+  /** The questions a published set version holds, so a lesson can take one up and write with it. */
+  async readProblemSet(userId: string, versionId: string): Promise<AuthoringResponse> {
+    await this.require(userId);
+    const set = (await problemSetRecords(this.db, [versionId])).get(versionId);
+    if (!set) throw new AppError(404, 'problem_set_missing', '그 문제집 판본을 찾지 못했어요.');
+    return { workspace: await this.workspace(userId), problemSet: { ...set, problems: set.problems.map(draftProblem) } };
   }
 
   async publishDraft(userId: string, draftId: string): Promise<AuthoringResponse> {
@@ -888,7 +1011,8 @@ export class AuthoringService {
     const sets = await this.resolveSets(document);
     const issues = this.issues(document, sets);
     if (issues.length) throw new AppError(422, 'draft_invalid', '아직 고칠 곳이 있어 발행할 수 없어요.');
-    try { await importContent(this.db, this.bundle(document, sets), false); }
+    const carried = await this.carryShared(document, sets);
+    try { await importContent(this.db, this.bundle(document, sets, carried), false); }
     catch (error) {
       const described = describeContentError(error, { sections: document.sections, problems: this.problemsOf(document, sets) });
       throw new AppError(422, 'publish_rejected', described[0]?.message ?? '발행 검증을 통과하지 못했어요.');
@@ -899,7 +1023,9 @@ export class AuthoringService {
     }
     const published = await this.db.contentDraft.update({ where: { id: draftId },
       data: { status: 'published', publishedVersionId: document.public.versionId }, include: withAuthor });
-    return { workspace: await this.workspace(userId), draft: await this.detail(published as DraftRow, userId, []), publishedVersionId: document.public.versionId };
+    return { workspace: await this.workspace(userId), draft: await this.detail(published as DraftRow, userId, []),
+      publishedVersionId: document.public.versionId,
+      ...(carried.length ? { carriedLessons: carried.map((lesson) => ({ lessonKey: lesson.public.lessonKey, title: lesson.public.title, versionId: lesson.public.versionId })) } : {}) };
   }
 
   async deleteDraft(userId: string, draftId: string): Promise<AuthoringResponse> {
@@ -944,6 +1070,8 @@ export class AuthoringService {
       case 'lesson.read': return this.readLesson(userId, action.versionId);
       case 'draft.create': return this.createDraft(userId, action.lessonKey);
       case 'lesson.create': return this.createLesson(userId, action.courseKey, action.lessonKey, action.title, action.conceptKeys);
+      case 'problemSet.name': return this.nameProblemSet(userId, action.problemSetId, action.name);
+      case 'problemSet.read': return this.readProblemSet(userId, action.versionId);
       case 'draft.review': return this.setReview(userId, action.draftId, action.asking);
       case 'draft.save': return this.saveDraft(userId, action.draftId, action.edit);
       case 'draft.validate': return this.validateDraft(userId, action.draftId);

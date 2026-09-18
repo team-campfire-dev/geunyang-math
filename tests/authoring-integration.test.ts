@@ -44,10 +44,11 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     return next;
   };
   /** A lesson of this test's own, so publishing a version of it disturbs nobody else's counting. */
-  const ownLesson = async () => {
+  const ownLesson = async (courseKey?: string) => {
     const key = `authoring-${randomUUID()}`;
     const base = JSON.parse(JSON.stringify(seedLessons[0]).replaceAll('fraction-meaning', key)) as LessonRecord;
-    await importContent(db, lessonBundle([base], { key: `course-${key}`, title: '검사 코스' }));
+    // A set belongs to one course, so two lessons can only share one when they are in the same course.
+    await importContent(db, lessonBundle([base], { key: courseKey ?? `course-${key}`, title: '검사 코스' }));
     return key;
   };
   const drawing = (blockId: string) => ({
@@ -165,7 +166,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     expect(await authoringRole(db, learner.id)).toBeNull();
     expect(await authoringRole(db, author.id)).toBe('author');
     expect(await authoringRole(db, admin.id)).toBe('admin');
-    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], courses: [], lessons: [], accounts: [], concepts: [], expertMode: false });
+    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], courses: [], lessons: [], accounts: [], concepts: [], problemSets: [], expertMode: false });
     await expect(service.createDraft(learner.id, lessonKey)).rejects.toThrow(/권한/);
   });
 
@@ -306,6 +307,104 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const old = (await problemSetRecords(db, [before.problemSetVersionId])).get(before.problemSetVersionId)!;
     expect(old.problems.map((problem) => problem.problemVersionId)).toEqual(before.problemVersionIds);
   });
+
+  it('names a problem set without publishing anything, and says which lessons hold it', async () => {
+    const admin = await account('admin');
+    const author = await account('author');
+    const key = await ownLesson();
+    const before = await db.problemSetVersion.count();
+
+    const opened = await service.createDraft(admin.id, key);
+    const setId = String(opened.draft!.edit.sections.flatMap((section) => section.contentBlocks)
+      .find((block) => block.kind === 'core.problem_set')!.payload.problemSetId);
+    // Only a publisher names a set: the name is what makes it something other lessons take up.
+    await expect(service.act(author.id, { action: 'problemSet.name', problemSetId: setId, name: '가져다 쓸 묶음' })).rejects.toMatchObject({ status: 403 });
+
+    const named = await service.act(admin.id, { action: 'problemSet.name', problemSetId: setId, name: '가져다 쓸 묶음' });
+    const listed = named.workspace.problemSets.find((set) => set.problemSetId === setId)!;
+    expect(listed.name).toBe('가져다 쓸 묶음');
+    expect(listed.lessonKeys).toEqual([key]);
+    // A name is the set's, not a version's, so nothing was published to carry it.
+    expect(await db.problemSetVersion.count()).toBe(before);
+    await service.deleteDraft(admin.id, opened.draft!.id);
+  });
+
+  it('takes the lessons that share a set along when the set changes', async () => {
+    const admin = await account('admin');
+    const together = `course-${randomUUID()}`;
+    const first = await ownLesson(together);
+    const second = await ownLesson(together);
+
+    // The second lesson takes up the first one's activity set, so two lessons now hold it.
+    const opened = await service.createDraft(admin.id, second);
+    const mine = opened.draft!.edit.sections.flatMap((section) => section.contentBlocks).find((block) => block.kind === 'core.problem_set')!;
+    const theirs = (await lessonRecord(db, `${first}:v1`))!.sections.flatMap((section) => section.contentBlocks)
+      .find((block) => block.kind === 'core.problem_set')!.payload as { problemSetId: string; problemSetVersionId: string; problemVersionIds: string[] };
+    const taken = (await service.act(admin.id, { action: 'problemSet.read', versionId: theirs.problemSetVersionId })).problemSet!;
+
+    const sharing = structuredClone(opened.draft!.edit);
+    sharing.sections = sharing.sections.map((section) => ({ ...section, contentBlocks: section.contentBlocks.map((block) =>
+      (block.blockId === mine.blockId ? { ...block, payload: { problemSetId: taken.problemSetId, problemSetVersionId: taken.versionId,
+        problemVersionIds: taken.problems.map((problem) => problem.problemVersionId) } } : block)) }));
+    sharing.problems = [...sharing.problems.filter((problem) => !(mine.payload.problemVersionIds as string[]).includes(problem.problemVersionId)), ...taken.problems];
+    await service.saveDraft(admin.id, opened.draft!.id, sharing);
+    const shared = await service.publishDraft(admin.id, opened.draft!.id);
+    expect(shared.carriedLessons).toBeUndefined();
+    expect((await service.workspace(admin.id)).problemSets.find((set) => set.problemSetId === taken.problemSetId)!.lessonKeys.sort())
+      .toEqual([first, second].sort());
+
+    // Now editing it from the second lesson has to move the first one too, or the set's newest
+    // version would be what only one of its two holders uses.
+    const again = await service.createDraft(admin.id, second);
+    const changed = structuredClone(again.draft!.edit);
+    const target = changed.problems.find((problem) => problem.problemVersionId === taken.problems[0].problemVersionId)!;
+    target.gradingSpec = { kind: 'integer', value: 4242 };
+    await service.saveDraft(admin.id, again.draft!.id, changed);
+    const published = await service.publishDraft(admin.id, again.draft!.id);
+    expect(published.carriedLessons!.map((lesson) => lesson.lessonKey)).toEqual([first]);
+
+    const moved = (await lessonRecord(db, published.carriedLessons![0].versionId))!;
+    const nowAt = moved.sections.flatMap((section) => section.contentBlocks)
+      .find((block) => block.kind === 'core.problem_set')!.payload as { problemSetVersionId: string };
+    expect(nowAt.problemSetVersionId).not.toBe(theirs.problemSetVersionId);
+    const set = (await problemSetRecords(db, [nowAt.problemSetVersionId])).get(nowAt.problemSetVersionId)!;
+    expect(set.problems.some((problem) => JSON.stringify(problem.gradingSpec).includes('4242'))).toBe(true);
+    // The version the first lesson used to name is untouched, and so is that lesson's old version.
+    const old = (await problemSetRecords(db, [theirs.problemSetVersionId])).get(theirs.problemSetVersionId)!;
+    expect(JSON.stringify(old.problems)).not.toContain('4242');
+  }, 30_000);
+
+  it('refuses to carry a lesson somebody else is in the middle of writing', async () => {
+    const admin = await account('admin');
+    const author = await account('author');
+    const together = `course-${randomUUID()}`;
+    const first = await ownLesson(together);
+    const second = await ownLesson(together);
+    const opened = await service.createDraft(admin.id, second);
+    const mine = opened.draft!.edit.sections.flatMap((section) => section.contentBlocks).find((block) => block.kind === 'core.problem_set')!;
+    const theirs = (await lessonRecord(db, `${first}:v1`))!.sections.flatMap((section) => section.contentBlocks)
+      .find((block) => block.kind === 'core.problem_set')!.payload as { problemSetVersionId: string };
+    const taken = (await service.act(admin.id, { action: 'problemSet.read', versionId: theirs.problemSetVersionId })).problemSet!;
+    const sharing = structuredClone(opened.draft!.edit);
+    sharing.sections = sharing.sections.map((section) => ({ ...section, contentBlocks: section.contentBlocks.map((block) =>
+      (block.blockId === mine.blockId ? { ...block, payload: { problemSetId: taken.problemSetId, problemSetVersionId: taken.versionId,
+        problemVersionIds: taken.problems.map((problem) => problem.problemVersionId) } } : block)) }));
+    sharing.problems = [...sharing.problems.filter((problem) => !(mine.payload.problemVersionIds as string[]).includes(problem.problemVersionId)), ...taken.problems];
+    await service.saveDraft(admin.id, opened.draft!.id, sharing);
+    await service.publishDraft(admin.id, opened.draft!.id);
+
+    // Somebody else opens the lesson that would be carried, and is not to be moved under.
+    const theirDraft = await service.createDraft(author.id, first);
+    const again = await service.createDraft(admin.id, second);
+    const changed = structuredClone(again.draft!.edit);
+    changed.problems.find((problem) => problem.problemVersionId === taken.problems[0].problemVersionId)!.gradingSpec = { kind: 'integer', value: 77 };
+    await service.saveDraft(admin.id, again.draft!.id, changed);
+    await expect(service.publishDraft(admin.id, again.draft!.id)).rejects.toMatchObject({ status: 409 });
+
+    await service.deleteDraft(author.id, theirDraft.draft!.id);
+    // With their draft gone the publish goes through, carrying the lesson as it would have.
+    expect((await service.publishDraft(admin.id, again.draft!.id)).carriedLessons!.map((lesson) => lesson.lessonKey)).toEqual([first]);
+  }, 30_000);
 
   it('lets a writer hand work on without locking it, and lets it be handed back', async () => {
     const author = await account('author');
