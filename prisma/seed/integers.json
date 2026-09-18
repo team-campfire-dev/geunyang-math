@@ -1,0 +1,1952 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "integers",
+      "title": "정수와 유리수",
+      "summary": "0보다 작은 수를 읽고, 수직선의 자리로 크기를 견주고, 부호를 지닌 채로 더해요.",
+      "lessons": [
+        {
+          "key": "negative-number",
+          "order": 1
+        },
+        {
+          "key": "absolute-value",
+          "order": 2
+        },
+        {
+          "key": "signed-addition",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "negative-number",
+      "label": "음수",
+      "assessable": true
+    },
+    {
+      "key": "absolute-value",
+      "label": "절댓값",
+      "assessable": true
+    },
+    {
+      "key": "signed-addition",
+      "label": "부호가 있는 수의 덧셈",
+      "assessable": true
+    },
+    {
+      "key": "rational-number",
+      "label": "유리수",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "negative-number",
+        "versionId": "negative-number:v1",
+        "title": "0보다 작은 수: 음수와 수직선",
+        "summary": "수직선의 왼쪽에서 만나는 음수를 읽고, 부호가 무엇을 뜻하는지 알아봐요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "negative-number",
+          "integer"
+        ],
+        "prerequisiteConceptKeys": [],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "negative-number:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "negative-number:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "수직선 위에서 0의 오른쪽으로 가면 1, 2, 3처럼 수가 커져요. 왼쪽으로도 같은 간격으로 갈 수 있고, 그렇게 만나는 0보다 작은 수를 음수라고 해요.\n\n음수는 앞에 부호 $-$를 붙여 $-1$, $-2$처럼 써요. 이 $-$는 빼기가 아니라 그 수가 0의 왼쪽에 있다는 표시예요.\n\n$\\dots, -2, -1, 0, 1, 2, \\dots$를 통틀어 정수라고 해요. 기온이 영하로 내려가거나 통장에서 돈이 빠져나가는 것처럼, 0을 기준으로 반대 방향이 있는 곳에서 음수를 써요.",
+                "definitions": [
+                  {
+                    "conceptKey": "negative-number",
+                    "surface": "음수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "integer",
+                    "surface": "정수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "negative-number:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "수직선 위에서 점이 0의 오른쪽과 왼쪽으로 옮겨 가는 그림",
+                "caption": "0을 가운데 두고 양쪽으로 같은 간격",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 23.19999999999999,
+                    "y1": 95,
+                    "x2": 296.8,
+                    "y2": 95,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 46,
+                    "y1": 89,
+                    "x2": 46,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 46,
+                    "y": 121,
+                    "text": "-3",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 84,
+                    "y1": 89,
+                    "x2": 84,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 84,
+                    "y": 121,
+                    "text": "-2",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 122,
+                    "y1": 89,
+                    "x2": 122,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 122,
+                    "y": 121,
+                    "text": "-1",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160,
+                    "y1": 89,
+                    "x2": 160,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 121,
+                    "text": "0",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 198,
+                    "y1": 89,
+                    "x2": 198,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 198,
+                    "y": 121,
+                    "text": "1",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 236,
+                    "y1": 89,
+                    "x2": 236,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 236,
+                    "y": 121,
+                    "text": "2",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 274,
+                    "y1": 89,
+                    "x2": 274,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 274,
+                    "y": 121,
+                    "text": "3",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "walker",
+                    "cx": 160,
+                    "cy": 95,
+                    "rx": 7,
+                    "ry": 7,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "minus-note",
+                    "x": 160,
+                    "y": 158,
+                    "text": "$-$는 빼기가 아니라 0의 왼쪽이라는 표시",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "0에서 오른쪽으로 두 칸 가면 $2$예요.",
+                    "changes": [
+                      {
+                        "id": "walker",
+                        "dx": 76
+                      },
+                      {
+                        "id": "minus-note",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "왼쪽으로도 같은 간격으로 갈 수 있어요.",
+                    "changes": [
+                      {
+                        "id": "walker",
+                        "dx": -76
+                      },
+                      {
+                        "id": "minus-note",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "0의 왼쪽에서 만나는 수가 음수예요.",
+                    "changes": [
+                      {
+                        "id": "walker",
+                        "dx": -76
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1100
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "negative-number:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "negative-number:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "어제 기온이 $3\\,^\\circ\\mathrm{C}$였는데 오늘은 어제보다 $5\\,^\\circ\\mathrm{C}$ 낮아요. 오늘 기온을 써 볼게요.\n\n수직선에서 3부터 왼쪽으로 5칸 가요. 3에서 세 칸 가면 0이고, 두 칸 더 가면 $-2$예요.\n\n오늘 기온은 $-2\\,^\\circ\\mathrm{C}$, 곧 영하 2도예요.\n\n0을 지나갈 때가 헷갈리는 자리예요. 0은 양수도 음수도 아니고, 양쪽을 가르는 기준일 뿐이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "negative-number",
+                    "surface": "음수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "negative-number:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "negative-number:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "negative-number:practice",
+                "problemSetVersionId": "negative-number:practice:v1",
+                "problemVersionIds": [
+                  "negative-number:practice-1:v1",
+                  "negative-number:practice-2:v1",
+                  "negative-number:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "negative-number:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "negative-number:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "negative-number:check",
+                "problemSetVersionId": "negative-number:check:v1",
+                "problemVersionIds": [
+                  "negative-number:check-1:v1",
+                  "negative-number:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "negative-number:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "negative-number:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "0의 왼쪽에 있는 수가 음수이고, 앞의 $-$는 빼기가 아니라 방향을 나타내는 부호예요. 음수와 0과 양수를 통틀어 정수라고 해요.\n\n이 수업의 개념은 음수·정수예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "negative-number",
+                    "surface": "음수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "integer",
+                    "surface": "정수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "negative-number:review",
+        "problemSetVersionId": "negative-number:review:v1",
+        "problemVersionIds": [
+          "negative-number:homework-1:v1",
+          "negative-number:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "absolute-value",
+        "versionId": "absolute-value:v1",
+        "title": "크기 비교와 절댓값: 자리와 거리",
+        "summary": "수직선의 자리로 크기를 견주고, 0에서 떨어진 거리를 절댓값으로 나타내요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "absolute-value"
+        ],
+        "prerequisiteConceptKeys": [
+          "negative-number",
+          "integer"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "absolute-value:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "absolute-value:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "수직선에서는 오른쪽에 있을수록 큰 수예요. 그래서 $-5$보다 $-1$이 커요. 숫자만 보면 5가 1보다 크지만, 음수에서는 0에서 멀수록 작아져요.\n\n어떤 수가 0에서 얼마나 떨어져 있는지를 절댓값이라고 하고 $|-5|=5$처럼 써요. 방향을 빼고 거리만 남긴 값이에요.\n\n$-5$와 $5$는 절댓값이 둘 다 5예요. 0을 가운데 두고 반대쪽으로 같은 거리에 있으니까요. 그래서 절댓값만으로는 어느 쪽인지 알 수 없어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "absolute-value",
+                    "surface": "절댓값",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "negative-number",
+                    "surface": "음수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "absolute-value:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "absolute-value:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$-3$, $0$, $2$를 작은 것부터 늘어놓아 볼게요.\n\n수직선에 놓으면 왼쪽부터 $-3$, $0$, $2$예요. 왼쪽에 있을수록 작으니 이 순서가 그대로 답이에요.\n\n절댓값으로 견주면 헷갈려요. $|-3|=3$이고 $|2|=2$라 3이 더 크지만, 수 자체는 $-3$이 $2$보다 작아요.\n\n음수끼리는 절댓값이 클수록 작은 수예요. $-7$과 $-2$ 중에서는 $-7$이 더 작아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "absolute-value",
+                    "surface": "절댓값",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "absolute-value:example:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "마이너스 3과 0과 2를 크기 순서대로 수직선 자리에 놓아 보는 그림",
+                "caption": "작은 수부터 왼쪽에 놓아 보세요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "id": "card-neg",
+                    "label": "마이너스 3 카드",
+                    "draggable": true,
+                    "x": 60,
+                    "y": 35,
+                    "text": "$-3$",
+                    "size": 19,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "card-zero",
+                    "label": "0 카드",
+                    "draggable": true,
+                    "x": 150,
+                    "y": 35,
+                    "text": "$0$",
+                    "size": 19,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "card-pos",
+                    "label": "2 카드",
+                    "draggable": true,
+                    "x": 230,
+                    "y": 35,
+                    "text": "$2$",
+                    "size": 19,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 44.8,
+                    "y1": 120,
+                    "x2": 275.2,
+                    "y2": 120,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 64,
+                    "y1": 114,
+                    "x2": 64,
+                    "y2": 126,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 96,
+                    "y1": 114,
+                    "x2": 96,
+                    "y2": 126,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 128,
+                    "y1": 114,
+                    "x2": 128,
+                    "y2": 126,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160,
+                    "y1": 114,
+                    "x2": 160,
+                    "y2": 126,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 192,
+                    "y1": 114,
+                    "x2": 192,
+                    "y2": 126,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 224,
+                    "y1": 114,
+                    "x2": 224,
+                    "y2": 126,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 256,
+                    "y1": 114,
+                    "x2": 256,
+                    "y2": 126,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 178,
+                    "text": "왼쪽일수록 작은 수",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ],
+                "zones": [
+                  {
+                    "id": "seat-small",
+                    "x": 35,
+                    "y": 135,
+                    "width": 62,
+                    "height": 34,
+                    "label": "가장 작은 수 자리",
+                    "accepts": [
+                      "card-neg"
+                    ]
+                  },
+                  {
+                    "id": "seat-middle",
+                    "x": 130,
+                    "y": 135,
+                    "width": 62,
+                    "height": 34,
+                    "label": "가운데 자리",
+                    "accepts": [
+                      "card-zero"
+                    ]
+                  },
+                  {
+                    "id": "seat-large",
+                    "x": 225,
+                    "y": 135,
+                    "width": 62,
+                    "height": 34,
+                    "label": "가장 큰 수 자리",
+                    "accepts": [
+                      "card-pos"
+                    ]
+                  }
+                ],
+                "task": {
+                  "prompt": "$-3$, $0$, $2$를 작은 것부터 왼쪽 자리에 놓아 보세요.",
+                  "promptAlt": "마이너스 3, 0, 2를 작은 것부터 왼쪽 자리에 놓아 보세요.",
+                  "successText": "왼쪽에 있을수록 작은 수예요. 절댓값이 아니라 자리가 크기를 정해요."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "absolute-value:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "absolute-value:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "absolute-value:practice",
+                "problemSetVersionId": "absolute-value:practice:v1",
+                "problemVersionIds": [
+                  "absolute-value:practice-1:v1",
+                  "absolute-value:practice-2:v1",
+                  "absolute-value:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "absolute-value:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "absolute-value:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "absolute-value:check",
+                "problemSetVersionId": "absolute-value:check:v1",
+                "problemVersionIds": [
+                  "absolute-value:check-1:v1",
+                  "absolute-value:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "absolute-value:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "absolute-value:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "수직선에서 오른쪽일수록 큰 수예요. 절댓값은 0에서 떨어진 거리이고 방향은 담지 않아요. 음수끼리는 절댓값이 클수록 작은 수예요.\n\n이 수업의 개념은 절댓값이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "absolute-value",
+                    "surface": "절댓값",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "absolute-value:review",
+        "problemSetVersionId": "absolute-value:review:v1",
+        "problemVersionIds": [
+          "absolute-value:homework-1:v1",
+          "absolute-value:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "signed-addition",
+        "versionId": "signed-addition:v1",
+        "title": "부호가 있는 수의 덧셈과 뺄셈: 수직선 위를 걷기",
+        "summary": "양수는 오른쪽, 음수는 왼쪽으로 걸어 도착한 자리를 답으로 삼아요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "signed-addition",
+          "rational-number"
+        ],
+        "prerequisiteConceptKeys": [
+          "negative-number",
+          "absolute-value",
+          "fraction",
+          "decimal-addition"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "signed-addition:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "signed-addition:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "부호가 있는 수를 더하는 것은 수직선 위를 걷는 일이에요. 양수를 더하면 오른쪽으로, 음수를 더하면 왼쪽으로 그 수만큼 가요.\n\n$(+5)+(-3)$은 0에서 오른쪽으로 5칸 간 다음 왼쪽으로 3칸 가는 거예요. 도착한 자리는 $2$예요.\n\n빼기는 반대 부호를 더하는 것과 같아요. $5-3$과 $5+(-3)$은 같은 걸음이에요. 그래서 뺄셈을 따로 외울 필요 없이 덧셈 하나로 다룰 수 있어요.\n\n정수뿐 아니라 분수와 소수도 같은 규칙을 따라요. 정수와 분수로 나타낼 수 있는 수를 통틀어 유리수라고 해요.",
+                "definitions": [
+                  {
+                    "conceptKey": "signed-addition",
+                    "surface": "더하는",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "rational-number",
+                    "surface": "유리수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "negative-number",
+                    "surface": "음수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "signed-addition:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "0에서 오른쪽 다섯 칸 뒤 왼쪽 세 칸을 걸어 2에 닿는 그림",
+                "caption": "$(+5)+(-3)=2$",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": -40.8,
+                    "y1": 95,
+                    "x2": 160.8,
+                    "y2": 95,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 4,
+                    "y1": 89,
+                    "x2": 4,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 4,
+                    "y": 121,
+                    "text": "-2",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 32,
+                    "y1": 89,
+                    "x2": 32,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 32,
+                    "y": 121,
+                    "text": "-1",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 60,
+                    "y1": 89,
+                    "x2": 60,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 60,
+                    "y": 121,
+                    "text": "0",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 88,
+                    "y1": 89,
+                    "x2": 88,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 88,
+                    "y": 121,
+                    "text": "1",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 116,
+                    "y1": 89,
+                    "x2": 116,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 116,
+                    "y": 121,
+                    "text": "2",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 144,
+                    "y1": 89,
+                    "x2": 144,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 144,
+                    "y": 121,
+                    "text": "3",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 172,
+                    "y1": 89,
+                    "x2": 172,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 172,
+                    "y": 121,
+                    "text": "4",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 200,
+                    "y1": 89,
+                    "x2": 200,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 200,
+                    "y": 121,
+                    "text": "5",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 228,
+                    "y1": 89,
+                    "x2": 228,
+                    "y2": 101,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 228,
+                    "y": 121,
+                    "text": "6",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "walker",
+                    "cx": 60,
+                    "cy": 95,
+                    "rx": 7,
+                    "ry": 7,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "id": "go-right",
+                    "x1": 60,
+                    "y1": 69,
+                    "x2": 200,
+                    "y2": 69,
+                    "stroke": "green",
+                    "strokeWidth": 2,
+                    "arrow": "end"
+                  },
+                  {
+                    "kind": "line",
+                    "id": "go-left",
+                    "x1": 200,
+                    "y1": 53,
+                    "x2": 116,
+                    "y2": 53,
+                    "stroke": "orange",
+                    "strokeWidth": 2,
+                    "arrow": "end"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "landed",
+                    "x": 160,
+                    "y": 160,
+                    "text": "$(+5)+(-3)=2$",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "weight": "bold"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "0에서 오른쪽으로 5칸 가요.",
+                    "changes": [
+                      {
+                        "id": "walker",
+                        "dx": 140
+                      },
+                      {
+                        "id": "go-left",
+                        "hidden": true
+                      },
+                      {
+                        "id": "landed",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "음수를 더하니 왼쪽으로 3칸 가요.",
+                    "changes": [
+                      {
+                        "id": "walker",
+                        "dx": 56
+                      },
+                      {
+                        "id": "landed",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "도착한 자리가 답이에요.",
+                    "changes": [
+                      {
+                        "id": "walker",
+                        "dx": 56
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1100
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "signed-addition:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "signed-addition:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$(-4)+(-3)$을 계산해 볼게요.\n\n0에서 왼쪽으로 4칸 간 다음 다시 왼쪽으로 3칸 가요. 둘 다 같은 방향이니 거리가 더해져 7칸이고, 도착한 자리는 $-7$이에요.\n\n부호가 같으면 절댓값을 더하고 그 부호를 붙여요. 부호가 다르면 절댓값이 큰 쪽에서 작은 쪽을 빼고, 큰 쪽의 부호를 붙여요.\n\n$(-9)+4$는 절댓값이 $9$와 $4$이고 큰 쪽이 음수예요. $9-4=5$에 $-$를 붙여 $-5$예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "signed-addition",
+                    "surface": "부호가 같으면",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "absolute-value",
+                    "surface": "절댓값",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "signed-addition:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "signed-addition:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "signed-addition:practice",
+                "problemSetVersionId": "signed-addition:practice:v1",
+                "problemVersionIds": [
+                  "signed-addition:practice-1:v1",
+                  "signed-addition:practice-2:v1",
+                  "signed-addition:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "signed-addition:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "signed-addition:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "signed-addition:check",
+                "problemSetVersionId": "signed-addition:check:v1",
+                "problemVersionIds": [
+                  "signed-addition:check-1:v1",
+                  "signed-addition:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "signed-addition:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "signed-addition:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "양수를 더하면 오른쪽, 음수를 더하면 왼쪽으로 가요. 빼기는 반대 부호를 더하는 것과 같아요. 정수와 분수로 나타낼 수 있는 수를 통틀어 유리수라고 해요.\n\n이 수업의 개념은 부호가 있는 수의 덧셈·유리수예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "signed-addition",
+                    "surface": "부호가 있는 수의 덧셈",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "rational-number",
+                    "surface": "유리수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "signed-addition:review",
+        "problemSetVersionId": "signed-addition:review:v1",
+        "problemVersionIds": [
+          "signed-addition:homework-1:v1",
+          "signed-addition:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "negative-number:practice",
+      "courseKey": "integers",
+      "name": "0보다 작은 수 연습",
+      "versionId": "negative-number:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "negative-number:practice-1:v1",
+          "conceptKeys": [
+            "negative-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "negative-number:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "영하 7도를 부호를 붙인 수로 써 주세요. 단위는 빼고 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "negative-number:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "영하는 0보다 낮아요. 부호 $-$를 붙입니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "negative-number:practice-2:v1",
+          "conceptKeys": [
+            "negative-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "negative-number:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "수직선에서 0으로부터 왼쪽으로 4칸 떨어진 수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "negative-number:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "왼쪽은 0보다 작은 쪽이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "negative-number:practice-3:v1",
+          "conceptKeys": [
+            "integer"
+          ],
+          "promptContent": [
+            {
+              "blockId": "negative-number:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$에서 왼쪽으로 6칸 가면 어떤 수인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "negative-number:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "2에서 두 칸 가면 0이고, 네 칸 더 갑니다."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "negative-number:check",
+      "courseKey": "integers",
+      "name": "0보다 작은 수 확인",
+      "versionId": "negative-number:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "negative-number:check-1:v1",
+          "conceptKeys": [
+            "negative-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "negative-number:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "통장에서 3000원이 빠져나간 것을 부호를 붙인 수로 써 주세요. 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3000
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "negative-number:check-2:v1",
+          "conceptKeys": [
+            "integer"
+          ],
+          "promptContent": [
+            {
+              "blockId": "negative-number:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$에서 왼쪽으로 5칸 가면 어떤 수인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "negative-number:review",
+      "courseKey": "integers",
+      "name": "0보다 작은 수 복습",
+      "versionId": "negative-number:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "negative-number:homework-1:v1",
+          "conceptKeys": [
+            "negative-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "negative-number:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "영하 12도를 부호를 붙인 수로 써 주세요. 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "negative-number:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "영하는 0보다 낮아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "negative-number:homework-2:v1",
+          "conceptKeys": [
+            "integer"
+          ],
+          "promptContent": [
+            {
+              "blockId": "negative-number:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$에서 왼쪽으로 8칸 가면 어떤 수인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "negative-number:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "3에서 세 칸 가면 0이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "absolute-value:practice",
+      "courseKey": "integers",
+      "name": "크기 비교와 절댓값 연습",
+      "versionId": "absolute-value:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "absolute-value:practice-1:v1",
+          "conceptKeys": [
+            "absolute-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "absolute-value:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$|-9|$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "absolute-value:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "절댓값은 0에서 떨어진 거리예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "absolute-value:practice-2:v1",
+          "conceptKeys": [
+            "absolute-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "absolute-value:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-6$과 $-2$ 중 더 작은 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "absolute-value:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "수직선에서 왼쪽에 있는 쪽이 작아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "absolute-value:practice-3:v1",
+          "conceptKeys": [
+            "absolute-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "absolute-value:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "절댓값이 4인 음수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "absolute-value:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "0에서 왼쪽으로 4칸 떨어진 수예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "absolute-value:check",
+      "courseKey": "integers",
+      "name": "크기 비교와 절댓값 확인",
+      "versionId": "absolute-value:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "absolute-value:check-1:v1",
+          "conceptKeys": [
+            "absolute-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "absolute-value:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$|-15|$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "absolute-value:check-2:v1",
+          "conceptKeys": [
+            "absolute-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "absolute-value:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-8$과 $3$ 중 더 작은 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -8
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "absolute-value:review",
+      "courseKey": "integers",
+      "name": "크기 비교와 절댓값 복습",
+      "versionId": "absolute-value:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "absolute-value:homework-1:v1",
+          "conceptKeys": [
+            "absolute-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "absolute-value:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$|-11|$은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 11
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "absolute-value:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부호를 떼고 거리만 봅니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "absolute-value:homework-2:v1",
+          "conceptKeys": [
+            "absolute-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "absolute-value:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-4$와 $-10$ 중 더 작은 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "absolute-value:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "음수끼리는 절댓값이 클수록 작아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "signed-addition:practice",
+      "courseKey": "integers",
+      "name": "부호가 있는 수의 덧셈 연습",
+      "versionId": "signed-addition:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "signed-addition:practice-1:v1",
+          "conceptKeys": [
+            "signed-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "signed-addition:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(+6)+(-2)$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "signed-addition:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "오른쪽 6칸 뒤 왼쪽 2칸이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "signed-addition:practice-2:v1",
+          "conceptKeys": [
+            "signed-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "signed-addition:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(-5)+(-4)$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "signed-addition:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 방향이니 거리가 더해져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "signed-addition:practice-3:v1",
+          "conceptKeys": [
+            "signed-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "signed-addition:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3-8$은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "signed-addition:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3+(-8)$과 같은 걸음이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "signed-addition:check",
+      "courseKey": "integers",
+      "name": "부호가 있는 수의 덧셈 확인",
+      "versionId": "signed-addition:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "signed-addition:check-1:v1",
+          "conceptKeys": [
+            "signed-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "signed-addition:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(-7)+3$은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "signed-addition:check-2:v1",
+          "conceptKeys": [
+            "rational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "signed-addition:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(-1.5)+0.5$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -1
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "signed-addition:review",
+      "courseKey": "integers",
+      "name": "부호가 있는 수의 덧셈 복습",
+      "versionId": "signed-addition:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "signed-addition:homework-1:v1",
+          "conceptKeys": [
+            "signed-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "signed-addition:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(-8)+5$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "signed-addition:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "절댓값이 큰 쪽의 부호를 붙여요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "signed-addition:homework-2:v1",
+          "conceptKeys": [
+            "rational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "signed-addition:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(-\\frac{1}{2})+\\frac{1}{4}$은 얼마인가요? 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": -1,
+            "denominator": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "signed-addition:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모를 4로 맞추면 $-\\frac{2}{4}+\\frac{1}{4}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}

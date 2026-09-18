@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "negative-number",
+      "label": "음수",
+      "assessable": true
+    },
+    {
+      "key": "absolute-value",
+      "label": "절댓값",
+      "assessable": true
+    },
+    {
+      "key": "signed-addition",
+      "label": "부호가 있는 수의 덧셈",
+      "assessable": true
+    },
+    {
+      "key": "rational-number",
+      "label": "유리수",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "negative-number",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "음수",
+      "summary": "0보다 작은 수이고 앞에 부호 $-$를 붙여 써요.",
+      "blocks": [
+        {
+          "blockId": "global:negative-number:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "수직선에서 0의 왼쪽에 있는 수예요. $-1$, $-2$처럼 앞에 부호 $-$를 붙여 쓰는데, 이 $-$는 빼기가 아니라 0의 어느 쪽인지를 나타내는 표시예요. 기온이 영하로 내려가거나 통장에서 돈이 빠져나가는 것처럼, 0을 기준으로 반대 방향이 있는 곳에서 써요. 0은 음수도 양수도 아니에요 — 양쪽을 가르는 기준일 뿐이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "0보다 작은 쪽을 나타내는 일"
+    },
+    {
+      "conceptKey": "absolute-value",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "절댓값",
+      "summary": "0에서 떨어진 거리이고 방향은 담지 않아요.",
+      "blocks": [
+        {
+          "blockId": "global:absolute-value:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "어떤 수가 수직선에서 0으로부터 얼마나 떨어져 있는지를 나타낸 값이고 $|-5|=5$처럼 써요. 거리만 남기므로 절댓값은 0이거나 0보다 커요. $-5$와 $5$는 절댓값이 둘 다 5예요 — 0을 가운데 두고 반대쪽으로 같은 거리에 있으니까요. 그래서 절댓값만으로는 어느 쪽인지 알 수 없어요. 크기를 견주는 것과는 다른 이야기예요. 음수끼리는 **절댓값이 클수록 작은 수**예요.",
+            "definitions": [
+              {
+                "conceptKey": "negative-number",
+                "surface": "음수"
+              }
+            ]
+          }
+        }
+      ],
+      "usageNote": "방향을 빼고 거리만 볼 때"
+    },
+    {
+      "conceptKey": "signed-addition",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "부호가 있는 수의 덧셈",
+      "summary": "양수는 오른쪽으로, 음수는 왼쪽으로 걸어 도착한 자리예요.",
+      "blocks": [
+        {
+          "blockId": "global:signed-addition:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "수직선 위를 걷는 일로 볼 수 있어요. 양수를 더하면 오른쪽으로, 음수를 더하면 왼쪽으로 그 수만큼 가고, 도착한 자리가 답이에요. 부호가 같으면 절댓값을 더하고 그 부호를 붙여요. 부호가 다르면 절댓값이 큰 쪽에서 작은 쪽을 빼고 큰 쪽의 부호를 붙여요. 빼기는 반대 부호를 더하는 것과 같아서 $5-3$과 $5+(-3)$은 같은 걸음이에요. 그래서 뺄셈을 따로 외울 필요가 없어요.",
+            "definitions": [
+              {
+                "conceptKey": "absolute-value",
+                "surface": "절댓값"
+              }
+            ]
+          }
+        }
+      ],
+      "usageNote": "부호를 지닌 채로 더하고 뺄 때"
+    },
+    {
+      "conceptKey": "rational-number",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "유리수",
+      "summary": "정수와, 정수의 비로 나타낼 수 있는 수를 통틀어 부르는 이름이에요.",
+      "blocks": [
+        {
+          "blockId": "global:rational-number:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "정수 $a$와 0이 아닌 정수 $b$로 $\\frac{a}{b}$처럼 쓸 수 있는 수예요. 정수도 $\\frac{3}{1}$처럼 쓸 수 있으니 유리수예요. $0.25=\\frac{1}{4}$처럼 끝이 있는 소수도 분수로 쓸 수 있으니 유리수이고, 음수도 마찬가지예요. 부호가 있는 수의 덧셈 규칙은 정수뿐 아니라 유리수 전체에 그대로 적용돼요 — 수직선 위를 걷는다는 그림이 달라지지 않으니까요.",
+            "definitions": [
+              {
+                "conceptKey": "integer",
+                "surface": "정수"
+              },
+              {
+                "conceptKey": "fraction",
+                "surface": "분수"
+              }
+            ]
+          }
+        }
+      ],
+      "usageNote": "정수와 분수를 한 이름으로 부를 때"
+    }
+  ]
+}
