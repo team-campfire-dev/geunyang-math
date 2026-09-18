@@ -61,6 +61,18 @@
 .login-divider::before,.login-divider::after { content: ''; height: 1px; background: #e0e6d5; flex: 1; }
 .login-browse { display: flex; margin: 24px auto 0; justify-content: center; font-size: 13px; }
 .profile-logout { display: flex; margin: 24px auto 0; justify-content: center; font-size: 13px; }
+/* Leaving for good sits apart from leaving this browser, and reads as the heavier of the two. */
+.account-erase-open { display: flex; margin: 14px auto 0; justify-content: center; font-size: 12px; color: #9a7455; }
+.account-erase-open:hover { color: #86603f; }
+.account-erase { margin-top: 22px; padding: 17px 18px; border: 1px solid #eacbb8; background: #fcf3e9; border-radius: 8px; }
+.account-erase strong { display: block; font-size: 13px; font-weight: 500; color: #8a5b3c; }
+.account-erase p { font-size: 12px; line-height: 1.9; color: #986648; margin-top: 9px; word-break: keep-all; }
+.account-erase p.muted { color: #9a8a79; }
+.account-erase b { font-weight: 600; color: #8a5b3c; }
+.account-erase-actions { display: flex; align-items: center; gap: 14px; margin-top: 16px; }
+.button.danger { background: #9c5a3c; color: #fffefa; border: 1px solid #9c5a3c; font-size: 13px; }
+.button.danger:not(:disabled):hover { background: #86603f; }
+.account-erase-actions .text-button { color: #96775c; }
 .auth-error-banner { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 1px solid #e5d4b7; border-radius: 7px; background: #fbf4e6; color: #886c43; margin-bottom: 24px; font-size: 12px; line-height: 1.8; }
 .auth-error-banner > span { flex: 1; }
 .auth-error-banner .text-button { color: #886c43; }
