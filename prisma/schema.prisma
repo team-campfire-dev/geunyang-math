@@ -50,9 +50,9 @@ model ContentAuthor {
 /// names the problem set drafts it publishes with, by the version ids its blocks reference.
 model ContentDraft {
   id                 String @id @default(cuid()) @db.VarChar(191)
-  /// 'lesson' | 'problem_set'
+  /// 'lesson' | 'problem_set' | 'diagnostic'
   ownerKind          String @db.VarChar(20)
-  /// Lesson.key or ProblemSet.id
+  /// Lesson.key, ProblemSet.id or Diagnostic.key
   ownerKey           String @db.VarChar(191)
   versionId          String @db.VarChar(191)
   baseVersionId      String? @db.VarChar(191)

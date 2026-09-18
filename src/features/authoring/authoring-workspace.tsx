@@ -8,6 +8,7 @@ import {
   problemGist, sectionRoleLabels, sectionRoles, splitProblemSet, versionLabel,
   type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail,
   type DraftEdit, type DraftIssue, type DraftProblem, type ConceptChoice, type ProblemSetChoice,
+  type DiagnosticDraft, type DiagnosticEdit,
 } from '@/shared/authoring';
 import { ApiError, learningApi, type Session } from '@/features/learning/api-client';
 import { Icon } from '@/features/learning/icons';
@@ -17,6 +18,7 @@ import { RemovalNotice, useEditHistory } from './edit-history';
 import { ExpertMode, useExpertMode } from './expert-mode';
 import { AddBlock, BlockCard } from './block-editor';
 import { LessonSheet, type Picked } from './lesson-sheet';
+import { PlacementPanel } from './placement-panel';
 import { ProblemPanel, ProblemSetEditor, ProblemSetPanel, ConceptPicker } from './problem-editor';
 import { DefinitionPanel } from './definition-editor';
 import { LessonSettings } from './lesson-settings';
@@ -53,7 +55,10 @@ export function AuthoringWorkspace() {
   const [confirming, setConfirming] = useState(false);
   const [loading, setLoading] = useState(true);
   const [matches, setMatches] = useState<AccountRole[] | null>(null);
-  const [libraryPage, setLibraryPage] = useState<'courses' | 'concepts' | 'dictionary' | 'settings'>('courses');
+  const [libraryPage, setLibraryPage] = useState<'courses' | 'concepts' | 'dictionary' | 'placement' | 'settings'>('courses');
+  /** The placement being written, which lives beside the lesson draft rather than inside it. */
+  const [placement, setPlacement] = useState<DiagnosticDraft | null>(null);
+  const [placementEdit, setPlacementEdit] = useState<DiagnosticEdit | null>(null);
   const [courseKey, setCourseKey] = useState<string | null>(null);
   const [showDefinitions, setShowDefinitions] = useState(false);
   /** Writing the lesson, or saying what the lesson is. Two questions, so two screens. */
@@ -128,7 +133,7 @@ export function AuthoringWorkspace() {
           const params = new URLSearchParams(window.location.search);
           setCourseKey(params.get('course'));
           const page = params.get('view');
-          if (page === 'concepts' || page === 'dictionary' || page === 'settings') setLibraryPage(page);
+          if (page === 'concepts' || page === 'dictionary' || page === 'placement' || page === 'settings') setLibraryPage(page);
           const draftId = params.get('draft'); const versionId = params.get('version');
           if (draftId || versionId) {
             const detail = draftId ? (await authoringApi.draft(draftId)).draft
@@ -318,6 +323,7 @@ export function AuthoringWorkspace() {
         <button className={libraryPage === 'courses' ? 'active' : ''} aria-current={libraryPage === 'courses' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('courses'); }}>코스와 수업</button>
         <button className={libraryPage === 'dictionary' ? 'active' : ''} aria-current={libraryPage === 'dictionary' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('dictionary'); }}>뜻풀이 사전</button>
         <button className={libraryPage === 'concepts' ? 'active' : ''} aria-current={libraryPage === 'concepts' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('concepts'); }}>개념으로 찾기</button>
+        <button className={libraryPage === 'placement' ? 'active' : ''} aria-current={libraryPage === 'placement' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('placement'); }}>시작점 확인</button>
         {mayGrantRoles(workspace.role) && <button className={libraryPage === 'settings' ? 'active' : ''} aria-current={libraryPage === 'settings' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('settings'); }}>편집 권한</button>}
       </nav>
       {libraryPage === 'courses' && <CourseLibrary onDirty={setLibraryDirty} workspace={workspace} busy={busy} courseKey={courseKey} onCourse={setCourseKey}
@@ -333,6 +339,23 @@ export function AuthoringWorkspace() {
         workspace={workspace} busy={busy} onDirty={setLibraryDirty}
         onOpen={summary => { if (discardChanges(libraryDirty)) void run(async () => { const detail = (await authoringApi.draft(summary.id)).draft; open(detail); setCourseKey(workspace.lessons.find(l => l.lessonKey === detail.lessonKey)?.courseKey ?? null); }); }}
         onAction={async action => { if (action.action === 'lesson.read' && !discardChanges(libraryDirty)) return false; let ok = false; await act(action, () => { ok = true; }); return ok; }} />}
+      {libraryPage === 'placement' && <PlacementPanel
+        diagnostics={workspace.diagnostics} draft={placement} edit={placementEdit} concepts={workspace.concepts} busy={busy}
+        answerInputs={answerInputs} onAnswerInput={(problemVersionId, input) => setAnswerInputs((current) => ({ ...current, [problemVersionId]: input }))}
+        onOpen={(diagnosticKey) => act({ action: 'diagnostic.draft', diagnosticKey }, (response) => {
+          setPlacement(response.diagnostic ?? null); setPlacementEdit(response.diagnostic?.edit ?? null); setLibraryDirty(false);
+        })}
+        onEdit={(next) => { setPlacementEdit(next); setLibraryDirty(true); }}
+        onSave={() => placement && placementEdit && act({ action: 'diagnostic.save', draftId: placement.id, edit: placementEdit }, (response) => {
+          setPlacement(response.diagnostic ?? null); setPlacementEdit(response.diagnostic?.edit ?? null); setLibraryDirty(false);
+          setNotice('저장했어요.');
+        })}
+        onPublish={() => placement && act({ action: 'diagnostic.publish', draftId: placement.id }, (response) => {
+          setPlacement(null); setPlacementEdit(null); setLibraryDirty(false);
+          setNotice(`${response.publishedVersionId}을(를) 발행했어요. 지금부터 새로 시작하는 학습자가 이것을 받아요.`);
+        })}
+        onDelete={() => { if (!placement) return; if (!discardChanges(libraryDirty)) return;
+          void act({ action: 'diagnostic.delete', draftId: placement.id }, () => { setPlacement(null); setPlacementEdit(null); setLibraryDirty(false); }); }} />}
       {libraryPage === 'dictionary' && <DefinitionPanel onDirty={setLibraryDirty} lessons={workspace.lessons} concepts={workspace.concepts}
         mayEditDictionary={mayPublish(workspace.role)}
         onList={async (scopeKind, scopeKey) => (await authoringApi.act({ action: 'definition.list', scopeKind, scopeKey }, session?.user?.id ?? '')).definitions ?? []}

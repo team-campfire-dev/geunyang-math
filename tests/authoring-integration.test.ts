@@ -166,7 +166,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     expect(await authoringRole(db, learner.id)).toBeNull();
     expect(await authoringRole(db, author.id)).toBe('author');
     expect(await authoringRole(db, admin.id)).toBe('admin');
-    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], courses: [], lessons: [], accounts: [], concepts: [], problemSets: [], expertMode: false });
+    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], courses: [], lessons: [], accounts: [], concepts: [], problemSets: [], diagnostics: [], expertMode: false });
     await expect(service.createDraft(learner.id, lessonKey)).rejects.toThrow(/권한/);
   });
 
