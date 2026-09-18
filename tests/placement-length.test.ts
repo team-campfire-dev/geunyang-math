@@ -80,7 +80,19 @@ describe('placing a learner', () => {
       return [...scope, null].map((known) => place(scope, known ? new Set([known, ...graph.ancestors(known)]) : new Set()).asked);
     }));
     expect(worst, `최악 ${worst}문항, 전수 ${exhaustive}문항`).toBeLessThan(exhaustive / 2);
-    expect(worst).toBeLessThanOrEqual(9);
+    // 48 concepts, so 96 questions to name them all twice. The catalogue more than doubled when the
+    // middle-school courses landed and this went 9 to 12, because the descent pays for depth, not size.
+    expect(worst).toBeLessThanOrEqual(12);
+  });
+
+  it('costs an old starting point exactly what it cost before the catalogue grew', () => {
+    // Measured on the four courses that shipped first, before 문자와 식 and everything above it.
+    for (const [target, worst] of [['percentage-of', 9], ['rational-number', 9], ['percentage', 8],
+      ['decimal-addition', 6], ['reduce', 4], ['ratio', 4], ['fraction', 1]] as const) {
+      const scope = placementScope(graph, [target]);
+      const costs = [...scope, null].map((known) => place(scope, known ? new Set([known, ...graph.ancestors(known)]) : new Set()).asked);
+      expect(Math.max(...costs), `${target}을(를) 배우려는 사람이 더 오래 걸린다`).toBe(worst);
+    }
   });
 
   it('does not get longer because the catalogue grew somewhere else', () => {

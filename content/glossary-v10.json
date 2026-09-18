@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "inequality",
+      "label": "부등식",
+      "assessable": true
+    },
+    {
+      "key": "inequality-solution",
+      "label": "부등식의 해",
+      "assessable": true
+    },
+    {
+      "key": "inequality-property",
+      "label": "부등식의 성질",
+      "assessable": true
+    },
+    {
+      "key": "linear-inequality",
+      "label": "일차부등식",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "inequality",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "부등식",
+      "summary": "두 식의 크고 작음을 부등호로 나타낸 식이에요.",
+      "blocks": [
+        {
+          "blockId": "global:inequality:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$x > 3$이나 $2x+1 \\leq 7$처럼 $<$, $>$, $\\leq$, $\\geq$로 이은 식이에요. 등식이 양쪽이 같다고 말하는 것과 달리 어느 쪽이 큰지를 말합니다. $\\leq$는 작거나 같다는 뜻이라 같은 경우도 포함해요 — 경계값이 들어가는지 아닌지가 여기서 갈립니다. 「이상」과 「이하」는 같은 경우를 포함하고, 「초과」와 「미만」은 포함하지 않아요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "크고 작음을 식으로 적을 때"
+    },
+    {
+      "conceptKey": "inequality-solution",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "부등식의 해",
+      "summary": "넣었을 때 부등식이 참이 되는 수 전부예요.",
+      "blocks": [
+        {
+          "blockId": "global:inequality-solution:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "방정식의 해가 보통 하나인 것과 달리, 부등식의 해는 대개 수없이 많아요. $x>3$의 해는 $3$보다 큰 수 전부입니다. 그래서 답을 하나의 수가 아니라 $x>3$ 같은 범위로 적고, 수직선에 칠해 나타내요. 경계를 포함하면 속을 채운 점, 포함하지 않으면 속이 빈 점으로 그립니다.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "답이 범위로 나올 때"
+    },
+    {
+      "conceptKey": "inequality-property",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "부등식의 성질",
+      "summary": "양변에 무엇을 하면 방향이 유지되고 무엇을 하면 뒤집히는지에 대한 규칙이에요.",
+      "blocks": [
+        {
+          "blockId": "global:inequality-property:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "양변에 같은 수를 더하거나 빼면 방향은 그대로예요. 양수를 곱하거나 나눌 때도 그대로고요. 음수를 곱하거나 나눌 때만 부등호의 방향이 뒤집힙니다 — $2<5$의 양변에 $-1$을 곱하면 $-2>-5$예요. 수직선에서 0을 사이에 두고 반대쪽으로 옮겨 가니 앞뒤가 바뀌는 것입니다. 등식에는 없던 단 하나의 차이이고, 틀리는 자리도 거의 여기뿐이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "부등식을 변형해도 되는지 판단할 때"
+    },
+    {
+      "conceptKey": "linear-inequality",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "일차부등식",
+      "summary": "정리하면 문자가 한 번만 곱해진 꼴이 되는 부등식이에요.",
+      "blocks": [
+        {
+          "blockId": "global:linear-inequality:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$2x+1 \\leq 7$처럼 모두 한쪽으로 모으면 $ax+b \\leq 0$ 같은 꼴이 되는 부등식이에요. 푸는 순서는 일차방정식과 똑같아요 — 괄호를 풀고, 이항하고, 계수로 나눕니다. 다른 점은 마지막 나눗셈 하나뿐이에요. 계수가 음수이면 부등호를 뒤집어야 합니다. 답은 범위로 나오므로 수직선에 칠해 두면 확인하기 쉬워요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "문자가 한 번만 곱해진 부등식을 풀 때"
+    }
+  ]
+}

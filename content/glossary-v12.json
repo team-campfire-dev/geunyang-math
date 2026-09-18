@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "function",
+      "label": "함수",
+      "assessable": true
+    },
+    {
+      "key": "function-value",
+      "label": "함숫값",
+      "assessable": true
+    },
+    {
+      "key": "linear-function",
+      "label": "일차함수",
+      "assessable": true
+    },
+    {
+      "key": "slope",
+      "label": "기울기",
+      "assessable": true
+    },
+    {
+      "key": "intercept",
+      "label": "절편",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "function",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "함수",
+      "summary": "하나를 넣으면 나오는 값이 하나로 정해지는 관계예요.",
+      "blocks": [
+        {
+          "blockId": "global:function:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$x$를 정할 때마다 $y$가 딱 하나로 따라 정해지면 $y$는 $x$의 함수예요. 자판기와 비슷해요 — 같은 버튼을 눌렀는데 어떤 때는 사이다가, 어떤 때는 콜라가 나온다면 함수가 아닙니다. $y=2x$는 함수이고, $x$가 $y$의 제곱인 관계는 $x=4$에 $y$가 $2$와 $-2$ 둘이라 함수가 아니에요. 그래프로는 세로선을 그어 두 번 만나면 함수가 아니라고 볼 수 있어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "값 하나가 값 하나를 정하는지 볼 때"
+    },
+    {
+      "conceptKey": "function-value",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "함숫값",
+      "summary": "넣은 값에 대해 나온 값이에요.",
+      "blocks": [
+        {
+          "blockId": "global:function-value:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$f(x)=2x$에서 $x$에 $3$을 넣어 나온 $6$을 $f(3)$이라 쓰고 함숫값이라고 해요. $f(3)$은 $f$와 $3$을 곱하라는 뜻이 아니라 「$3$을 넣었을 때 나오는 값」이라는 하나의 이름입니다. 식의 값을 구하는 일과 계산은 똑같고, 이름만 달라진 것이에요. 그래프에서는 $x=3$인 자리의 높이예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "넣은 값에 대한 결과를 가리킬 때"
+    },
+    {
+      "conceptKey": "linear-function",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "일차함수",
+      "summary": "$y$가 $x$에 대한 일차식으로 나타나는 함수예요.",
+      "blocks": [
+        {
+          "blockId": "global:linear-function:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$y=ax+b$ 꼴로 쓸 수 있고 $a$가 $0$이 아닌 함수예요. $y=2x-1$이 그렇습니다. 해가 되는 점들을 좌표평면에 찍으면 언제나 직선 하나가 나와요 — 그래서 점 두 개만 찍어 이으면 그래프를 그릴 수 있습니다. $a$가 $0$이면 $y=b$인 가로선이 되어 일차함수라고 부르지 않아요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "직선으로 그려지는 관계를 다룰 때"
+    },
+    {
+      "conceptKey": "slope",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "기울기",
+      "summary": "$x$가 $1$만큼 늘 때 $y$가 얼마나 변하는지를 나타내는 수예요.",
+      "blocks": [
+        {
+          "blockId": "global:slope:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$y=ax+b$에서 $a$가 기울기예요. 오른쪽으로 한 칸 갈 때 위로 몇 칸 오르는지를 말해 줍니다. $y$의 변화량을 $x$의 변화량으로 나눈 값이라 비율과 같은 계산이에요. 양수이면 오른쪽으로 갈수록 올라가고, 음수이면 내려가요. 절댓값이 클수록 가파릅니다.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "직선이 얼마나 가파른지 말할 때"
+    },
+    {
+      "conceptKey": "intercept",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "절편",
+      "summary": "그래프가 축과 만나는 자리예요.",
+      "blocks": [
+        {
+          "blockId": "global:intercept:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$y=ax+b$에서 $b$가 $y$절편이고, 그래프가 $y$축과 만나는 점의 $y$좌표예요. $x=0$을 넣으면 바로 나옵니다. $x$절편은 그래프가 $x$축과 만나는 점의 $x$좌표이고, $y=0$을 넣어 풀면 나와요. 기울기와 $y$절편 둘만 알면 직선을 그릴 수 있어요 — $y$절편에 점을 찍고 기울기만큼 이동해 한 점을 더 잡으면 됩니다.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "그래프가 축을 지나는 자리를 말할 때"
+    }
+  ]
+}

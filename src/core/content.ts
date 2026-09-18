@@ -292,9 +292,16 @@ function validateProblemFields(problem: StoredProblem, ctx: z.RefinementCtx) {
 const problemSchema = z.object(problemShape).strict().superRefine(validateProblemFields);
 
 /** A frozen problem set version and the questions picked from it — how a lesson step, a review pool and a diagnostic name their questions. */
-export const problemSetRefSchema = z.object({
-  problemSetId: id, problemSetVersionId: id, problemVersionIds: z.array(id).min(1).max(50),
+const problemSetRefOf = (most: number) => z.object({
+  problemSetId: id, problemSetVersionId: id, problemVersionIds: z.array(id).min(1).max(most),
 }).strict();
+export const problemSetRefSchema = problemSetRefOf(50);
+/**
+ * A placement names the pool it may ask from, not a list it puts to anybody: the descent settles a
+ * concept from one answer and stops, so a bank that covers a wider catalogue does not make a longer
+ * placement. It may therefore name as many questions as the set it draws on actually holds.
+ */
+export const diagnosticPoolRefSchema = problemSetRefOf(200);
 const storedLessonSchema = z.object({
   public: z.object({
     lessonKey: id,

@@ -83,6 +83,28 @@ describe('a drawing', () => {
     expect(screen.getByText('다음')).toBeDefined();
   });
 
+  it('lets a frame show a shape the drawing starts with hidden', () => {
+    // Writing a shape at opacity 0 and turning it on in a later frame is how a scene reveals a step.
+    // The shape's own opacity and the frame's multiply in SVG, so the frame has to replace it.
+    const items: SceneItem[] = [{ kind: 'rect', id: 'later', x: 10, y: 10, width: 40, height: 20, fill: 'green', opacity: 0 }];
+    const { container } = render(<ContentBlocks blocks={[scene({ items,
+      frames: [{ caption: '아직', changes: [] }, { caption: '이제', changes: [{ id: 'later', opacity: 1 }] }] })]} />);
+    expect(container.querySelector('rect')!.getAttribute('opacity')).toBe('0');
+    fireEvent.click(screen.getByRole('button', { name: '다음 장면' }));
+    const shown = container.querySelector('rect')!;
+    expect(shown.getAttribute('opacity'), '장면이 켠 도형이 여전히 보이지 않는다').toBeNull();
+    expect((shown.parentElement as HTMLElement).style.opacity).toBe('1');
+  });
+
+  it('keeps the space before a formula inside a drawing\'s label', () => {
+    const items: SceneItem[] = [{ kind: 'text', x: 10, y: 20, text: '양쪽에서 똑같이 $3$을 덜어요' }];
+    const { container } = render(<ContentBlocks blocks={[scene({ items })]} />);
+    const label = container.querySelector('foreignObject > div')!;
+    // The prose and the formula are one flex item together, or the flex box eats the space between.
+    expect(label.children).toHaveLength(1);
+    expect(label.firstElementChild!.innerHTML).toContain('똑같이 ');
+  });
+
   it('keeps a bar drawn by a retired block readable', () => {
     render(<ContentBlocks blocks={[block('core.figure', 1, {
       alt: '4등분 중 3개를 칠한 막대', primitive: { kind: 'fraction_strip', parts: 4, filled: 3, label: '$\\frac{3}{4}$' },

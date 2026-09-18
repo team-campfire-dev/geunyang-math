@@ -1,0 +1,2119 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "systems",
+      "title": "연립방정식",
+      "summary": "미지수가 둘인 식은 혼자서 답을 정하지 못해요. 두 식을 함께 놓고 문자를 하나씩 없애며 풀어요.",
+      "order": 9,
+      "lessons": [
+        {
+          "key": "two-variable-equation",
+          "order": 1
+        },
+        {
+          "key": "substitution-method",
+          "order": 2
+        },
+        {
+          "key": "elimination-method",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "two-variable-equation",
+      "label": "미지수가 두 개인 일차방정식",
+      "assessable": true
+    },
+    {
+      "key": "simultaneous-equations",
+      "label": "연립방정식",
+      "assessable": true
+    },
+    {
+      "key": "substitution-method",
+      "label": "대입법",
+      "assessable": true
+    },
+    {
+      "key": "elimination-method",
+      "label": "가감법",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "two-variable-equation",
+        "versionId": "two-variable-equation:v1",
+        "title": "미지수가 두 개일 때: 식 하나로는 부족하다",
+        "summary": "문자가 둘인 식의 해가 짝으로 줄줄이 나오는 것을 보고, 식을 묶어야 하는 이유를 알아봐요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "two-variable-equation",
+          "simultaneous-equations"
+        ],
+        "prerequisiteConceptKeys": [
+          "linear-equation",
+          "expression-value"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "two-variable-equation:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "two-variable-equation:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "사탕과 초콜릿을 합쳐 5개 샀어요. 사탕을 $x$개, 초콜릿을 $y$개라 하면 $x+y=5$예요.\n\n그런데 몇 개씩 샀는지 알 수 있나요? 알 수 없어요. 사탕 $0$개에 초콜릿 $5$개일 수도, $2$개와 $3$개일 수도 있으니까요.\n\n$x+y=5$처럼 문자가 둘이고 각각 한 번씩만 곱해진 식을 미지수가 두 개인 일차방정식이라고 해요. 해가 하나로 정해지지 않고 $(0,5)$, $(1,4)$, $(2,3)$처럼 짝으로 줄줄이 나와요. 그래서 해를 수 하나가 아니라 $x$와 $y$의 짝으로 적어요.\n\n조건이 하나 더 있으면 어떨까요. 「사탕이 초콜릿보다 1개 많다」면 $x-y=1$이에요.\n\n이제 두 식을 동시에 만족시키는 짝을 찾으면 $(3,2)$ 하나뿐이에요. 이렇게 함께 성립해야 하는 식들을 묶어 놓은 것을 연립방정식이라고 해요.",
+                "definitions": [
+                  {
+                    "conceptKey": "two-variable-equation",
+                    "surface": "미지수가 두 개인 일차방정식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "simultaneous-equations",
+                    "surface": "연립방정식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "two-variable-equation:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 190,
+                "alt": "좌표평면에 x와 y의 합이 5가 되는 점들이 차례로 찍히는 그림",
+                "caption": "미지수가 둘이면 해가 여럿이다",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 22,
+                    "text": "$x + y = 5$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 46,
+                    "y1": 150,
+                    "x2": 198,
+                    "y2": 150,
+                    "stroke": "ink",
+                    "strokeWidth": 1.3,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 56,
+                    "y1": 160,
+                    "x2": 56,
+                    "y2": 8,
+                    "stroke": "ink",
+                    "strokeWidth": 1.3,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 78,
+                    "y1": 147,
+                    "x2": 78,
+                    "y2": 153,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 53,
+                    "y1": 128,
+                    "x2": 59,
+                    "y2": 128,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 100,
+                    "y1": 147,
+                    "x2": 100,
+                    "y2": 153,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 53,
+                    "y1": 106,
+                    "x2": 59,
+                    "y2": 106,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 122,
+                    "y1": 147,
+                    "x2": 122,
+                    "y2": 153,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 53,
+                    "y1": 84,
+                    "x2": 59,
+                    "y2": 84,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 144,
+                    "y1": 147,
+                    "x2": 144,
+                    "y2": 153,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 53,
+                    "y1": 62,
+                    "x2": 59,
+                    "y2": 62,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 166,
+                    "y1": 147,
+                    "x2": 166,
+                    "y2": 153,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 53,
+                    "y1": 40,
+                    "x2": 59,
+                    "y2": 40,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 188,
+                    "y1": 147,
+                    "x2": 188,
+                    "y2": 153,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 53,
+                    "y1": 18,
+                    "x2": 59,
+                    "y2": 18,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 49,
+                    "y": 164,
+                    "text": "0",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 56,
+                    "cy": 40,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "d1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 78,
+                    "cy": 62,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "d2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 100,
+                    "cy": 84,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "d3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 122,
+                    "cy": 106,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "d4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 144,
+                    "cy": 128,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "d5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 166,
+                    "cy": 150,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "d6",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 236,
+                    "y": 66,
+                    "text": "$(0,5)$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "t1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 236,
+                    "y": 86,
+                    "text": "$(2,3)$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "t2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 236,
+                    "y": 106,
+                    "text": "$(5,0)$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "t3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 236,
+                    "y": 134,
+                    "text": "해가 줄줄이 나와요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "t4",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$x=0$이면 $y=5$예요.",
+                    "changes": [
+                      {
+                        "id": "d1",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "t1",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$x=2$이면 $y=3$이고요.",
+                    "changes": [
+                      {
+                        "id": "d1",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "t1",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "d2",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "d3",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "t2",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$x=5$이면 $y=0$이에요.",
+                    "changes": [
+                      {
+                        "id": "d1",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "t1",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "d2",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "d3",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "t2",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "d4",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "d5",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "d6",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "t3",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "식 하나만으로는 답을 하나로 좁힐 수 없어요.",
+                    "changes": [
+                      {
+                        "id": "d1",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "t1",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "d2",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "d3",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "t2",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "d4",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "d5",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "d6",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "t3",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "t4",
+                        "opacity": 1.0
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1500
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "two-variable-equation:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "two-variable-equation:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$x+y=5$의 해를 찾아 좌표평면에 찍어 볼게요.\n\n$x$에 수를 하나 정해 넣으면 $y$가 따라 정해져요. $x=0$이면 $y=5$, $x=1$이면 $y=4$, $x=2$이면 $y=3$이에요.\n\n이 짝들을 점으로 찍으면 한 줄로 늘어서요. 사실 직선 하나예요. 문자가 둘인 일차방정식의 해는 언제나 직선을 이룹니다.\n\n$x-y=1$도 같은 방식으로 그리면 또 다른 직선이 나와요.\n\n두 직선을 한 평면에 그리면 한 점에서 만나요. 그 점이 $(3,2)$이고, 두 식을 동시에 만족시키는 유일한 짝이에요. 연립방정식을 푼다는 것은 이 만나는 점을 찾는 일이에요.\n\n나란한 두 직선이라면 만나지 않으니 해가 없어요. 겹쳐 있다면 만나는 점이 무수히 많고요.",
+                "definitions": [
+                  {
+                    "conceptKey": "simultaneous-equations",
+                    "surface": "연립방정식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "two-variable-equation:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "two-variable-equation:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "two-variable-equation:practice",
+                "problemSetVersionId": "two-variable-equation:practice:v1",
+                "problemVersionIds": [
+                  "two-variable-equation:practice-1:v1",
+                  "two-variable-equation:practice-2:v1",
+                  "two-variable-equation:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "two-variable-equation:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "two-variable-equation:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "two-variable-equation:check",
+                "problemSetVersionId": "two-variable-equation:check:v1",
+                "problemVersionIds": [
+                  "two-variable-equation:check-1:v1",
+                  "two-variable-equation:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "two-variable-equation:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "two-variable-equation:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "문자가 둘인 일차방정식은 해가 짝으로 여럿 나와요. 좌표평면에 찍으면 직선을 이뤄요.\n\n두 식을 동시에 만족시켜야 하는 것으로 묶으면 연립방정식이고, 그 해는 두 직선이 만나는 점이에요.\n\n이 수업의 개념은 미지수가 두 개인 일차방정식과 연립방정식이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "two-variable-equation",
+                    "surface": "미지수가 두 개인 일차방정식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "simultaneous-equations",
+                    "surface": "연립방정식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "two-variable-equation:review",
+        "problemSetVersionId": "two-variable-equation:review:v1",
+        "problemVersionIds": [
+          "two-variable-equation:homework-1:v1",
+          "two-variable-equation:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "substitution-method",
+        "versionId": "substitution-method:v1",
+        "title": "대입법: 한 식이 말해 주는 것을 넣기",
+        "summary": "한 문자가 이미 홀로 있는 식의 값을 다른 식에 넣어, 문자가 하나뿐인 식으로 바꿔 풀어요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "substitution-method"
+        ],
+        "prerequisiteConceptKeys": [
+          "simultaneous-equations",
+          "two-variable-equation",
+          "linear-equation"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "substitution-method:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "substitution-method:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$y=x+1$과 $2x+y=7$을 함께 풀어 볼게요.\n\n위 식이 친절해요. $y$가 무엇인지 $x$로 말해 주고 있거든요. $y$는 $x+1$이에요.\n\n그러면 아래 식의 $y$ 자리에 $x+1$을 그대로 넣을 수 있어요. $2x+(x+1)=7$이 됩니다. 문자가 하나뿐인 익숙한 식이 됐어요.\n\n이렇게 한 식이 말해 주는 값을 다른 식에 넣어 문자를 줄이는 방법을 대입법이라고 해요.\n\n정리하면 $3x+1=7$이고 $3x=6$이라 $x=2$예요.\n\n여기서 멈추면 안 돼요. 구하는 것은 짝이니까요. $x=2$를 $y=x+1$에 되돌려 넣으면 $y=3$이에요. 답은 $(2,3)$입니다.\n\n넣을 때는 괄호로 감싸 두세요. $y=x-2$를 $3y$ 자리에 넣을 때 괄호를 빼면 $3x-2$가 되어 틀려요. $3(x-2)$라야 맞습니다.",
+                "definitions": [
+                  {
+                    "conceptKey": "substitution-method",
+                    "surface": "대입법",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "substitution-method:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "한 식이 말해 주는 값이 다른 식의 빈자리로 옮겨 가는 그림",
+                "caption": "하나로 줄여서 푼다",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 30,
+                    "text": "$y = x + 1$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "e1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 62,
+                    "text": "$2x + y = 7$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "e2"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 196,
+                    "y": 50,
+                    "width": 26,
+                    "height": 22,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 4,
+                    "id": "slot"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 209,
+                    "y": 66,
+                    "text": "$y$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "slott"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 209,
+                    "y": 30,
+                    "text": "$x+1$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "sub",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 108,
+                    "text": "$2x + (x+1) = 7$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "e3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 138,
+                    "text": "$3x = 6$이라 $x = 2$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "e4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 170,
+                    "text": "$y = 2 + 1 = 3$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "e5",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "위 식이 $y$를 $x$로 말해 주고 있어요.",
+                    "changes": [
+                      {
+                        "id": "sub",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "아래 식의 $y$ 자리에 그대로 넣어요.",
+                    "changes": [
+                      {
+                        "id": "sub",
+                        "opacity": 1.0,
+                        "dy": 36
+                      },
+                      {
+                        "id": "slott",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "e3",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "문자가 하나가 되니 풀 수 있어요.",
+                    "changes": [
+                      {
+                        "id": "sub",
+                        "opacity": 0,
+                        "dy": 36
+                      },
+                      {
+                        "id": "slott",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "e3",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "slot",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "e4",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "구한 $x$를 다시 넣어 $y$를 찾아요.",
+                    "changes": [
+                      {
+                        "id": "sub",
+                        "opacity": 0,
+                        "dy": 36
+                      },
+                      {
+                        "id": "slott",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "e3",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "slot",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "e4",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "e5",
+                        "opacity": 1.0
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "substitution-method:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "substitution-method:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$x=2y-1$과 $3x+2y=13$을 대입법으로 풀어 볼게요.\n\n이번에는 $x$가 홀로 있네요. $x$ 자리에 $2y-1$을 괄호로 감싸 넣어요. $3(2y-1)+2y=13$이에요.\n\n괄호를 풀면 $6y-3+2y=13$이고, 동류항을 모으면 $8y-3=13$이에요.\n\n이항하면 $8y=16$이고 $y=2$입니다.\n\n되돌려 넣어요. $x=2 \\times 2 - 1 = 3$이에요. 답은 $(3,2)$예요.\n\n확인해 볼게요. $3 \\times 3 + 2 \\times 2 = 13$이 맞고, $3 = 2 \\times 2 - 1$도 맞아요.\n\n두 식 다 문자가 홀로 있지 않으면 어떻게 할까요. $x+y=5$라면 $y=5-x$로 고쳐 쓰고 시작하면 돼요. 다만 이렇게 고치다 분수가 생기면 다음 수업의 가감법이 편합니다.",
+                "definitions": [
+                  {
+                    "conceptKey": "substitution-method",
+                    "surface": "대입법",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "substitution-method:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "substitution-method:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "substitution-method:practice",
+                "problemSetVersionId": "substitution-method:practice:v1",
+                "problemVersionIds": [
+                  "substitution-method:practice-1:v1",
+                  "substitution-method:practice-2:v1",
+                  "substitution-method:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "substitution-method:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "substitution-method:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "substitution-method:check",
+                "problemSetVersionId": "substitution-method:check:v1",
+                "problemVersionIds": [
+                  "substitution-method:check-1:v1",
+                  "substitution-method:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "substitution-method:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "substitution-method:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "한 문자가 홀로 있는 식이 있으면, 그 값을 다른 식의 같은 문자 자리에 넣어요. 문자가 하나로 줄어 풀 수 있게 됩니다. 이것이 대입법이에요.\n\n넣을 때는 괄호로 감싸요. 한 문자를 구한 뒤에는 되돌려 넣어 나머지도 구해야 답이 완성돼요.\n\n이 수업의 개념은 대입법이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "substitution-method",
+                    "surface": "대입법",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "substitution-method:review",
+        "problemSetVersionId": "substitution-method:review:v1",
+        "problemVersionIds": [
+          "substitution-method:homework-1:v1",
+          "substitution-method:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "elimination-method",
+        "versionId": "elimination-method:v1",
+        "title": "가감법: 더하거나 빼서 하나를 지우기",
+        "summary": "계수를 맞춰 두 식을 더하거나 빼면 문자 하나가 사라지는 것을 이용해 풀어요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "elimination-method"
+        ],
+        "prerequisiteConceptKeys": [
+          "simultaneous-equations",
+          "two-variable-equation",
+          "equality-property"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "elimination-method:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "elimination-method:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$x+y=5$와 $x-y=1$을 나란히 놓아 보세요. $y$의 계수가 $+1$과 $-1$이에요.\n\n두 식을 그대로 더하면 어떻게 될까요? $y$와 $-y$가 서로 지워져요. 왼쪽은 $2x$, 오른쪽은 $5+1=6$이라 $2x=6$이고 $x=3$이에요.\n\n이렇게 두 식을 더하거나 빼서 문자 하나를 없애는 방법을 가감법이라고 해요.\n\n더해도 되는 이유는 등식의 성질 때문이에요. $x-y$와 $1$은 같은 값이니, 첫 식의 양변에 같은 값을 더한 것일 뿐이에요.\n\n$x=3$을 첫 식에 되돌려 넣으면 $y=2$예요. 답은 $(3,2)$입니다.\n\n계수가 맞지 않으면 맞춰 두고 시작해요. $2x+y=7$과 $x+y=4$라면 $y$의 계수가 둘 다 $1$이니 빼면 됩니다. 뺄 때는 뒤쪽 식 모든 항의 부호가 바뀐다는 것을 놓치지 마세요.",
+                "definitions": [
+                  {
+                    "conceptKey": "elimination-method",
+                    "surface": "가감법",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "equality-property",
+                    "surface": "등식의 성질",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "elimination-method:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "위아래로 놓인 두 식을 더하자 한 문자가 사라지는 그림",
+                "caption": "더하거나 빼서 하나를 없앤다",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 140,
+                    "y": 40,
+                    "text": "$x + y = 5$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "e1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 140,
+                    "y": 72,
+                    "text": "$x - y = 1$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "e2"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 56,
+                    "y1": 88,
+                    "x2": 224,
+                    "y2": 88,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4
+                  },
+                  {
+                    "kind": "text",
+                    "x": 62,
+                    "y": 58,
+                    "text": "$+$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "plus",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 212,
+                    "y": 40,
+                    "text": "$+y$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "y1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 212,
+                    "y": 72,
+                    "text": "$-y$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "y2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 140,
+                    "y": 112,
+                    "text": "$2x = 6$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "e3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 140,
+                    "y": 142,
+                    "text": "$x = 3$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "e4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 140,
+                    "y": 174,
+                    "text": "$3 + y = 5$이라 $y = 2$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "e5",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$y$의 계수가 $+1$과 $-1$이에요.",
+                    "changes": [
+                      {
+                        "id": "y1",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "y2",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "두 식을 그대로 더해요.",
+                    "changes": [
+                      {
+                        "id": "y1",
+                        "opacity": 0.2
+                      },
+                      {
+                        "id": "y2",
+                        "opacity": 0.2
+                      },
+                      {
+                        "id": "plus",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$y$가 사라지고 $x$만 남아요.",
+                    "changes": [
+                      {
+                        "id": "y1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "y2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "plus",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "e3",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$x$를 구하고 되돌려 넣어 $y$를 찾아요.",
+                    "changes": [
+                      {
+                        "id": "y1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "y2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "plus",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "e3",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "e4",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "e5",
+                        "opacity": 1.0
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "elimination-method:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "elimination-method:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$2x+3y=12$와 $x-y=1$을 가감법으로 풀어 볼게요. 계수가 하나도 맞지 않네요.\n\n맞춰 주면 돼요. 아래 식 양변에 $3$을 곱하면 $3x-3y=3$이에요. 이제 $y$의 계수가 $+3$과 $-3$이에요.\n\n두 식을 더하면 $y$가 사라져요. $2x+3x=5x$, $12+3=15$라 $5x=15$이고 $x=3$이에요.\n\n되돌려 넣어요. $3-y=1$이니 $y=2$예요. 답은 $(3,2)$입니다.\n\n양변에 곱할 때 오른쪽도 곱해야 한다는 것을 잊지 마세요. 왼쪽만 곱하면 다른 식이 되어 버려요.\n\n$x$를 없애고 싶었다면 아래 식에 $2$를 곱해 $2x-2y=2$로 만들고 빼면 됐어요. 어느 문자를 없앨지는 계수를 맞추기 쉬운 쪽으로 고르면 됩니다.",
+                "definitions": [
+                  {
+                    "conceptKey": "elimination-method",
+                    "surface": "가감법",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "elimination-method:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "elimination-method:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "elimination-method:practice",
+                "problemSetVersionId": "elimination-method:practice:v1",
+                "problemVersionIds": [
+                  "elimination-method:practice-1:v1",
+                  "elimination-method:practice-2:v1",
+                  "elimination-method:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "elimination-method:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "elimination-method:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "elimination-method:check",
+                "problemSetVersionId": "elimination-method:check:v1",
+                "problemVersionIds": [
+                  "elimination-method:check-1:v1",
+                  "elimination-method:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "elimination-method:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "elimination-method:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "어떤 문자의 계수가 같거나 부호만 다르면, 두 식을 빼거나 더해 그 문자를 없앨 수 있어요. 이것이 가감법이에요.\n\n계수가 맞지 않으면 한쪽이나 양쪽에 수를 곱해 맞춰요. 곱할 때는 양변 모두에 곱합니다. 뺄 때는 뒤쪽 식의 부호가 모두 바뀌어요.\n\n이 수업의 개념은 가감법이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "elimination-method",
+                    "surface": "가감법",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "elimination-method:review",
+        "problemSetVersionId": "elimination-method:review:v1",
+        "problemVersionIds": [
+          "elimination-method:homework-1:v1",
+          "elimination-method:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "two-variable-equation:practice",
+      "courseKey": "systems",
+      "name": "미지수가 두 개인 식 연습",
+      "versionId": "two-variable-equation:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "two-variable-equation:practice-1:v1",
+          "conceptKeys": [
+            "two-variable-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "two-variable-equation:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x+y=5$에서 $x=2$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "two-variable-equation:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$에 얼마를 더해야 $5$가 될까요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "two-variable-equation:practice-2:v1",
+          "conceptKeys": [
+            "two-variable-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "two-variable-equation:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x+y=9$에서 $x=3$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "two-variable-equation:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 \\times 3$을 먼저 계산해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "two-variable-equation:practice-3:v1",
+          "conceptKeys": [
+            "simultaneous-equations"
+          ],
+          "promptContent": [
+            {
+              "blockId": "two-variable-equation:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x+y=5$와 $x-y=1$을 모두 만족하는 짝에서 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "two-variable-equation:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 식을 더해 보세요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "two-variable-equation:check",
+      "courseKey": "systems",
+      "name": "미지수가 두 개인 식 확인",
+      "versionId": "two-variable-equation:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "two-variable-equation:check-1:v1",
+          "conceptKeys": [
+            "simultaneous-equations"
+          ],
+          "promptContent": [
+            {
+              "blockId": "two-variable-equation:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x+y=5$와 $x-y=1$을 모두 만족하는 짝에서 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "two-variable-equation:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$를 먼저 구해 되돌려 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "two-variable-equation:check-2:v1",
+          "conceptKeys": [
+            "two-variable-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "two-variable-equation:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x-y=1$에서 $y=4$일 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "two-variable-equation:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$는 $y$보다 $1$ 큽니다."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "two-variable-equation:review",
+      "courseKey": "systems",
+      "name": "미지수가 두 개인 식 복습",
+      "versionId": "two-variable-equation:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "two-variable-equation:homework-1:v1",
+          "conceptKeys": [
+            "two-variable-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "two-variable-equation:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x+y=10$에서 $x=2$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "two-variable-equation:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3 \\times 2$를 먼저 빼 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "two-variable-equation:homework-2:v1",
+          "conceptKeys": [
+            "simultaneous-equations"
+          ],
+          "promptContent": [
+            {
+              "blockId": "two-variable-equation:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x+y=7$과 $x=y+1$을 모두 만족하는 짝에서 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "two-variable-equation:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$ 자리에 $y+1$을 넣어 보세요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "substitution-method:practice",
+      "courseKey": "systems",
+      "name": "대입법 연습",
+      "versionId": "substitution-method:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "substitution-method:practice-1:v1",
+          "conceptKeys": [
+            "substitution-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "substitution-method:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y=x+1$과 $2x+y=7$을 풀었을 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "substitution-method:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$ 자리에 $x+1$을 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "substitution-method:practice-2:v1",
+          "conceptKeys": [
+            "substitution-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "substitution-method:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y=x+1$과 $2x+y=7$을 풀었을 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "substitution-method:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$를 구해 되돌려 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "substitution-method:practice-3:v1",
+          "conceptKeys": [
+            "substitution-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "substitution-method:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x=2y$와 $x+y=9$를 풀었을 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "substitution-method:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$ 자리에 $2y$를 넣으면 $3y=9$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "substitution-method:check",
+      "courseKey": "systems",
+      "name": "대입법 확인",
+      "versionId": "substitution-method:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "substitution-method:check-1:v1",
+          "conceptKeys": [
+            "substitution-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "substitution-method:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x=2y-1$과 $3x+2y=13$을 풀었을 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "substitution-method:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호로 감싸 넣는 것을 잊지 마세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "substitution-method:check-2:v1",
+          "conceptKeys": [
+            "substitution-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "substitution-method:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y=3-x$와 $2x+y=5$를 풀었을 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "substitution-method:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$ 자리에 $3-x$를 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "substitution-method:review",
+      "courseKey": "systems",
+      "name": "대입법 복습",
+      "versionId": "substitution-method:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "substitution-method:homework-1:v1",
+          "conceptKeys": [
+            "substitution-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "substitution-method:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y=2x$와 $x+y=12$를 풀었을 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "substitution-method:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x+2x=12$가 됩니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "substitution-method:homework-2:v1",
+          "conceptKeys": [
+            "substitution-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "substitution-method:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x=y+4$와 $x+y=10$을 풀었을 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "substitution-method:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y+4+y=10$이 됩니다."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "elimination-method:practice",
+      "courseKey": "systems",
+      "name": "가감법 연습",
+      "versionId": "elimination-method:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "elimination-method:practice-1:v1",
+          "conceptKeys": [
+            "elimination-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "elimination-method:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x+y=5$와 $x-y=1$을 더하면 $\\square x = 6$이에요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "elimination-method:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$끼리 서로 지워져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "elimination-method:practice-2:v1",
+          "conceptKeys": [
+            "elimination-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "elimination-method:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x+y=7$과 $x+y=4$를 빼서 구한 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "elimination-method:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$의 계수가 같으니 빼면 사라져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "elimination-method:practice-3:v1",
+          "conceptKeys": [
+            "elimination-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "elimination-method:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x+y=5$와 $x-y=1$을 풀었을 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "elimination-method:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$를 구해 되돌려 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "elimination-method:check",
+      "courseKey": "systems",
+      "name": "가감법 확인",
+      "versionId": "elimination-method:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "elimination-method:check-1:v1",
+          "conceptKeys": [
+            "elimination-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "elimination-method:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x+3y=12$와 $x-y=1$을 풀었을 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "elimination-method:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "아래 식에 $3$을 곱해 계수를 맞춰요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "elimination-method:check-2:v1",
+          "conceptKeys": [
+            "elimination-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "elimination-method:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x+2y=16$과 $3x-y=7$을 빼서 구한 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "elimination-method:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$의 계수가 같으니 빼면 사라져요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "elimination-method:review",
+      "courseKey": "systems",
+      "name": "가감법 복습",
+      "versionId": "elimination-method:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "elimination-method:homework-1:v1",
+          "conceptKeys": [
+            "elimination-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "elimination-method:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x+2y=8$과 $x+y=5$를 풀었을 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "elimination-method:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 식을 빼면 $y$만 남아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "elimination-method:homework-2:v1",
+          "conceptKeys": [
+            "elimination-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "elimination-method:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x-y=3$과 $x+y=6$을 더해서 구한 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "elimination-method:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$가 서로 지워져 $3x=9$가 돼요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}

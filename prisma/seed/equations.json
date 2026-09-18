@@ -1,0 +1,2030 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "equations",
+      "title": "일차방정식",
+      "summary": "어떤 수를 넣어야 양쪽이 같아지는지를 묻고, 등식의 성질로 문자만 남겨 그 수를 찾아요.",
+      "order": 6,
+      "lessons": [
+        {
+          "key": "equation-meaning",
+          "order": 1
+        },
+        {
+          "key": "equality-property",
+          "order": 2
+        },
+        {
+          "key": "linear-equation",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "equation",
+      "label": "방정식",
+      "assessable": true
+    },
+    {
+      "key": "equation-solution",
+      "label": "방정식의 해",
+      "assessable": true
+    },
+    {
+      "key": "equality-property",
+      "label": "등식의 성질",
+      "assessable": true
+    },
+    {
+      "key": "transposition",
+      "label": "이항",
+      "assessable": true
+    },
+    {
+      "key": "linear-equation",
+      "label": "일차방정식",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "equation-meaning",
+        "versionId": "equation-meaning:v1",
+        "title": "방정식과 해: 양쪽이 같아지는 수 찾기",
+        "summary": "넣는 수에 따라 맞기도 틀리기도 하는 등식을 알아보고, 맞게 만드는 수를 찾아요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "equation",
+          "equation-solution"
+        ],
+        "prerequisiteConceptKeys": [
+          "variable",
+          "expression-value"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "equation-meaning:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "equation-meaning:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$x+2=5$라고 적힌 식이 있어요. 이 식은 맞을까요, 틀릴까요? 아직 알 수 없어요. $x$가 무엇인지에 달려 있으니까요.\n\n$x$에 $2$를 넣으면 왼쪽이 $4$라 $5$와 다르니 틀려요. $3$을 넣으면 왼쪽도 $5$라 맞고요. 이렇게 넣는 수에 따라 참이 되기도 거짓이 되기도 하는 등식을 방정식이라고 해요.\n\n참이 되게 만드는 수를 방정식의 해라고 하고, 그 수를 찾는 일을 방정식을 푼다고 해요. $x+2=5$의 해는 $3$이에요.\n\n모든 등식이 방정식인 것은 아니에요. $x+x=2x$는 어떤 수를 넣어도 맞아요. 이런 식은 물어볼 것이 없으니 방정식이라고 하지 않고 항등식이라고 불러요.\n\n저울로 생각하면 편해요. 등호는 양쪽 무게가 같다는 뜻이고, 해는 저울이 딱 평형이 되게 하는 수예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "equation",
+                    "surface": "방정식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "equation-solution",
+                    "surface": "방정식의 해",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "equation-meaning:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "저울 한쪽에 문자 주머니와 추가, 다른 쪽에 추가 놓여 기울었다가 평형이 되는 그림",
+                "caption": "양쪽이 같아지는 수가 해다",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 64,
+                    "y1": 78,
+                    "x2": 256,
+                    "y2": 78,
+                    "stroke": "ink",
+                    "strokeWidth": 2.5,
+                    "id": "arm"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        148,
+                        112
+                      ],
+                      [
+                        172,
+                        112
+                      ],
+                      [
+                        160,
+                        80
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 130,
+                    "y1": 112,
+                    "x2": 190,
+                    "y2": 112,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 36,
+                    "y": 44,
+                    "width": 34,
+                    "height": 30,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "bagL"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 53,
+                    "y": 64,
+                    "text": "$x$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "white",
+                    "id": "bagLt"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 74,
+                    "y": 52,
+                    "width": 22,
+                    "height": 22,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "oneL"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 85,
+                    "y": 68,
+                    "text": "$2$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "oneLt"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 212,
+                    "y": 44,
+                    "width": 60,
+                    "height": 30,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "five"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 242,
+                    "y": 64,
+                    "text": "$5$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "fivet"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 132,
+                    "text": "$x + 2 = 5$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 162,
+                    "text": "$x=2$이면 왼쪽이 가벼워요",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "try2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 162,
+                    "text": "$x=3$이면 딱 맞아요 — 이것이 해예요",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "try3",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$x$에 $2$를 넣으면 왼쪽이 $4$라 기울어요.",
+                    "changes": [
+                      {
+                        "id": "try2",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "try3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "arm",
+                        "rotate": 7
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$x$에 $3$을 넣으면 양쪽이 $5$로 같아져요.",
+                    "changes": [
+                      {
+                        "id": "try2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "try3",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "arm",
+                        "rotate": 0
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1500
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "equation-meaning:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "equation-meaning:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$2x-1=7$의 해가 $4$인지 확인해 볼게요.\n\n$x$ 자리에 $4$를 넣어요. 왼쪽은 $2 \\times 4 - 1 = 7$이에요. 오른쪽도 $7$이니 양쪽이 같아요. 그러니 $4$는 이 방정식의 해가 맞아요.\n\n$3$은 어떨까요. 왼쪽이 $2 \\times 3 - 1 = 5$라 오른쪽 $7$과 다르니 해가 아니에요.\n\n이렇게 하나씩 넣어 보는 방법은 확인할 때는 확실하지만 찾을 때는 느려요. 해가 $\\frac{7}{3}$처럼 분수이면 넣어 볼 수도 없고요. 그래서 다음 수업에서 넣어 보지 않고 찾는 방법을 배워요.\n\n찾은 뒤에는 늘 원래 식에 넣어 확인하세요. 계산을 틀렸는지 스스로 알 수 있는 방법이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "equation-solution",
+                    "surface": "방정식의 해",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "equation-meaning:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "equation-meaning:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "equation-meaning:practice",
+                "problemSetVersionId": "equation-meaning:practice:v1",
+                "problemVersionIds": [
+                  "equation-meaning:practice-1:v1",
+                  "equation-meaning:practice-2:v1",
+                  "equation-meaning:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "equation-meaning:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "equation-meaning:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "equation-meaning:check",
+                "problemSetVersionId": "equation-meaning:check:v1",
+                "problemVersionIds": [
+                  "equation-meaning:check-1:v1",
+                  "equation-meaning:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "equation-meaning:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "equation-meaning:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "넣는 수에 따라 참이 되기도 거짓이 되기도 하는 등식이 방정식이에요.\n\n참이 되게 만드는 수가 방정식의 해이고, 그 수를 찾는 일이 방정식을 푸는 일이에요. 어떤 수를 넣어도 맞는 등식은 항등식이라 따로 부릅니다.\n\n이 수업의 개념은 방정식과 방정식의 해예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "equation",
+                    "surface": "방정식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "equation-solution",
+                    "surface": "방정식의 해",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "equation-meaning:review",
+        "problemSetVersionId": "equation-meaning:review:v1",
+        "problemVersionIds": [
+          "equation-meaning:homework-1:v1",
+          "equation-meaning:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "equality-property",
+        "versionId": "equality-property:v1",
+        "title": "등식의 성질과 이항: 저울을 기울이지 않는 손질",
+        "summary": "양변에 똑같이 해도 등식이 깨지지 않는다는 규칙을 익히고, 그것을 줄여 적는 이항을 배워요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "equality-property",
+          "transposition"
+        ],
+        "prerequisiteConceptKeys": [
+          "equation",
+          "equation-solution"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "equality-property:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "equality-property:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "평형인 저울이 있어요. 양쪽에서 똑같이 $3$씩 덜어 내면 어떻게 될까요? 여전히 평형이에요. 양쪽에 똑같이 하면 균형은 깨지지 않아요.\n\n등식도 저울과 같아요. 양변에 같은 수를 더하거나 빼도, 같은 수를 곱해도 등식은 그대로예요. 나눗셈만 조건이 하나 붙는데, $0$이 아닌 수로만 나눌 수 있어요. 이것을 등식의 성질이라고 해요.\n\n$x+3=8$을 풀어 볼게요. 양변에서 $3$을 빼면 $x=5$예요. $x$만 남기려고 방해가 되는 $3$을 양쪽에서 똑같이 덜어 낸 거예요.\n\n이 과정을 짧게 적는 방법이 있어요. $+3$을 $-3$으로 바꿔 등호 반대쪽으로 옮겨 $x=8-3$이라고 쓰는 거예요. 이것을 이항이라고 해요.\n\n이항은 새 규칙이 아니라 양변에서 빼는 일을 줄여 쓴 것뿐이에요. 부호를 바꾸는 것을 잊지 마세요.",
+                "definitions": [
+                  {
+                    "conceptKey": "equality-property",
+                    "surface": "등식의 성질",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "transposition",
+                    "surface": "이항",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "equality-property:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "저울 양쪽에서 같은 무게를 동시에 덜어 내도 평형이 유지되는 그림",
+                "caption": "양쪽에 똑같이 하면 등식은 깨지지 않는다",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 64,
+                    "y1": 70,
+                    "x2": 256,
+                    "y2": 70,
+                    "stroke": "ink",
+                    "strokeWidth": 2.5,
+                    "id": "arm"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        148,
+                        104
+                      ],
+                      [
+                        172,
+                        104
+                      ],
+                      [
+                        160,
+                        72
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 130,
+                    "y1": 104,
+                    "x2": 190,
+                    "y2": 104,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 40,
+                    "y": 36,
+                    "width": 32,
+                    "height": 28,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "xL"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 56,
+                    "y": 55,
+                    "text": "$x$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "white",
+                    "id": "xLt"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 78,
+                    "y": 42,
+                    "width": 20,
+                    "height": 22,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "pL"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 88,
+                    "y": 58,
+                    "text": "$3$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "pLt"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 216,
+                    "y": 36,
+                    "width": 52,
+                    "height": 28,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "rR"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 242,
+                    "y": 55,
+                    "text": "$8$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "rRt"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 216,
+                    "y": 36,
+                    "width": 52,
+                    "height": 28,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "rR2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 242,
+                    "y": 55,
+                    "text": "$5$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "rR2t",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 126,
+                    "text": "$x + 3 = 8$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "step1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 126,
+                    "text": "$x = 5$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "step2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 158,
+                    "text": "양쪽에서 똑같이 $3$을 덜어 내도 저울은 그대로예요.",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "note",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "양쪽이 같은 상태에서 시작해요.",
+                    "changes": []
+                  },
+                  {
+                    "caption": "왼쪽에서 $3$을 덜면 오른쪽에서도 $3$을 덜어요.",
+                    "changes": [
+                      {
+                        "id": "pL",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "pLt",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rR",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rRt",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rR2",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "rR2t",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$x$만 남아 $x=5$입니다.",
+                    "changes": [
+                      {
+                        "id": "pL",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "pLt",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rR",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rRt",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rR2",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "rR2t",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "step1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "step2",
+                        "opacity": 1.0
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1500
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "equality-property:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "equality-property:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$4x-5=2x+3$을 풀어 볼게요. 양쪽에 문자가 다 있네요.\n\n이항으로 문자는 왼쪽, 수는 오른쪽으로 모을게요. $2x$를 $-2x$로 바꿔 왼쪽으로, $-5$를 $+5$로 바꿔 오른쪽으로 옮겨요.\n\n$4x-2x = 3+5$가 되고, 정리하면 $2x=8$이에요.\n\n이제 양변을 $2$로 나누면 $x=4$예요. $2$는 $x$에 곱해져 있어서 옮길 수 없어요. 곱해진 수는 나눗셈으로 떼어 냅니다.\n\n확인해 볼게요. 왼쪽은 $4 \\times 4 - 5 = 11$, 오른쪽은 $2 \\times 4 + 3 = 11$이에요. 같으니 맞았어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "transposition",
+                    "surface": "이항",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "equality-property:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "equality-property:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "equality-property:practice",
+                "problemSetVersionId": "equality-property:practice:v1",
+                "problemVersionIds": [
+                  "equality-property:practice-1:v1",
+                  "equality-property:practice-2:v1",
+                  "equality-property:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "equality-property:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "equality-property:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "equality-property:check",
+                "problemSetVersionId": "equality-property:check:v1",
+                "problemVersionIds": [
+                  "equality-property:check-1:v1",
+                  "equality-property:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "equality-property:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "equality-property:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "양변에 똑같이 더하거나 빼거나 곱해도 등식은 깨지지 않아요. 나눌 때만 $0$이 아니어야 해요. 이것이 등식의 성질이에요.\n\n한 항을 부호를 바꿔 반대쪽으로 옮기는 이항은 이 성질을 줄여 적은 것이에요. 곱해져 있는 수는 이항할 수 없고 나눗셈으로 떼어 냅니다.\n\n이 수업의 개념은 등식의 성질과 이항이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "equality-property",
+                    "surface": "등식의 성질",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "transposition",
+                    "surface": "이항",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "equality-property:review",
+        "problemSetVersionId": "equality-property:review:v1",
+        "problemVersionIds": [
+          "equality-property:homework-1:v1",
+          "equality-property:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "linear-equation",
+        "versionId": "linear-equation:v1",
+        "title": "일차방정식 풀기: 순서가 정해져 있다",
+        "summary": "괄호를 풀고 이항하고 계수로 나누는 한 가지 순서로 일차방정식을 끝까지 풀어요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "linear-equation"
+        ],
+        "prerequisiteConceptKeys": [
+          "equality-property",
+          "transposition",
+          "linear-expression"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "linear-equation:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-equation:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$3x+2=11$처럼 정리하면 문자가 한 번만 곱해진 꼴이 되는 방정식을 일차방정식이라고 해요.\n\n푸는 순서는 언제나 같아요. 괄호가 있으면 먼저 풀고, 문자 항은 왼쪽 수 항은 오른쪽으로 이항하고, 마지막에 양변을 문자의 계수로 나눕니다.\n\n$3x+2=11$로 해 볼게요. 괄호는 없으니 $+2$를 이항해 $3x=11-2$, 즉 $3x=9$예요. 양변을 $3$으로 나누면 $x=3$이고요.\n\n분수나 소수가 섞여 있으면 먼저 없애는 편이 수월해요. $\\frac{x}{2}+1=4$는 양변에 $2$를 곱해 $x+2=8$로 만들고 풀면 돼요. 곱할 때 모든 항에 곱해야 한다는 것만 조심하세요.\n\n다 풀면 원래 식에 넣어 확인해요. $3 \\times 3 + 2 = 11$이니 맞았어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "linear-equation",
+                    "surface": "일차방정식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "transposition",
+                    "surface": "이항",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "linear-equation:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "식의 한 항이 부호를 바꾸며 등호 반대쪽으로 옮겨 가고, 마지막에 문자만 남는 그림",
+                "caption": "옮기고 나누면 문자만 남는다",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 34,
+                    "text": "$3x + 2 = 11$",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "s1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 34,
+                    "text": "$3x = 11 - 2$",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "s2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 34,
+                    "text": "$3x = 9$",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "s3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 34,
+                    "text": "$x = 3$",
+                    "size": 19,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "s4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 112,
+                    "y": 70,
+                    "text": "$+2$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "mover"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 120,
+                    "y1": 82,
+                    "x2": 196,
+                    "y2": 82,
+                    "stroke": "orange",
+                    "strokeWidth": 1.2,
+                    "arrow": "end",
+                    "id": "arc",
+                    "dash": true,
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 118,
+                    "text": "부호를 바꿔 반대쪽으로 옮겨요",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "n1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 146,
+                    "text": "양변을 $3$으로 나눠요",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "n2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 178,
+                    "text": "넣어서 확인: $3 \\times 3 + 2 = 11$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "n3",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "문자가 있는 항만 왼쪽에 남기고 싶어요.",
+                    "changes": [
+                      {
+                        "id": "arc",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "n1",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$+2$를 $-2$로 바꿔 오른쪽으로 옮겨요.",
+                    "changes": [
+                      {
+                        "id": "arc",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n1",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "s1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s2",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "mover",
+                        "dx": 84,
+                        "dy": -36
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "오른쪽을 계산하면 $3x = 9$예요.",
+                    "changes": [
+                      {
+                        "id": "arc",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "mover",
+                        "dx": 84,
+                        "dy": -36,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "양변을 $3$으로 나누면 $x = 3$이에요.",
+                    "changes": [
+                      {
+                        "id": "arc",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "mover",
+                        "dx": 84,
+                        "dy": -36,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s4",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 1.0
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "linear-equation:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-equation:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "괄호가 있는 일차방정식 $2(x-1)=x+4$를 순서대로 풀어 볼게요.\n\n먼저 괄호를 풀어요. $2$를 안쪽 두 항에 모두 곱하면 $2x-2$예요. 식은 $2x-2=x+4$가 됐어요.\n\n이항해서 문자는 왼쪽, 수는 오른쪽으로 모아요. $x$를 왼쪽으로, $-2$를 오른쪽으로 옮기면 $2x-x = 4+2$예요.\n\n양쪽을 정리하면 $x=6$이에요. 이번에는 계수가 $1$이라 나눌 것이 없네요.\n\n확인해 봐요. 왼쪽은 $2 \\times (6-1) = 10$, 오른쪽은 $6+4=10$이에요. 같으니 맞았어요.\n\n계수가 음수로 남는 경우도 있어요. $-x=7$까지 왔다면 양변을 $-1$로 나눠 $x=-7$입니다. 여기서 멈추면 답이 아니에요 — 구해야 하는 것은 $x$이지 $-x$가 아니니까요.",
+                "definitions": [
+                  {
+                    "conceptKey": "linear-equation",
+                    "surface": "일차방정식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "transposition",
+                    "surface": "이항",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "linear-equation:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-equation:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "linear-equation:practice",
+                "problemSetVersionId": "linear-equation:practice:v1",
+                "problemVersionIds": [
+                  "linear-equation:practice-1:v1",
+                  "linear-equation:practice-2:v1",
+                  "linear-equation:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "linear-equation:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-equation:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "linear-equation:check",
+                "problemSetVersionId": "linear-equation:check:v1",
+                "problemVersionIds": [
+                  "linear-equation:check-1:v1",
+                  "linear-equation:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "linear-equation:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-equation:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "일차방정식은 괄호 풀기, 이항, 계수로 나누기의 순서로 풀어요. 순서가 정해져 있어 외울 것이 하나뿐이에요.\n\n분수나 소수는 양변에 같은 수를 곱해 먼저 없애면 수월해요. 다 풀면 원래 식에 넣어 확인합니다.\n\n이 수업의 개념은 일차방정식이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "linear-equation",
+                    "surface": "일차방정식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "linear-equation:review",
+        "problemSetVersionId": "linear-equation:review:v1",
+        "problemVersionIds": [
+          "linear-equation:homework-1:v1",
+          "linear-equation:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "equation-meaning:practice",
+      "courseKey": "equations",
+      "name": "방정식과 해 연습",
+      "versionId": "equation-meaning:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "equation-meaning:practice-1:v1",
+          "conceptKeys": [
+            "equation-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equation-meaning:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x+6=10$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equation-meaning:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6$에 얼마를 더해야 $10$이 될까요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equation-meaning:practice-2:v1",
+          "conceptKeys": [
+            "equation-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equation-meaning:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x-3=-5$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equation-meaning:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-5$보다 $3$만큼 큰 수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equation-meaning:practice-3:v1",
+          "conceptKeys": [
+            "equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equation-meaning:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x=14$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equation-meaning:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$를 곱해 $14$가 되는 수예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "equation-meaning:check",
+      "courseKey": "equations",
+      "name": "방정식과 해 확인",
+      "versionId": "equation-meaning:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "equation-meaning:check-1:v1",
+          "conceptKeys": [
+            "equation-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equation-meaning:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x-1=8$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equation-meaning:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "먼저 $3x$가 얼마인지 생각해 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equation-meaning:check-2:v1",
+          "conceptKeys": [
+            "equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equation-meaning:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x+4=1$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equation-meaning:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$보다 $4$만큼 작은 수예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "equation-meaning:review",
+      "courseKey": "equations",
+      "name": "방정식과 해 복습",
+      "versionId": "equation-meaning:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "equation-meaning:homework-1:v1",
+          "conceptKeys": [
+            "equation-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equation-meaning:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5-x=9$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equation-meaning:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5$에서 얼마를 빼야 $9$가 될까요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equation-meaning:homework-2:v1",
+          "conceptKeys": [
+            "equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equation-meaning:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{x}{4}=3$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equation-meaning:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4$로 나눠 $3$이 되는 수예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "equality-property:practice",
+      "courseKey": "equations",
+      "name": "등식의 성질 연습",
+      "versionId": "equality-property:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "equality-property:practice-1:v1",
+          "conceptKeys": [
+            "transposition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equality-property:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x+7=12$에서 $7$을 이항하면 $x=12-\\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equality-property:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부호만 바꿔 그대로 옮겨요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equality-property:practice-2:v1",
+          "conceptKeys": [
+            "equality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equality-property:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x-4=6$의 양변에 $4$를 더하면 $x$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equality-property:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "왼쪽은 $x$만 남아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equality-property:practice-3:v1",
+          "conceptKeys": [
+            "equality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equality-property:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5x=35$의 양변을 $5$로 나누면 $x$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equality-property:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$35$를 $5$로 나눕니다."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "equality-property:check",
+      "courseKey": "equations",
+      "name": "등식의 성질 확인",
+      "versionId": "equality-property:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "equality-property:check-1:v1",
+          "conceptKeys": [
+            "transposition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equality-property:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x-8=x$에서 문자를 왼쪽으로 모으면 $\\square x = 8$이에요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equality-property:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$를 $-x$로 바꿔 왼쪽으로 옮겨요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equality-property:check-2:v1",
+          "conceptKeys": [
+            "equality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equality-property:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-2x=10$의 양변을 $-2$로 나누면 $x$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equality-property:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "음수로 나누면 부호가 바뀝니다."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "equality-property:review",
+      "courseKey": "equations",
+      "name": "등식의 성질 복습",
+      "versionId": "equality-property:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "equality-property:homework-1:v1",
+          "conceptKeys": [
+            "transposition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equality-property:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x+9=4x$에서 $2x$를 오른쪽으로 이항하면 $9 = \\square x$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equality-property:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4x-2x$를 계산해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equality-property:homework-2:v1",
+          "conceptKeys": [
+            "equality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equality-property:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{x}{3}=-4$의 양변에 $3$을 곱하면 $x$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equality-property:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-4$에 $3$을 곱합니다."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "linear-equation:practice",
+      "courseKey": "equations",
+      "name": "일차방정식 풀기 연습",
+      "versionId": "linear-equation:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "linear-equation:practice-1:v1",
+          "conceptKeys": [
+            "linear-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-equation:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4x+3=19$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-equation:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$+3$을 이항한 뒤 $4$로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "linear-equation:practice-2:v1",
+          "conceptKeys": [
+            "linear-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-equation:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2(x+3)=10$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-equation:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호를 먼저 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "linear-equation:practice-3:v1",
+          "conceptKeys": [
+            "linear-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-equation:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5x-2=3x+8$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-equation:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "문자는 왼쪽, 수는 오른쪽으로 모아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "linear-equation:check",
+      "courseKey": "equations",
+      "name": "일차방정식 풀기 확인",
+      "versionId": "linear-equation:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "linear-equation:check-1:v1",
+          "conceptKeys": [
+            "linear-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-equation:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{x}{2}+1=4$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-equation:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "양변에 $2$를 곱해 분수를 없애요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "linear-equation:check-2:v1",
+          "conceptKeys": [
+            "linear-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-equation:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-x+5=8$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-equation:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-x$가 남으면 양변을 $-1$로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "linear-equation:review",
+      "courseKey": "equations",
+      "name": "일차방정식 풀기 복습",
+      "versionId": "linear-equation:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "linear-equation:homework-1:v1",
+          "conceptKeys": [
+            "linear-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-equation:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3(x-2)=x$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-equation:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호를 풀면 $3x-6=x$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "linear-equation:homework-2:v1",
+          "conceptKeys": [
+            "linear-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-equation:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4x+1=2$의 해를 분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-equation:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4x=1$에서 양변을 $4$로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}

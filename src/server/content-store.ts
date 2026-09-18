@@ -229,11 +229,11 @@ export async function currentDiagnostic(db: Db): Promise<DiagnosticRecord | null
 }
 /** Courses with the identities they keep, in the order the course gives them. */
 async function courseDefinitions(db: Db): Promise<CourseDefinition[]> {
-  const courses = await db.course.findMany({ orderBy: [{ createdAt: 'asc' }, { key: 'asc' }], include: {
+  const courses = await db.course.findMany({ orderBy: [{ order: 'asc' }, { createdAt: 'asc' }, { key: 'asc' }], include: {
     lessons: { orderBy: [{ order: 'asc' }, { key: 'asc' }], select: { key: true, order: true } },
     diagnostics: { orderBy: { key: 'asc' }, select: { key: true } },
   } });
-  return courses.map(course => ({ key: course.key, title: course.title, summary: course.summary,
+  return courses.map(course => ({ key: course.key, title: course.title, summary: course.summary, order: course.order,
     lessons: course.lessons, diagnostics: course.diagnostics.map(row => row.key) }));
 }
 export async function exportContent(db: Db): Promise<ContentBundle> {
@@ -277,6 +277,7 @@ function mergeCourses(existing: CourseDefinition[], incoming: CourseDefinition[]
     const lessons = new Map(old.lessons.map(lesson => [lesson.key, lesson]));
     for (const lesson of course.lessons) lessons.set(lesson.key, lesson);
     merged.set(course.key, { key: course.key, title: course.title, summary: course.summary ?? old.summary,
+      order: course.order ?? old.order,
       lessons: [...lessons.values()].sort((a, b) => a.order - b.order || a.key.localeCompare(b.key)),
       diagnostics: [...new Set([...old.diagnostics, ...course.diagnostics])] });
   }
@@ -285,8 +286,9 @@ function mergeCourses(existing: CourseDefinition[], incoming: CourseDefinition[]
 /** Writes what a bundle says about a course: the course itself, then the identities it keeps. */
 async function writeCourse(db: Db, course: CourseDefinition) {
   const row = await db.course.upsert({ where: { key: course.key },
-    create: { key: course.key, title: course.title, summary: course.summary ?? '' },
-    update: { title: course.title, ...(course.summary === undefined ? {} : { summary: course.summary }) } });
+    create: { key: course.key, title: course.title, summary: course.summary ?? '', order: course.order ?? 0 },
+    update: { title: course.title, ...(course.summary === undefined ? {} : { summary: course.summary }),
+      ...(course.order === undefined ? {} : { order: course.order }) } });
   for (const lesson of course.lessons) {
     await db.lesson.upsert({ where: { key: lesson.key }, create: { key: lesson.key, courseId: row.id, order: lesson.order },
       update: { order: lesson.order } });

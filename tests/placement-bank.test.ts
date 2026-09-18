@@ -18,7 +18,10 @@ const seeds = readdirSync('prisma/seed').filter((name) => name.endsWith('.json')
   .map((name) => ({ name, bundle: parseContentBundle(JSON.parse(readFileSync(`prisma/seed/${name}`, 'utf8'))) }));
 const bundles = seeds.map((seed) => seed.bundle);
 const lessons = bundles.flatMap((bundle) => (bundle.lessons as StoredLesson[]).map((lesson) => lesson.public));
-const definition = bundles.flatMap((bundle) => bundle.diagnostics).find((item) => item.diagnosticKey === 'catalogue-placement')!;
+// Several versions of the bank ship side by side, since a published one is never rewritten. The
+// placement asks from the last one, so that is the one these rules are about.
+const versions = bundles.flatMap((bundle) => bundle.diagnostics).filter((item) => item.diagnosticKey === 'catalogue-placement');
+const definition = versions[versions.length - 1];
 const set = bundles.flatMap((bundle) => bundle.problemSets).find((item) => item.versionId === definition.problemSet.problemSetVersionId)!;
 const asked = definition.problemSet.problemVersionIds;
 const problems = set.problems.filter((problem) => asked.includes(problem.problemVersionId));
@@ -72,6 +75,12 @@ describe('the placement bank', () => {
     for (const [key, specs] of byConcept) {
       expect(new Set(specs).size, `${key}의 문항들이 같은 답을 받는다`).toBe(specs.length);
     }
+  });
+
+  it('leaves every earlier bank published exactly as it was', () => {
+    const earlier = bundles.flatMap((bundle) => bundle.problemSets).find((item) => item.versionId === 'placement:v1')!;
+    expect(earlier.problems).toHaveLength(39);
+    expect(versions.map((item) => item.versionId)).toEqual(['placement-v4', 'placement-v5']);
   });
 
   it('leaves the fraction-only bank published exactly as it was', () => {

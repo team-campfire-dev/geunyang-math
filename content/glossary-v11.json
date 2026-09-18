@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "two-variable-equation",
+      "label": "미지수가 두 개인 일차방정식",
+      "assessable": true
+    },
+    {
+      "key": "simultaneous-equations",
+      "label": "연립방정식",
+      "assessable": true
+    },
+    {
+      "key": "substitution-method",
+      "label": "대입법",
+      "assessable": true
+    },
+    {
+      "key": "elimination-method",
+      "label": "가감법",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "two-variable-equation",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "미지수가 두 개인 일차방정식",
+      "summary": "문자가 둘이고 각각 한 번씩만 곱해진 방정식이에요.",
+      "blocks": [
+        {
+          "blockId": "global:two-variable-equation:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$x+y=5$처럼 문자가 둘인 일차방정식이에요. 식 하나만으로는 답이 하나로 정해지지 않아요 — $(0,5)$, $(1,4)$, $(2,3)$처럼 짝이 줄줄이 나오니까요. 그래서 해를 수 하나가 아니라 $x$와 $y$의 짝으로 적습니다. 좌표평면에 찍어 보면 이 짝들이 직선 하나를 이뤄요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "문자가 둘인 식을 다룰 때"
+    },
+    {
+      "conceptKey": "simultaneous-equations",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "연립방정식",
+      "summary": "동시에 성립해야 하는 방정식 둘 이상을 묶어 놓은 것이에요.",
+      "blocks": [
+        {
+          "blockId": "global:simultaneous-equations:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$x+y=5$와 $x-y=1$을 함께 묶어 두면, 두 식을 **동시에** 참으로 만드는 짝만 해가 돼요. $(3,2)$ 하나만 남죠. 식 하나로는 좁혀지지 않던 답이 식이 둘이 되며 하나로 정해집니다. 좌표평면에서는 두 직선이 만나는 점이에요. 나란한 직선이면 만나지 않으니 해가 없고, 겹치면 해가 무수히 많아요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "두 조건을 동시에 만족시켜야 할 때"
+    },
+    {
+      "conceptKey": "substitution-method",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "대입법",
+      "summary": "한 식이 말해 주는 값을 다른 식에 넣어 문자를 하나 줄이는 방법이에요.",
+      "blocks": [
+        {
+          "blockId": "global:substitution-method:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$y=x+1$처럼 한 문자가 이미 홀로 있는 식이 있으면, 그 값을 다른 식의 같은 문자 자리에 그대로 넣어요. $2x+y=7$의 $y$ 자리에 $x+1$을 넣으면 $2x+(x+1)=7$이 되어 문자가 하나뿐인 익숙한 식이 됩니다. 넣을 때 괄호로 감싸 두면 부호 실수를 막을 수 있어요. 한 문자를 구한 뒤에는 반드시 되돌려 넣어 나머지 문자도 구해야 합니다.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "한 문자가 이미 홀로 있을 때"
+    },
+    {
+      "conceptKey": "elimination-method",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "가감법",
+      "summary": "두 식을 더하거나 빼서 한 문자를 없애는 방법이에요.",
+      "blocks": [
+        {
+          "blockId": "global:elimination-method:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "두 식에서 어떤 문자의 계수가 같거나 부호만 다르면, 빼거나 더하는 것만으로 그 문자가 사라져요. $x+y=5$와 $x-y=1$을 더하면 $y$가 사라져 $2x=6$이 됩니다. 계수가 맞지 않으면 한쪽이나 양쪽에 적당한 수를 곱해 맞춰 두고 시작해요. 뺄 때 뒤쪽 식의 모든 항의 부호가 바뀐다는 것을 놓치지 마세요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "계수를 맞춰 한 문자를 지울 때"
+    }
+  ]
+}

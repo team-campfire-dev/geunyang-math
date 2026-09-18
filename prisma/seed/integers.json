@@ -5,6 +5,7 @@
       "key": "integers",
       "title": "정수와 유리수",
       "summary": "0보다 작은 수를 읽고, 수직선의 자리로 크기를 견주고, 부호를 지닌 채로 더해요.",
+      "order": 4,
       "lessons": [
         {
           "key": "negative-number",

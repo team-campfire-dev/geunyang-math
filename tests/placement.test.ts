@@ -17,7 +17,10 @@ const seeds = readdirSync('prisma/seed').filter((name) => name.endsWith('.json')
 const lessons = seeds.flatMap((seed) => (seed.lessons as StoredLesson[]).map((lesson) => lesson.public));
 const graph = conceptGraph(lessons);
 const scope = placementScope(graph, []);
-const definition = seeds.flatMap((seed) => seed.diagnostics).find((item) => item.diagnosticKey === 'catalogue-placement')!;
+// Earlier versions of the bank ship beside the current one, since a published version is never
+// rewritten. A learner is placed against the last one.
+const published = seeds.flatMap((seed) => seed.diagnostics).filter((item) => item.diagnosticKey === 'catalogue-placement');
+const definition = published[published.length - 1];
 const bank: PlacementProblem[] = seeds.flatMap((seed) => seed.problemSets)
   .find((set) => set.versionId === definition.problemSet.problemSetVersionId)!
   .problems.filter((problem) => definition.problemSet.problemVersionIds.includes(problem.problemVersionId))
@@ -95,14 +98,26 @@ describe('placing someone against the published bank', () => {
   });
 
   it('marks every concept a wrong answer asked about, since it cannot tell which one went wrong', () => {
-    // The bank's last question asks about two concepts at once. Getting it right takes both, and
+    // One of the bank's questions asks about two concepts at once. Getting it right takes both, and
     // getting it wrong says only that one of them is missing — so neither is counted on.
     const both = bank.find((problem) => problem.conceptKeys.length > 1)!;
-    const { state } = placement(graph, scope, bank, [
-      { problemVersionId: bank.find((p) => p.conceptKeys.includes(both.conceptKeys[1]) && p !== both)!.problemVersionId, status: 'correct' },
-      { problemVersionId: both.problemVersionId, status: 'incorrect' },
-    ]);
-    for (const key of both.conceptKeys) {
+    // Which questions come up is the descent's to decide, so the run is played through rather than
+    // written out: everything is answered right except the one question that names two concepts.
+    // Only the concepts still open when it was asked are this rule's to decide — one already settled
+    // by a neighbour keeps the verdict it was given, since a settled concept is never reopened.
+    const answers: PlacementAnswer[] = [];
+    let open: string[] = [];
+    for (let guard = 0; guard <= bank.length; guard += 1) {
+      const { state, next } = placement(graph, scope, bank, answers);
+      if (!next) break;
+      const wrong = next.problemVersionId === both.problemVersionId;
+      if (wrong) open = both.conceptKeys.filter((key) => !(key in state.placed));
+      answers.push({ problemVersionId: next.problemVersionId, status: wrong ? 'incorrect' : 'correct' });
+    }
+    expect(answers.some((answer) => answer.status === 'incorrect'), '두 개념을 함께 묻는 문항이 끝내 나오지 않았다').toBe(true);
+    expect(open.length, '물었을 때 이미 둘 다 정해져 있었다').toBeGreaterThan(0);
+    const { state } = placement(graph, scope, bank, answers);
+    for (const key of open) {
       expect(state.placed[key], key).toBe('needs-practice');
       expect(state.source[key], key).toBe('asked');
     }

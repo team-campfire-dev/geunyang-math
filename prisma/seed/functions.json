@@ -1,0 +1,2184 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "functions",
+      "title": "일차함수",
+      "summary": "넣는 값마다 나오는 값이 하나로 정해지는 관계를 다루고, 그 관계를 직선 그래프로 읽어요.",
+      "order": 10,
+      "lessons": [
+        {
+          "key": "function-meaning",
+          "order": 1
+        },
+        {
+          "key": "linear-function",
+          "order": 2
+        },
+        {
+          "key": "slope-intercept",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "function",
+      "label": "함수",
+      "assessable": true
+    },
+    {
+      "key": "function-value",
+      "label": "함숫값",
+      "assessable": true
+    },
+    {
+      "key": "linear-function",
+      "label": "일차함수",
+      "assessable": true
+    },
+    {
+      "key": "slope",
+      "label": "기울기",
+      "assessable": true
+    },
+    {
+      "key": "intercept",
+      "label": "절편",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "function-meaning",
+        "versionId": "function-meaning:v1",
+        "title": "함수와 함숫값: 넣으면 하나가 나오는 관계",
+        "summary": "넣는 값마다 나오는 값이 하나로 정해지는 관계를 알아보고, 그 결과를 부르는 이름을 배워요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "function",
+          "function-value"
+        ],
+        "prerequisiteConceptKeys": [
+          "variable",
+          "expression-value"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "function-meaning:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "function-meaning:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "자판기에 콜라 버튼을 누르면 콜라가 나와요. 같은 버튼을 눌렀는데 어떤 때는 사이다가 나온다면 고장 난 자판기겠죠.\n\n수에서도 비슷한 관계가 있어요. $x$를 정할 때마다 $y$가 딱 하나로 따라 정해지면, $y$는 $x$의 함수라고 해요.\n\n$y=2x$가 그래요. $x=1$이면 $y=2$, $x=3$이면 $y=6$으로 하나씩만 나와요.\n\n함수가 아닌 경우도 있어요. 「$x$는 $y$의 제곱」이라는 관계에서 $x=4$이면 $y$는 $2$일 수도 $-2$일 수도 있어요. 하나로 정해지지 않으니 함수가 아니에요.\n\n함수에는 이름을 붙여 $f(x)=2x$처럼 써요. $x$에 $3$을 넣어 나온 값은 $f(3)$이라 쓰고 함숫값이라고 해요.\n\n$f(3)$은 $f$와 $3$을 곱하라는 뜻이 아니에요. 「$3$을 넣었을 때 나오는 값」이라는 하나의 이름일 뿐이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "function",
+                    "surface": "함수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "function-value",
+                    "surface": "함숫값",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "function-meaning:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "상자에 수를 넣을 때마다 값이 하나씩 나오는 그림",
+                "caption": "넣는 값마다 나오는 값이 하나로 정해진다",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "x": 116,
+                    "y": 74,
+                    "width": 88,
+                    "height": 44,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 6
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 101,
+                    "text": "$f(x)=2x$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 38,
+                    "y1": 96,
+                    "x2": 110,
+                    "y2": 96,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "arrow": "end"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 210,
+                    "y1": 96,
+                    "x2": 282,
+                    "y2": 96,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "arrow": "end"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 62,
+                    "y": 74,
+                    "text": "$x$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 258,
+                    "y": 74,
+                    "text": "$f(x)$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 62,
+                    "y": 118,
+                    "text": "$1$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "i1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 258,
+                    "y": 118,
+                    "text": "$2$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "o1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 62,
+                    "y": 118,
+                    "text": "$3$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "i2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 258,
+                    "y": 118,
+                    "text": "$6$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "o2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 62,
+                    "y": 118,
+                    "text": "$-2$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "i3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 258,
+                    "y": 118,
+                    "text": "$-4$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "o3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 162,
+                    "text": "하나를 넣으면 하나만 나와요 — 그래서 함수예요",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "note",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$1$을 넣으면 $2$가 나와요.",
+                    "changes": [
+                      {
+                        "id": "o1",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$3$을 넣으면 $6$이 나와요.",
+                    "changes": [
+                      {
+                        "id": "o1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "i1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "i2",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "o2",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$-2$를 넣으면 $-4$가 나와요.",
+                    "changes": [
+                      {
+                        "id": "o1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "i1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "i2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "o2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "i3",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "o3",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1.0
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1500
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "function-meaning:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "function-meaning:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$f(x)=3x-2$일 때 $f(4)$와 $f(-1)$을 구해 볼게요.\n\n$f(4)$는 $x$ 자리에 $4$를 넣으라는 뜻이에요. $3 \\times 4 - 2 = 10$이니 $f(4)=10$이에요.\n\n$f(-1)$은 $3 \\times (-1) - 2 = -5$예요. 음수를 넣을 때는 괄호로 감싸는 습관이 여기서도 그대로 쓰여요.\n\n계산 자체는 식의 값을 구하던 것과 똑같아요. 달라진 것은 이름뿐이에요.\n\n거꾸로 묻기도 해요. $f(x)=7$이 되는 $x$는 무엇일까요? $3x-2=7$을 풀면 $x=3$이에요. 함숫값이 주어지고 넣은 값을 찾는 일은 방정식을 푸는 일이 됩니다.\n\n그래프에서는 $f(3)$이 $x=3$인 자리의 높이예요. 함숫값을 읽는 것은 그래프에서 높이를 재는 것과 같아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "function-value",
+                    "surface": "함숫값",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "function-meaning:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "function-meaning:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "function-meaning:practice",
+                "problemSetVersionId": "function-meaning:practice:v1",
+                "problemVersionIds": [
+                  "function-meaning:practice-1:v1",
+                  "function-meaning:practice-2:v1",
+                  "function-meaning:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "function-meaning:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "function-meaning:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "function-meaning:check",
+                "problemSetVersionId": "function-meaning:check:v1",
+                "problemVersionIds": [
+                  "function-meaning:check-1:v1",
+                  "function-meaning:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "function-meaning:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "function-meaning:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$x$를 정할 때마다 $y$가 하나로 정해지면 함수예요. 둘 이상 나오면 함수가 아니에요.\n\n$f(x)$처럼 이름을 붙여 쓰고, $f(3)$은 $3$을 넣었을 때 나오는 값인 함숫값이에요. 곱셈이 아니에요.\n\n이 수업의 개념은 함수와 함숫값이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "function",
+                    "surface": "함수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "function-value",
+                    "surface": "함숫값",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "function-meaning:review",
+        "problemSetVersionId": "function-meaning:review:v1",
+        "problemVersionIds": [
+          "function-meaning:homework-1:v1",
+          "function-meaning:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "linear-function",
+        "versionId": "linear-function:v1",
+        "title": "일차함수와 그래프: 점을 찍으면 직선이 된다",
+        "summary": "일차식으로 나타나는 함수의 점을 찍어 보고, 그것이 언제나 직선이 되는 것을 확인해요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "linear-function"
+        ],
+        "prerequisiteConceptKeys": [
+          "function",
+          "function-value",
+          "linear-expression"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "linear-function:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-function:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$y=2x-1$처럼 $y$가 $x$에 대한 일차식으로 나타나는 함수를 일차함수라고 해요. $y=ax+b$ 꼴이고 $a$가 $0$이 아닌 함수예요.\n\n점을 찍어 볼게요. $x=-1$이면 $y=-3$, $x=0$이면 $y=-1$, $x=1$이면 $y=1$, $x=2$이면 $y=3$이에요.\n\n좌표평면에 찍어 보면 한 줄로 늘어서요. 사이사이 $x=0.5$ 같은 값을 넣어 봐도 여전히 그 줄 위에 있어요. 빈틈없이 이으면 직선 하나가 됩니다.\n\n일차함수의 그래프는 언제나 직선이에요. 그래서 점을 많이 찍을 필요가 없어요 — 두 개만 정확히 찍고 자로 이으면 끝이에요.\n\n$a$가 $0$이면 어떨까요. $y=3$처럼 $x$가 무엇이든 값이 같은 가로선이 돼요. 이건 일차함수라고 부르지 않아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "linear-function",
+                    "surface": "일차함수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "linear-function:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "좌표평면에 점이 하나씩 찍히다가 직선으로 이어지는 그림",
+                "caption": "일차함수의 그래프는 직선이다",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 20,
+                    "text": "$y = 2x - 1$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 92,
+                    "y1": 112,
+                    "x2": 232,
+                    "y2": 112,
+                    "stroke": "ink",
+                    "strokeWidth": 1.3,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 150,
+                    "y1": 170,
+                    "x2": 150,
+                    "y2": 30,
+                    "stroke": "ink",
+                    "strokeWidth": 1.3,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 102,
+                    "y1": 109,
+                    "x2": 102,
+                    "y2": 115,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 147,
+                    "y1": 160,
+                    "x2": 153,
+                    "y2": 160,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 126,
+                    "y1": 109,
+                    "x2": 126,
+                    "y2": 115,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 147,
+                    "y1": 136,
+                    "x2": 153,
+                    "y2": 136,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 174,
+                    "y1": 109,
+                    "x2": 174,
+                    "y2": 115,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 147,
+                    "y1": 88,
+                    "x2": 153,
+                    "y2": 88,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 198,
+                    "y1": 109,
+                    "x2": 198,
+                    "y2": 115,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 147,
+                    "y1": 64,
+                    "x2": 153,
+                    "y2": 64,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 222,
+                    "y1": 109,
+                    "x2": 222,
+                    "y2": 115,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 147,
+                    "y1": 40,
+                    "x2": 153,
+                    "y2": 40,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 143,
+                    "y": 126,
+                    "text": "0",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 126,
+                    "cy": 184,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "p1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 150,
+                    "cy": 136,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "p2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 174,
+                    "cy": 88,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "p3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 198,
+                    "cy": 40,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "p4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 122.4,
+                    "y1": 191.2,
+                    "x2": 205.2,
+                    "y2": 25.6,
+                    "stroke": "green",
+                    "strokeWidth": 2,
+                    "id": "ln",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 258,
+                    "y": 168,
+                    "text": "$x$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 164,
+                    "y": 28,
+                    "text": "$y$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 186,
+                    "text": "점을 이으면 직선 하나가 나와요",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "note",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$x$에 수를 넣어 점을 찍어요.",
+                    "changes": [
+                      {
+                        "id": "p1",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "p2",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "넣을수록 점이 한 줄로 늘어서요.",
+                    "changes": [
+                      {
+                        "id": "p1",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "p2",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "p3",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "p4",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "빈틈없이 이으면 직선이에요.",
+                    "changes": [
+                      {
+                        "id": "p1",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "p2",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "p3",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "p4",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "ln",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1.0
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1500
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "linear-function:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-function:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "일차함수 $y=-x+4$의 그래프를 그려 볼게요.\n\n점 두 개면 충분해요. 계산하기 쉬운 곳을 고르면 좋아요.\n\n$x=0$을 넣으면 $y=4$라 점 $(0,4)$예요. 이건 그래프가 세로축을 지나는 자리예요.\n\n$y=0$이 되는 곳도 찾아볼게요. $-x+4=0$이니 $x=4$이고, 점 $(4,0)$이에요. 가로축을 지나는 자리고요.\n\n두 점을 이으면 오른쪽으로 갈수록 내려가는 직선이 나와요. $x$ 앞의 수가 음수라 그래요.\n\n$y=2x-1$과 $y=2x+3$을 함께 그리면 두 직선이 나란해요. $x$ 앞의 수가 같으면 기울어진 정도가 같아 만나지 않아요. 연립방정식에서 해가 없는 경우가 바로 이 모양이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "linear-function",
+                    "surface": "일차함수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "linear-function:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-function:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "linear-function:practice",
+                "problemSetVersionId": "linear-function:practice:v1",
+                "problemVersionIds": [
+                  "linear-function:practice-1:v1",
+                  "linear-function:practice-2:v1",
+                  "linear-function:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "linear-function:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-function:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "linear-function:check",
+                "problemSetVersionId": "linear-function:check:v1",
+                "problemVersionIds": [
+                  "linear-function:check-1:v1",
+                  "linear-function:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "linear-function:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "linear-function:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$y=ax+b$ 꼴이고 $a$가 $0$이 아닌 함수가 일차함수예요.\n\n그래프는 언제나 직선이라 점 두 개만 찍어 이으면 그릴 수 있어요. 세로축과 가로축을 지나는 자리를 고르면 계산이 쉬워요.\n\n이 수업의 개념은 일차함수예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "linear-function",
+                    "surface": "일차함수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "linear-function:review",
+        "problemSetVersionId": "linear-function:review:v1",
+        "problemVersionIds": [
+          "linear-function:homework-1:v1",
+          "linear-function:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "slope-intercept",
+        "versionId": "slope-intercept:v1",
+        "title": "기울기와 절편: 직선을 두 수로 말하기",
+        "summary": "직선이 얼마나 가파른지와 축을 어디서 지나는지를 수로 읽고, 그 둘로 직선을 그려요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "slope",
+          "intercept"
+        ],
+        "prerequisiteConceptKeys": [
+          "linear-function",
+          "signed-addition",
+          "rate"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "slope-intercept:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "slope-intercept:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$y=2x+1$의 그래프 위에서 오른쪽으로 한 칸 가 보세요. 위로 두 칸 올라가요. 어디서 시작하든 그래요.\n\n이 「오른쪽 한 칸에 오르는 높이」를 기울기라고 해요. $y=ax+b$에서 $x$ 앞의 수인 $a$가 바로 그 값이에요.\n\n기울기는 $y$의 변화량을 $x$의 변화량으로 나눈 값이에요. 비율을 구하던 계산과 똑같아요. 오른쪽으로 두 칸 갈 때 위로 세 칸 오르면 기울기는 $\\frac{3}{2}$이에요.\n\n기울기가 양수면 오른쪽으로 갈수록 올라가고, 음수면 내려가요. 절댓값이 클수록 가파르고요.\n\n그래프가 세로축과 만나는 점의 높이는 $y$절편이라고 해요. $y=2x+1$에서는 $1$이고, $x=0$을 넣으면 바로 나와요. 가로축과 만나는 자리는 $x$절편이라 하고, $y=0$을 넣어 풀면 나와요.\n\n기울기와 $y$절편 둘만 알면 직선을 그릴 수 있어요. 세로축 위에 점을 찍고, 기울기만큼 이동해 점을 하나 더 잡아 이으면 됩니다.",
+                "definitions": [
+                  {
+                    "conceptKey": "slope",
+                    "surface": "기울기",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "rate",
+                    "surface": "비율",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "intercept",
+                    "surface": "절편",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "slope-intercept:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "직선 위에서 오른쪽으로 한 칸, 위로 두 칸 올라가는 계단이 그려지는 그림",
+                "caption": "기울기는 오른쪽 한 칸에 오르는 높이",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 246,
+                    "y": 34,
+                    "text": "$y = 2x + 1$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 57,
+                    "y1": 140,
+                    "x2": 191,
+                    "y2": 140,
+                    "stroke": "ink",
+                    "strokeWidth": 1.3,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 86,
+                    "y1": 169,
+                    "x2": 86,
+                    "y2": 35,
+                    "stroke": "ink",
+                    "strokeWidth": 1.3,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 67,
+                    "y1": 137,
+                    "x2": 67,
+                    "y2": 143,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 83,
+                    "y1": 159,
+                    "x2": 89,
+                    "y2": 159,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 105,
+                    "y1": 137,
+                    "x2": 105,
+                    "y2": 143,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 83,
+                    "y1": 121,
+                    "x2": 89,
+                    "y2": 121,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 124,
+                    "y1": 137,
+                    "x2": 124,
+                    "y2": 143,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 83,
+                    "y1": 102,
+                    "x2": 89,
+                    "y2": 102,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 143,
+                    "y1": 137,
+                    "x2": 143,
+                    "y2": 143,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 83,
+                    "y1": 83,
+                    "x2": 89,
+                    "y2": 83,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 162,
+                    "y1": 137,
+                    "x2": 162,
+                    "y2": 143,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 83,
+                    "y1": 64,
+                    "x2": 89,
+                    "y2": 64,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 181,
+                    "y1": 137,
+                    "x2": 181,
+                    "y2": 143,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 83,
+                    "y1": 45,
+                    "x2": 89,
+                    "y2": 45,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 79,
+                    "y": 154,
+                    "text": "0",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 72.7,
+                    "y1": 147.6,
+                    "x2": 129.7,
+                    "y2": 33.6,
+                    "stroke": "green",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 86,
+                    "cy": 121,
+                    "rx": 6,
+                    "ry": 6,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "yint",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 40,
+                    "y": 125,
+                    "text": "$y$절편 $1$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "yt",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 105,
+                    "y1": 83,
+                    "x2": 124,
+                    "y2": 83,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "id": "run",
+                    "dash": true,
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 124,
+                    "y1": 83,
+                    "x2": 124,
+                    "y2": 45,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "id": "rise",
+                    "dash": true,
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 114.5,
+                    "y": 99,
+                    "text": "오른쪽 $1$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "runt",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 68.0,
+                    "text": "위로 $2$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "riset",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 182,
+                    "text": "기울기 $2$는 오른쪽 한 칸에 위로 두 칸이라는 뜻",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "note",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "직선이 세로축을 지나는 자리가 $y$절편이에요.",
+                    "changes": [
+                      {
+                        "id": "yint",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "yt",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "오른쪽으로 한 칸 가 보세요.",
+                    "changes": [
+                      {
+                        "id": "yint",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "yt",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "run",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "runt",
+                        "opacity": 1.0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "그만큼 위로 두 칸 올라가요.",
+                    "changes": [
+                      {
+                        "id": "yint",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "yt",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "run",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "runt",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "rise",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "riset",
+                        "opacity": 1.0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1.0
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "slope-intercept:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "slope-intercept:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "점 $(1,3)$과 $(3,7)$을 지나는 직선의 기울기를 구해 볼게요.\n\n$x$는 $1$에서 $3$으로 $2$만큼 늘었어요. $y$는 $3$에서 $7$로 $4$만큼 늘었고요.\n\n기울기는 $y$의 변화량을 $x$의 변화량으로 나눈 값이라 $\\frac{4}{2}=2$예요.\n\n이제 $y$절편도 찾아볼게요. 기울기가 $2$이니 식은 $y=2x+b$ 꼴이에요. 지나는 점 하나를 넣으면 $b$가 나와요. $(1,3)$을 넣으면 $3=2+b$라 $b=1$이에요.\n\n그래서 이 직선은 $y=2x+1$이에요. $(3,7)$도 지나는지 확인해 보면 $2 \\times 3 + 1 = 7$로 맞아요.\n\n기울기가 음수인 경우도 봐 둘게요. $(0,5)$와 $(2,1)$을 지나면 $x$가 $2$ 늘 때 $y$가 $4$ 줄었으니 기울기는 $\\frac{-4}{2}=-2$예요. 내려가는 직선입니다.",
+                "definitions": [
+                  {
+                    "conceptKey": "slope",
+                    "surface": "기울기",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "slope-intercept:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "slope-intercept:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "slope-intercept:practice",
+                "problemSetVersionId": "slope-intercept:practice:v1",
+                "problemVersionIds": [
+                  "slope-intercept:practice-1:v1",
+                  "slope-intercept:practice-2:v1",
+                  "slope-intercept:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "slope-intercept:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "slope-intercept:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "slope-intercept:check",
+                "problemSetVersionId": "slope-intercept:check:v1",
+                "problemVersionIds": [
+                  "slope-intercept:check-1:v1",
+                  "slope-intercept:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "slope-intercept:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "slope-intercept:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "기울기는 $x$가 $1$만큼 늘 때 $y$가 변하는 양이고, $y=ax+b$의 $a$예요. 두 점이 주어지면 $y$의 변화량을 $x$의 변화량으로 나눠 구해요.\n\n$y$절편은 그래프가 세로축과 만나는 높이이고 $b$예요. 기울기와 $y$절편 둘이면 직선이 정해집니다.\n\n이 수업의 개념은 기울기와 절편이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "slope",
+                    "surface": "기울기",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "intercept",
+                    "surface": "절편",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "slope-intercept:review",
+        "problemSetVersionId": "slope-intercept:review:v1",
+        "problemVersionIds": [
+          "slope-intercept:homework-1:v1",
+          "slope-intercept:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "function-meaning:practice",
+      "courseKey": "functions",
+      "name": "함수와 함숫값 연습",
+      "versionId": "function-meaning:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "function-meaning:practice-1:v1",
+          "conceptKeys": [
+            "function-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "function-meaning:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x)=2x$일 때 $f(3)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "function-meaning:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$ 자리에 $3$을 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "function-meaning:practice-2:v1",
+          "conceptKeys": [
+            "function-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "function-meaning:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x)=3x-2$일 때 $f(4)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "function-meaning:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3 \\times 4$를 먼저 계산해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "function-meaning:practice-3:v1",
+          "conceptKeys": [
+            "function-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "function-meaning:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x)=3x-2$일 때 $f(-1)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "function-meaning:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "음수는 괄호로 감싸 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "function-meaning:check",
+      "courseKey": "functions",
+      "name": "함수와 함숫값 확인",
+      "versionId": "function-meaning:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "function-meaning:check-1:v1",
+          "conceptKeys": [
+            "function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "function-meaning:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x)=3x-2$일 때 $f(x)=7$이 되는 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "function-meaning:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x-2=7$을 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "function-meaning:check-2:v1",
+          "conceptKeys": [
+            "function-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "function-meaning:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x)=-x+5$일 때 $f(2)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "function-meaning:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-2+5$를 계산해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "function-meaning:review",
+      "courseKey": "functions",
+      "name": "함수와 함숫값 복습",
+      "versionId": "function-meaning:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "function-meaning:homework-1:v1",
+          "conceptKeys": [
+            "function-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "function-meaning:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x)=\\frac{x}{2}+1$일 때 $f(6)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "function-meaning:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6$을 $2$로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "function-meaning:homework-2:v1",
+          "conceptKeys": [
+            "function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "function-meaning:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x)=4x$일 때 $f(x)=-8$이 되는 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "function-meaning:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4x=-8$을 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "linear-function:practice",
+      "courseKey": "functions",
+      "name": "일차함수의 그래프 연습",
+      "versionId": "linear-function:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "linear-function:practice-1:v1",
+          "conceptKeys": [
+            "linear-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-function:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y=2x-1$에서 $x=3$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-function:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 \\times 3 - 1$을 계산해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "linear-function:practice-2:v1",
+          "conceptKeys": [
+            "linear-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-function:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y=-x+4$의 그래프가 세로축과 만나는 점의 $y$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-function:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x=0$을 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "linear-function:practice-3:v1",
+          "conceptKeys": [
+            "linear-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-function:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y=-x+4$의 그래프가 가로축과 만나는 점의 $x$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-function:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y=0$으로 두고 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "linear-function:check",
+      "courseKey": "functions",
+      "name": "일차함수의 그래프 확인",
+      "versionId": "linear-function:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "linear-function:check-1:v1",
+          "conceptKeys": [
+            "linear-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-function:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y=3x+2$에서 $y=11$일 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-function:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x+2=11$을 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "linear-function:check-2:v1",
+          "conceptKeys": [
+            "linear-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-function:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y=2x-1$의 그래프가 점 $(2, \\square)$를 지날 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-function:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x=2$를 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "linear-function:review",
+      "courseKey": "functions",
+      "name": "일차함수의 그래프 복습",
+      "versionId": "linear-function:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "linear-function:homework-1:v1",
+          "conceptKeys": [
+            "linear-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-function:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y=\\frac{1}{2}x+1$에서 $x=4$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-function:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4$의 절반에 $1$을 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "linear-function:homework-2:v1",
+          "conceptKeys": [
+            "linear-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "linear-function:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y=-2x+6$의 그래프가 가로축과 만나는 점의 $x$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "linear-function:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-2x+6=0$을 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "slope-intercept:practice",
+      "courseKey": "functions",
+      "name": "기울기와 절편 연습",
+      "versionId": "slope-intercept:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "slope-intercept:practice-1:v1",
+          "conceptKeys": [
+            "slope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "slope-intercept:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y=2x+1$의 기울기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "slope-intercept:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$ 앞의 수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "slope-intercept:practice-2:v1",
+          "conceptKeys": [
+            "intercept"
+          ],
+          "promptContent": [
+            {
+              "blockId": "slope-intercept:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y=2x+1$의 $y$절편을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "slope-intercept:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x=0$을 넣어 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "slope-intercept:practice-3:v1",
+          "conceptKeys": [
+            "slope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "slope-intercept:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(1,3)$과 $(3,7)$을 지나는 직선의 기울기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "slope-intercept:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$의 변화량을 $x$의 변화량으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "slope-intercept:check",
+      "courseKey": "functions",
+      "name": "기울기와 절편 확인",
+      "versionId": "slope-intercept:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "slope-intercept:check-1:v1",
+          "conceptKeys": [
+            "slope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "slope-intercept:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(0,5)$와 $(2,1)$을 지나는 직선의 기울기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "slope-intercept:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$가 줄었으니 음수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "slope-intercept:check-2:v1",
+          "conceptKeys": [
+            "intercept"
+          ],
+          "promptContent": [
+            {
+              "blockId": "slope-intercept:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y=-3x+6$의 그래프의 $x$절편을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "slope-intercept:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y=0$으로 두고 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "slope-intercept:review",
+      "courseKey": "functions",
+      "name": "기울기와 절편 복습",
+      "versionId": "slope-intercept:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "slope-intercept:homework-1:v1",
+          "conceptKeys": [
+            "slope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "slope-intercept:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "오른쪽으로 $2$만큼 갈 때 위로 $3$만큼 오르는 직선의 기울기를 분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "slope-intercept:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "위로 오른 만큼을 오른쪽으로 간 만큼으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "slope-intercept:homework-2:v1",
+          "conceptKeys": [
+            "intercept"
+          ],
+          "promptContent": [
+            {
+              "blockId": "slope-intercept:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기울기가 $2$이고 점 $(1,3)$을 지나는 직선의 $y$절편을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "slope-intercept:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3 = 2 \\times 1 + b$를 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}

@@ -1,6 +1,6 @@
 import 'server-only';
 import { z } from 'zod';
-import { blockDefinitionRefs, definitionBlockSchema, definitionReferences, problemSetRefSchema, problemSetRefs, validateLesson, validateProblemSet, type LessonRecord, type StoredLesson, type StoredProblem, type StoredProblemSet } from './content';
+import { blockDefinitionRefs, definitionBlockSchema, definitionReferences, diagnosticPoolRefSchema, problemSetRefs, validateLesson, validateProblemSet, type LessonRecord, type StoredLesson, type StoredProblem, type StoredProblemSet } from './content';
 import { definitionRefId, mayReferenceDefinition } from '@/shared/rich-text';
 
 const id = z.string().min(1).max(191).regex(/^[a-zA-Z0-9:._-]+$/);
@@ -11,7 +11,7 @@ export type ConceptRecord = z.infer<typeof conceptSchema>;
 export const diagnosticDefinitionSchema = z.object({
   versionId: id, diagnosticKey: id.max(100), title: z.string().trim().min(1).max(191),
   description: z.string().trim().min(1).max(2000), estimatedMinutes: z.number().int().min(1).max(120),
-  problemSet: problemSetRefSchema,
+  problemSet: diagnosticPoolRefSchema,
 }).strict();
 export type DiagnosticDefinition = z.infer<typeof diagnosticDefinitionSchema>;
 /** A diagnostic with the questions its reference resolves to, the way the application reads one. */
@@ -40,6 +40,9 @@ export type DefinitionRecord = z.infer<typeof definitionSchema>;
  */
 export const courseSchema = z.object({
   key: id.max(100), title: z.string().trim().min(1).max(191), summary: z.string().trim().max(500).optional(),
+  // Where the course sits in the catalogue, the way `order` places a lesson inside one. A bundle
+  // written before courses were ordered names none and keeps the place it already has.
+  order: z.number().int().min(0).max(1_000_000).optional(),
   lessons: z.array(z.object({ key: id.max(100), order: z.number().int().min(0).max(1_000_000) }).strict()).max(500),
   diagnostics: z.array(id.max(100)).max(50),
 }).strict();

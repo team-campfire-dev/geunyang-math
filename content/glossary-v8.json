@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "equation",
+      "label": "방정식",
+      "assessable": true
+    },
+    {
+      "key": "equation-solution",
+      "label": "방정식의 해",
+      "assessable": true
+    },
+    {
+      "key": "equality-property",
+      "label": "등식의 성질",
+      "assessable": true
+    },
+    {
+      "key": "transposition",
+      "label": "이항",
+      "assessable": true
+    },
+    {
+      "key": "linear-equation",
+      "label": "일차방정식",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "equation",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "방정식",
+      "summary": "문자에 어떤 수를 넣느냐에 따라 참이 되기도 거짓이 되기도 하는 등식이에요.",
+      "blocks": [
+        {
+          "blockId": "global:equation:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$x+2=5$처럼 등호가 있는 식 중에서, 문자에 넣는 수에 따라 맞기도 하고 틀리기도 하는 것을 말해요. $x=3$일 때만 맞고 나머지에서는 틀리죠. $x+x=2x$처럼 어떤 수를 넣어도 항상 맞는 등식은 방정식이 아니라 항등식이라고 부릅니다. 저울 그림으로 보면 양쪽 접시가 같아지는 순간을 찾는 일이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "어떤 수를 넣어야 같아지는지 물을 때"
+    },
+    {
+      "conceptKey": "equation-solution",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "방정식의 해",
+      "summary": "넣었을 때 등식이 참이 되는 수예요.",
+      "blocks": [
+        {
+          "blockId": "global:equation-solution:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "방정식을 맞게 만드는 값이고, 그 값을 찾는 일을 방정식을 푼다고 해요. $x+2=5$의 해는 $3$입니다. 해는 하나일 수도, 여럿일 수도, 아예 없을 수도 있어요 — 일차방정식은 보통 하나입니다. 구한 값을 원래 식에 다시 넣어 보면 맞았는지 스스로 확인할 수 있어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "답을 찾아 확인할 때"
+    },
+    {
+      "conceptKey": "equality-property",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "등식의 성질",
+      "summary": "양변에 똑같이 하면 등식은 깨지지 않는다는 규칙이에요.",
+      "blocks": [
+        {
+          "blockId": "global:equality-property:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "양쪽이 같은 저울에서 양쪽에 같은 무게를 더하거나 덜어도 평형이 유지되는 것과 같아요. 양변에 같은 수를 더하거나 빼도, 같은 수를 곱해도 등식은 그대로입니다. 나눗셈만 조건이 하나 붙어요 — $0$이 아닌 수로만 나눌 수 있어요. 방정식을 푸는 모든 과정이 이 성질을 반복해서 쓰는 일이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "식을 변형해도 되는지 판단할 때"
+    },
+    {
+      "conceptKey": "transposition",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "이항",
+      "summary": "한 항을 부호를 바꿔 등호 반대쪽으로 옮기는 일이에요.",
+      "blocks": [
+        {
+          "blockId": "global:transposition:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$x+2=5$에서 $+2$를 $-2$로 바꿔 오른쪽으로 옮기면 $x=5-2$가 돼요. 새로운 규칙이 아니라 양변에서 $2$를 빼는 일을 짧게 적은 것뿐이에요. 부호를 바꾸는 것을 잊는 실수가 가장 흔하니, 옮긴 뒤 부호부터 확인하세요. 곱해져 있는 수는 이렇게 옮길 수 없어요 — 그건 나눗셈으로 처리합니다.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "문자를 한쪽으로 모을 때"
+    },
+    {
+      "conceptKey": "linear-equation",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "일차방정식",
+      "summary": "정리하면 문자가 한 번만 곱해진 꼴이 되는 방정식이에요.",
+      "blocks": [
+        {
+          "blockId": "global:linear-equation:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "모두 한쪽으로 모았을 때 $ax+b=0$ 꼴이 되고 $a$가 $0$이 아닌 방정식이에요. 푸는 순서는 늘 같아요 — 괄호를 풀고, 문자 항은 왼쪽으로 수 항은 오른쪽으로 이항하고, 양변을 문자의 계수로 나눕니다. 분수나 소수가 섞여 있으면 양변에 같은 수를 곱해 정수로 만들어 두면 훨씬 수월해요. 해는 하나뿐입니다.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "문자가 한 번만 곱해진 방정식을 풀 때"
+    }
+  ]
+}
