@@ -1962,6 +1962,376 @@
           "solution": []
         }
       ]
+    },
+    {
+      "problemSetId": "starting-point",
+      "courseKey": "fractions",
+      "name": "분수의 시작점 확인",
+      "versionId": "starting-point:v3",
+      "problems": [
+        {
+          "problemVersionId": "fraction-placement-v3:q1",
+          "conceptKeys": [
+            "fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v3:q1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 크기로 나눈 케이크 9조각 중 4조각이 남았어요. 전체 케이크에서 남은 양을 분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 4,
+            "denominator": 9
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fraction-placement-v3:q2",
+          "conceptKeys": [
+            "fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v3:q2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "물 1리터를 똑같은 컵 5개에 남김없이 나눠 담았어요. 한 컵에 담긴 물은 전체의 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fraction-placement-v3:q3",
+          "conceptKeys": [
+            "denominator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v3:q3:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{5}{12}$의 분모는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fraction-placement-v3:q4",
+          "conceptKeys": [
+            "denominator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v3:q4:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "색종이 한 장을 똑같은 크기로 8조각 냈어요. 이 상황을 분수로 나타낼 때 분모는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fraction-placement-v3:q5",
+          "conceptKeys": [
+            "numerator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v3:q5:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{5}{12}$의 분자는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fraction-placement-v3:q6",
+          "conceptKeys": [
+            "numerator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v3:q6:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "똑같이 8조각 낸 색종이에서 5조각을 썼어요. 쓴 양을 분수로 나타낼 때 분자는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fraction-placement-v3:q7",
+          "conceptKeys": [
+            "equivalent-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v3:q7:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{2}{3}=\\frac{\\square}{15}$의 빈칸에 들어갈 정수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fraction-placement-v3:q8",
+          "conceptKeys": [
+            "equivalent-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v3:q8:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{3}{4}=\\frac{\\square}{20}$의 빈칸에 들어갈 정수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fraction-placement-v3:q9",
+          "conceptKeys": [
+            "reduce"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v3:q9:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{18}{24}$를 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 4,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fraction-placement-v3:q10",
+          "conceptKeys": [
+            "reduce"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v3:q10:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{20}{45}$를 더 이상 약분할 수 없는 분수로 써 주세요. 분모는 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 4,
+            "denominator": 9,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fraction-placement-v3:q11",
+          "conceptKeys": [
+            "common-denominator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v3:q11:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{4}$과 $\\frac{1}{6}$을 분모가 12가 되도록 통분할 때, $\\frac{1}{4}$은 $\\frac{\\square}{12}$이 돼요. 빈칸에 들어갈 정수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fraction-placement-v3:q12",
+          "conceptKeys": [
+            "addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v3:q12:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{2}{11}+\\frac{5}{11}$은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 7,
+            "denominator": 11
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fraction-placement-v3:q13",
+          "conceptKeys": [
+            "common-denominator",
+            "addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fraction-placement-v3:q13:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{4}+\\frac{1}{6}$은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 12
+          },
+          "hintAvailable": false,
+          "hints": [],
+          "solution": []
+        }
+      ]
     }
   ],
   "diagnostics": [
@@ -1983,6 +2353,32 @@
           "fraction-placement-v2:q6",
           "fraction-placement-v2:q7",
           "fraction-placement-v2:q8"
+        ]
+      }
+    },
+    {
+      "versionId": "fraction-placement-v3",
+      "diagnosticKey": "starting-point",
+      "title": "분수의 시작점 확인",
+      "description": "분수·분자·분모부터 동치분수·약분·통분·덧셈까지 개념마다 두 문제씩 확인해요. 모르는 문제는 건너뛰어도 괜찮아요.",
+      "estimatedMinutes": 9,
+      "problemSet": {
+        "problemSetId": "starting-point",
+        "problemSetVersionId": "starting-point:v3",
+        "problemVersionIds": [
+          "fraction-placement-v3:q1",
+          "fraction-placement-v3:q2",
+          "fraction-placement-v3:q3",
+          "fraction-placement-v3:q4",
+          "fraction-placement-v3:q5",
+          "fraction-placement-v3:q6",
+          "fraction-placement-v3:q7",
+          "fraction-placement-v3:q8",
+          "fraction-placement-v3:q9",
+          "fraction-placement-v3:q10",
+          "fraction-placement-v3:q11",
+          "fraction-placement-v3:q12",
+          "fraction-placement-v3:q13"
         ]
       }
     }
