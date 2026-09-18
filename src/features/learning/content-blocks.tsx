@@ -270,14 +270,28 @@ export function SceneShapes({ items, frame, animated = false, offsetOf }:
         }
         if (item.kind === 'path') return <path key={index} d={item.d} {...style} />;
         if (item.kind === 'strip') {
-          // A fraction bar: `fill` paints the filled cells, `stroke` draws every cell's border.
-          const gap = Math.min(2, item.width / Math.max(item.parts * 8, 1));
-          const cell = (item.width - gap * (item.parts - 1)) / item.parts;
+          // A fraction bar, drawn as the block it replaced drew it: cells resting in a tray. Every
+          // measurement is taken from the bar rather than fixed in user units, so the tray, the
+          // gaps and the corners keep their proportions at whatever size a drawing gives the bar —
+          // a flat `rx={1}` reads as a hard grid once the drawing is scaled up to the figure width.
+          // The item's own box is the tray's, which is what the editor selects and resizes; the
+          // cells sit inside it.
+          const pad = item.height * 0.065;
+          const gap = Math.min(pad, item.width / Math.max(item.parts * 6, 1));
+          const inner = { x: item.x + pad, y: item.y + pad, width: item.width - pad * 2, height: item.height - pad * 2 };
+          const cell = (inner.width - gap * (item.parts - 1)) / item.parts;
+          const radius = Math.min(Math.max(cell, 0), Math.max(inner.height, 0)) * 0.09;
+          // `fill` paints the filled cells and is its own edge; a pale outline drawn over it turns
+          // the bar into a grid. `stroke` outlines the empty cells, which is where a line has
+          // something to say.
           return <g key={index} transform={style.transform} opacity={item.opacity}>
+            <rect x={item.x} y={item.y} width={item.width} height={item.height} rx={item.height * 0.08}
+              fill="#fcfdf7" stroke="#c9d7b5" strokeWidth={Math.max(item.height * 0.016, 0.3)} />
             {Array.from({ length: item.parts }, (_, cellIndex) => <rect key={cellIndex}
-              x={item.x + cellIndex * (cell + gap)} y={item.y} width={Math.max(cell, 0)} height={item.height} rx={1}
+              x={inner.x + cellIndex * (cell + gap)} y={inner.y} width={Math.max(cell, 0)} height={Math.max(inner.height, 0)} rx={radius}
               fill={cellIndex < item.filled ? cssColor(item.fill, '#8daa69') : '#e5ecd7'}
-              stroke={cssColor(item.stroke, '#dce5c9')} strokeWidth={item.strokeWidth ?? 0.5} />)}
+              stroke={cellIndex < item.filled ? 'none' : cssColor(item.stroke, '#dce5c9')}
+              strokeWidth={item.strokeWidth ?? 0.5} />)}
           </g>;
         }
     return <text key={index} x={item.x} y={item.y} textAnchor={item.anchor ?? 'start'} fontSize={item.size ?? 14}
