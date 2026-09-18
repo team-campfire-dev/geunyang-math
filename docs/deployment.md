@@ -1,6 +1,6 @@
 # Oracle 운영 배포
 
-2026-09-18 확인 기준 최근 릴리스는 화면 렌더 테스트 `4a02874` (#58)다. [해당 검증·배포 기록](#2026-09-18-그림의-크기와-화면-렌더-테스트)에 확인 근거를 남겼으며, 이전 릴리스는 아래 기록으로 보존한다. 문서 변경 이후 최신 배포 commit은 `/api/version`과 GitHub Actions에서 확인한다.
+2026-09-18 확인 기준 최근 릴리스는 `a9a966d` (#72)다. [해당 검증·배포 기록](#2026-09-18-코스-넷과-화면-렌더-테스트)에 확인 근거를 남겼으며, 이전 릴리스는 아래 기록으로 보존한다. 문서 변경 이후 최신 배포 commit은 `/api/version`과 GitHub Actions에서 확인한다.
 
 ## 대상과 범위
 
@@ -261,6 +261,28 @@ DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVer
 #58 배포 뒤 세 군데가 모두 `4a02874`로 일치하는 것을 배포 잡의 검사와 따로 확인했다 — 공개 `/api/version`, VM의 컨테이너 이미지 태그(`geunyang-math:4a02874…`, healthy), 그리고 `current` 심링크다. `/api/health`는 `ready`다.
 
 **이미 지나간 릴리스의 상태는 지금 조회할 수 없다.** #55·#56·#57이 떠 있던 시점의 확인은 각 실행의 배포 성공 기록으로만 남는다 — 세 시간 안에 네 번을 덮었기 때문이다. 이 기록을 쓰기 시작할 때 떠 있던 것은 `dfdf260`(#57)이었고 곧 #58로 전환됐다. 릴리스마다 그 자리에서 두 군데(공개 API와 컨테이너 이미지)를 확인하지 않으면 뒤에 와서 되살릴 수 없다.
+
+### 2026-09-18 코스 넷과 화면 렌더 테스트
+
+하루에 열네 릴리스가 나갔다. 성격으로 묶으면 넷이다.
+
+| 묶음 | 릴리스 |
+|---|---|
+| 화면 렌더 테스트 | [#58](https://github.com/team-campfire-dev/geunyang-math/pull/58) 도입 · [#60](https://github.com/team-campfire-dev/geunyang-math/pull/60) 편집 워크스페이스 · [#61](https://github.com/team-campfire-dev/geunyang-math/pull/61) 학습 워크스페이스 |
+| 파일럿 준비 | [#62](https://github.com/team-campfire-dev/geunyang-math/pull/62) 계정 삭제 · [#63](https://github.com/team-campfire-dev/geunyang-math/pull/63) 기록 집계 · [#64](https://github.com/team-campfire-dev/geunyang-math/pull/64) 진단 13문항 |
+| 콘텐츠 | [#65](https://github.com/team-campfire-dev/geunyang-math/pull/65) 소수 · [#66](https://github.com/team-campfire-dev/geunyang-math/pull/66) 비와 비율 · [#67](https://github.com/team-campfire-dev/geunyang-math/pull/67) 분수 재작성 · [#68](https://github.com/team-campfire-dev/geunyang-math/pull/68) 정수와 유리수 · [#72](https://github.com/team-campfire-dev/geunyang-math/pull/72) 남은 세 수업의 움직임 |
+| 화면 | [#69](https://github.com/team-campfire-dev/geunyang-math/pull/69)·[#70](https://github.com/team-campfire-dev/geunyang-math/pull/70) 내 학습의 선반 · [#71](https://github.com/team-campfire-dev/geunyang-math/pull/71) 그림 크기 규칙 |
+| 문서 | [#59](https://github.com/team-campfire-dev/geunyang-math/pull/59) 기준 정리 |
+
+**DB 스키마는 하나도 바뀌지 않았다.** migration이 없고, 콘텐츠는 `db:seed`가 새 판본만 올린다. 되돌리려면 이전 이미지를 다시 띄우면 된다.
+
+`prisma/seed/`가 코스마다 한 파일이 됐고 `db:seed`가 이름 순으로 모두 적용한다. 정답을 담는 파일은 여전히 씨앗뿐이며 `content/` 번들은 뜻풀이만 든다.
+
+발행된 판본을 고치지 않고 새 판본으로 냈다 — 분수 세 수업이 `v3`, `decimal-fraction`·`ratio-meaning`·`percentage-of`가 `v2`다. 분수를 다시 쓰기 전에 운영에 물어 `enrollments 0 · attempts 0 · submissions 0`을 확인했다. **옛 판본은 지우지 않고 남아 있다.**
+
+마지막 배포([#72의 실행](https://github.com/team-campfire-dev/geunyang-math/actions/runs/35303272616))에서 34개 파일 490개 검사·웹 빌드·모바일 정적 export와 Oracle 배포가 통과했다. 그 뒤 공개 `/api/version`이 `a9a966d`, `/api/health`가 `ready`이고, 공개 카탈로그가 **코스 4개·수업 12개·개념 20개**를 돌려주는 것을 확인했다. 수업 판본은 위에 적은 대로 나온다.
+
+#71의 main 실행은 `cancelled`로 남아 있다 — 뒤이은 #72의 push가 같은 브랜치의 실행을 대신했기 때문이고 실패가 아니다. #71의 내용은 #72의 실행에 포함되어 검증됐다.
 
 ## 운영 후속 작업
 
