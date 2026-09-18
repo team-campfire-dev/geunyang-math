@@ -1,7 +1,28 @@
 {
   "schemaVersion": 1,
   "courses": [],
-  "concepts": [],
+  "concepts": [
+    {
+      "key": "decimal",
+      "label": "소수",
+      "assessable": true
+    },
+    {
+      "key": "decimal-place",
+      "label": "소수의 자릿값",
+      "assessable": true
+    },
+    {
+      "key": "decimal-fraction",
+      "label": "소수와 분수의 관계",
+      "assessable": true
+    },
+    {
+      "key": "decimal-addition",
+      "label": "소수의 덧셈",
+      "assessable": true
+    }
+  ],
   "lessons": [],
   "problemSets": [],
   "diagnostics": [],
