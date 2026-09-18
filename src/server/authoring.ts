@@ -11,10 +11,11 @@ import type { AnswerSpec } from '@/shared/answer';
 import type { ContentBlock, LessonSection, ProblemSetRef } from '@/shared/api';
 import {
   lessonKeyPattern, mayEditEveryDraft, mayGrantRoles, mayPublish, newProblem, nextBlockId, nextProblemVersionId,
-  nextSectionId, problemSetIdPattern, pruneBlock, pruneProblems, pruneSections,
+  nextSectionId, problemSetIdPattern, pruneBlock, pruneProblems, pruneSections, suggestDiagnosticVersionId,
   renameProblem, renamedProblemVersionId, renameProblemReferences, responseSpecOf, scopeDefinitionLinks, suggestVersionId,
   type AccountRole, type AuthoringResponse, type AuthoringRole, type AuthoringWorkspace, type DraftDetail, type DraftIssue,
   type DraftEdit, type DraftProblem, type DraftSummary, type EditableConceptScope, type DefinitionChoice, type DefinitionEdit, type DefinitionSummary,
+  type DiagnosticDraft, type DiagnosticEdit,
 } from '@/shared/authoring';
 
 const id = z.string().min(1).max(191);
@@ -46,6 +47,20 @@ function reviewEdit(document: StoredLesson): { reviewBlockId?: string | null; re
   return block ? { reviewBlockId: block.blockId } : { reviewProblemIds: [...document.review.problemVersionIds] };
 }
 
+/** A question as the editor writes it. The same shape wherever questions are written. */
+const problemEditSchema = z.object({
+  problemVersionId: id,
+  conceptKeys: z.array(id).max(50),
+  promptContent: blockList,
+  gradingSpec: z.discriminatedUnion('kind', [
+    z.object({ kind: z.literal('integer'), value: answerNumber }).strict(),
+    z.object({ kind: z.literal('rational'), numerator: answerNumber, denominator: answerNumber,
+      requiredForm: z.literal('reduced_fraction').optional() }).strict(),
+  ]),
+  hints: blockList,
+  solution: blockList,
+}).strict();
+
 /** Structural only. A draft is saved while it is still wrong; publishing validation is the gate. */
 const editSchema = z.object({
   meta: z.object({
@@ -66,18 +81,7 @@ const editSchema = z.object({
   reviewProblemIds: z.array(id).max(50).optional(),
   // An answer says what a question expects; the response format and whether a hint exists follow
   // from it and from the hints, so the editor never sends either and the two cannot disagree.
-  problems: z.array(z.object({
-    problemVersionId: id,
-    conceptKeys: z.array(id).max(50),
-    promptContent: blockList,
-    gradingSpec: z.discriminatedUnion('kind', [
-      z.object({ kind: z.literal('integer'), value: answerNumber }).strict(),
-      z.object({ kind: z.literal('rational'), numerator: answerNumber, denominator: answerNumber,
-        requiredForm: z.literal('reduced_fraction').optional() }).strict(),
-    ]),
-    hints: blockList,
-    solution: blockList,
-  }).strict()).max(200),
+  problems: z.array(problemEditSchema).max(200),
 }).strict();
 
 export const authoringActionSchema = z.discriminatedUnion('action', [
@@ -108,6 +112,14 @@ export const authoringActionSchema = z.discriminatedUnion('action', [
     blocks: blockList.max(20),
     newConcept: z.object({ label: z.string().trim().min(1).max(191) }).strict().optional(),
   }).strict() }).strict(),
+  z.object({ action: z.literal('diagnostic.draft'), diagnosticKey: id.max(100) }).strict(),
+  z.object({ action: z.literal('diagnostic.save'), draftId: id, edit: z.object({
+    versionId: id.regex(/^[a-zA-Z0-9:._-]+$/), title: z.string().max(191), description: z.string().max(2000),
+    estimatedMinutes: z.number().int().min(0).max(240),
+    problemVersionIds: z.array(id).max(200), problems: z.array(problemEditSchema).max(200),
+  }).strict() }).strict(),
+  z.object({ action: z.literal('diagnostic.publish'), draftId: id }).strict(),
+  z.object({ action: z.literal('diagnostic.delete'), draftId: id }).strict(),
   z.object({ action: z.literal('problemSet.name'), problemSetId: id, name: z.string().trim().max(191) }).strict(),
   z.object({ action: z.literal('problemSet.read'), versionId: id }).strict(),
   z.object({ action: z.literal('editor.expertMode'), on: z.boolean() }).strict(),
@@ -222,6 +234,32 @@ function renameEditedProblems(problems: StoredProblem[], versionId: string, publ
   return { problems: next, renames };
 }
 
+/** A diagnostic draft as it is stored: the definition it will publish, and the questions with it. */
+type DiagnosticDraftDocument = {
+  versionId: string; diagnosticKey: string; title: string; description: string; estimatedMinutes: number;
+  problemSetId: string; problemVersionIds: string[]; problems: StoredProblem[];
+};
+
+/**
+ * What stops a placement from publishing. Few rules, and all of them about what a placement is: it
+ * has to say what it is, ask something, and show neither hint nor worked solution — a placement that
+ * helps is not measuring where somebody is.
+ */
+function diagnosticIssues(document: DiagnosticDraftDocument): DraftIssue[] {
+  const found: DraftIssue[] = [];
+  if (!document.title.trim()) found.push({ message: '제목을 써 주세요.', field: 'title' });
+  if (!document.description.trim()) found.push({ message: '설명을 써 주세요.', field: 'description' });
+  if (document.estimatedMinutes < 1 || document.estimatedMinutes > 120) found.push({ message: '예상 시간은 1분에서 120분 사이로 정해 주세요.', field: 'estimatedMinutes' });
+  if (!document.problemVersionIds.length) found.push({ message: '문항을 하나 이상 넣어 주세요.' });
+  for (const problem of document.problems) {
+    const where = { problemVersionId: problem.problemVersionId };
+    if (!problem.conceptKeys.length) found.push({ ...where, message: '이 문항이 확인하는 개념을 골라 주세요.', field: 'conceptKeys' });
+    if (!problem.promptContent.length) found.push({ ...where, message: '문제 지문을 써 주세요.', field: 'promptContent' });
+    if (problem.hints.length) found.push({ ...where, message: '시작점 확인은 힌트를 보여 주지 않아요. 힌트를 비워 주세요.', field: 'hints' });
+  }
+  return found;
+}
+
 type DraftRow = { id: string; ownerKind: string; ownerKey: string; versionId: string; baseVersionId: string | null; title: string;
   document: unknown; status: string; authorId: string; publishedVersionId: string | null; updatedAt: Date;
   author: { displayName: string } };
@@ -332,8 +370,8 @@ export class AuthoringService {
 
   async workspace(userId: string): Promise<AuthoringWorkspace> {
     const role = await authoringRole(this.db, userId);
-    if (!role) return { role: null, drafts: [], courses: [], lessons: [], accounts: [], concepts: [], problemSets: [], expertMode: false };
-    const [drafts, versions, courses, accounts, concepts, account, identities, setRows, setVersions, setBlocks] = await Promise.all([
+    if (!role) return { role: null, drafts: [], courses: [], lessons: [], accounts: [], concepts: [], problemSets: [], diagnostics: [], expertMode: false };
+    const [drafts, versions, courses, accounts, concepts, account, identities, setRows, setVersions, setBlocks, diagnosticVersions] = await Promise.all([
       this.db.contentDraft.findMany({ where: { ownerKind: 'lesson', ...(mayEditEveryDraft(role) ? {} : { authorId: userId }) },
         orderBy: { updatedAt: 'desc' }, select: { id: true, ownerKey: true, versionId: true, baseVersionId: true, title: true,
           status: true, authorId: true, publishedVersionId: true, updatedAt: true, document: true, ...withAuthor } }),
@@ -349,6 +387,8 @@ export class AuthoringService {
       // A version's metadata holds what the lesson says about itself and its review pool; the
       // activities that name a set are block rows, so the references are read from there.
       this.db.contentBlock.findMany({ where: { ownerKind: 'section', kind: 'core.problem_set' }, select: { ownerVersionId: true, payload: true } }),
+      this.db.diagnosticVersion.findMany({ orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }],
+        select: { id: true, diagnosticKey: true, title: true, problemVersionIds: true, diagnostic: { select: { course: { select: { key: true } } } } } }),
     ]);
     const openDrafts = new Set(drafts.filter((draft) => draft.status !== 'published').map((draft) => draft.ownerKey));
     const byKey = new Map<string, { title: string; courseKey: string; versions: string[]; conceptKeys: string[]; review?: ProblemSetRef | null }>();
@@ -379,6 +419,20 @@ export class AuthoringService {
     }
     const latestOfSet = new Map<string, string>();
     for (const version of setVersions) latestOfSet.set(version.problemSetId, version.id);
+    // Diagnostics are listed by identity, newest version last. The placement in use is the newest of
+    // them all, whatever key it was published under.
+    const diagnosticsByKey = new Map<string, { key: string; courseKey: string; title: string; ids: string[]; problemCount: number }>();
+    for (const version of diagnosticVersions) {
+      const entry = diagnosticsByKey.get(version.diagnosticKey)
+        ?? { key: version.diagnosticKey, courseKey: version.diagnostic.course.key, title: version.title, ids: [], problemCount: 0 };
+      entry.title = version.title;
+      entry.ids.push(version.id);
+      entry.problemCount = (version.problemVersionIds as string[]).length;
+      diagnosticsByKey.set(version.diagnosticKey, entry);
+    }
+    const newest = diagnosticVersions.at(-1)?.id;
+    const diagnosticDrafts = new Set((await this.db.contentDraft.findMany({ where: { ownerKind: 'diagnostic', status: { not: 'published' } },
+      select: { ownerKey: true } })).map((open) => open.ownerKey));
     return {
       role,
       accounts,
@@ -388,6 +442,9 @@ export class AuthoringService {
       drafts: drafts.map((row) => this.summary(row, userId)),
       problemSets: setRows.map((set) => ({ problemSetId: set.id, name: set.name, courseKey: set.course.key,
         latestVersionId: latestOfSet.get(set.id) ?? null, lessonKeys: heldBy.get(set.id) ?? [] })),
+      diagnostics: [...diagnosticsByKey.values()].map((entry) => ({ diagnosticKey: entry.key, courseKey: entry.courseKey, title: entry.title,
+        latestVersionId: entry.ids.at(-1) ?? null, suggestedVersionId: suggestDiagnosticVersionId(entry.ids.at(-1) ?? entry.key, entry.ids),
+        problemCount: entry.problemCount, current: entry.ids.at(-1) === newest, hasDraft: diagnosticDrafts.has(entry.key) })),
       lessons: identities.flatMap((identity) => {
         const entry = byKey.get(identity.key);
         const draft = drafts.find((item) => item.ownerKey === identity.key);
@@ -977,6 +1034,106 @@ export class AuthoringService {
   }
 
   /**
+   * A placement written on a screen instead of in a file.
+   *
+   * Its questions are the only ones no lesson holds, so nothing in the studio could reach them: the
+   * only way to change what a placement asks was to edit `prisma/seed/` and deploy. A diagnostic
+   * draft is the next version of one, with the questions it asks written the way a lesson's are.
+   */
+  private async diagnosticDetail(row: DraftRow, userId: string): Promise<DiagnosticDraft> {
+    const document = row.document as unknown as DiagnosticDraftDocument;
+    return {
+      id: row.id, diagnosticKey: row.ownerKey, versionId: row.versionId, baseVersionId: row.baseVersionId,
+      status: row.status === 'published' ? 'published' : row.status === 'review' ? 'review' : 'draft',
+      mine: row.authorId === userId, authorName: row.author.displayName, updatedAt: row.updatedAt.toISOString(),
+      edit: { versionId: document.versionId, title: document.title, description: document.description,
+        estimatedMinutes: document.estimatedMinutes, problemVersionIds: [...document.problemVersionIds],
+        problems: document.problems.map(draftProblem) },
+      issues: diagnosticIssues(document),
+    };
+  }
+
+  async draftDiagnostic(userId: string, diagnosticKey: string): Promise<AuthoringResponse> {
+    const role = await this.require(userId);
+    const open = await this.db.contentDraft.findFirst({ where: { ownerKind: 'diagnostic', ownerKey: diagnosticKey, status: { not: 'published' } }, include: withAuthor });
+    if (open) {
+      if (!mayEditEveryDraft(role) && (open as DraftRow).authorId !== userId) throw new AppError(409, 'draft_taken', '다른 사람이 쓰고 있는 초안이에요.');
+      return { workspace: await this.workspace(userId), diagnostic: await this.diagnosticDetail(open as DraftRow, userId) };
+    }
+    const versions = await this.db.diagnosticVersion.findMany({ where: { diagnosticKey }, orderBy: [{ publishedAt: 'asc' }, { id: 'asc' }] });
+    const base = versions.at(-1);
+    if (!base) throw new AppError(404, 'diagnostic_missing', '그 시작점 확인을 찾지 못했어요.');
+    const set = (await problemSetRecords(this.db, [base.problemSetVersionId])).get(base.problemSetVersionId);
+    const asked = base.problemVersionIds as string[];
+    const document: DiagnosticDraftDocument = {
+      versionId: suggestDiagnosticVersionId(base.id, versions.map((version) => version.id)),
+      diagnosticKey, title: base.title, description: base.description, estimatedMinutes: base.estimatedMinutes,
+      problemSetId: base.problemSetId, problemVersionIds: [...asked],
+      problems: asked.flatMap((problemId) => set?.problems.filter((problem) => problem.problemVersionId === problemId) ?? []),
+    };
+    const created = await this.db.contentDraft.create({ data: { ownerKind: 'diagnostic', ownerKey: diagnosticKey,
+      versionId: document.versionId, baseVersionId: base.id, title: base.title, document: document as never, authorId: userId }, include: withAuthor });
+    return { workspace: await this.workspace(userId), diagnostic: await this.diagnosticDetail(created as DraftRow, userId) };
+  }
+
+  private async loadDiagnostic(draftId: string, userId: string, role: AuthoringRole): Promise<DraftRow> {
+    const row = await this.db.contentDraft.findUnique({ where: { id: draftId }, include: withAuthor });
+    if (!row || row.ownerKind !== 'diagnostic') throw new AppError(404, 'draft_missing', '그 초안을 찾지 못했어요.');
+    if (!mayEditEveryDraft(role) && row.authorId !== userId) throw new AppError(403, 'draft_of_another', '다른 사람의 초안이에요.');
+    return row as DraftRow;
+  }
+
+  async saveDiagnostic(userId: string, draftId: string, edit: DiagnosticEdit): Promise<AuthoringResponse> {
+    const role = await this.require(userId);
+    const row = await this.loadDiagnostic(draftId, userId, role);
+    if (row.status === 'published') throw new AppError(409, 'draft_published', '이미 발행한 초안이에요.');
+    const stored = row.document as unknown as DiagnosticDraftDocument;
+    const published = await publishedProblems(this.db, edit.problems.map((problem) => problem.problemVersionId));
+    const { problems, renames } = renameEditedProblems(pruneProblems(edit.problems).map(storedProblem), edit.versionId, published);
+    const byId = new Map(problems.map((problem) => [problem.problemVersionId, problem]));
+    // What the set holds is what the diagnostic asks: a question it stopped asking is not kept.
+    const asked = edit.problemVersionIds.map((problemId) => renames.get(problemId) ?? problemId).filter((problemId) => byId.has(problemId));
+    const document: DiagnosticDraftDocument = { versionId: edit.versionId, diagnosticKey: stored.diagnosticKey,
+      title: edit.title, description: edit.description, estimatedMinutes: edit.estimatedMinutes,
+      problemSetId: stored.problemSetId, problemVersionIds: asked,
+      problems: asked.map((problemId) => byId.get(problemId)!) };
+    const saved = await this.db.contentDraft.update({ where: { id: draftId },
+      data: { document: document as never, versionId: document.versionId, title: document.title }, include: withAuthor });
+    return { workspace: await this.workspace(userId), diagnostic: await this.diagnosticDetail(saved as DraftRow, userId) };
+  }
+
+  async publishDiagnostic(userId: string, draftId: string): Promise<AuthoringResponse> {
+    const role = await this.require(userId);
+    if (!mayPublish(role)) throw new AppError(403, 'not_a_publisher', '발행은 관리자만 할 수 있어요. 검토를 요청해 주세요.');
+    const row = await this.loadDiagnostic(draftId, userId, role);
+    const document = row.document as unknown as DiagnosticDraftDocument;
+    if (diagnosticIssues(document).length) throw new AppError(422, 'draft_invalid', '아직 고칠 곳이 있어 발행할 수 없어요.');
+    const owner = await this.db.problemSet.findUnique({ where: { id: document.problemSetId }, include: { course: { select: { key: true } } } });
+    if (!owner) throw new AppError(404, 'problem_set_missing', '이 시작점 확인의 문제집을 찾지 못했어요.');
+    const versions = await this.db.problemSetVersion.count({ where: { problemSetId: document.problemSetId } });
+    const set: StoredProblemSet = { problemSetId: document.problemSetId, courseKey: owner.course.key, name: owner.name,
+      versionId: `${document.problemSetId}:v${versions + 1}`, problems: document.problems };
+    const definition = { versionId: document.versionId, diagnosticKey: document.diagnosticKey, title: document.title,
+      description: document.description, estimatedMinutes: document.estimatedMinutes,
+      problemSet: { problemSetId: set.problemSetId, problemSetVersionId: set.versionId, problemVersionIds: [...document.problemVersionIds] } };
+    try {
+      await importContent(this.db, { schemaVersion: 1, concepts: [], lessons: [], problemSets: [set], diagnostics: [definition], definitions: [] }, false);
+    } catch (error) {
+      throw new AppError(422, 'publish_rejected', describeContentError(error, { sections: [], problems: document.problems })[0]?.message ?? '발행 검증을 통과하지 못했어요.');
+    }
+    const finished = await this.db.contentDraft.update({ where: { id: draftId },
+      data: { status: 'published', publishedVersionId: document.versionId }, include: withAuthor });
+    return { workspace: await this.workspace(userId), diagnostic: await this.diagnosticDetail(finished as DraftRow, userId), publishedVersionId: document.versionId };
+  }
+
+  async deleteDiagnostic(userId: string, draftId: string): Promise<AuthoringResponse> {
+    const role = await this.require(userId);
+    const row = await this.loadDiagnostic(draftId, userId, role);
+    await this.db.contentDraft.delete({ where: { id: row.id } });
+    return { workspace: await this.workspace(userId) };
+  }
+
+  /**
    * What a problem set is called. The name is the set's, not a version's, so renaming it changes
    * nothing that was published and needs no new version — but an open draft of the set carries the
    * old name in the document it will publish, so that copy is corrected too.
@@ -1070,6 +1227,10 @@ export class AuthoringService {
       case 'lesson.read': return this.readLesson(userId, action.versionId);
       case 'draft.create': return this.createDraft(userId, action.lessonKey);
       case 'lesson.create': return this.createLesson(userId, action.courseKey, action.lessonKey, action.title, action.conceptKeys);
+      case 'diagnostic.draft': return this.draftDiagnostic(userId, action.diagnosticKey);
+      case 'diagnostic.save': return this.saveDiagnostic(userId, action.draftId, action.edit);
+      case 'diagnostic.publish': return this.publishDiagnostic(userId, action.draftId);
+      case 'diagnostic.delete': return this.deleteDiagnostic(userId, action.draftId);
       case 'problemSet.name': return this.nameProblemSet(userId, action.problemSetId, action.name);
       case 'problemSet.read': return this.readProblemSet(userId, action.versionId);
       case 'draft.review': return this.setReview(userId, action.draftId, action.asking);

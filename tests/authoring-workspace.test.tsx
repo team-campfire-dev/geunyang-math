@@ -11,6 +11,7 @@ const workspace: Workspace = {
   lessons: [{ lessonKey: 'fraction-meaning', courseKey: 'fractions', title: '분수의 의미', latestVersionId: null, suggestedVersionId: 'fraction-meaning:v3', hasDraft: true }],
   accounts: [],
   problemSets: [],
+  diagnostics: [],
   concepts: [{ key: 'term.denominator', label: '분모', assessable: true }],
   expertMode: false,
 };

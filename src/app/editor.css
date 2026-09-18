@@ -235,6 +235,16 @@
 .role-row select { width: auto; min-height: var(--editor-control); padding: 8px 11px; border: 1px solid var(--editor-field-line);
   border-radius: 6px; background: var(--editor-field-bg); color: var(--editor-ink); font-size: var(--editor-label-size); }
 
+.studio-panel { display: grid; gap: 20px; }
+.studio-cards { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.studio-card { border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: grid; gap: 8px; align-content: start; }
+.studio-card h2 { font-size: 17px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.studio-card p { color: #6b7566; font-size: 13px; }
+.studio-card .button { justify-self: start; }
+.studio-issues { display: grid; gap: 8px; margin-top: 10px; font-size: 13px; }
+.studio-issues li { display: grid; gap: 2px; }
+.studio-issues small { color: #8a7b5f; }
+
 .editor-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 22px; }
 .editor-confirm { margin-top: 18px; padding: 20px 22px; border: 1px solid #cdd8bd; border-radius: 10px; background: #f1f5e9; }
 .editor-confirm strong { font-size: 15px; color: var(--editor-active-text); }
