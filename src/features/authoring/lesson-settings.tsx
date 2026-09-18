@@ -2,14 +2,15 @@
 
 import { useState } from 'react';
 import {
-  looseProblems, problemGist, versionLabel,
+  copyProblem, insertAfter, looseProblems, moveBlock, problemGist, versionLabel,
   type ConceptChoice, type DefinitionEdit, type DefinitionSummary, type DraftDetail, type DraftEdit,
-  type DraftIssue, type EditableConceptScope, type LessonChoice,
+  type DraftIssue, type DraftProblem, type EditableConceptScope, type LessonChoice,
 } from '@/shared/authoring';
+import type { AnswerInput } from '@/shared/authoring-checks';
 import { Icon } from '@/features/learning/icons';
 import { useRemovalNotice } from './edit-history';
 import { useExpertMode } from './expert-mode';
-import { ConceptPicker } from './problem-editor';
+import { ConceptPicker, ProblemList, ProblemPanel } from './problem-editor';
 import { DefinitionPanel } from './definition-editor';
 
 /**
@@ -23,10 +24,12 @@ import { DefinitionPanel } from './definition-editor';
  */
 export function LessonSettings({
   edit, draft, concepts, lessons, published, issues, showDefinitions, mayEditDictionary,
-  onEdit, onShowDefinitions, onDefinitionDirty, onListDefinitions, onSaveDefinition, onDelete, onClose,
+  answerInputs, onAnswerInput, onEdit, onShowDefinitions, onDefinitionDirty, onListDefinitions, onSaveDefinition, onDelete, onClose,
 }: {
   edit: DraftEdit; draft: DraftDetail; concepts: ConceptChoice[]; lessons: LessonChoice[];
   published: boolean; issues: DraftIssue[]; showDefinitions: boolean; mayEditDictionary: boolean;
+  answerInputs: Record<string, AnswerInput>;
+  onAnswerInput: (problemVersionId: string, input: AnswerInput) => void;
   onEdit: (next: DraftEdit) => void;
   onShowDefinitions: (open: boolean) => void;
   onDefinitionDirty: (dirty: boolean) => void;
@@ -38,6 +41,30 @@ export function LessonSettings({
   const expert = useExpertMode();
   const notifyRemoval = useRemovalNotice();
   const [confirming, setConfirming] = useState(false);
+  /** Which of the review pool's questions is open here. The pool sits on no page but this one. */
+  const [openProblem, setOpenProblem] = useState<string | null>(null);
+  const reviewProblem = edit.reviewProblemIds?.includes(openProblem ?? '')
+    ? edit.problems.find((problem) => problem.problemVersionId === openProblem) : undefined;
+  // A question may only claim a concept this lesson teaches, the way the writing page says it too.
+  const draftConcepts: ConceptChoice[] = edit.meta.conceptKeys.map((key) =>
+    concepts.find((concept) => concept.key === key) ?? { key, label: key, assessable: true });
+  const blockIds = [
+    ...edit.sections.flatMap((section) => section.contentBlocks.map((block) => block.blockId)),
+    ...edit.problems.flatMap((problem) => [...problem.promptContent, ...problem.hints, ...problem.solution].map((block) => block.blockId)),
+  ];
+  const reviewMode = edit.reviewProblemIds ? 'own'
+    : edit.reviewBlockId === undefined ? 'keep' : edit.reviewBlockId ?? 'none';
+  /** Moving between「keep」,「none」, an activity's questions and the lesson's own pool. */
+  const reviewChoice = (mode: string): Partial<DraftEdit> => {
+    if (mode === 'own') {
+      // Keeping a pool that was already the lesson's own: its questions come across as they are.
+      const saved = draft.edit.reviewProblemIds ?? (draft.review && draft.edit.reviewBlockId === undefined ? draft.review.problemVersionIds : []);
+      return { reviewProblemIds: edit.reviewProblemIds ?? [...saved], reviewBlockId: undefined };
+    }
+    if (mode === 'keep') return { reviewProblemIds: undefined, reviewBlockId: undefined };
+    if (mode === 'none') return { reviewProblemIds: undefined, reviewBlockId: null };
+    return { reviewProblemIds: undefined, reviewBlockId: mode };
+  };
   const assessable = concepts.filter((concept) => concept.assessable);
   /** Questions no activity in the lesson holds. They block publishing, so the lesson says so here. */
   const loose = looseProblems(edit);
@@ -81,17 +108,44 @@ export function LessonSettings({
     <fieldset className="editor-panel" disabled={published}>
       <legend>수업을 마친 뒤 복습</legend>
       <label className="editor-field"><span className="editor-label">복습에 낼 문제</span>
-        <select value={edit.reviewBlockId === undefined ? 'keep' : edit.reviewBlockId ?? 'none'}
-          onChange={(event) => onEdit({ ...edit, reviewBlockId: event.target.value === 'keep' ? undefined : event.target.value === 'none' ? null : event.target.value })}>
-          {draft.review && draft.edit.reviewBlockId === undefined && <option value="keep">기존 복습 문제 유지</option>}
+        <select value={reviewMode}
+          onChange={(event) => onEdit({ ...edit, ...reviewChoice(event.target.value) })}>
+          {draft.review && draft.edit.reviewBlockId === undefined && draft.edit.reviewProblemIds === undefined && <option value="keep">기존 복습 문제 유지</option>}
           <option value="none">복습 과제 만들지 않기</option>
+          <option value="own">이 수업만의 복습 문제 쓰기</option>
           {edit.sections.flatMap((section) => section.contentBlocks.filter((block) => block.kind === 'core.problem_set')
             .map((block, index) => <option key={block.blockId} value={block.blockId}>{section.title} · 문제 {index + 1} 묶음</option>))}
         </select>
-        <small>선택한 문제 중 학습자의 풀이와 목표에 맞게 복습 과제를 만들어요. 수업 안의 문제를 선택하면 이후 수정도 함께 반영됩니다.</small></label>
-      <p className="editor-note">{draft.review
-        ? `저장된 복습 문제: ${draft.review.problemVersionIds.length}개.`
-        : '저장된 복습 문제가 없어요.'}</p>
+        <small>선택한 문제 중 학습자의 풀이와 목표에 맞게 복습 과제를 만들어요. 수업 안의 문제를 고르면 이후 수정도 함께 반영되고, 이 수업만의 복습 문제는 수업 화면에 나오지 않아요.</small></label>
+      {edit.reviewProblemIds
+        ? <>
+          <ProblemList ids={edit.reviewProblemIds} problems={edit.problems} lessonKey={draft.lessonKey} role="check"
+            versionId={edit.meta.versionId} concepts={draftConcepts} note="복습에만 쓰는 문항이라 수업 화면에는 나오지 않아요. 여기에서 골라 고칩니다."
+            onPick={(problemVersionId) => setOpenProblem(problemVersionId)}
+            onChange={(reviewProblemIds, problems) => { onEdit({ ...edit, reviewProblemIds, problems });
+              if (reviewProblem && !reviewProblemIds.includes(reviewProblem.problemVersionId)) setOpenProblem(null); }} />
+          {reviewProblem && <div className="editor-inspector-block">
+            <ProblemPanel offSheet problem={reviewProblem} number={edit.reviewProblemIds.indexOf(reviewProblem.problemVersionId) + 1}
+              total={edit.reviewProblemIds.length} concepts={draftConcepts} taken={blockIds} definitionChoices={draft.definitions}
+              answerInput={answerInputs[reviewProblem.problemVersionId]}
+              onAnswerInput={(input) => onAnswerInput(reviewProblem.problemVersionId, input)}
+              onChange={(next) => onEdit({ ...edit, problems: edit.problems.map((item) => (item.problemVersionId === next.problemVersionId ? next : item)) })}
+              onMove={(delta) => onEdit({ ...edit, reviewProblemIds: moveBlock(edit.reviewProblemIds!, edit.reviewProblemIds!.indexOf(reviewProblem.problemVersionId), delta) })}
+              onCopy={() => {
+                const made = copyProblem(reviewProblem, draft.lessonKey, 'check', edit.meta.versionId, edit.problems.map((item) => item.problemVersionId));
+                onEdit({ ...edit, reviewProblemIds: insertAfter(edit.reviewProblemIds!, edit.reviewProblemIds!.indexOf(reviewProblem.problemVersionId), made.problemVersionId), problems: [...edit.problems, made] });
+                setOpenProblem(made.problemVersionId);
+              }}
+              onRemove={() => {
+                onEdit({ ...edit, reviewProblemIds: edit.reviewProblemIds!.filter((problemId) => problemId !== reviewProblem.problemVersionId),
+                  problems: edit.problems.filter((item) => item.problemVersionId !== reviewProblem.problemVersionId) });
+                setOpenProblem(null);
+              }} />
+          </div>}
+        </>
+        : <p className="editor-note">{draft.review
+          ? `저장된 복습 문제: ${draft.review.problemVersionIds.length}개.`
+          : '저장된 복습 문제가 없어요.'}</p>}
     </fieldset>
 
     {!!loose.length && <fieldset className="editor-panel" disabled={published}>

@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { createDatabase } from '@/server/db';
 import { AuthoringService, authoringRole, authoringRoleDetail, openAuthoring, openAuthoringAccount } from '@/server/authoring';
-import { lessonRecord, importContent, definitionRecords } from '@/server/content-store';
+import { lessonRecord, importContent, definitionRecords, problemSetRecords } from '@/server/content-store';
 import type { LessonRecord, StoredLesson } from '@/core/content';
 import { newProblem, nextProblemVersionId, type DraftEdit, type DraftProblem } from '@/shared/authoring';
 import { lessonBundle, seedLessons } from './fixtures/content';
@@ -42,6 +42,13 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const next = structuredClone(edit);
     change(next.sections);
     return next;
+  };
+  /** A lesson of this test's own, so publishing a version of it disturbs nobody else's counting. */
+  const ownLesson = async () => {
+    const key = `authoring-${randomUUID()}`;
+    const base = JSON.parse(JSON.stringify(seedLessons[0]).replaceAll('fraction-meaning', key)) as LessonRecord;
+    await importContent(db, lessonBundle([base], { key: `course-${key}`, title: '검사 코스' }));
+    return key;
   };
   const drawing = (blockId: string) => ({
     blockId, kind: 'core.scene', typeVersion: 1, required: true,
@@ -253,18 +260,51 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     await service.deleteDraft(admin.id, draftId);
   });
 
-  it('tells the editor about the review pool, which no section shows and this screen does not edit', async () => {
+  it('hands the editor the review pool\u2019s own questions, which no section shows', async () => {
     const admin = await account('admin');
     const created = await service.createDraft(admin.id, lessonKey);
     const review = created.draft!.review!;
     expect(review.problemVersionIds.length).toBeGreaterThan(0);
-    // The pool's questions are the review set's, not the draft's to edit, so they are not among its questions.
+    // The pool names them, the draft carries them, and no activity in the lesson shows them.
+    expect(created.draft!.edit.reviewProblemIds).toEqual(review.problemVersionIds);
+    expect(created.draft!.edit.reviewBlockId).toBeUndefined();
     for (const id of review.problemVersionIds) {
-      expect(created.draft!.edit.problems.some((problem) => problem.problemVersionId === id)).toBe(false);
+      expect(created.draft!.edit.problems.some((problem) => problem.problemVersionId === id), id).toBe(true);
       expect(created.draft!.edit.sections.some((section) => section.contentBlocks.some((block) =>
-        Array.isArray(block.payload.problemVersionIds) && (block.payload.problemVersionIds as string[]).includes(id)))).toBe(false);
+        Array.isArray(block.payload.problemVersionIds) && (block.payload.problemVersionIds as string[]).includes(id))), id).toBe(false);
     }
     await service.deleteDraft(admin.id, created.draft!.id);
+  });
+
+  it('publishes an edited review question as a new one, into the pool\u2019s next version', async () => {
+    const admin = await account('admin');
+    const created = await service.createDraft(admin.id, await ownLesson());
+    const draftId = created.draft!.id;
+    const before = created.draft!.review!;
+    const [first] = before.problemVersionIds;
+
+    const edited = structuredClone(created.draft!.edit);
+    const target = edited.problems.find((problem) => problem.problemVersionId === first)!;
+    target.promptContent = [{ ...target.promptContent[0], payload: { ...target.promptContent[0].payload, text: '복습 문항을 여기에서 고쳤어요.' } }];
+    const saved = await service.saveDraft(admin.id, draftId, edited);
+    // A published question is immutable, so the edited one is published under a new name and the
+    // pool follows it. Its own `reviewProblemIds` must name the new one, not the one it replaced.
+    const renamed = saved.draft!.edit.reviewProblemIds!;
+    expect(renamed).toHaveLength(before.problemVersionIds.length);
+    expect(renamed[0]).not.toBe(first);
+    expect(saved.draft!.issues).toEqual([]);
+
+    const published = await service.publishDraft(admin.id, draftId);
+    const lesson = (await lessonRecord(db, published.draft!.versionId))!;
+    expect(lesson.review!.problemSetId).toBe(before.problemSetId);
+    expect(lesson.review!.problemSetVersionId).not.toBe(before.problemSetVersionId);
+    expect(lesson.review!.problemVersionIds).toEqual(renamed);
+    const set = (await problemSetRecords(db, [lesson.review!.problemSetVersionId])).get(lesson.review!.problemSetVersionId)!;
+    const written = set.problems.find((problem) => problem.problemVersionId === renamed[0])!;
+    expect(JSON.stringify(written.promptContent)).toContain('여기에서 고쳤어요');
+    // The version it replaced is untouched, and so is the question a learner may already have answered.
+    const old = (await problemSetRecords(db, [before.problemSetVersionId])).get(before.problemSetVersionId)!;
+    expect(old.problems.map((problem) => problem.problemVersionId)).toEqual(before.problemVersionIds);
   });
 
   it('lets a writer hand work on without locking it, and lets it be handed back', async () => {

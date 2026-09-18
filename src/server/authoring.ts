@@ -27,6 +27,25 @@ const blockList = z.array(z.object({
   fallback: z.string().max(2_000).optional(),
 }).strict()).max(100);
 const answerNumber = z.number().int().min(Number.MIN_SAFE_INTEGER).max(Number.MAX_SAFE_INTEGER);
+/**
+ * The set id a lesson's own review pool uses. A pool that came with the lesson keeps the name it was
+ * published under; one made here is named after the lesson, the way an activity's set would be.
+ */
+function ownReviewSetId(stored: StoredLesson): string {
+  const shown = new Set(stored.sections.flatMap((section) => section.contentBlocks)
+    .filter((block) => block.kind === 'core.problem_set').map((block) => String(block.payload.problemSetId ?? '')));
+  const review = stored.review?.problemSetId;
+  return review && !shown.has(review) ? review : `${stored.public.lessonKey}:review`;
+}
+
+/** How the editor is told about the review: its own pool's questions, an activity's block, or none. */
+function reviewEdit(document: StoredLesson): { reviewBlockId?: string | null; reviewProblemIds?: string[] } {
+  if (!document.review) return { reviewBlockId: null };
+  const block = document.sections.flatMap((section) => section.contentBlocks).find((block) =>
+    block.kind === 'core.problem_set' && canonicalJson(block.payload) === canonicalJson(document.review));
+  return block ? { reviewBlockId: block.blockId } : { reviewProblemIds: [...document.review.problemVersionIds] };
+}
+
 /** Structural only. A draft is saved while it is still wrong; publishing validation is the gate. */
 const editSchema = z.object({
   meta: z.object({
@@ -44,6 +63,7 @@ const editSchema = z.object({
     contentBlocks: blockList,
   }).strict()).min(1).max(50),
   reviewBlockId: id.nullable().optional(),
+  reviewProblemIds: z.array(id).max(50).optional(),
   // An answer says what a question expects; the response format and whether a hint exists follow
   // from it and from the hints, so the editor never sends either and the two cannot disagree.
   problems: z.array(z.object({
@@ -243,11 +263,14 @@ export class AuthoringService {
   private setOf(sets: ResolvedSets, versionId: string): StoredProblemSet | undefined {
     return sets.drafted.get(versionId)?.document ?? sets.published.get(versionId);
   }
-  /** The questions a lesson's activities hold, in the order the activities name them, each once. */
+  /**
+   * The questions a lesson holds, in the order it names them, each once — its activities' and its
+   * review pool's. The pool's were left out while nothing could edit them, which meant the twelve
+   * installed lessons each carried two questions no screen could reach.
+   */
   private problemsOf(document: StoredLesson, sets: ResolvedSets): StoredProblem[] {
     const held = new Map<string, StoredProblem>();
     for (const ref of problemSetRefs(document)) {
-      if (!ref.blockId) continue;
       const set = this.setOf(sets, ref.problemSetVersionId);
       for (const problemId of ref.problemVersionIds) {
         const problem = set?.problems.find((item) => item.problemVersionId === problemId);
@@ -270,8 +293,7 @@ export class AuthoringService {
         estimatedMinutes: document.public.estimatedMinutes, conceptKeys: [...document.public.conceptKeys],
         prerequisiteConceptKeys: [...document.public.prerequisiteConceptKeys] },
       sections: structuredClone(document.sections),
-      ...(document.review ? { reviewBlockId: document.sections.flatMap((section) => section.contentBlocks).find((block) =>
-        block.kind === 'core.problem_set' && canonicalJson(block.payload) === canonicalJson(document.review))?.blockId } : { reviewBlockId: null }),
+      ...reviewEdit(document),
       problems: this.problemsOf(document, resolved).map(draftProblem),
     };
     const definitions = await this.definitionChoices(document.public.lessonKey);
@@ -688,8 +710,10 @@ export class AuthoringService {
     const stored = row.document as unknown as StoredLesson;
     const lesson = await this.db.lesson.findUnique({ where: { key: stored.public.lessonKey }, include: { course: { select: { id: true, key: true } } } });
     if (!lesson) throw new AppError(404, 'lesson_missing', '이 초안의 수업이 없어요.');
-    const setIds = [...new Set(edit.sections.flatMap((section) => section.contentBlocks)
-      .filter((block) => block.kind === 'core.problem_set').map((block) => String(block.payload.problemSetId ?? '')))];
+    const setIds = [...new Set([...edit.sections.flatMap((section) => section.contentBlocks)
+      .filter((block) => block.kind === 'core.problem_set').map((block) => String(block.payload.problemSetId ?? '')),
+      // The review pool is a set like any other; it just has no activity naming it.
+      ...(edit.reviewProblemIds ? [ownReviewSetId(stored)] : [])])];
     for (const setId of setIds) {
       if (!problemSetIdPattern.test(setId)) throw new AppError(422, 'problem_set_id', `문제집 이름이 올바르지 않아요: ${setId}`);
     }
@@ -725,7 +749,7 @@ export class AuthoringService {
         title: edit.meta.title, document: set as never, authorId: userId } });
     }
     const stale = (openDrafts as DraftRow[]).filter((open) => !kept.has(open.versionId) && !sets.some((set) => set.problemSetId === open.ownerKey));
-    const previously = problemSetRefs(stored).filter((ref) => ref.blockId).map((ref) => ref.problemSetVersionId).filter((versionId) => !kept.has(versionId));
+    const previously = problemSetRefs(stored).map((ref) => ref.problemSetVersionId).filter((versionId) => !kept.has(versionId));
     await this.db.contentDraft.deleteMany({ where: { ownerKind: 'problem_set', status: { not: 'published' },
       OR: [{ id: { in: stale.map((open) => open.id) } }, { versionId: { in: previously } }] } });
     const saved = await this.db.contentDraft.update({ where: { id: draftId },
@@ -766,6 +790,19 @@ export class AuthoringService {
       }
       holdings.set(problemSetId, held);
     }
+    // The lesson's own review pool holds questions the same way, with no activity to name them. Its
+    // ids are renamed with everyone else's, or an edited question would be pointed at by its old name.
+    const ownReview = edit.reviewProblemIds
+      ? { problemSetId: ownReviewSetId(stored), problemVersionIds: edit.reviewProblemIds.map((problemId) => renames.get(problemId) ?? problemId) }
+      : null;
+    if (ownReview) {
+      const held: StoredProblem[] = [];
+      for (const problemId of ownReview.problemVersionIds) {
+        const problem = byId.get(problemId);
+        if (problem && !held.some((item) => item.problemVersionId === problemId)) held.push(problem);
+      }
+      holdings.set(ownReview.problemSetId, [...(holdings.get(ownReview.problemSetId) ?? []), ...held]);
+    }
     const sets: StoredProblemSet[] = [];
     const versionOf = new Map<string, string>();
     for (const [problemSetId, held] of holdings) {
@@ -782,7 +819,13 @@ export class AuthoringService {
           problemVersionIds: (block.payload.problemVersionIds as string[] | undefined) ?? [] } }
       : block)) }));
     let review = stored.review;
-    if (edit.reviewBlockId === null) review = null;
+    if (ownReview) {
+      review = { problemSetId: ownReview.problemSetId, problemSetVersionId: versionOf.get(ownReview.problemSetId) ?? '',
+        problemVersionIds: ownReview.problemVersionIds };
+      // An empty pool is no pool: publishing refuses a review that names nothing.
+      if (!ownReview.problemVersionIds.length) review = null;
+    }
+    else if (edit.reviewBlockId === null) review = null;
     else if (edit.reviewBlockId !== undefined) {
       const block = referenced.flatMap((section) => section.contentBlocks).find((block) => block.blockId === edit.reviewBlockId && block.kind === 'core.problem_set');
       if (!block) throw new AppError(422, 'review_missing', '복습에 쓸 문제가 있는 단계를 다시 골라 주세요.');
@@ -803,11 +846,10 @@ export class AuthoringService {
     try { validateLesson(document); }
     catch (error) { found.push(...describeContentError(error, { sections: document.sections, problems: [] }).filter(issue => !found.some(existing => existing.field && existing.field === issue.field && existing.sectionId === issue.sectionId && !existing.blockId && !issue.blockId))); }
     for (const ref of problemSetRefs(document)) {
-      if (!ref.blockId) continue;
       const set = this.setOf(sets, ref.problemSetVersionId);
-      if (!set) { found.push({ message: `Missing problem set version: ${ref.problemSetVersionId} (${ref.blockId})`, blockId: ref.blockId }); continue; }
+      if (!set) { found.push({ message: `Missing problem set version: ${ref.problemSetVersionId} (${ref.blockId ?? '복습'})`, ...(ref.blockId ? { blockId: ref.blockId } : {}) }); continue; }
       for (const problemId of ref.problemVersionIds) {
-        if (!set.problems.some((problem) => problem.problemVersionId === problemId)) found.push({ message: `Missing immutable problem version: ${problemId} (${ref.blockId})`, blockId: ref.blockId });
+        if (!set.problems.some((problem) => problem.problemVersionId === problemId)) found.push({ message: `Missing immutable problem version: ${problemId} (${ref.blockId ?? '복습'})`, ...(ref.blockId ? { blockId: ref.blockId } : { problemVersionId: problemId }) });
       }
     }
     for (const { document: set } of sets.drafted.values()) {

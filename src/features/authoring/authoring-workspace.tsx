@@ -517,6 +517,7 @@ export function AuthoringWorkspace() {
     {lessonPage === 'settings'
       ? <LessonSettings edit={edit} draft={draft} concepts={workspace.concepts} lessons={workspace.lessons}
         published={published} issues={localIssues} showDefinitions={showDefinitions} mayEditDictionary={mayPublish(workspace.role)}
+        answerInputs={answerInputs} onAnswerInput={(problemVersionId, input) => setAnswerInputs((current) => ({ ...current, [problemVersionId]: input }))}
         onEdit={setEdit} onShowDefinitions={setShowDefinitions} onDefinitionDirty={setDefinitionDirty}
         onListDefinitions={async (scopeKind, scopeKey) => (await authoringApi.act({ action: 'definition.list', scopeKind, scopeKey }, session?.user?.id ?? '')).definitions ?? []}
         onSaveDefinition={async (definition) => {

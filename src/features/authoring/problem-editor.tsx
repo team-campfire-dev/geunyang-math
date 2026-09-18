@@ -6,7 +6,7 @@ import { displayedAnswer, type AnswerInput } from '@/shared/authoring-checks';
 import { answerSpec, answerText, type AnswerSpec } from '@/shared/answer';
 import {
   copyProblem, insertAfter, moveBlock, newProblem, nextProblemBlockId, nextProblemVersionId, problemBlockForms,
-  problemGist, problemsOfBlock, type DraftProblem, type ConceptChoice, type DefinitionChoice,
+  problemGist, type DraftProblem, type ConceptChoice, type DefinitionChoice,
 } from '@/shared/authoring';
 import { Icon } from '@/features/learning/icons';
 import { AddBlock, BlockCard } from './block-editor';
@@ -118,9 +118,11 @@ function ProblemBlocks({ label, hint, part, problem, blocks, taken, definitionCh
  * is left here is everything a prompt cannot show: the answer it accepts, the concepts it claims, and
  * the help that only appears when someone asks for it.
  */
-export function ProblemPanel({ problem, number, total, concepts, taken, definitionChoices, answerInput, onAnswerInput, onChange, onMove, onCopy, onRemove }: {
+export function ProblemPanel({ problem, number, total, concepts, taken, definitionChoices, answerInput, offSheet = false, onAnswerInput, onChange, onMove, onCopy, onRemove }: {
   answerInput?: AnswerInput; onAnswerInput: (input: AnswerInput) => void;
   problem: DraftProblem; number: number; total: number; concepts: ConceptChoice[]; taken: string[]; definitionChoices: DefinitionChoice[];
+  /** A question no step shows, so its text has nowhere else to be written and is written here. */
+  offSheet?: boolean;
   onChange: (next: DraftProblem) => void; onMove: (delta: number) => void; onCopy: () => void; onRemove: () => void;
 }) {
   const expert = useExpertMode();
@@ -139,12 +141,15 @@ export function ProblemPanel({ problem, number, total, concepts, taken, definiti
           onClick={() => { notifyRemoval('문항'); onRemove(); }}><Icon name="close" size={15} /></button>
       </div>
     </header>
-    <p className="editor-note">문제 지문은 수업 화면에서 바로 씁니다. 여기에는 지문이 보여 주지 않는 것들이 있어요.</p>
+    <p className="editor-note">{offSheet
+      ? '이 문항은 수업 화면에 나오지 않아요. 지문도 여기에서 씁니다.'
+      : '문제 지문은 수업 화면에서 바로 씁니다. 여기에는 지문이 보여 주지 않는 것들이 있어요.'}</p>
     <AnswerField spec={problem.gradingSpec} input={answerInput} onInput={onAnswerInput} onChange={(gradingSpec) => onChange({ ...problem, gradingSpec })} />
     <ConceptPicker concepts={concepts} chosen={problem.conceptKeys} onChange={(next) => onChange({ ...problem, conceptKeys: next })} />
     <ProblemBlocks label="문제" part="prompt" problem={problem} blocks={problem.promptContent} taken={taken} definitionChoices={definitionChoices}
-      hint="글은 수업 화면에서 고치고, 그림처럼 지문에 더 넣을 것이 있으면 여기에서 더합니다."
-      onChange={(promptContent) => onChange({ ...problem, promptContent })} omitText />
+      hint={offSheet ? '이 문항의 지문은 여기에만 있어요. 글과 그림을 모두 여기에서 씁니다.'
+        : '글은 수업 화면에서 고치고, 그림처럼 지문에 더 넣을 것이 있으면 여기에서 더합니다.'}
+      onChange={(promptContent) => onChange({ ...problem, promptContent })} omitText={!offSheet} />
     <ProblemBlocks label="힌트" part="hint" problem={problem} blocks={problem.hints} taken={taken} definitionChoices={definitionChoices}
       hint="힌트를 하나라도 두면 학습 화면에 힌트 버튼이 생겨요. 힌트를 열고 맞히면 도움을 받은 풀이로 기록합니다."
       onChange={(hints) => onChange({ ...problem, hints })} />
@@ -166,18 +171,21 @@ export function ProblemPanel({ problem, number, total, concepts, taken, definiti
  * question is written, changed and removed; removing one here drops it from the version being
  * written, while every published version keeps the question it was published with.
  */
-export function ProblemSetEditor({ block, problems, lessonKey, role, versionId, concepts, onPick, onChange }: {
-  block: ContentBlock; problems: DraftProblem[]; lessonKey: string; role: string; versionId: string;
-  concepts: ConceptChoice[]; onPick: (problemVersionId: string) => void;
-  onChange: (block: ContentBlock, problems: DraftProblem[]) => void;
+/**
+ * The questions a list names, and what may be done to the list. An activity holds one; so does a
+ * lesson's own review pool, which no activity names and no section shows.
+ */
+export function ProblemList({ ids, problems, lessonKey, role, versionId, concepts, note, onPick, onChange }: {
+  ids: string[]; problems: DraftProblem[]; lessonKey: string; role: string; versionId: string;
+  concepts: ConceptChoice[]; note: string; onPick: (problemVersionId: string) => void;
+  onChange: (ids: string[], problems: DraftProblem[]) => void;
 }) {
   const notifyRemoval = useRemovalNotice();
-  const ids = Array.isArray(block.payload.problemVersionIds) ? (block.payload.problemVersionIds as string[]) : [];
-  const chosen = problemsOfBlock(block, problems);
-  // An activity and its questions are one change: writing them separately would leave the activity
-  // naming a question the document no longer holds, or holding one nothing names.
-  const write = (nextIds: string[], nextProblems: DraftProblem[]) =>
-    onChange({ ...block, payload: { ...block.payload, problemVersionIds: nextIds } }, nextProblems);
+  const held = new Map(problems.map((problem) => [problem.problemVersionId, problem]));
+  const chosen = ids.flatMap((problemId) => { const problem = held.get(problemId); return problem ? [problem] : []; });
+  // A list and its questions are one change: writing them separately would leave the list naming a
+  // question the document no longer holds, or holding one nothing names.
+  const write = (nextIds: string[], nextProblems: DraftProblem[]) => onChange(nextIds, nextProblems);
   const add = () => {
     const created = newProblem(nextProblemVersionId(lessonKey, role, versionId, problems.map((item) => item.problemVersionId)),
       chosen[0]?.conceptKeys ?? problems[0]?.conceptKeys ?? concepts.slice(0, 1).map((concept) => concept.key));
@@ -190,7 +198,7 @@ export function ProblemSetEditor({ block, problems, lessonKey, role, versionId, 
     onPick(made.problemVersionId);
   };
   return <div className="editor-problems">
-    <p className="editor-note">문항은 수업 화면에서 눌러 고칩니다. 여기에서는 순서를 바꾸고, 더하고, 복제하고, 뺍니다.</p>
+    <p className="editor-note">{note}</p>
     {chosen.map((problem, index) => <div key={problem.problemVersionId} className="editor-problem-row">
       <button type="button" className="editor-problem-open" onClick={() => onPick(problem.problemVersionId)}>
         <strong>{index + 1}번</strong>
@@ -210,7 +218,18 @@ export function ProblemSetEditor({ block, problems, lessonKey, role, versionId, 
       </div>
     </div>)}
     {ids.length > chosen.length && <p className="editor-note editor-warn">
-      이 활동이 가리키는 문항 중 {ids.length - chosen.length}개가 이 판본에 없어요. 발행 전에 지우거나 다시 만들어 주세요.</p>}
+      여기가 가리키는 문항 중 {ids.length - chosen.length}개가 이 판본에 없어요. 발행 전에 지우거나 다시 만들어 주세요.</p>}
     <button type="button" className="button secondary" onClick={add}><Icon name="plus" size={14} />문항 추가</button>
   </div>;
+}
+
+/** An activity's own list, which is its block's `problemVersionIds`. */
+export function ProblemSetEditor({ block, onChange, ...rest }: {
+  block: ContentBlock; problems: DraftProblem[]; lessonKey: string; role: string; versionId: string;
+  concepts: ConceptChoice[]; onPick: (problemVersionId: string) => void;
+  onChange: (block: ContentBlock, problems: DraftProblem[]) => void;
+}) {
+  const ids = Array.isArray(block.payload.problemVersionIds) ? (block.payload.problemVersionIds as string[]) : [];
+  return <ProblemList {...rest} ids={ids} note="문항은 수업 화면에서 눌러 고칩니다. 여기에서는 순서를 바꾸고, 더하고, 복제하고, 뺍니다."
+    onChange={(nextIds, problems) => onChange({ ...block, payload: { ...block.payload, problemVersionIds: nextIds } }, problems)} />;
 }

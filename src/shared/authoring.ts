@@ -59,6 +59,12 @@ export type DraftProblem = {
 export type DraftEdit = { meta: DraftMeta; sections: LessonSection[]; problems: DraftProblem[];
   /** Undefined preserves a separate review pool; null disables review; a block id selects its questions. */
   reviewBlockId?: string | null;
+  /**
+   * The questions the lesson's **own** review pool holds — the ones no section shows. Present when
+   * the lesson keeps a pool of its own, so that those questions can be written like any others;
+   * undefined when the review points at an activity instead, or at nothing.
+   */
+  reviewProblemIds?: string[];
 };
 /** `definitions` are the definitions this lesson may link: the shared dictionary and its own. */
 /**
@@ -77,7 +83,8 @@ export type DraftIssue = {
   field?: string;
 };
 /**
- * `review` describes the saved pool; `edit.reviewBlockId` chooses whether to retain or replace it.
+ * `review` describes the saved pool. `edit.reviewProblemIds` writes the lesson's own pool; `edit.reviewBlockId` points
+ * the review at an activity instead, or clears it.
  */
 export type DraftDetail = DraftSummary & {
   edit: DraftEdit; definitions: DefinitionChoice[]; glossary: GlossaryEntry[]; issues: DraftIssue[]; review: ProblemSetRef | null;
@@ -96,7 +103,8 @@ export function editShape(edit: DraftEdit): string {
   const sections = edit.sections.map((section) => `${section.sectionId}:${section.role}>${named(section.contentBlocks)}`).join('|');
   const problems = edit.problems.map((problem) =>
     `${problem.problemVersionId}>${named([...problem.promptContent, ...problem.hints, ...problem.solution])}`).join('|');
-  return `${sections}#${problems}#${edit.reviewBlockId === undefined ? 'keep' : edit.reviewBlockId ?? 'none'}`;
+  const review = edit.reviewProblemIds ? `own(${edit.reviewProblemIds.join(',')})` : edit.reviewBlockId === undefined ? 'keep' : edit.reviewBlockId ?? 'none';
+  return `${sections}#${problems}#${review}`;
 }
 
 export const responseSpecOf = (spec: AnswerSpec): PublicProblem['responseSpec'] =>
@@ -312,7 +320,7 @@ export const problemIdsIn = (blocks: ContentBlock[]): string[] =>
  * section shows them.
  */
 export function looseProblems(edit: DraftEdit): DraftProblem[] {
-  const held = new Set(problemIdsIn(edit.sections.flatMap((section) => section.contentBlocks)));
+  const held = new Set([...problemIdsIn(edit.sections.flatMap((section) => section.contentBlocks)), ...(edit.reviewProblemIds ?? [])]);
   return edit.problems.filter((problem) => !held.has(problem.problemVersionId));
 }
 
