@@ -48,7 +48,7 @@
     {
       "public": {
         "lessonKey": "ratio-meaning",
-        "versionId": "ratio-meaning:v1",
+        "versionId": "ratio-meaning:v2",
         "title": "비와 비율: 두 양을 견주기",
         "summary": "두 양을 비로 나타내고, 기준량에 대한 비율을 하나의 수로 구해요.",
         "estimatedMinutes": 10,
@@ -65,12 +65,12 @@
       },
       "sections": [
         {
-          "sectionId": "ratio-meaning:explanation:v1",
+          "sectionId": "ratio-meaning:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "ratio-meaning:explanation:text:v1",
+              "blockId": "ratio-meaning:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -96,7 +96,7 @@
               }
             },
             {
-              "blockId": "ratio-meaning:explanation:drawing:v1",
+              "blockId": "ratio-meaning:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -104,7 +104,7 @@
                 "width": 320,
                 "height": 200,
                 "alt": "원액 한 칸에 물 네 칸을 견준 막대",
-                "caption": "원액 1에 물 4 · 비율은 $\\frac{200}{50}=4$",
+                "caption": "기준량을 정하고, 그것으로 나눠 하나의 수로",
                 "items": [
                   {
                     "kind": "strip",
@@ -116,7 +116,8 @@
                     "filled": 1,
                     "fill": "orange",
                     "stroke": "ink",
-                    "strokeWidth": 1
+                    "strokeWidth": 1,
+                    "id": "base"
                   },
                   {
                     "kind": "text",
@@ -125,7 +126,8 @@
                     "text": "원액",
                     "size": 12,
                     "anchor": "middle",
-                    "fill": "ink"
+                    "fill": "ink",
+                    "id": "base-name"
                   },
                   {
                     "kind": "strip",
@@ -137,7 +139,8 @@
                     "filled": 4,
                     "fill": "green",
                     "stroke": "ink",
-                    "strokeWidth": 1
+                    "strokeWidth": 1,
+                    "id": "compared"
                   },
                   {
                     "kind": "text",
@@ -146,7 +149,8 @@
                     "text": "물",
                     "size": 12,
                     "anchor": "middle",
-                    "fill": "ink"
+                    "fill": "ink",
+                    "id": "compared-name"
                   },
                   {
                     "kind": "text",
@@ -155,20 +159,54 @@
                     "text": "$200:50 \\rightarrow 4$",
                     "size": 16,
                     "anchor": "middle",
-                    "fill": "ink"
+                    "fill": "ink",
+                    "id": "as-rate"
                   }
-                ]
+                ],
+                "frames": [
+                  {
+                    "caption": "견줄 두 양을 나란히 놓아요.",
+                    "changes": [
+                      {
+                        "id": "as-rate",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "원액을 기준량으로 삼아요. 이 하나가 기준이에요.",
+                    "changes": [
+                      {
+                        "id": "compared",
+                        "opacity": 0.35
+                      },
+                      {
+                        "id": "compared-name",
+                        "opacity": 0.35
+                      },
+                      {
+                        "id": "as-rate",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "기준량으로 나누면 비율 $4$가 나와요.",
+                    "changes": []
+                  }
+                ],
+                "frameMs": 1100
               }
             }
           ]
         },
         {
-          "sectionId": "ratio-meaning:example:v1",
+          "sectionId": "ratio-meaning:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ratio-meaning:example:text:v1",
+              "blockId": "ratio-meaning:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -186,12 +224,12 @@
           ]
         },
         {
-          "sectionId": "ratio-meaning:practice:v1",
+          "sectionId": "ratio-meaning:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ratio-meaning:practice:problems:v1",
+              "blockId": "ratio-meaning:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -208,12 +246,12 @@
           ]
         },
         {
-          "sectionId": "ratio-meaning:check:v1",
+          "sectionId": "ratio-meaning:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ratio-meaning:check:problems:v1",
+              "blockId": "ratio-meaning:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -229,12 +267,12 @@
           ]
         },
         {
-          "sectionId": "ratio-meaning:summary:v1",
+          "sectionId": "ratio-meaning:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ratio-meaning:summary:text:v1",
+              "blockId": "ratio-meaning:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -582,7 +620,7 @@
     {
       "public": {
         "lessonKey": "percentage-of",
-        "versionId": "percentage-of:v1",
+        "versionId": "percentage-of:v2",
         "title": "비율만큼의 양: 할인과 이자",
         "summary": "기준량에 비율을 곱해 깎이는 양과 내는 양을 구해요.",
         "estimatedMinutes": 10,
@@ -598,12 +636,12 @@
       },
       "sections": [
         {
-          "sectionId": "percentage-of:explanation:v1",
+          "sectionId": "percentage-of:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "percentage-of:explanation:text:v1",
+              "blockId": "percentage-of:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -629,7 +667,7 @@
               }
             },
             {
-              "blockId": "percentage-of:explanation:drawing:v1",
+              "blockId": "percentage-of:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -637,7 +675,7 @@
                 "width": 320,
                 "height": 200,
                 "alt": "전체 열 칸 중 세 칸이 할인, 일곱 칸이 내는 금액인 막대",
-                "caption": "20000원의 30%는 6000원 · 내는 금액은 14000원",
+                "caption": "깎이는 양과 내는 양을 갈라서 본다",
                 "items": [
                   {
                     "kind": "strip",
@@ -649,7 +687,8 @@
                     "filled": 3,
                     "fill": "orange",
                     "stroke": "ink",
-                    "strokeWidth": 1
+                    "strokeWidth": 1,
+                    "id": "bar"
                   },
                   {
                     "kind": "text",
@@ -658,7 +697,8 @@
                     "text": "할인 6000원",
                     "size": 12,
                     "anchor": "middle",
-                    "fill": "ink"
+                    "fill": "ink",
+                    "id": "cut-name"
                   },
                   {
                     "kind": "text",
@@ -667,7 +707,8 @@
                     "text": "내는 금액 14000원",
                     "size": 12,
                     "anchor": "middle",
-                    "fill": "ink"
+                    "fill": "ink",
+                    "id": "pay-name"
                   },
                   {
                     "kind": "line",
@@ -676,7 +717,8 @@
                     "x2": 112,
                     "y2": 100,
                     "stroke": "orange",
-                    "strokeWidth": 2
+                    "strokeWidth": 2,
+                    "id": "cut-line"
                   },
                   {
                     "kind": "line",
@@ -685,7 +727,8 @@
                     "x2": 280,
                     "y2": 100,
                     "stroke": "green",
-                    "strokeWidth": 2
+                    "strokeWidth": 2,
+                    "id": "pay-line"
                   },
                   {
                     "kind": "text",
@@ -694,20 +737,70 @@
                     "text": "$20000 \\times 0.3 = 6000$",
                     "size": 15,
                     "anchor": "middle",
-                    "fill": "ink"
+                    "fill": "ink",
+                    "id": "as-product"
                   }
-                ]
+                ],
+                "frames": [
+                  {
+                    "caption": "전체 20000원을 열 칸으로 봐요.",
+                    "changes": [
+                      {
+                        "id": "cut-name",
+                        "hidden": true
+                      },
+                      {
+                        "id": "pay-name",
+                        "hidden": true
+                      },
+                      {
+                        "id": "cut-line",
+                        "hidden": true
+                      },
+                      {
+                        "id": "pay-line",
+                        "hidden": true
+                      },
+                      {
+                        "id": "as-product",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "30%는 세 칸이고, 그것이 깎이는 금액이에요.",
+                    "changes": [
+                      {
+                        "id": "pay-name",
+                        "hidden": true
+                      },
+                      {
+                        "id": "pay-line",
+                        "hidden": true
+                      },
+                      {
+                        "id": "as-product",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "남은 일곱 칸이 내는 금액이에요.",
+                    "changes": []
+                  }
+                ],
+                "frameMs": 1100
               }
             }
           ]
         },
         {
-          "sectionId": "percentage-of:example:v1",
+          "sectionId": "percentage-of:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "percentage-of:example:text:v1",
+              "blockId": "percentage-of:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -725,12 +818,12 @@
           ]
         },
         {
-          "sectionId": "percentage-of:practice:v1",
+          "sectionId": "percentage-of:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "percentage-of:practice:problems:v1",
+              "blockId": "percentage-of:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -747,12 +840,12 @@
           ]
         },
         {
-          "sectionId": "percentage-of:check:v1",
+          "sectionId": "percentage-of:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "percentage-of:check:problems:v1",
+              "blockId": "percentage-of:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -768,12 +861,12 @@
           ]
         },
         {
-          "sectionId": "percentage-of:summary:v1",
+          "sectionId": "percentage-of:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "percentage-of:summary:text:v1",
+              "blockId": "percentage-of:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
