@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "similar-triangles",
+      "label": "삼각형의 닮음",
+      "assessable": true
+    },
+    {
+      "key": "parallel-ratio",
+      "label": "평행선과 선분의 비",
+      "assessable": true
+    },
+    {
+      "key": "centroid",
+      "label": "삼각형의 무게중심",
+      "assessable": true
+    },
+    {
+      "key": "similar-ratio",
+      "label": "닮음비와 넓이·부피의 비",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "similar-triangles",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "삼각형의 닮음",
+      "summary": "크기는 달라도 모양이 같아요.",
+      "blocks": [
+        {
+          "blockId": "global:similar-triangles:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "한쪽을 일정한 배로 늘이거나 줄여 다른 쪽과 포갤 수 있으면 두 도형이 닮음이에요. 대응각의 크기는 각각 같고 대응변의 길이의 비는 모두 같은데, 이 일정한 비가 닮음비예요. 둘레도 닮음비와 같은 비로 늘어나요. 합동은 닮음비가 $1:1$인 닮음이고요. 삼각형은 두 각의 크기가 각각 같거나, 두 변의 비와 낀 각이 같거나, 세 변의 비가 모두 같으면 닮음이에요. 평행선이 있으면 각이 같아지니 닮음을 먼저 의심해 보면 좋아요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "두 도형이 같은 모양인지 가릴 때"
+    },
+    {
+      "conceptKey": "parallel-ratio",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "평행선과 선분의 비",
+      "summary": "나란하면 비가 그대로 옮겨 가요.",
+      "blocks": [
+        {
+          "blockId": "global:parallel-ratio:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "삼각형을 가로지르는 선분이 밑변과 나란하면 두 삼각형이 닮음이 되어 두 변을 같은 비로 나눠요. 곧 $\\overline{AD} : \\overline{DB} = \\overline{AE} : \\overline{EC}$예요. 거꾸로 같은 비로 나누는 점을 이으면 그 선분은 밑변과 나란해요. 두 변의 중점을 이으면 밑변과 나란하고 길이는 절반인데, 이것이 중점연결정리예요. 닮음비가 $1:2$인 경우를 이름 붙인 것이고요. 사다리꼴에서 평행하지 않은 두 변의 중점을 이으면 두 밑변의 평균이 돼요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "평행선이 자른 길이를 구할 때"
+    },
+    {
+      "conceptKey": "centroid",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "삼각형의 무게중심",
+      "summary": "중선을 둘과 하나로 나누는 점이에요.",
+      "blocks": [
+        {
+          "blockId": "global:centroid:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "꼭짓점과 마주 보는 변의 중점을 이은 선분이 중선이고, 세 중선은 한 점에서 만나요. 그 점이 무게중심이에요. 무게중심은 각 중선을 꼭짓점 쪽부터 $2:1$로 나누므로, 중선을 세 조각으로 보고 둘과 하나로 가른다고 생각하면 편해요. 이유는 중점연결정리에 있어요. 중선 하나는 삼각형을 넓이가 같은 둘로 나누고, 세 중선을 모두 그으면 넓이가 같은 여섯 조각이 돼요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "중선의 길이나 조각의 넓이를 구할 때"
+    },
+    {
+      "conceptKey": "similar-ratio",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "닮음비와 넓이·부피의 비",
+      "summary": "두 배면 네 배, 여덟 배예요.",
+      "blocks": [
+        {
+          "blockId": "global:similar-ratio:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "닮음비가 $m:n$이면 넓이의 비는 $m^2 : n^2$, 부피의 비는 $m^3 : n^3$이에요. 가로와 세로가 함께 늘어나니 넓이는 두 번, 높이까지 늘어나니 부피는 세 번 곱해지는 거예요. 겉넓이는 넓이이니 제곱으로 커져요. 거꾸로 넓이의 비가 $9:25$면 닮음비는 $3:5$고요. 지도의 축척은 지도와 실제의 닮음비예요. 축척이 $1:50000$이면 지도의 $3$cm가 실제로는 $150000$cm, 곧 $1500$m예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "닮은 도형의 넓이나 부피를 구할 때"
+    }
+  ]
+}

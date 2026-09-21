@@ -1,0 +1,3652 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "triangle-quad",
+      "title": "삼각형과 사각형의 성질",
+      "summary": "이등변삼각형과 평행사변형에서 하나를 주면 무엇이 따라 나오는지 합동으로 확인하고, 사각형들이 어떻게 이어지는지 봐요.",
+      "order": 250,
+      "track": "middle",
+      "stage": "middle-2",
+      "lessons": [
+        {
+          "key": "isosceles",
+          "order": 1
+        },
+        {
+          "key": "triangle-center",
+          "order": 2
+        },
+        {
+          "key": "parallelogram",
+          "order": 3
+        },
+        {
+          "key": "special-quad",
+          "order": 4
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "isosceles",
+      "label": "이등변삼각형",
+      "assessable": true
+    },
+    {
+      "key": "triangle-center",
+      "label": "삼각형의 외심과 내심",
+      "assessable": true
+    },
+    {
+      "key": "parallelogram",
+      "label": "평행사변형",
+      "assessable": true
+    },
+    {
+      "key": "special-quad",
+      "label": "여러 가지 사각형",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "isosceles",
+        "versionId": "isosceles:v1",
+        "title": "이등변삼각형: 접으면 포개지는 삼각형",
+        "summary": "두 변이 같으면 두 밑각도 같은 이유를 합동으로 확인하고, 거꾸로도 성립하는지 봐요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "isosceles"
+        ],
+        "prerequisiteConceptKeys": [
+          "angle-basics",
+          "construction-congruence",
+          "polygon-angles"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "isosceles:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "isosceles:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 변의 길이가 같은 삼각형을 이등변삼각형이라 해요. 길이가 같은 두 변이 만나는 각을 꼭지각, 나머지 두 각을 밑각이라 부르고요.\n\n눈으로 보면 두 밑각은 같아 보여요. 하지만 보이는 것과 그런 것은 다르니 이유를 대야 해요.\n\n꼭지각을 이등분하는 선을 그어 보세요. 삼각형이 둘로 갈라지는데, 이 둘은 합동이에요. 두 변의 길이가 같고, 그 사이에 낀 각이 같고, 이등분선은 두 삼각형이 함께 쓰니까요. 두 변과 낀 각이 같으면 합동이라는 조건이 그대로 들어맞아요.\n\n합동이면 대응하는 각도 같아요. 그래서 두 밑각의 크기가 같아요.\n\n덤으로 따라오는 것이 있어요. 갈라진 두 각이 같으니 각각 $90°$이고, 밑변도 반씩 나뉘어요. 그러니 꼭지각의 이등분선은 밑변을 수직이등분해요. 이등분선 하나가 네 가지 일을 한꺼번에 해요.\n\n거꾸로도 성립해요. 두 밑각이 같은 삼각형은 두 변의 길이도 같아요. 그래서 「두 변이 같다」와 「두 밑각이 같다」는 같은 말이에요. 어느 쪽을 알든 나머지를 쓸 수 있어요.\n\n세 변이 모두 같은 정삼각형은 이등변삼각형이기도 해서 세 각이 모두 같아요. 세 각의 합이 $180°$이니 한 각은 $60°$예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "isosceles",
+                    "surface": "이등변삼각형",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "isosceles:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "합동인 직각삼각형 두 개가 미끄러져 맞붙어 이등변삼각형이 되는 그림",
+                "caption": "합동인 직각삼각형 둘을 맞붙이면 이등변삼각형이 돼요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 20,
+                    "text": "합동인 직각삼각형 둘",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "head"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        132,
+                        40
+                      ],
+                      [
+                        72,
+                        160
+                      ],
+                      [
+                        132,
+                        160
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.6,
+                    "id": "left"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        188,
+                        40
+                      ],
+                      [
+                        248,
+                        160
+                      ],
+                      [
+                        188,
+                        160
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.6,
+                    "id": "right"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160,
+                    "y1": 40,
+                    "x2": 160,
+                    "y2": 160,
+                    "stroke": "green",
+                    "strokeWidth": 1.6,
+                    "id": "axis",
+                    "opacity": 0,
+                    "dash": true
+                  },
+                  {
+                    "kind": "text",
+                    "x": 196,
+                    "y": 46,
+                    "text": "꼭지각",
+                    "size": 10,
+                    "anchor": "start",
+                    "fill": "green",
+                    "id": "apex",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 126,
+                    "y": 152,
+                    "text": "밑각",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "ang1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 194,
+                    "y": 152,
+                    "text": "밑각",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "ang2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 182,
+                    "text": "두 밑각의 크기가 같아요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "합동인 직각삼각형 둘이에요. 세로로 선 변의 길이가 서로 같아요.",
+                    "changes": [
+                      {
+                        "id": "axis",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "apex",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ang1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ang2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "head",
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "세로로 선 변끼리 마주 보게 가까이 붙여 볼게요.",
+                    "changes": [
+                      {
+                        "id": "left",
+                        "dx": 14
+                      },
+                      {
+                        "id": "right",
+                        "dx": -14
+                      },
+                      {
+                        "id": "axis",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "apex",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ang1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ang2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "head",
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "맞붙이면 이등변삼각형이에요. 두 밑각은 합동인 두 삼각형의 대응각이니 크기가 같아요.",
+                    "changes": [
+                      {
+                        "id": "left",
+                        "dx": 28
+                      },
+                      {
+                        "id": "right",
+                        "dx": -28
+                      },
+                      {
+                        "id": "axis",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "apex",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ang1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ang2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "head",
+                        "opacity": 0
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "isosceles:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "isosceles:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "꼭지각이 $40°$인 이등변삼각형의 한 밑각을 구해 볼게요.\n\n세 각의 합은 $180°$예요. 꼭지각이 $40°$이니 두 밑각의 합은 $180° - 40° = 140°$고요.\n\n두 밑각은 크기가 같으니 하나는 $140° \\div 2 = 70°$예요.\n\n거꾸로도 해 볼게요. 한 밑각이 $65°$라면 꼭지각은 얼마일까요.\n\n밑각이 둘이니 $65° \\times 2 = 130°$이고, 꼭지각은 $180° - 130° = 50°$예요.\n\n밑각을 물으면 나누고, 꼭지각을 물으면 곱해서 빼요. 어느 쪽이 둘인지만 놓치지 않으면 돼요.\n\n각이 아니라 길이를 물을 수도 있어요. 밑변이 $10$인 이등변삼각형에서 꼭지각의 이등분선은 밑변을 수직이등분하니, 나뉜 한 조각은 $5$예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "isosceles:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "isosceles:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "isosceles:practice",
+                "problemSetVersionId": "isosceles:practice:v1",
+                "problemVersionIds": [
+                  "isosceles:practice-1:v1",
+                  "isosceles:practice-2:v1",
+                  "isosceles:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "isosceles:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "isosceles:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "isosceles:check",
+                "problemSetVersionId": "isosceles:check:v1",
+                "problemVersionIds": [
+                  "isosceles:check-1:v1",
+                  "isosceles:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "isosceles:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "isosceles:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "이등변삼각형은 두 변의 길이가 같은 삼각형이고, 두 밑각의 크기도 같아요.\n\n이유는 꼭지각의 이등분선이 삼각형을 합동인 둘로 가르기 때문이에요.\n\n그 이등분선은 밑변을 수직이등분하기도 해요.\n\n거꾸로 두 밑각이 같으면 두 변도 같아요. 정삼각형의 한 각이 $60°$인 것도 여기서 나와요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "isosceles:review",
+        "problemSetVersionId": "isosceles:review:v1",
+        "problemVersionIds": [
+          "isosceles:homework-1:v1",
+          "isosceles:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "triangle-center",
+        "versionId": "triangle-center:v1",
+        "title": "외심과 내심: 어디에서 재도 같은 자리",
+        "summary": "세 꼭짓점까지 거리가 같은 점과 세 변까지 거리가 같은 점을 찾고, 각의 크기를 구해요.",
+        "estimatedMinutes": 13,
+        "conceptKeys": [
+          "triangle-center"
+        ],
+        "prerequisiteConceptKeys": [
+          "isosceles",
+          "angle-basics",
+          "circle-measure"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "triangle-center:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "triangle-center:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "삼각형 하나를 종이에 그려 두고, 세 꼭짓점에서 모두 같은 거리에 있는 점을 찾아볼게요.\n\n두 점에서 같은 거리에 있는 점들은 그 두 점을 잇는 선분의 수직이등분선 위에 놓여요. 그러니 세 변의 수직이등분선을 모두 그으면, 셋이 만나는 한 점이 세 꼭짓점 모두에서 같은 거리예요. 이 점이 외심이고, 그 거리를 반지름으로 삼은 원은 세 꼭짓점을 지나요. 이 원이 외접원이에요.\n\n직각삼각형이면 외심이 특별한 자리에 있어요. 바로 빗변의 중점이에요. 그러니 외접원의 반지름은 빗변의 절반이에요.\n\n외심에서 두 꼭짓점까지의 거리가 같으니 이등변삼각형이 생기고, 밑각이 같다는 성질을 쓰면 $\\angle BOC = 2\\angle A$가 나와요. 중심에서 본 각이 두 배예요.\n\n이번엔 세 변에서 모두 같은 거리에 있는 점을 찾아요. 한 각의 두 변에서 같은 거리에 있는 점들은 그 각의 이등분선 위에 놓여요. 그러니 세 각의 이등분선이 만나는 점이 내심이고, 그 거리를 반지름으로 한 원은 세 변에 닿아요. 이 원이 내접원이에요.\n\n내심에서는 $\\angle BIC = 90° + \\dfrac{1}{2}\\angle A$가 성립해요. $\\angle A$가 커질수록 아래쪽 두 각이 줄어드니, 그 절반만큼만 커지는 거예요.\n\n두 점은 대개 서로 다른 자리에 있어요. 정삼각형일 때만 겹쳐요.",
+                "definitions": [
+                  {
+                    "conceptKey": "triangle-center",
+                    "surface": "외심",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "triangle-center:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "직각삼각형의 외접원과 내접원, 그리고 두 중심이 서로 다른 자리에 있음을 보이는 그림",
+                "caption": "세 꼭짓점을 지나는 원과 세 변에 닿는 원은 중심이 달라요",
+                "items": [
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        92,
+                        66
+                      ],
+                      [
+                        92,
+                        142
+                      ],
+                      [
+                        228,
+                        142
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.6,
+                    "id": "tri"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160,
+                    "cy": 104,
+                    "rx": 77.89,
+                    "ry": 77.89,
+                    "fill": "none",
+                    "stroke": "green",
+                    "strokeWidth": 1.4,
+                    "id": "circum",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 120.1,
+                    "cy": 113.9,
+                    "rx": 28.1,
+                    "ry": 28.1,
+                    "fill": "none",
+                    "stroke": "orange",
+                    "strokeWidth": 1.4,
+                    "id": "incircle",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 64,
+                    "y1": 104,
+                    "x2": 252,
+                    "y2": 104,
+                    "stroke": "green",
+                    "strokeWidth": 1,
+                    "id": "pb1",
+                    "opacity": 0,
+                    "dash": true
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160,
+                    "y1": 62,
+                    "x2": 160,
+                    "y2": 160,
+                    "stroke": "green",
+                    "strokeWidth": 1,
+                    "id": "pb2",
+                    "opacity": 0,
+                    "dash": true
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 92,
+                    "y1": 142,
+                    "x2": 162,
+                    "y2": 72,
+                    "stroke": "orange",
+                    "strokeWidth": 1,
+                    "id": "ab1",
+                    "opacity": 0,
+                    "dash": true
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 228,
+                    "y1": 142,
+                    "x2": 111.9,
+                    "y2": 111.8,
+                    "stroke": "orange",
+                    "strokeWidth": 1,
+                    "id": "ab2",
+                    "opacity": 0,
+                    "dash": true
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160,
+                    "cy": 104,
+                    "rx": 4,
+                    "ry": 4,
+                    "fill": "ink",
+                    "id": "ctr",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 180,
+                    "y": 94,
+                    "text": "외심",
+                    "size": 10,
+                    "anchor": "start",
+                    "fill": "green",
+                    "id": "outl",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 120,
+                    "y": 136,
+                    "text": "내심",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "inl",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 14,
+                    "text": "중심을 어디에 두느냐",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 194,
+                    "text": "두 중심은 서로 다른 점이에요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "직각삼각형이에요. 세 꼭짓점을 모두 지나는 원을 그릴 수 있을까요.",
+                    "changes": [
+                      {
+                        "id": "circum",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "incircle",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "pb1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "pb2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ab1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ab2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ctr",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "outl",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "inl",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "세 변의 수직이등분선은 한 점에서 만나요. 그 점에서 세 꼭짓점까지 거리가 같으니 원이 셋을 다 지나요.",
+                    "changes": [
+                      {
+                        "id": "circum",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "pb1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "pb2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ctr",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "outl",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "incircle",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ab1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ab2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "inl",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "이번엔 세 각의 이등분선이 만나는 자리로 중심을 옮겨요. 세 변까지 거리가 같아 변에 닿는 원이 돼요.",
+                    "changes": [
+                      {
+                        "id": "ctr",
+                        "dx": -39.9,
+                        "dy": 9.9
+                      },
+                      {
+                        "id": "incircle",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ab1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ab2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "inl",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "circum",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "pb1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "pb2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "outl",
+                        "opacity": 0
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "triangle-center:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "triangle-center:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "빗변의 길이가 $10$인 직각삼각형의 외접원의 반지름을 구해 볼게요.\n\n직각삼각형의 외심은 빗변의 중점이에요. 그러니 반지름은 $10 \\div 2 = 5$예요.\n\n각도 해 볼게요. $\\angle A = 50°$인 삼각형에서 외심을 $O$라 하면 $\\angle BOC$는 얼마일까요.\n\n$\\angle BOC = 2\\angle A$이니 $2 \\times 50° = 100°$예요.\n\n같은 삼각형에서 내심을 $I$라 하면 $\\angle BIC = 90° + \\dfrac{1}{2} \\times 50° = 115°$예요.\n\n둘을 헷갈리지 않는 방법이 있어요. 외심은 곱하기 둘, 내심은 $90°$에 절반을 더하기예요. 내심 쪽은 $\\angle A$가 아무리 작아도 $90°$보다 크다는 것을 기억하면 검산이 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "triangle-center:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "triangle-center:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "triangle-center:practice",
+                "problemSetVersionId": "triangle-center:practice:v1",
+                "problemVersionIds": [
+                  "triangle-center:practice-1:v1",
+                  "triangle-center:practice-2:v1",
+                  "triangle-center:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "triangle-center:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "triangle-center:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "triangle-center:check",
+                "problemSetVersionId": "triangle-center:check:v1",
+                "problemVersionIds": [
+                  "triangle-center:check-1:v1",
+                  "triangle-center:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "triangle-center:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "triangle-center:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "외심은 세 변의 수직이등분선이 만나는 점이고, 세 꼭짓점까지 거리가 같아요.\n\n직각삼각형의 외심은 빗변의 중점이라 외접원의 반지름은 빗변의 절반이에요.\n\n내심은 세 각의 이등분선이 만나는 점이고, 세 변까지 거리가 같아요.\n\n각은 $\\angle BOC = 2\\angle A$, $\\angle BIC = 90° + \\dfrac{1}{2}\\angle A$로 구해요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "triangle-center:review",
+        "problemSetVersionId": "triangle-center:review:v1",
+        "problemVersionIds": [
+          "triangle-center:homework-1:v1",
+          "triangle-center:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "parallelogram",
+        "versionId": "parallelogram:v1",
+        "title": "평행사변형: 반 바퀴 돌려도 제자리",
+        "summary": "두 쌍의 대변이 나란하다는 것 하나에서 대변, 대각, 대각선의 성질이 줄줄이 따라와요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "parallelogram"
+        ],
+        "prerequisiteConceptKeys": [
+          "parallel-lines",
+          "isosceles",
+          "polygon-angles"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "parallelogram:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "parallelogram:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 쌍의 대변이 각각 나란한 사각형을 평행사변형이라 해요. 주어진 것은 「나란하다」 하나뿐인데, 여기서 따라 나오는 것이 꽤 많아요.\n\n대각선을 하나 그어 보세요. 사각형이 삼각형 둘로 갈라지는데, 이 둘은 합동이에요. 엇각이 같고 대각선은 함께 쓰니, 한 변과 그 양 끝 각이 같다는 조건에 들어맞거든요.\n\n합동이니 대응하는 변과 각이 같아요. 그래서 두 쌍의 대변의 길이가 같고, 두 쌍의 대각의 크기가 같아요.\n\n이웃한 두 각은 어떨까요. 나란한 두 직선을 한 직선이 가로지를 때 같은 쪽 각의 합은 $180°$예요. 그러니 이웃한 두 각을 더하면 $180°$가 돼요. 하나가 $70°$면 옆은 $110°$예요.\n\n대각선을 둘 다 그으면 또 하나가 보여요. 두 대각선은 서로 다른 것을 이등분해요. 만나는 점이 두 대각선 각각의 중점이라는 뜻이에요.\n\n이 모든 것을 한 문장으로 말할 수도 있어요. 평행사변형은 두 대각선이 만나는 점을 중심으로 반 바퀴 돌리면 처음 모양에 꼭 포개져요. 마주 보는 변은 마주 보는 변으로, 마주 보는 각은 마주 보는 각으로 옮겨 가니 서로 같을 수밖에 없어요.\n\n거꾸로도 쓸 수 있어요. 두 쌍의 대변의 길이가 같거나, 두 쌍의 대각의 크기가 같거나, 대각선이 서로 다른 것을 이등분하거나, 한 쌍의 대변이 나란하면서 길이도 같으면 평행사변형이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "parallelogram",
+                    "surface": "평행사변형",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "parallelogram:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "평행사변형을 가운데 점을 중심으로 반 바퀴 돌리면 처음 모양에 포개지는 그림",
+                "caption": "반 바퀴를 돌려도 제자리예요. 그래서 대변과 대각이 같아요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 22,
+                    "text": "가운데 점을 중심으로 돌려 보면",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        70,
+                        140
+                      ],
+                      [
+                        140,
+                        60
+                      ],
+                      [
+                        250,
+                        60
+                      ],
+                      [
+                        180,
+                        140
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.6,
+                    "id": "base"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        70,
+                        140
+                      ],
+                      [
+                        140,
+                        60
+                      ],
+                      [
+                        250,
+                        60
+                      ],
+                      [
+                        180,
+                        140
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "none",
+                    "stroke": "orange",
+                    "strokeWidth": 2,
+                    "id": "ghost",
+                    "opacity": 0,
+                    "dash": true
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 70,
+                    "y1": 140,
+                    "x2": 250,
+                    "y2": 60,
+                    "stroke": "green",
+                    "strokeWidth": 1.2,
+                    "id": "d1",
+                    "opacity": 0,
+                    "dash": true
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 140,
+                    "y1": 60,
+                    "x2": 180,
+                    "y2": 140,
+                    "stroke": "green",
+                    "strokeWidth": 1.2,
+                    "id": "d2",
+                    "opacity": 0,
+                    "dash": true
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160,
+                    "cy": 100,
+                    "rx": 3.5,
+                    "ry": 3.5,
+                    "fill": "ink",
+                    "id": "mid",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 178,
+                    "text": "대변끼리 같고 대각끼리 같아요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "두 쌍의 대변이 나란한 사각형이에요. 나란하다는 것만 주었는데 무엇이 더 따라올까요.",
+                    "changes": [
+                      {
+                        "id": "ghost",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "d1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "d2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "mid",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "가운데 점을 중심으로 사분의 일 바퀴 돌려 봐요. 아직 겹치지 않아요.",
+                    "changes": [
+                      {
+                        "id": "mid",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "d1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "d2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ghost",
+                        "rotate": 90,
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "반 바퀴를 돌면 처음 모양에 꼭 포개져요. 마주 보는 변과 각이 서로 옮겨 간 거예요.",
+                    "changes": [
+                      {
+                        "id": "d1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "d2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "mid",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ghost",
+                        "rotate": 180,
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "parallelogram:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "parallelogram:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "평행사변형 $ABCD$에서 $\\angle A = 70°$일 때 나머지 세 각을 구해 볼게요.\n\n$\\angle C$는 $\\angle A$와 마주 보는 각이니 $70°$예요.\n\n$\\angle B$는 $\\angle A$와 이웃하니 $180° - 70° = 110°$이고, $\\angle D$도 마주 보는 각이라 $110°$예요.\n\n확인해 볼게요. $70 + 110 + 70 + 110 = 360$이니 사각형의 네 각의 합과 맞아요.\n\n길이도 해 볼게요. $\\overline{AB} = 7$이면 마주 보는 $\\overline{CD}$도 $7$이에요.\n\n대각선 $\\overline{AC}$의 길이가 $12$라면, 두 대각선이 만나는 점은 $\\overline{AC}$를 이등분하니 한 조각이 $6$이에요. 다른 대각선의 길이는 알 수 없어요. 평행사변형에서 두 대각선의 길이는 같지 않아도 되거든요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "parallelogram:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "parallelogram:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "parallelogram:practice",
+                "problemSetVersionId": "parallelogram:practice:v1",
+                "problemVersionIds": [
+                  "parallelogram:practice-1:v1",
+                  "parallelogram:practice-2:v1",
+                  "parallelogram:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "parallelogram:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "parallelogram:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "parallelogram:check",
+                "problemSetVersionId": "parallelogram:check:v1",
+                "problemVersionIds": [
+                  "parallelogram:check-1:v1",
+                  "parallelogram:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "parallelogram:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "parallelogram:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "평행사변형은 두 쌍의 대변이 나란한 사각형이에요.\n\n대변끼리 길이가 같고, 대각끼리 크기가 같고, 이웃한 두 각의 합은 $180°$예요.\n\n두 대각선은 서로 다른 것을 이등분하지만, 길이는 같지 않아도 돼요.\n\n가운데 점을 중심으로 반 바퀴 돌리면 제자리라는 한 문장이 이 모두를 담고 있어요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "parallelogram:review",
+        "problemSetVersionId": "parallelogram:review:v1",
+        "problemVersionIds": [
+          "parallelogram:homework-1:v1",
+          "parallelogram:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "special-quad",
+        "versionId": "special-quad:v1",
+        "title": "여러 가지 사각형: 조건을 더할수록 좁아진다",
+        "summary": "사다리꼴에서 정사각형까지, 조건을 하나씩 더하며 사각형들이 어떻게 이어지는지 봐요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "special-quad"
+        ],
+        "prerequisiteConceptKeys": [
+          "parallelogram"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "special-quad:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "special-quad:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "사각형들은 따로 떨어진 이름이 아니라 조건을 더해 가며 좁아지는 한 줄이에요.\n\n한 쌍의 대변이 나란하면 사다리꼴이에요. 여기에 나머지 한 쌍도 나란하다는 조건을 더하면 평행사변형이고요.\n\n평행사변형에 각의 조건을 더해 볼게요. 한 각이 직각이면 나머지도 모두 직각이 돼요. 이웃한 각의 합이 $180°$이고 대각끼리 같으니까요. 네 각이 모두 직각인 사각형이 직사각형이에요.\n\n직사각형에서는 두 대각선의 길이가 같아요. 평행사변형에서는 그렇지 않았는데, 각이 직각이 되면서 생긴 성질이에요.\n\n이번엔 변의 조건을 더해요. 이웃한 두 변의 길이가 같으면 네 변이 모두 같아지고, 이 사각형이 마름모예요.\n\n마름모에서는 두 대각선이 서로 수직이에요. 네 변이 같으니 대각선으로 갈라진 삼각형들이 모두 이등변삼각형이 되고, 꼭지각의 이등분선이 밑변을 수직이등분한다는 성질이 그대로 쓰이거든요. 그래서 마름모의 넓이는 두 대각선의 길이를 곱해 반으로 나누면 돼요.\n\n두 조건을 모두 더하면 정사각형이에요. 네 각이 직각이면서 네 변의 길이도 같으니, 정사각형은 직사각형이기도 하고 마름모이기도 해요. 두 대각선의 길이가 같고, 서로 수직이고, 서로 이등분해요.\n\n그러니 「정사각형은 직사각형인가요」라는 물음의 답은 그렇다예요. 조건을 더 가진 것일 뿐이니까요.",
+                "definitions": [
+                  {
+                    "conceptKey": "special-quad",
+                    "surface": "마름모",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "special-quad:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "직사각형과 마름모를 나타낸 두 원이 겹치는 자리로 정사각형 카드가 들어가는 그림",
+                "caption": "정사각형은 직사각형이면서 마름모예요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 20,
+                    "text": "평행사변형에 조건을 더하면",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 124,
+                    "cy": 100,
+                    "rx": 62,
+                    "ry": 56,
+                    "fill": "none",
+                    "stroke": "green",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 196,
+                    "cy": 100,
+                    "rx": 62,
+                    "ry": 56,
+                    "fill": "none",
+                    "stroke": "orange",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "text",
+                    "x": 92,
+                    "y": 62,
+                    "text": "직사각형",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "green"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 228,
+                    "y": 62,
+                    "text": "마름모",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 92,
+                    "y": 78,
+                    "text": "네 각이 같다",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 228,
+                    "y": 78,
+                    "text": "네 변이 같다",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 136,
+                    "y": 170,
+                    "width": 48,
+                    "height": 24,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 4,
+                    "id": "card",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 186,
+                    "text": "정사각형",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "cardl",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "평행사변형에 각의 조건을 더하면 직사각형, 변의 조건을 더하면 마름모예요.",
+                    "changes": [
+                      {
+                        "id": "card",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "cardl",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "그럼 정사각형은 어디에 놓아야 할까요.",
+                    "changes": [
+                      {
+                        "id": "card",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cardl",
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "두 원이 겹치는 자리예요. 정사각형은 직사각형이면서 마름모니까요.",
+                    "changes": [
+                      {
+                        "id": "card",
+                        "dy": -82,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cardl",
+                        "dy": -82,
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "special-quad:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "special-quad:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 대각선의 길이가 $6$과 $8$인 마름모의 넓이를 구해 볼게요.\n\n마름모의 두 대각선은 서로 수직이고 서로를 이등분해요. 그러니 마름모는 가로 $8$, 세로 $6$인 직사각형 안에 꼭 들어가고, 그 직사각형의 절반을 차지해요.\n\n넓이는 $6 \\times 8 \\div 2 = 24$예요.\n\n성질을 견주는 문제도 자주 나와요. 직사각형은 두 대각선의 길이가 같지만 수직은 아니에요. 마름모는 두 대각선이 수직이지만 길이는 다를 수 있고요.\n\n둘 다 가진 것이 정사각형이에요. 길이도 같고 수직이기도 해요.\n\n「대각선의 길이가 같다」를 물으면 각의 조건을, 「대각선이 수직이다」를 물으면 변의 조건을 떠올리면 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "special-quad:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "special-quad:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "special-quad:practice",
+                "problemSetVersionId": "special-quad:practice:v1",
+                "problemVersionIds": [
+                  "special-quad:practice-1:v1",
+                  "special-quad:practice-2:v1",
+                  "special-quad:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "special-quad:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "special-quad:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "special-quad:check",
+                "problemSetVersionId": "special-quad:check:v1",
+                "problemVersionIds": [
+                  "special-quad:check-1:v1",
+                  "special-quad:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "special-quad:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "special-quad:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "사다리꼴에 조건을 더하면 평행사변형, 각의 조건을 더하면 직사각형, 변의 조건을 더하면 마름모예요.\n\n직사각형은 두 대각선의 길이가 같고, 마름모는 두 대각선이 서로 수직이에요.\n\n마름모의 넓이는 두 대각선을 곱해 반으로 나눠요.\n\n두 조건을 모두 가진 것이 정사각형이라, 정사각형은 직사각형이면서 마름모예요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "special-quad:review",
+        "problemSetVersionId": "special-quad:review:v1",
+        "problemVersionIds": [
+          "special-quad:homework-1:v1",
+          "special-quad:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "isosceles:practice",
+      "courseKey": "triangle-quad",
+      "name": "이등변삼각형 연습",
+      "versionId": "isosceles:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "isosceles:practice-1:v1",
+          "conceptKeys": [
+            "isosceles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "isosceles:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "꼭지각이 $40°$인 이등변삼각형의 한 밑각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 70
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "isosceles:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 밑각의 합이 $140°$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "isosceles:practice-2:v1",
+          "conceptKeys": [
+            "isosceles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "isosceles:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 밑각이 $65°$인 이등변삼각형의 꼭지각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 50
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "isosceles:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑각이 둘이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "isosceles:practice-3:v1",
+          "conceptKeys": [
+            "isosceles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "isosceles:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이등변삼각형에서 꼭지각의 이등분선이 밑변과 이루는 각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 90
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "isosceles:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "수직이등분해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "isosceles:check",
+      "courseKey": "triangle-quad",
+      "name": "이등변삼각형 확인",
+      "versionId": "isosceles:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "isosceles:check-1:v1",
+          "conceptKeys": [
+            "isosceles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "isosceles:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑변의 길이가 $10$인 이등변삼각형에서 꼭지각의 이등분선이 밑변을 나눈 한 조각의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "isosceles:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이등분선이 밑변을 반으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "isosceles:check-2:v1",
+          "conceptKeys": [
+            "isosceles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "isosceles:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변의 길이가 모두 같은 삼각형의 한 각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "isosceles:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 각이 모두 같아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "isosceles:review",
+      "courseKey": "triangle-quad",
+      "name": "이등변삼각형 복습",
+      "versionId": "isosceles:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "isosceles:homework-1:v1",
+          "conceptKeys": [
+            "isosceles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "isosceles:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "꼭지각이 $100°$인 이등변삼각형의 한 밑각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 40
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "isosceles:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$80°$를 둘로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "isosceles:homework-2:v1",
+          "conceptKeys": [
+            "isosceles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "isosceles:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 밑각이 각각 $50°$인 삼각형에 대한 설명으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 변의 길이가 같다"
+              },
+              {
+                "id": "b",
+                "text": "세 변의 길이가 같다"
+              },
+              {
+                "id": "c",
+                "text": "직각삼각형이다"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 변의 길이가 같다"
+              },
+              {
+                "id": "b",
+                "text": "세 변의 길이가 같다"
+              },
+              {
+                "id": "c",
+                "text": "직각삼각형이다"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "isosceles:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 밑각이 같으면 두 변도 같아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "triangle-center:practice",
+      "courseKey": "triangle-quad",
+      "name": "외심과 내심 연습",
+      "versionId": "triangle-center:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "triangle-center:practice-1:v1",
+          "conceptKeys": [
+            "triangle-center"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-center:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빗변의 길이가 $10$인 직각삼각형의 외접원의 반지름을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-center:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "외심은 빗변의 중점이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-center:practice-2:v1",
+          "conceptKeys": [
+            "triangle-center"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-center:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\angle A = 50°$인 삼각형의 외심을 $O$라 할 때 $\\angle BOC$는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 100
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-center:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 배예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-center:practice-3:v1",
+          "conceptKeys": [
+            "triangle-center"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-center:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\angle A = 60°$인 삼각형의 내심을 $I$라 할 때 $\\angle BIC$는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 120
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-center:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$90°$에 절반을 더해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "triangle-center:check",
+      "courseKey": "triangle-quad",
+      "name": "외심과 내심 확인",
+      "versionId": "triangle-center:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "triangle-center:check-1:v1",
+          "conceptKeys": [
+            "triangle-center"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-center:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\angle A = 80°$인 삼각형의 내심을 $I$라 할 때 $\\angle BIC$는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 130
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-center:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$90° + 40°$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-center:check-2:v1",
+          "conceptKeys": [
+            "triangle-center"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-center:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 내심은 무엇이 만나는 점인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "세 각의 이등분선"
+              },
+              {
+                "id": "b",
+                "text": "세 변의 수직이등분선"
+              },
+              {
+                "id": "c",
+                "text": "세 중선"
+              },
+              {
+                "id": "d",
+                "text": "세 높이"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "세 각의 이등분선"
+              },
+              {
+                "id": "b",
+                "text": "세 변의 수직이등분선"
+              },
+              {
+                "id": "c",
+                "text": "세 중선"
+              },
+              {
+                "id": "d",
+                "text": "세 높이"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-center:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변까지 거리가 같은 점이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "triangle-center:review",
+      "courseKey": "triangle-quad",
+      "name": "외심과 내심 복습",
+      "versionId": "triangle-center:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "triangle-center:homework-1:v1",
+          "conceptKeys": [
+            "triangle-center"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-center:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "외접원의 반지름이 $7$인 직각삼각형의 빗변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 14
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-center:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름의 두 배예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-center:homework-2:v1",
+          "conceptKeys": [
+            "triangle-center"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-center:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\angle A = 30°$인 삼각형의 외심을 $O$라 할 때 $\\angle BOC$는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-center:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 배예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "parallelogram:practice",
+      "courseKey": "triangle-quad",
+      "name": "평행사변형 연습",
+      "versionId": "parallelogram:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "parallelogram:practice-1:v1",
+          "conceptKeys": [
+            "parallelogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallelogram:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행사변형의 한 각이 $70°$일 때 이웃한 각의 크기는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 110
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallelogram:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합이 $180°$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "parallelogram:practice-2:v1",
+          "conceptKeys": [
+            "parallelogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallelogram:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행사변형의 한 각이 $70°$일 때 마주 보는 각의 크기는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 70
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallelogram:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "대각끼리 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "parallelogram:practice-3:v1",
+          "conceptKeys": [
+            "parallelogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallelogram:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행사변형에서 한 대각선의 길이가 $12$일 때 두 대각선이 만나는 점이 나눈 한 조각의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallelogram:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "서로 이등분해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "parallelogram:check",
+      "courseKey": "triangle-quad",
+      "name": "평행사변형 확인",
+      "versionId": "parallelogram:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "parallelogram:check-1:v1",
+          "conceptKeys": [
+            "parallelogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallelogram:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행사변형 $ABCD$에서 $\\overline{AB} = 7$일 때 $\\overline{CD}$의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallelogram:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "마주 보는 변이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "parallelogram:check-2:v1",
+          "conceptKeys": [
+            "parallelogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallelogram:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 평행사변형이 되는 조건이 아닌 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "한 쌍의 대변만 나란하다"
+              },
+              {
+                "id": "b",
+                "text": "두 쌍의 대변이 각각 나란하다"
+              },
+              {
+                "id": "c",
+                "text": "두 쌍의 대변의 길이가 각각 같다"
+              },
+              {
+                "id": "d",
+                "text": "대각선이 서로 다른 것을 이등분한다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "한 쌍의 대변만 나란하다"
+              },
+              {
+                "id": "b",
+                "text": "두 쌍의 대변이 각각 나란하다"
+              },
+              {
+                "id": "c",
+                "text": "두 쌍의 대변의 길이가 각각 같다"
+              },
+              {
+                "id": "d",
+                "text": "대각선이 서로 다른 것을 이등분한다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallelogram:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 쌍만 나란한 것은 사다리꼴이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "parallelogram:review",
+      "courseKey": "triangle-quad",
+      "name": "평행사변형 복습",
+      "versionId": "parallelogram:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "parallelogram:homework-1:v1",
+          "conceptKeys": [
+            "parallelogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallelogram:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행사변형의 네 각의 크기의 합은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 360
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallelogram:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "사각형이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "parallelogram:homework-2:v1",
+          "conceptKeys": [
+            "parallelogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallelogram:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행사변형의 한 각이 $115°$일 때 이웃한 각의 크기는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 65
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallelogram:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$180°$에서 빼요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "special-quad:practice",
+      "courseKey": "triangle-quad",
+      "name": "여러 가지 사각형 연습",
+      "versionId": "special-quad:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "special-quad:practice-1:v1",
+          "conceptKeys": [
+            "special-quad"
+          ],
+          "promptContent": [
+            {
+              "blockId": "special-quad:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "마름모의 두 대각선이 이루는 각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 90
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "special-quad:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "서로 수직이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "special-quad:practice-2:v1",
+          "conceptKeys": [
+            "special-quad"
+          ],
+          "promptContent": [
+            {
+              "blockId": "special-quad:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 변의 길이가 $5$인 마름모의 둘레를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "special-quad:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "네 변이 모두 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "special-quad:practice-3:v1",
+          "conceptKeys": [
+            "special-quad"
+          ],
+          "promptContent": [
+            {
+              "blockId": "special-quad:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직사각형의 한 대각선의 길이가 $8$일 때 다른 대각선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "special-quad:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "길이가 같아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "special-quad:check",
+      "courseKey": "triangle-quad",
+      "name": "여러 가지 사각형 확인",
+      "versionId": "special-quad:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "special-quad:check-1:v1",
+          "conceptKeys": [
+            "special-quad"
+          ],
+          "promptContent": [
+            {
+              "blockId": "special-quad:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직사각형이면서 마름모인 사각형은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "정사각형"
+              },
+              {
+                "id": "b",
+                "text": "사다리꼴"
+              },
+              {
+                "id": "c",
+                "text": "평행사변형"
+              },
+              {
+                "id": "d",
+                "text": "그런 사각형은 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "정사각형"
+              },
+              {
+                "id": "b",
+                "text": "사다리꼴"
+              },
+              {
+                "id": "c",
+                "text": "평행사변형"
+              },
+              {
+                "id": "d",
+                "text": "그런 사각형은 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "special-quad:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 조건을 모두 가졌어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "special-quad:check-2:v1",
+          "conceptKeys": [
+            "special-quad"
+          ],
+          "promptContent": [
+            {
+              "blockId": "special-quad:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 대각선의 길이가 $6$과 $8$인 마름모의 넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 24
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "special-quad:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "곱해서 반으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "special-quad:review",
+      "courseKey": "triangle-quad",
+      "name": "여러 가지 사각형 복습",
+      "versionId": "special-quad:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "special-quad:homework-1:v1",
+          "conceptKeys": [
+            "special-quad"
+          ],
+          "promptContent": [
+            {
+              "blockId": "special-quad:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 대각선의 길이가 $10$과 $12$인 마름모의 넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "special-quad:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "곱해서 반으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "special-quad:homework-2:v1",
+          "conceptKeys": [
+            "special-quad"
+          ],
+          "promptContent": [
+            {
+              "blockId": "special-quad:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "마름모의 성질로 옳지 않은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 대각선의 길이가 서로 같다"
+              },
+              {
+                "id": "b",
+                "text": "네 변의 길이가 모두 같다"
+              },
+              {
+                "id": "c",
+                "text": "두 대각선이 서로 수직이다"
+              },
+              {
+                "id": "d",
+                "text": "두 대각선이 서로 이등분한다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 대각선의 길이가 서로 같다"
+              },
+              {
+                "id": "b",
+                "text": "네 변의 길이가 모두 같다"
+              },
+              {
+                "id": "c",
+                "text": "두 대각선이 서로 수직이다"
+              },
+              {
+                "id": "d",
+                "text": "두 대각선이 서로 이등분한다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "special-quad:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "길이가 같은 것은 직사각형이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "triangle-quad:drill",
+      "courseKey": "triangle-quad",
+      "name": "삼각형과 사각형 모아 풀기",
+      "versionId": "triangle-quad:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "triangle-quad:drill-1:v1",
+          "conceptKeys": [
+            "isosceles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "꼭지각이 $80°$인 이등변삼각형의 한 밑각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 50
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$100°$를 둘로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-2:v1",
+          "conceptKeys": [
+            "isosceles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 밑각이 $72°$인 이등변삼각형의 꼭지각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 36
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑각이 둘이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-3:v1",
+          "conceptKeys": [
+            "isosceles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "꼭지각이 $20°$인 이등변삼각형의 한 밑각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 80
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$160°$를 둘로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-4:v1",
+          "conceptKeys": [
+            "isosceles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑변의 길이가 $14$인 이등변삼각형에서 꼭지각의 이등분선이 밑변을 나눈 한 조각의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "수직이등분해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-5:v1",
+          "conceptKeys": [
+            "isosceles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이등변삼각형에서 꼭지각의 이등분선에 대한 설명으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "밑변을 수직이등분한다"
+              },
+              {
+                "id": "b",
+                "text": "밑변과 나란하다"
+              },
+              {
+                "id": "c",
+                "text": "밑변을 삼등분한다"
+              },
+              {
+                "id": "d",
+                "text": "밑변과 만나지 않는다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "밑변을 수직이등분한다"
+              },
+              {
+                "id": "b",
+                "text": "밑변과 나란하다"
+              },
+              {
+                "id": "c",
+                "text": "밑변을 삼등분한다"
+              },
+              {
+                "id": "d",
+                "text": "밑변과 만나지 않는다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "네 가지 일을 한꺼번에 해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-6:v1",
+          "conceptKeys": [
+            "triangle-center"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빗변의 길이가 $16$인 직각삼각형의 외접원의 반지름을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빗변의 절반이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-7:v1",
+          "conceptKeys": [
+            "triangle-center"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\angle A = 45°$인 삼각형의 외심을 $O$라 할 때 $\\angle BOC$는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 90
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 배예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-8:v1",
+          "conceptKeys": [
+            "triangle-center"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\angle A = 40°$인 삼각형의 내심을 $I$라 할 때 $\\angle BIC$는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 110
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$90° + 20°$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-9:v1",
+          "conceptKeys": [
+            "triangle-center"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "외접원의 반지름이 $9$인 직각삼각형의 빗변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 18
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름의 두 배예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-10:v1",
+          "conceptKeys": [
+            "triangle-center"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 외심은 무엇이 만나는 점인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "세 변의 수직이등분선"
+              },
+              {
+                "id": "b",
+                "text": "세 각의 이등분선"
+              },
+              {
+                "id": "c",
+                "text": "세 중선"
+              },
+              {
+                "id": "d",
+                "text": "세 높이"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "세 변의 수직이등분선"
+              },
+              {
+                "id": "b",
+                "text": "세 각의 이등분선"
+              },
+              {
+                "id": "c",
+                "text": "세 중선"
+              },
+              {
+                "id": "d",
+                "text": "세 높이"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 꼭짓점까지 거리가 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-11:v1",
+          "conceptKeys": [
+            "parallelogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행사변형의 한 각이 $50°$일 때 이웃한 각의 크기는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 130
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합이 $180°$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-12:v1",
+          "conceptKeys": [
+            "parallelogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행사변형의 한 각이 $50°$일 때 마주 보는 각의 크기는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 50
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "대각끼리 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-13:v1",
+          "conceptKeys": [
+            "parallelogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행사변형에서 한 대각선의 길이가 $18$일 때 두 대각선이 만나는 점이 나눈 한 조각의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "서로 이등분해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-14:v1",
+          "conceptKeys": [
+            "parallelogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행사변형 $ABCD$에서 $\\overline{AD} = 9$일 때 $\\overline{BC}$의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "마주 보는 변이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-15:v1",
+          "conceptKeys": [
+            "parallelogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행사변형의 성질이 아닌 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 대각선의 길이가 서로 같다"
+              },
+              {
+                "id": "b",
+                "text": "두 쌍의 대변의 길이가 같다"
+              },
+              {
+                "id": "c",
+                "text": "두 쌍의 대각의 크기가 같다"
+              },
+              {
+                "id": "d",
+                "text": "두 대각선이 서로 이등분한다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 대각선의 길이가 서로 같다"
+              },
+              {
+                "id": "b",
+                "text": "두 쌍의 대변의 길이가 같다"
+              },
+              {
+                "id": "c",
+                "text": "두 쌍의 대각의 크기가 같다"
+              },
+              {
+                "id": "d",
+                "text": "두 대각선이 서로 이등분한다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "길이가 같은 것은 직사각형이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-16:v1",
+          "conceptKeys": [
+            "special-quad"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 변의 길이가 $7$인 마름모의 둘레를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 28
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "네 변이 모두 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-17:v1",
+          "conceptKeys": [
+            "special-quad"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 대각선의 길이가 $5$와 $8$인 마름모의 넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "곱해서 반으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-18:v1",
+          "conceptKeys": [
+            "special-quad"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정사각형의 두 대각선이 이루는 각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 90
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정사각형은 마름모이기도 해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-19:v1",
+          "conceptKeys": [
+            "special-quad"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직사각형의 한 대각선의 길이가 $13$일 때 다른 대각선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 13
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "길이가 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "triangle-quad:drill-20:v1",
+          "conceptKeys": [
+            "special-quad"
+          ],
+          "promptContent": [
+            {
+              "blockId": "triangle-quad:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "네 변의 길이가 모두 같은 평행사변형은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "마름모"
+              },
+              {
+                "id": "b",
+                "text": "직사각형"
+              },
+              {
+                "id": "c",
+                "text": "사다리꼴"
+              },
+              {
+                "id": "d",
+                "text": "그런 사각형은 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "마름모"
+              },
+              {
+                "id": "b",
+                "text": "직사각형"
+              },
+              {
+                "id": "c",
+                "text": "사다리꼴"
+              },
+              {
+                "id": "d",
+                "text": "그런 사각형은 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "triangle-quad:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "변의 조건을 더한 것이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}
