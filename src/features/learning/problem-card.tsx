@@ -5,6 +5,7 @@ import { leafGlossary } from '@/shared/definition-exploration';
 import type { AttemptView, ContentBlock, PublicProblem } from '@/shared/api';
 import { ContentBlocks, RichText, unsupportedRequiredBlocks, type GlossaryContext } from './content-blocks';
 import { Icon } from './icons';
+import { MathAnswerField } from './math-answer-field';
 
 const messageOf = (error: unknown) => (error instanceof Error ? error.message : '문제가 생겼어요. 다시 시도해 주세요.');
 
@@ -73,7 +74,10 @@ export function ProblemCard({ problem, attempt, actions, busy, disabled, ready =
               <span><RichText text={option.text} /></span>
             </label>)}
           </fieldset>
-        : <label>나의 답<input aria-label="나의 답" type="text" inputMode="text" maxLength={100} placeholder={problem.responseSpec.kind === 'rational' ? '예: 3/4 또는 0.75' : '정수를 입력해 주세요'} value={answer} onChange={(event) => { setAnswer(event.target.value); onDraftChange?.(problem.problemVersionId, event.target.value.trim() !== (attempt?.answer ?? '')); }} disabled={busy || disabled || unsupported || !ready} autoComplete="off" spellCheck={false} /></label>}
+        : <MathAnswerField label="나의 답" value={answer} disabled={busy || disabled || unsupported || !ready}
+            integerOnly={problem.responseSpec.kind === 'integer'}
+            placeholder={problem.responseSpec.kind === 'rational' ? '예: 3/4 또는 0.75' : '정수를 입력해 주세요'}
+            onChange={(next) => { setAnswer(next); onDraftChange?.(problem.problemVersionId, next.trim() !== (attempt?.answer ?? '')); }} />}
       <button className="button primary" disabled={busy || disabled || unsupported || !ready || !answer.trim()} type="submit">{busy ? '저장 중…' : submitLabel}</button>
     </form>
     {problem.responseSpec.requiredForm && <p className="input-help">답안 형식: {problem.responseSpec.requiredForm === 'simplest' || problem.responseSpec.requiredForm === 'simplest_fraction' || problem.responseSpec.requiredForm === 'reduced_fraction' ? '기약분수' : problem.responseSpec.requiredForm}</p>}

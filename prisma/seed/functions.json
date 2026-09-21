@@ -418,7 +418,7 @@
     {
       "public": {
         "lessonKey": "linear-function",
-        "versionId": "linear-function:v1",
+        "versionId": "linear-function:v2",
         "title": "일차함수와 그래프: 점을 찍으면 직선이 된다",
         "summary": "일차식으로 나타나는 함수의 점을 찍어 보고, 그것이 언제나 직선이 되는 것을 확인해요.",
         "estimatedMinutes": 10,
@@ -434,12 +434,12 @@
       },
       "sections": [
         {
-          "sectionId": "linear-function:explanation:v1",
+          "sectionId": "linear-function:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "linear-function:explanation:text:v1",
+              "blockId": "linear-function:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -455,7 +455,7 @@
               }
             },
             {
-              "blockId": "linear-function:explanation:drawing:v1",
+              "blockId": "linear-function:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -753,12 +753,12 @@
           ]
         },
         {
-          "sectionId": "linear-function:example:v1",
+          "sectionId": "linear-function:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "linear-function:example:text:v1",
+              "blockId": "linear-function:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -776,12 +776,12 @@
           ]
         },
         {
-          "sectionId": "linear-function:practice:v1",
+          "sectionId": "linear-function:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "linear-function:practice:problems:v1",
+              "blockId": "linear-function:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -798,12 +798,12 @@
           ]
         },
         {
-          "sectionId": "linear-function:check:v1",
+          "sectionId": "linear-function:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "linear-function:check:problems:v1",
+              "blockId": "linear-function:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -819,12 +819,12 @@
           ]
         },
         {
-          "sectionId": "linear-function:summary:v1",
+          "sectionId": "linear-function:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "linear-function:summary:text:v1",
+              "blockId": "linear-function:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -854,7 +854,7 @@
     {
       "public": {
         "lessonKey": "slope-intercept",
-        "versionId": "slope-intercept:v1",
+        "versionId": "slope-intercept:v2",
         "title": "기울기와 절편: 직선을 두 수로 말하기",
         "summary": "직선이 얼마나 가파른지와 축을 어디서 지나는지를 수로 읽고, 그 둘로 직선을 그려요.",
         "estimatedMinutes": 10,
@@ -871,12 +871,12 @@
       },
       "sections": [
         {
-          "sectionId": "slope-intercept:explanation:v1",
+          "sectionId": "slope-intercept:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "slope-intercept:explanation:text:v1",
+              "blockId": "slope-intercept:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -902,7 +902,7 @@
               }
             },
             {
-              "blockId": "slope-intercept:explanation:drawing:v1",
+              "blockId": "slope-intercept:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1223,12 +1223,12 @@
           ]
         },
         {
-          "sectionId": "slope-intercept:example:v1",
+          "sectionId": "slope-intercept:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "slope-intercept:example:text:v1",
+              "blockId": "slope-intercept:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1246,12 +1246,12 @@
           ]
         },
         {
-          "sectionId": "slope-intercept:practice:v1",
+          "sectionId": "slope-intercept:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "slope-intercept:practice:problems:v1",
+              "blockId": "slope-intercept:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1268,12 +1268,12 @@
           ]
         },
         {
-          "sectionId": "slope-intercept:check:v1",
+          "sectionId": "slope-intercept:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "slope-intercept:check:problems:v1",
+              "blockId": "slope-intercept:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1289,12 +1289,12 @@
           ]
         },
         {
-          "sectionId": "slope-intercept:summary:v1",
+          "sectionId": "slope-intercept:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "slope-intercept:summary:text:v1",
+              "blockId": "slope-intercept:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,

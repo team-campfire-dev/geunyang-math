@@ -759,7 +759,7 @@
     {
       "public": {
         "lessonKey": "linear-expression",
-        "versionId": "linear-expression:v1",
+        "versionId": "linear-expression:v2",
         "title": "일차식의 계산: 같은 것끼리 모으기",
         "summary": "문자 부분이 같은 항끼리 계수를 더해 식을 줄이고, 괄호를 먼저 푼 뒤에 모으는 순서를 익혀요.",
         "estimatedMinutes": 10,
@@ -776,12 +776,12 @@
       },
       "sections": [
         {
-          "sectionId": "linear-expression:explanation:v1",
+          "sectionId": "linear-expression:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "linear-expression:explanation:text:v1",
+              "blockId": "linear-expression:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -807,7 +807,7 @@
               }
             },
             {
-              "blockId": "linear-expression:explanation:drawing:v1",
+              "blockId": "linear-expression:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1115,12 +1115,12 @@
           ]
         },
         {
-          "sectionId": "linear-expression:example:v1",
+          "sectionId": "linear-expression:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "linear-expression:example:text:v1",
+              "blockId": "linear-expression:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1143,12 +1143,12 @@
           ]
         },
         {
-          "sectionId": "linear-expression:practice:v1",
+          "sectionId": "linear-expression:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "linear-expression:practice:problems:v1",
+              "blockId": "linear-expression:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1165,12 +1165,12 @@
           ]
         },
         {
-          "sectionId": "linear-expression:check:v1",
+          "sectionId": "linear-expression:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "linear-expression:check:problems:v1",
+              "blockId": "linear-expression:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1186,12 +1186,12 @@
           ]
         },
         {
-          "sectionId": "linear-expression:summary:v1",
+          "sectionId": "linear-expression:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "linear-expression:summary:text:v1",
+              "blockId": "linear-expression:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,

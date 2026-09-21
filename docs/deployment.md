@@ -284,6 +284,26 @@ DB 콘텐츠 migration `20260914030000_database_content`는 Skill·DiagnosticVer
 
 #71의 main 실행은 `cancelled`로 남아 있다 — 뒤이은 #72의 push가 같은 브랜치의 실행을 대신했기 때문이고 실패가 아니다. #71의 내용은 #72의 실행에 포함되어 검증됐다.
 
+### 2026-09-21 발행된 판본을 고쳐서 배포가 멈춤 (#85)
+
+**[#85](https://github.com/team-campfire-dev/geunyang-math/pull/85)의 배포가 「Apply migrations and verify database content」에서 실패하고 되돌아갔다.** 운영은 `632b3dd`(#84)에 남았고, DB migration은 없었으므로 되돌릴 것도 없었다.
+
+원인은 하나다 — **이미 발행된 수업 판본 여섯 개를 그 자리에서 고쳤다.** 모바일에서 깨진 장면을 손보면서 `linear-expression:v1`·`linear-function:v1`·`slope-intercept:v1`·`exponent-law:v1`·`monomial-arithmetic:v1`·`polynomial-arithmetic:v1`의 내용을 바꾸고 판본 ID는 그대로 뒀다. 발행된 판본은 불변이므로 `db:seed`가 거부한다:
+
+```
+Published lesson is immutable: linear-expression:v1. Use a new version ID.
+```
+
+**빈 DB에서는 통과한다.** 씨앗은 이름 순으로 적용되고, 거부는 그 판본을 이미 들고 있는 DB에서만 일어난다. 그래서 `decimals`와 `equations`까지 들어간 뒤 `expressions`에서 멈췄고, 운영 카탈로그에 「모아 풀기」 문제집이 둘만 남은 반쪽 상태가 됐다(문제집 92개, `decimals:drill`·`equations:drill`). 나머지는 다음 배포가 채운다.
+
+검증이 놓친 자리는 분명하다 — **빈 DB에 설치하는 것만 확인하고, 이미 설치된 DB를 올리는 길은 확인하지 않았다.** 그 길이 배포가 실제로 가는 길이다.
+
+고침과 재발 방지:
+
+- 고친 장면을 **새 판본**(`:v2`)으로 낸다. 옛 판본은 씨앗에서 빠지지만 운영 DB에는 그대로 남는다 — `decimal-fraction`이 이미 그렇게 v2가 됐다.
+- `prisma/published-versions.json`이 **발행한 모든 판본의 지문**을 들고, `tests/published-immutability.test.ts`가 매번 확인한다. 발행된 판본을 고치면 배포가 아니라 저장소에서 걸린다. 새 판본은 `npm run content:lock`이 적고, **이미 적힌 판본의 지문은 덮어쓰지 않는다** — 고쳤다면 답은 새 판본 ID뿐이다.
+- 사라진 v1 여섯 개의 지문도 릴리스된 내용에서 계산해 함께 적어 뒀다. 운영에는 남아 있는 판본이기 때문이다.
+
 ## 운영 후속 작업
 
 - 백업 생성·복원 훈련과 복구 소요 시간 확인. 계정 데이터를 전체 삭제한 뒤라 되돌릴 수단이 없는 상태가 실제로 확인됐다.

@@ -83,7 +83,7 @@ describe('the placement screen', () => {
   it('sends the answer for the question it is showing, whichever one that is', () => {
     const dispatch = vi.fn(async () => ({}) as never);
     panel({ dispatch, diagnostic: run({ currentProblem: { ...problem, problemVersionId: 'q7' } }) });
-    fireEvent.change(screen.getByLabelText('진단 답안'), { target: { value: '3/4' } });
+    fireEvent.change(screen.getByLabelText('나의 답'), { target: { value: '3/4' } });
     fireEvent.click(screen.getByRole('button', { name: '저장하고 다음으로' }));
     expect(dispatch).toHaveBeenCalledWith({ action: 'diagnostic.answer', diagnosticId: 'run', problemVersionId: 'q7', answer: '3/4' });
   });

@@ -108,3 +108,22 @@ export function choiceIssue(spec: { options: AnswerOption[]; correct: string }):
   return null;
 }
 export const choiceLimits = { maxOptions: 6, maxText: 200 } as const;
+
+/**
+ * A written answer as TeX, or null when it is not a number yet.
+ *
+ * Only for showing back what somebody typed — `3/4` printed the way a book prints it, so they can
+ * see whether the box holds what they meant before they save it. Nothing is graded from this, and
+ * a half-typed answer simply has no picture.
+ */
+export function answerLatex(written: string): string | null {
+  // Only what the marker can read gets a picture: `3/0` drawn as a fraction would promise a reading
+  // that is refused a moment later.
+  if (!parseAnswer(written)) return null;
+  const input = normalizeAnswer(written);
+  if (!input) return null;
+  const fraction = /^([+-]?)(\d+)\s*\/\s*([+-]?\d+)$/.exec(input);
+  // The sign goes in front of the fraction, where it is read, rather than inside the numerator.
+  if (fraction) return `${fraction[1] === '-' ? '-' : ''}\\frac{${fraction[2]}}{${fraction[3]}}`;
+  return /^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(input) ? input : null;
+}
