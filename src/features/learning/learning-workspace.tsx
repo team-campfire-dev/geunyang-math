@@ -444,8 +444,19 @@ export function LearningWorkspace() {
     // left to look like what comes after 일차함수. With only the one line there is nothing to say.
     const lines = courseTracks.filter((track) => shown.some((course) => course.track === track));
     const split = new Set(available.map((course) => course.track)).size > 1;
+    // The chips are grouped by the same lines as the catalogue under them, and from `available`
+    // rather than `shown`: picking a course narrows what is listed, never what can be picked next.
+    const chipLines = courseTracks.filter((track) => available.some((course) => course.track === track));
+    const chip = (key: string, label: string) => <button key={key} className={selectedCourse === key ? 'active' : ''}
+      aria-pressed={selectedCourse === key} onClick={() => setSelectedCourse(key)}>{label}</button>;
     return <><div className="page-heading"><div className="eyebrow">차근차근 이어지는 수업</div><h1>배우고 싶은 코스부터.</h1><p>코스의 순서를 따라가거나, 지금 필요한 수업을 골라 시작하세요.</p></div>
-      {available.length > 1 && <div className="course-filters" role="group" aria-label="코스 고르기"><button className={selectedCourse === 'all' ? 'active' : ''} aria-pressed={selectedCourse === 'all'} onClick={() => setSelectedCourse('all')}>모든 코스</button>{available.map((course) => <button key={course.key} className={selectedCourse === course.key ? 'active' : ''} aria-pressed={selectedCourse === course.key} onClick={() => setSelectedCourse(course.key)}>{course.title}</button>)}</div>}
+      {available.length > 1 && <div className="course-filters" role="group" aria-label="코스 고르기">
+        <div className="course-filter-line">{chip('all', '모든 코스')}{!split && available.map((course) => chip(course.key, course.title))}</div>
+        {split && chipLines.map((track) => <div className="course-filter-line" key={track} role="group" aria-label={courseTrackLabels[track]}>
+          <span className="course-filter-name" aria-hidden="true">{courseTrackLabels[track]}</span>
+          {available.filter((course) => course.track === track).map((course) => chip(course.key, course.title))}
+        </div>)}
+      </div>}
       {lines.map((track) => <div className="course-track" key={track}>{split && <div className="track-heading"><span className="eyebrow">{trackIntros[track].eyebrow}</span><h2>{courseTrackLabels[track]}</h2><p>{trackIntros[track].note}</p></div>}
       {shown.filter((course) => course.track === track).map((course) => {
         const held = lessons.filter((lesson) => lesson.courseKey === course.key);

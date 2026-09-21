@@ -487,6 +487,17 @@ describe('a course beside the line the catalogue is ordered along', () => {
     expect(headings()).toEqual(['수학 과정', '분수', 'NCS 수리영역', '응용계산']);
   });
 
+  it('groups the chips into the same lines, and keeps both reachable after one is picked', async () => {
+    server = twoTracks();
+    await openCatalogue();
+    const rows = () => [...window.document.querySelectorAll('.course-filter-line')].map((row) => [...row.children].map((node) => node.textContent));
+    expect(rows()).toEqual([['모든 코스'], ['수학 과정', '분수'], ['NCS 수리영역', '응용계산']]);
+    fireEvent.click(screen.getByRole('button', { name: '응용계산' }));
+    // Picking narrows the courses listed below, never the chips: the school line stays one click away.
+    expect(rows()).toEqual([['모든 코스'], ['수학 과정', '분수'], ['NCS 수리영역', '응용계산']]);
+    expect(headings()).toEqual(['NCS 수리영역', '응용계산']);
+  });
+
   it('says nothing about lines when every course is on the same one', async () => {
     server = serve();
     render(<LearningWorkspace />);

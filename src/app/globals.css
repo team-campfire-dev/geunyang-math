@@ -228,7 +228,12 @@
 .scene-task .builder-actions .editor-note { max-width: 60%; text-align: left; }
 @media (max-width: 520px) { .scene-task { padding: 15px; } }
 
-.course-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+/* One row of chips per line of study, each row named, so a chip is read as belonging to a line
+ * rather than as the next thing after the chip before it. The name takes a row of its own
+ * (flex-basis: 100%) — hanging it in front of the chips would indent each row differently. */
+.course-filters { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+.course-filter-line { display: flex; flex-wrap: wrap; gap: 10px; }
+.course-filter-name { flex-basis: 100%; font-size: 12px; font-weight: 600; letter-spacing: .06em; color: #8d9781; }
 .course-filters button { padding: 10px 18px; border: 1px solid var(--line); border-radius: 24px; background: var(--white); font-size: 13px; }
 .course-filters button.active { background: var(--deep-green); color: white; border-color: var(--deep-green); }
 .course-section .catalog-banner { margin-bottom: 20px; }
