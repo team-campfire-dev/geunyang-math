@@ -61,6 +61,11 @@ async function buildMobile() {
       'src/app/privacy',
       'src/app/layout.tsx',
       'src/app/globals.css',
+      // Next reads these by name, so they are files rather than imports and have to be listed.
+      // `tests/app-icons.test.ts` holds this list against what src/app actually holds.
+      'src/app/favicon.ico',
+      'src/app/icon.svg',
+      'src/app/apple-icon.png',
     ]) {
       await copyClientPath(stage, relativePath);
     }
