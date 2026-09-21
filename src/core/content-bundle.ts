@@ -208,11 +208,11 @@ export function validateReferences(bundle: ContentBundle) {
     // A lesson-scoped definition belongs to the lesson that keeps it. Reaching into another lesson's
     // definitions would make one lesson's wording depend on a document its author cannot see.
     if (reference.scopeKind === 'lesson' && reference.scopeKey !== c.public.lessonKey) {
-      throw new ContentError(`A lesson can only link its own definitions:  ()`);
+      throw new ContentError(`A lesson can only link its own definitions: ${definitionRefId(reference)} (${c.public.lessonKey})`);
     }
-    if (!linkable.has(definitionRefId(reference))) throw new ContentError(`Missing definition:  ()`);
+    if (!linkable.has(definitionRefId(reference))) throw new ContentError(`Missing definition: ${definitionRefId(reference)} (${c.public.lessonKey})`);
     // A definition of the very concept under assessment would answer the question.
-    if (reference.problemConceptKeys?.includes(reference.conceptKey)) throw new ContentError(`A problem cannot explain the concept it assesses:  ()`);
+    if (reference.problemConceptKeys?.includes(reference.conceptKey)) throw new ContentError(`A problem cannot explain the concept it assesses: ${reference.conceptKey} (${c.public.lessonKey})`);
   }
   for (const p of bundle.problemSets.flatMap(s => s.problems)) {
     p.conceptKeys.forEach(assertAssessable);
