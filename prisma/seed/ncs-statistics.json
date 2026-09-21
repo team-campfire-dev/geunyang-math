@@ -1,0 +1,2892 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "ncs-statistics",
+      "title": "기초통계",
+      "summary": "세고, 비중을 내고, 평균을 구하고, 흩어진 정도까지 읽어요. 자료해석의 바탕이 되는 계산이에요.",
+      "order": 13,
+      "track": "ncs",
+      "lessons": [
+        {
+          "key": "ncs-frequency",
+          "order": 1
+        },
+        {
+          "key": "ncs-mean",
+          "order": 2
+        },
+        {
+          "key": "ncs-spread",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "frequency",
+      "label": "빈도",
+      "assessable": true
+    },
+    {
+      "key": "proportion",
+      "label": "비중",
+      "assessable": true
+    },
+    {
+      "key": "mean",
+      "label": "평균",
+      "assessable": true
+    },
+    {
+      "key": "weighted-mean",
+      "label": "가중평균",
+      "assessable": true
+    },
+    {
+      "key": "median-mode",
+      "label": "중앙값과 최빈값",
+      "assessable": true
+    },
+    {
+      "key": "dispersion",
+      "label": "범위와 표준편차",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "ncs-frequency",
+        "versionId": "ncs-frequency:v1",
+        "title": "빈도와 비중: 몇 건이고, 몇 %인가",
+        "summary": "자료를 세어 빈도를 구하고, 전체로 나누어 비중으로 바꿔요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "frequency",
+          "proportion"
+        ],
+        "prerequisiteConceptKeys": [
+          "percentage",
+          "percentage-of",
+          "rate"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-frequency:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-frequency:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "길잡이 과정에서 통계가 무엇을 하는지 훑었어요. 여기서부터는 손에 익히는 자리예요.\n\n통계는 어려운 계산이 아니라 세는 것에서 시작해요. 어떤 값이 몇 번 나타났는지 센 것이 빈도예요. 고객 문의를 유형별로 세면 배송 $80$건, 반품 $50$건, 결제 $70$건, 기타 $50$건처럼 나와요.\n\n빈도만으로는 많은지 적은지 말하기 어려워요. 배송 문의 $80$건은 전체가 $100$건일 때와 $1{,}000$건일 때 뜻이 전혀 달라요. 그래서 전체로 나눈 값, 비중을 함께 봅니다.\n\n$\\text{비중} = \\frac{\\text{부분}}{\\text{전체}}$이고, 백분율로 쓰려면 $100$을 곱해요. 배송 문의의 비중은 $\\frac{80}{250} = 0.32$, 즉 $32\\%$예요.\n\n거꾸로 전체와 비중을 알면 부분을 구할 수 있어요. 고객 $500$명의 $35\\%$가 신규라면 신규 고객은 $500 \\times 0.35 = 175$명이에요. 시험에서는 이 두 방향이 번갈아 나옵니다.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "ncs-frequency:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "문의 유형별 건수를 나란히 세운 막대와, 그중 배송 문의가 전체에서 차지하는 비중",
+                "caption": "센 것이 빈도, 전체로 나눈 것이 비중",
+                "items": [
+                  {
+                    "kind": "line",
+                    "id": "base",
+                    "x1": 28,
+                    "y1": 150,
+                    "x2": 300,
+                    "y2": 150,
+                    "stroke": "line",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "bar-a",
+                    "x": 40,
+                    "y": 70,
+                    "width": 46,
+                    "height": 80,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "bar-b",
+                    "x": 110,
+                    "y": 100,
+                    "width": 46,
+                    "height": 50,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "bar-c",
+                    "x": 180,
+                    "y": 80,
+                    "width": 46,
+                    "height": 70,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "bar-d",
+                    "x": 250,
+                    "y": 100,
+                    "width": 46,
+                    "height": 50,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "num-a",
+                    "x": 63,
+                    "y": 62,
+                    "text": "80",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "num-b",
+                    "x": 133,
+                    "y": 92,
+                    "text": "50",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "num-c",
+                    "x": 203,
+                    "y": 72,
+                    "text": "70",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "num-d",
+                    "x": 273,
+                    "y": 92,
+                    "text": "50",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-a",
+                    "x": 63,
+                    "y": 166,
+                    "text": "배송",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-b",
+                    "x": 133,
+                    "y": 166,
+                    "text": "반품",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-c",
+                    "x": 203,
+                    "y": 166,
+                    "text": "결제",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-d",
+                    "x": 273,
+                    "y": 166,
+                    "text": "기타",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "total",
+                    "x": 160,
+                    "y": 32,
+                    "text": "문의 250건",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "share",
+                    "x": 160,
+                    "y": 190,
+                    "text": "$80 \\div 250 = 0.32 \\rightarrow 32\\%$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "유형마다 몇 건인지 센 것이 빈도예요.",
+                    "changes": [
+                      {
+                        "id": "share",
+                        "hidden": true
+                      },
+                      {
+                        "id": "total",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "다 더하면 250건. 이것이 전체예요.",
+                    "changes": [
+                      {
+                        "id": "share",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "배송 80건은 250건의 32%. 이것이 비중이에요.",
+                    "changes": [
+                      {
+                        "id": "bar-b",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "bar-c",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "bar-d",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "num-b",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "num-c",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "num-d",
+                        "opacity": 0.3
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1300
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-frequency:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-frequency:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "어느 달의 부서별 지출이 인건비 $1{,}800$만 원, 임차료 $600$만 원, 재료비 $1{,}200$만 원, 기타 $400$만 원이었어요. 인건비의 비중을 구해 볼게요.\n\n먼저 전체예요. $1{,}800 + 600 + 1{,}200 + 400 = 4{,}000$만 원이에요. 비중을 묻는 문제는 전체를 먼저 구하는 것이 거의 항상 첫 걸음이에요.\n\n인건비의 비중은 $\\frac{1{,}800}{4{,}000} = 0.45$, 즉 $45\\%$예요.\n\n여기서 조심할 것이 하나 있어요. 네 항목의 비중을 각각 구하면 $45\\%$, $15\\%$, $30\\%$, $10\\%$이고 더하면 $100\\%$가 돼요. 비중은 이렇게 전체가 $100\\%$가 되도록 나눈 몫이에요. 서로 다른 전체를 기준으로 구한 비중끼리는 더할 수 없다는 뜻이기도 해요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-frequency:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-frequency:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-frequency:practice",
+                "problemSetVersionId": "ncs-frequency:practice:v1",
+                "problemVersionIds": [
+                  "ncs-frequency:practice-1:v1",
+                  "ncs-frequency:practice-2:v1",
+                  "ncs-frequency:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-frequency:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-frequency:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-frequency:check",
+                "problemSetVersionId": "ncs-frequency:check:v1",
+                "problemVersionIds": [
+                  "ncs-frequency:check-1:v1",
+                  "ncs-frequency:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-frequency:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-frequency:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "빈도는 센 수이고, 비중은 그것을 전체로 나눈 값이에요. 비중을 묻는 문제는 전체를 먼저 구해요.\n\n전체와 비중을 알면 부분은 곱셈으로 구해요. 같은 전체에서 나온 비중들은 더해서 $100\\%$가 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-frequency:review",
+        "problemSetVersionId": "ncs-frequency:review:v1",
+        "problemVersionIds": [
+          "ncs-frequency:homework-1:v1",
+          "ncs-frequency:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "ncs-mean",
+        "versionId": "ncs-mean:v1",
+        "title": "평균: 여럿을 하나의 수로",
+        "summary": "합계와 개수로 평균을 구하고, 인원이 다른 집단을 합칠 때의 가중평균을 익혀요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "mean",
+          "weighted-mean"
+        ],
+        "prerequisiteConceptKeys": [
+          "frequency",
+          "rate",
+          "percentage-of"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-mean:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-mean:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "길잡이 과정에서 평균과 합계가 서로 뒤집힌다는 것과, 인원이 다르면 가중평균이라는 것을 봤어요. 여기서는 그 둘을 문제 앞에서 바로 쓸 수 있을 만큼 익혀요.\n\n평균은 여러 값을 대표하는 하나의 수예요. $\\text{평균} = \\frac{\\text{합계}}{\\text{개수}}$이고, 이 식은 뒤집어서도 자주 씁니다. $\\text{합계} = \\text{평균} \\times \\text{개수}$예요.\n\n시험에서는 뒤집은 쪽이 더 많이 나와요. 「네 달 평균이 $250$개인데 앞의 세 달이 $230$, $260$, $240$개였다면 남은 한 달은?」 같은 물음은 평균을 합계로 바꾸는 순간 뺄셈 하나로 끝나요.\n\n조심할 곳은 평균끼리 더할 때예요. A부서 $20$명의 평균이 $80$점, B부서 $30$명의 평균이 $70$점일 때 전체 평균은 $75$점이 아니에요. 사람 수가 다르기 때문이에요.\n\n각 집단의 합계를 먼저 구해 더하고, 전체 인원으로 나눕니다. $\\frac{20 \\times 80 + 30 \\times 70}{50} = \\frac{3{,}700}{50} = 74$점이에요. 이렇게 개수를 무게로 삼아 구한 평균을 가중평균이라고 해요. 값은 언제나 사람이 많은 쪽으로 끌려갑니다.\n\n집단이 셋 이상이어도 같아요. $10$명 평균 $85$점, $20$명 평균 $70$점, $20$명 평균 $65$점이면 $\\frac{850 + 1{,}400 + 1{,}300}{50} = 71$점이에요. 무게가 인원이 아니라 비율로 주어질 때도 방법은 같아요 — 전체를 $100$명이라 두고 인원으로 바꿔 놓으면 돼요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "ncs-mean:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "두 부서의 평균 점수를 수직선에 찍고, 합친 평균이 인원이 많은 쪽으로 끌려가는 그림",
+                "caption": "합친 평균은 사람이 많은 쪽으로 끌려가요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "id": "axis",
+                    "x1": 40,
+                    "y1": 120,
+                    "x2": 280,
+                    "y2": 120,
+                    "stroke": "line",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "text",
+                    "id": "tick-60",
+                    "x": 40,
+                    "y": 142,
+                    "text": "60",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "tick-90",
+                    "x": 280,
+                    "y": 142,
+                    "text": "90",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "mark-b",
+                    "x": 116,
+                    "y": 112,
+                    "width": 8,
+                    "height": 16,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-b",
+                    "x": 120,
+                    "y": 100,
+                    "text": "B 30명 · 70점",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "mark-a",
+                    "x": 196,
+                    "y": 112,
+                    "width": 8,
+                    "height": 16,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-a",
+                    "x": 200,
+                    "y": 100,
+                    "text": "A 20명 · 80점",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "mark-all",
+                    "x": 156,
+                    "y": 62,
+                    "width": 8,
+                    "height": 16,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-all",
+                    "x": 160,
+                    "y": 52,
+                    "text": "단순 평균 75점",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "id": "drop",
+                    "x1": 160,
+                    "y1": 80,
+                    "x2": 160,
+                    "y2": 110,
+                    "stroke": "muted",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "kind": "text",
+                    "id": "answer",
+                    "x": 160,
+                    "y": 176,
+                    "text": "$\\frac{20 \\times 80 + 30 \\times 70}{50} = 74$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "두 부서의 평균이 각각 80점과 70점이에요.",
+                    "changes": [
+                      {
+                        "id": "mark-all",
+                        "hidden": true
+                      },
+                      {
+                        "id": "name-all",
+                        "hidden": true
+                      },
+                      {
+                        "id": "drop",
+                        "hidden": true
+                      },
+                      {
+                        "id": "answer",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "두 평균을 더해 반으로 나누면 75점. 여기서 많이 틀려요.",
+                    "changes": [
+                      {
+                        "id": "answer",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "사람이 많은 B쪽으로 끌려가 실제로는 74점이에요.",
+                    "changes": [
+                      {
+                        "id": "mark-all",
+                        "dx": -8,
+                        "fill": "green"
+                      },
+                      {
+                        "id": "name-all",
+                        "dx": -8,
+                        "hidden": true
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1400
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-mean:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-mean:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "상반기 매출이 $1$월부터 $6$월까지 $280$, $310$, $300$, $330$, $290$, $290$만 원이었어요. 하반기 평균이 $320$만 원이라면 한 해 평균은 얼마인지 구해 볼게요.\n\n먼저 상반기예요. 합계는 $1{,}800$만 원이고 평균은 $\\frac{1{,}800}{6} = 300$만 원이에요.\n\n하반기는 평균만 주어졌으니 합계로 바꿔요. $320 \\times 6 = 1{,}920$만 원이에요.\n\n한 해 평균은 $\\frac{1{,}800 + 1{,}920}{12} = \\frac{3{,}720}{12} = 310$만 원이에요.\n\n이번에는 두 기간의 개수가 $6$개월로 같아서 $\\frac{300 + 320}{2} = 310$으로 구해도 값이 같아요. 개수가 같을 때만 그렇습니다. 한쪽이 $6$개월, 다른 쪽이 $3$개월이었다면 두 평균의 한가운데는 답이 아니에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-mean:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-mean:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-mean:practice",
+                "problemSetVersionId": "ncs-mean:practice:v1",
+                "problemVersionIds": [
+                  "ncs-mean:practice-1:v1",
+                  "ncs-mean:practice-2:v1",
+                  "ncs-mean:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-mean:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-mean:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-mean:check",
+                "problemSetVersionId": "ncs-mean:check:v1",
+                "problemVersionIds": [
+                  "ncs-mean:check-1:v1",
+                  "ncs-mean:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-mean:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-mean:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "평균은 합계를 개수로 나눈 값이고, 합계는 평균에 개수를 곱한 값이에요. 문제가 평균을 주면 합계로 바꿔 보세요.\n\n인원이 다른 집단을 합칠 때는 합계끼리 더해 전체 인원으로 나눠요. 두 평균의 한가운데는 인원이 같을 때만 맞아요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-mean:review",
+        "problemSetVersionId": "ncs-mean:review:v1",
+        "problemVersionIds": [
+          "ncs-mean:homework-1:v1",
+          "ncs-mean:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "ncs-spread",
+        "versionId": "ncs-spread:v1",
+        "title": "대표값과 흩어진 정도",
+        "summary": "평균·중앙값·최빈값 가운데 알맞은 대표값을 고르고, 범위와 표준편차로 흩어진 정도를 읽어요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "median-mode",
+          "dispersion"
+        ],
+        "prerequisiteConceptKeys": [
+          "mean",
+          "frequency"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-spread:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-spread:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "길잡이 과정에서 유난한 값이 섞이면 평균 대신 중앙값을 본다는 것을 봤어요. 여기서는 그 셋을 실제로 구하는 법과, 흩어진 정도를 재는 법을 익혀요.\n\n중앙값은 크기 순으로 놓았을 때 한가운데 오는 값이에요. 개수가 홀수면 한가운데가 하나라 그것이 중앙값이고, 짝수면 가운데 두 값의 평균이에요. $4$, $6$, $8$, $10$, $12$, $14$의 중앙값은 $\\frac{8 + 10}{2} = 9$예요. 여기서 자주 틀려요 — 자료에 없는 수가 중앙값이 될 수 있어요.\n\n최빈값은 가장 여러 번 나타난 값이에요. 가장 많이 팔린 치수, 가장 많이 들어온 문의 유형처럼 수로 더할 수 없는 자료에서는 최빈값만이 뜻을 가져요. 같은 횟수인 값이 둘이면 최빈값도 둘이고, 모두 한 번씩이면 최빈값은 없어요.\n\n흩어진 정도를 재는 가장 간단한 수는 범위예요. $\\text{범위} = \\text{최댓값} - \\text{최솟값}$이고, 양 끝 두 값만 쓰기 때문에 유난한 값 하나에 크게 휘둘려요.\n\n표준편차는 모든 값을 씁니다. 각 값이 평균에서 얼마나 떨어졌는지를 재고, 그 떨어진 정도를 평균 낸 것이에요. 시험이 표준편차를 손으로 계산하게 하는 일은 드물고, 두 자료 중 어느 쪽이 더 퍼져 있는지를 묻는 쪽이 대부분이에요. 그때는 범위만 견주어도 대개 답이 보여요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "ncs-spread:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "평균이 같은 두 팀의 값을 점으로 찍어, 한쪽은 가운데 모이고 다른 쪽은 넓게 퍼진 모습",
+                "caption": "평균이 같아도 흩어진 정도는 다를 수 있어요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "id": "mid",
+                    "x1": 160,
+                    "y1": 40,
+                    "x2": 160,
+                    "y2": 170,
+                    "stroke": "muted",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "kind": "text",
+                    "id": "mid-name",
+                    "x": 160,
+                    "y": 32,
+                    "text": "평균 100",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "a1",
+                    "cx": 124,
+                    "cy": 70,
+                    "rx": 6,
+                    "ry": 6,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "a2",
+                    "cx": 142,
+                    "cy": 70,
+                    "rx": 6,
+                    "ry": 6,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "a3",
+                    "cx": 160,
+                    "cy": 70,
+                    "rx": 6,
+                    "ry": 6,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "a4",
+                    "cx": 178,
+                    "cy": 70,
+                    "rx": 6,
+                    "ry": 6,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "a5",
+                    "cx": 196,
+                    "cy": 70,
+                    "rx": 6,
+                    "ry": 6,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "a-name",
+                    "x": 40,
+                    "y": 74,
+                    "text": "A팀",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "id": "a-range",
+                    "x1": 124,
+                    "y1": 88,
+                    "x2": 196,
+                    "y2": 88,
+                    "stroke": "green",
+                    "strokeWidth": 2,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "a-span",
+                    "x": 160,
+                    "y": 104,
+                    "text": "범위 8",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "b1",
+                    "cx": 60,
+                    "cy": 136,
+                    "rx": 6,
+                    "ry": 6,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "b2",
+                    "cx": 110,
+                    "cy": 136,
+                    "rx": 6,
+                    "ry": 6,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "b3",
+                    "cx": 160,
+                    "cy": 136,
+                    "rx": 6,
+                    "ry": 6,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "b4",
+                    "cx": 210,
+                    "cy": 136,
+                    "rx": 6,
+                    "ry": 6,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "b5",
+                    "cx": 260,
+                    "cy": 136,
+                    "rx": 6,
+                    "ry": 6,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "b-name",
+                    "x": 40,
+                    "y": 140,
+                    "text": "B팀",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "id": "b-range",
+                    "x1": 60,
+                    "y1": 154,
+                    "x2": 260,
+                    "y2": 154,
+                    "stroke": "orange",
+                    "strokeWidth": 2,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "b-span",
+                    "x": 160,
+                    "y": 170,
+                    "text": "범위 40",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "두 팀 모두 평균이 100이에요.",
+                    "changes": [
+                      {
+                        "id": "a-range",
+                        "hidden": true
+                      },
+                      {
+                        "id": "a-span",
+                        "hidden": true
+                      },
+                      {
+                        "id": "b-range",
+                        "hidden": true
+                      },
+                      {
+                        "id": "b-span",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "A팀은 평균 가까이 모여 있어요. 범위가 8이에요.",
+                    "changes": [
+                      {
+                        "id": "b-range",
+                        "hidden": true
+                      },
+                      {
+                        "id": "b-span",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "B팀은 넓게 퍼져 있어요. 범위가 40, 표준편차도 더 큽니다.",
+                    "changes": []
+                  }
+                ],
+                "frameMs": 1400
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-spread:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-spread:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 팀의 하루 처리 건수를 닷새 동안 적었어요. A팀은 $96$, $98$, $100$, $102$, $104$건이고 B팀은 $80$, $90$, $100$, $110$, $120$건이에요.\n\n평균은 두 팀 모두 $100$건이에요. 합계가 각각 $500$건이고 날수가 $5$일이니까요. 평균만 보면 두 팀은 같아 보여요.\n\n범위를 보면 달라져요. A팀은 $104 - 96 = 8$건, B팀은 $120 - 80 = 40$건이에요. B팀은 잘하는 날과 못하는 날의 차이가 다섯 배예요.\n\n중앙값은 둘 다 $100$건이라 여기서는 평균과 같아요. 대표값이 같아도 흩어진 정도가 다르면 다른 팀이에요. 인원을 새로 배치하거나 재고를 잡을 때 B팀 쪽이 더 큰 여유를 두어야 하는 이유가 이것이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-spread:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-spread:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-spread:practice",
+                "problemSetVersionId": "ncs-spread:practice:v1",
+                "problemVersionIds": [
+                  "ncs-spread:practice-1:v1",
+                  "ncs-spread:practice-2:v1",
+                  "ncs-spread:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-spread:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-spread:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-spread:check",
+                "problemSetVersionId": "ncs-spread:check:v1",
+                "problemVersionIds": [
+                  "ncs-spread:check-1:v1",
+                  "ncs-spread:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-spread:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-spread:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "평균·중앙값·최빈값은 모두 대표값이고, 자료의 생김새에 따라 알맞은 것이 달라요. 유난히 크거나 작은 값이 섞이면 평균 대신 중앙값을 봐요.\n\n범위는 최댓값에서 최솟값을 뺀 값이고, 표준편차는 평균에서 떨어진 정도예요. 평균이 같아도 흩어진 정도는 다를 수 있어요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-spread:review",
+        "problemSetVersionId": "ncs-spread:review:v1",
+        "problemVersionIds": [
+          "ncs-spread:homework-1:v1",
+          "ncs-spread:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "ncs-frequency:practice",
+      "courseKey": "ncs-statistics",
+      "name": "빈도와 비중 연습",
+      "versionId": "ncs-frequency:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-frequency:practice-1:v1",
+          "conceptKeys": [
+            "frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-frequency:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 주 동안 접수된 문의가 월 $40$건, 화 $35$건, 수 $55$건, 목 $45$건, 금 $75$건이었어요. 이 주의 문의는 모두 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 250
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-frequency:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "요일별 건수를 모두 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-frequency:practice-2:v1",
+          "conceptKeys": [
+            "proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-frequency:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 문의 $250$건 가운데 배송 문의가 $80$건이에요. 배송 문의의 비중은 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 32
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-frequency:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부분을 전체로 나눈 뒤 $100$을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-frequency:practice-3:v1",
+          "conceptKeys": [
+            "proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-frequency:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 고객 $500$명 가운데 $35\\%$가 신규 고객이에요. 신규 고객은 몇 명인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 175
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-frequency:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체에 비율을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-frequency:check",
+      "courseKey": "ncs-statistics",
+      "name": "빈도와 비중 확인",
+      "versionId": "ncs-frequency:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-frequency:check-1:v1",
+          "conceptKeys": [
+            "proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-frequency:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어느 부서의 인원이 전체 $200$명의 $12\\%$예요. 이 부서의 인원은 몇 명인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 24
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-frequency:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$200$의 $12\\%$를 구해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-frequency:check-2:v1",
+          "conceptKeys": [
+            "frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-frequency:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 빈도에 대한 설명으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "어떤 값이 나타난 횟수를 센 것"
+              },
+              {
+                "id": "b",
+                "text": "전체에서 차지하는 비율"
+              },
+              {
+                "id": "c",
+                "text": "값들을 대표하는 하나의 수"
+              },
+              {
+                "id": "d",
+                "text": "가장 큰 값과 가장 작은 값의 차이"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "어떤 값이 나타난 횟수를 센 것"
+              },
+              {
+                "id": "b",
+                "text": "전체에서 차지하는 비율"
+              },
+              {
+                "id": "c",
+                "text": "값들을 대표하는 하나의 수"
+              },
+              {
+                "id": "d",
+                "text": "가장 큰 값과 가장 작은 값의 차이"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-frequency:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빈도는 나누지 않고 세기만 한 수예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-frequency:review",
+      "courseKey": "ncs-statistics",
+      "name": "빈도와 비중 복습",
+      "versionId": "ncs-frequency:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-frequency:homework-1:v1",
+          "conceptKeys": [
+            "frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-frequency:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "하루 판매량이 $12$, $18$, $15$, $20$, $15$개였어요. 닷새 동안 모두 몇 개를 팔았나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 80
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-frequency:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다섯 날의 판매량을 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-frequency:homework-2:v1",
+          "conceptKeys": [
+            "proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-frequency:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "접수 $300$건 가운데 $45$건이 불만이에요. 불만의 비중은 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-frequency:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$45 \\div 300$을 백분율로 바꿔요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-mean:practice",
+      "courseKey": "ncs-statistics",
+      "name": "평균 연습",
+      "versionId": "ncs-mean:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-mean:practice-1:v1",
+          "conceptKeys": [
+            "mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-mean:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다섯 달 매출이 각각 $320$, $290$, $350$, $310$, $330$만 원이었어요. 월평균 매출은 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 320
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-mean:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다섯 달을 더해 $5$로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-mean:practice-2:v1",
+          "conceptKeys": [
+            "mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-mean:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "여덟 명으로 이루어진 팀의 평균 처리 건수가 $15$건이에요. 팀 전체의 처리 건수는 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 120
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-mean:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평균에 사람 수를 곱하면 합계예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-mean:practice-3:v1",
+          "conceptKeys": [
+            "weighted-mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-mean:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "A부서 $15$명의 평균 점수가 $82$점, B부서 $25$명의 평균 점수가 $66$점이에요. 두 부서를 합친 평균 점수는 몇 점인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 72
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-mean:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합계는 $1{,}230 + 1{,}650$점이고 인원은 $40$명이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-mean:check",
+      "courseKey": "ncs-statistics",
+      "name": "평균 확인",
+      "versionId": "ncs-mean:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-mean:check-1:v1",
+          "conceptKeys": [
+            "mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-mean:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "네 달 평균 판매량이 $250$개인데, 앞의 세 달이 각각 $230$, $260$, $240$개였어요. 남은 한 달의 판매량은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 270
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-mean:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "네 달 합계는 $1{,}000$개예요. 앞 세 달을 빼면 남습니다."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-mean:check-2:v1",
+          "conceptKeys": [
+            "weighted-mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-mean:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 부서의 인원과 평균이 각각 $10$명 $85$점, $20$명 $70$점, $20$명 $65$점이에요. 전체 평균은 몇 점인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 71
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-mean:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 합계를 모두 더해 $50$명으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-mean:review",
+      "courseKey": "ncs-statistics",
+      "name": "평균 복습",
+      "versionId": "ncs-mean:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-mean:homework-1:v1",
+          "conceptKeys": [
+            "mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-mean:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "엿새 동안 접수된 문의가 모두 $132$건이에요. 하루 평균은 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 22
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-mean:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합계를 날수로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-mean:homework-2:v1",
+          "conceptKeys": [
+            "weighted-mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-mean:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10$명의 평균이 $90$점인 반과 $30$명의 평균이 $70$점인 반을 합치면 평균은 몇 점인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 75
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-mean:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합계는 $900 + 2{,}100$점, 인원은 $40$명이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-spread:practice",
+      "courseKey": "ncs-statistics",
+      "name": "대표값과 산포 연습",
+      "versionId": "ncs-spread:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-spread:practice-1:v1",
+          "conceptKeys": [
+            "median-mode"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-spread:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "일곱 명의 처리 건수가 $4$, $6$, $6$, $7$, $9$, $12$, $40$건이에요. 중앙값은 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-spread:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "크기 순으로 놓았을 때 한가운데 있는 값이에요. 일곱 개면 네 번째예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-spread:practice-2:v1",
+          "conceptKeys": [
+            "median-mode"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-spread:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "위와 같은 자료 $4$, $6$, $6$, $7$, $9$, $12$, $40$건에서 최빈값은 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-spread:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 여러 번 나타난 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-spread:practice-3:v1",
+          "conceptKeys": [
+            "dispersion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-spread:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어느 주의 최고기온이 $18$, $21$, $25$, $19$, $27$도였어요. 범위는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-spread:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 큰 값에서 가장 작은 값을 빼요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-spread:check",
+      "courseKey": "ncs-statistics",
+      "name": "대표값과 산포 확인",
+      "versionId": "ncs-spread:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-spread:check-1:v1",
+          "conceptKeys": [
+            "median-mode"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-spread:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이번 달에 가장 많이 팔린 옷 치수를 재고 발주에 쓰려고 해요. 알맞은 대표값은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "최빈값"
+              },
+              {
+                "id": "b",
+                "text": "평균"
+              },
+              {
+                "id": "c",
+                "text": "중앙값"
+              },
+              {
+                "id": "d",
+                "text": "범위"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "최빈값"
+              },
+              {
+                "id": "b",
+                "text": "평균"
+              },
+              {
+                "id": "c",
+                "text": "중앙값"
+              },
+              {
+                "id": "d",
+                "text": "범위"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-spread:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "치수를 더해 평균을 내면 아무도 입지 않는 치수가 나올 수 있어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-spread:check-2:v1",
+          "conceptKeys": [
+            "dispersion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-spread:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평균이 같은 두 팀 가운데 표준편차가 더 큰 팀에 대한 설명으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "값들이 평균에서 더 멀리 흩어져 있다"
+              },
+              {
+                "id": "b",
+                "text": "평균이 더 크다"
+              },
+              {
+                "id": "c",
+                "text": "값의 개수가 더 많다"
+              },
+              {
+                "id": "d",
+                "text": "가장 여러 번 나타난 값이 더 크다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "값들이 평균에서 더 멀리 흩어져 있다"
+              },
+              {
+                "id": "b",
+                "text": "평균이 더 크다"
+              },
+              {
+                "id": "c",
+                "text": "값의 개수가 더 많다"
+              },
+              {
+                "id": "d",
+                "text": "가장 여러 번 나타난 값이 더 크다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-spread:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "표준편차는 값들이 평균에서 떨어진 정도를 하나의 수로 나타낸 것이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-spread:review",
+      "courseKey": "ncs-statistics",
+      "name": "대표값과 산포 복습",
+      "versionId": "ncs-spread:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-spread:homework-1:v1",
+          "conceptKeys": [
+            "median-mode"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-spread:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5$, $8$, $8$, $11$, $13$의 최빈값은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-spread:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 여러 번 나타난 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-spread:homework-2:v1",
+          "conceptKeys": [
+            "dispersion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-spread:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어느 자료의 최댓값이 $48$, 최솟값이 $19$예요. 범위는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 29
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-spread:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "최댓값에서 최솟값을 빼요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-statistics:drill",
+      "courseKey": "ncs-statistics",
+      "name": "NCS 기초통계 모아 풀기",
+      "versionId": "ncs-statistics:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-statistics:drill-1:v1",
+          "conceptKeys": [
+            "frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "월요일부터 금요일까지 접수 건수가 $22$, $31$, $28$, $35$, $24$건이었어요. 모두 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 140
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다섯 날을 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-2:v1",
+          "conceptKeys": [
+            "frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 창고의 재고가 각각 $120$, $85$, $95$개예요. 재고는 모두 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 300
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 창고를 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-3:v1",
+          "conceptKeys": [
+            "proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "생산한 $300$개 가운데 $45$개가 불량이었어요. 불량률은 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$45$를 $300$으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-4:v1",
+          "conceptKeys": [
+            "proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 $800$명의 $25\\%$는 몇 명인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 200
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$800$에 $0.25$를 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-5:v1",
+          "conceptKeys": [
+            "proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "매출 $4{,}000$만 원 가운데 온라인 매출이 $1{,}400$만 원이에요. 온라인의 비중은 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 35
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부분을 전체로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-6:v1",
+          "conceptKeys": [
+            "mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4$, $7$, $9$, $12$의 평균은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합계 $32$를 개수 $4$로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-7:v1",
+          "conceptKeys": [
+            "mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "여섯 달 동안의 매출 합계가 $1{,}800$만 원이에요. 월평균은 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 300
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합계를 개월 수로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-8:v1",
+          "conceptKeys": [
+            "mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다섯 명의 평균 처리 건수가 $24$건이에요. 다섯 명이 처리한 건수는 모두 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 120
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평균에 인원을 곱하면 합계예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-9:v1",
+          "conceptKeys": [
+            "weighted-mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$30$명의 평균이 $60$점, $20$명의 평균이 $85$점이에요. 전체 평균은 몇 점인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 70
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합계는 $1{,}800 + 1{,}700$점, 인원은 $50$명이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-10:v1",
+          "conceptKeys": [
+            "weighted-mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$40$명의 평균이 $75$점, $10$명의 평균이 $95$점이에요. 전체 평균은 몇 점인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 79
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합계를 구해 $50$명으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-11:v1",
+          "conceptKeys": [
+            "median-mode"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$, $5$, $7$, $9$, $11$의 중앙값은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다섯 개 가운데 세 번째 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-12:v1",
+          "conceptKeys": [
+            "median-mode"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$, $4$, $4$, $6$, $9$, $9$, $9$의 최빈값은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 여러 번 나타난 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-13:v1",
+          "conceptKeys": [
+            "dispersion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어느 날의 최고기온이 $32$도, 최저기온이 $17$도였어요. 범위는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "최고에서 최저를 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-14:v1",
+          "conceptKeys": [
+            "dispersion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$8$, $15$, $23$, $31$의 범위는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 23
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 큰 값에서 가장 작은 값을 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-15:v1",
+          "conceptKeys": [
+            "proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 $200$건 가운데 A유형이 $50$건, B유형이 $150$건이에요. A유형의 비중은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$25\\%$"
+              },
+              {
+                "id": "b",
+                "text": "$33\\%$"
+              },
+              {
+                "id": "c",
+                "text": "$50\\%$"
+              },
+              {
+                "id": "d",
+                "text": "$75\\%$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$25\\%$"
+              },
+              {
+                "id": "b",
+                "text": "$33\\%$"
+              },
+              {
+                "id": "c",
+                "text": "$50\\%$"
+              },
+              {
+                "id": "d",
+                "text": "$75\\%$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$50$을 $200$으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-16:v1",
+          "conceptKeys": [
+            "weighted-mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "A부서 $10$명의 평균이 $80$점, B부서 $40$명의 평균이 $60$점이에요. 전체 평균에 가장 가까운 값은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$64$점"
+              },
+              {
+                "id": "b",
+                "text": "$70$점"
+              },
+              {
+                "id": "c",
+                "text": "$72$점"
+              },
+              {
+                "id": "d",
+                "text": "$76$점"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$64$점"
+              },
+              {
+                "id": "b",
+                "text": "$70$점"
+              },
+              {
+                "id": "c",
+                "text": "$72$점"
+              },
+              {
+                "id": "d",
+                "text": "$76$점"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "인원이 많은 B부서 쪽으로 끌려가요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-17:v1",
+          "conceptKeys": [
+            "median-mode"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평균이 자료를 잘 대표하지 못하는 경우로 알맞은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "유난히 크거나 작은 값이 섞여 있을 때"
+              },
+              {
+                "id": "b",
+                "text": "값의 개수가 많을 때"
+              },
+              {
+                "id": "c",
+                "text": "값이 모두 같을 때"
+              },
+              {
+                "id": "d",
+                "text": "값이 모두 정수일 때"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "유난히 크거나 작은 값이 섞여 있을 때"
+              },
+              {
+                "id": "b",
+                "text": "값의 개수가 많을 때"
+              },
+              {
+                "id": "c",
+                "text": "값이 모두 같을 때"
+              },
+              {
+                "id": "d",
+                "text": "값이 모두 정수일 때"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 사람의 임원 급여가 회사 평균을 올리는 경우를 떠올려 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-18:v1",
+          "conceptKeys": [
+            "mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 달 평균 판매량이 $180$개인데 앞의 두 달이 $165$개, $175$개였어요. 셋째 달의 판매량은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 200
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 달 합계는 $540$개예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-19:v1",
+          "conceptKeys": [
+            "median-mode"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "여섯 명의 처리 건수가 $4$, $6$, $8$, $10$, $12$, $14$건이에요. 중앙값은 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "개수가 짝수면 가운데 두 값의 평균이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill-20:v1",
+          "conceptKeys": [
+            "frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "하루 네 번 조사한 접수 건수가 $12$, $9$, $15$, $14$건이에요. 하루 동안 모두 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 50
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "네 번을 더해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}
