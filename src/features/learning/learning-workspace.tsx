@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import Link from 'next/link';
-import { courseTrackLabels, courseTracks, defaultCourseTrack, type ActionResponse, type AssignmentView, type AttemptView, type CourseTrack, type LessonDocument, type ContentBlock, type EnrollmentView, type LearningAction, type LearningState, type PublicLesson, type PublicProblem, type PublicProblemSet, type PublicConcept, type PublicCourse } from '@/shared/api';
+import { courseStageLabels, courseTrackLabels, courseTracks, defaultCourseTrack, stagesOf, type ActionResponse, type AssignmentView, type AttemptView, type CourseTrack, type LessonDocument, type ContentBlock, type EnrollmentView, type LearningAction, type LearningState, type PublicLesson, type PublicProblem, type PublicProblemSet, type PublicConcept, type PublicCourse } from '@/shared/api';
 import { ApiError, learningApi, supportsWebAuthentication, type Session } from './api-client';
 import { assertLearningResponseAccount, clearAuthReturn, GOOGLE_LOGIN_PATH, isNativeBrowser, LearningResponseError, parseAuthError, readAuthReturn, saveAuthReturn, type AuthReturn } from './auth-client';
 import { DiagnosticPanel } from './diagnostic-panel';
@@ -32,8 +32,19 @@ const onATrack = (course: PublicCourse): PublicCourse =>
  * learner arrives on purpose, so it says what it is for rather than where it comes in the order.
  */
 const trackIntros: Record<CourseTrack, { eyebrow: string; note: string }> = {
-  math: { eyebrow: 'ONE THING AFTER ANOTHER', note: '학교에서 배우는 차례 그대로예요. 앞 과정이 뒤 과정의 바탕이 돼요.' },
-  ncs: { eyebrow: 'FOR THE TEST AHEAD', note: '취업 시험의 수리영역이에요. 수학 과정과 따로 있으니 필요한 것만 골라 풀어도 괜찮아요.' },
+  basics: { eyebrow: 'WHERE IT ALL RESTS', note: '학년과 상관없이 여기서 시작해요. 위의 모든 과정이 이 셋을 바탕으로 삼아요.' },
+  middle: { eyebrow: 'ONE THING AFTER ANOTHER', note: '학교에서 배우는 차례 그대로예요. 앞 학년이 뒤 학년의 바탕이 돼요.' },
+  high: { eyebrow: 'BUILDING ON IT', note: '중학교 과정 위에 서요. 중학교에서 다룬 것을 한 번 더 넓히고 깊게 봐요.' },
+  ncs: { eyebrow: 'FOR THE TEST AHEAD', note: '취업 시험의 수리영역이에요. 학교 과정과 따로 있으니 필요한 것만 골라 풀어도 괜찮아요.' },
+};
+/** The courses of one line, in the order the catalogue gives them, cut into the years they belong to. */
+const byStage = (courses: PublicCourse[], track: CourseTrack) => {
+  const held = courses.filter((course) => course.track === track);
+  const years = stagesOf(track).map((stage) => ({ stage, courses: held.filter((course) => course.stage === stage) }))
+    .filter((year) => year.courses.length);
+  // A course on a line that keeps no years, or one that names none, is listed under the line itself.
+  const loose = held.filter((course) => !years.some((year) => year.courses.includes(course)));
+  return loose.length ? [{ stage: null, courses: loose }, ...years] : years;
 };
 const navItems: { page: Page; label: string; icon: IconName }[] = [
   { page: 'home', label: '내 학습', icon: 'home' }, { page: 'lessons', label: '수업', icon: 'book' },
@@ -452,19 +463,25 @@ export function LearningWorkspace() {
     return <><div className="page-heading"><div className="eyebrow">차근차근 이어지는 수업</div><h1>배우고 싶은 코스부터.</h1><p>코스의 순서를 따라가거나, 지금 필요한 수업을 골라 시작하세요.</p></div>
       {available.length > 1 && <div className="course-filters" role="group" aria-label="코스 고르기">
         <div className="course-filter-line">{chip('all', '모든 코스')}{!split && available.map((course) => chip(course.key, course.title))}</div>
-        {split && chipLines.map((track) => <div className="course-filter-line" key={track} role="group" aria-label={courseTrackLabels[track]}>
+        {split && chipLines.map((track) => <div className="course-filter-track" key={track} role="group" aria-label={courseTrackLabels[track]}>
           <span className="course-filter-name" aria-hidden="true">{courseTrackLabels[track]}</span>
-          {available.filter((course) => course.track === track).map((course) => chip(course.key, course.title))}
+          {byStage(available, track).map((year) => <div className="course-filter-line" key={year.stage ?? track}
+            role="group" aria-label={year.stage ? `${courseTrackLabels[track]} ${courseStageLabels[year.stage]}` : courseTrackLabels[track]}>
+            {year.stage && <span className="course-filter-year" aria-hidden="true">{courseStageLabels[year.stage]}</span>}
+            <span className="course-filter-chips">{year.courses.map((course) => chip(course.key, course.title))}</span>
+          </div>)}
         </div>)}
       </div>}
       {lines.map((track) => <div className="course-track" key={track}>{split && <div className="track-heading"><span className="eyebrow">{trackIntros[track].eyebrow}</span><h2>{courseTrackLabels[track]}</h2><p>{trackIntros[track].note}</p></div>}
-      {shown.filter((course) => course.track === track).map((course) => {
+      {byStage(shown, track).flatMap((year) => [
+        ...(year.stage ? [<h3 className="stage-heading" key={`${track}:${year.stage}`}>{courseStageLabels[year.stage]}</h3>] : []),
+        ...year.courses.map((course) => {
         const held = lessons.filter((lesson) => lesson.courseKey === course.key);
         const complete = held.filter((lesson) => state?.enrollments.some((entry) => entry.lessonKey === lesson.lessonKey && entry.status === 'completed')).length;
         return <section className="dashboard-section course-section" key={course.key}><div className="catalog-banner"><Icon name="book" size={24} /><div><h3>{course.title}</h3><p>{course.summary || '설명을 읽고, 직접 풀며 한 단계씩 이해해요.'}</p></div><span>{state ? `${complete} / ${held.length}개 완료` : `${held.length}개 수업`}</span></div>
           <div className="class-grid">{held.map((item, index) => <div className="class-option" key={item.lessonKey}><LessonCard item={item} index={index} courseTitle={course.title} enrollment={state?.enrollments.find((entry) => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />{state && <button className="text-button course-preference" disabled={busy} onClick={() => { void dispatch({ action: 'recommendation.choose', lessonKey: item.lessonKey }).then(() => navigate('home')).catch(() => {}); }}>{state.plan.preferredLessonKey === item.lessonKey ? '내가 고른 수업 ✓' : '이 수업부터 배우기'}</button>}</div>)}</div>
         </section>;
-      })}</div>)}
+      })])}</div>)}
       {!lessons.length && <EmptyState title="수업을 준비하고 있어요" text="잠시 후 다시 확인해 주세요." />}</>;
   }
 
@@ -619,7 +636,7 @@ export function LearningWorkspace() {
         </form>}
         <p className="login-privacy-note">계정과 학습 기록을 사용하는 방법은 <Link href="/privacy/" target="_blank" rel="noopener noreferrer">개인정보 안내<span className="sr-only"> (새 창)</span></Link>에서 확인할 수 있어요.</p>
         <button className="text-button login-browse" disabled={busy || googleStarting} onClick={() => { setModal(null); navigate('lessons'); }}>수업 먼저 둘러보기<Icon name="arrow" size={16} /></button>
-      </> : <><span className="modal-symbol"><Icon name="spark" size={27} /></span><div className="eyebrow">SMALL STEPS, YOUR PACE</div><h2 id="modal-title">무엇을 배우러 오셨나요?</h2><p>배우려는 과정을 고르면 시작점 확인이 거기까지 가는 데 필요한 것만 묻고, 추천도 그쪽을 향해요. 나중에 언제든 바꿀 수 있어요.</p><form onSubmit={saveProfile}><label className="form-label">배우려는 과정<select value={target} onChange={(event) => setTarget(event.target.value)} disabled={busy}><option value="">아직 고르지 않을래요</option>{courseTracks.filter((track) => courses.some((course) => course.track === track)).map((track) => <optgroup key={track} label={courseTrackLabels[track]}>{courses.filter((course) => course.track === track).map((course) => <option key={course.key} value={course.key}>{course.title}</option>)}</optgroup>)}</select></label><label className="form-label">하루에 얼마나 함께할까요?<select value={minutes} onChange={(event) => setMinutes(Number(event.target.value))} disabled={busy}>{[5, 10, 20].map((value) => <option key={value} value={value}>{value}분</option>)}</select></label>{error && <p role="alert" className="field-error">{error}</p>}<button className="button primary full-width" type="submit" disabled={busy}>{busy ? '저장 중…' : '이렇게 시작할게요'}<Icon name="check" size={17} /></button></form><button className="text-button profile-logout" disabled={busy || loading} onClick={() => void logout()}><Icon name="logout" size={16} />이 기기에서 로그아웃</button>{erasing ? <div className="account-erase asking" role="group" aria-label="계정 삭제 확인"><strong>계정과 학습 기록을 모두 지울까요?</strong><p>수업 진도와 풀이, 힌트 기록, 복습 과제와 제출, 시작점 확인, 추천 이력, 배우려는 과정 설정이 함께 사라져요. <b>되돌릴 수 없고 복구해 드릴 방법도 없어요.</b></p><p className="muted small">같은 Google 계정으로 다시 로그인하면 아무 기록도 없는 새 학습 공간으로 시작해요.</p><div className="account-erase-actions"><button className="button danger" disabled={busy} onClick={() => void eraseAccount()}>{busy ? '지우는 중…' : '네, 지울게요'}</button><button className="text-button" disabled={busy} onClick={() => setErasing(false)}>그만두기</button></div></div> : <button className="text-button account-erase-open" disabled={busy || loading} onClick={() => { setError(''); setErasing(true); }}><Icon name="close" size={15} />계정과 학습 기록 지우기</button>}</>}</div></div>}</div>;
+      </> : <><span className="modal-symbol"><Icon name="spark" size={27} /></span><div className="eyebrow">SMALL STEPS, YOUR PACE</div><h2 id="modal-title">무엇을 배우러 오셨나요?</h2><p>배우려는 과정을 고르면 시작점 확인이 거기까지 가는 데 필요한 것만 묻고, 추천도 그쪽을 향해요. 나중에 언제든 바꿀 수 있어요.</p><form onSubmit={saveProfile}><label className="form-label">배우려는 과정<select value={target} onChange={(event) => setTarget(event.target.value)} disabled={busy}><option value="">아직 고르지 않을래요</option>{courseTracks.filter((track) => courses.some((course) => course.track === track)).flatMap((track) => byStage(courses, track).map((year) => <optgroup key={`${track}:${year.stage ?? ''}`} label={year.stage ? `${courseTrackLabels[track]} · ${courseStageLabels[year.stage]}` : courseTrackLabels[track]}>{year.courses.map((course) => <option key={course.key} value={course.key}>{course.title}</option>)}</optgroup>))}</select></label><label className="form-label">하루에 얼마나 함께할까요?<select value={minutes} onChange={(event) => setMinutes(Number(event.target.value))} disabled={busy}>{[5, 10, 20].map((value) => <option key={value} value={value}>{value}분</option>)}</select></label>{error && <p role="alert" className="field-error">{error}</p>}<button className="button primary full-width" type="submit" disabled={busy}>{busy ? '저장 중…' : '이렇게 시작할게요'}<Icon name="check" size={17} /></button></form><button className="text-button profile-logout" disabled={busy || loading} onClick={() => void logout()}><Icon name="logout" size={16} />이 기기에서 로그아웃</button>{erasing ? <div className="account-erase asking" role="group" aria-label="계정 삭제 확인"><strong>계정과 학습 기록을 모두 지울까요?</strong><p>수업 진도와 풀이, 힌트 기록, 복습 과제와 제출, 시작점 확인, 추천 이력, 배우려는 과정 설정이 함께 사라져요. <b>되돌릴 수 없고 복구해 드릴 방법도 없어요.</b></p><p className="muted small">같은 Google 계정으로 다시 로그인하면 아무 기록도 없는 새 학습 공간으로 시작해요.</p><div className="account-erase-actions"><button className="button danger" disabled={busy} onClick={() => void eraseAccount()}>{busy ? '지우는 중…' : '네, 지울게요'}</button><button className="text-button" disabled={busy} onClick={() => setErasing(false)}>그만두기</button></div></div> : <button className="text-button account-erase-open" disabled={busy || loading} onClick={() => { setError(''); setErasing(true); }}><Icon name="close" size={15} />계정과 학습 기록 지우기</button>}</>}</div></div>}</div>;
 }
 
 function EmptyState({ title, text, actionLabel, onAction }: { title: string; text: string; actionLabel?: string; onAction?: () => void }) {

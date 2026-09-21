@@ -6,7 +6,7 @@
       "title": "이차방정식",
       "summary": "곱이 0이 되는 자리를 찾아 풀고, 인수분해가 막히면 제곱의 꼴로 고쳐 풀고, 마지막에는 어떤 식에도 통하는 공식을 얻어요.",
       "order": 17,
-      "track": "math",
+      "track": "middle",
       "lessons": [
         {
           "key": "quadratic-equation",
@@ -21,7 +21,8 @@
           "order": 3
         }
       ],
-      "diagnostics": []
+      "diagnostics": [],
+      "stage": "middle-3"
     }
   ],
   "concepts": [

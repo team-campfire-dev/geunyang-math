@@ -57,19 +57,37 @@ export type LessonDocument = PublicLesson & { sections: LessonSection[]; problem
 export type PublicConcept = { key: string; label: string };
 // A course as the catalogue lists it. Lessons arrive in the order the course gives them.
 /**
- * Which line of study a course belongs to.
+ * Which line of study a course belongs to, and where in it.
  *
- * The catalogue is one ordered line — school mathematics, fractions through linear functions — and
- * a learner who has chosen nothing is recommended along it. A course beside that line is something
- * somebody comes for on purpose: it is listed apart, it is never what a learner is handed next, and
- * a placement asks about it only when it is the course they said they wanted.
+ * The catalogue is one ordered line — 기초 · 중학교 · 고등학교 — and a learner who has chosen nothing
+ * is recommended along it. A course beside that line is something somebody comes for on purpose: it
+ * is listed apart, it is never what a learner is handed next, and a placement asks about it only
+ * when it is the course they said they wanted.
+ *
+ * The line is cut into schools rather than left as one heap because a learner arrives knowing what
+ * they last sat through. 「중2까지 했어요」 names a place in the catalogue; 「수학 과정」 does not.
  */
-export type CourseTrack = 'math' | 'ncs';
-export const courseTracks: CourseTrack[] = ['math', 'ncs'];
-/** The line the catalogue is ordered along, and the only one an unchosen placement asks about. */
-export const defaultCourseTrack: CourseTrack = 'math';
-export const courseTrackLabels: Record<CourseTrack, string> = { math: '수학 과정', ncs: 'NCS 수리영역' };
-export type PublicCourse = { key: string; title: string; summary: string; track: CourseTrack };
+export type CourseTrack = 'basics' | 'middle' | 'high' | 'ncs';
+export const courseTracks: CourseTrack[] = ['basics', 'middle', 'high', 'ncs'];
+/** The line the catalogue is ordered along. An unchosen placement asks about these and no more. */
+export const schoolTracks: CourseTrack[] = ['basics', 'middle', 'high'];
+export const isSchoolTrack = (track: CourseTrack) => schoolTracks.includes(track);
+/** What a course is on when it says nothing — including one an older server called 「math」. */
+export const defaultCourseTrack: CourseTrack = 'middle';
+export const courseTrackLabels: Record<CourseTrack, string> = {
+  basics: '기초 과정', middle: '중학교 과정', high: '고등학교 과정', ncs: 'NCS 수리영역',
+};
+/**
+ * The school year inside a track. Only the two school tracks have them — 기초 과정 is where a
+ * learner starts whatever their year, and NCS is not a school year at all.
+ */
+export type CourseStage = 'middle-1' | 'middle-2' | 'middle-3' | 'high-1' | 'high-2' | 'high-3';
+export const courseStages: CourseStage[] = ['middle-1', 'middle-2', 'middle-3', 'high-1', 'high-2', 'high-3'];
+export const courseStageLabels: Record<CourseStage, string> = {
+  'middle-1': '중1', 'middle-2': '중2', 'middle-3': '중3', 'high-1': '고1', 'high-2': '고2', 'high-3': '고3',
+};
+export const stagesOf = (track: CourseTrack): CourseStage[] => courseStages.filter((stage) => stage.startsWith(`${track}-`));
+export type PublicCourse = { key: string; title: string; summary: string; track: CourseTrack; stage?: CourseStage | null };
 /**
  * A problem set a learner can pick and solve on its own, without opening the lesson that uses it.
  *

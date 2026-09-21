@@ -6,7 +6,7 @@
       "title": "다항식과 나머지정리",
       "summary": "다항식을 수처럼 나누고, 나누지 않고도 나머지를 알아내고, 나머지가 0인 자리를 찾아 삼차 이상의 식을 인수분해해요.",
       "order": 19,
-      "track": "math",
+      "track": "high",
       "lessons": [
         {
           "key": "polynomial-division",
@@ -21,7 +21,8 @@
           "order": 3
         }
       ],
-      "diagnostics": []
+      "diagnostics": [],
+      "stage": "high-1"
     }
   ],
   "concepts": [
