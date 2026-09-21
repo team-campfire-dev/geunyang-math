@@ -1,0 +1,3549 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "similarity",
+      "title": "도형의 닮음",
+      "summary": "크기가 달라도 모양이 같다는 것이 무엇인지 정하고, 평행선과 중점, 무게중심, 넓이와 부피의 비까지 이어 가요.",
+      "order": 260,
+      "track": "middle",
+      "stage": "middle-2",
+      "lessons": [
+        {
+          "key": "similar-triangles",
+          "order": 1
+        },
+        {
+          "key": "parallel-ratio",
+          "order": 2
+        },
+        {
+          "key": "centroid",
+          "order": 3
+        },
+        {
+          "key": "similar-ratio",
+          "order": 4
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "similar-triangles",
+      "label": "삼각형의 닮음",
+      "assessable": true
+    },
+    {
+      "key": "parallel-ratio",
+      "label": "평행선과 선분의 비",
+      "assessable": true
+    },
+    {
+      "key": "centroid",
+      "label": "삼각형의 무게중심",
+      "assessable": true
+    },
+    {
+      "key": "similar-ratio",
+      "label": "닮음비와 넓이·부피의 비",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "similar-triangles",
+        "versionId": "similar-triangles:v1",
+        "title": "닮음: 크기는 달라도 모양은 같다",
+        "summary": "닮음이 무엇인지 정하고, 삼각형이 닮음인지 세 가지 조건으로 가려내요.",
+        "estimatedMinutes": 13,
+        "conceptKeys": [
+          "similar-triangles"
+        ],
+        "prerequisiteConceptKeys": [
+          "ratio",
+          "parallel-lines",
+          "polygon-angles"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "similar-triangles:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "similar-triangles:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "사진을 확대해도 사람 얼굴은 그대로예요. 길이는 모두 같은 배로 늘어나지만 각은 하나도 변하지 않으니까요. 이렇게 한쪽을 일정한 배로 늘이거나 줄여 다른 쪽과 포갤 수 있을 때, 두 도형이 닮음이라고 해요.\n\n닮은 두 도형에서는 대응각의 크기가 각각 같고, 대응변의 길이의 비가 모두 같아요. 이 일정한 비를 닮음비라 불러요. 닮음비가 $1:2$면 어느 변을 재어도 두 배예요.\n\n합동은 닮음비가 $1:1$인 닮음이에요. 그러니 합동은 닮음의 한 경우예요.\n\n삼각형은 조금만 확인해도 닮음인지 알 수 있어요. 세 가지 조건이 있어요.\n\n첫째, 두 각의 크기가 각각 같으면 닮음이에요. 세 번째 각은 자동으로 같아지니까요. 가장 자주 쓰는 조건이에요.\n\n둘째, 두 변의 길이의 비가 같고 그 사이에 낀 각이 같으면 닮음이에요.\n\n셋째, 세 변의 길이의 비가 모두 같으면 닮음이에요.\n\n합동 조건과 나란히 놓고 보면 외우기 쉬워요. 「길이가 같다」를 「길이의 비가 같다」로 바꾸면 그대로 닮음 조건이에요.\n\n닮음을 찾는 가장 흔한 자리는 평행선이에요. 평행선이 있으면 동위각과 엇각이 같아지고, 두 각이 같아지니 바로 닮음이거든요.",
+                "definitions": [
+                  {
+                    "conceptKey": "similar-triangles",
+                    "surface": "닮음비",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "similar-triangles:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "작은 삼각형이 큰 삼각형의 한 꼭짓점으로 옮겨 가 두 변이 나란해지는 그림",
+                "caption": "포개 보면 남은 변이 나란해요. 모양이 같다는 뜻이에요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 22,
+                    "text": "크기가 다른 두 삼각형",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        40,
+                        168
+                      ],
+                      [
+                        232,
+                        168
+                      ],
+                      [
+                        88,
+                        72
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.6,
+                    "id": "big"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        196,
+                        110
+                      ],
+                      [
+                        292,
+                        110
+                      ],
+                      [
+                        220,
+                        62
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.6,
+                    "id": "small"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 64,
+                    "y1": 120,
+                    "x2": 136,
+                    "y2": 168,
+                    "stroke": "orange",
+                    "strokeWidth": 2,
+                    "id": "cut",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 150,
+                    "y": 130,
+                    "text": "나란해요",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 60,
+                    "y": 188,
+                    "text": "닮음비는 $1 : 2$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "ratio",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "크기가 다른 두 삼각형이에요. 모양까지 같은지는 어떻게 알까요.",
+                    "changes": [
+                      {
+                        "id": "cut",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ratio",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "작은 것을 큰 것의 왼쪽 아래 꼭짓점에 맞춰 옮겨 볼게요.",
+                    "changes": [
+                      {
+                        "id": "small",
+                        "dx": -78,
+                        "dy": 29
+                      },
+                      {
+                        "id": "cut",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ratio",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "남은 변이 큰 삼각형의 변과 나란해요. 대응각이 같고, 대응변의 비는 어디를 재도 같아요.",
+                    "changes": [
+                      {
+                        "id": "small",
+                        "dx": -156,
+                        "dy": 58
+                      },
+                      {
+                        "id": "cut",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ratio",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "similar-triangles:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "similar-triangles:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $2:3$인 두 삼각형이 있어요. 작은 쪽의 한 변이 $4$일 때 대응하는 변의 길이를 구해 볼게요.\n\n$2:3 = 4:x$이니 $2x = 12$, 곧 $x = 6$이에요.\n\n비례식을 세울 때는 「작은 쪽끼리, 큰 쪽끼리」 자리를 맞추는 것만 조심하면 돼요.\n\n둘레도 같은 비로 늘어나요. 닮음비가 $1:4$이고 작은 삼각형의 둘레가 $9$라면 큰 쪽은 $36$이에요. 세 변이 모두 네 배이니 합도 네 배거든요.\n\n이번엔 이름이 붙은 문제예요. $\\triangle ABC$와 $\\triangle DEF$가 닮음이고 $\\overline{AB} = 6$, $\\overline{DE} = 9$, $\\overline{BC} = 8$일 때 $\\overline{EF}$를 구해 볼게요.\n\n$\\overline{AB}$에 대응하는 변이 $\\overline{DE}$이니 닮음비는 $6:9$, 곧 $2:3$이에요. $\\overline{BC}$에 대응하는 변은 $\\overline{EF}$이니 $8 \\times \\dfrac{3}{2} = 12$예요.\n\n이름의 순서가 대응을 말해 준다는 것을 기억하면 헷갈리지 않아요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "similar-triangles:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "similar-triangles:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "similar-triangles:practice",
+                "problemSetVersionId": "similar-triangles:practice:v1",
+                "problemVersionIds": [
+                  "similar-triangles:practice-1:v1",
+                  "similar-triangles:practice-2:v1",
+                  "similar-triangles:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "similar-triangles:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "similar-triangles:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "similar-triangles:check",
+                "problemSetVersionId": "similar-triangles:check:v1",
+                "problemVersionIds": [
+                  "similar-triangles:check-1:v1",
+                  "similar-triangles:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "similar-triangles:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "similar-triangles:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "닮음은 크기만 다르고 모양이 같은 관계예요. 대응각은 같고 대응변의 비는 일정해요.\n\n그 일정한 비가 닮음비이고, 둘레도 같은 비로 늘어나요.\n\n삼각형은 두 각이 같거나, 두 변의 비와 낀 각이 같거나, 세 변의 비가 같으면 닮음이에요.\n\n평행선이 보이면 각이 같아지니 닮음을 먼저 의심해 보세요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "similar-triangles:review",
+        "problemSetVersionId": "similar-triangles:review:v1",
+        "problemVersionIds": [
+          "similar-triangles:homework-1:v1",
+          "similar-triangles:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "parallel-ratio",
+        "versionId": "parallel-ratio:v1",
+        "title": "평행선과 선분의 비: 나란하면 비가 옮겨 간다",
+        "summary": "삼각형을 가로지르는 평행선이 두 변을 같은 비로 나누는 것을 보고, 중점연결정리까지 가요.",
+        "estimatedMinutes": 13,
+        "conceptKeys": [
+          "parallel-ratio"
+        ],
+        "prerequisiteConceptKeys": [
+          "similar-triangles",
+          "parallel-lines"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "parallel-ratio:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "parallel-ratio:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "삼각형 $ABC$에서 변 $AB$ 위의 점 $D$와 변 $AC$ 위의 점 $E$를 잡고, $\\overline{DE}$가 $\\overline{BC}$와 나란하다고 해 볼게요.\n\n그러면 $\\triangle ADE$와 $\\triangle ABC$는 닮음이에요. 각 $A$는 함께 쓰고, 나란하니 동위각이 같아 두 각이 같아지거든요.\n\n닮음이니 대응변의 비가 같아요. 곧 $\\overline{AD} : \\overline{AB} = \\overline{AE} : \\overline{AC}$이고, 정리하면 $\\overline{AD} : \\overline{DB} = \\overline{AE} : \\overline{EC}$가 돼요. 평행선이 두 변을 같은 비로 나눈다는 뜻이에요.\n\n거꾸로도 성립해요. 두 변을 같은 비로 나누는 점을 이으면 그 선분은 밑변과 나란해요.\n\n가장 많이 쓰는 경우는 반으로 나눌 때예요. $D$와 $E$가 각각 중점이면 $\\overline{DE}$는 $\\overline{BC}$와 나란하고 길이는 그 절반이에요. 이것을 중점연결정리라 불러요.\n\n닮음비가 $1:2$이니 길이도 절반인 거예요. 특별한 정리가 아니라 닮음을 반으로 읽은 것뿐이에요.\n\n사다리꼴에도 같은 이야기가 있어요. 평행하지 않은 두 변의 중점을 이으면, 그 선분은 두 밑변과 나란하고 길이는 두 밑변의 길이의 평균이에요. 밑변이 $6$과 $10$이면 $8$이에요.\n\n평행선을 보면 닮음을 떠올리고, 중점을 보면 절반을 떠올리면 돼요.",
+                "definitions": [
+                  {
+                    "conceptKey": "parallel-ratio",
+                    "surface": "중점연결정리",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "parallel-ratio:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "두 변의 중점을 이은 선분을 밑변에 두 번 옮겨 대어 딱 맞는 것을 보이는 그림",
+                "caption": "중점을 이은 선분은 밑변에 꼭 두 번 들어가요",
+                "items": [
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        56,
+                        164
+                      ],
+                      [
+                        264,
+                        164
+                      ],
+                      [
+                        160,
+                        36
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.6,
+                    "id": "tri"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 108,
+                    "y1": 100,
+                    "x2": 212,
+                    "y2": 100,
+                    "stroke": "green",
+                    "strokeWidth": 2.4,
+                    "id": "mid"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 108,
+                    "cy": 100,
+                    "rx": 3.5,
+                    "ry": 3.5,
+                    "fill": "green",
+                    "id": "d1"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 212,
+                    "cy": 100,
+                    "rx": 3.5,
+                    "ry": 3.5,
+                    "fill": "green",
+                    "id": "d2"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 108,
+                    "y1": 100,
+                    "x2": 212,
+                    "y2": 100,
+                    "stroke": "orange",
+                    "strokeWidth": 3,
+                    "id": "c1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 108,
+                    "y1": 100,
+                    "x2": 212,
+                    "y2": 100,
+                    "stroke": "orange",
+                    "strokeWidth": 3,
+                    "id": "c2",
+                    "opacity": 0,
+                    "dash": true
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 22,
+                    "text": "두 변의 중점을 이으면",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 188,
+                    "text": "밑변의 절반이고 밑변과 나란해요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "두 변의 중점을 찾아 이어 봤어요. 이 선분과 밑변은 어떤 사이일까요.",
+                    "changes": [
+                      {
+                        "id": "c1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "같은 길이를 잘라 밑변의 왼쪽 절반에 대어 보면 딱 맞아요.",
+                    "changes": [
+                      {
+                        "id": "c1",
+                        "dx": -52,
+                        "dy": 70,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "한 번 더 옮기면 오른쪽 절반도 딱 맞아요. 두 번 들어가니 밑변의 절반이에요.",
+                    "changes": [
+                      {
+                        "id": "c1",
+                        "dx": -52,
+                        "dy": 70,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c2",
+                        "dx": 52,
+                        "dy": 70,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "parallel-ratio:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "parallel-ratio:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "삼각형 $ABC$에서 $\\overline{DE}$가 $\\overline{BC}$와 나란하고 $\\overline{AD} = 2$, $\\overline{DB} = 3$, $\\overline{AE} = 4$일 때 $\\overline{EC}$를 구해 볼게요.\n\n$\\overline{AD} : \\overline{DB} = \\overline{AE} : \\overline{EC}$이니 $2 : 3 = 4 : x$예요.\n\n$2x = 12$이니 $x = 6$이에요.\n\n비를 세울 때 위와 아래를 섞지 않는 것이 요령이에요. $\\overline{AD}$의 짝은 $\\overline{AE}$, $\\overline{DB}$의 짝은 $\\overline{EC}$예요.\n\n중점연결정리도 해 볼게요. $\\overline{BC} = 14$이고 $D$, $E$가 각각 중점이면 $\\overline{DE} = 7$이에요. 거꾸로 $\\overline{DE} = 5$면 $\\overline{BC} = 10$이고요.\n\n사다리꼴이면 평균이에요. 두 밑변이 $6$과 $10$인 사다리꼴에서 두 변의 중점을 이은 선분은 $(6 + 10) \\div 2 = 8$이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "parallel-ratio:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "parallel-ratio:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "parallel-ratio:practice",
+                "problemSetVersionId": "parallel-ratio:practice:v1",
+                "problemVersionIds": [
+                  "parallel-ratio:practice-1:v1",
+                  "parallel-ratio:practice-2:v1",
+                  "parallel-ratio:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "parallel-ratio:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "parallel-ratio:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "parallel-ratio:check",
+                "problemSetVersionId": "parallel-ratio:check:v1",
+                "problemVersionIds": [
+                  "parallel-ratio:check-1:v1",
+                  "parallel-ratio:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "parallel-ratio:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "parallel-ratio:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "삼각형을 가로지르는 평행선은 두 변을 같은 비로 나눠요. 닮음에서 곧바로 나오는 성질이에요.\n\n거꾸로 같은 비로 나누는 점을 이으면 그 선분은 밑변과 나란해요.\n\n두 변의 중점을 이으면 밑변과 나란하고 길이는 절반이에요.\n\n사다리꼴에서는 두 밑변의 평균이 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "parallel-ratio:review",
+        "problemSetVersionId": "parallel-ratio:review:v1",
+        "problemVersionIds": [
+          "parallel-ratio:homework-1:v1",
+          "parallel-ratio:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "centroid",
+        "versionId": "centroid:v1",
+        "title": "무게중심: 중선을 둘과 하나로 나눈다",
+        "summary": "세 중선이 한 점에서 만나는 것과, 그 점이 중선을 2 대 1로 나누는 것을 확인해요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "centroid"
+        ],
+        "prerequisiteConceptKeys": [
+          "parallel-ratio"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "centroid:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "centroid:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 한 꼭짓점과 마주 보는 변의 중점을 이은 선분을 중선이라 해요. 꼭짓점이 셋이니 중선도 셋이에요.\n\n놀랍게도 세 중선은 한 점에서 만나요. 이 점이 무게중심이에요. 삼각형 모양의 판을 이 점에서 받치면 기울지 않아 붙은 이름이에요.\n\n무게중심은 각 중선을 꼭짓점 쪽부터 $2:1$로 나눠요. 꼭짓점에서 무게중심까지가 긴 쪽이고, 무게중심에서 중점까지가 짧은 쪽이에요.\n\n이유는 중점연결정리에 있어요. 두 변의 중점을 이은 선분은 밑변과 나란하고 길이가 절반이니, 두 중선이 만드는 삼각형 둘이 닮음이 되고 닮음비가 $1:2$가 되거든요. 그래서 만나는 점이 각 중선을 $2:1$로 자르는 거예요.\n\n중선 하나의 길이가 $12$라면 꼭짓점에서 무게중심까지는 $8$, 무게중심에서 중점까지는 $4$예요. 전체를 세 조각으로 보고 둘과 하나로 나눈다고 생각하면 편해요.\n\n넓이도 깔끔하게 갈라져요. 중선 하나는 삼각형을 넓이가 같은 둘로 나누고, 세 중선을 모두 그으면 넓이가 같은 여섯 조각이 돼요. 그러니 무게중심과 두 꼭짓점이 만드는 삼각형은 전체의 $\\dfrac{1}{3}$이에요.\n\n넓이가 $30$인 삼각형이라면 여섯 조각 하나는 $5$, 세 조각짜리 하나는 $10$이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "centroid",
+                    "surface": "무게중심",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "centroid:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "무게중심에서 중점까지의 길이를 중선 위쪽에 두 번 옮겨 대어 2 대 1을 보이는 그림",
+                "caption": "짧은 쪽을 두 번 옮기면 꼭짓점에 닿아요",
+                "items": [
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        56,
+                        164
+                      ],
+                      [
+                        264,
+                        164
+                      ],
+                      [
+                        160,
+                        36
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.6,
+                    "id": "tri"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160,
+                    "y1": 36,
+                    "x2": 160,
+                    "y2": 164,
+                    "stroke": "green",
+                    "strokeWidth": 1.6,
+                    "id": "m1"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 56,
+                    "y1": 164,
+                    "x2": 212,
+                    "y2": 100,
+                    "stroke": "green",
+                    "strokeWidth": 1.2,
+                    "id": "m2",
+                    "dash": true
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 264,
+                    "y1": 164,
+                    "x2": 108,
+                    "y2": 100,
+                    "stroke": "green",
+                    "strokeWidth": 1.2,
+                    "id": "m3",
+                    "dash": true
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160,
+                    "cy": 121.33,
+                    "rx": 4,
+                    "ry": 4,
+                    "fill": "ink",
+                    "id": "g"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 168,
+                    "y1": 121.33,
+                    "x2": 168,
+                    "y2": 164,
+                    "stroke": "orange",
+                    "strokeWidth": 3,
+                    "id": "unit",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 168,
+                    "y1": 121.33,
+                    "x2": 168,
+                    "y2": 164,
+                    "stroke": "deep-green",
+                    "strokeWidth": 3,
+                    "id": "c1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 168,
+                    "y1": 121.33,
+                    "x2": 168,
+                    "y2": 164,
+                    "stroke": "orange",
+                    "strokeWidth": 3,
+                    "id": "c2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 176,
+                    "y": 134,
+                    "text": "무게중심",
+                    "size": 10,
+                    "anchor": "start",
+                    "fill": "ink",
+                    "id": "gl",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 22,
+                    "text": "세 중선이 만나는 점",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 188,
+                    "text": "무게중심은 중선을 $2 : 1$로 나눠요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "세 중선은 한 점에서 만나요. 그 점이 무게중심이에요.",
+                    "changes": [
+                      {
+                        "id": "unit",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "gl",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "무게중심에서 밑변의 중점까지를 재어 위로 옮겨 대어 봐요. 한 번으로는 꼭짓점에 못 닿아요.",
+                    "changes": [
+                      {
+                        "id": "unit",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c1",
+                        "dy": -42.67,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "gl",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "두 번이면 꼭짓점에 딱 닿아요. 위쪽이 아래쪽의 두 배예요.",
+                    "changes": [
+                      {
+                        "id": "unit",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c1",
+                        "dy": -42.67,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c2",
+                        "dy": -85.33,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "gl",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "centroid:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "centroid:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "중선의 길이가 $12$인 삼각형에서 꼭짓점부터 무게중심까지의 길이를 구해 볼게요.\n\n무게중심은 중선을 $2:1$로 나누니 전체를 세 조각으로 보면 돼요. 한 조각은 $12 \\div 3 = 4$예요.\n\n꼭짓점 쪽은 두 조각이니 $8$, 중점 쪽은 한 조각이니 $4$예요.\n\n거꾸로도 물어요. 무게중심에서 중점까지가 $3$이라면 한 조각이 $3$이니 중선 전체는 $9$예요.\n\n넓이도 해 볼게요. 넓이가 $30$인 삼각형에서 세 중선이 나눈 여섯 조각 중 하나의 넓이는 $30 \\div 6 = 5$예요.\n\n무게중심과 두 꼭짓점이 만드는 삼각형은 그 여섯 조각 중 둘이니 $10$이에요. 전체의 $\\dfrac{1}{3}$이라는 말과 같아요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "centroid:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "centroid:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "centroid:practice",
+                "problemSetVersionId": "centroid:practice:v1",
+                "problemVersionIds": [
+                  "centroid:practice-1:v1",
+                  "centroid:practice-2:v1",
+                  "centroid:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "centroid:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "centroid:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "centroid:check",
+                "problemSetVersionId": "centroid:check:v1",
+                "problemVersionIds": [
+                  "centroid:check-1:v1",
+                  "centroid:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "centroid:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "centroid:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "꼭짓점과 마주 보는 변의 중점을 이은 선분이 중선이고, 세 중선은 한 점에서 만나요.\n\n그 점이 무게중심이고, 중선을 꼭짓점 쪽부터 $2:1$로 나눠요.\n\n전체를 세 조각으로 보고 둘과 하나로 나눈다고 생각하면 편해요.\n\n세 중선은 삼각형을 넓이가 같은 여섯 조각으로 나눠요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "centroid:review",
+        "problemSetVersionId": "centroid:review:v1",
+        "problemVersionIds": [
+          "centroid:homework-1:v1",
+          "centroid:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "similar-ratio",
+        "versionId": "similar-ratio:v1",
+        "title": "닮음비와 넓이, 부피: 두 배면 네 배, 여덟 배",
+        "summary": "닮음비가 넓이와 부피에서 몇 제곱, 몇 세제곱으로 커지는지 보고 축척에 써요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "similar-ratio"
+        ],
+        "prerequisiteConceptKeys": [
+          "similar-triangles",
+          "volume",
+          "circle-measure"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "similar-ratio:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "similar-ratio:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "한 변이 $1$인 정사각형과 한 변이 $2$인 정사각형을 견주어 볼게요. 닮음비는 $1:2$예요.\n\n넓이는 어떨까요. 큰 정사각형 안에 작은 것을 넣어 보면 네 개가 들어가요. 넓이의 비는 $1:4$예요.\n\n가로도 두 배, 세로도 두 배이니 두 번 곱해진 거예요. 그래서 닮음비가 $m:n$이면 넓이의 비는 $m^2 : n^2$이에요. 정사각형만 그런 것이 아니라 닮은 도형이면 무엇이든 그래요.\n\n입체라면 한 번 더 곱해져요. 가로, 세로, 높이가 모두 $n$배가 되니 부피의 비는 $m^3 : n^3$이에요. 길이가 두 배면 부피는 여덟 배예요.\n\n겉넓이는 넓이이니 $m^2 : n^2$이에요. 「무엇의 비인가」만 보면 몇 번 곱할지 정해져요.\n\n거꾸로도 읽을 수 있어요. 넓이의 비가 $9:25$라면 닮음비는 제곱근을 취해 $3:5$예요. 부피의 비가 $8:27$이라면 닮음비는 $2:3$이고요.\n\n이 성질이 가장 자주 쓰이는 곳이 지도의 축척이에요. 축척이 $1:50000$이면 지도에서 $1$은 실제로 $50000$이라는 뜻이에요. 지도에서 $3$cm는 실제로 $150000$cm, 곧 $1500$m예요.\n\n넓이를 물으면 한 번 더 조심해야 해요. 축척이 $1:50000$인 지도에서 넓이는 실제의 $50000^2$분의 $1$이니까요.",
+                "definitions": [
+                  {
+                    "conceptKey": "similar-ratio",
+                    "surface": "축척",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "similar-ratio:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "작은 정사각형 네 개가 모여 두 배 크기의 정사각형을 채우는 그림",
+                "caption": "길이가 두 배면 넓이는 네 배예요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 20,
+                    "text": "길이가 두 배면 넓이는",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 24,
+                    "y": 78,
+                    "width": 44,
+                    "height": 44,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "unit"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 46,
+                    "y": 136,
+                    "text": "$1$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        180,
+                        56
+                      ],
+                      [
+                        268,
+                        56
+                      ],
+                      [
+                        268,
+                        144
+                      ],
+                      [
+                        180,
+                        144
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "none",
+                    "stroke": "ink",
+                    "strokeWidth": 1.6,
+                    "dash": true
+                  },
+                  {
+                    "kind": "text",
+                    "x": 224,
+                    "y": 158,
+                    "text": "$2$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 168,
+                    "y": 44,
+                    "width": 44,
+                    "height": 44,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "t1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 236,
+                    "y": 44,
+                    "width": 44,
+                    "height": 44,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "t2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 168,
+                    "y": 112,
+                    "width": 44,
+                    "height": 44,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "t3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 236,
+                    "y": 112,
+                    "width": 44,
+                    "height": 44,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "t4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 114,
+                    "y": 186,
+                    "text": "넓이는 네 배, 부피는 여덟 배",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "한 변이 두 배인 정사각형이에요. 넓이도 두 배일까요.",
+                    "changes": [
+                      {
+                        "id": "t1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "t2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "t3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "t4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "작은 정사각형을 몇 개 넣어야 채워지는지 놓아 볼게요.",
+                    "changes": [
+                      {
+                        "id": "t1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "네 개가 빈틈없이 들어가요. 길이가 두 배면 넓이는 네 배, 부피는 여덟 배예요.",
+                    "changes": [
+                      {
+                        "id": "t1",
+                        "dx": 12,
+                        "dy": 12,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t2",
+                        "dx": -12,
+                        "dy": 12,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t3",
+                        "dx": 12,
+                        "dy": -12,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t4",
+                        "dx": -12,
+                        "dy": -12,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "similar-ratio:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "similar-ratio:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $2:3$인 두 도형이 있어요. 작은 쪽의 넓이가 $8$일 때 큰 쪽의 넓이를 구해 볼게요.\n\n넓이의 비는 닮음비의 제곱이니 $2^2 : 3^2 = 4 : 9$예요.\n\n$4 : 9 = 8 : x$이니 $4x = 72$, 곧 $x = 18$이에요.\n\n입체도 해 볼게요. 닮음비가 $1:2$이고 작은 입체의 부피가 $5$라면, 부피의 비는 $1 : 8$이니 큰 쪽은 $40$이에요.\n\n거꾸로 묻는 문제도 있어요. 두 닮은 도형의 넓이의 비가 $9:25$라면 닮음비는 얼마일까요. 제곱해서 $9$와 $25$가 되는 수는 $3$과 $5$이니 닮음비는 $3:5$예요.\n\n축척 문제도 같은 셈이에요. 축척이 $1:50000$인 지도에서 $3$cm 떨어진 두 곳은 실제로 $3 \\times 50000 = 150000$cm 떨어져 있어요. $100$으로 나누면 $1500$m예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "similar-ratio:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "similar-ratio:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "similar-ratio:practice",
+                "problemSetVersionId": "similar-ratio:practice:v1",
+                "problemVersionIds": [
+                  "similar-ratio:practice-1:v1",
+                  "similar-ratio:practice-2:v1",
+                  "similar-ratio:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "similar-ratio:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "similar-ratio:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "similar-ratio:check",
+                "problemSetVersionId": "similar-ratio:check:v1",
+                "problemVersionIds": [
+                  "similar-ratio:check-1:v1",
+                  "similar-ratio:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "similar-ratio:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "similar-ratio:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $m:n$이면 넓이의 비는 $m^2 : n^2$, 부피의 비는 $m^3 : n^3$이에요.\n\n길이가 두 배면 넓이는 네 배, 부피는 여덟 배예요.\n\n겉넓이는 넓이이니 제곱으로 커져요.\n\n축척은 지도와 실제의 닮음비예요. 길이는 그대로 곱하고 넓이는 제곱으로 곱해요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "similar-ratio:review",
+        "problemSetVersionId": "similar-ratio:review:v1",
+        "problemVersionIds": [
+          "similar-ratio:homework-1:v1",
+          "similar-ratio:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "similar-triangles:practice",
+      "courseKey": "similarity",
+      "name": "닮음 연습",
+      "versionId": "similar-triangles:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "similar-triangles:practice-1:v1",
+          "conceptKeys": [
+            "similar-triangles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similar-triangles:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $2:3$인 두 삼각형에서 작은 쪽의 한 변이 $4$일 때 대응하는 변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similar-triangles:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2:3 = 4:x$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similar-triangles:practice-2:v1",
+          "conceptKeys": [
+            "similar-triangles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similar-triangles:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 삼각형이 닮음일 때 대응각의 크기는 어떤가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "서로 같다"
+              },
+              {
+                "id": "b",
+                "text": "닮음비만큼 커진다"
+              },
+              {
+                "id": "c",
+                "text": "합이 $180°$다"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "서로 같다"
+              },
+              {
+                "id": "b",
+                "text": "닮음비만큼 커진다"
+              },
+              {
+                "id": "c",
+                "text": "합이 $180°$다"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similar-triangles:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "각은 변하지 않아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similar-triangles:practice-3:v1",
+          "conceptKeys": [
+            "similar-triangles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similar-triangles:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $1:4$이고 작은 삼각형의 둘레가 $9$일 때 큰 삼각형의 둘레를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 36
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similar-triangles:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘레도 네 배예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "similar-triangles:check",
+      "courseKey": "similarity",
+      "name": "닮음 확인",
+      "versionId": "similar-triangles:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "similar-triangles:check-1:v1",
+          "conceptKeys": [
+            "similar-triangles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similar-triangles:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\triangle ABC$와 $\\triangle DEF$가 닮음이고 $\\overline{AB} = 6$, $\\overline{DE} = 9$, $\\overline{BC} = 8$일 때 $\\overline{EF}$의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similar-triangles:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $2:3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similar-triangles:check-2:v1",
+          "conceptKeys": [
+            "similar-triangles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similar-triangles:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 두 삼각형이 닮음이 되는 조건이 아닌 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 변의 길이가 각각 같다"
+              },
+              {
+                "id": "b",
+                "text": "두 각의 크기가 각각 같다"
+              },
+              {
+                "id": "c",
+                "text": "세 변의 길이의 비가 같다"
+              },
+              {
+                "id": "d",
+                "text": "두 변의 길이의 비와 낀 각이 같다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 변의 길이가 각각 같다"
+              },
+              {
+                "id": "b",
+                "text": "두 각의 크기가 각각 같다"
+              },
+              {
+                "id": "c",
+                "text": "세 변의 길이의 비가 같다"
+              },
+              {
+                "id": "d",
+                "text": "두 변의 길이의 비와 낀 각이 같다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similar-triangles:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음은 길이가 아니라 길이의 비를 봐요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "similar-triangles:review",
+      "courseKey": "similarity",
+      "name": "닮음 복습",
+      "versionId": "similar-triangles:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "similar-triangles:homework-1:v1",
+          "conceptKeys": [
+            "similar-triangles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similar-triangles:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $3:5$인 두 삼각형에서 작은 쪽의 한 변이 $9$일 때 대응하는 변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similar-triangles:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3:5 = 9:x$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similar-triangles:homework-2:v1",
+          "conceptKeys": [
+            "similar-triangles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similar-triangles:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $2:5$이고 큰 삼각형의 둘레가 $30$일 때 작은 삼각형의 둘레를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similar-triangles:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘레의 비도 $2:5$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "parallel-ratio:practice",
+      "courseKey": "similarity",
+      "name": "평행선과 선분의 비 연습",
+      "versionId": "parallel-ratio:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "parallel-ratio:practice-1:v1",
+          "conceptKeys": [
+            "parallel-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallel-ratio:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형 $ABC$에서 $\\overline{DE}$가 $\\overline{BC}$와 나란하고 $\\overline{AD} = 2$, $\\overline{DB} = 3$, $\\overline{AE} = 4$일 때 $\\overline{EC}$의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallel-ratio:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 : 3 = 4 : x$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "parallel-ratio:practice-2:v1",
+          "conceptKeys": [
+            "parallel-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallel-ratio:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 두 변의 중점을 이은 선분의 길이는 밑변이 $14$일 때 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallel-ratio:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "절반이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "parallel-ratio:practice-3:v1",
+          "conceptKeys": [
+            "parallel-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallel-ratio:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 두 변의 중점을 이은 선분의 길이가 $5$일 때 밑변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallel-ratio:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 배예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "parallel-ratio:check",
+      "courseKey": "similarity",
+      "name": "평행선과 선분의 비 확인",
+      "versionId": "parallel-ratio:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "parallel-ratio:check-1:v1",
+          "conceptKeys": [
+            "parallel-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallel-ratio:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형 $ABC$에서 $\\overline{DE}$가 $\\overline{BC}$와 나란하고 $\\overline{AD} : \\overline{DB} = 3 : 2$, $\\overline{AE} = 6$일 때 $\\overline{EC}$의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallel-ratio:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3 : 2 = 6 : x$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "parallel-ratio:check-2:v1",
+          "conceptKeys": [
+            "parallel-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallel-ratio:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 밑변의 길이가 $6$과 $10$인 사다리꼴에서 평행하지 않은 두 변의 중점을 이은 선분의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallel-ratio:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 밑변의 평균이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "parallel-ratio:review",
+      "courseKey": "similarity",
+      "name": "평행선과 선분의 비 복습",
+      "versionId": "parallel-ratio:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "parallel-ratio:homework-1:v1",
+          "conceptKeys": [
+            "parallel-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallel-ratio:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑변의 길이가 $22$인 삼각형에서 두 변의 중점을 이은 선분의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 11
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallel-ratio:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "절반이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "parallel-ratio:homework-2:v1",
+          "conceptKeys": [
+            "parallel-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallel-ratio:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형 $ABC$에서 $\\overline{DE}$가 $\\overline{BC}$와 나란할 때 $\\angle ADE$와 크기가 같은 각은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\angle ABC$"
+              },
+              {
+                "id": "b",
+                "text": "$\\angle ACB$"
+              },
+              {
+                "id": "c",
+                "text": "$\\angle BAC$"
+              },
+              {
+                "id": "d",
+                "text": "같은 각이 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\angle ABC$"
+              },
+              {
+                "id": "b",
+                "text": "$\\angle ACB$"
+              },
+              {
+                "id": "c",
+                "text": "$\\angle BAC$"
+              },
+              {
+                "id": "d",
+                "text": "같은 각이 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallel-ratio:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동위각이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "centroid:practice",
+      "courseKey": "similarity",
+      "name": "무게중심 연습",
+      "versionId": "centroid:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "centroid:practice-1:v1",
+          "conceptKeys": [
+            "centroid"
+          ],
+          "promptContent": [
+            {
+              "blockId": "centroid:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중선의 길이가 $12$일 때 꼭짓점에서 무게중심까지의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "centroid:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 조각 중 둘이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "centroid:practice-2:v1",
+          "conceptKeys": [
+            "centroid"
+          ],
+          "promptContent": [
+            {
+              "blockId": "centroid:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중선의 길이가 $12$일 때 무게중심에서 중점까지의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "centroid:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 조각 중 하나예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "centroid:practice-3:v1",
+          "conceptKeys": [
+            "centroid"
+          ],
+          "promptContent": [
+            {
+              "blockId": "centroid:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "무게중심에서 중점까지의 길이가 $3$일 때 중선 전체의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "centroid:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 배예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "centroid:check",
+      "courseKey": "similarity",
+      "name": "무게중심 확인",
+      "versionId": "centroid:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "centroid:check-1:v1",
+          "conceptKeys": [
+            "centroid"
+          ],
+          "promptContent": [
+            {
+              "blockId": "centroid:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "넓이가 $30$인 삼각형에서 세 중선이 나눈 여섯 조각 중 하나의 넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "centroid:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "여섯으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "centroid:check-2:v1",
+          "conceptKeys": [
+            "centroid"
+          ],
+          "promptContent": [
+            {
+              "blockId": "centroid:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "무게중심은 중선을 어떤 비로 나누나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2 : 1$"
+              },
+              {
+                "id": "b",
+                "text": "$1 : 1$"
+              },
+              {
+                "id": "c",
+                "text": "$3 : 1$"
+              },
+              {
+                "id": "d",
+                "text": "$3 : 2$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2 : 1$"
+              },
+              {
+                "id": "b",
+                "text": "$1 : 1$"
+              },
+              {
+                "id": "c",
+                "text": "$3 : 1$"
+              },
+              {
+                "id": "d",
+                "text": "$3 : 2$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "centroid:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "꼭짓점 쪽이 길어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "centroid:review",
+      "courseKey": "similarity",
+      "name": "무게중심 복습",
+      "versionId": "centroid:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "centroid:homework-1:v1",
+          "conceptKeys": [
+            "centroid"
+          ],
+          "promptContent": [
+            {
+              "blockId": "centroid:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중선의 길이가 $15$일 때 꼭짓점에서 무게중심까지의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "centroid:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 조각 중 둘이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "centroid:homework-2:v1",
+          "conceptKeys": [
+            "centroid"
+          ],
+          "promptContent": [
+            {
+              "blockId": "centroid:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "넓이가 $54$인 삼각형에서 무게중심과 두 꼭짓점이 만드는 삼각형의 넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 18
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "centroid:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체의 삼분의 일이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "similar-ratio:practice",
+      "courseKey": "similarity",
+      "name": "닮음비와 넓이 연습",
+      "versionId": "similar-ratio:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "similar-ratio:practice-1:v1",
+          "conceptKeys": [
+            "similar-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similar-ratio:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $1:3$인 두 도형의 넓이의 비가 $1:a$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similar-ratio:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "제곱이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similar-ratio:practice-2:v1",
+          "conceptKeys": [
+            "similar-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similar-ratio:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $1:2$인 두 입체의 부피의 비가 $1:a$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similar-ratio:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세제곱이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similar-ratio:practice-3:v1",
+          "conceptKeys": [
+            "similar-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similar-ratio:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $2:3$이고 작은 도형의 넓이가 $8$일 때 큰 도형의 넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 18
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similar-ratio:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "넓이의 비는 $4:9$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "similar-ratio:check",
+      "courseKey": "similarity",
+      "name": "닮음비와 넓이 확인",
+      "versionId": "similar-ratio:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "similar-ratio:check-1:v1",
+          "conceptKeys": [
+            "similar-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similar-ratio:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $1:2$이고 작은 입체의 부피가 $5$일 때 큰 입체의 부피를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 40
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similar-ratio:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "여덟 배예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similar-ratio:check-2:v1",
+          "conceptKeys": [
+            "similar-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similar-ratio:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "넓이의 비가 $9:25$인 두 닮은 도형의 닮음비는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3 : 5$"
+              },
+              {
+                "id": "b",
+                "text": "$9 : 25$"
+              },
+              {
+                "id": "c",
+                "text": "$81 : 625$"
+              },
+              {
+                "id": "d",
+                "text": "$3 : 25$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3 : 5$"
+              },
+              {
+                "id": "b",
+                "text": "$9 : 25$"
+              },
+              {
+                "id": "c",
+                "text": "$81 : 625$"
+              },
+              {
+                "id": "d",
+                "text": "$3 : 25$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similar-ratio:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "제곱해서 $9$와 $25$가 되는 수예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "similar-ratio:review",
+      "courseKey": "similarity",
+      "name": "닮음비와 넓이 복습",
+      "versionId": "similar-ratio:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "similar-ratio:homework-1:v1",
+          "conceptKeys": [
+            "similar-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similar-ratio:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $3:4$인 두 입체의 부피의 비가 $27:a$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 64
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similar-ratio:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세제곱이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similar-ratio:homework-2:v1",
+          "conceptKeys": [
+            "similar-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similar-ratio:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "축척이 $1:50000$인 지도에서 $3$cm 떨어진 두 지점의 실제 거리는 몇 m인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1500
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similar-ratio:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$150000$cm를 m로 고쳐요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "similarity:drill",
+      "courseKey": "similarity",
+      "name": "도형의 닮음 모아 풀기",
+      "versionId": "similarity:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "similarity:drill-1:v1",
+          "conceptKeys": [
+            "similar-triangles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $2:5$인 두 삼각형에서 작은 쪽의 한 변이 $6$일 때 대응하는 변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2:5 = 6:x$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-2:v1",
+          "conceptKeys": [
+            "similar-triangles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $1:3$이고 큰 삼각형의 둘레가 $27$일 때 작은 삼각형의 둘레를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘레의 비도 $1:3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-3:v1",
+          "conceptKeys": [
+            "similar-triangles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\triangle ABC$와 $\\triangle DEF$가 닮음이고 $\\overline{AB} = 4$, $\\overline{DE} = 10$, $\\overline{BC} = 6$일 때 $\\overline{EF}$의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $2:5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-4:v1",
+          "conceptKeys": [
+            "similar-triangles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $4:7$인 두 삼각형에서 작은 쪽의 한 변이 $8$일 때 대응하는 변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 14
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4:7 = 8:x$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-5:v1",
+          "conceptKeys": [
+            "similar-triangles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 도형이 닮음일 때 언제나 같은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "대응각의 크기"
+              },
+              {
+                "id": "b",
+                "text": "대응변의 길이"
+              },
+              {
+                "id": "c",
+                "text": "넓이"
+              },
+              {
+                "id": "d",
+                "text": "둘레"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "대응각의 크기"
+              },
+              {
+                "id": "b",
+                "text": "대응변의 길이"
+              },
+              {
+                "id": "c",
+                "text": "넓이"
+              },
+              {
+                "id": "d",
+                "text": "둘레"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "각은 확대해도 변하지 않아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-6:v1",
+          "conceptKeys": [
+            "parallel-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형 $ABC$에서 $\\overline{DE}$가 $\\overline{BC}$와 나란하고 $\\overline{AD} = 3$, $\\overline{DB} = 6$, $\\overline{AE} = 4$일 때 $\\overline{EC}$의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3 : 6 = 4 : x$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-7:v1",
+          "conceptKeys": [
+            "parallel-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑변의 길이가 $30$인 삼각형에서 두 변의 중점을 이은 선분의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "절반이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-8:v1",
+          "conceptKeys": [
+            "parallel-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 두 변의 중점을 이은 선분의 길이가 $7$일 때 밑변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 14
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 배예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-9:v1",
+          "conceptKeys": [
+            "parallel-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 밑변의 길이가 $8$과 $14$인 사다리꼴에서 평행하지 않은 두 변의 중점을 이은 선분의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 11
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 밑변의 평균이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-10:v1",
+          "conceptKeys": [
+            "parallel-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 두 변의 중점을 이은 선분과 밑변의 관계로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "나란하고 길이가 절반이다"
+              },
+              {
+                "id": "b",
+                "text": "수직이고 길이가 절반이다"
+              },
+              {
+                "id": "c",
+                "text": "나란하고 길이가 같다"
+              },
+              {
+                "id": "d",
+                "text": "나란하고 길이가 두 배다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "나란하고 길이가 절반이다"
+              },
+              {
+                "id": "b",
+                "text": "수직이고 길이가 절반이다"
+              },
+              {
+                "id": "c",
+                "text": "나란하고 길이가 같다"
+              },
+              {
+                "id": "d",
+                "text": "나란하고 길이가 두 배다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중점연결정리예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-11:v1",
+          "conceptKeys": [
+            "centroid"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중선의 길이가 $18$일 때 꼭짓점에서 무게중심까지의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 조각 중 둘이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-12:v1",
+          "conceptKeys": [
+            "centroid"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중선의 길이가 $18$일 때 무게중심에서 중점까지의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 조각 중 하나예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-13:v1",
+          "conceptKeys": [
+            "centroid"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "넓이가 $42$인 삼각형에서 세 중선이 나눈 여섯 조각 중 하나의 넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "여섯으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-14:v1",
+          "conceptKeys": [
+            "centroid"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "무게중심에서 중점까지의 길이가 $5$일 때 중선 전체의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 배예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-15:v1",
+          "conceptKeys": [
+            "centroid"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 세 중선이 만나는 점의 이름은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "무게중심"
+              },
+              {
+                "id": "b",
+                "text": "외심"
+              },
+              {
+                "id": "c",
+                "text": "내심"
+              },
+              {
+                "id": "d",
+                "text": "수심"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "무게중심"
+              },
+              {
+                "id": "b",
+                "text": "외심"
+              },
+              {
+                "id": "c",
+                "text": "내심"
+              },
+              {
+                "id": "d",
+                "text": "수심"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "받치면 기울지 않는 점이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-16:v1",
+          "conceptKeys": [
+            "similar-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $1:4$인 두 도형의 넓이의 비가 $1:a$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 16
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "제곱이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-17:v1",
+          "conceptKeys": [
+            "similar-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $1:3$인 두 입체의 부피의 비가 $1:a$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 27
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세제곱이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-18:v1",
+          "conceptKeys": [
+            "similar-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $2:3$이고 작은 입체의 부피가 $16$일 때 큰 입체의 부피를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 54
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부피의 비는 $8:27$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-19:v1",
+          "conceptKeys": [
+            "similar-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "축척이 $1:25000$인 지도에서 $4$cm 떨어진 두 지점의 실제 거리는 몇 m인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$100000$cm를 m로 고쳐요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "similarity:drill-20:v1",
+          "conceptKeys": [
+            "similar-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "similarity:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "넓이의 비가 $4:9$인 두 닮은 도형의 닮음비는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2 : 3$"
+              },
+              {
+                "id": "b",
+                "text": "$4 : 9$"
+              },
+              {
+                "id": "c",
+                "text": "$16 : 81$"
+              },
+              {
+                "id": "d",
+                "text": "$2 : 9$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2 : 3$"
+              },
+              {
+                "id": "b",
+                "text": "$4 : 9$"
+              },
+              {
+                "id": "c",
+                "text": "$16 : 81$"
+              },
+              {
+                "id": "d",
+                "text": "$2 : 9$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "similarity:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "제곱해서 $4$와 $9$가 되는 수예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}

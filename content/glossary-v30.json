@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "isosceles",
+      "label": "이등변삼각형",
+      "assessable": true
+    },
+    {
+      "key": "triangle-center",
+      "label": "삼각형의 외심과 내심",
+      "assessable": true
+    },
+    {
+      "key": "parallelogram",
+      "label": "평행사변형",
+      "assessable": true
+    },
+    {
+      "key": "special-quad",
+      "label": "여러 가지 사각형",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "isosceles",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "이등변삼각형",
+      "summary": "두 변이 같으면 두 밑각도 같아요.",
+      "blocks": [
+        {
+          "blockId": "global:isosceles:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "두 변의 길이가 같은 삼각형이에요. 같은 두 변이 낀 각을 꼭지각, 나머지 두 각을 밑각이라 해요. 꼭지각의 이등분선을 그으면 삼각형이 합동인 둘로 갈라지므로 두 밑각의 크기가 같아요. 그 이등분선은 밑변을 수직이등분하기도 해요. 거꾸로 두 밑각이 같으면 두 변의 길이도 같아서, 「두 변이 같다」와 「두 밑각이 같다」는 같은 말이에요. 세 변이 모두 같은 정삼각형은 한 각이 $60°$예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "삼각형에서 같은 것을 찾아낼 때"
+    },
+    {
+      "conceptKey": "triangle-center",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "삼각형의 외심과 내심",
+      "summary": "세 꼭짓점까지 같은 점과 세 변까지 같은 점이에요.",
+      "blocks": [
+        {
+          "blockId": "global:triangle-center:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "세 변의 수직이등분선이 만나는 점이 외심이고, 세 꼭짓점까지의 거리가 같아 세 꼭짓점을 지나는 외접원을 그릴 수 있어요. 직각삼각형의 외심은 빗변의 중점이라 외접원의 반지름은 빗변의 절반이에요. 세 각의 이등분선이 만나는 점은 내심이고, 세 변까지의 거리가 같아 세 변에 닿는 내접원의 중심이 돼요. 각은 $\\angle BOC = 2\\angle A$, $\\angle BIC = 90° + \\dfrac{1}{2}\\angle A$로 구해요. 두 점은 정삼각형일 때만 겹쳐요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "원과 삼각형을 함께 다룰 때"
+    },
+    {
+      "conceptKey": "parallelogram",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "평행사변형",
+      "summary": "반 바퀴 돌려도 제자리인 사각형이에요.",
+      "blocks": [
+        {
+          "blockId": "global:parallelogram:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "두 쌍의 대변이 각각 나란한 사각형이에요. 대각선을 그으면 합동인 삼각형 둘로 갈라지므로 대변끼리 길이가 같고 대각끼리 크기가 같아요. 이웃한 두 각의 합은 $180°$고요. 두 대각선은 서로 다른 것을 이등분하지만 길이가 같을 필요는 없어요. 두 대각선이 만나는 점을 중심으로 반 바퀴 돌리면 처음 모양에 포개진다는 한 문장이 이 성질들을 모두 담고 있어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "사각형의 변과 각을 따질 때"
+    },
+    {
+      "conceptKey": "special-quad",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "여러 가지 사각형",
+      "summary": "조건을 더할수록 좁아지는 한 줄이에요.",
+      "blocks": [
+        {
+          "blockId": "global:special-quad:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "한 쌍의 대변이 나란하면 사다리꼴, 두 쌍이 모두 나란하면 평행사변형이에요. 평행사변형에 각의 조건을 더해 네 각이 직각이면 직사각형이고, 두 대각선의 길이가 같아져요. 변의 조건을 더해 네 변이 같으면 마름모이고, 두 대각선이 서로 수직이 돼요. 그래서 마름모의 넓이는 두 대각선을 곱해 반으로 나눠요. 두 조건을 모두 가진 것이 정사각형이라, 정사각형은 직사각형이면서 마름모예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "사각형들의 관계를 가릴 때"
+    }
+  ]
+}
