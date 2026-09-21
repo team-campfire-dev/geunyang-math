@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, screen } from './render';
 import { LearningWorkspace } from '@/features/learning/learning-workspace';
-import type { AssignmentView, AttemptView, ContentBlock, LearningAction, LearningState, LessonDocument, PublicLesson, PublicProblemSet } from '@/shared/api';
+import type { AssignmentView, AttemptView, ContentBlock, LearningAction, LearningState, LessonDocument, PublicCourse, PublicLesson, PublicProblemSet } from '@/shared/api';
 
 const lessonKey = 'fraction-meaning';
 const problemId = 'fraction-meaning:practice:p1:v2';
@@ -53,7 +53,8 @@ const enrolled = (completedSectionIds: string[] = [], status: 'active' | 'comple
   learningState({ enrollments: [{ id: 'e1', lessonKey, lessonVersionId: 'fraction-meaning:v2', completedSectionIds, status, attempts: [] }] });
 
 /** The real client, answered by a stand-in server, so a test can say what the server did. */
-function serve(options: { signedIn?: boolean; state?: LearningState; lesson?: LessonDocument } = {}) {
+function serve(options: { signedIn?: boolean; state?: LearningState; lesson?: LessonDocument;
+  courses?: PublicCourse[]; catalogue?: PublicLesson[] } = {}) {
   const sent: LearningAction[] = [];
   const state = {
     signedIn: options.signedIn ?? true,
@@ -61,6 +62,9 @@ function serve(options: { signedIn?: boolean; state?: LearningState; lesson?: Le
     lesson: options.lesson ?? document(),
     refuse: null as { action: LearningAction['action']; code: string; message: string; status?: number; then?: () => void } | null,
     refuseDelete: null as { code: string; message: string } | null,
+    // What the public catalogue offers. A course without a track is one an older server sent.
+    courses: options.courses ?? [{ key: 'fractions', title: '분수', summary: '분수를 처음부터' }, { key: 'decimals', title: '소수', summary: '소수를 처음부터' }] as PublicCourse[],
+    catalogue: options.catalogue ?? catalogue,
     deletes: 0,
     after: undefined as ((action: LearningAction) => LearningState) | undefined,
   };
@@ -68,7 +72,7 @@ function serve(options: { signedIn?: boolean; state?: LearningState; lesson?: Le
   globalThis.fetch = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
     if (url.endsWith('/api/v1/session')) return reply({ user: state.signedIn ? { id: 'u1', displayName: '학습자' } : null, developmentLogin: false, googleLogin: true });
-    if (url.includes('/api/v1/learning?catalog=1')) return reply({ courses: [{ key: 'fractions', title: '분수', summary: '분수를 처음부터' }, { key: 'decimals', title: '소수', summary: '소수를 처음부터' }], lessons: catalogue, concepts: [{ key: 'term.denominator', label: '분모' }], problemSets: shelf });
+    if (url.includes('/api/v1/learning?catalog=1')) return reply({ courses: state.courses, lessons: state.catalogue, concepts: [{ key: 'term.denominator', label: '분모' }], problemSets: shelf });
     if (url.includes('/api/v1/learning?lessonKey=')) return reply(state.lesson);
     if (url.endsWith('/api/v1/account') && init?.method === 'DELETE') {
       if (state.refuseDelete) return reply({ error: state.refuseDelete }, 409);
@@ -454,6 +458,42 @@ describe('the account behind the records', () => {
     // It is let go of and reloaded, and what is left is what anyone may see.
     await until(() => expect(screen.getByRole('button', { name: /내 학습 시작/ })).toBeDefined());
     expect(screen.queryByText('학습자')).toBeNull();
+  });
+});
+
+describe('a course beside the line the catalogue is ordered along', () => {
+  const ncsLesson: PublicLesson = { lessonKey: 'ncs-price', versionId: 'ncs-price:v1', title: '원가와 정가',
+    summary: '붙인 만큼과 깎은 만큼', estimatedMinutes: 10, conceptKeys: ['cost-price'],
+    prerequisiteConceptKeys: ['term.denominator'], sectionCount: 5, courseKey: 'ncs-applied' };
+  const twoTracks = () => serve({
+    courses: [{ key: 'fractions', title: '분수', summary: '분수를 처음부터', track: 'math' },
+      { key: 'ncs-applied', title: '응용계산', summary: '시험이 묻는 방식 그대로', track: 'ncs' }],
+    catalogue: [...catalogue, ncsLesson],
+    // A signed-in learner reads the lessons from their own state, which is the same catalogue.
+    state: learningState({ lessons: [...catalogue, ncsLesson] }),
+  });
+  const openCatalogue = async () => {
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: '수업' }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
+    await until(() => expect(screen.getAllByText('응용계산').length).toBeGreaterThan(1));
+  };
+  const headings = () => [...window.document.querySelectorAll('.track-heading h2, .catalog-banner h3')].map((node) => node.textContent);
+
+  it('is listed under its own line rather than after the last school course', async () => {
+    server = twoTracks();
+    await openCatalogue();
+    // The school line first and whole, then the other line, each said out loud before its courses.
+    expect(headings()).toEqual(['수학 과정', '분수', 'NCS 수리영역', '응용계산']);
+  });
+
+  it('says nothing about lines when every course is on the same one', async () => {
+    server = serve();
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: '수업' }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
+    await until(() => expect(screen.getByText('분수의 의미')).toBeDefined());
+    expect(window.document.querySelector('.track-heading')).toBeNull();
   });
 });
 

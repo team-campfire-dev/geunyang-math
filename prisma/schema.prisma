@@ -126,6 +126,10 @@ model Course {
   /// Where the course sits in the catalogue. The catalogue's order is the only thing a learner who
   /// has chosen nothing is recommended by, so it is written down rather than left to install order.
   order       Int      @default(0)
+  /// Which line of study the course belongs to. The catalogue is ordered along one line — school
+  /// mathematics — and a course beside that line is chosen on purpose rather than met on the way,
+  /// so what places a learner who has chosen nothing only ever asks along the default one.
+  track       String   @default("math") @db.VarChar(40)
   /// Who keeps the course. Null is the platform's own; organisations have no model yet.
   ownerUserId String?  @db.VarChar(191)
   createdAt   DateTime @default(now())

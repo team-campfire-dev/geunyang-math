@@ -232,7 +232,7 @@
 .course-filters button { padding: 10px 18px; border: 1px solid var(--line); border-radius: 24px; background: var(--white); font-size: 13px; }
 .course-filters button.active { background: var(--deep-green); color: white; border-color: var(--deep-green); }
 .course-section .catalog-banner { margin-bottom: 20px; }
-.catalog-banner h2 { font-size: 20px; margin: 0 0 7px; }
+.catalog-banner h2, .catalog-banner h3 { font-size: 20px; margin: 0 0 7px; font-weight: 600; letter-spacing: -.5px; }
 .course-preference { margin: 12px 0 0; padding: 5px 0; }
 .course-art-shapes { position: relative; width: 215px; height: 120px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; align-items: center; }
 .course-art-shapes i { display: block; width: 42px; height: 60px; border-radius: 40px 40px 8px 8px; background: #94a970; transform: rotate(-12deg); }
@@ -372,6 +372,7 @@
 
 @media(max-width:520px){.math-keypad{max-width:280px;gap:7px}
 .math-key{min-height:48px;font-size:17px}
+}
 
 /* A set of twenty questions is ten screens on a phone, and the two things a learner keeps wanting
    — how far along they are, and the way out — used to sit at the two far ends of that scroll. The
@@ -393,4 +394,19 @@
 @media(max-width:520px){.solve-progress{margin-bottom:16px;padding:10px 13px;gap:10px}
 .solve-meter{width:60px}
 .assignment-problems>section{scroll-margin-top:66px}
+}
+
+/* Where the catalogue splits. The school line is one thing after another and the line beside it is
+   somewhere a learner arrives on purpose, so each says which it is before its courses begin. */
+.track-heading{display:flex;flex-direction:column;gap:6px;margin:0 0 22px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.track-heading h2{font-size:21px;font-weight:600;letter-spacing:-.7px}
+.track-heading p{font-size:13px;line-height:1.7;color:#77866a;max-width:640px}
+.course-track+.course-track{margin-top:44px}
+.shelf-track+.shelf-track{margin-top:22px}
+.shelf-track-name{font-size:12px;font-weight:600;letter-spacing:.06em;color:#8d9781;margin-bottom:9px}
+
+@media(max-width:520px){.track-heading{margin-bottom:18px;padding-bottom:13px}
+.track-heading h2{font-size:18px}
+.track-heading p{font-size:12px}
+.course-track+.course-track{margin-top:34px}
 }

@@ -12,7 +12,7 @@ import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
 import { blockDefinitionRefs, getActivityProblemIds, definitionReferences, toPublicLesson, type LessonMetadata, type LessonRecord, type StoredProblem } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
-import type { ActionResponse, AssignmentView, AttemptView, GradeResult, LearningState, PublicCatalog, PublicLesson, PublicProblem, PublicProblemSet, DiagnosticAnswer, Recommendation } from '@/shared/api';
+import { defaultCourseTrack, type ActionResponse, type AssignmentView, type AttemptView, type CourseTrack, type GradeResult, type LearningState, type PublicCatalog, type PublicLesson, type PublicProblem, type PublicProblemSet, type DiagnosticAnswer, type Recommendation } from '@/shared/api';
 import { AppError } from './errors';
 
 /**
@@ -72,6 +72,20 @@ function orderConcepts<T extends { key: string; label: string }>(rows: T[], less
 export class LearningService {
   constructor(private readonly db: PrismaClient) {}
 
+  /**
+   * The concepts a placement should cover for one learner: what the course they came for stands on,
+   * or — when they have not said — everything on the line the catalogue is ordered along. A course
+   * on a track beside that line is never asked about by accident. Somebody who came for it says so,
+   * and only then does the descent start from its concepts.
+   */
+  private async placementTargets(db: Tx, lessons: PublicLesson[], targetCourseKey: string | null): Promise<string[]> {
+    const chosen = lessons.filter(lesson => lesson.courseKey === targetCourseKey).flatMap(lesson => lesson.conceptKeys);
+    if (chosen.length) return chosen;
+    const tracks = new Map((await db.course.findMany({ select: { key: true, track: true } })).map(row => [row.key, row.track]));
+    return lessons.filter(lesson => (tracks.get(lesson.courseKey) ?? defaultCourseTrack) === defaultCourseTrack)
+      .flatMap(lesson => lesson.conceptKeys);
+  }
+
   /** The latest version of every published lesson, in the order its course gives it. */
   async catalog(db: Tx = this.db): Promise<PublicLesson[]> {
     const rows = await db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }],
@@ -92,10 +106,10 @@ export class LearningService {
     const published = new Set(lessons.map(item => item.courseKey));
     const [rows, courses] = await Promise.all([
       db.concept.findMany({ where: { assessable: true } }),
-      db.course.findMany({ orderBy: [{ order: 'asc' }, { createdAt: 'asc' }, { key: 'asc' }], select: { key: true, title: true, summary: true } }),
+      db.course.findMany({ orderBy: [{ order: 'asc' }, { createdAt: 'asc' }, { key: 'asc' }], select: { key: true, title: true, summary: true, track: true } }),
     ]);
     // A course with nothing published yet is not in the catalogue either.
-    return { courses: courses.filter(course => published.has(course.key)), lessons,
+    return { courses: courses.filter(course => published.has(course.key)).map(course => ({ ...course, track: course.track as CourseTrack })), lessons,
       concepts: orderConcepts(rows.filter(row => taught.has(row.key)), lessons).map(row => ({ key: row.key, label: row.label })),
       problemSets: await this.publicProblemSets(db, lessons) };
   }
@@ -307,7 +321,7 @@ export class LearningService {
       user: { id: user.id, displayName: user.displayName, targetCourseKey: user.targetCourseKey, dailyMinutes: user.dailyMinutes },
       lessons, assignments, recommendations, concepts, plan,
       diagnosticOffering: offering ? { version: offering.versionId, title: offering.title, description: offering.description,
-        scope: placementScope(conceptGraph(lessons), lessons.filter(l => l.courseKey === user.targetCourseKey).flatMap(l => l.conceptKeys)).length,
+        scope: placementScope(conceptGraph(lessons), await this.placementTargets(db, lessons, user.targetCourseKey)).length,
         estimatedMinutes: offering.estimatedMinutes } : null,
       diagnostic: diagnostic && diagnosticBank && stored ? { id: diagnostic.id, version: diagnostic.version, status: diagnostic.status as 'active' | 'completed',
         completedAt: diagnostic.completedAt?.toISOString() ?? null, answered: diagnosticAnswers.length,
@@ -379,12 +393,13 @@ export class LearningService {
               else if (open) return {};
               const definition = await currentDiagnostic(tx);
               if (!definition) throw new AppError(503, 'content_unavailable', '시작점 확인을 준비하고 있어요. 잠시 후 다시 시도해 주세요.');
-              // Only what the course they came for stands on. Without one it is the whole catalogue,
-              // which is the length this was replacing — so the question is worth asking first.
+              // Only what the course they came for stands on. Without one it is the line the
+              // catalogue is ordered along, which is the length this was replacing — so the
+              // question is worth asking first.
               const published = await this.catalog(tx);
               const shapes = published.map(l => ({ conceptKeys: l.conceptKeys, prerequisiteConceptKeys: l.prerequisiteConceptKeys }));
               const learner = await tx.user.findUniqueOrThrow({ where: { id: userId }, select: { targetCourseKey: true } });
-              const wanted = published.filter(l => l.courseKey === learner.targetCourseKey).flatMap(l => l.conceptKeys);
+              const wanted = await this.placementTargets(tx, published, learner.targetCourseKey);
               const scope = placementScope(conceptGraph(shapes), wanted);
               await tx.diagnosticRun.upsert({ where: { userId_version: { userId, version: definition.versionId } }, update: {},
                 create: { userId, version: definition.versionId, document: asJson(definition.problems), answers: [],
