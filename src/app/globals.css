@@ -274,6 +274,11 @@
 .readiness-details { margin-top: 16px; font-size: 13px; }
 .readiness-details summary { cursor: pointer; color: var(--deep-green); }
 .assignment-info small { line-height: 1.7; }
+/* The way from a course, a lesson, or the home screen to the problem sets they keep. */
+.course-sets { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-top: 15px; }
+.course-sets .text-button { color: var(--deep-green); font-weight: 600; }
+.lesson-outline > .outline-sets { padding: 11px 10px; margin-bottom: 0; color: var(--deep-green); font-weight: 600; }
+.completion-panel .completion-sets { margin-top: 20px; color: var(--deep-green); font-weight: 600; }
 @media (max-width: 600px) {
   .catalog-banner { flex-wrap: wrap; }
   .catalog-banner > div { min-width: 0; flex: 1; }

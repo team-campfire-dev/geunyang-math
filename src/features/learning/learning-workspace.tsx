@@ -71,6 +71,13 @@ const messageOf = (error: unknown) => error instanceof Error ? error.message : '
  * box takes the cursor. It is asked for by number and done after the redraw, because the box a
  * saved answer sends the learner on to is still disabled while that save is being recorded.
  */
+/**
+ * Where a course's sets stand on the shelf, and where one lesson's sets stand inside that course.
+ * Both are drawn as ids so that a door elsewhere in the app can name the exact place it opens.
+ */
+const shelfGroupId = (courseKey: string, lessonKey: string | null) =>
+  lessonKey ? `shelf-${courseKey}-${lessonKey}` : `shelf-${courseKey}`;
+
 function showProblem(index: number) {
   const card = window.document.getElementById(`problem-${index + 1}`);
   if (!card) return;
@@ -112,7 +119,16 @@ export function LearningWorkspace() {
   const [selectedCourse, setSelectedCourse] = useState<string>('all');
   const [taughtConcepts, setTaughtConcepts] = useState<PublicConcept[]>([]);
   const [problemSets, setProblemSets] = useState<PublicProblemSet[]>([]);
-  const [openShelf, setOpenShelf] = useState<string | null>(null);
+  /**
+   * Which courses on the shelf are open, and where to land once it is drawn.
+   *
+   * A course used to close when another opened, which made the shelf a place that showed one thing
+   * and hid the rest. Several may stand open now, because a learner who came looking for a set is
+   * usually comparing them. `shelfTarget` is the way in from elsewhere: a course, and the lesson
+   * inside it when the learner arrived from that lesson rather than from the course.
+   */
+  const [openShelves, setOpenShelves] = useState<string[]>([]);
+  const [shelfTarget, setShelfTarget] = useState<{ courseKey: string; lessonKey: string | null } | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const busyRef = useRef(false);
@@ -149,6 +165,18 @@ export function LearningWorkspace() {
     showProblem(problemToShow);
   }, [problemToShow]);
 
+  // Landing on the shelf, once the course asked for has been drawn open. The group takes the
+  // cursor as well as the screen, so a learner reading with the keyboard arrives where the eye does.
+  useEffect(() => {
+    if (!shelfTarget) return;
+    setShelfTarget(null);
+    const group = window.document.getElementById(shelfGroupId(shelfTarget.courseKey, shelfTarget.lessonKey))
+      ?? window.document.getElementById(shelfGroupId(shelfTarget.courseKey, null));
+    if (!group) return;
+    group.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    group.querySelector<HTMLButtonElement>('button:not([disabled])')?.focus({ preventScroll: true });
+  }, [shelfTarget]);
+
   useEffect(() => {
     if (!modal) return;
     modalReturnFocus.current = window.document.activeElement as HTMLElement;
@@ -170,7 +198,7 @@ export function LearningWorkspace() {
     authenticatedUserId.current = null;
     setState(null);
     setSession((previous) => previous ? { ...previous, user: null } : null);
-    setSelectedAssignment(null); setDirtyProblems([]); setOpenShelf(null); submissionRequests.current.clear();
+    setSelectedAssignment(null); setDirtyProblems([]); setOpenShelves([]); submissionRequests.current.clear();
     lessonRequest.current += 1; setDocument(null); setLessonLoading(false);
     setSectionIndex(0); setFinishedLesson(false); setDisplayName('');
     setTarget(''); setMinutes(10); setModal(null); setPage('home');
@@ -344,6 +372,18 @@ export function LearningWorkspace() {
       setDirtyProblems([]); setSelectedAssignment(response.recipientId); navigate('assignment');
     } catch { /* dispatch has already said what went wrong. */ }
   }
+  /**
+   * The way into a course's problem sets from the course itself, or from a lesson inside it.
+   *
+   * A set belongs to a course and is shown by a lesson's step, so until now the only door was the
+   * shelf at the far end of 연습장 — a learner had to already know the sets were there to go and
+   * look for them. Every place that names a course or a lesson can open this one instead.
+   */
+  function openCourseSets(courseKey: string, lessonKey: string | null = null) {
+    setOpenShelves((previous) => previous.includes(courseKey) ? previous : [...previous, courseKey]);
+    navigate('practice');
+    setShelfTarget({ courseKey, lessonKey });
+  }
   async function submitAssignment() {
     if (!assignment || dirtyProblems.length) return;
     const requestId = submissionRequests.current.get(assignment.recipientId) ?? crypto.randomUUID();
@@ -443,7 +483,7 @@ export function LearningWorkspace() {
       </section>}
       <div className="learning-overview"><div><span className="overview-icon"><Icon name="book" size={20} /></span><span><small>나의 학습</small><strong>{completedCount}<em>개 수업 완료</em></strong></span></div><div><span className="overview-icon"><Icon name="pencil" size={20} /></span><span><small>한 번 더 생각하기</small><strong>{pendingAssignments.length}<em>개 과제 남음</em></strong></span></div><button onClick={openProfile}><span className="overview-icon orange"><Icon name="clock" size={20} /></span><span><small>꾸준함을 위한 작은 약속</small><strong>하루 {state?.user.dailyMinutes ?? 10}<em>분씩 학습</em></strong></span><Icon name="chevron" size={16} /></button></div>
       <section className="dashboard-section"><div className="section-heading"><div><span className="eyebrow">BUILD YOUR FOUNDATION</span><h2>{shelfTitle}</h2></div><button className="text-button" onClick={() => navigate('lessons')}>전체 수업<Icon name="arrow" size={16} /></button></div><div className="class-grid">{nearby.map((item) => <LessonCard key={item.lessonKey} item={item} index={courseIndex(item)} courseTitle={courseTitle(item)} enrollment={state?.enrollments.find((entry) => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />)}</div>{!loading && !lessons.length && <div className="empty-inline">{error ? '수업을 불러오지 못했어요. 상단에서 다시 시도해 주세요.' : '첫 번째 수업을 준비하고 있어요.'}</div>}</section>
-      <section className="dashboard-section"><div className="section-heading"><div><span className="eyebrow">MAKE IT YOURS</span><h2>배운 것을 내 것으로</h2></div><button className="text-button" onClick={() => navigate('practice')}>연습장<Icon name="arrow" size={16} /></button></div>{nextAssignments.length ? <div className="assignment-list">{nextAssignments.map(assignmentRow)}</div> : <div className="gentle-empty"><span className="empty-drawing"><Icon name="pencil" size={28} /></span><div><h3>오늘의 이해가 내일도 남도록</h3><p>복습이 있는 수업을 마치면 여기에 과제가 모여요. 지금은 배우고 싶은 수업부터 골라 보세요.</p></div><span className="small-note">한 번 더, 천천히.</span></div>}</section>
+      <section className="dashboard-section"><div className="section-heading"><div><span className="eyebrow">MAKE IT YOURS</span><h2>배운 것을 내 것으로</h2></div><button className="text-button" onClick={() => navigate('practice')}>연습장<Icon name="arrow" size={16} /></button></div>{nextAssignments.length ? <div className="assignment-list">{nextAssignments.map(assignmentRow)}</div> : <div className="gentle-empty"><span className="empty-drawing"><Icon name="pencil" size={28} /></span><div><h3>오늘의 이해가 내일도 남도록</h3><p>복습이 있는 수업을 마치면 여기에 과제가 모여요. 설명 없이 문제만 풀고 싶다면 문제집을 골라도 좋아요.</p></div>{problemSets.length ? <button className="text-button" disabled={busy} onClick={() => openCourseSets(courses[0]?.key ?? '')}>문제집 골라 풀기<Icon name="arrow" size={15} /></button> : <span className="small-note">한 번 더, 천천히.</span>}</div>}</section>
       <div className="page-footnote"><span>∴</span> 조금씩 이해하는 즐거움. <b>geunyang math</b></div>
     </>;
   }
@@ -478,8 +518,12 @@ export function LearningWorkspace() {
         ...year.courses.map((course) => {
         const held = lessons.filter((lesson) => lesson.courseKey === course.key);
         const complete = held.filter((lesson) => state?.enrollments.some((entry) => entry.lessonKey === lesson.lessonKey && entry.status === 'completed')).length;
+        // What this course keeps besides its lessons. Said here because this is where a learner
+        // looks at a course; the shelf is where they go once they know there is something to go to.
+        const sets = problemSets.filter((set) => set.courseKey === course.key);
         return <section className="dashboard-section course-section" key={course.key}><div className="catalog-banner"><Icon name="book" size={24} /><div><h3>{course.title}</h3><p>{course.summary || '설명을 읽고, 직접 풀며 한 단계씩 이해해요.'}</p></div><span>{state ? `${complete} / ${held.length}개 완료` : `${held.length}개 수업`}</span></div>
           <div className="class-grid">{held.map((item, index) => <div className="class-option" key={item.lessonKey}><LessonCard item={item} index={index} courseTitle={course.title} enrollment={state?.enrollments.find((entry) => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />{state && <button className="text-button course-preference" disabled={busy} onClick={() => { void dispatch({ action: 'recommendation.choose', lessonKey: item.lessonKey }).then(() => navigate('home')).catch(() => {}); }}>{state.plan.preferredLessonKey === item.lessonKey ? '내가 고른 수업 ✓' : '이 수업부터 배우기'}</button>}</div>)}</div>
+          {sets.length > 0 && <div className="course-sets"><button className="text-button" disabled={busy} onClick={() => openCourseSets(course.key)}>이 코스의 문제집 {sets.length}개 풀기<Icon name="arrow" size={15} /></button><span className="muted small">문제 {sets.reduce((sum, set) => sum + set.questionCount, 0)}개 · 설명 없이 문제만 풀고 싶을 때</span></div>}
         </section>;
       })])}</div>)}
       {!lessons.length && <EmptyState title="수업을 준비하고 있어요" text="잠시 후 다시 확인해 주세요." />}</>;
@@ -497,10 +541,11 @@ export function LearningWorkspace() {
     return <div className="problem-shelf">{lines.map((track) => <div className="shelf-track" key={track}>
       {lines.length > 1 && <p className="shelf-track-name">{courseTrackLabels[track]}</p>}
       {shelves.filter((shelf) => shelf.course.track === track).map(({ course, sets }) => {
-      const open = openShelf === course.key;
+      const open = openShelves.includes(course.key);
       const questions = sets.reduce((sum, set) => sum + set.questionCount, 0);
-      return <section key={course.key} className={open ? 'shelf-course is-open' : 'shelf-course'}>
-        <button className="shelf-course-head" aria-expanded={open} onClick={() => setOpenShelf(open ? null : course.key)}>
+      return <section key={course.key} id={shelfGroupId(course.key, null)} className={open ? 'shelf-course is-open' : 'shelf-course'}>
+        <button className="shelf-course-head" aria-expanded={open}
+          onClick={() => setOpenShelves((previous) => open ? previous.filter((key) => key !== course.key) : [...previous, course.key])}>
           <span className="shelf-course-title"><strong>{course.title}</strong><small>문제집 {sets.length}개 · 문제 {questions}개</small></span>
           <Icon name="chevron" size={18} />
         </button>
@@ -512,7 +557,9 @@ export function LearningWorkspace() {
           const heading = set.lessonKey === sets[index - 1]?.lessonKey ? null
             : set.lessonKey ? lessons.find((lesson) => lesson.lessonKey === set.lessonKey)?.title
             : '수업과 따로, 모아 풀기';
-          return <li key={set.problemSetId}>
+          // A lesson's sets stand together, and the group carries the lesson's name as its id so a
+          // learner arriving from that lesson lands on them rather than at the top of the course.
+          return <li key={set.problemSetId} id={heading ? shelfGroupId(course.key, set.lessonKey) : undefined}>
             {heading && <p className="shelf-lesson">{heading}</p>}
             <button className="shelf-set" disabled={busy} onClick={() => void startProblemSet(set.problemSetId)}>
               <span className="shelf-set-info"><strong>{set.name}</strong><small>{set.questionCount}문제{labels.length ? ` · ${labels.join(' · ')}` : ''}</small></span>
@@ -532,7 +579,7 @@ export function LearningWorkspace() {
     const chosen = pendingAssignments.filter((item) => item.policy.kind === 'practice');
     const done = submitted.filter((item) => item.policy.kind !== 'practice');
     const solved = submitted.filter((item) => item.policy.kind === 'practice');
-    return <><div className="page-heading"><div className="eyebrow">A LITTLE PRACTICE GOES A LONG WAY</div><h1>이해를 오래 남기는 연습장.</h1><p>어제 배운 내용을 오늘 다시 떠올려보세요. 문제집을 직접 골라 풀 수도 있어요.</p></div><div className="section-heading"><h2>나에게 배정된 과제 <span className="count-label">{issued.length}</span></h2></div>{issued.length ? <div className="assignment-list">{issued.map(assignmentRow)}</div> : <EmptyState title={state ? '남아 있는 과제가 없어요' : '나의 연습을 시작해 볼까요?'} text={state ? '복습이 있는 수업을 마치면 과제가 배정돼요. 아래에서 문제집을 직접 골라 풀어도 좋아요.' : '학습 공간을 시작하면 수업과 연결된 과제를 풀고 기록할 수 있어요.'} actionLabel={state ? '문제집 고르기' : '내 학습 시작하기'} onAction={() => state ? setOpenShelf(courses[0]?.key ?? null) : setModal('login')} />}{chosen.length > 0 && <section className="dashboard-section"><div className="section-heading"><h2>풀던 문제집 <span className="count-label">{chosen.length}</span></h2></div><div className="assignment-list">{chosen.map(assignmentRow)}</div></section>}<section className="dashboard-section"><div className="section-heading"><div><h2>문제집 골라 풀기</h2></div></div><p className="muted small">설명 없이 문제만 풀고 싶을 때. 수업에서 쓰는 문제집을 그대로 골라 풀 수 있고, 푼 기록은 수업에서 푼 것과 똑같이 남아요.</p>{renderShelf()}</section>{done.length > 0 && <section className="dashboard-section"><div className="section-heading"><h2>제출한 과제 <span className="count-label">{done.length}</span></h2></div><div className="assignment-list">{done.map(assignmentRow)}</div></section>}{solved.length > 0 && <section className="dashboard-section"><div className="section-heading"><h2>다 푼 문제집 <span className="count-label">{solved.length}</span></h2></div><div className="assignment-list">{solved.map(assignmentRow)}</div></section>}</>;
+    return <><div className="page-heading"><div className="eyebrow">A LITTLE PRACTICE GOES A LONG WAY</div><h1>이해를 오래 남기는 연습장.</h1><p>어제 배운 내용을 오늘 다시 떠올려보세요. 문제집을 직접 골라 풀 수도 있어요.</p></div><div className="section-heading"><h2>나에게 배정된 과제 <span className="count-label">{issued.length}</span></h2></div>{issued.length ? <div className="assignment-list">{issued.map(assignmentRow)}</div> : <EmptyState title={state ? '남아 있는 과제가 없어요' : '나의 연습을 시작해 볼까요?'} text={state ? '복습이 있는 수업을 마치면 과제가 배정돼요. 아래에서 문제집을 직접 골라 풀어도 좋아요.' : '학습 공간을 시작하면 수업과 연결된 과제를 풀고 기록할 수 있어요.'} actionLabel={state ? '문제집 고르기' : '내 학습 시작하기'} onAction={() => state ? openCourseSets(courses[0]?.key ?? '') : setModal('login')} />}{chosen.length > 0 && <section className="dashboard-section"><div className="section-heading"><h2>풀던 문제집 <span className="count-label">{chosen.length}</span></h2></div><div className="assignment-list">{chosen.map(assignmentRow)}</div></section>}<section className="dashboard-section"><div className="section-heading"><div><h2>문제집 골라 풀기</h2></div></div><p className="muted small">설명 없이 문제만 풀고 싶을 때. 수업에서 쓰는 문제집을 그대로 골라 풀 수 있고, 푼 기록은 수업에서 푼 것과 똑같이 남아요.</p>{renderShelf()}</section>{done.length > 0 && <section className="dashboard-section"><div className="section-heading"><h2>제출한 과제 <span className="count-label">{done.length}</span></h2></div><div className="assignment-list">{done.map(assignmentRow)}</div></section>}{solved.length > 0 && <section className="dashboard-section"><div className="section-heading"><h2>다 푼 문제집 <span className="count-label">{solved.length}</span></h2></div><div className="assignment-list">{solved.map(assignmentRow)}</div></section>}</>;
   }
 
   function renderHistory() {
@@ -544,7 +591,10 @@ export function LearningWorkspace() {
     if (lessonLoading) return <div className="loading-panel" role="status"><span className="loader" />수업을 펼치고 있어요…</div>;
     if (!document) return <EmptyState title="수업을 열 수 없어요" text="수업 목록으로 돌아가 다시 열어 주세요." actionLabel="수업 목록" onAction={() => navigate('lessons')} />;
     const review = state?.assignments.find((item) => item.lessonKey === document.lessonKey && item.policy.kind === 'review' && item.status === 'assigned');
-    if (finishedLesson) return <div className="completion-panel"><span className="completion-mark"><Icon name="check" size={38} /></span><div className="eyebrow">ONE MORE STEP FORWARD</div><h1>오늘의 이해가 하나 더 쌓였어요.</h1><p>「{document.title}」 수업을 완료했어요.<br />{review ? '배운 내용을 다시 떠올릴 복습 과제가 있어요.' : '다음 수업을 살펴보거나, 오늘 배운 내용을 다시 펼쳐보세요.'}</p><div className="completion-actions"><button className="button primary" onClick={() => review ? openAssignment(review) : navigate('lessons')}>{review ? '복습 과제 확인' : '다음 수업 둘러보기'}<Icon name="arrow" size={18} /></button><button className="button secondary" onClick={() => navigate('home')}>내 학습으로</button></div><div className="completion-bottom">잘 모르겠는 부분은 언제든 다시 펼쳐보세요.</div></div>;
+    // The sets this lesson's steps show. A learner who wants only the questions should not have to
+    // walk the lesson again to reach them, so the lesson itself says where they are.
+    const lessonSets = problemSets.filter((set) => set.lessonKey === document.lessonKey);
+    if (finishedLesson) return <div className="completion-panel"><span className="completion-mark"><Icon name="check" size={38} /></span><div className="eyebrow">ONE MORE STEP FORWARD</div><h1>오늘의 이해가 하나 더 쌓였어요.</h1><p>「{document.title}」 수업을 완료했어요.<br />{review ? '배운 내용을 다시 떠올릴 복습 과제가 있어요.' : '다음 수업을 살펴보거나, 오늘 배운 내용을 다시 펼쳐보세요.'}</p><div className="completion-actions"><button className="button primary" onClick={() => review ? openAssignment(review) : navigate('lessons')}>{review ? '복습 과제 확인' : '다음 수업 둘러보기'}<Icon name="arrow" size={18} /></button><button className="button secondary" onClick={() => navigate('home')}>내 학습으로</button></div>{lessonSets.length > 0 && <button className="text-button completion-sets" disabled={busy} onClick={() => openCourseSets(document.courseKey, document.lessonKey)}>이 수업의 문제집 {lessonSets.length}개 다시 풀기<Icon name="arrow" size={15} /></button>}<div className="completion-bottom">잘 모르겠는 부분은 언제든 다시 펼쳐보세요.</div></div>;
     const section = document.sections[sectionIndex];
     if (!section) return <EmptyState title="수업 내용을 준비하고 있어요" text="아직 공개된 학습 단계가 없어요." />;
     const unsupported = unsupportedRequiredBlocks(section.contentBlocks, document.problems) || document.problems.some((problem) => unsupportedRequiredBlocks(problem.promptContent));
@@ -568,7 +618,7 @@ export function LearningWorkspace() {
       : waitingStep >= 0 ? <>앞 단계를 끝내면 이 문제를 풀 수 있어요. <button className="text-button" disabled={busy} onClick={() => setSectionIndex(waitingStep)}><Icon name="back" size={14} />{waitingStep + 1}단계로 돌아가기</button></>
       : undefined;
     return <ConceptExplorer key={`${state?.user.id ?? 'public'}:${document.versionId}:${section.sectionId}`} glossary={glossary} lessons={lessons}
-      loadDefinition={(path) => learningApi.definition({ lessonKey: document.lessonKey, lessonVersionId: document.versionId, path })}>{(readingGlossary) => <><button className="back-button" onClick={() => navigate('lessons')}><Icon name="back" size={17} />수업 목록</button><div className="lesson-header"><div><div className="eyebrow">{courseTitle(document)} · {document.estimatedMinutes}분 수업</div><h1>{document.title}</h1></div><span className={`pill ${currentEnrollment?.status === 'completed' ? 'green' : ''}`}>{currentEnrollment?.status === 'completed' ? '학습 완료' : currentEnrollment ? '학습 중' : '수업 미리보기'}</span></div>{!currentEnrollment && <div className="preview-banner"><div><strong>설명은 먼저 둘러볼 수 있어요.</strong><p>수업을 시작하면 문제를 풀고 진도를 저장할 수 있어요.</p></div><button className="button primary" disabled={busy} onClick={() => void startLesson()}>{state ? '이 수업 시작하기' : '내 학습 시작하기'}<Icon name="arrow" size={16} /></button></div>}{state && <div className="session-guidance"><strong>오늘은 {state.user.dailyMinutes}분씩, 나의 속도로.</strong><p>한 단계가 끝나면 쉬어도 괜찮아요. 다음 방문에 저장된 단계부터 이어가며 설명과 문제는 모두 남아 있어요.</p></div>}<div className="lesson-layout"><aside className="lesson-outline" aria-label="수업 학습 단계"><span className="eyebrow">수업 단계</span>{document.sections.map((item, index) => <button key={item.sectionId} className={index === sectionIndex ? 'active' : ''} aria-current={index === sectionIndex ? 'step' : undefined} disabled={busy} onClick={() => setSectionIndex(index)}><span className={currentEnrollment?.completedSectionIds.includes(item.sectionId) ? 'done' : ''}>{currentEnrollment?.completedSectionIds.includes(item.sectionId) ? <Icon name="check" size={13} /> : index + 1}</span><span><small>{roleLabels[item.role]}</small>{item.title}</span></button>)}<p>헷갈리면 앞 단계로 돌아가도 괜찮아요.</p></aside><div><article className="lesson-sheet"><div className="lesson-step-label">{String(sectionIndex + 1).padStart(2, '0')}<i />{roleLabels[section.role]}</div><h2>{section.title}</h2><ContentBlocks blocks={section.contentBlocks} problems={document.problems} glossary={canExploreDefinitions(section.role) ? readingGlossary : glossary} renderProblem={(problem) => <ProblemCard key={`${currentEnrollment?.id ?? 'preview'}-${problem.problemVersionId}`} glossary={glossary} problem={problem} attempt={currentEnrollment?.attempts.filter((item) => item.problemVersionId === problem.problemVersionId).at(-1)} actions={lessonActions(problem.problemVersionId)} ready={!!currentEnrollment} busy={busy} disabled={answeringClosed} disabledNote={closedNote} onReady={() => currentEnrollment ? setModal('login') : void startLesson()} readyNote="수업을 시작하면 풀이와 진도가 저장돼요." />} /></article>{unsupported && <div className="error-banner" role="alert">필수 콘텐츠를 표시할 수 없어 단계 완료를 멈췄어요. 지원되는 앱 버전에서 다시 열어 주세요.</div>}<div className="lesson-controls"><button className="button secondary" disabled={sectionIndex === 0 || busy} onClick={() => setSectionIndex((value) => value - 1)}><Icon name="back" size={17} />이전</button><span>{sectionIndex + 1} / {document.sections.length}</span>{!currentEnrollment && isLast ? <button className="button primary" disabled={busy || unsupported} onClick={() => void startLesson()}>수업 시작하기<Icon name="arrow" size={17} /></button> : <button className="button primary" disabled={busy || unsupported} onClick={() => void nextSection()}>{busy ? '저장 중…' : isLast ? currentEnrollment?.status === 'completed' ? '내 학습으로' : '수업 완료하기' : currentEnrollment?.status === 'active' ? '이해했어요, 다음으로' : '다음 단계'}<Icon name="arrow" size={17} /></button>}</div></div></div></>}</ConceptExplorer>;
+      loadDefinition={(path) => learningApi.definition({ lessonKey: document.lessonKey, lessonVersionId: document.versionId, path })}>{(readingGlossary) => <><button className="back-button" onClick={() => navigate('lessons')}><Icon name="back" size={17} />수업 목록</button><div className="lesson-header"><div><div className="eyebrow">{courseTitle(document)} · {document.estimatedMinutes}분 수업</div><h1>{document.title}</h1></div><span className={`pill ${currentEnrollment?.status === 'completed' ? 'green' : ''}`}>{currentEnrollment?.status === 'completed' ? '학습 완료' : currentEnrollment ? '학습 중' : '수업 미리보기'}</span></div>{!currentEnrollment && <div className="preview-banner"><div><strong>설명은 먼저 둘러볼 수 있어요.</strong><p>수업을 시작하면 문제를 풀고 진도를 저장할 수 있어요.</p></div><button className="button primary" disabled={busy} onClick={() => void startLesson()}>{state ? '이 수업 시작하기' : '내 학습 시작하기'}<Icon name="arrow" size={16} /></button></div>}{state && <div className="session-guidance"><strong>오늘은 {state.user.dailyMinutes}분씩, 나의 속도로.</strong><p>한 단계가 끝나면 쉬어도 괜찮아요. 다음 방문에 저장된 단계부터 이어가며 설명과 문제는 모두 남아 있어요.</p></div>}<div className="lesson-layout"><aside className="lesson-outline" aria-label="수업 학습 단계"><span className="eyebrow">수업 단계</span>{document.sections.map((item, index) => <button key={item.sectionId} className={index === sectionIndex ? 'active' : ''} aria-current={index === sectionIndex ? 'step' : undefined} disabled={busy} onClick={() => setSectionIndex(index)}><span className={currentEnrollment?.completedSectionIds.includes(item.sectionId) ? 'done' : ''}>{currentEnrollment?.completedSectionIds.includes(item.sectionId) ? <Icon name="check" size={13} /> : index + 1}</span><span><small>{roleLabels[item.role]}</small>{item.title}</span></button>)}<p>헷갈리면 앞 단계로 돌아가도 괜찮아요.</p>{lessonSets.length > 0 && <button className="text-button outline-sets" disabled={busy} onClick={() => openCourseSets(document.courseKey, document.lessonKey)}><Icon name="pencil" size={14} />이 수업의 문제집 {lessonSets.length}개</button>}</aside><div><article className="lesson-sheet"><div className="lesson-step-label">{String(sectionIndex + 1).padStart(2, '0')}<i />{roleLabels[section.role]}</div><h2>{section.title}</h2><ContentBlocks blocks={section.contentBlocks} problems={document.problems} glossary={canExploreDefinitions(section.role) ? readingGlossary : glossary} renderProblem={(problem) => <ProblemCard key={`${currentEnrollment?.id ?? 'preview'}-${problem.problemVersionId}`} glossary={glossary} problem={problem} attempt={currentEnrollment?.attempts.filter((item) => item.problemVersionId === problem.problemVersionId).at(-1)} actions={lessonActions(problem.problemVersionId)} ready={!!currentEnrollment} busy={busy} disabled={answeringClosed} disabledNote={closedNote} onReady={() => currentEnrollment ? setModal('login') : void startLesson()} readyNote="수업을 시작하면 풀이와 진도가 저장돼요." />} /></article>{unsupported && <div className="error-banner" role="alert">필수 콘텐츠를 표시할 수 없어 단계 완료를 멈췄어요. 지원되는 앱 버전에서 다시 열어 주세요.</div>}<div className="lesson-controls"><button className="button secondary" disabled={sectionIndex === 0 || busy} onClick={() => setSectionIndex((value) => value - 1)}><Icon name="back" size={17} />이전</button><span>{sectionIndex + 1} / {document.sections.length}</span>{!currentEnrollment && isLast ? <button className="button primary" disabled={busy || unsupported} onClick={() => void startLesson()}>수업 시작하기<Icon name="arrow" size={17} /></button> : <button className="button primary" disabled={busy || unsupported} onClick={() => void nextSection()}>{busy ? '저장 중…' : isLast ? currentEnrollment?.status === 'completed' ? '내 학습으로' : '수업 완료하기' : currentEnrollment?.status === 'active' ? '이해했어요, 다음으로' : '다음 단계'}<Icon name="arrow" size={17} /></button>}</div></div></div></>}</ConceptExplorer>;
   }
 
   function renderAssignment() {

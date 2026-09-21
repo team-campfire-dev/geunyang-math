@@ -15,6 +15,9 @@ const shelf: PublicProblemSet[] = [
     courseKey: 'fractions', lessonKey: 'fraction-meaning', questionCount: 3, conceptKeys: ['term.denominator'] },
   { problemSetId: 'fraction-meaning:check', versionId: 'fraction-meaning:check:v1', name: '분수의 의미 확인',
     courseKey: 'fractions', lessonKey: 'fraction-meaning', questionCount: 2, conceptKeys: ['term.denominator'] },
+  // A second course's set, so the shelf has two courses to hold open at once.
+  { problemSetId: 'decimal-meaning:practice', versionId: 'decimal-meaning:practice:v1', name: '소수의 의미 연습',
+    courseKey: 'decimals', lessonKey: 'decimal-meaning', questionCount: 4, conceptKeys: ['term.decimal'] },
 ];
 const catalogue: PublicLesson[] = [{
   lessonKey, versionId: 'fraction-meaning:v2', title: '분수의 의미', summary: '분자와 분모를 읽어요',
@@ -548,6 +551,45 @@ describe('picking a problem set to solve', () => {
     fireEvent.click(screen.getByRole('button', { name: /분수의 의미 연습/ }));
     await until(() => expect(server.of('problemSet.start')).toHaveLength(1));
     expect(server.of('problemSet.start')[0]).toEqual({ action: 'problemSet.start', problemSetId: 'fraction-meaning:practice' });
+  });
+
+  it('is reachable from the course itself, opened where the learner asked', async () => {
+    serve();
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: '수업' }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
+    // A course says what it keeps besides its lessons, which is the only reason anybody knows to look.
+    await until(() => expect(screen.getByRole('button', { name: /이 코스의 문제집 2개 풀기/ })).toBeDefined());
+    fireEvent.click(screen.getByRole('button', { name: /이 코스의 문제집 2개 풀기/ }));
+    // Arriving this way, the sets are already there — no second click to undo the hiding.
+    await until(() => expect(screen.getByText('분수의 의미 연습')).toBeDefined());
+    expect(screen.getByText('문제집 골라 풀기')).toBeDefined();
+  });
+
+  it('is reachable from the lesson that shows it, landing on that lesson\u2019s sets', async () => {
+    await openLesson();
+    fireEvent.click(screen.getByRole('button', { name: /이 수업의 문제집 2개/ }));
+    await until(() => expect(screen.getByText('분수의 의미 연습')).toBeDefined());
+    // The lesson's own group carries an id, so the way in can point at it rather than at the course.
+    expect(window.document.getElementById('shelf-fractions-fraction-meaning')).not.toBeNull();
+  });
+
+  it('leaves a course open when another one is opened, since a shelf hides nothing', async () => {
+    serve({ catalogue: twoCourses });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: '연습장' }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: '연습장' })[0]);
+    await until(() => expect(screen.getByRole('button', { name: /문제집 2개/ })).toBeDefined());
+    fireEvent.click(screen.getByRole('button', { name: /문제집 2개/ }));
+    await until(() => expect(screen.getByText('분수의 의미 연습')).toBeDefined());
+    fireEvent.click(screen.getByRole('button', { name: /문제집 1개/ }));
+    await until(() => expect(screen.getByText('소수의 의미 연습')).toBeDefined());
+    // Opening the second did not close the first, which is what an accordion would have done.
+    expect(screen.getByText('분수의 의미 연습')).toBeDefined();
+    // And the head is still a toggle: pressing it again puts that one course away.
+    fireEvent.click(screen.getByRole('button', { name: /문제집 2개/ }));
+    await until(() => expect(screen.queryByText('분수의 의미 연습')).toBeNull());
+    expect(screen.getByText('소수의 의미 연습')).toBeDefined();
   });
 
   it('calls work the learner chose their own, not an assignment', async () => {
