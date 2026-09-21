@@ -10,6 +10,8 @@ import {
 } from '@/shared/scene';
 import { locateTerms, mathOptions, splitRichText, definitionRefId, type DefinitionLink, type DefinitionRef } from '@/shared/rich-text';
 import { readTable, type Table, type TableColumn, type TableRow } from '@/shared/table';
+import { barsMatching, chartComplete, chartTicks, heightOf, setBar,
+  type ChartBuild, type ChartDrawing } from '@/shared/chart-build';
 import { Icon } from './icons';
 
 /**
@@ -415,6 +417,98 @@ export function TableFigure({ caption, note, columns, rows, rowHeader }: Table) 
   </div>;
 }
 
+/**
+ * A chart the learner draws. The data sits in a table beside an empty grid and they raise each bar
+ * until the two agree. Nothing is reported to the server: this is a thing to try, not a thing that
+ * is marked — the same footing as a drawing the learner arranges.
+ *
+ * A bar is a slider, not a shape that happens to be draggable. That is what gives it arrow keys,
+ * a value a screen reader can read out, and a place in the tab order, so the task can be finished
+ * without a pointer. Dragging is the other half of the same control, not a second way of working.
+ */
+export function ChartBuildFigure({ chart }: { chart: ChartBuild }) {
+  const [drawing, setDrawing] = useState<ChartDrawing>({});
+  const [holding, setHolding] = useState<string | null>(null);
+  const plot = useRef<SVGSVGElement>(null);
+  const ticks = chartTicks(chart.axisMax, chart.axisStep);
+  const done = chartComplete(chart, drawing);
+  const matched = barsMatching(chart, drawing);
+  // Every other tick carries a number once there are more than seven; a crowded axis is unread.
+  const labelled = (index: number) => ticks.length <= 7 || index % 2 === 0;
+
+  const [width, height] = [320, 210];
+  const [left, top, floor] = [44, 18, 154];
+  const span = (width - left - 14) / chart.bars.length;
+  const barWidth = Math.min(34, span * 0.56);
+  const atY = (value: number) => floor - (value / chart.axisMax) * (floor - top);
+  const valueAt = (clientY: number) => {
+    const box = plot.current?.getBoundingClientRect();
+    if (!box) return 0;
+    const y = ((clientY - box.top) / box.height) * height;
+    return ((floor - y) / (floor - top)) * chart.axisMax;
+  };
+  const move = (label: string, value: number) => setDrawing((current) => setBar(current, chart, label, value));
+  const nudge = (label: string, steps: number) => move(label, heightOf(drawing, label) + steps * chart.axisStep);
+
+  const status = done
+    ? chart.successText ?? '자료와 똑같아졌어요.'
+    : `막대 ${chart.bars.length}개 중 ${matched}개가 자료와 같아요.`;
+
+  return <div className="chart-build" role="group" aria-label={chart.promptAlt ?? chart.prompt}>
+    <div className="builder-prompt"><RichText text={chart.prompt} asCaption /></div>
+    <TableFigure caption={chart.caption} note={chart.note} rowHeader
+      columns={[{ label: '항목', align: 'start' }, { label: '값', align: 'end' }]}
+      rows={chart.bars.map((bar) => ({ cells: [bar.label, String(bar.value)] }))} />
+    <div className="scene-figure chart-plot">
+      <svg ref={plot} viewBox={`0 0 ${width} ${height}`} style={{ aspectRatio: `${width} / ${height}`, maxWidth: width }}
+        onPointerMove={(event) => { if (holding) move(holding, valueAt(event.clientY)); }}
+        onPointerUp={() => setHolding(null)} onPointerCancel={() => setHolding(null)}>
+        {ticks.map((tick, index) => <g key={tick}>
+          <line x1={left} y1={atY(tick)} x2={width - 10} y2={atY(tick)} className={tick ? 'chart-grid' : 'chart-axis'} />
+          {labelled(index) && <text x={left - 6} y={atY(tick) + 3} textAnchor="end" className="chart-tick">{tick}</text>}
+        </g>)}
+        <line x1={left} y1={top} x2={left} y2={floor} className="chart-axis" />
+        {chart.bars.map((bar, index) => {
+          const value = heightOf(drawing, bar.label);
+          const x = left + span * index + (span - barWidth) / 2;
+          return <g key={bar.label}>
+            {/* The whole column takes the press, so a bar at zero — a rectangle of no height — can still be grabbed. */}
+            <rect x={left + span * index} y={top} width={span} height={floor - top} fill="transparent"
+              onPointerDown={(event) => {
+                event.currentTarget.setPointerCapture(event.pointerId);
+                setHolding(bar.label);
+                move(bar.label, valueAt(event.clientY));
+              }} style={{ cursor: 'ns-resize', touchAction: 'none' }} />
+            <rect x={x} y={atY(value)} width={barWidth} height={floor - atY(value)}
+              className={`chart-bar${value === bar.value ? ' settled' : ''}`} pointerEvents="none" />
+            <rect x={x} y={top} width={barWidth} height={floor - top} fill="transparent"
+              role="slider" tabIndex={0} aria-label={bar.label}
+              aria-valuemin={0} aria-valuemax={chart.axisMax} aria-valuenow={value}
+              style={{ cursor: 'ns-resize', touchAction: 'none' }}
+              onPointerDown={(event) => {
+                event.currentTarget.setPointerCapture(event.pointerId);
+                setHolding(bar.label);
+                move(bar.label, valueAt(event.clientY));
+              }}
+              onKeyDown={(event) => {
+                const step = { ArrowUp: 1, ArrowRight: 1, ArrowDown: -1, ArrowLeft: -1 }[event.key];
+                if (step) { event.preventDefault(); nudge(bar.label, step); return; }
+                if (event.key === 'Home') { event.preventDefault(); move(bar.label, 0); }
+                if (event.key === 'End') { event.preventDefault(); move(bar.label, chart.axisMax); }
+              }} />
+            <text x={left + span * index + span / 2} y={floor + 16} textAnchor="middle" className="chart-name">{bar.label}</text>
+          </g>;
+        })}
+      </svg>
+    </div>
+    <p className={`builder-status ${done ? 'matched' : 'building'}`} aria-live="polite">{status}</p>
+    <div className="builder-actions">
+      <span className="editor-note">위아래 화살표로도 막대를 올리고 내릴 수 있어요.</span>
+      <button type="button" className="text-button" onClick={() => setDrawing({})}>처음으로</button>
+    </div>
+  </div>;
+}
+
 const validLinks = (payload: Record<string, unknown>) => Array.isArray(payload.definitions) && payload.definitions.every((definition) => !!definition && typeof definition === 'object' && typeof (definition as DefinitionLink).conceptKey === 'string' && typeof (definition as DefinitionLink).surface === 'string');
 const registry: Record<string, Renderer> = {
   'core.rich_text@1': {
@@ -465,6 +559,24 @@ const registry: Record<string, Renderer> = {
         && (row as TableRow).cells.length === (payload.columns as unknown[]).length
         && (row as TableRow).cells.every((cell) => typeof cell === 'string')),
     render: (block) => <TableFigure {...readTable(block.payload)} />,
+  },
+  'core.chart_build@1': {
+    // A chart whose values do not land on ticks is drawn as nothing rather than as a task the
+    // learner can work at forever: the bars move a tick at a time, so a value between two of them
+    // is one no amount of trying reaches.
+    validate: (payload) => typeof payload.caption === 'string' && !!payload.caption
+      && typeof payload.prompt === 'string' && !!payload.prompt
+      && typeof payload.axisMax === 'number' && payload.axisMax > 0
+      && typeof payload.axisStep === 'number' && payload.axisStep > 0
+      && payload.axisMax % payload.axisStep === 0
+      && Array.isArray(payload.bars) && payload.bars.length > 1
+      && payload.bars.every((bar) => !!bar && typeof bar === 'object'
+        && typeof (bar as ChartBuild['bars'][number]).label === 'string' && !!(bar as ChartBuild['bars'][number]).label
+        && typeof (bar as ChartBuild['bars'][number]).value === 'number'
+        && (bar as ChartBuild['bars'][number]).value >= 0
+        && (bar as ChartBuild['bars'][number]).value <= (payload.axisMax as number)
+        && (bar as ChartBuild['bars'][number]).value % (payload.axisStep as number) === 0),
+    render: (block) => <ChartBuildFigure chart={block.payload as unknown as ChartBuild} />,
   },
   'core.problem_set@2': {
     validate: (payload, context) => Array.isArray(payload.problemVersionIds) && payload.problemVersionIds.length > 0 && payload.problemVersionIds.every((id) => typeof id === 'string' && context.problems.some((problem) => problem.problemVersionId === id)),

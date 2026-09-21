@@ -4,7 +4,7 @@
     {
       "key": "ncs-statistics",
       "title": "기초통계",
-      "summary": "세고, 비중을 내고, 평균을 구하고, 흩어진 정도까지 읽어요. 자료해석의 바탕이 되는 계산이에요.",
+      "summary": "세고, 비중을 내고, 평균을 구하고, 흩어진 정도와 확률까지 읽어요. 자료해석의 바탕이 되는 계산이에요.",
       "order": 930,
       "track": "ncs",
       "lessons": [
@@ -19,6 +19,10 @@
         {
           "key": "ncs-spread",
           "order": 3
+        },
+        {
+          "key": "ncs-chance",
+          "order": 4
         }
       ],
       "diagnostics": []
@@ -53,6 +57,11 @@
     {
       "key": "dispersion",
       "label": "범위와 표준편차",
+      "assessable": true
+    },
+    {
+      "key": "chance",
+      "label": "경우의 수와 확률",
       "assessable": true
     }
   ],
@@ -1068,6 +1077,465 @@
         "problemVersionIds": [
           "ncs-spread:homework-1:v1",
           "ncs-spread:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "ncs-chance",
+        "versionId": "ncs-chance:v1",
+        "title": "경우의 수와 확률: 세어서 나눈다",
+        "summary": "「또는」과 「그리고」로 경우를 세고, 그 수로 확률을 구하고, 「적어도」는 뒤집어 풀어요.",
+        "estimatedMinutes": 15,
+        "conceptKeys": [
+          "chance"
+        ],
+        "prerequisiteConceptKeys": [
+          "counting-cases",
+          "probability-meaning",
+          "probability-rules",
+          "proportion"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-chance:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chance:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "시험에서 확률 문항은 대개 어렵지 않아요. 세는 일과 나누는 일, 둘뿐이거든요. 틀리는 자리는 계산이 아니라 세는 방식이에요.\n\n세는 방식은 문제의 말이 정해요. 「또는」이면 더하고 「그리고」면 곱해요. 사원증 번호를 앞자리 $3$가지와 뒷자리 $4$가지로 만든다면 둘을 이어 붙이는 것이니 $3 \\times 4 = 12$가지예요.\n\n더할 때는 겹치는 것이 없는지 봐야 해요. 「$A$팀이거나 신입」이라면 둘 다인 사람을 두 번 세게 되거든요.\n\n확률은 바라는 경우를 모든 경우로 나눈 값이에요. 스무 개 중 불량이 셋이면 불량일 확률은 $\\dfrac{3}{20}$, 백분율로는 $15\\%$예요.\n\n업무에서는 백분율로 묻는 일이 많아요. 불량률, 합격률, 응답률이 모두 확률을 백분율로 적은 것이에요. 분수로 구해 놓고 $100$을 곱하는 것이 안전해요.\n\n「적어도 하나」가 보이면 뒤집어 푸세요. 반대가 「하나도 없다」 한 가지뿐이라 훨씬 짧아요. 세 개를 검사해 적어도 하나가 불량일 확률은 $1$에서 셋 다 정상일 확률을 뺀 값이에요.\n\n이어지는 일은 곱해요. 불량률이 $10\\%$인 공정을 두 번 거쳐 둘 다 불량일 확률은 $0.1 \\times 0.1 = 0.01$, 곧 $1\\%$예요.\n\n마지막으로 조심할 것. 확률은 $0$과 $1$ 사이예요. $120\\%$가 나왔다면 어딘가에서 겹치는 것을 두 번 셌다는 뜻이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "chance",
+                    "surface": "확률",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-chance:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "스무 개 중 불량 셋을 세어 확률을 구하는 그림",
+                "caption": "바라는 경우를 세고 전체로 나누면 확률이에요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 26,
+                    "text": "스무 개 가운데 불량은 몇 개인가",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 36,
+                    "y": 52,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q1"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 60,
+                    "y": 52,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q2"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 84,
+                    "y": 52,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q3"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 108,
+                    "y": 52,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q4"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 132,
+                    "y": 52,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q5"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 156,
+                    "y": 52,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q6"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 180,
+                    "y": 52,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q7"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 204,
+                    "y": 52,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q8"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 228,
+                    "y": 52,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q9"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 252,
+                    "y": 52,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q10"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 36,
+                    "y": 78,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q11"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 60,
+                    "y": 78,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q12"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 84,
+                    "y": 78,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q13"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 108,
+                    "y": 78,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q14"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 132,
+                    "y": 78,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q15"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 156,
+                    "y": 78,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q16"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 180,
+                    "y": 78,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q17"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 204,
+                    "y": 78,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q18"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 228,
+                    "y": 78,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q19"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 252,
+                    "y": 78,
+                    "width": 20,
+                    "height": 20,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q20"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 30,
+                    "y1": 116,
+                    "x2": 286,
+                    "y2": 116,
+                    "stroke": "line",
+                    "strokeWidth": 1,
+                    "id": "rule",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 140,
+                    "text": "전체 $20$개, 불량 $3$개",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "count",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 168,
+                    "text": "불량일 확률 $= \\frac{3}{20} = 15\\%$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "상자에 스무 개가 들어 있어요. 그중 셋이 불량이에요.",
+                    "changes": [
+                      {
+                        "id": "rule",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "count",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "일어날 수 있는 경우는 스무 가지, 바라는 경우는 세 가지예요.",
+                    "changes": [
+                      {
+                        "id": "rule",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "count",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "바라는 경우를 전체로 나누면 확률이에요. 백분율로 고치면 $15\\%$고요.",
+                    "changes": [
+                      {
+                        "id": "rule",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "count",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chance:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chance:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "부품 스무 개 중 셋이 불량이에요. 하나를 꺼낼 때 불량일 확률을 백분율로 구해 볼게요.\n\n모든 경우는 스무 가지, 바라는 경우는 세 가지예요. 확률은 $\\dfrac{3}{20}$이고요.\n\n백분율로 고치면 $\\dfrac{3}{20} \\times 100 = 15\\%$예요.\n\n세는 문제도 해 볼게요. 상의 $4$종과 하의 $3$종으로 만들 수 있는 차림은 몇 가지일까요. 「그리고」이니 곱해서 $12$가지예요.\n\n「적어도」는 뒤집어요. 불량률이 $10\\%$인 부품 둘을 꺼낼 때 적어도 하나가 불량일 확률은요.\n\n둘 다 정상일 확률이 $0.9 \\times 0.9 = 0.81$이니, 구하려는 값은 $1 - 0.81 = 0.19$, 곧 $19\\%$예요.\n\n하나씩 세면 「첫째만 불량」, 「둘째만 불량」, 「둘 다 불량」 셋을 더해야 하지만 뒤집으면 한 번으로 끝나요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chance:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chance:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-chance:practice",
+                "problemSetVersionId": "ncs-chance:practice:v1",
+                "problemVersionIds": [
+                  "ncs-chance:practice-1:v1",
+                  "ncs-chance:practice-2:v1",
+                  "ncs-chance:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chance:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chance:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-chance:check",
+                "problemSetVersionId": "ncs-chance:check:v1",
+                "problemVersionIds": [
+                  "ncs-chance:check-1:v1",
+                  "ncs-chance:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chance:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chance:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "「또는」이면 더하고 「그리고」면 곱해요. 더할 때는 겹치는 것이 없는지 확인해요.\n\n확률은 바라는 경우를 모든 경우로 나눈 값이고, 업무에서는 대개 백분율로 적어요.\n\n「적어도」가 보이면 $1$에서 반대 경우를 빼는 쪽이 훨씬 짧아요.\n\n확률이 $1$을 넘었다면 어딘가를 두 번 센 거예요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-chance:review",
+        "problemSetVersionId": "ncs-chance:review:v1",
+        "problemVersionIds": [
+          "ncs-chance:homework-1:v1",
+          "ncs-chance:homework-2:v1"
         ]
       }
     }
@@ -2879,6 +3347,1181 @@
               "required": true,
               "payload": {
                 "text": "네 번을 더해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-chance:practice",
+      "courseKey": "ncs-statistics",
+      "name": "확률 연습",
+      "versionId": "ncs-chance:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-chance:practice-1:v1",
+          "conceptKeys": [
+            "chance"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chance:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부품 $20$개 중 $3$개가 불량일 때 하나를 꺼내 불량일 확률은 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chance:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{3}{20}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-chance:practice-2:v1",
+          "conceptKeys": [
+            "chance"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chance:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "상의 $4$종과 하의 $3$종으로 만들 수 있는 차림은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chance:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「그리고」이니 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-chance:practice-3:v1",
+          "conceptKeys": [
+            "chance"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chance:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$50$명 중 $20$명이 합격했다면 합격률은 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 40
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chance:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{20}{50}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-chance:check",
+      "courseKey": "ncs-statistics",
+      "name": "확률 확인",
+      "versionId": "ncs-chance:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-chance:check-1:v1",
+          "conceptKeys": [
+            "chance"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chance:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "불량률이 $10\\%$인 부품 둘을 꺼낼 때 적어도 하나가 불량일 확률은 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 19
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chance:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1 - 0.81$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-chance:check-2:v1",
+          "conceptKeys": [
+            "chance"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chance:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「적어도 하나」를 묻는 문제에서 먼저 구하면 쉬운 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "하나도 없을 확률"
+              },
+              {
+                "id": "b",
+                "text": "모든 경우의 수"
+              },
+              {
+                "id": "c",
+                "text": "가장 큰 확률"
+              },
+              {
+                "id": "d",
+                "text": "평균"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "하나도 없을 확률"
+              },
+              {
+                "id": "b",
+                "text": "모든 경우의 수"
+              },
+              {
+                "id": "c",
+                "text": "가장 큰 확률"
+              },
+              {
+                "id": "d",
+                "text": "평균"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chance:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반대가 한 가지뿐이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-chance:review",
+      "courseKey": "ncs-statistics",
+      "name": "확률 복습",
+      "versionId": "ncs-chance:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-chance:homework-1:v1",
+          "conceptKeys": [
+            "chance"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chance:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "앞자리 $5$가지와 뒷자리 $4$가지로 만들 수 있는 번호는 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chance:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이어 붙이니 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-chance:homework-2:v1",
+          "conceptKeys": [
+            "chance"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chance:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$200$명 중 $30$명이 응답했다면 응답률은 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chance:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{30}{200}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-statistics:drill",
+      "courseKey": "ncs-statistics",
+      "name": "NCS 기초통계 모아 풀기",
+      "versionId": "ncs-statistics:drill:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-statistics:drill2-1:v1",
+          "conceptKeys": [
+            "frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4$건, $7$건, $6$건, $3$건일 때 전체는 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "모두 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-2:v1",
+          "conceptKeys": [
+            "frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$120$건 중 $30$건이 A유형이라면 A유형은 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "센 수 그대로예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-3:v1",
+          "conceptKeys": [
+            "frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$50$건 중 $20$건이 접수되었다면 나머지는 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-4:v1",
+          "conceptKeys": [
+            "proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 $200$건 중 $50$건의 비중은 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부분을 전체로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-5:v1",
+          "conceptKeys": [
+            "proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 $400$건의 $15\\%$는 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체에 비율을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-6:v1",
+          "conceptKeys": [
+            "proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어떤 항목이 $30\\%$일 때 나머지는 모두 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 70
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합이 $100\\%$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-7:v1",
+          "conceptKeys": [
+            "mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$12$, $16$, $20$, $24$의 평균을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 18
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합이 $72$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-8:v1",
+          "conceptKeys": [
+            "mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평균이 $25$이고 개수가 $8$이면 합계는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 200
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평균에 개수를 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-9:v1",
+          "conceptKeys": [
+            "weighted-mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10$명의 평균이 $80$, $30$명의 평균이 $60$일 때 전체 평균을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 65
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합계끼리 더해 $40$으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-10:v1",
+          "conceptKeys": [
+            "weighted-mean"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "인원이 다른 두 집단의 평균을 합칠 때 옳은 방법은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "합계끼리 더해 전체 인원으로 나눈다"
+              },
+              {
+                "id": "b",
+                "text": "두 평균을 더해 둘로 나눈다"
+              },
+              {
+                "id": "c",
+                "text": "큰 쪽 평균을 쓴다"
+              },
+              {
+                "id": "d",
+                "text": "구할 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "합계끼리 더해 전체 인원으로 나눈다"
+              },
+              {
+                "id": "b",
+                "text": "두 평균을 더해 둘로 나눈다"
+              },
+              {
+                "id": "c",
+                "text": "큰 쪽 평균을 쓴다"
+              },
+              {
+                "id": "d",
+                "text": "구할 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "인원이 같을 때만 한가운데예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-11:v1",
+          "conceptKeys": [
+            "median-mode"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$, $5$, $9$, $11$, $12$의 중앙값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가운데 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-12:v1",
+          "conceptKeys": [
+            "median-mode"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$, $7$, $7$, $7$, $30$의 최빈값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 자주 나온 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-13:v1",
+          "conceptKeys": [
+            "median-mode"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "유난히 큰 값이 하나 섞인 자료에서 알맞은 대표값은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "중앙값"
+              },
+              {
+                "id": "b",
+                "text": "평균"
+              },
+              {
+                "id": "c",
+                "text": "합계"
+              },
+              {
+                "id": "d",
+                "text": "최댓값"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "중앙값"
+              },
+              {
+                "id": "b",
+                "text": "평균"
+              },
+              {
+                "id": "c",
+                "text": "합계"
+              },
+              {
+                "id": "d",
+                "text": "최댓값"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평균이 끌려가요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-14:v1",
+          "conceptKeys": [
+            "dispersion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "최댓값이 $92$, 최솟값이 $47$일 때 범위를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 45
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-15:v1",
+          "conceptKeys": [
+            "dispersion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "모든 값이 같은 자료의 표준편차를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "흩어짐이 없어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-16:v1",
+          "conceptKeys": [
+            "dispersion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평균이 같은 두 자료에 대해 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "흩어진 정도는 다를 수 있다"
+              },
+              {
+                "id": "b",
+                "text": "같은 자료다"
+              },
+              {
+                "id": "c",
+                "text": "범위도 같다"
+              },
+              {
+                "id": "d",
+                "text": "표준편차도 같다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "흩어진 정도는 다를 수 있다"
+              },
+              {
+                "id": "b",
+                "text": "같은 자료다"
+              },
+              {
+                "id": "c",
+                "text": "범위도 같다"
+              },
+              {
+                "id": "d",
+                "text": "표준편차도 같다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평균은 흩어짐을 숨겨요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-17:v1",
+          "conceptKeys": [
+            "chance"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부품 $20$개 중 $3$개가 불량일 때 불량률은 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{3}{20}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-18:v1",
+          "conceptKeys": [
+            "chance"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "상의 $5$종과 하의 $4$종으로 만들 수 있는 차림은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-19:v1",
+          "conceptKeys": [
+            "chance"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$250$명 중 $50$명이 응답했다면 응답률은 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{50}{250}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-statistics:drill2-20:v1",
+          "conceptKeys": [
+            "chance"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-statistics:drill2-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "불량률이 $10\\%$인 부품 둘이 모두 불량일 확률은 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-statistics:drill2-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.1 \\times 0.1$이에요."
               }
             }
           ],

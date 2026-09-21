@@ -4,6 +4,7 @@ import { z } from 'zod';
 import type { LessonDocument, LessonSection, ContentBlock, GlossaryEntry, ProblemSetRef, PublicLesson, PublicProblem } from '@/shared/api';
 import { frameLimits, isSceneColor, itemIdPattern, pathPattern, sceneLimits, stripLimits } from '@/shared/scene';
 import { tableIssue, tableLimits, type Table } from '@/shared/table';
+import { chartBuildIssue, chartBuildLimits, type ChartBuild } from '@/shared/chart-build';
 import { choiceIssue, choiceLimits, type AnswerOption, type AnswerSpec } from '@/shared/answer';
 import { locateTerms, definitionRefId, type DefinitionLink, type DefinitionRef } from '@/shared/rich-text';
 
@@ -161,6 +162,26 @@ const blockSchemas = {
     rowHeader: z.boolean().optional(),
   }).strict().superRefine((payload, ctx) => {
     const issue = tableIssue(payload as Table);
+    if (issue) ctx.addIssue({ code: 'custom', message: issue });
+  }),
+  // A chart the learner draws. 도표작성 was the one NCS area we could only ask about, because
+  // choosing a graph from four options is not drawing one. The data arrives as a table beside an
+  // empty grid and the learner puts it up; every value has to land on a tick, or the task is one
+  // that draws correctly and can never be finished.
+  'core.chart_build@1': z.object({
+    caption: plainText(chartBuildLimits.maxCaption),
+    note: z.string().trim().max(chartBuildLimits.maxNote).optional(),
+    bars: z.array(z.object({
+      label: z.string().trim().min(1).max(chartBuildLimits.maxLabel),
+      value: z.number().min(0).max(chartBuildLimits.maxValue),
+    }).strict()).min(chartBuildLimits.minBars).max(chartBuildLimits.maxBars),
+    axisMax: z.number().positive().max(chartBuildLimits.maxValue),
+    axisStep: z.number().positive().max(chartBuildLimits.maxValue),
+    prompt: z.string().trim().min(1).max(chartBuildLimits.maxPrompt),
+    promptAlt: plainText(chartBuildLimits.maxPrompt).optional(),
+    successText: plainText(chartBuildLimits.maxPrompt).optional(),
+  }).strict().superRefine((payload, ctx) => {
+    const issue = chartBuildIssue(payload as ChartBuild);
     if (issue) ctx.addIssue({ code: 'custom', message: issue });
   }),
   // A drawing given as data. Every value lands in an attribute of an element the renderer creates,

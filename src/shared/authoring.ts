@@ -606,6 +606,33 @@ export const blockForms: BlockForm[] = [
     editsTable: true,
   },
   {
+    kind: 'core.chart_build', typeVersion: 1, label: '도표 그리기',
+    hint: '자료를 표로 보여 주고 학습자가 막대그래프로 옮겨 그리게 해요. 값은 모두 눈금 간격의 배수여야 학습자가 맞출 수 있어요.',
+    // A new chart is already a finishable chart: two bars that land on ticks of the axis it ships
+    // with. A block that arrives refused is a block the author has to repair before writing in it.
+    create: () => ({ caption: '자료 제목', note: '단위: 건', axisMax: 40, axisStep: 10,
+      prompt: '표의 값을 막대그래프로 옮겨 그려 보세요.',
+      bars: [{ label: '첫째', value: 20 }, { label: '둘째', value: 30 }] }),
+    fields: [
+      { key: 'caption', label: '자료 제목', kind: 'text', hint: '화면 낭독에서 이 자료의 이름이 돼요. 수식 없이 평문으로 씁니다.' },
+      { key: 'note', label: '단위·출처', kind: 'text', optional: true, hint: '「단위: 만 원」처럼 표 아래 한 줄로 붙어요.' },
+      { key: 'prompt', label: '과제', kind: 'text' },
+      { key: 'promptAlt', label: '낭독용 과제', kind: 'text', optional: true, hint: '과제에 수식을 쓸 때 필요해요.' },
+      { key: 'successText', label: '다 그렸을 때 할 말', kind: 'text', optional: true },
+      { key: 'axisMax', label: '세로축 꼭대기', kind: 'number', min: 1, max: 1_000_000 },
+      { key: 'axisStep', label: '눈금 간격', kind: 'number', min: 1, max: 1_000_000,
+        hint: '꼭대기가 이 값으로 나누어떨어져야 하고, 막대 값도 모두 이 값의 배수여야 해요.' },
+    ],
+    list: {
+      key: 'bars', label: '막대', addLabel: '막대 추가', max: 8,
+      create: () => ({ label: '항목', value: 0 }),
+      fields: [
+        { key: 'label', label: '이름', kind: 'text' },
+        { key: 'value', label: '값', kind: 'number', min: 0, max: 1_000_000 },
+      ],
+    },
+  },
+  {
     kind: 'core.problem_set', typeVersion: 2, label: '문제',
     hint: '학습자가 풀 문제를 추가하고 순서와 정답, 힌트를 고쳐요.',
     create: () => { const problemSetId = newProblemSetId(); return { problemSetId, problemSetVersionId: `${problemSetId}:v1`, problemVersionIds: [] }; },
