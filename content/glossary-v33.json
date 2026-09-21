@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "counting-cases",
+      "label": "경우의 수",
+      "assessable": true
+    },
+    {
+      "key": "probability-meaning",
+      "label": "확률",
+      "assessable": true
+    },
+    {
+      "key": "probability-rules",
+      "label": "확률의 계산",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "counting-cases",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "경우의 수",
+      "summary": "또는이면 더하고 그리고면 곱해요.",
+      "blocks": [
+        {
+          "blockId": "global:counting-cases:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "일어날 수 있는 일이 모두 몇 가지인지 센 것이 경우의 수예요. 「또는」으로 이어지면 두 무리를 나란히 놓고 세니 더해요. 이것이 합의 법칙인데, 두 무리에 겹치는 것이 없어야 해요. 「그리고」로 이어지면 짝을 짓는 것이라 곱해요. 이것이 곱의 법칙이고, 줄과 칸으로 된 표의 칸 수를 세는 것과 같아요. 동전 하나와 주사위 하나를 함께 던지면 $2 \\times 6 = 12$가지예요. 가짓수가 적을 때는 수형도를 그려 끝을 세어도 돼요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "가짓수를 셀 때"
+    },
+    {
+      "conceptKey": "probability-meaning",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "확률",
+      "summary": "전체 중에서 얼마만큼인지예요.",
+      "blocks": [
+        {
+          "blockId": "global:probability-meaning:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "모든 경우가 똑같이 일어날 만할 때, 확률은 바라는 경우의 수를 모든 경우의 수로 나눈 값이에요. 주사위에서 $3$이 나올 확률은 $\\dfrac{1}{6}$이고요. 확률은 언제나 $0$ 이상 $1$ 이하예요. 절대 일어나지 않으면 $0$, 반드시 일어나면 $1$이에요. 분수로도 소수로도 백분율로도 쓸 수 있고, $\\dfrac{1}{2}$과 $0.5$와 $50\\%$는 같은 말이에요. 분수로 적을 때는 약분해 기약분수로 적어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "가능성을 하나의 수로 나타낼 때"
+    },
+    {
+      "conceptKey": "probability-rules",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "확률의 계산",
+      "summary": "여사건으로 빼고, 이어지면 곱해요.",
+      "blocks": [
+        {
+          "blockId": "global:probability-rules:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "사건 $A$가 일어나지 않는 경우가 $A$의 여사건이고, 두 확률을 더하면 $1$이에요. 그래서 일어나지 않을 확률은 $1$에서 일어날 확률을 뺀 값이에요. 「적어도 하나」를 묻는 문제에서 특히 쓸모 있어요. 반대가 「하나도 없다」 한 가지뿐이니까요. 함께 일어날 수 없는 두 사건 중 하나가 일어날 확률은 더해서 구하고, 서로 영향을 주지 않는 두 사건이 함께 일어날 확률은 곱해서 구해요. 주사위를 두 번 던져 두 번 다 $6$일 확률은 $\\dfrac{1}{36}$이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "확률을 세지 않고 구할 때"
+    }
+  ]
+}
