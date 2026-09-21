@@ -89,9 +89,16 @@ function Brand() {
   return <span className="brand"><span className="brand-mark" aria-hidden="true"><i /><i /><i /><i /></span><span>geunyang<span className="brand-sub">math</span></span></span>;
 }
 
-function LessonArt({ lessonKey = '', large = false }: { lessonKey?: string; large?: boolean }) {
+/**
+ * The drawing a lesson wears, and the one the problem sets of that lesson wear with it.
+ *
+ * A set borrows its lesson's mark instead of drawing one of its own, because that is what says the
+ * set is the work of the lesson just read — three sets under one lesson heading are siblings, not
+ * three unrelated things. `small` is the same mark at the size of a list row.
+ */
+function LessonArt({ lessonKey = '', large = false, small = false }: { lessonKey?: string; large?: boolean; small?: boolean }) {
   const tone = [...lessonKey].reduce((sum, letter) => sum + letter.codePointAt(0)!, 0) % 3;
-  return <div className={`class-art art-${tone}${large ? ' large' : ''}`} aria-hidden="true">
+  return <div className={`class-art art-${tone}${large ? ' large' : ''}${small ? ' small' : ''}`} aria-hidden="true">
     <div className="course-art-shapes"><i /><i /><i /><i /></div>
   </div>;
 }
@@ -450,10 +457,21 @@ export function LearningWorkspace() {
   }
 
   const courseTitle = (item: PublicLesson) => courses.find((course) => course.key === item.courseKey)?.title ?? '수업';
+  /**
+   * Whose mark a problem set wears. A set the learner opened is carried as a piece of work with no
+   * lesson of its own, so the catalogue is asked which lesson shows it; a set no lesson shows falls
+   * back to its own name, which at least keeps it the same drawing every time it is listed.
+   */
+  const setArtKey = (problemSetId: string, lessonKey: string | null = null) =>
+    problemSets.find((set) => set.problemSetId === problemSetId)?.lessonKey ?? lessonKey ?? problemSetId;
   const courseIndex = (item: PublicLesson) => lessons.filter((lesson) => lesson.courseKey === item.courseKey).findIndex((lesson) => lesson.lessonKey === item.lessonKey);
   function assignmentRow(item: AssignmentView) {
     const savedCount = item.items.filter((entry) => entry.attempt).length;
-    return <button key={item.recipientId} className="assignment-row" onClick={() => openAssignment(item)}><span className="assignment-icon"><Icon name={item.status === 'submitted' ? 'check' : 'pencil'} size={23} /></span><span className="assignment-info"><strong>{item.title}</strong><small>{assignmentKindLabel[item.policy.kind]} · {item.items.length}문제 · {assignmentTiming(item)}</small>{item.lessonKey && <small>{lessons.find((lesson) => lesson.lessonKey === item.lessonKey)?.title}</small>}</span><span className={`assignment-status ${item.status}`}>{item.status === 'submitted' ? '제출 완료' : savedCount ? `${savedCount}/${item.items.length} 저장` : '풀어보기'}</span><Icon name="chevron" size={18} /></button>;
+    // A set the learner picked wears the same mark it wore on the shelf, so it is recognisable as
+    // the thing they chose. Work somebody else issued keeps the icon that says what it is.
+    return <button key={item.recipientId} className="assignment-row" onClick={() => openAssignment(item)}>{item.policy.kind === 'practice'
+      ? <LessonArt lessonKey={setArtKey(item.problemSetId, item.lessonKey)} small />
+      : <span className="assignment-icon"><Icon name={item.status === 'submitted' ? 'check' : 'pencil'} size={23} /></span>}<span className="assignment-info"><strong>{item.title}</strong><small>{assignmentKindLabel[item.policy.kind]} · {item.items.length}문제 · {assignmentTiming(item)}</small>{item.lessonKey && <small>{lessons.find((lesson) => lesson.lessonKey === item.lessonKey)?.title}</small>}</span><span className={`assignment-status ${item.status}`}>{item.status === 'submitted' ? '제출 완료' : savedCount ? `${savedCount}/${item.items.length} 저장` : '풀어보기'}</span><Icon name="chevron" size={18} /></button>;
   }
 
   function renderHome() {
@@ -562,6 +580,7 @@ export function LearningWorkspace() {
           return <li key={set.problemSetId} id={heading ? shelfGroupId(course.key, set.lessonKey) : undefined}>
             {heading && <p className="shelf-lesson">{heading}</p>}
             <button className="shelf-set" disabled={busy} onClick={() => void startProblemSet(set.problemSetId)}>
+              <LessonArt lessonKey={setArtKey(set.problemSetId, set.lessonKey)} small />
               <span className="shelf-set-info"><strong>{set.name}</strong><small>{set.questionCount}문제{labels.length ? ` · ${labels.join(' · ')}` : ''}</small></span>
               <span className="shelf-set-action">{run?.status === 'submitted' ? '다시 풀기' : run ? '이어서 풀기' : '풀어보기'}<Icon name="arrow" size={16} /></span>
             </button>

@@ -592,6 +592,27 @@ describe('picking a problem set to solve', () => {
     expect(screen.getByText('소수의 의미 연습')).toBeDefined();
   });
 
+  it('wears its lesson\u2019s drawing, so the sets under one lesson are read as siblings', async () => {
+    serve({ catalogue: twoCourses });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: '연습장' }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: '연습장' })[0]);
+    await until(() => expect(screen.getByRole('button', { name: /문제집 2개/ })).toBeDefined());
+    fireEvent.click(screen.getByRole('button', { name: /문제집 2개/ }));
+    fireEvent.click(screen.getByRole('button', { name: /문제집 1개/ }));
+    await until(() => expect(screen.getByText('소수의 의미 연습')).toBeDefined());
+    const tone = (node: Element) => [...node.classList].find((name) => name.startsWith('art-'));
+    const marks = [...window.document.querySelectorAll('.shelf-set > .class-art.small')].map(tone);
+    // Every set carries one, and the two 분수의 의미 sets carry the same one because one lesson shows both.
+    expect(marks).toHaveLength(3);
+    expect(marks[0]).toBe(marks[1]);
+    // And it is the lesson's own drawing, not one the set made up: the card on 수업 wears it too.
+    fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
+    await until(() => expect(screen.getByText('분수의 의미')).toBeDefined());
+    const card = screen.getByText('분수의 의미').closest('.class-card')!;
+    expect(tone(card.querySelector('.class-art')!)).toBe(marks[0]);
+  });
+
   it('calls work the learner chose their own, not an assignment', async () => {
     const own: AssignmentView = assignment({ recipientId: 'r-own', title: '분수의 의미 연습',
       problemSetId: 'fraction-meaning:practice', lessonKey: null,
