@@ -56,7 +56,20 @@ export type LessonDocument = PublicLesson & { sections: LessonSection[]; problem
 // Display-only concept names for the signed-out catalogue. Never carries answers or grading rules.
 export type PublicConcept = { key: string; label: string };
 // A course as the catalogue lists it. Lessons arrive in the order the course gives them.
-export type PublicCourse = { key: string; title: string; summary: string };
+/**
+ * Which line of study a course belongs to.
+ *
+ * The catalogue is one ordered line — school mathematics, fractions through linear functions — and
+ * a learner who has chosen nothing is recommended along it. A course beside that line is something
+ * somebody comes for on purpose: it is listed apart, it is never what a learner is handed next, and
+ * a placement asks about it only when it is the course they said they wanted.
+ */
+export type CourseTrack = 'math' | 'ncs';
+export const courseTracks: CourseTrack[] = ['math', 'ncs'];
+/** The line the catalogue is ordered along, and the only one an unchosen placement asks about. */
+export const defaultCourseTrack: CourseTrack = 'math';
+export const courseTrackLabels: Record<CourseTrack, string> = { math: '수학 과정', ncs: 'NCS 수리영역' };
+export type PublicCourse = { key: string; title: string; summary: string; track: CourseTrack };
 /**
  * A problem set a learner can pick and solve on its own, without opening the lesson that uses it.
  *

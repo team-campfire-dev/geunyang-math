@@ -12,7 +12,9 @@ import type { StoredLesson } from '@/core/content';
  * It used to ask about fractions only — thirteen questions for seven concepts — so the thirteen
  * concepts of the other three courses could never be settled by answering, however long a learner
  * kept going. The bank now reaches every concept the catalogue teaches, and it lives in a course of
- * its own because it belongs to none of them.
+ * its own because it belongs to none of them. That includes the courses beside the school line: a
+ * learner is only asked about those when they say that is what they came for, but when they do say
+ * so the bank has to be able to ask.
  */
 const seeds = readdirSync('prisma/seed').filter((name) => name.endsWith('.json')).sort()
   .map((name) => ({ name, bundle: parseContentBundle(JSON.parse(readFileSync(`prisma/seed/${name}`, 'utf8'))) }));
@@ -80,7 +82,7 @@ describe('the placement bank', () => {
   it('leaves every earlier bank published exactly as it was', () => {
     const earlier = bundles.flatMap((bundle) => bundle.problemSets).find((item) => item.versionId === 'placement:v1')!;
     expect(earlier.problems).toHaveLength(39);
-    expect(versions.map((item) => item.versionId)).toEqual(['placement-v4', 'placement-v5']);
+    expect(versions.map((item) => item.versionId)).toEqual(['placement-v4', 'placement-v5', 'placement-v6']);
   });
 
   it('leaves the fraction-only bank published exactly as it was', () => {
