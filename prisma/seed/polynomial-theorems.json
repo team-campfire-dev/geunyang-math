@@ -1,0 +1,2970 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "polynomial-theorems",
+      "title": "다항식과 나머지정리",
+      "summary": "다항식을 수처럼 나누고, 나누지 않고도 나머지를 알아내고, 나머지가 0인 자리를 찾아 삼차 이상의 식을 인수분해해요.",
+      "order": 19,
+      "track": "math",
+      "lessons": [
+        {
+          "key": "polynomial-division",
+          "order": 1
+        },
+        {
+          "key": "remainder-theorem",
+          "order": 2
+        },
+        {
+          "key": "factor-theorem",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "polynomial-division",
+      "label": "다항식의 나눗셈",
+      "assessable": true
+    },
+    {
+      "key": "remainder-theorem",
+      "label": "나머지정리",
+      "assessable": true
+    },
+    {
+      "key": "factor-theorem",
+      "label": "인수정리",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "polynomial-division",
+        "versionId": "polynomial-division:v1",
+        "title": "다항식의 나눗셈: 수를 나누듯이",
+        "summary": "차수가 높은 항부터 덜어 내며 몫과 나머지를 구하고, 나눗셈을 곱셈 한 줄로 다시 적어요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "polynomial-division"
+        ],
+        "prerequisiteConceptKeys": [
+          "polynomial-arithmetic",
+          "factorization",
+          "monomial"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "polynomial-division:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "polynomial-division:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$17$을 $5$로 나누면 몫이 $3$, 나머지가 $2$예요. 이것을 한 줄로 적으면 $17 = 5 \\times 3 + 2$죠.\n\n다항식의 나눗셈도 이와 똑같아요. $x^2 + 3x + 5$를 $x + 1$로 나눠 볼게요.\n\n차수가 가장 높은 항부터 봐요. $x^2$을 만들려면 $x+1$에 $x$를 곱해야 해요. 그러니 몫의 첫 항은 $x$예요.\n\n$x(x+1) = x^2 + x$를 덜어 내면 $2x + 5$가 남아요. 여기서 다시 $2x$를 만들려면 $2$를 곱해야 하니 몫의 다음 항은 $2$예요.\n\n$2(x+1) = 2x + 2$를 덜어 내면 $3$이 남아요. 이제 $x+1$로는 더 덜어 낼 수 없어요. 그래서 몫은 $x+2$, 나머지는 $3$이에요.\n\n언제 멈추는지가 중요해요. 나머지의 차수가 나누는 식의 차수보다 낮아지면 끝이에요. 수에서 나머지가 나누는 수보다 작아야 하는 것과 같은 규칙이에요.\n\n결과는 늘 한 줄로 적어 둬요. $A$를 $B$로 나눈 몫이 $Q$, 나머지가 $R$이면 $A = BQ + R$이에요. 다음 수업은 이 한 줄에서 시작해요.",
+                "definitions": [
+                  {
+                    "conceptKey": "polynomial-division",
+                    "surface": "다항식의 나눗셈",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "polynomial-division:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "수의 나눗셈과 다항식의 나눗셈을 나란히 놓고 몫과 나머지를 견주는 그림",
+                "caption": "나누어지는 것 = 나누는 것 곱하기 몫 더하기 나머지",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "x": 24,
+                    "y": 44,
+                    "width": 130,
+                    "height": 96,
+                    "radius": 8,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "left"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 166,
+                    "y": 44,
+                    "width": 130,
+                    "height": 96,
+                    "radius": 8,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "right"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 89,
+                    "y": 34,
+                    "text": "수",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 231,
+                    "y": 34,
+                    "text": "다항식",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 89,
+                    "y": 74,
+                    "text": "$17 \\div 5$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 231,
+                    "y": 74,
+                    "text": "$(x^2+3x+5) \\div (x+1)$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 89,
+                    "y": 104,
+                    "text": "몫 $3$, 나머지 $2$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "q1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 231,
+                    "y": 104,
+                    "text": "몫 $x+2$, 나머지 $3$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "q2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 89,
+                    "y": 128,
+                    "text": "$17 = 5 \\times 3 + 2$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "e1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 231,
+                    "y": 128,
+                    "text": "$A = BQ + R$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "e2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 174,
+                    "text": "나머지의 차수는 나누는 식보다 낮아요",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "note",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "수를 나눌 때처럼 다항식도 몫과 나머지를 구해요.",
+                    "changes": [
+                      {
+                        "id": "q1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "q2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "e1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "e2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$17$에서 $5$를 세 번 덜어 내면 $2$가 남듯이, 차수가 높은 항부터 덜어 내요.",
+                    "changes": [
+                      {
+                        "id": "q1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "q2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "e1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "e2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "언제 멈추는지도 같아요. 더 덜어 낼 수 없을 때예요.",
+                    "changes": [
+                      {
+                        "id": "q1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "q2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "e1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "e2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "polynomial-division:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "polynomial-division:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$2x^2 - x - 1$을 $x - 1$로 나눠 볼게요.\n\n$2x^2$을 만들려면 $x-1$에 $2x$를 곱해야 해요. 몫의 첫 항은 $2x$예요.\n\n$2x(x-1) = 2x^2 - 2x$를 덜어 내요. $(-x) - (-2x) = x$이니 $x - 1$이 남아요. 부호를 조심할 자리예요.\n\n남은 $x$를 만들려면 $1$을 곱해야 하니 몫의 다음 항은 $1$이에요.\n\n$1(x-1) = x-1$을 덜어 내면 $0$이 남아요. 몫은 $2x+1$, 나머지는 $0$이에요.\n\n나머지가 $0$이라는 것은 딱 나누어떨어졌다는 뜻이에요. 곧 $2x^2 - x - 1 = (x-1)(2x+1)$이고, 이것은 인수분해이기도 해요.\n\n나눗셈과 인수분해가 같은 일의 두 얼굴이라는 것, 이것이 다음다음 수업의 열쇠예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "polynomial-division:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "polynomial-division:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "polynomial-division:practice",
+                "problemSetVersionId": "polynomial-division:practice:v1",
+                "problemVersionIds": [
+                  "polynomial-division:practice-1:v1",
+                  "polynomial-division:practice-2:v1",
+                  "polynomial-division:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "polynomial-division:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "polynomial-division:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "polynomial-division:check",
+                "problemSetVersionId": "polynomial-division:check:v1",
+                "problemVersionIds": [
+                  "polynomial-division:check-1:v1",
+                  "polynomial-division:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "polynomial-division:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "polynomial-division:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "다항식의 나눗셈은 수의 나눗셈과 같은 절차예요. 차수가 높은 항부터 덜어 내요.\n\n나머지의 차수가 나누는 식보다 낮아지면 멈춰요.\n\n결과는 $A = BQ + R$ 한 줄로 적어요.\n\n나머지가 $0$이면 나누어떨어진 것이고, 그때 나누는 식은 그 다항식의 인수예요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "polynomial-division:review",
+        "problemSetVersionId": "polynomial-division:review:v1",
+        "problemVersionIds": [
+          "polynomial-division:homework-1:v1",
+          "polynomial-division:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "remainder-theorem",
+        "versionId": "remainder-theorem:v1",
+        "title": "나머지정리: 나누지 않고 나머지를 안다",
+        "summary": "나눗셈을 한 줄로 적어 둔 식에 수를 하나 넣어, 나머지를 계산 한 번으로 구해요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "remainder-theorem"
+        ],
+        "prerequisiteConceptKeys": [
+          "polynomial-division",
+          "expression-value",
+          "function-value"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "remainder-theorem:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "remainder-theorem:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^3 - 2x + 5$를 $x - 1$로 나눈 나머지를 구한다고 해 볼게요. 나눗셈을 끝까지 하면 나오긴 해요. 그런데 더 빠른 길이 있어요.\n\n앞 수업의 한 줄에서 시작해요. 나눈 몫을 $Q(x)$, 나머지를 $R$이라 하면 $f(x) = (x-1)Q(x) + R$이에요. 나누는 식이 일차식이니 나머지는 상수 하나예요.\n\n이 식은 모든 $x$에 대해 성립해요. 그러니 아무 수나 넣어도 되는데, 하필 $x = 1$을 넣어 볼게요.\n\n$(1-1) = 0$이니 앞의 큰 덩어리가 통째로 사라져요. $f(1) = 0 \\times Q(1) + R = R$이에요.\n\n나머지가 곧 $f(1)$이에요. 나눗셈을 하지 않고 대입 한 번으로 끝났어요. 이것을 나머지정리라고 해요.\n\n정리해 두면, $f(x)$를 $x - a$로 나눈 나머지는 $f(a)$예요. 넣는 수는 「나누는 식을 $0$으로 만드는 수」예요.\n\n$x + 2$로 나눈다면 $x + 2 = 0$에서 $x = -2$이니 $f(-2)$예요. 부호를 뒤집어 읽는다는 것만 조심하면 돼요.",
+                "definitions": [
+                  {
+                    "conceptKey": "remainder-theorem",
+                    "surface": "나머지정리",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "remainder-theorem:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "나눗셈을 끝까지 하는 길과 수를 하나 대입하는 길이 같은 나머지에 닿는 그림",
+                "caption": "같은 나머지에 닿는 두 길 중 짧은 쪽을 골라요",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "x": 22,
+                    "y": 40,
+                    "width": 126,
+                    "height": 54,
+                    "radius": 8,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "long"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 172,
+                    "y": 40,
+                    "width": 126,
+                    "height": 54,
+                    "radius": 8,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "short"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 85,
+                    "y": 62,
+                    "text": "나눗셈을 끝까지",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 85,
+                    "y": 82,
+                    "text": "$x-1$로 나눈다",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 235,
+                    "y": 62,
+                    "text": "수 하나를 넣는다",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 235,
+                    "y": 82,
+                    "text": "$f(1)$을 구한다",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 85,
+                    "y1": 100,
+                    "x2": 140,
+                    "y2": 132,
+                    "stroke": "line",
+                    "strokeWidth": 1.4,
+                    "arrow": "end",
+                    "id": "a1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 235,
+                    "y1": 100,
+                    "x2": 180,
+                    "y2": 132,
+                    "stroke": "line",
+                    "strokeWidth": 1.4,
+                    "arrow": "end",
+                    "id": "a2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 108,
+                    "y": 136,
+                    "width": 104,
+                    "height": 38,
+                    "radius": 8,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "same",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 160,
+                    "text": "같은 나머지",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "samet",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 24,
+                    "text": "$f(x) = x^3 - 2x + 5$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "나머지를 구하는 길이 둘 있어요.",
+                    "changes": [
+                      {
+                        "id": "a1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "a2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "same",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "samet",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "왼쪽은 정직하지만 오래 걸리고, 오른쪽은 계산 한 번이에요.",
+                    "changes": [
+                      {
+                        "id": "a1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "same",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "samet",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "두 길은 늘 같은 값에 닿아요. 그것이 나머지정리예요.",
+                    "changes": [
+                      {
+                        "id": "a1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "same",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "samet",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "remainder-theorem:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "remainder-theorem:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^3 - 2x + 5$를 $x - 1$로 나눈 나머지를 구해 볼게요.\n\n나누는 식을 $0$으로 만드는 수는 $x = 1$이에요.\n\n$f(1) = 1^3 - 2 \\times 1 + 5 = 1 - 2 + 5 = 4$예요. 나머지는 $4$예요.\n\n이번에는 $x + 2$로 나눈 나머지예요. $x + 2 = 0$에서 $x = -2$이니 $f(-2)$를 구해요.\n\n$f(-2) = (-2)^3 - 2 \\times (-2) + 5 = -8 + 4 + 5 = 1$이에요.\n\n거꾸로 묻는 문제도 자주 나와요. $f(x) = x^2 + ax + 3$을 $x - 2$로 나눈 나머지가 $5$라면 $a$는 얼마일까요.\n\n$f(2) = 5$라는 뜻이니 $4 + 2a + 3 = 5$, 곧 $2a = -2$에서 $a = -1$이에요. 나머지정리가 나눗셈 문제를 일차방정식 문제로 바꿔 놓았어요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "remainder-theorem:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "remainder-theorem:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "remainder-theorem:practice",
+                "problemSetVersionId": "remainder-theorem:practice:v1",
+                "problemVersionIds": [
+                  "remainder-theorem:practice-1:v1",
+                  "remainder-theorem:practice-2:v1",
+                  "remainder-theorem:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "remainder-theorem:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "remainder-theorem:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "remainder-theorem:check",
+                "problemSetVersionId": "remainder-theorem:check:v1",
+                "problemVersionIds": [
+                  "remainder-theorem:check-1:v1",
+                  "remainder-theorem:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "remainder-theorem:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "remainder-theorem:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$f(x)$를 $x - a$로 나눈 나머지는 $f(a)$예요.\n\n이유는 $f(x) = (x-a)Q(x) + R$에 $x = a$를 넣으면 앞 덩어리가 사라지기 때문이에요.\n\n넣을 수는 나누는 식을 $0$으로 만드는 수예요. $x+2$로 나눈다면 $-2$를 넣어요.\n\n다음 수업에서는 나머지가 $0$인 경우만 따로 봐요. 그때 나눗셈은 인수분해가 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "remainder-theorem:review",
+        "problemSetVersionId": "remainder-theorem:review:v1",
+        "problemVersionIds": [
+          "remainder-theorem:homework-1:v1",
+          "remainder-theorem:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "factor-theorem",
+        "versionId": "factor-theorem:v1",
+        "title": "인수정리: 나머지가 0이면 인수다",
+        "summary": "값이 0이 되는 수를 찾아 삼차 이상의 식을 인수분해하고, 고차방정식의 해까지 얻어요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "factor-theorem"
+        ],
+        "prerequisiteConceptKeys": [
+          "remainder-theorem",
+          "factorization-formula",
+          "quadratic-equation"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "factor-theorem:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "factor-theorem:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "나머지정리에서 나머지가 $0$인 경우만 따로 떼어 볼게요.\n\n$f(a) = 0$이면 나머지가 $0$이니 $f(x) = (x-a)Q(x)$예요. 나머지 항이 아예 사라졌죠. 곧 $x - a$가 $f(x)$의 인수라는 뜻이에요. 이것을 인수정리라고 해요.\n\n반대도 성립해요. $x-a$가 인수이면 $f(a) = 0$이에요. 「값이 $0$이 되는 수」와 「인수」가 같은 것의 두 이름이에요.\n\n이것으로 삼차 이상의 식을 인수분해할 수 있어요. 지금까지는 이차식까지만 다뤘는데, 더 높은 차수에는 공식이 없거든요.\n\n대신 이렇게 해요. $f(x) = x^3 - 7x + 6$이라면 $x$에 작은 수를 하나씩 넣어 $0$이 되는 것을 찾아요. $f(1) = 1 - 7 + 6 = 0$이니 $x - 1$이 인수예요.\n\n찾았으면 $x-1$로 나눠요. 몫이 $x^2 + x - 6$이고, 이차식이 되었으니 이제는 아는 방법으로 $(x+3)(x-2)$로 갈라져요. 모두 모으면 $f(x) = (x-1)(x+3)(x-2)$예요.\n\n넣어 볼 수를 아무렇게나 고르지는 않아요. 상수항의 약수를 먼저 봐요. $6$의 약수인 $\\pm 1, \\pm 2, \\pm 3, \\pm 6$ 안에 답이 있어요. 인수분해된 식의 상수항은 각 인수의 상수항을 곱한 값이니까요.\n\n고차방정식도 이렇게 풀어요. $x^3 - 7x + 6 = 0$은 $(x-1)(x+3)(x-2) = 0$이니 해는 $1$, $-3$, $2$예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "factor-theorem",
+                    "surface": "인수정리",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "factor-theorem:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "세제곱식에 1을 넣어 0이 나오는 것을 보고 x 빼기 1로 갈라 인수분해하는 그림",
+                "caption": "값이 0이 되는 수를 찾으면 인수가 보여요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 34,
+                    "text": "$f(x) = x^3 - 7x + 6$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 38,
+                    "y": 56,
+                    "width": 78,
+                    "height": 38,
+                    "radius": 6,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "t1"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 122,
+                    "y": 56,
+                    "width": 78,
+                    "height": 38,
+                    "radius": 6,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "t2"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 206,
+                    "y": 56,
+                    "width": 78,
+                    "height": 38,
+                    "radius": 6,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "t3"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 77,
+                    "y": 80,
+                    "text": "$f(1) = 0$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "green"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 161,
+                    "y": 80,
+                    "text": "$f(2) = 0$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "s2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 245,
+                    "y": 80,
+                    "text": "$f(-3) = 0$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "s3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 130,
+                    "text": "$(x-1)(x-2)(x+3)$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "done",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 168,
+                    "text": "값이 $0$이 되는 수마다 인수가 하나씩",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "note",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "작은 수부터 넣어 봐요. $x=1$에서 값이 $0$이에요.",
+                    "changes": [
+                      {
+                        "id": "s2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "done",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$0$이 되는 수를 더 찾아요. $2$와 $-3$에서도 $0$이에요.",
+                    "changes": [
+                      {
+                        "id": "s2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "done",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$0$이 되는 수 $a$마다 $x-a$가 인수예요.",
+                    "changes": [
+                      {
+                        "id": "s2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "done",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "factor-theorem:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "factor-theorem:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^3 - 4x^2 + x + 6$을 인수분해해 볼게요.\n\n상수항 $6$의 약수부터 넣어 봐요. $f(1) = 1 - 4 + 1 + 6 = 4$이니 $1$은 아니에요.\n\n$f(-1) = -1 - 4 - 1 + 6 = 0$이에요. 찾았어요. $x + 1$이 인수예요.\n\n$x+1$로 나누면 몫은 $x^2 - 5x + 6$이에요.\n\n몫이 이차식이니 익숙한 방법으로 갈라요. 곱해서 $6$, 더해서 $-5$인 두 수는 $-2$와 $-3$이에요.\n\n$f(x) = (x+1)(x-2)(x-3)$이에요.\n\n확인은 상수항으로 빠르게 할 수 있어요. $1 \\times (-2) \\times (-3) = 6$. 처음 식의 상수항과 같으니 안심이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "factor-theorem:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "factor-theorem:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "factor-theorem:practice",
+                "problemSetVersionId": "factor-theorem:practice:v1",
+                "problemVersionIds": [
+                  "factor-theorem:practice-1:v1",
+                  "factor-theorem:practice-2:v1",
+                  "factor-theorem:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "factor-theorem:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "factor-theorem:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "factor-theorem:check",
+                "problemSetVersionId": "factor-theorem:check:v1",
+                "problemVersionIds": [
+                  "factor-theorem:check-1:v1",
+                  "factor-theorem:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "factor-theorem:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "factor-theorem:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$f(a) = 0$이면 $x - a$가 인수이고, 거꾸로도 성립해요.\n\n삼차 이상의 식은 값이 $0$이 되는 수를 하나 찾고, 그 인수로 나눠 차수를 낮춰요. 이차식까지 내려오면 아는 방법으로 끝내요.\n\n넣어 볼 수는 상수항의 약수 중에서 골라요.\n\n고차방정식의 해도 같은 방법으로 얻어요. 인수분해해서 곱이 $0$이 되는 자리를 읽으면 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "factor-theorem:review",
+        "problemSetVersionId": "factor-theorem:review:v1",
+        "problemVersionIds": [
+          "factor-theorem:homework-1:v1",
+          "factor-theorem:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "polynomial-division:practice",
+      "courseKey": "polynomial-theorems",
+      "name": "다항식의 나눗셈 연습",
+      "versionId": "polynomial-division:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "polynomial-division:practice-1:v1",
+          "conceptKeys": [
+            "polynomial-division"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-division:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + 3x + 5$를 $x + 1$로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-division:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "몫의 첫 항은 $x$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-division:practice-2:v1",
+          "conceptKeys": [
+            "polynomial-division"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-division:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + 3x + 2$를 $x + 1$로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-division:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2+3x+2 = (x+1)(x+2)$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-division:practice-3:v1",
+          "conceptKeys": [
+            "polynomial-division"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-division:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x^2 - x - 1$을 $x - 1$로 나눈 몫은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2x+1$"
+              },
+              {
+                "id": "b",
+                "text": "$2x-1$"
+              },
+              {
+                "id": "c",
+                "text": "$x+1$"
+              },
+              {
+                "id": "d",
+                "text": "$2x$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2x+1$"
+              },
+              {
+                "id": "b",
+                "text": "$2x-1$"
+              },
+              {
+                "id": "c",
+                "text": "$x+1$"
+              },
+              {
+                "id": "d",
+                "text": "$2x$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-division:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x^2$을 만들려면 $2x$를 곱해야 해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "polynomial-division:check",
+      "courseKey": "polynomial-theorems",
+      "name": "다항식의 나눗셈 확인",
+      "versionId": "polynomial-division:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "polynomial-division:check-1:v1",
+          "conceptKeys": [
+            "polynomial-division"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-division:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + 5x + 7$을 $x + 2$로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-division:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x(x+2)$를 덜어 내면 $3x+7$이 남아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-division:check-2:v1",
+          "conceptKeys": [
+            "polynomial-division"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-division:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 4$를 $x - 2$로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-division:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2-4 = (x+2)(x-2)$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "polynomial-division:review",
+      "courseKey": "polynomial-theorems",
+      "name": "다항식의 나눗셈 복습",
+      "versionId": "polynomial-division:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "polynomial-division:homework-1:v1",
+          "conceptKeys": [
+            "polynomial-division"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-division:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^3$을 $x - 1$로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-division:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^3 = (x-1)(x^2+x+1) + 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-division:homework-2:v1",
+          "conceptKeys": [
+            "polynomial-division"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-division:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A$를 $B$로 나눈 몫이 $Q$, 나머지가 $R$일 때 옳게 적은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$A = BQ + R$"
+              },
+              {
+                "id": "b",
+                "text": "$A = BR + Q$"
+              },
+              {
+                "id": "c",
+                "text": "$B = AQ + R$"
+              },
+              {
+                "id": "d",
+                "text": "$A = B + QR$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$A = BQ + R$"
+              },
+              {
+                "id": "b",
+                "text": "$A = BR + Q$"
+              },
+              {
+                "id": "c",
+                "text": "$B = AQ + R$"
+              },
+              {
+                "id": "d",
+                "text": "$A = B + QR$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-division:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$17 = 5 \\times 3 + 2$와 같은 모양이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "remainder-theorem:practice",
+      "courseKey": "polynomial-theorems",
+      "name": "나머지정리 연습",
+      "versionId": "remainder-theorem:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "remainder-theorem:practice-1:v1",
+          "conceptKeys": [
+            "remainder-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "remainder-theorem:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^3 - 2x + 5$를 $x - 1$로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "remainder-theorem:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(1)$을 구해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "remainder-theorem:practice-2:v1",
+          "conceptKeys": [
+            "remainder-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "remainder-theorem:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^2 + 3x - 1$을 $x - 2$로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "remainder-theorem:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(2) = 4 + 6 - 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "remainder-theorem:practice-3:v1",
+          "conceptKeys": [
+            "remainder-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "remainder-theorem:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^3 - 2x + 5$를 $x + 2$로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "remainder-theorem:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + 2 = 0$에서 $x = -2$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "remainder-theorem:check",
+      "courseKey": "polynomial-theorems",
+      "name": "나머지정리 확인",
+      "versionId": "remainder-theorem:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "remainder-theorem:check-1:v1",
+          "conceptKeys": [
+            "remainder-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "remainder-theorem:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = 2x^2 - x + 4$를 $x - 3$으로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 19
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "remainder-theorem:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(3) = 18 - 3 + 4$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "remainder-theorem:check-2:v1",
+          "conceptKeys": [
+            "remainder-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "remainder-theorem:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^2 + ax + 3$을 $x - 2$로 나눈 나머지가 $5$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "remainder-theorem:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(2) = 5$라는 뜻이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "remainder-theorem:review",
+      "courseKey": "polynomial-theorems",
+      "name": "나머지정리 복습",
+      "versionId": "remainder-theorem:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "remainder-theorem:homework-1:v1",
+          "conceptKeys": [
+            "remainder-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "remainder-theorem:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^3 + 1$을 $x + 1$로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "remainder-theorem:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(-1)$을 구해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "remainder-theorem:homework-2:v1",
+          "conceptKeys": [
+            "remainder-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "remainder-theorem:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x)$를 $x - 5$로 나눈 나머지는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$f(5)$"
+              },
+              {
+                "id": "b",
+                "text": "$f(-5)$"
+              },
+              {
+                "id": "c",
+                "text": "$f(0)$"
+              },
+              {
+                "id": "d",
+                "text": "$5$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$f(5)$"
+              },
+              {
+                "id": "b",
+                "text": "$f(-5)$"
+              },
+              {
+                "id": "c",
+                "text": "$f(0)$"
+              },
+              {
+                "id": "d",
+                "text": "$5$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "remainder-theorem:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "나누는 식을 $0$으로 만드는 수를 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "factor-theorem:practice",
+      "courseKey": "polynomial-theorems",
+      "name": "인수정리 연습",
+      "versionId": "factor-theorem:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "factor-theorem:practice-1:v1",
+          "conceptKeys": [
+            "factor-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factor-theorem:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^3 - 7x + 6$일 때 $f(1)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factor-theorem:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1 - 7 + 6$을 계산해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factor-theorem:practice-2:v1",
+          "conceptKeys": [
+            "factor-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factor-theorem:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(2) = 0$일 때 $f(x)$의 인수인 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x-2$"
+              },
+              {
+                "id": "b",
+                "text": "$x+2$"
+              },
+              {
+                "id": "c",
+                "text": "$2x$"
+              },
+              {
+                "id": "d",
+                "text": "$x-\\frac{1}{2}$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x-2$"
+              },
+              {
+                "id": "b",
+                "text": "$x+2$"
+              },
+              {
+                "id": "c",
+                "text": "$2x$"
+              },
+              {
+                "id": "d",
+                "text": "$x-\\frac{1}{2}$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factor-theorem:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(a) = 0$이면 $x - a$가 인수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factor-theorem:practice-3:v1",
+          "conceptKeys": [
+            "factor-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factor-theorem:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^3 - 7x + 6 = 0$의 해 중 가장 큰 것을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factor-theorem:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "해는 $1$, $2$, $-3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "factor-theorem:check",
+      "courseKey": "polynomial-theorems",
+      "name": "인수정리 확인",
+      "versionId": "factor-theorem:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "factor-theorem:check-1:v1",
+          "conceptKeys": [
+            "factor-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factor-theorem:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^3 - 4x^2 + x + 6$일 때 $f(-1)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factor-theorem:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-1 - 4 - 1 + 6$을 계산해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factor-theorem:check-2:v1",
+          "conceptKeys": [
+            "factor-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factor-theorem:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^3 - 4x^2 + x + 6 = 0$의 해 중 가장 큰 것을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factor-theorem:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x+1)(x-2)(x-3) = 0$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "factor-theorem:review",
+      "courseKey": "polynomial-theorems",
+      "name": "인수정리 복습",
+      "versionId": "factor-theorem:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "factor-theorem:homework-1:v1",
+          "conceptKeys": [
+            "factor-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factor-theorem:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^3 - 1$일 때 $f(1)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factor-theorem:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1 - 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factor-theorem:homework-2:v1",
+          "conceptKeys": [
+            "factor-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factor-theorem:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^3 + 2x^2 - x - 2$를 인수분해할 때 가장 먼저 넣어 볼 수로 알맞은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "상수항 $-2$의 약수"
+              },
+              {
+                "id": "b",
+                "text": "최고차항의 차수"
+              },
+              {
+                "id": "c",
+                "text": "$x$의 계수"
+              },
+              {
+                "id": "d",
+                "text": "아무 수나"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "상수항 $-2$의 약수"
+              },
+              {
+                "id": "b",
+                "text": "최고차항의 차수"
+              },
+              {
+                "id": "c",
+                "text": "$x$의 계수"
+              },
+              {
+                "id": "d",
+                "text": "아무 수나"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factor-theorem:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "인수분해된 식의 상수항은 각 인수의 상수항을 곱한 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "polynomial-theorems:drill",
+      "courseKey": "polynomial-theorems",
+      "name": "다항식과 나머지정리 모아 풀기",
+      "versionId": "polynomial-theorems:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "polynomial-theorems:drill-1:v1",
+          "conceptKeys": [
+            "polynomial-division"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + 4x + 7$을 $x + 1$로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x(x+1)$을 덜어 내면 $3x+7$이 남아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-2:v1",
+          "conceptKeys": [
+            "polynomial-division"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 9$를 $x + 3$으로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2-9 = (x+3)(x-3)$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-3:v1",
+          "conceptKeys": [
+            "polynomial-division"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + 7x + 12$를 $x + 3$으로 나눈 몫은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x+4$"
+              },
+              {
+                "id": "b",
+                "text": "$x+3$"
+              },
+              {
+                "id": "c",
+                "text": "$x-4$"
+              },
+              {
+                "id": "d",
+                "text": "$x+12$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x+4$"
+              },
+              {
+                "id": "b",
+                "text": "$x+3$"
+              },
+              {
+                "id": "c",
+                "text": "$x-4$"
+              },
+              {
+                "id": "d",
+                "text": "$x+12$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x+3)(x+4)$로 인수분해돼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-4:v1",
+          "conceptKeys": [
+            "polynomial-division"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6x^2 + 5x + 2$를 $2x + 1$로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "몫의 첫 항은 $3x$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-5:v1",
+          "conceptKeys": [
+            "polynomial-division"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다항식을 나눌 때 멈추는 때로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "나머지의 차수가 나누는 식보다 낮아질 때"
+              },
+              {
+                "id": "b",
+                "text": "나머지가 $0$이 될 때만"
+              },
+              {
+                "id": "c",
+                "text": "몫의 차수가 $1$이 될 때"
+              },
+              {
+                "id": "d",
+                "text": "항이 하나 남을 때"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "나머지의 차수가 나누는 식보다 낮아질 때"
+              },
+              {
+                "id": "b",
+                "text": "나머지가 $0$이 될 때만"
+              },
+              {
+                "id": "c",
+                "text": "몫의 차수가 $1$이 될 때"
+              },
+              {
+                "id": "d",
+                "text": "항이 하나 남을 때"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "수의 나눗셈에서 나머지가 나누는 수보다 작아야 하는 것과 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-6:v1",
+          "conceptKeys": [
+            "polynomial-division"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^3 - 1$을 $x - 1$로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^3-1 = (x-1)(x^2+x+1)$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-7:v1",
+          "conceptKeys": [
+            "remainder-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^2 + 2x + 3$을 $x - 1$로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(1) = 1 + 2 + 3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-8:v1",
+          "conceptKeys": [
+            "remainder-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^3 + x$를 $x - 2$로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(2) = 8 + 2$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-9:v1",
+          "conceptKeys": [
+            "remainder-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^2 - 5$를 $x + 3$으로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(-3) = 9 - 5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-10:v1",
+          "conceptKeys": [
+            "remainder-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^2 + ax - 2$를 $x - 1$로 나눈 나머지가 $3$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(1) = 3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-11:v1",
+          "conceptKeys": [
+            "remainder-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x)$를 $x + 4$로 나눈 나머지는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$f(-4)$"
+              },
+              {
+                "id": "b",
+                "text": "$f(4)$"
+              },
+              {
+                "id": "c",
+                "text": "$f(0)$"
+              },
+              {
+                "id": "d",
+                "text": "$-4$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$f(-4)$"
+              },
+              {
+                "id": "b",
+                "text": "$f(4)$"
+              },
+              {
+                "id": "c",
+                "text": "$f(0)$"
+              },
+              {
+                "id": "d",
+                "text": "$-4$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "나누는 식을 $0$으로 만드는 수를 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-12:v1",
+          "conceptKeys": [
+            "remainder-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = 2x^2 - 3x + 1$을 $x - 2$로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(2) = 8 - 6 + 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-13:v1",
+          "conceptKeys": [
+            "remainder-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^3 - 2x^2 + 5$를 $x$로 나눈 나머지를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x = x - 0$이니 $f(0)$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-14:v1",
+          "conceptKeys": [
+            "factor-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^3 - x$일 때 $f(1)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1 - 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-15:v1",
+          "conceptKeys": [
+            "factor-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(3) = 0$일 때 $f(x)$의 인수인 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x-3$"
+              },
+              {
+                "id": "b",
+                "text": "$x+3$"
+              },
+              {
+                "id": "c",
+                "text": "$3x$"
+              },
+              {
+                "id": "d",
+                "text": "$x^2-3$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x-3$"
+              },
+              {
+                "id": "b",
+                "text": "$x+3$"
+              },
+              {
+                "id": "c",
+                "text": "$3x$"
+              },
+              {
+                "id": "d",
+                "text": "$x^2-3$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(a) = 0$이면 $x-a$가 인수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-16:v1",
+          "conceptKeys": [
+            "factor-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^3 - 7x + 6 = 0$의 해 중 음수인 것을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x-1)(x-2)(x+3) = 0$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-17:v1",
+          "conceptKeys": [
+            "factor-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^3 - x = 0$의 해 중 가장 큰 것을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x(x+1)(x-1) = 0$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-18:v1",
+          "conceptKeys": [
+            "factor-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^3 + 2x^2 - 5x - 6$일 때 $f(2)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$8 + 8 - 10 - 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-19:v1",
+          "conceptKeys": [
+            "factor-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^3 - 8 = 0$의 실수인 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(2) = 0$이니 $x-2$가 인수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomial-theorems:drill-20:v1",
+          "conceptKeys": [
+            "factor-theorem"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomial-theorems:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼차식을 인수분해할 때 넣어 볼 수를 고르는 기준으로 알맞은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "상수항의 약수"
+              },
+              {
+                "id": "b",
+                "text": "최고차항의 차수"
+              },
+              {
+                "id": "c",
+                "text": "항의 개수"
+              },
+              {
+                "id": "d",
+                "text": "아무 수나"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "상수항의 약수"
+              },
+              {
+                "id": "b",
+                "text": "최고차항의 차수"
+              },
+              {
+                "id": "c",
+                "text": "항의 개수"
+              },
+              {
+                "id": "d",
+                "text": "아무 수나"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomial-theorems:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "상수항은 각 인수의 상수항을 곱한 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}
