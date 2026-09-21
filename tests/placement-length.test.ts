@@ -98,8 +98,8 @@ describe('placing a learner', () => {
     // the catalogue is ordered along and no more — the same 48 concepts it covered before 응용계산
     // was installed beside it, although the graph now holds 52.
     const line = placementScope(graph, schoolLine.flatMap((lesson) => lesson.conceptKeys));
-    // 48 before 제곱근과 실수, which added six concepts to the line itself.
-    expect(line).toHaveLength(54);
+    // 48 before 제곱근과 실수, 54 before 곱셈 공식과 인수분해 and 이차방정식 added nine more.
+    expect(line).toHaveLength(63);
     expect(graph.keys.length).toBeGreaterThan(line.length);
     for (const key of ['cost-price', 'discount-rate', 'concentration', 'speed']) expect(line).not.toContain(key);
   });

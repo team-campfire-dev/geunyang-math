@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "quadratic-equation",
+      "label": "이차방정식",
+      "assessable": true
+    },
+    {
+      "key": "zero-product",
+      "label": "곱이 0이 되는 성질",
+      "assessable": true
+    },
+    {
+      "key": "completing-square",
+      "label": "완전제곱식 만들기",
+      "assessable": true
+    },
+    {
+      "key": "quadratic-formula",
+      "label": "근의 공식",
+      "assessable": true
+    },
+    {
+      "key": "discriminant",
+      "label": "판별식",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "quadratic-equation",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "이차방정식",
+      "summary": "문자의 차수가 2인 방정식이에요.",
+      "blocks": [
+        {
+          "blockId": "global:quadratic-equation:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$x^2 - x - 6 = 0$처럼 정리했을 때 가장 높은 차수가 $2$인 방정식이에요. 해는 보통 두 개예요. 푸는 순서는 이항해서 한쪽을 $0$으로 만들고, 왼쪽을 인수분해해 곱의 꼴로 만드는 것이에요. $x^2 = 5x$처럼 생긴 식에서 양변을 $x$로 나누면 안 돼요. $x = 0$인 해를 잃어버려요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "차수가 둘인 방정식을 만났을 때"
+    },
+    {
+      "conceptKey": "zero-product",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "곱이 0이 되는 성질",
+      "summary": "곱이 0이면 둘 중 적어도 하나가 0이에요.",
+      "blocks": [
+        {
+          "blockId": "global:zero-product:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "두 수를 곱해 $5$가 나왔다면 두 수가 무엇인지 알 수 없지만, $0$이 나왔다면 둘 중 적어도 하나는 $0$이에요. $0$에만 있는 성질이고, 이차방정식을 푸는 열쇠예요. $(x-3)(x+2) = 0$이면 $x - 3 = 0$이거나 $x + 2 = 0$이니, 갈래마다 일차방정식이 돼요. 두 갈래가 같은 답을 내놓으면 그 해를 중근이라고 불러요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "인수분해된 식이 0과 같을 때"
+    },
+    {
+      "conceptKey": "completing-square",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "완전제곱식 만들기",
+      "summary": "제곱의 꼴로 고쳐 제곱근으로 풀어요.",
+      "blocks": [
+        {
+          "blockId": "global:completing-square:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "「무엇의 제곱 = 어떤 수」 꼴이면 제곱근으로 바로 풀 수 있어요. $(x-1)^2 = 16$이면 $x - 1 = \\pm 4$예요. 그 꼴로 만들려면 $x$ 계수의 절반을 제곱한 값을 더해요. $x^2 + 6x$라면 $6$의 절반인 $3$을 제곱한 $9$예요. 방정식에서는 한쪽에 더한 만큼 다른 쪽에도 더해야 해요. $6x$짜리 띠를 둘로 갈라 두 변에 붙일 때 비는 모서리가 $3 \\times 3$이라고 그림으로 보면 왜 절반인지 보여요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "인수분해가 되지 않는 이차방정식을 만났을 때"
+    },
+    {
+      "conceptKey": "quadratic-formula",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "근의 공식",
+      "summary": "계수 셋을 넣으면 해가 나오는 공식이에요.",
+      "blocks": [
+        {
+          "blockId": "global:quadratic-formula:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$ax^2 + bx + c = 0$의 해는 $x = \\dfrac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$예요. 완전제곱식 만들기를 문자로 한 번에 해 둔 것이라 어떤 이차방정식에도 통해요. 쓸 때는 한쪽을 $0$으로 만들고 $a$, $b$, $c$를 부호까지 그대로 읽어 넣어요. $2x^2 - 7x + 3 = 0$에서 $b$는 $7$이 아니라 $-7$이에요. 인수분해가 눈에 보인다면 그쪽이 더 빨라요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "인수분해가 보이지 않을 때"
+    },
+    {
+      "conceptKey": "discriminant",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "판별식",
+      "summary": "해가 몇 개인지 미리 알려 주는 값이에요.",
+      "blocks": [
+        {
+          "blockId": "global:discriminant:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "근의 공식에서 근호 안에 있는 $b^2 - 4ac$예요. 풀지 않고도 해의 개수를 알 수 있어요. 양수이면 근호가 서로 다른 두 값을 내놓으니 해가 둘, $0$이면 $\\pm$가 붙어도 같은 값이니 해가 하나(중근), 음수이면 제곱해서 음수가 되는 실수가 없으므로 해가 없어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "해의 개수만 물을 때"
+    }
+  ]
+}

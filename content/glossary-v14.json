@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "expansion",
+      "label": "전개",
+      "assessable": true
+    },
+    {
+      "key": "multiplication-formula",
+      "label": "곱셈 공식",
+      "assessable": true
+    },
+    {
+      "key": "factorization",
+      "label": "인수분해",
+      "assessable": true
+    },
+    {
+      "key": "factorization-formula",
+      "label": "인수분해 공식",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "expansion",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "전개",
+      "summary": "괄호를 풀어 더한 식으로 쓰는 것이에요.",
+      "blocks": [
+        {
+          "blockId": "global:expansion:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$(x+2)(x+3)$처럼 괄호끼리 곱한 식을 풀어 쓰는 것이에요. 앞 괄호의 각 항을 뒤 괄호의 각 항에 하나씩 곱한 뒤 같은 것끼리 모아요. $x^2 + 3x + 2x + 6 = x^2 + 5x + 6$이 그 결과예요. 반대 방향으로 가는 것이 인수분해이고, 전개해서 처음 식으로 돌아오는지가 인수분해를 확인하는 방법이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "괄호가 있는 곱셈을 정리할 때"
+    },
+    {
+      "conceptKey": "multiplication-formula",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "곱셈 공식",
+      "summary": "자주 나오는 전개 결과를 외워 두고 쓰는 것이에요.",
+      "blocks": [
+        {
+          "blockId": "global:multiplication-formula:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "네 가지를 외워 두면 매번 곱하지 않아도 돼요. $(a+b)^2 = a^2 + 2ab + b^2$, $(a-b)^2 = a^2 - 2ab + b^2$, $(a+b)(a-b) = a^2 - b^2$, $(x+a)(x+b) = x^2 + (a+b)x + ab$예요. 가장 흔한 실수는 $(x+3)^2$을 $x^2 + 9$로 적는 것이에요. 가운데 $2ab$가 있어요. 한 변이 $a+b$인 정사각형을 네 조각으로 나눈 그림을 떠올리면 $ab$가 두 개라는 것이 보여요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "괄호의 제곱이나 합과 차의 곱을 만났을 때"
+    },
+    {
+      "conceptKey": "factorization",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "인수분해",
+      "summary": "더한 식을 곱한 식으로 되돌리는 것이에요.",
+      "blocks": [
+        {
+          "blockId": "global:factorization:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$3x + 6$을 보고 $3(x+2)$를 찾아내는 일이에요. 전개의 반대 방향이에요. 첫걸음은 늘 모든 항에 함께 든 것을 앞으로 빼내는 것이고, 수와 문자를 모두 살펴 가능한 한 많이 빼내요. $4x^2 + 6x$는 $2(2x^2+3x)$에서 멈추면 덜 된 것이고 $2x(2x+3)$까지 가야 해요. 맞게 했는지는 다시 전개해 보면 알 수 있어요. 곱의 꼴로 만들어 두면 이차방정식을 풀 때 곱이 $0$이라는 성질을 쓸 수 있어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "식을 곱의 꼴로 되돌릴 때"
+    },
+    {
+      "conceptKey": "factorization-formula",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "인수분해 공식",
+      "summary": "곱셈 공식을 거꾸로 읽어 인수분해해요.",
+      "blocks": [
+        {
+          "blockId": "global:factorization-formula:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$x^2 + (a+b)x + ab = (x+a)(x+b)$를 「더해서 가운데, 곱해서 끝」으로 읽어요. 후보가 적은 곱부터 찾는 편이 빨라요. 끝의 수가 음수이면 두 수의 부호가 서로 달라요. 끝이 제곱수이고 가운데가 그 수의 두 배이면 $(x+a)^2$ 꼴의 완전제곱식이고, $x^2 - 9$처럼 제곱에서 제곱을 뺀 모양은 $(x+3)(x-3)$처럼 합과 차의 곱으로 갈라져요. 어느 경우든 공통인수를 먼저 빼내고 시작해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "공통인수가 없는데 인수분해해야 할 때"
+    }
+  ]
+}
