@@ -102,7 +102,13 @@ UI 관리 방식으로 전환하면서 기존 custom HTTP 설정을 백업하고
 
 ## 배포와 복구
 
-[GitHub workflow](../.github/workflows/ci.yml)는 모든 브랜치의 타입·단위/실제 MySQL 검사·웹/모바일 빌드를 실행한다. 운영 배포는 검증에 성공한 `main` push 또는 `main`의 수동 실행에서만 진행한다. PR에서는 배포 비밀값을 사용하지 않는다.
+[GitHub workflow](../.github/workflows/ci.yml)는 타입·단위/실제 MySQL 검사·웹/모바일 빌드를 실행한다. 운영 배포는 검증에 성공한 `main` push 또는 `main`의 수동 실행에서만 진행한다. PR에서는 배포 비밀값을 사용하지 않는다.
+
+**한 커밋은 한 번만 검증한다**(2026-09-21). 전에는 `push`에 브랜치 제한이 없어 브랜치 커밋 하나가 `push`와 `pull_request`로 두 번 돌았고, 두 실행의 ref가 달라(`refs/heads/…` vs `refs/pull/…/merge`) 서로 취소하지도 않았다. `pull_request`는 **그 커밋을 main에 합친 결과**를 검사하므로 브랜치 push의 실행이 더 증명하는 것이 없다. 이제 `push`는 `main`에서만 돈다.
+
+**릴리스 포장 검사는 포장이 바뀔 때만 돈다.** migrator 이미지를 처음부터 빌드하는 단계가 한 실행의 5분의 1을 쓰는데, 그것이 증명하는 것(archive 권한과 비root 실행)은 `Dockerfile`·`prisma/`·`package-lock.json`과 migrator가 읽는 소스가 바뀔 때만 달라진다. 그 밖을 건드리는 PR은 건너뛰고, **`main` push는 언제나 돌린다** — 운영에 닿는 것은 모두 이 검사를 거친다.
+
+30일 기준으로 실행 294회·약 1,640분이었고, 위 둘로 약 1,050분이 된다. 남은 큰 항목은 실행마다 도는 테스트(84초)와 두 번의 Next 빌드(각 31초)이며, 더 줄이려면 다음 중에서 고른다 — 모바일 export를 `main`에서만 돌리기(약 60분), 테스트 파일 병렬 실행(약 120분, DB 테스트끼리 충돌하지 않게 나눠야 한다), 자체 호스트 러너(청구 분이 사라지지만 러너가 워크플로 코드를 실행할 머신이 필요하다).
 
 검증한 Git SHA의 archive와 환경 파일을 `incoming/`으로 전송한다. SHA별 `releases/<sha>/` 디렉터리에서 [deploy-remote.sh](../scripts/deploy-remote.sh)를 실행한다. 스크립트는 앱과 migrator 이미지를 따로 만들고, migration→기본 콘텐츠 seed→저장소 번들 발행→content:verify→기동→사설·공개 health/version 확인이 끝나야 `current`를 새 릴리스로 바꾼다.
 

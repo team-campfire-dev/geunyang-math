@@ -1,7 +1,12 @@
 name: Verify web and mobile boundaries
 
 on:
+  # A branch commit is verified once, by its pull request. `pull_request` checks the commit **merged
+  # into main**, which is what main will hold — so a second run on the branch push proves nothing
+  # the first did not, and the two do not cancel each other (their refs differ). Running both cost
+  # roughly a third of this repository's Actions minutes.
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -35,13 +40,37 @@ jobs:
       NEXT_TELEMETRY_DISABLED: '1'
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Enough history to see what a pull request changed, for the release-packaging check below.
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
       - run: npm ci
       - run: npm run db:generate
+      # The packaging check builds an image from scratch and takes a fifth of the run. What it
+      # proves — that the release archive stays private and the migrator stays non-root — can only
+      # change when the packaging surface does, so a pull request that leaves it alone skips it.
+      # Every push to main runs it regardless, so nothing reaches production unchecked.
+      - name: Decide whether the release packaging needs checking
+        id: packaging
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" != 'pull_request' ]]; then
+            echo 'needed=true' >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          base="${{ github.event.pull_request.base.sha }}"
+          changed="$(git diff --name-only "$base" HEAD)"
+          if grep -qE '^(Dockerfile|package(-lock)?\.json|prisma\.config\.ts|tsconfig\.json|prisma/|scripts/content\.ts|src/(core/content-bundle|server/content-store|server/db)\.ts)' <<<"$changed"; then
+            echo 'needed=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'needed=false' >> "$GITHUB_OUTPUT"
+            echo "Release packaging untouched by this pull request; the check runs again on main."
+          fi
       - name: Verify non-root migrator from a private release archive
+        if: steps.packaging.outputs.needed == 'true'
         shell: bash
         run: |
           set -euo pipefail
