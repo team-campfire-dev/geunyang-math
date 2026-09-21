@@ -9,6 +9,7 @@ import {
   type ScenePlacement, type SceneFrame, type SceneItem, type SceneTask, type SceneZone,
 } from '@/shared/scene';
 import { locateTerms, splitRichText, definitionRefId, type DefinitionLink, type DefinitionRef } from '@/shared/rich-text';
+import { readTable, type Table, type TableColumn, type TableRow } from '@/shared/table';
 import { Icon } from './icons';
 
 /**
@@ -384,6 +385,31 @@ const validScene = (payload: Record<string, unknown>) => typeof payload.alt === 
   && (payload.zones === undefined || (Array.isArray(payload.zones)
     && payload.zones.every((zone) => !!zone && typeof zone === 'object' && typeof (zone as SceneZone).id === 'string' && typeof (zone as SceneZone).label === 'string')
     && (!payload.zones.length || (!!payload.task && typeof (payload.task as SceneTask).prompt === 'string'))));
+/**
+ * A table of numbers, drawn as a table.
+ *
+ * The header cells are `<th scope>` rather than bold text, so a reader who cannot see the screen
+ * hears 「A지점 · 2024년 · 3,600」 instead of a bare number. The caption is the table's name and is
+ * announced first, which is why the validator keeps math out of it.
+ *
+ * It scrolls sideways rather than shrinking. Eight columns squeezed into a phone are unreadable and
+ * a column that wraps to three lines has stopped being a column, so the box takes the scroll and the
+ * cells keep their width. The box is focusable, so the scroll is reachable without a pointer.
+ */
+export function TableFigure({ caption, note, columns, rows, rowHeader }: Table) {
+  const align = (index: number) => (columns[index]?.align === 'end' ? 'is-end' : undefined);
+  return <div className="data-table" role="group" aria-label={caption} tabIndex={0}>
+    <table>
+      <caption>{caption}{note && <span className="data-table-note"><RichText text={note} asCaption /></span>}</caption>
+      <thead><tr>{columns.map((column, index) => <th key={index} scope="col" className={align(index)}>
+        <RichText text={column.label} asCaption /></th>)}</tr></thead>
+      <tbody>{rows.map((row, at) => <tr key={at}>{row.cells.map((cell, index) => (rowHeader && index === 0
+        ? <th key={index} scope="row"><RichText text={cell} asCaption /></th>
+        : <td key={index} className={align(index)}><RichText text={cell} asCaption /></td>))}</tr>)}</tbody>
+    </table>
+  </div>;
+}
+
 const validLinks = (payload: Record<string, unknown>) => Array.isArray(payload.definitions) && payload.definitions.every((definition) => !!definition && typeof definition === 'object' && typeof (definition as DefinitionLink).conceptKey === 'string' && typeof (definition as DefinitionLink).surface === 'string');
 const registry: Record<string, Renderer> = {
   'core.rich_text@1': {
@@ -422,6 +448,18 @@ const registry: Record<string, Renderer> = {
       frames={Array.isArray(block.payload.frames) ? block.payload.frames as SceneFrame[] : undefined}
       frameMs={typeof block.payload.frameMs === 'number' ? block.payload.frameMs : undefined}
       loop={block.payload.loop === true} autoplay={block.payload.autoplay === true} />,
+  },
+  'core.table@1': {
+    // A table whose rows do not line up with its columns is drawn as nothing rather than as a table
+    // with holes in it: a hole in a table of numbers reads as a value, and there is no value there.
+    validate: (payload) => typeof payload.caption === 'string' && !!payload.caption
+      && Array.isArray(payload.columns) && payload.columns.length > 0
+      && payload.columns.every((column) => !!column && typeof column === 'object' && typeof (column as TableColumn).label === 'string')
+      && Array.isArray(payload.rows) && payload.rows.length > 0
+      && payload.rows.every((row) => !!row && typeof row === 'object' && Array.isArray((row as TableRow).cells)
+        && (row as TableRow).cells.length === (payload.columns as unknown[]).length
+        && (row as TableRow).cells.every((cell) => typeof cell === 'string')),
+    render: (block) => <TableFigure {...readTable(block.payload)} />,
   },
   'core.problem_set@2': {
     validate: (payload, context) => Array.isArray(payload.problemVersionIds) && payload.problemVersionIds.length > 0 && payload.problemVersionIds.every((id) => typeof id === 'string' && context.problems.some((problem) => problem.problemVersionId === id)),

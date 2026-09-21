@@ -9,6 +9,7 @@ import { useRemovalNotice } from './edit-history';
 import { useExpertMode } from './expert-mode';
 import { Icon } from '@/features/learning/icons';
 import { SceneEditor } from './scene-editor';
+import { TableEditor } from './table-editor';
 
 const text = (value: unknown) => (typeof value === 'string' ? value : value === undefined || value === null ? '' : String(value));
 /** A number field left empty stays empty rather than becoming 0; validation names what is missing. */
@@ -115,6 +116,7 @@ export function BlockEditor({ block, problems, arrangingRefusal, definitionChoic
       ? <TermLinks payload={block.payload} onChange={setPayload} />
       : <Rows form={form} payload={block.payload} onChange={setPayload} />)}
     {form.editsScene && <SceneEditor payload={block.payload} arrangingRefusal={arrangingRefusal} onChange={setPayload} />}
+    {form.editsTable && <TableEditor payload={block.payload} onChange={setPayload} />}
     {form.editsProblems && problems}
   </>;
 }
@@ -136,7 +138,7 @@ export function BlockCard({ block, index, total, problems, arrangingRefusal, def
    * will be read — has nothing left for this card but its name and its handles. It says that much and
    * stops: an empty card, with a hint about a field it is not showing, is a card in the way.
    */
-  const bodyless = !!form && !shown.length && !listShows && !form.editsScene && !form.editsProblems
+  const bodyless = !!form && !shown.length && !listShows && !form.editsScene && !form.editsTable && !form.editsProblems
     && !(expert && !block.required);
   return <section className={`editor-block${bodyless ? ' compact' : ''}`}>
     <header>
