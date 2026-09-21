@@ -459,7 +459,7 @@
     {
       "public": {
         "lessonKey": "ncs-data-change",
-        "versionId": "ncs-data-change:v1",
+        "versionId": "ncs-data-change:v2",
         "title": "증감과 증감률: 얼마나 늘었나",
         "summary": "늘어난 양과 늘어난 비율을 구분하고, 기준을 잡아 증감률을 구해요.",
         "estimatedMinutes": 20,
@@ -475,12 +475,12 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-data-change:two:v1",
+          "sectionId": "ncs-data-change:two:v2",
           "role": "explanation",
           "title": "늘어난 양과 늘어난 비율",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:two:text:v1",
+              "blockId": "ncs-data-change:two:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -492,22 +492,22 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:base:v1",
+          "sectionId": "ncs-data-change:base:v2",
           "role": "explanation",
           "title": "기준은 언제나 이전 값",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:base:text:v1",
+              "blockId": "ncs-data-change:base:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "증감률에서 가장 많이 틀리는 곳은 나누는 수예요. **나중 값이 아니라 처음 값으로 나눕니다.**\n\n$40{,}000$명이 $50{,}000$명이 되었으면 늘어난 $10{,}000$을 $40{,}000$으로 나눠 $25\\%$예요. $50{,}000$으로 나눈 $20\\%$는 틀린 답인데, 시험은 그 $20\\%$를 보기에 꼭 넣어 둬요.\n\n여러 해에 걸친 증가율도 더할 수 없어요. $2022 \\rightarrow 2023$이 $25\\%$, $2023 \\rightarrow 2024$가 $30\\%$라고 해서 두 해 동안 $55\\%$가 아니에요. $40{,}000$이 $65{,}000$이 되었으니 $\\frac{25{,}000}{40{,}000} = 62.5\\%$예요. 기준이 해마다 달라지기 때문이에요.\n\n그리고 %와 %p가 있어요. 점유율이 $8\\%$에서 $10\\%$가 되면 $2$%p 오른 것이고, 비율로는 $\\frac{2}{8} = 25\\%$ 오른 것이에요. 같은 사실을 두 수로 말할 수 있으니, 문장이 어느 쪽을 묻는지 읽어야 해요.",
+                "text": "증감률에서 가장 많이 틀리는 곳은 나누는 수예요. 나중 값이 아니라 처음 값으로 나눕니다.\n\n$40{,}000$명이 $50{,}000$명이 되었으면 늘어난 $10{,}000$을 $40{,}000$으로 나눠 $25\\%$예요. $50{,}000$으로 나눈 $20\\%$는 틀린 답인데, 시험은 그 $20\\%$를 보기에 꼭 넣어 둬요.\n\n여러 해에 걸친 증가율도 더할 수 없어요. $2022 \\rightarrow 2023$이 $25\\%$, $2023 \\rightarrow 2024$가 $30\\%$라고 해서 두 해 동안 $55\\%$가 아니에요. $40{,}000$이 $65{,}000$이 되었으니 $\\frac{25{,}000}{40{,}000} = 62.5\\%$예요. 기준이 해마다 달라지기 때문이에요.\n\n그리고 %와 %p가 있어요. 점유율이 $8\\%$에서 $10\\%$가 되면 $2$%p 오른 것이고, 비율로는 $\\frac{2}{8} = 25\\%$ 오른 것이에요. 같은 사실을 두 수로 말할 수 있으니, 문장이 어느 쪽을 묻는지 읽어야 해요.",
                 "definitions": []
               }
             },
             {
-              "blockId": "ncs-data-change:growth:drawing:v1",
+              "blockId": "ncs-data-change:growth:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -667,12 +667,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:example:v1",
+          "sectionId": "ncs-data-change:example:v2",
           "role": "worked_example",
           "title": "증가율이 가장 큰 곳 찾기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:example:text:v1",
+              "blockId": "ncs-data-change:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -684,12 +684,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:practice:v1",
+          "sectionId": "ncs-data-change:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:practice:problems:v1",
+              "blockId": "ncs-data-change:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -706,12 +706,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:check:v1",
+          "sectionId": "ncs-data-change:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:check:problems:v1",
+              "blockId": "ncs-data-change:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -727,12 +727,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:summary:v1",
+          "sectionId": "ncs-data-change:summary:v2",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:summary:text:v1",
+              "blockId": "ncs-data-change:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -756,7 +756,7 @@
     {
       "public": {
         "lessonKey": "ncs-data-compare",
-        "versionId": "ncs-data-compare:v1",
+        "versionId": "ncs-data-compare:v2",
         "title": "두 표를 견주고, 말하지 않은 것을 가려내기",
         "summary": "두 값을 이어 표에 없는 값을 구하고, 표가 말하지 않은 것을 가려내요.",
         "estimatedMinutes": 20,
@@ -772,22 +772,22 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-data-compare:join:v1",
+          "sectionId": "ncs-data-compare:join:v2",
           "role": "explanation",
           "title": "두 값을 이으면 셋째 값이 나와요",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-compare:join:text:v1",
+              "blockId": "ncs-data-compare:join:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "표가 두 가지를 함께 보여 주면 그 둘을 이어 표에 없는 값을 구할 수 있어요. 자료해석에서 가장 자주 나오는 이음은 부분과 비율이에요.\n\n$\\text{부분} = \\text{전체} \\times \\text{비율}$이니 거꾸로 $\\text{전체} = \\frac{\\text{부분}}{\\text{비율}}$이에요. A사의 매출이 $80$억 원이고 점유율이 $10\\%$라면 시장 전체는 $80 \\div 0.1 = 800$억 원이에요.\n\n이 이음이 강력한 이유는 표가 「시장 규모」라는 열을 아예 갖고 있지 않아도 답이 나오기 때문이에요. 시험은 그래서 두 열을 주고 셋째를 묻습니다.\n\n여기서 흥미로운 일이 벌어져요. $2024$년은 매출 $92$억, 점유율 $12\\%$니 시장은 $92 \\div 0.12 = 766.6\\ldots$억 원이에요. **A사는 컸는데 시장은 줄었어요.** 점유율이 오른 이유의 절반이 그것이에요.",
+                "text": "표가 두 가지를 함께 보여 주면 그 둘을 이어 표에 없는 값을 구할 수 있어요. 자료해석에서 가장 자주 나오는 이음은 부분과 비율이에요.\n\n$\\text{부분} = \\text{전체} \\times \\text{비율}$이니 거꾸로 $\\text{전체} = \\frac{\\text{부분}}{\\text{비율}}$이에요. A사의 매출이 $80$억 원이고 점유율이 $10\\%$라면 시장 전체는 $80 \\div 0.1 = 800$억 원이에요.\n\n이 이음이 강력한 이유는 표가 「시장 규모」라는 열을 아예 갖고 있지 않아도 답이 나오기 때문이에요. 시험은 그래서 두 열을 주고 셋째를 묻습니다.\n\n여기서 흥미로운 일이 벌어져요. $2024$년은 매출 $92$억, 점유율 $12\\%$니 시장은 $92 \\div 0.12 = 766.6\\ldots$억 원이에요. A사는 컸는데 시장은 줄었어요. 점유율이 오른 이유의 절반이 그것이에요.",
                 "definitions": []
               }
             },
             {
-              "blockId": "ncs-data-compare:market:drawing:v1",
+              "blockId": "ncs-data-compare:market:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -888,17 +888,17 @@
           ]
         },
         {
-          "sectionId": "ncs-data-compare:silent:v1",
+          "sectionId": "ncs-data-compare:silent:v2",
           "role": "explanation",
           "title": "표가 말하지 않은 것",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-compare:silent:text:v1",
+              "blockId": "ncs-data-compare:silent:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "길잡이 과정에서 도표 분석의 유의점 다섯 가지를 봤어요. 그중 실제 문항으로 가장 많이 나오는 것이 「도표로 알 수 있는 것과 없는 것을 구별하라」예요.\n\n아래 표를 봅시다. 여기서 **알 수 있는 것**은 지점별 분기 매출, 분기별 합계, 지점별 증감, 비중이에요. 표에 있는 수와 그 수들로 계산되는 것 전부예요.\n\n**알 수 없는 것**은 훨씬 많아요. $4$분기 매출은 열이 없으니 모르고, 이익은 매출과 다른 값이라 모르고, 지점의 크기나 직원 수도 모르고, 왜 그렇게 되었는지도 모릅니다.\n\n그래서 「B지점은 영업을 잘하지 못했다」는 이 표로 말할 수 없어요. 매출이 줄었다는 것만 알 수 있어요. 지점이 작아졌을 수도, 상권이 바뀌었을 수도, 목표가 달랐을 수도 있으니까요.\n\n시험에서 「알 수 없다」가 답인 보기는 함정처럼 보이지만 함정이 아니에요. 표에 없는 것을 읽어 내지 않는 것이 이 영역의 능력 그 자체예요.",
+                "text": "길잡이 과정에서 도표 분석의 유의점 다섯 가지를 봤어요. 그중 실제 문항으로 가장 많이 나오는 것이 「도표로 알 수 있는 것과 없는 것을 구별하라」예요.\n\n아래 표를 봅시다. 여기서 「알 수 있는 것」은 지점별 분기 매출, 분기별 합계, 지점별 증감, 비중이에요. 표에 있는 수와 그 수들로 계산되는 것 전부예요.\n\n「알 수 없는 것」은 훨씬 많아요. $4$분기 매출은 열이 없으니 모르고, 이익은 매출과 다른 값이라 모르고, 지점의 크기나 직원 수도 모르고, 왜 그렇게 되었는지도 모릅니다.\n\n그래서 「B지점은 영업을 잘하지 못했다」는 이 표로 말할 수 없어요. 매출이 줄었다는 것만 알 수 있어요. 지점이 작아졌을 수도, 상권이 바뀌었을 수도, 목표가 달랐을 수도 있으니까요.\n\n시험에서 「알 수 없다」가 답인 보기는 함정처럼 보이지만 함정이 아니에요. 표에 없는 것을 읽어 내지 않는 것이 이 영역의 능력 그 자체예요.",
                 "definitions": []
               }
             },
@@ -968,29 +968,29 @@
           ]
         },
         {
-          "sectionId": "ncs-data-compare:example:v1",
+          "sectionId": "ncs-data-compare:example:v2",
           "role": "worked_example",
           "title": "총량과 비율을 섞지 않기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-compare:example:text:v1",
+              "blockId": "ncs-data-compare:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "「A사의 점유율이 $10\\%$에서 $12\\%$로 올랐다. 그러므로 A사의 매출도 늘었다.」 이 문장은 맞을까요?\n\n이 표에서는 맞아요. 매출이 $80$억에서 $92$억으로 늘었다고 적혀 있으니까요.\n\n하지만 점유율만 주어졌다면 말할 수 없어요. 시장이 절반으로 줄었다면 점유율이 올라도 매출은 줄 수 있어요. 실제로 이 표의 시장은 $800$억에서 $767$억으로 줄었고, 그런데도 매출은 늘었어요. 셋 중 둘을 알아야 나머지 하나를 말할 수 있어요.\n\n반대 방향도 마찬가지예요. 「매출이 늘었으니 점유율도 올랐다」도 말할 수 없어요. 시장이 더 빨리 컸다면 점유율은 내려가요.\n\n정리하면 이래요. **비율의 변화는 총량의 변화를 말해 주지 않고, 총량의 변화도 비율의 변화를 말해 주지 않아요.** 둘을 잇는 것은 언제나 전체예요.",
+                "text": "「A사의 점유율이 $10\\%$에서 $12\\%$로 올랐다. 그러므로 A사의 매출도 늘었다.」 이 문장은 맞을까요?\n\n이 표에서는 맞아요. 매출이 $80$억에서 $92$억으로 늘었다고 적혀 있으니까요.\n\n하지만 점유율만 주어졌다면 말할 수 없어요. 시장이 절반으로 줄었다면 점유율이 올라도 매출은 줄 수 있어요. 실제로 이 표의 시장은 $800$억에서 $767$억으로 줄었고, 그런데도 매출은 늘었어요. 셋 중 둘을 알아야 나머지 하나를 말할 수 있어요.\n\n반대 방향도 마찬가지예요. 「매출이 늘었으니 점유율도 올랐다」도 말할 수 없어요. 시장이 더 빨리 컸다면 점유율은 내려가요.\n\n정리하면 이래요. 비율의 변화는 총량의 변화를 말해 주지 않고, 총량의 변화도 비율의 변화를 말해 주지 않아요. 둘을 잇는 것은 언제나 전체예요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-data-compare:practice:v1",
+          "sectionId": "ncs-data-compare:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-compare:practice:problems:v1",
+              "blockId": "ncs-data-compare:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1007,12 +1007,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-compare:check:v1",
+          "sectionId": "ncs-data-compare:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-compare:check:problems:v1",
+              "blockId": "ncs-data-compare:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1028,12 +1028,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-compare:summary:v1",
+          "sectionId": "ncs-data-compare:summary:v2",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-compare:summary:text:v1",
+              "blockId": "ncs-data-compare:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,

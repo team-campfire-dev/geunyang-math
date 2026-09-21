@@ -49,7 +49,7 @@
     {
       "public": {
         "lessonKey": "exponent-law",
-        "versionId": "exponent-law:v2",
+        "versionId": "exponent-law:v3",
         "title": "지수법칙: 풀어 써 보면 보인다",
         "summary": "같은 문자를 거듭 곱한 식을 곱하고 나눌 때 지수가 어떻게 되는지 직접 풀어 확인해요.",
         "estimatedMinutes": 10,
@@ -65,12 +65,12 @@
       },
       "sections": [
         {
-          "sectionId": "exponent-law:explanation:v2",
+          "sectionId": "exponent-law:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "exponent-law:explanation:text:v2",
+              "blockId": "exponent-law:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -86,7 +86,7 @@
               }
             },
             {
-              "blockId": "exponent-law:explanation:drawing:v2",
+              "blockId": "exponent-law:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -348,17 +348,17 @@
           ]
         },
         {
-          "sectionId": "exponent-law:example:v2",
+          "sectionId": "exponent-law:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "exponent-law:example:text:v2",
+              "blockId": "exponent-law:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$(2x^3)^2$을 지수법칙으로 계산해 볼게요.\n\n괄호 안 전체를 두 번 곱하는 것이니 $2x^3 \\times 2x^3$이에요. 수는 수끼리 $2 \\times 2 = 4$, 문자는 문자끼리 $x^3 \\times x^3 = x^6$이고요. 그래서 $4x^6$이에요.\n\n여기서 자주 나오는 실수가 있어요. 괄호 밖 지수는 괄호 안 **모든** 것에 걸려요. $2$를 그대로 두고 $2x^6$이라고 쓰면 틀려요.\n\n$x^5 \\div x^5$처럼 같은 것끼리 나누면 어떻게 될까요. 지수를 빼면 $x^0$인데, 같은 수로 나눈 것이니 값은 $1$이에요. 그래서 $x^0=1$이라고 약속합니다.\n\n$a^3 + a^2$은 어떨까요. 이건 덧셈이라 지수법칙이 쓰이지 않아요. 차수가 다르니 합쳐지지 않고 그대로 둡니다.",
+                "text": "$(2x^3)^2$을 지수법칙으로 계산해 볼게요.\n\n괄호 안 전체를 두 번 곱하는 것이니 $2x^3 \\times 2x^3$이에요. 수는 수끼리 $2 \\times 2 = 4$, 문자는 문자끼리 $x^3 \\times x^3 = x^6$이고요. 그래서 $4x^6$이에요.\n\n여기서 자주 나오는 실수가 있어요. 괄호 밖 지수는 괄호 안 「모든」 것에 걸려요. $2$를 그대로 두고 $2x^6$이라고 쓰면 틀려요.\n\n$x^5 \\div x^5$처럼 같은 것끼리 나누면 어떻게 될까요. 지수를 빼면 $x^0$인데, 같은 수로 나눈 것이니 값은 $1$이에요. 그래서 $x^0=1$이라고 약속합니다.\n\n$a^3 + a^2$은 어떨까요. 이건 덧셈이라 지수법칙이 쓰이지 않아요. 차수가 다르니 합쳐지지 않고 그대로 둡니다.",
                 "definitions": [
                   {
                     "conceptKey": "exponent-law",
@@ -371,12 +371,12 @@
           ]
         },
         {
-          "sectionId": "exponent-law:practice:v2",
+          "sectionId": "exponent-law:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "exponent-law:practice:problems:v2",
+              "blockId": "exponent-law:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -393,12 +393,12 @@
           ]
         },
         {
-          "sectionId": "exponent-law:check:v2",
+          "sectionId": "exponent-law:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "exponent-law:check:problems:v2",
+              "blockId": "exponent-law:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -414,12 +414,12 @@
           ]
         },
         {
-          "sectionId": "exponent-law:summary:v2",
+          "sectionId": "exponent-law:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "exponent-law:summary:text:v2",
+              "blockId": "exponent-law:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -727,7 +727,7 @@
     {
       "public": {
         "lessonKey": "polynomial-arithmetic",
-        "versionId": "polynomial-arithmetic:v2",
+        "versionId": "polynomial-arithmetic:v3",
         "title": "다항식의 덧셈과 뺄셈: 빼기 괄호를 조심하기",
         "summary": "항이 여럿인 식을 더하고 빼며, 빼기 괄호가 안쪽 부호를 모두 바꾼다는 것을 익혀요.",
         "estimatedMinutes": 10,
@@ -744,17 +744,17 @@
       },
       "sections": [
         {
-          "sectionId": "polynomial-arithmetic:explanation:v2",
+          "sectionId": "polynomial-arithmetic:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-arithmetic:explanation:text:v2",
+              "blockId": "polynomial-arithmetic:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$2x+3$이나 $x^2-4x+1$처럼 항이 여럿인 식을 다항식이라고 해요. 항이 하나뿐인 단항식도 다항식에 들어갑니다.\n\n가장 높은 차수가 그 식의 차수예요. $x^2-4x+1$은 이차식이고 $2x+3$은 일차식이에요.\n\n다항식의 덧셈과 뺄셈은 괄호를 풀고 동류항을 모으는 일이에요. 새로운 계산이 아니라 일차식에서 하던 것을 항이 늘어난 식에 그대로 하는 거예요.\n\n더할 때는 괄호 안이 그대로 나와요. $(2x+3) + (3x-1) = 2x+3+3x-1$이고, 모으면 $5x+2$예요.\n\n뺄 때가 조심할 자리예요. 빼기 괄호는 안쪽 **모든** 항의 부호를 바꿔요. $(2x+3)-(x-1)$은 $2x+3-x+1$이고, 정리하면 $x+4$예요. 뒤쪽 $-1$이 $+1$로 바뀌는 것을 놓치기 쉬워요.",
+                "text": "$2x+3$이나 $x^2-4x+1$처럼 항이 여럿인 식을 다항식이라고 해요. 항이 하나뿐인 단항식도 다항식에 들어갑니다.\n\n가장 높은 차수가 그 식의 차수예요. $x^2-4x+1$은 이차식이고 $2x+3$은 일차식이에요.\n\n다항식의 덧셈과 뺄셈은 괄호를 풀고 동류항을 모으는 일이에요. 새로운 계산이 아니라 일차식에서 하던 것을 항이 늘어난 식에 그대로 하는 거예요.\n\n더할 때는 괄호 안이 그대로 나와요. $(2x+3) + (3x-1) = 2x+3+3x-1$이고, 모으면 $5x+2$예요.\n\n뺄 때가 조심할 자리예요. 빼기 괄호는 안쪽 「모든」 항의 부호를 바꿔요. $(2x+3)-(x-1)$은 $2x+3-x+1$이고, 정리하면 $x+4$예요. 뒤쪽 $-1$이 $+1$로 바뀌는 것을 놓치기 쉬워요.",
                 "definitions": [
                   {
                     "conceptKey": "polynomial",
@@ -770,7 +770,7 @@
               }
             },
             {
-              "blockId": "polynomial-arithmetic:explanation:drawing:v2",
+              "blockId": "polynomial-arithmetic:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1028,12 +1028,12 @@
           ]
         },
         {
-          "sectionId": "polynomial-arithmetic:example:v2",
+          "sectionId": "polynomial-arithmetic:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-arithmetic:example:text:v2",
+              "blockId": "polynomial-arithmetic:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1051,12 +1051,12 @@
           ]
         },
         {
-          "sectionId": "polynomial-arithmetic:practice:v2",
+          "sectionId": "polynomial-arithmetic:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-arithmetic:practice:problems:v2",
+              "blockId": "polynomial-arithmetic:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1073,12 +1073,12 @@
           ]
         },
         {
-          "sectionId": "polynomial-arithmetic:check:v2",
+          "sectionId": "polynomial-arithmetic:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-arithmetic:check:problems:v2",
+              "blockId": "polynomial-arithmetic:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1094,12 +1094,12 @@
           ]
         },
         {
-          "sectionId": "polynomial-arithmetic:summary:v2",
+          "sectionId": "polynomial-arithmetic:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-arithmetic:summary:text:v2",
+              "blockId": "polynomial-arithmetic:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
