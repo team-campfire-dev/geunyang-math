@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { answerSpec, answerText, matchMisreading, misreadingsIssue, parseAnswer } from '@/shared/answer';
 import { misconceptionKeys, misconceptions } from '@/shared/misconception';
+import katex from 'katex';
+import { mathOptions, splitRichText } from '@/shared/rich-text';
 import { gradeAnswer } from '@/core/grading';
 
 describe('reading the answer an author wrote', () => {
@@ -91,10 +93,24 @@ describe('naming a question\u2019s expected wrong answers', () => {
     expect(misreadingsIssue({ kind: 'integer', value: 12 }, [{ answer: '10.5', misconception: 'add-instead-of-scale' }], known)).toMatch(/정수여야/);
   });
 
+  it('sets the mathematics in every note, rather than showing a learner backslashes', () => {
+    // The same trap the catalogue has: KaTeX does not fail loudly, it draws the source in red. A
+    // note reaches a learner the moment they write the answer it names, so it is checked here.
+    for (const record of misconceptions) {
+      for (const piece of splitRichText(record.note)) {
+        if (piece.kind !== 'math') continue;
+        const drawn = katex.renderToString(piece.equation, { ...mathOptions, displayMode: piece.display });
+        expect(drawn, `${record.key}: ${piece.equation}`).not.toContain('katex-error');
+      }
+    }
+  });
+
   it('keeps the vocabulary a vocabulary: no repeated keys, and every one says what was done', () => {
     expect(new Set(misconceptionKeys).size).toBe(misconceptionKeys.length);
     for (const record of misconceptions) {
       expect(record.label.trim().length, record.key).toBeGreaterThan(1);
+      // A label is read where mathematics cannot be drawn — a `<select>`, a title — so it is plain.
+      expect(record.label, record.key).not.toContain('$');
       expect(record.note.trim().endsWith('.') || record.note.trim().endsWith('요.'), record.key).toBe(true);
     }
   });

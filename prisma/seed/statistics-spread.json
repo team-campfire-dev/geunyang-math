@@ -1643,7 +1643,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "always-the-mean"
+            }
+          ]
         }
       ]
     },
@@ -2353,7 +2359,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "correlation-as-cause"
+            }
+          ]
         }
       ]
     },
@@ -2773,7 +2785,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "always-the-mean"
+            }
+          ]
         },
         {
           "problemVersionId": "statistics-spread:drill-7:v1",
@@ -2846,7 +2864,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "always-the-mean"
+            }
+          ]
         },
         {
           "problemVersionId": "statistics-spread:drill-8:v1",
@@ -3141,7 +3165,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "spread-as-value"
+            },
+            {
+              "answer": "c",
+              "misconception": "spread-as-value"
+            }
+          ]
         },
         {
           "problemVersionId": "statistics-spread:drill-15:v1",

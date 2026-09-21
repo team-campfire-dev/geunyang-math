@@ -1652,7 +1652,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "or-and-swapped"
+            }
+          ]
         }
       ]
     },
@@ -2675,7 +2681,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "or-and-swapped"
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-8:v1",

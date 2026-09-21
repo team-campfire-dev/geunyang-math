@@ -2704,7 +2704,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "assumes-right-triangle"
+            },
+            {
+              "answer": "c",
+              "misconception": "converse-inequality-flipped"
+            }
+          ]
         }
       ]
     },
@@ -2785,7 +2795,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "assumes-right-triangle"
+            },
+            {
+              "answer": "c",
+              "misconception": "converse-inequality-flipped"
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras-converse:check-2:v1",
@@ -3735,7 +3755,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "assumes-right-triangle"
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-6:v1",
@@ -3881,7 +3907,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "assumes-right-triangle"
+            },
+            {
+              "answer": "c",
+              "misconception": "converse-inequality-flipped"
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-8:v1",
@@ -3954,7 +3990,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "assumes-right-triangle"
+            },
+            {
+              "answer": "c",
+              "misconception": "converse-inequality-flipped"
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-9:v1",

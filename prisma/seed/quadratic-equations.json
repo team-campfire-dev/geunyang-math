@@ -2023,7 +2023,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "c",
+              "misconception": "always-two-roots"
+            }
+          ]
         },
         {
           "problemVersionId": "quadratic-formula:homework-2:v1",
@@ -2761,7 +2767,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "c",
+              "misconception": "always-two-roots"
+            }
+          ]
         },
         {
           "problemVersionId": "quadratic-equations:drill-18:v1",
@@ -2826,7 +2838,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "c",
+              "misconception": "always-two-roots"
+            }
+          ]
         },
         {
           "problemVersionId": "quadratic-equations:drill-19:v1",

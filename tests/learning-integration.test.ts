@@ -196,6 +196,8 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
 
   it('gathers the questions built to catch one mistake, and leaves out what this learner has shown', async () => {
     const learner = await newLearner();
+    // `sign-on-distribute` and `count-endpoints` are names the seeds do not use, so this test owns
+    // the whole pool for them. If a course ever tags one, pick another unused key here.
     const tagged = record.problems.slice(0, 3).map((problem) => problem.problemVersionId);
     // Three questions named the same mistake. The published version carries it, which is allowed
     // because expected wrong answers are not frozen with it.

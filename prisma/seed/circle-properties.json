@@ -2054,7 +2054,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "d",
+              "misconception": "inscribed-as-central"
+            }
+          ]
         }
       ]
     },
@@ -2992,7 +2998,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "d",
+              "misconception": "inscribed-as-central"
+            }
+          ]
         }
       ]
     }

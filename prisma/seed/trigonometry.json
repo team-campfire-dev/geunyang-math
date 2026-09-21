@@ -1339,7 +1339,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "ratio-depends-on-size"
+            }
+          ]
         }
       ]
     },
@@ -1582,7 +1588,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "complement-ignored"
+            }
+          ]
         }
       ]
     },
@@ -2347,7 +2359,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "ratio-depends-on-size"
+            }
+          ]
         },
         {
           "problemVersionId": "trigonometry:drill-8:v1",
