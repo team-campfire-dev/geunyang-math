@@ -1,0 +1,2918 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "complex-numbers",
+      "title": "복소수와 이차방정식",
+      "summary": "제곱해서 음수가 되는 수가 없다는 벽을 넘어 수를 한 칸 넓히고, 근을 구하지 않고도 두 근의 합과 곱을 읽어요.",
+      "order": 20,
+      "track": "math",
+      "lessons": [
+        {
+          "key": "imaginary-unit",
+          "order": 1
+        },
+        {
+          "key": "complex-arithmetic",
+          "order": 2
+        },
+        {
+          "key": "root-coefficient",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "imaginary-unit",
+      "label": "허수단위",
+      "assessable": true
+    },
+    {
+      "key": "complex-number",
+      "label": "복소수",
+      "assessable": true
+    },
+    {
+      "key": "complex-arithmetic",
+      "label": "복소수의 계산",
+      "assessable": true
+    },
+    {
+      "key": "conjugate",
+      "label": "켤레복소수",
+      "assessable": true
+    },
+    {
+      "key": "root-coefficient",
+      "label": "근과 계수의 관계",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "imaginary-unit",
+        "versionId": "imaginary-unit:v1",
+        "title": "허수와 복소수: 제곱해서 음수가 되는 수를 만들다",
+        "summary": "제곱해서 음수가 되는 수가 없다는 벽을 넘어, 수를 한 칸 넓혀요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "imaginary-unit",
+          "complex-number"
+        ],
+        "prerequisiteConceptKeys": [
+          "square-root",
+          "discriminant",
+          "irrational-number"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "imaginary-unit:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "imaginary-unit:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$x^2 = -1$을 풀어 볼까요. 제곱해서 음수가 되는 실수는 없으니 해가 없어요. 앞 과정에서 판별식이 음수이면 「해가 없다」고 한 것도 같은 이유였어요.\n\n수학은 이런 벽을 만나면 종종 수를 넓혀 왔어요. 빼기가 모자라 음수를 만들고, 나누기가 모자라 분수를 만들고, 제곱근이 모자라 무리수를 만들었죠. 이번에도 같은 일을 해요.\n\n제곱해서 $-1$이 되는 수를 하나 두고 $i$라고 부르기로 해요. 이것을 허수단위라고 해요. 정의는 그 한 줄이 전부예요. $i^2 = -1$.\n\n$i$가 있으면 음수의 제곱근도 적을 수 있어요. $\\sqrt{-9} = \\sqrt{9} \\times i = 3i$예요.\n\n실수와 $i$를 섞어 $a + bi$ 꼴로 쓴 수를 복소수라고 해요. $a$를 실수부, $b$를 허수부라고 불러요.\n\n$b$가 $0$이면 그냥 실수예요. 그러니 복소수는 실수를 밀어낸 것이 아니라 품은 것이에요. 실수는 복소수 중에서 허수부가 $0$인 것들이에요.\n\n그림으로 보면 $i$를 곱하는 일은 사분의 일 바퀴 도는 일이에요. $1$에 $i$를 곱하면 수직선을 벗어나 위로 올라가고, 한 번 더 곱하면 $-1$에 닿아요. 두 번 돌면 반대편이라는 것이 $i^2 = -1$이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "imaginary-unit",
+                    "surface": "허수단위",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "complex-number",
+                    "surface": "복소수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "imaginary-unit:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "수직선 위의 1이 i를 곱할 때마다 사분의 일 바퀴씩 돌아 마이너스 1에 닿는 그림",
+                "caption": "i를 곱하는 것은 사분의 일 바퀴 도는 일이에요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 40,
+                    "y1": 116,
+                    "x2": 280,
+                    "y2": 116,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160,
+                    "y1": 32,
+                    "x2": 160,
+                    "y2": 192,
+                    "stroke": "line",
+                    "strokeWidth": 1.4,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 216,
+                    "y1": 110,
+                    "x2": 216,
+                    "y2": 122,
+                    "stroke": "ink",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 104,
+                    "y1": 110,
+                    "x2": 104,
+                    "y2": 122,
+                    "stroke": "ink",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "text",
+                    "x": 216,
+                    "y": 136,
+                    "text": "$1$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 104,
+                    "y": 136,
+                    "text": "$-1$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 178,
+                    "y": 62,
+                    "text": "$i$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "path",
+                    "d": "M196 96 A28 28 0 0 1 176 78",
+                    "fill": "none",
+                    "stroke": "muted",
+                    "strokeWidth": 1.4,
+                    "id": "arc1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "path",
+                    "d": "M144 78 A28 28 0 0 1 124 96",
+                    "fill": "none",
+                    "stroke": "muted",
+                    "strokeWidth": 1.4,
+                    "id": "arc2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 216,
+                    "cy": 116,
+                    "rx": 6,
+                    "ry": 6,
+                    "fill": "orange",
+                    "id": "pt"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 244,
+                    "y": 172,
+                    "text": "$i \\times i = -1$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "law",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "수직선 위의 $1$에서 출발해요.",
+                    "changes": [
+                      {
+                        "id": "arc1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "arc2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$i$를 곱하면 사분의 일 바퀴 돌아 위로 올라가요. 수직선 밖으로 나간 자리예요.",
+                    "changes": [
+                      {
+                        "id": "pt",
+                        "dx": -56,
+                        "dy": -56
+                      },
+                      {
+                        "id": "arc1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "arc2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "한 번 더 곱하면 또 사분의 일 바퀴. $-1$에 닿아요. 그래서 $i$를 두 번 곱하면 $-1$이에요.",
+                    "changes": [
+                      {
+                        "id": "pt",
+                        "dx": -112
+                      },
+                      {
+                        "id": "arc1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "arc2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "imaginary-unit:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "imaginary-unit:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{-16}$을 $i$로 나타내 볼게요.\n\n음수를 「$-1$ 곱하기 양수」로 갈라요. $-16 = (-1) \\times 16$이에요.\n\n$\\sqrt{-16} = \\sqrt{-1} \\times \\sqrt{16} = i \\times 4 = 4i$예요.\n\n이제 $x^2 = -16$의 해도 말할 수 있어요. $x = \\pm 4i$예요.\n\n$i$의 거듭제곱은 네 개마다 되풀이돼요. $i^1 = i$, $i^2 = -1$, $i^3 = i^2 \\times i = -i$, $i^4 = (-1)^2 = 1$. 그리고 $i^5$부터 다시 $i$예요.\n\n그래서 $i^{10}$처럼 큰 지수도 $4$로 나눈 나머지만 보면 돼요. $10 \\div 4$의 나머지가 $2$이니 $i^{10} = i^2 = -1$이에요.\n\n사분의 일 바퀴씩 도는 그림을 떠올리면 네 번마다 제자리라는 것이 당연해 보여요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "imaginary-unit:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "imaginary-unit:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "imaginary-unit:practice",
+                "problemSetVersionId": "imaginary-unit:practice:v1",
+                "problemVersionIds": [
+                  "imaginary-unit:practice-1:v1",
+                  "imaginary-unit:practice-2:v1",
+                  "imaginary-unit:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "imaginary-unit:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "imaginary-unit:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "imaginary-unit:check",
+                "problemSetVersionId": "imaginary-unit:check:v1",
+                "problemVersionIds": [
+                  "imaginary-unit:check-1:v1",
+                  "imaginary-unit:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "imaginary-unit:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "imaginary-unit:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "제곱해서 $-1$이 되는 수를 하나 두고 $i$라 부르기로 했어요. 그것이 허수단위예요.\n\n음수의 제곱근은 $\\sqrt{-9} = 3i$처럼 적어요.\n\n$a + bi$ 꼴의 수가 복소수이고, 허수부가 $0$이면 실수예요. 복소수는 실수를 품고 있어요.\n\n$i$의 거듭제곱은 네 개마다 되풀이돼요. 지수를 $4$로 나눈 나머지만 보면 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "imaginary-unit:review",
+        "problemSetVersionId": "imaginary-unit:review:v1",
+        "problemVersionIds": [
+          "imaginary-unit:homework-1:v1",
+          "imaginary-unit:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "complex-arithmetic",
+        "versionId": "complex-arithmetic:v1",
+        "title": "복소수의 계산: i 제곱만 바꿔 주면 된다",
+        "summary": "복소수를 문자식처럼 더하고 곱하되, i 제곱이 나오면 그 자리에서 마이너스 1로 바꿔요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "complex-arithmetic",
+          "conjugate"
+        ],
+        "prerequisiteConceptKeys": [
+          "imaginary-unit",
+          "complex-number",
+          "polynomial-arithmetic"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "complex-arithmetic:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "complex-arithmetic:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "복소수의 계산은 새로 배울 것이 거의 없어요. $i$를 문자 하나로 보고 다항식처럼 다루면 돼요. 딱 하나, $i^2$이 나오면 그 자리에서 $-1$로 바꿔 주는 것만 다릅니다.\n\n덧셈과 뺄셈은 동류항을 모으듯 해요. 실수는 실수끼리, $i$가 붙은 것은 그것끼리. $(2 + 3i) + (1 - 5i) = 3 - 2i$예요.\n\n곱셈은 괄호를 풀어요. $(2 + 3i)(1 + i) = 2 + 2i + 3i + 3i^2$이고, 여기서 $3i^2$을 $-3$으로 바꾸면 $2 + 5i - 3 = -1 + 5i$예요.\n\n$a + bi$에서 허수부의 부호만 뒤집은 $a - bi$를 켤레복소수라고 해요. 짝이 되는 수라는 뜻이에요.\n\n켤레끼리 곱하면 특별한 일이 일어나요. $(2+3i)(2-3i)$를 풀면 $i$가 붙은 두 조각이 서로 지워지고 $4 - 9i^2 = 4 + 9 = 13$, 실수만 남아요.\n\n합과 차의 곱이 $a^2 - b^2$이었던 것을 떠올리면, 여기서는 $a^2 - (bi)^2 = a^2 + b^2$이 되는 셈이에요.\n\n이 성질은 나눗셈에 써요. 분모에 근호가 있을 때 유리화했듯이, 분모에 $i$가 있으면 분자와 분모에 분모의 켤레를 곱해 분모를 실수로 만들어요. 하는 일이 똑같아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "complex-arithmetic",
+                    "surface": "동류항을 모으듯",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "conjugate",
+                    "surface": "켤레복소수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "complex-arithmetic:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "네 칸으로 편 곱셈에서 i 제곱이 든 칸이 실수 쪽으로 옮겨 가는 그림",
+                "caption": "i 제곱이 든 칸만 실수로 바뀌어 넘어가요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 26,
+                    "text": "$(2 + 3i)(2 - 3i)$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 78,
+                    "y": 44,
+                    "width": 82,
+                    "height": 44,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "c1"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 160,
+                    "y": 44,
+                    "width": 82,
+                    "height": 44,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "c2"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 78,
+                    "y": 88,
+                    "width": 82,
+                    "height": 44,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "c3"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 160,
+                    "y": 88,
+                    "width": 82,
+                    "height": 44,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "c4"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 119,
+                    "y": 72,
+                    "text": "$4$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "v1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 201,
+                    "y": 72,
+                    "text": "$-6i$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "v2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 119,
+                    "y": 116,
+                    "text": "$6i$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "v3"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 201,
+                    "y": 116,
+                    "text": "$-9i^2$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "v4"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 240,
+                    "y": 148,
+                    "text": "$i^2 = -1$이니",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "flip",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 240,
+                    "y": 172,
+                    "text": "$4 + 9 = 13$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "done",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "괄호를 풀면 네 조각이 나와요.",
+                    "changes": [
+                      {
+                        "id": "flip",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "done",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$i$가 붙은 두 조각은 서로 지워져요. $-6i$와 $6i$니까요.",
+                    "changes": [
+                      {
+                        "id": "v2",
+                        "opacity": 0.25
+                      },
+                      {
+                        "id": "v3",
+                        "opacity": 0.25
+                      },
+                      {
+                        "id": "c2",
+                        "opacity": 0.25
+                      },
+                      {
+                        "id": "c3",
+                        "opacity": 0.25
+                      },
+                      {
+                        "id": "flip",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "done",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "남은 조각의 $i^2$은 $-1$이에요. 그래서 음수가 양수로 바뀌어 실수만 남아요.",
+                    "changes": [
+                      {
+                        "id": "v2",
+                        "opacity": 0.25
+                      },
+                      {
+                        "id": "v3",
+                        "opacity": 0.25
+                      },
+                      {
+                        "id": "c2",
+                        "opacity": 0.25
+                      },
+                      {
+                        "id": "c3",
+                        "opacity": 0.25
+                      },
+                      {
+                        "id": "v4",
+                        "dx": -82,
+                        "dy": 46
+                      },
+                      {
+                        "id": "c4",
+                        "dx": -82,
+                        "dy": 46
+                      },
+                      {
+                        "id": "flip",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "done",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "complex-arithmetic:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "complex-arithmetic:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$(3 + 2i)(1 - 4i)$를 계산해 볼게요.\n\n괄호를 풀어요. $3 \\times 1 = 3$, $3 \\times (-4i) = -12i$, $2i \\times 1 = 2i$, $2i \\times (-4i) = -8i^2$이에요.\n\n모으면 $3 - 12i + 2i - 8i^2$이에요.\n\n$i^2$을 $-1$로 바꿔요. $-8i^2 = -8 \\times (-1) = 8$이에요.\n\n이제 실수끼리, $i$끼리 모아요. $(3 + 8) + (-12 + 2)i = 11 - 10i$예요.\n\n이번에는 나눗셈이에요. $\\dfrac{2}{1 + i}$의 분모를 실수로 만들어 볼게요.\n\n분모의 켤레인 $1 - i$를 분자와 분모에 곱해요. 분모는 $(1+i)(1-i) = 1 + 1 = 2$, 분자는 $2(1-i) = 2 - 2i$예요.\n\n$\\dfrac{2 - 2i}{2} = 1 - i$예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "complex-arithmetic:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "complex-arithmetic:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "complex-arithmetic:practice",
+                "problemSetVersionId": "complex-arithmetic:practice:v1",
+                "problemVersionIds": [
+                  "complex-arithmetic:practice-1:v1",
+                  "complex-arithmetic:practice-2:v1",
+                  "complex-arithmetic:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "complex-arithmetic:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "complex-arithmetic:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "complex-arithmetic:check",
+                "problemSetVersionId": "complex-arithmetic:check:v1",
+                "problemVersionIds": [
+                  "complex-arithmetic:check-1:v1",
+                  "complex-arithmetic:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "complex-arithmetic:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "complex-arithmetic:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$i$를 문자처럼 보고 다항식처럼 계산하되, $i^2$이 나오면 $-1$로 바꿔요.\n\n덧셈과 뺄셈은 실수끼리, $i$가 붙은 것끼리 모아요.\n\n$a + bi$의 켤레는 $a - bi$이고, 켤레끼리 곱하면 $a^2 + b^2$으로 실수만 남아요.\n\n분모에 $i$가 있으면 켤레를 곱해 분모를 실수로 만들어요. 분모의 유리화와 같은 손놀림이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "complex-arithmetic:review",
+        "problemSetVersionId": "complex-arithmetic:review:v1",
+        "problemVersionIds": [
+          "complex-arithmetic:homework-1:v1",
+          "complex-arithmetic:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "root-coefficient",
+        "versionId": "root-coefficient:v1",
+        "title": "근과 계수의 관계: 풀지 않고 두 근의 합과 곱을 안다",
+        "summary": "근의 공식을 한 번만 들여다보면 두 근의 합과 곱이 계수에서 바로 읽혀요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "root-coefficient"
+        ],
+        "prerequisiteConceptKeys": [
+          "quadratic-formula",
+          "complex-number",
+          "factorization-formula"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "root-coefficient:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "root-coefficient:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 5x + 6 = 0$의 두 근은 $2$와 $3$이에요. 더하면 $5$, 곱하면 $6$이죠. 계수를 다시 보면 가운데가 $-5$, 끝이 $6$이에요. 우연이 아니에요.\n\n인수분해로 보면 당장 보여요. 두 근이 $\\alpha$와 $\\beta$이면 식은 $(x - \\alpha)(x - \\beta) = 0$이고, 펼치면 $x^2 - (\\alpha + \\beta)x + \\alpha\\beta = 0$이에요. 가운데 계수가 합의 반대 부호, 끝이 곱이에요.\n\n최고차항의 계수가 $1$이 아니면 그것으로 나눠 주면 돼요. $ax^2 + bx + c = 0$에서 두 근의 합은 $-\\dfrac{b}{a}$, 곱은 $\\dfrac{c}{a}$예요. 이것이 근과 계수의 관계예요.\n\n쓸모가 분명해요. 두 근을 각각 구하지 않고도 「두 근의 합」이나 「두 근의 곱」만 묻는 물음에 바로 답할 수 있어요. 근이 지저분한 무리수여도, 심지어 허수여도 합과 곱은 깔끔한 경우가 많거든요.\n\n$x^2 + x + 1 = 0$이 그래요. 판별식이 음수라 실수인 해가 없지만, 두 근의 합은 $-1$, 곱은 $1$이에요.\n\n거꾸로도 쓸 수 있어요. 합이 $s$이고 곱이 $p$인 두 수를 근으로 하는 이차방정식은 $x^2 - sx + p = 0$이에요.\n\n그림으로 보면 두 근은 꼭짓점을 지나는 세로선을 사이에 두고 똑같이 벌어져 있어요. 그래서 두 근의 합은 늘 그 가운데의 두 배예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "root-coefficient",
+                    "surface": "근과 계수의 관계",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "root-coefficient:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "두 근이 꼭짓점 아래 축 위에서 좌우로 똑같이 벌어지며 합과 곱을 보이는 그림",
+                "caption": "두 근은 꼭짓점을 사이에 두고 똑같이 벌어져요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 30,
+                    "y1": 132,
+                    "x2": 296,
+                    "y2": 132,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4
+                  },
+                  {
+                    "kind": "path",
+                    "d": "M86 48 Q162 216 238 48",
+                    "fill": "none",
+                    "stroke": "green",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 162,
+                    "y1": 44,
+                    "x2": 162,
+                    "y2": 152,
+                    "stroke": "line",
+                    "strokeWidth": 1.2,
+                    "id": "axis",
+                    "dash": true
+                  },
+                  {
+                    "kind": "text",
+                    "x": 162,
+                    "y": 168,
+                    "text": "가운데",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "mid"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 162,
+                    "cy": 132,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "orange",
+                    "id": "r1"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 162,
+                    "cy": 132,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "orange",
+                    "id": "r2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 110,
+                    "y": 118,
+                    "text": "$\\alpha$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "a",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 214,
+                    "y": 118,
+                    "text": "$\\beta$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "b",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 72,
+                    "y": 32,
+                    "text": "$x^2 - 5x + 6 = 0$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 238,
+                    "y": 172,
+                    "text": "합 $5$, 곱 $6$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "sum",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "포물선이 가로축과 만나는 두 자리가 두 근이에요.",
+                    "changes": [
+                      {
+                        "id": "a",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "sum",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "두 근은 꼭짓점을 지나는 세로선을 사이에 두고 똑같이 벌어져 있어요.",
+                    "changes": [
+                      {
+                        "id": "r1",
+                        "dx": -52
+                      },
+                      {
+                        "id": "r2",
+                        "dx": 52
+                      },
+                      {
+                        "id": "a",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sum",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "그러니 두 근을 더하면 가운데의 두 배예요. 풀지 않아도 합과 곱을 알 수 있어요.",
+                    "changes": [
+                      {
+                        "id": "r1",
+                        "dx": -52
+                      },
+                      {
+                        "id": "r2",
+                        "dx": 52
+                      },
+                      {
+                        "id": "a",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sum",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "root-coefficient:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "root-coefficient:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$2x^2 - 7x + 3 = 0$의 두 근의 합과 곱을 구해 볼게요. 풀지 않고요.\n\n$a = 2$, $b = -7$, $c = 3$이에요.\n\n합은 $-\\dfrac{b}{a} = -\\dfrac{-7}{2} = \\dfrac{7}{2}$예요. 부호를 두 번 뒤집는다는 것에 주의하세요.\n\n곱은 $\\dfrac{c}{a} = \\dfrac{3}{2}$예요.\n\n확인해 볼까요. 이 방정식의 두 근은 $3$과 $\\dfrac{1}{2}$이에요. 더하면 $\\dfrac{7}{2}$, 곱하면 $\\dfrac{3}{2}$. 맞아요.\n\n이번에는 거꾸로예요. 두 근이 $\\alpha$, $\\beta$인 $x^2 - 6x + 4 = 0$에서 $\\alpha^2 + \\beta^2$을 구해 볼게요.\n\n두 근을 따로 구하면 무리수라 번거로워요. 대신 $\\alpha^2 + \\beta^2 = (\\alpha+\\beta)^2 - 2\\alpha\\beta$로 바꿔요.\n\n합이 $6$, 곱이 $4$이니 $6^2 - 2 \\times 4 = 36 - 8 = 28$이에요. 근을 한 번도 구하지 않았어요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "root-coefficient:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "root-coefficient:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "root-coefficient:practice",
+                "problemSetVersionId": "root-coefficient:practice:v1",
+                "problemVersionIds": [
+                  "root-coefficient:practice-1:v1",
+                  "root-coefficient:practice-2:v1",
+                  "root-coefficient:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "root-coefficient:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "root-coefficient:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "root-coefficient:check",
+                "problemSetVersionId": "root-coefficient:check:v1",
+                "problemVersionIds": [
+                  "root-coefficient:check-1:v1",
+                  "root-coefficient:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "root-coefficient:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "root-coefficient:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$ax^2 + bx + c = 0$의 두 근의 합은 $-\\dfrac{b}{a}$, 곱은 $\\dfrac{c}{a}$예요.\n\n$(x-\\alpha)(x-\\beta)$를 펼쳐 보면 왜 그런지 바로 보여요.\n\n근이 무리수든 허수든 합과 곱은 깔끔한 경우가 많아, 근을 구하지 않고 답하는 길이 돼요.\n\n합이 $s$, 곱이 $p$인 두 수를 근으로 하는 방정식은 $x^2 - sx + p = 0$이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "root-coefficient:review",
+        "problemSetVersionId": "root-coefficient:review:v1",
+        "problemVersionIds": [
+          "root-coefficient:homework-1:v1",
+          "root-coefficient:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "imaginary-unit:practice",
+      "courseKey": "complex-numbers",
+      "name": "허수와 복소수 연습",
+      "versionId": "imaginary-unit:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "imaginary-unit:practice-1:v1",
+          "conceptKeys": [
+            "imaginary-unit"
+          ],
+          "promptContent": [
+            {
+              "blockId": "imaginary-unit:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$i^2$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "imaginary-unit:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "허수단위의 정의 그대로예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "imaginary-unit:practice-2:v1",
+          "conceptKeys": [
+            "imaginary-unit"
+          ],
+          "promptContent": [
+            {
+              "blockId": "imaginary-unit:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{-16} = ai$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "imaginary-unit:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-16$을 $-1$과 $16$으로 갈라요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "imaginary-unit:practice-3:v1",
+          "conceptKeys": [
+            "complex-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "imaginary-unit:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "복소수 $5 - 3i$의 실수부를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "imaginary-unit:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$a + bi$에서 $a$가 실수부예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "imaginary-unit:check",
+      "courseKey": "complex-numbers",
+      "name": "허수와 복소수 확인",
+      "versionId": "imaginary-unit:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "imaginary-unit:check-1:v1",
+          "conceptKeys": [
+            "imaginary-unit"
+          ],
+          "promptContent": [
+            {
+              "blockId": "imaginary-unit:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$i^4$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "imaginary-unit:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$i^2 = -1$을 두 번 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "imaginary-unit:check-2:v1",
+          "conceptKeys": [
+            "complex-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "imaginary-unit:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 실수인 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3 + 0i$"
+              },
+              {
+                "id": "b",
+                "text": "$3i$"
+              },
+              {
+                "id": "c",
+                "text": "$-i$"
+              },
+              {
+                "id": "d",
+                "text": "$1 + i$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3 + 0i$"
+              },
+              {
+                "id": "b",
+                "text": "$3i$"
+              },
+              {
+                "id": "c",
+                "text": "$-i$"
+              },
+              {
+                "id": "d",
+                "text": "$1 + i$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "imaginary-unit:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "허수부가 $0$이면 실수예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "imaginary-unit:review",
+      "courseKey": "complex-numbers",
+      "name": "허수와 복소수 복습",
+      "versionId": "imaginary-unit:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "imaginary-unit:homework-1:v1",
+          "conceptKeys": [
+            "imaginary-unit"
+          ],
+          "promptContent": [
+            {
+              "blockId": "imaginary-unit:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$i^{10}$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "imaginary-unit:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10$을 $4$로 나눈 나머지가 $2$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "imaginary-unit:homework-2:v1",
+          "conceptKeys": [
+            "complex-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "imaginary-unit:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "복소수 $-2 + 7i$의 허수부를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "imaginary-unit:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$a + bi$에서 $b$가 허수부예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "complex-arithmetic:practice",
+      "courseKey": "complex-numbers",
+      "name": "복소수의 계산 연습",
+      "versionId": "complex-arithmetic:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "complex-arithmetic:practice-1:v1",
+          "conceptKeys": [
+            "complex-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-arithmetic:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(2 + 3i) + (1 - 5i) = a - 2i$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-arithmetic:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "실수끼리 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-arithmetic:practice-2:v1",
+          "conceptKeys": [
+            "complex-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-arithmetic:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(1 + i)^2 = ai$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-arithmetic:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1 + 2i + i^2$에서 $i^2$을 $-1$로 바꿔요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-arithmetic:practice-3:v1",
+          "conceptKeys": [
+            "conjugate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-arithmetic:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3 - 4i$의 켤레복소수는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3 + 4i$"
+              },
+              {
+                "id": "b",
+                "text": "$-3 - 4i$"
+              },
+              {
+                "id": "c",
+                "text": "$-3 + 4i$"
+              },
+              {
+                "id": "d",
+                "text": "$4 - 3i$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3 + 4i$"
+              },
+              {
+                "id": "b",
+                "text": "$-3 - 4i$"
+              },
+              {
+                "id": "c",
+                "text": "$-3 + 4i$"
+              },
+              {
+                "id": "d",
+                "text": "$4 - 3i$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-arithmetic:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "허수부의 부호만 뒤집어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "complex-arithmetic:check",
+      "courseKey": "complex-numbers",
+      "name": "복소수의 계산 확인",
+      "versionId": "complex-arithmetic:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "complex-arithmetic:check-1:v1",
+          "conceptKeys": [
+            "complex-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-arithmetic:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(3 + 2i)(1 - 4i) = 11 + bi$일 때 $b$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-arithmetic:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-12i$와 $2i$를 모아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-arithmetic:check-2:v1",
+          "conceptKeys": [
+            "conjugate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-arithmetic:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(2 + 3i)(2 - 3i)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 13
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-arithmetic:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$i$가 붙은 조각이 서로 지워지고 $4 + 9$가 남아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "complex-arithmetic:review",
+      "courseKey": "complex-numbers",
+      "name": "복소수의 계산 복습",
+      "versionId": "complex-arithmetic:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "complex-arithmetic:homework-1:v1",
+          "conceptKeys": [
+            "complex-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-arithmetic:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$i(2 - i) = a + 2i$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-arithmetic:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-i^2 = 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-arithmetic:homework-2:v1",
+          "conceptKeys": [
+            "conjugate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-arithmetic:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(1 + i)(1 - i)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-arithmetic:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1 - i^2 = 1 + 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "root-coefficient:practice",
+      "courseKey": "complex-numbers",
+      "name": "근과 계수의 관계 연습",
+      "versionId": "root-coefficient:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "root-coefficient:practice-1:v1",
+          "conceptKeys": [
+            "root-coefficient"
+          ],
+          "promptContent": [
+            {
+              "blockId": "root-coefficient:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 5x + 6 = 0$의 두 근의 합을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "root-coefficient:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가운데 계수의 부호를 뒤집어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "root-coefficient:practice-2:v1",
+          "conceptKeys": [
+            "root-coefficient"
+          ],
+          "promptContent": [
+            {
+              "blockId": "root-coefficient:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + 3x - 10 = 0$의 두 근의 곱을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "root-coefficient:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "최고차항의 계수가 $1$이면 끝의 수가 그대로 곱이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "root-coefficient:practice-3:v1",
+          "conceptKeys": [
+            "root-coefficient"
+          ],
+          "promptContent": [
+            {
+              "blockId": "root-coefficient:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x^2 - 7x + 3 = 0$의 두 근의 합을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 7,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "root-coefficient:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-\\dfrac{b}{a}$에 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "root-coefficient:check",
+      "courseKey": "complex-numbers",
+      "name": "근과 계수의 관계 확인",
+      "versionId": "root-coefficient:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "root-coefficient:check-1:v1",
+          "conceptKeys": [
+            "root-coefficient"
+          ],
+          "promptContent": [
+            {
+              "blockId": "root-coefficient:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + x + 1 = 0$의 두 근의 합을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "root-coefficient:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "실수인 해가 없어도 합과 곱은 구할 수 있어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "root-coefficient:check-2:v1",
+          "conceptKeys": [
+            "root-coefficient"
+          ],
+          "promptContent": [
+            {
+              "blockId": "root-coefficient:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 근의 합이 $4$, 곱이 $3$인 이차방정식은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x^2 - 4x + 3 = 0$"
+              },
+              {
+                "id": "b",
+                "text": "$x^2 + 4x + 3 = 0$"
+              },
+              {
+                "id": "c",
+                "text": "$x^2 - 3x + 4 = 0$"
+              },
+              {
+                "id": "d",
+                "text": "$x^2 + 4x - 3 = 0$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x^2 - 4x + 3 = 0$"
+              },
+              {
+                "id": "b",
+                "text": "$x^2 + 4x + 3 = 0$"
+              },
+              {
+                "id": "c",
+                "text": "$x^2 - 3x + 4 = 0$"
+              },
+              {
+                "id": "d",
+                "text": "$x^2 + 4x - 3 = 0$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "root-coefficient:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - sx + p = 0$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "root-coefficient:review",
+      "courseKey": "complex-numbers",
+      "name": "근과 계수의 관계 복습",
+      "versionId": "root-coefficient:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "root-coefficient:homework-1:v1",
+          "conceptKeys": [
+            "root-coefficient"
+          ],
+          "promptContent": [
+            {
+              "blockId": "root-coefficient:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 6x + 4 = 0$의 두 근을 $\\alpha$, $\\beta$라 할 때 $\\alpha^2 + \\beta^2$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 28
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "root-coefficient:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(\\alpha+\\beta)^2 - 2\\alpha\\beta$로 바꿔요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "root-coefficient:homework-2:v1",
+          "conceptKeys": [
+            "root-coefficient"
+          ],
+          "promptContent": [
+            {
+              "blockId": "root-coefficient:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x^2 + 6x - 9 = 0$의 두 근의 합을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "root-coefficient:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-\\dfrac{6}{3}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "complex-numbers:drill",
+      "courseKey": "complex-numbers",
+      "name": "복소수와 이차방정식 모아 풀기",
+      "versionId": "complex-numbers:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "complex-numbers:drill-1:v1",
+          "conceptKeys": [
+            "imaginary-unit"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$i^3$의 값은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$-i$"
+              },
+              {
+                "id": "b",
+                "text": "$i$"
+              },
+              {
+                "id": "c",
+                "text": "$-1$"
+              },
+              {
+                "id": "d",
+                "text": "$1$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$-i$"
+              },
+              {
+                "id": "b",
+                "text": "$i$"
+              },
+              {
+                "id": "c",
+                "text": "$-1$"
+              },
+              {
+                "id": "d",
+                "text": "$1$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$i^2 \\times i$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-2:v1",
+          "conceptKeys": [
+            "imaginary-unit"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{-25} = ai$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-25$를 $-1$과 $25$로 갈라요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-3:v1",
+          "conceptKeys": [
+            "imaginary-unit"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$i^8$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$8$을 $4$로 나눈 나머지가 $0$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-4:v1",
+          "conceptKeys": [
+            "imaginary-unit"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 = -9$의 해 중 허수부가 양수인 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3i$"
+              },
+              {
+                "id": "b",
+                "text": "$-3i$"
+              },
+              {
+                "id": "c",
+                "text": "$3$"
+              },
+              {
+                "id": "d",
+                "text": "$9i$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3i$"
+              },
+              {
+                "id": "b",
+                "text": "$-3i$"
+              },
+              {
+                "id": "c",
+                "text": "$3$"
+              },
+              {
+                "id": "d",
+                "text": "$9i$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x = \\pm 3i$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-5:v1",
+          "conceptKeys": [
+            "complex-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "복소수 $7 - 2i$의 실수부를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$a + bi$에서 $a$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-6:v1",
+          "conceptKeys": [
+            "complex-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "복소수 $-4 + 9i$의 허수부를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$a + bi$에서 $b$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-7:v1",
+          "conceptKeys": [
+            "complex-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 실수가 아닌 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2 + i$"
+              },
+              {
+                "id": "b",
+                "text": "$5$"
+              },
+              {
+                "id": "c",
+                "text": "$-3 + 0i$"
+              },
+              {
+                "id": "d",
+                "text": "$\\sqrt{2}$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2 + i$"
+              },
+              {
+                "id": "b",
+                "text": "$5$"
+              },
+              {
+                "id": "c",
+                "text": "$-3 + 0i$"
+              },
+              {
+                "id": "d",
+                "text": "$\\sqrt{2}$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "허수부가 $0$이 아니면 실수가 아니에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-8:v1",
+          "conceptKeys": [
+            "complex-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(4 + i) + (2 - 5i) = a - 4i$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "실수끼리 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-9:v1",
+          "conceptKeys": [
+            "complex-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(5 + 2i) - (3 + 6i) = 2 + bi$일 때 $b$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$i$가 붙은 것끼리 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-10:v1",
+          "conceptKeys": [
+            "complex-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(1 + i)^2$의 허수부를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1 + 2i + i^2 = 2i$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-11:v1",
+          "conceptKeys": [
+            "complex-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$i(3 + i)$의 실수부를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3i + i^2$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-12:v1",
+          "conceptKeys": [
+            "complex-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(2 - i)(1 + i) = a + i$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 + 2i - i - i^2$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-13:v1",
+          "conceptKeys": [
+            "conjugate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-5 + 2i$의 켤레복소수는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$-5 - 2i$"
+              },
+              {
+                "id": "b",
+                "text": "$5 + 2i$"
+              },
+              {
+                "id": "c",
+                "text": "$5 - 2i$"
+              },
+              {
+                "id": "d",
+                "text": "$2 - 5i$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$-5 - 2i$"
+              },
+              {
+                "id": "b",
+                "text": "$5 + 2i$"
+              },
+              {
+                "id": "c",
+                "text": "$5 - 2i$"
+              },
+              {
+                "id": "d",
+                "text": "$2 - 5i$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "허수부의 부호만 뒤집어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-14:v1",
+          "conceptKeys": [
+            "conjugate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(3 + i)(3 - i)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$9 + 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-15:v1",
+          "conceptKeys": [
+            "conjugate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(4 + 3i)(4 - 3i)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$16 + 9$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-16:v1",
+          "conceptKeys": [
+            "root-coefficient"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 8x + 15 = 0$의 두 근의 합을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가운데 계수의 부호를 뒤집어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-17:v1",
+          "conceptKeys": [
+            "root-coefficient"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + 2x - 7 = 0$의 두 근의 곱을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "끝의 수가 그대로 곱이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-18:v1",
+          "conceptKeys": [
+            "root-coefficient"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x^2 - 12x + 6 = 0$의 두 근의 합을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-\\dfrac{-12}{3}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-19:v1",
+          "conceptKeys": [
+            "root-coefficient"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 근의 합이 $2$, 곱이 $-8$인 이차방정식은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x^2 - 2x - 8 = 0$"
+              },
+              {
+                "id": "b",
+                "text": "$x^2 + 2x - 8 = 0$"
+              },
+              {
+                "id": "c",
+                "text": "$x^2 - 8x + 2 = 0$"
+              },
+              {
+                "id": "d",
+                "text": "$x^2 + 8x - 2 = 0$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x^2 - 2x - 8 = 0$"
+              },
+              {
+                "id": "b",
+                "text": "$x^2 + 2x - 8 = 0$"
+              },
+              {
+                "id": "c",
+                "text": "$x^2 - 8x + 2 = 0$"
+              },
+              {
+                "id": "d",
+                "text": "$x^2 + 8x - 2 = 0$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - sx + p = 0$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "complex-numbers:drill-20:v1",
+          "conceptKeys": [
+            "root-coefficient"
+          ],
+          "promptContent": [
+            {
+              "blockId": "complex-numbers:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 4x + 1 = 0$의 두 근을 $\\alpha$, $\\beta$라 할 때 $\\alpha^2 + \\beta^2$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 14
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "complex-numbers:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(\\alpha+\\beta)^2 - 2\\alpha\\beta$로 바꿔요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}

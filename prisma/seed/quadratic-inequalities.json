@@ -1,0 +1,3035 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "quadratic-inequalities",
+      "title": "이차부등식",
+      "summary": "부등식을 그래프의 높낮이로 바꿔 읽고, 두 조건이 겹치는 구간을 찾고, 어떤 수를 넣어도 성립할 조건을 따져요.",
+      "order": 21,
+      "track": "math",
+      "lessons": [
+        {
+          "key": "quadratic-inequality",
+          "order": 1
+        },
+        {
+          "key": "simultaneous-inequality",
+          "order": 2
+        },
+        {
+          "key": "always-positive",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "quadratic-inequality",
+      "label": "이차부등식",
+      "assessable": true
+    },
+    {
+      "key": "simultaneous-inequality",
+      "label": "연립부등식",
+      "assessable": true
+    },
+    {
+      "key": "always-positive",
+      "label": "늘 성립할 조건",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "quadratic-inequality",
+        "versionId": "quadratic-inequality:v1",
+        "title": "이차부등식: 그래프가 축 위에 있는 구간을 찾는다",
+        "summary": "부등식을 그래프의 높낮이로 바꿔 읽고, 두 근을 경계로 구간을 말해요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "quadratic-inequality"
+        ],
+        "prerequisiteConceptKeys": [
+          "quadratic-function",
+          "quadratic-equation",
+          "linear-inequality"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "quadratic-inequality:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "quadratic-inequality:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 5x + 6 < 0$을 풀어 볼게요. 일차부등식처럼 이항해서 정리하는 방법은 통하지 않아요. $x$가 두 군데에 있으니까요.\n\n이런 것을 이차부등식이라고 해요. 푸는 길은 그래프로 바꿔 읽는 거예요. $y = x^2 - 5x + 6$이라는 함수를 두고, 이 물음을 「$y$가 음수가 되는 $x$는 어디인가」로 바꾸는 거예요. $y$가 음수라는 것은 그래프가 가로축보다 아래에 있다는 뜻이에요.\n\n그러니 먼저 축과 만나는 자리를 찾아요. $x^2 - 5x + 6 = 0$을 풀면 $x = 2$와 $x = 3$이에요. 이미 아는 일이죠.\n\n이 두 점이 경계예요. 아래로 볼록한 포물선이니 두 점 사이에서만 축 아래로 내려가요. 그래서 해는 $2 < x < 3$이에요.\n\n부등호가 반대면 구간도 반대예요. $x^2 - 5x + 6 > 0$의 해는 두 근 바깥, 곧 $x < 2$ 또는 $x > 3$이에요. 「사이」와 「바깥」으로 기억해 두면 편해요.\n\n등호가 붙으면 경계도 포함해요. $\\le$이면 $2 \\le x \\le 3$이에요.\n\n$x^2$의 계수가 음수이면 포물선이 뒤집혀 있으니 사이와 바깥도 뒤바뀌어요. 헷갈리면 양변에 $-1$을 곱해 계수를 양수로 만들고 부등호를 뒤집는 편이 안전해요. 그래프를 한 번 그려 보는 것이 가장 확실하고요.",
+                "definitions": [
+                  {
+                    "conceptKey": "quadratic-inequality",
+                    "surface": "이차부등식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "quadratic-inequality:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "포물선 위를 점이 왼쪽에서 오른쪽으로 걸어가며 축의 위와 아래를 오가는 그림",
+                "caption": "축보다 위에 있는 구간이 양수인 구간이에요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 24,
+                    "y1": 116,
+                    "x2": 296,
+                    "y2": 116,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4
+                  },
+                  {
+                    "kind": "path",
+                    "d": "M64 56 Q160 224 256 56",
+                    "fill": "none",
+                    "stroke": "green",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 104,
+                    "cy": 116,
+                    "rx": 4,
+                    "ry": 4,
+                    "fill": "ink",
+                    "id": "ra"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 216,
+                    "cy": 116,
+                    "rx": 4,
+                    "ry": 4,
+                    "fill": "ink",
+                    "id": "rb"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 104,
+                    "y": 136,
+                    "text": "$2$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 216,
+                    "y": 136,
+                    "text": "$3$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 78,
+                    "cy": 86,
+                    "rx": 6,
+                    "ry": 6,
+                    "fill": "orange",
+                    "id": "pt"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 78,
+                    "y": 66,
+                    "text": "$y > 0$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "tag"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 66,
+                    "text": "$y < 0$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "under",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 30,
+                    "text": "$y = x^2 - 5x + 6$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 176,
+                    "text": "$y < 0$인 구간은 $2 < x < 3$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "ans",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "포물선 위를 왼쪽부터 걸어가 볼게요. 여기서는 점이 축보다 위에 있어요.",
+                    "changes": [
+                      {
+                        "id": "under",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "두 근 사이로 들어오면 점이 축 아래로 내려가요. $y$가 음수인 구간이에요.",
+                    "changes": [
+                      {
+                        "id": "pt",
+                        "dx": 82,
+                        "dy": 72
+                      },
+                      {
+                        "id": "tag",
+                        "dx": 82,
+                        "dy": 72,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "under",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "다시 축 위로 올라와요. 그러니 $y < 0$인 곳은 두 근 사이뿐이에요.",
+                    "changes": [
+                      {
+                        "id": "pt",
+                        "dx": 164
+                      },
+                      {
+                        "id": "tag",
+                        "dx": 164,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "under",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "quadratic-inequality:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "quadratic-inequality:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + x - 6 \\ge 0$을 풀어 볼게요.\n\n먼저 경계를 찾아요. $x^2 + x - 6 = 0$은 $(x+3)(x-2) = 0$이니 $x = -3$과 $x = 2$예요.\n\n$x^2$의 계수가 양수라 아래로 볼록해요. 값이 $0$보다 크거나 같은 곳은 두 근의 바깥이에요.\n\n등호가 붙었으니 경계도 포함해요. 해는 $x \\le -3$ 또는 $x \\ge 2$예요.\n\n확인해 볼까요. $x = 0$은 두 근 사이인데 넣어 보면 $-6$으로 음수예요. 해가 아닌 것이 맞아요. $x = 3$을 넣으면 $6$으로 양수, 해가 맞고요.\n\n이렇게 구간 하나에서 아무 수나 하나 넣어 보는 것이 가장 빠른 확인법이에요.\n\n$-x^2 + 4 > 0$처럼 계수가 음수이면 양변에 $-1$을 곱해 $x^2 - 4 < 0$으로 바꿔요. 부등호가 뒤집힌다는 것만 잊지 마세요. 해는 $-2 < x < 2$예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "quadratic-inequality:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "quadratic-inequality:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "quadratic-inequality:practice",
+                "problemSetVersionId": "quadratic-inequality:practice:v1",
+                "problemVersionIds": [
+                  "quadratic-inequality:practice-1:v1",
+                  "quadratic-inequality:practice-2:v1",
+                  "quadratic-inequality:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "quadratic-inequality:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "quadratic-inequality:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "quadratic-inequality:check",
+                "problemSetVersionId": "quadratic-inequality:check:v1",
+                "problemVersionIds": [
+                  "quadratic-inequality:check-1:v1",
+                  "quadratic-inequality:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "quadratic-inequality:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "quadratic-inequality:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "이차부등식은 「그래프가 축의 위에 있는가 아래에 있는가」를 묻는 물음이에요.\n\n먼저 $= 0$으로 두고 경계가 되는 두 근을 찾아요.\n\n아래로 볼록한 경우, 음수인 곳은 두 근 사이, 양수인 곳은 두 근 바깥이에요. 등호가 붙으면 경계도 넣어요.\n\n계수가 음수이면 양변에 $-1$을 곱해 뒤집어 놓고 푸는 편이 안전해요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "quadratic-inequality:review",
+        "problemSetVersionId": "quadratic-inequality:review:v1",
+        "problemVersionIds": [
+          "quadratic-inequality:homework-1:v1",
+          "quadratic-inequality:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "simultaneous-inequality",
+        "versionId": "simultaneous-inequality:v1",
+        "title": "연립부등식: 두 조건이 겹치는 자리",
+        "summary": "조건마다 구간을 따로 구한 뒤, 둘 다에 드는 자리만 남겨요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "simultaneous-inequality"
+        ],
+        "prerequisiteConceptKeys": [
+          "quadratic-inequality",
+          "linear-inequality",
+          "inequality-solution"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "simultaneous-inequality:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "simultaneous-inequality:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "조건이 둘 이상 붙는 경우가 있어요. 「$x^2 - 3x \\le 0$이면서 $x \\ge 2$」처럼요. 이것을 연립부등식이라고 해요.\n\n연립방정식에서는 두 식을 더하거나 대입했지만, 부등식은 그렇게 하지 않아요. 훨씬 단순해요. 조건마다 구간을 따로 구한 다음, 둘 다에 드는 자리만 남기면 돼요.\n\n$x^2 - 3x \\le 0$은 $x(x-3) \\le 0$이니 $0 \\le x \\le 3$이에요. 둘째 조건은 $x \\ge 2$이고요.\n\n두 구간을 같은 수직선 위에 그려 놓고 겹치는 데를 보면 $2 \\le x \\le 3$이에요.\n\n머리로만 하면 경계에서 자주 틀려요. 수직선에 그려 보는 습관이 가장 안전해요.\n\n겹치는 데가 없으면 해가 없어요. 「$x < 1$이면서 $x > 5$」 같은 경우예요. 해가 없다는 것도 답이에요.\n\n$-1 < x^2 - 1 < 3$처럼 가운데에 식이 낀 꼴은 두 부등식으로 갈라 각각 풀고 겹치면 돼요. $x^2 > 0$과 $x^2 < 4$로 갈라지죠.",
+                "definitions": [
+                  {
+                    "conceptKey": "simultaneous-inequality",
+                    "surface": "연립부등식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "simultaneous-inequality:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "두 조건의 구간을 위아래로 그리고 겹치는 자리를 아래에 모으는 그림",
+                "caption": "두 구간이 겹치는 자리가 답이에요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 24,
+                    "y1": 48,
+                    "x2": 296,
+                    "y2": 48,
+                    "stroke": "line",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 24,
+                    "y1": 96,
+                    "x2": 296,
+                    "y2": 96,
+                    "stroke": "line",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 24,
+                    "y1": 160,
+                    "x2": 296,
+                    "y2": 160,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 178,
+                    "text": "겹치는 구간",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "lab3"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 72,
+                    "y": 40,
+                    "width": 132,
+                    "height": 16,
+                    "fill": "fill",
+                    "stroke": "none",
+                    "strokeWidth": 1,
+                    "radius": 8,
+                    "id": "bar1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 50,
+                    "y": 52,
+                    "text": "①",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 300,
+                    "y": 88,
+                    "width": 132,
+                    "height": 16,
+                    "fill": "fill-soft",
+                    "stroke": "none",
+                    "strokeWidth": 1,
+                    "radius": 8,
+                    "id": "bar2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 50,
+                    "y": 100,
+                    "text": "②",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 160,
+                    "y": 152,
+                    "width": 44,
+                    "height": 16,
+                    "fill": "orange",
+                    "stroke": "none",
+                    "strokeWidth": 1,
+                    "radius": 8,
+                    "id": "bar3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 72,
+                    "y": 30,
+                    "text": "$0$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 204,
+                    "y": 30,
+                    "text": "$3$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 78,
+                    "text": "$2$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "t2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 292,
+                    "y": 78,
+                    "text": "$5$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "t5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 128,
+                    "text": "$2 \\le x \\le 3$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "ans",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "첫째 조건이 말하는 구간이에요. $0$부터 $3$까지요.",
+                    "changes": [
+                      {
+                        "id": "bar2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "t2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "t5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "bar3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "둘째 조건도 그려요. $2$부터 $5$까지예요.",
+                    "changes": [
+                      {
+                        "id": "bar2",
+                        "dx": -140,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "bar3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "두 조건을 함께 만족하려면 둘 다에 들어야 해요. 겹치는 자리만 남아요.",
+                    "changes": [
+                      {
+                        "id": "bar2",
+                        "dx": -140,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "bar3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "simultaneous-inequality:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "simultaneous-inequality:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 3x \\le 0$이면서 $x \\ge 2$인 $x$를 찾아볼게요.\n\n첫째 조건부터요. $x(x-3) \\le 0$이니 두 근은 $0$과 $3$이고, 아래로 볼록하니 해는 두 근 사이, 곧 $0 \\le x \\le 3$이에요.\n\n둘째 조건은 그대로 $x \\ge 2$예요.\n\n수직선에 두 구간을 그려 보면 $2$부터 $3$까지가 겹쳐요. 답은 $2 \\le x \\le 3$이에요.\n\n여기에 속하는 정수를 세면 $2$와 $3$, 두 개예요.\n\n하나 더 볼게요. $x^2 - 4 < 0$이면서 $x > 1$인 경우예요.\n\n첫째는 $-2 < x < 2$, 둘째는 $x > 1$이니 겹치는 데는 $1 < x < 2$예요. 여기에는 정수가 하나도 없어요. 구간이 있다고 정수가 있는 것은 아니에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "simultaneous-inequality:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "simultaneous-inequality:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "simultaneous-inequality:practice",
+                "problemSetVersionId": "simultaneous-inequality:practice:v1",
+                "problemVersionIds": [
+                  "simultaneous-inequality:practice-1:v1",
+                  "simultaneous-inequality:practice-2:v1",
+                  "simultaneous-inequality:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "simultaneous-inequality:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "simultaneous-inequality:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "simultaneous-inequality:check",
+                "problemSetVersionId": "simultaneous-inequality:check:v1",
+                "problemVersionIds": [
+                  "simultaneous-inequality:check-1:v1",
+                  "simultaneous-inequality:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "simultaneous-inequality:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "simultaneous-inequality:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "연립부등식은 조건마다 구간을 따로 구한 뒤 겹치는 데만 남기는 일이에요.\n\n수직선에 그려 보면 경계에서 틀리지 않아요.\n\n겹치는 데가 없으면 해가 없어요. 그것도 답이에요.\n\n가운데에 식이 낀 꼴은 두 부등식으로 갈라 각각 풀고 겹쳐요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "simultaneous-inequality:review",
+        "problemSetVersionId": "simultaneous-inequality:review:v1",
+        "problemVersionIds": [
+          "simultaneous-inequality:homework-1:v1",
+          "simultaneous-inequality:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "always-positive",
+        "versionId": "always-positive:v1",
+        "title": "늘 성립할 조건: 판별식으로 따진다",
+        "summary": "어떤 x를 넣어도 성립하려면 그래프가 축에서 떨어져 있어야 해요. 그 조건을 판별식으로 적어요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "always-positive"
+        ],
+        "prerequisiteConceptKeys": [
+          "quadratic-inequality",
+          "discriminant",
+          "quadratic-max-min"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "always-positive:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "always-positive:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "이번에는 다른 물음이에요. 「$x^2 - 4x + k > 0$이 모든 실수 $x$에서 성립하려면 $k$가 얼마여야 할까」 같은 것이요.\n\n지금까지는 $x$를 찾았는데, 여기서는 $x$가 무엇이든 성립하게 만드는 $k$를 찾아요. 물음의 방향이 바뀌었어요.\n\n그래프로 보면 간단해요. 아래로 볼록한 포물선의 값이 늘 양수라는 것은, 그래프가 가로축보다 늘 위에 있다는 뜻이에요. 곧 축과 만나지 않아야 해요.\n\n축과 만나는 자리는 $= 0$으로 둔 이차방정식의 해였죠. 만나지 않는다는 것은 그 방정식에 실수인 해가 없다는 뜻이고, 그것은 판별식이 음수라는 뜻이에요.\n\n$x^2 - 4x + k$의 판별식은 $16 - 4k$예요. 이것이 음수여야 하니 $16 - 4k < 0$, 곧 $k > 4$예요.\n\n네 가지를 함께 정리해 두면 편해요. 아래로 볼록할 때, 늘 양수이려면 판별식이 음수, 늘 $0$ 이상이려면 판별식이 $0$ 이하예요. 등호가 붙으면 축에 닿는 것까지는 괜찮다는 뜻이거든요.\n\n위로 볼록한 경우는 뒤집어 생각하면 돼요. 늘 음수일 조건이 판별식이 음수인 것이고요. 잊었다면 그래프를 하나 그려 보세요. 조건을 외우는 것보다 그림이 빨라요.",
+                "definitions": [
+                  {
+                    "conceptKey": "always-positive",
+                    "surface": "모든 실수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "always-positive:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "포물선이 위로 올라가며 축과 두 점에서 만나다 한 점에서 닿고 마침내 떨어지는 그림",
+                "caption": "축에서 떨어지면 값이 늘 양수예요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 24,
+                    "y1": 140,
+                    "x2": 296,
+                    "y2": 140,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4
+                  },
+                  {
+                    "kind": "path",
+                    "d": "M76 68 Q160 236 244 68",
+                    "fill": "none",
+                    "stroke": "green",
+                    "strokeWidth": 2,
+                    "id": "curve"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 104,
+                    "cy": 140,
+                    "rx": 4,
+                    "ry": 4,
+                    "fill": "ink",
+                    "id": "ra"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 216,
+                    "cy": 140,
+                    "rx": 4,
+                    "ry": 4,
+                    "fill": "ink",
+                    "id": "rb"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 30,
+                    "text": "$y = x^2 - 4x + k$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 268,
+                    "y": 62,
+                    "text": "$D > 0$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "d1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 268,
+                    "y": 62,
+                    "text": "$D = 0$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "d2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 268,
+                    "y": 62,
+                    "text": "$D < 0$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "d3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 178,
+                    "text": "축과 만나지 않으면 늘 양수",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "ans",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "축과 두 점에서 만나요. 그 사이에서는 값이 음수예요.",
+                    "changes": [
+                      {
+                        "id": "d2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "d3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$k$를 키우면 포물선이 올라가요. 두 점이 하나로 붙어요.",
+                    "changes": [
+                      {
+                        "id": "curve",
+                        "dy": -26
+                      },
+                      {
+                        "id": "ra",
+                        "dx": 28
+                      },
+                      {
+                        "id": "rb",
+                        "dx": -28
+                      },
+                      {
+                        "id": "d1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "d2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "d3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "더 올리면 축에서 떨어져요. 이제 어떤 $x$를 넣어도 값이 양수예요.",
+                    "changes": [
+                      {
+                        "id": "curve",
+                        "dy": -52
+                      },
+                      {
+                        "id": "ra",
+                        "dx": 56,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rb",
+                        "dx": -56,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "d1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "d2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "d3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "always-positive:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "always-positive:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + 6x + k > 0$이 모든 실수 $x$에서 성립하도록 하는 $k$의 범위를 구해 볼게요.\n\n$x^2$의 계수가 $1$로 양수이니 아래로 볼록해요. 값이 늘 양수이려면 축과 만나지 않아야 해요.\n\n판별식을 구해요. $b^2 - 4ac = 36 - 4k$예요.\n\n만나지 않으려면 이 값이 음수여야 해요. $36 - 4k < 0$에서 $4k > 36$, 곧 $k > 9$예요.\n\n확인해 볼까요. $k = 10$이면 $x^2 + 6x + 10 = (x+3)^2 + 1$이고 꼭짓점의 값이 $1$로 양수예요. 늘 양수가 맞아요.\n\n$k = 9$였다면 $(x+3)^2$이 되어 $x = -3$에서 값이 $0$이에요. $> 0$이 아니라 등호가 걸리니 안 돼요. $k > 9$에서 등호가 빠진 이유예요.\n\n만약 문제가 $\\ge 0$이었다면 축에 닿아도 괜찮으니 $k \\ge 9$가 답이에요. 등호 하나가 조건을 바꿔요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "always-positive:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "always-positive:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "always-positive:practice",
+                "problemSetVersionId": "always-positive:practice:v1",
+                "problemVersionIds": [
+                  "always-positive:practice-1:v1",
+                  "always-positive:practice-2:v1",
+                  "always-positive:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "always-positive:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "always-positive:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "always-positive:check",
+                "problemSetVersionId": "always-positive:check:v1",
+                "problemVersionIds": [
+                  "always-positive:check-1:v1",
+                  "always-positive:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "always-positive:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "always-positive:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "「모든 실수에서 성립할 조건」은 그래프가 축과 만나지 않을 조건이에요.\n\n아래로 볼록하고 늘 양수이려면 판별식이 음수, 늘 $0$ 이상이려면 판별식이 $0$ 이하예요.\n\n등호 하나가 조건을 바꾸니 부등호를 끝까지 보세요.\n\n조건이 헷갈리면 포물선을 하나 그려 보는 편이 외우는 것보다 빨라요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "always-positive:review",
+        "problemSetVersionId": "always-positive:review:v1",
+        "problemVersionIds": [
+          "always-positive:homework-1:v1",
+          "always-positive:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "quadratic-inequality:practice",
+      "courseKey": "quadratic-inequalities",
+      "name": "이차부등식 연습",
+      "versionId": "quadratic-inequality:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "quadratic-inequality:practice-1:v1",
+          "conceptKeys": [
+            "quadratic-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequality:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 5x + 6 < 0$의 해가 $a < x < b$일 때 $a + b$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequality:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 근은 $2$와 $3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequality:practice-2:v1",
+          "conceptKeys": [
+            "quadratic-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequality:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 $x^2 - 9 > 0$의 해에 속하는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x = 4$"
+              },
+              {
+                "id": "b",
+                "text": "$x = 0$"
+              },
+              {
+                "id": "c",
+                "text": "$x = 2$"
+              },
+              {
+                "id": "d",
+                "text": "$x = -1$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x = 4$"
+              },
+              {
+                "id": "b",
+                "text": "$x = 0$"
+              },
+              {
+                "id": "c",
+                "text": "$x = 2$"
+              },
+              {
+                "id": "d",
+                "text": "$x = -1$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequality:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "해는 두 근 $\\pm 3$의 바깥이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequality:practice-3:v1",
+          "conceptKeys": [
+            "quadratic-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequality:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x-1)(x-4) \\le 0$의 해가 $a \\le x \\le b$일 때 $b$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequality:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 근 사이이고 경계도 포함해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "quadratic-inequality:check",
+      "courseKey": "quadratic-inequalities",
+      "name": "이차부등식 확인",
+      "versionId": "quadratic-inequality:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "quadratic-inequality:check-1:v1",
+          "conceptKeys": [
+            "quadratic-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequality:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + x - 6 > 0$의 해가 $x < a$ 또는 $x > b$일 때 $b$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequality:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x+3)(x-2) = 0$의 두 근 바깥이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequality:check-2:v1",
+          "conceptKeys": [
+            "quadratic-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequality:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 4x < 0$의 해에 속하는 정수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequality:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "해는 $0 < x < 4$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "quadratic-inequality:review",
+      "courseKey": "quadratic-inequalities",
+      "name": "이차부등식 복습",
+      "versionId": "quadratic-inequality:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "quadratic-inequality:homework-1:v1",
+          "conceptKeys": [
+            "quadratic-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequality:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 2x - 8 \\le 0$의 해가 $a \\le x \\le b$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequality:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x+2)(x-4) = 0$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequality:homework-2:v1",
+          "conceptKeys": [
+            "quadratic-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequality:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-x^2 + 4 > 0$의 해는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$-2 < x < 2$"
+              },
+              {
+                "id": "b",
+                "text": "$x < -2$ 또는 $x > 2$"
+              },
+              {
+                "id": "c",
+                "text": "$x > 2$"
+              },
+              {
+                "id": "d",
+                "text": "해가 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$-2 < x < 2$"
+              },
+              {
+                "id": "b",
+                "text": "$x < -2$ 또는 $x > 2$"
+              },
+              {
+                "id": "c",
+                "text": "$x > 2$"
+              },
+              {
+                "id": "d",
+                "text": "해가 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequality:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "양변에 $-1$을 곱하고 부등호를 뒤집어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "simultaneous-inequality:practice",
+      "courseKey": "quadratic-inequalities",
+      "name": "연립부등식 연습",
+      "versionId": "simultaneous-inequality:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "simultaneous-inequality:practice-1:v1",
+          "conceptKeys": [
+            "simultaneous-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "simultaneous-inequality:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x > 1$이면서 $x < 5$인 정수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "simultaneous-inequality:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$, $3$, $4$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "simultaneous-inequality:practice-2:v1",
+          "conceptKeys": [
+            "simultaneous-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "simultaneous-inequality:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 4 < 0$이면서 $x > 0$인 해가 $0 < x < a$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "simultaneous-inequality:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "첫째 조건은 $-2 < x < 2$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "simultaneous-inequality:practice-3:v1",
+          "conceptKeys": [
+            "simultaneous-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "simultaneous-inequality:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0 \\le x \\le 3$이면서 $x \\ge 2$인 구간은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2 \\le x \\le 3$"
+              },
+              {
+                "id": "b",
+                "text": "$0 \\le x \\le 2$"
+              },
+              {
+                "id": "c",
+                "text": "$x \\ge 2$"
+              },
+              {
+                "id": "d",
+                "text": "해가 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2 \\le x \\le 3$"
+              },
+              {
+                "id": "b",
+                "text": "$0 \\le x \\le 2$"
+              },
+              {
+                "id": "c",
+                "text": "$x \\ge 2$"
+              },
+              {
+                "id": "d",
+                "text": "해가 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "simultaneous-inequality:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 구간이 겹치는 데를 보세요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "simultaneous-inequality:check",
+      "courseKey": "quadratic-inequalities",
+      "name": "연립부등식 확인",
+      "versionId": "simultaneous-inequality:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "simultaneous-inequality:check-1:v1",
+          "conceptKeys": [
+            "simultaneous-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "simultaneous-inequality:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 3x \\le 0$이면서 $x \\ge 2$인 해가 $a \\le x \\le b$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "simultaneous-inequality:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "첫째 조건은 $0 \\le x \\le 3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "simultaneous-inequality:check-2:v1",
+          "conceptKeys": [
+            "simultaneous-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "simultaneous-inequality:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 4 < 0$이면서 $x > 1$인 구간에 속하는 정수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "simultaneous-inequality:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "겹치는 구간은 $1 < x < 2$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "simultaneous-inequality:review",
+      "courseKey": "quadratic-inequalities",
+      "name": "연립부등식 복습",
+      "versionId": "simultaneous-inequality:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "simultaneous-inequality:homework-1:v1",
+          "conceptKeys": [
+            "simultaneous-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "simultaneous-inequality:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-1 < x < 4$이면서 $x \\ge 2$인 구간에 속하는 정수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "simultaneous-inequality:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$와 $3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "simultaneous-inequality:homework-2:v1",
+          "conceptKeys": [
+            "simultaneous-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "simultaneous-inequality:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x < 1$이면서 $x > 5$인 해는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "해가 없다"
+              },
+              {
+                "id": "b",
+                "text": "$1 < x < 5$"
+              },
+              {
+                "id": "c",
+                "text": "모든 실수"
+              },
+              {
+                "id": "d",
+                "text": "$x > 5$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "해가 없다"
+              },
+              {
+                "id": "b",
+                "text": "$1 < x < 5$"
+              },
+              {
+                "id": "c",
+                "text": "모든 실수"
+              },
+              {
+                "id": "d",
+                "text": "$x > 5$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "simultaneous-inequality:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 구간이 겹치는 데가 있나요?"
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "always-positive:practice",
+      "courseKey": "quadratic-inequalities",
+      "name": "늘 성립할 조건 연습",
+      "versionId": "always-positive:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "always-positive:practice-1:v1",
+          "conceptKeys": [
+            "always-positive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "always-positive:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + 2x + 5$의 판별식의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -16
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "always-positive:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4 - 20$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "always-positive:practice-2:v1",
+          "conceptKeys": [
+            "always-positive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "always-positive:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + 4x + k > 0$이 모든 실수에서 성립하도록 하는 가장 작은 정수 $k$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "always-positive:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$16 - 4k < 0$에서 $k > 4$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "always-positive:practice-3:v1",
+          "conceptKeys": [
+            "always-positive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "always-positive:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 6x + 9 \\ge 0$은 모든 실수에서 성립하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "성립한다"
+              },
+              {
+                "id": "b",
+                "text": "성립하지 않는다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "성립한다"
+              },
+              {
+                "id": "b",
+                "text": "성립하지 않는다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "always-positive:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x-3)^2$이라 늘 $0$ 이상이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "always-positive:check",
+      "courseKey": "quadratic-inequalities",
+      "name": "늘 성립할 조건 확인",
+      "versionId": "always-positive:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "always-positive:check-1:v1",
+          "conceptKeys": [
+            "always-positive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "always-positive:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 2x + k > 0$이 모든 실수에서 성립하도록 하는 가장 작은 정수 $k$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "always-positive:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4 - 4k < 0$에서 $k > 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "always-positive:check-2:v1",
+          "conceptKeys": [
+            "always-positive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "always-positive:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "아래로 볼록한 이차함수의 값이 늘 양수일 조건은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "판별식이 음수"
+              },
+              {
+                "id": "b",
+                "text": "판별식이 $0$"
+              },
+              {
+                "id": "c",
+                "text": "판별식이 양수"
+              },
+              {
+                "id": "d",
+                "text": "조건 없음"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "판별식이 음수"
+              },
+              {
+                "id": "b",
+                "text": "판별식이 $0$"
+              },
+              {
+                "id": "c",
+                "text": "판별식이 양수"
+              },
+              {
+                "id": "d",
+                "text": "조건 없음"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "always-positive:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "축과 만나지 않아야 해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "always-positive:review",
+      "courseKey": "quadratic-inequalities",
+      "name": "늘 성립할 조건 복습",
+      "versionId": "always-positive:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "always-positive:homework-1:v1",
+          "conceptKeys": [
+            "always-positive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "always-positive:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + kx + 4 > 0$이 모든 실수에서 성립하도록 하는 정수 $k$는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "always-positive:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$k^2 - 16 < 0$에서 $-4 < k < 4$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "always-positive:homework-2:v1",
+          "conceptKeys": [
+            "always-positive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "always-positive:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + 6x + k \\ge 0$이 모든 실수에서 성립하도록 하는 가장 작은 정수 $k$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "always-positive:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "축에 닿아도 되니 판별식이 $0$ 이하예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "quadratic-inequalities:drill",
+      "courseKey": "quadratic-inequalities",
+      "name": "이차부등식 모아 풀기",
+      "versionId": "quadratic-inequalities:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "quadratic-inequalities:drill-1:v1",
+          "conceptKeys": [
+            "quadratic-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 7x + 12 < 0$의 해가 $a < x < b$일 때 $a + b$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 근은 $3$과 $4$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-2:v1",
+          "conceptKeys": [
+            "quadratic-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 16 > 0$의 해에 속하는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x = 5$"
+              },
+              {
+                "id": "b",
+                "text": "$x = 0$"
+              },
+              {
+                "id": "c",
+                "text": "$x = 3$"
+              },
+              {
+                "id": "d",
+                "text": "$x = -2$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x = 5$"
+              },
+              {
+                "id": "b",
+                "text": "$x = 0$"
+              },
+              {
+                "id": "c",
+                "text": "$x = 3$"
+              },
+              {
+                "id": "d",
+                "text": "$x = -2$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 근 $\\pm 4$의 바깥이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-3:v1",
+          "conceptKeys": [
+            "quadratic-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x-2)(x-6) \\le 0$의 해가 $a \\le x \\le b$일 때 $b$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 근 사이예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-4:v1",
+          "conceptKeys": [
+            "quadratic-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 6x < 0$의 해에 속하는 정수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "해는 $0 < x < 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-5:v1",
+          "conceptKeys": [
+            "quadratic-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + 5x + 4 \\ge 0$의 해는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x \\le -4$ 또는 $x \\ge -1$"
+              },
+              {
+                "id": "b",
+                "text": "$-4 \\le x \\le -1$"
+              },
+              {
+                "id": "c",
+                "text": "모든 실수"
+              },
+              {
+                "id": "d",
+                "text": "해가 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x \\le -4$ 또는 $x \\ge -1$"
+              },
+              {
+                "id": "b",
+                "text": "$-4 \\le x \\le -1$"
+              },
+              {
+                "id": "c",
+                "text": "모든 실수"
+              },
+              {
+                "id": "d",
+                "text": "해가 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 근 바깥이고 경계도 포함해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-6:v1",
+          "conceptKeys": [
+            "quadratic-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-x^2 + 9 > 0$의 해가 $a < x < b$일 때 $b$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "양변에 $-1$을 곱하고 부등호를 뒤집어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-7:v1",
+          "conceptKeys": [
+            "quadratic-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - x - 12 \\le 0$의 해가 $a \\le x \\le b$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x+3)(x-4) = 0$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-8:v1",
+          "conceptKeys": [
+            "simultaneous-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x > 2$이면서 $x < 7$인 정수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$부터 $6$까지예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-9:v1",
+          "conceptKeys": [
+            "simultaneous-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 9 < 0$이면서 $x > 0$인 해가 $0 < x < a$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "첫째 조건은 $-3 < x < 3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-10:v1",
+          "conceptKeys": [
+            "simultaneous-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0 \\le x \\le 5$이면서 $x \\ge 3$인 구간은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3 \\le x \\le 5$"
+              },
+              {
+                "id": "b",
+                "text": "$0 \\le x \\le 3$"
+              },
+              {
+                "id": "c",
+                "text": "$x \\ge 3$"
+              },
+              {
+                "id": "d",
+                "text": "해가 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3 \\le x \\le 5$"
+              },
+              {
+                "id": "b",
+                "text": "$0 \\le x \\le 3$"
+              },
+              {
+                "id": "c",
+                "text": "$x \\ge 3$"
+              },
+              {
+                "id": "d",
+                "text": "해가 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "겹치는 데를 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-11:v1",
+          "conceptKeys": [
+            "simultaneous-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x < 0$이면서 $x > 3$인 해는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "해가 없다"
+              },
+              {
+                "id": "b",
+                "text": "$0 < x < 3$"
+              },
+              {
+                "id": "c",
+                "text": "모든 실수"
+              },
+              {
+                "id": "d",
+                "text": "$x > 3$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "해가 없다"
+              },
+              {
+                "id": "b",
+                "text": "$0 < x < 3$"
+              },
+              {
+                "id": "c",
+                "text": "모든 실수"
+              },
+              {
+                "id": "d",
+                "text": "$x > 3$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "겹치는 데가 있나요?"
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-12:v1",
+          "conceptKeys": [
+            "simultaneous-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 4x \\le 0$이면서 $x \\ge 1$인 해가 $a \\le x \\le b$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "첫째 조건은 $0 \\le x \\le 4$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-13:v1",
+          "conceptKeys": [
+            "simultaneous-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-2 < x < 3$이면서 $x \\ge 0$인 구간에 속하는 정수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0$, $1$, $2$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-14:v1",
+          "conceptKeys": [
+            "simultaneous-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 < 1$이면서 $x > 0$인 구간에 속하는 정수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "겹치는 구간은 $0 < x < 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-15:v1",
+          "conceptKeys": [
+            "always-positive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + 2x + 7$의 판별식의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -24
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4 - 28$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-16:v1",
+          "conceptKeys": [
+            "always-positive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + 8x + k > 0$이 모든 실수에서 성립하도록 하는 가장 작은 정수 $k$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 17
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$64 - 4k < 0$에서 $k > 16$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-17:v1",
+          "conceptKeys": [
+            "always-positive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 10x + k \\ge 0$이 모든 실수에서 성립하도록 하는 가장 작은 정수 $k$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "축에 닿아도 되니 판별식이 $0$ 이하예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-18:v1",
+          "conceptKeys": [
+            "always-positive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + 4 > 0$은 모든 실수에서 성립하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "성립한다"
+              },
+              {
+                "id": "b",
+                "text": "성립하지 않는다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "성립한다"
+              },
+              {
+                "id": "b",
+                "text": "성립하지 않는다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "판별식이 $-16$으로 음수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-19:v1",
+          "conceptKeys": [
+            "always-positive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + kx + 9 > 0$이 모든 실수에서 성립하도록 하는 정수 $k$는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 11
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$k^2 - 36 < 0$에서 $-6 < k < 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-inequalities:drill-20:v1",
+          "conceptKeys": [
+            "always-positive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-inequalities:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "아래로 볼록한 이차함수가 늘 $0$ 이상일 조건은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "판별식이 $0$ 이하"
+              },
+              {
+                "id": "b",
+                "text": "판별식이 음수"
+              },
+              {
+                "id": "c",
+                "text": "판별식이 양수"
+              },
+              {
+                "id": "d",
+                "text": "조건 없음"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "판별식이 $0$ 이하"
+              },
+              {
+                "id": "b",
+                "text": "판별식이 음수"
+              },
+              {
+                "id": "c",
+                "text": "판별식이 양수"
+              },
+              {
+                "id": "d",
+                "text": "조건 없음"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-inequalities:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "축에 닿는 것까지는 괜찮아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}
