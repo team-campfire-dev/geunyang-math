@@ -6,7 +6,7 @@
       "title": "이차부등식",
       "summary": "부등식을 그래프의 높낮이로 바꿔 읽고, 두 조건이 겹치는 구간을 찾고, 어떤 수를 넣어도 성립할 조건을 따져요.",
       "order": 21,
-      "track": "math",
+      "track": "high",
       "lessons": [
         {
           "key": "quadratic-inequality",
@@ -21,7 +21,8 @@
           "order": 3
         }
       ],
-      "diagnostics": []
+      "diagnostics": [],
+      "stage": "high-1"
     }
   ],
   "concepts": [

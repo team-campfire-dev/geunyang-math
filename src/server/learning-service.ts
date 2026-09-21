@@ -12,7 +12,7 @@ import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
 import { blockDefinitionRefs, getActivityProblemIds, definitionReferences, toPublicLesson, type LessonMetadata, type LessonRecord, type StoredProblem } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
-import { defaultCourseTrack, type ActionResponse, type AssignmentView, type AttemptView, type CourseTrack, type GradeResult, type LearningState, type PublicCatalog, type PublicLesson, type PublicProblem, type PublicProblemSet, type DiagnosticAnswer, type Recommendation } from '@/shared/api';
+import { defaultCourseTrack, isSchoolTrack, type ActionResponse, type AssignmentView, type AttemptView, type CourseStage, type CourseTrack, type GradeResult, type LearningState, type PublicCatalog, type PublicLesson, type PublicProblem, type PublicProblemSet, type DiagnosticAnswer, type Recommendation } from '@/shared/api';
 import { AppError } from './errors';
 
 /**
@@ -82,7 +82,7 @@ export class LearningService {
     const chosen = lessons.filter(lesson => lesson.courseKey === targetCourseKey).flatMap(lesson => lesson.conceptKeys);
     if (chosen.length) return chosen;
     const tracks = new Map((await db.course.findMany({ select: { key: true, track: true } })).map(row => [row.key, row.track]));
-    return lessons.filter(lesson => (tracks.get(lesson.courseKey) ?? defaultCourseTrack) === defaultCourseTrack)
+    return lessons.filter(lesson => isSchoolTrack((tracks.get(lesson.courseKey) ?? defaultCourseTrack) as CourseTrack))
       .flatMap(lesson => lesson.conceptKeys);
   }
 
@@ -106,10 +106,11 @@ export class LearningService {
     const published = new Set(lessons.map(item => item.courseKey));
     const [rows, courses] = await Promise.all([
       db.concept.findMany({ where: { assessable: true } }),
-      db.course.findMany({ orderBy: [{ order: 'asc' }, { createdAt: 'asc' }, { key: 'asc' }], select: { key: true, title: true, summary: true, track: true } }),
+      db.course.findMany({ orderBy: [{ order: 'asc' }, { createdAt: 'asc' }, { key: 'asc' }], select: { key: true, title: true, summary: true, track: true, stage: true } }),
     ]);
     // A course with nothing published yet is not in the catalogue either.
-    return { courses: courses.filter(course => published.has(course.key)).map(course => ({ ...course, track: course.track as CourseTrack })), lessons,
+    return { courses: courses.filter(course => published.has(course.key))
+      .map(course => ({ ...course, track: course.track as CourseTrack, stage: course.stage as CourseStage | null })), lessons,
       concepts: orderConcepts(rows.filter(row => taught.has(row.key)), lessons).map(row => ({ key: row.key, label: row.label })),
       problemSets: await this.publicProblemSets(db, lessons) };
   }

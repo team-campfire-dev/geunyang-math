@@ -20,7 +20,9 @@
           "order": 3
         }
       ],
-      "diagnostics": []
+      "diagnostics": [],
+      "track": "middle",
+      "stage": "middle-2"
     }
   ],
   "concepts": [

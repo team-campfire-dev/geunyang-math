@@ -228,12 +228,21 @@
 .scene-task .builder-actions .editor-note { max-width: 60%; text-align: left; }
 @media (max-width: 520px) { .scene-task { padding: 15px; } }
 
-/* One row of chips per line of study, each row named, so a chip is read as belonging to a line
- * rather than as the next thing after the chip before it. The name takes a row of its own
- * (flex-basis: 100%) — hanging it in front of the chips would indent each row differently. */
-.course-filters { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
-.course-filter-line { display: flex; flex-wrap: wrap; gap: 10px; }
+/* Chips are grouped the way the catalogue below them is: a line of study, then the school years
+ * inside it. The line's name takes a row of its own — hanging it in front of the chips would
+ * indent each row differently — while a year's name is two characters for every year there is, so
+ * it sits in front at a fixed width and the rows still line up. */
+.course-filters { display: flex; flex-direction: column; gap: 18px; margin-bottom: 28px; }
+.course-filter-track { display: flex; flex-direction: column; gap: 8px; }
+.course-filter-line { display: flex; gap: 10px; align-items: baseline; }
+/* The chips of one year keep their own box, so a row that wraps lines its second line up with its
+ * first rather than sliding under the year's name. */
+.course-filter-chips { display: flex; flex-wrap: wrap; gap: 10px; }
 .course-filter-name { flex-basis: 100%; font-size: 12px; font-weight: 600; letter-spacing: .06em; color: #8d9781; }
+.course-filter-year { flex: none; width: 26px; font-size: 12px; font-weight: 600; color: #a7b09c; }
+/* The year a course belongs to, over the courses of that year. Quieter than the line's own heading
+ * and louder than a course's title, which is the order a reader scans them in. */
+.stage-heading { font-size: 15px; font-weight: 600; letter-spacing: -.3px; color: #77866a; margin: 26px 0 14px; }
 .course-filters button { padding: 10px 18px; border: 1px solid var(--line); border-radius: 24px; background: var(--white); font-size: 13px; }
 .course-filters button.active { background: var(--deep-green); color: white; border-color: var(--deep-green); }
 .course-section .catalog-banner { margin-bottom: 20px; }

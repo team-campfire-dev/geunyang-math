@@ -6,7 +6,7 @@
       "title": "경우의 수",
       "summary": "빠뜨리지도 겹치지도 않게 세는 법을 익히고, 줄을 세우는 뽑기와 그냥 뽑는 뽑기를 가려 세요.",
       "order": 22,
-      "track": "math",
+      "track": "high",
       "lessons": [
         {
           "key": "counting-rule",
@@ -21,7 +21,8 @@
           "order": 3
         }
       ],
-      "diagnostics": []
+      "diagnostics": [],
+      "stage": "high-1"
     }
   ],
   "concepts": [

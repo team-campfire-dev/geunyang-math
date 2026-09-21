@@ -129,7 +129,9 @@ model Course {
   /// Which line of study the course belongs to. The catalogue is ordered along one line — school
   /// mathematics — and a course beside that line is chosen on purpose rather than met on the way,
   /// so what places a learner who has chosen nothing only ever asks along the default one.
-  track       String   @default("math") @db.VarChar(40)
+  track       String   @default("middle") @db.VarChar(40)
+  /// The school year inside the track. Only 중학교 and 고등학교 have one.
+  stage       String?  @db.VarChar(40)
   /// Who keeps the course. Null is the platform's own; organisations have no model yet.
   ownerUserId String?  @db.VarChar(191)
   createdAt   DateTime @default(now())

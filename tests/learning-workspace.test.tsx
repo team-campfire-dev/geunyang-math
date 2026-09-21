@@ -466,7 +466,7 @@ describe('a course beside the line the catalogue is ordered along', () => {
     summary: '붙인 만큼과 깎은 만큼', estimatedMinutes: 10, conceptKeys: ['cost-price'],
     prerequisiteConceptKeys: ['term.denominator'], sectionCount: 5, courseKey: 'ncs-applied' };
   const twoTracks = () => serve({
-    courses: [{ key: 'fractions', title: '분수', summary: '분수를 처음부터', track: 'math' },
+    courses: [{ key: 'fractions', title: '분수', summary: '분수를 처음부터', track: 'basics' },
       { key: 'ncs-applied', title: '응용계산', summary: '시험이 묻는 방식 그대로', track: 'ncs' }],
     catalogue: [...catalogue, ncsLesson],
     // A signed-in learner reads the lessons from their own state, which is the same catalogue.
@@ -484,18 +484,41 @@ describe('a course beside the line the catalogue is ordered along', () => {
     server = twoTracks();
     await openCatalogue();
     // The school line first and whole, then the other line, each said out loud before its courses.
-    expect(headings()).toEqual(['수학 과정', '분수', 'NCS 수리영역', '응용계산']);
+    expect(headings()).toEqual(['기초 과정', '분수', 'NCS 수리영역', '응용계산']);
   });
 
   it('groups the chips into the same lines, and keeps both reachable after one is picked', async () => {
     server = twoTracks();
     await openCatalogue();
     const rows = () => [...window.document.querySelectorAll('.course-filter-line')].map((row) => [...row.children].map((node) => node.textContent));
-    expect(rows()).toEqual([['모든 코스'], ['수학 과정', '분수'], ['NCS 수리영역', '응용계산']]);
+    expect(rows()).toEqual([['모든 코스'], ['분수'], ['응용계산']]);
     fireEvent.click(screen.getByRole('button', { name: '응용계산' }));
     // Picking narrows the courses listed below, never the chips: the school line stays one click away.
-    expect(rows()).toEqual([['모든 코스'], ['수학 과정', '분수'], ['NCS 수리영역', '응용계산']]);
+    expect(rows()).toEqual([['모든 코스'], ['분수'], ['응용계산']]);
     expect(headings()).toEqual(['NCS 수리영역', '응용계산']);
+  });
+
+  it('cuts a line into the school years it holds, in the catalogue and in the chips', async () => {
+    // 「중2까지 했어요」 names a place in the catalogue; 「수학 과정」 does not. The chips and the
+    // list are cut the same way, so the chip a learner presses and the heading they scroll to match.
+    const spread: PublicLesson[] = [...catalogue,
+      { ...catalogue[0], lessonKey: 'negative-number', versionId: 'negative-number:v1', title: '음수와 수직선', courseKey: 'integers' },
+      { ...catalogue[0], lessonKey: 'linear-function', versionId: 'linear-function:v1', title: '일차함수와 그래프', courseKey: 'functions' }];
+    server = serve({
+      courses: [{ key: 'fractions', title: '분수', summary: '분수를 처음부터', track: 'basics' },
+        { key: 'integers', title: '정수와 유리수', summary: '음수부터', track: 'middle', stage: 'middle-1' },
+        { key: 'functions', title: '일차함수', summary: '직선으로', track: 'middle', stage: 'middle-2' }],
+      catalogue: spread, state: learningState({ lessons: spread }),
+    });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: '수업' }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
+    await until(() => expect(screen.getAllByText('정수와 유리수').length).toBeGreaterThan(0));
+    // 기초 과정 keeps no years, so its courses sit under the line itself; 중학교 과정 is cut in two.
+    expect([...window.document.querySelectorAll('.track-heading h2, .stage-heading, .catalog-banner h3')].map((node) => node.textContent))
+      .toEqual(['기초 과정', '분수', '중학교 과정', '중1', '정수와 유리수', '중2', '일차함수']);
+    expect([...window.document.querySelectorAll('.course-filter-line')].map((row) => [...row.children].map((node) => node.textContent)))
+      .toEqual([['모든 코스'], ['분수'], ['중1', '정수와 유리수'], ['중2', '일차함수']]);
   });
 
   it('says nothing about lines when every course is on the same one', async () => {

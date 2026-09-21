@@ -2,6 +2,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { conceptGraph, nextConcept, placementScope, settleConcept, type Placement, type PlacementSource } from '@/core/concept-graph';
 import { parseContentBundle } from '@/core/content-bundle';
+import { isSchoolTrack, type CourseTrack } from '@/shared/api';
 import type { StoredLesson } from '@/core/content';
 
 /**
@@ -17,8 +18,8 @@ const lessons = bundles.flatMap((bundle) => (bundle.lessons as StoredLesson[]).m
 const graph = conceptGraph(lessons);
 /** The lessons on the line the catalogue is ordered along, which is what an unchosen placement covers. */
 const schoolLine = (() => {
-  const tracks = new Map(bundles.flatMap((bundle) => bundle.courses.flatMap((course) => course.lessons.map((lesson) => [lesson.key, course.track ?? 'math'] as const))));
-  return lessons.filter((lesson) => tracks.get(lesson.lessonKey) === 'math');
+  const tracks = new Map(bundles.flatMap((bundle) => bundle.courses.flatMap((course) => course.lessons.map((lesson) => [lesson.key, course.track ?? 'middle'] as const))));
+  return lessons.filter((lesson) => isSchoolTrack((tracks.get(lesson.lessonKey) ?? 'middle') as CourseTrack));
 })();
 
 /** Runs a whole placement against a learner who knows exactly `known`, and reports what it cost. */

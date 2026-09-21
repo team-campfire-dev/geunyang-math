@@ -4,7 +4,7 @@ import { Prisma, type PrismaClient, type DiagnosticVersion } from '@prisma/clien
 import { canonicalJson, ContentError, diagnosticDefinitionSchema, parseContentBundle, definitionSchema, validateReferences, type ContentBundle, type CourseDefinition, type DiagnosticDefinition, type DiagnosticRecord, type DefinitionRecord } from '@/core/content-bundle';
 import type { PublishedDefinition } from '@/core/glossary';
 import { problemSetRefs, storedLessonOf, type LessonRecord, type StoredLesson, type StoredProblem, type StoredProblemSet } from '@/core/content';
-import { defaultCourseTrack, type ContentBlock, type CourseTrack } from '@/shared/api';
+import { defaultCourseTrack, type ContentBlock, type CourseStage, type CourseTrack } from '@/shared/api';
 import { definitionRefId, type DefinitionRef, type ConceptScope } from '@/shared/rich-text';
 
 type Db = Prisma.TransactionClient;
@@ -234,7 +234,8 @@ async function courseDefinitions(db: Db): Promise<CourseDefinition[]> {
     diagnostics: { orderBy: { key: 'asc' }, select: { key: true } },
   } });
   return courses.map(course => ({ key: course.key, title: course.title, summary: course.summary, order: course.order,
-    track: course.track as CourseTrack, lessons: course.lessons, diagnostics: course.diagnostics.map(row => row.key) }));
+    track: course.track as CourseTrack, ...(course.stage ? { stage: course.stage as CourseStage } : {}),
+    lessons: course.lessons, diagnostics: course.diagnostics.map(row => row.key) }));
 }
 export async function exportContent(db: Db): Promise<ContentBundle> {
   const [courses, concepts, lessons, sets, diagnostics, definitionRows] = await Promise.all([
@@ -277,7 +278,7 @@ function mergeCourses(existing: CourseDefinition[], incoming: CourseDefinition[]
     const lessons = new Map(old.lessons.map(lesson => [lesson.key, lesson]));
     for (const lesson of course.lessons) lessons.set(lesson.key, lesson);
     merged.set(course.key, { key: course.key, title: course.title, summary: course.summary ?? old.summary,
-      order: course.order ?? old.order, track: course.track ?? old.track,
+      order: course.order ?? old.order, track: course.track ?? old.track, stage: course.stage ?? old.stage,
       lessons: [...lessons.values()].sort((a, b) => a.order - b.order || a.key.localeCompare(b.key)),
       diagnostics: [...new Set([...old.diagnostics, ...course.diagnostics])] });
   }
@@ -287,10 +288,11 @@ function mergeCourses(existing: CourseDefinition[], incoming: CourseDefinition[]
 async function writeCourse(db: Db, course: CourseDefinition) {
   const row = await db.course.upsert({ where: { key: course.key },
     create: { key: course.key, title: course.title, summary: course.summary ?? '', order: course.order ?? 0,
-      track: course.track ?? defaultCourseTrack },
+      track: course.track ?? defaultCourseTrack, stage: course.stage ?? null },
     update: { title: course.title, ...(course.summary === undefined ? {} : { summary: course.summary }),
       ...(course.order === undefined ? {} : { order: course.order }),
-      ...(course.track === undefined ? {} : { track: course.track }) } });
+      ...(course.track === undefined ? {} : { track: course.track }),
+      ...(course.stage === undefined ? {} : { stage: course.stage }) } });
   for (const lesson of course.lessons) {
     await db.lesson.upsert({ where: { key: lesson.key }, create: { key: lesson.key, courseId: row.id, order: lesson.order },
       update: { order: lesson.order } });

@@ -6,7 +6,7 @@
       "title": "제곱근과 실수",
       "summary": "분수를 소수로 폈을 때 끝나지 않는 수를 만나고, 넓이에서 한 변을 되묻는 제곱근으로 수직선의 빈틈을 채워요.",
       "order": 15,
-      "track": "math",
+      "track": "middle",
       "lessons": [
         {
           "key": "repeating-decimal",
@@ -25,7 +25,8 @@
           "order": 4
         }
       ],
-      "diagnostics": []
+      "diagnostics": [],
+      "stage": "middle-3"
     }
   ],
   "concepts": [
