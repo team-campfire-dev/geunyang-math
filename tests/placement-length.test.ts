@@ -107,8 +107,9 @@ describe('placing a learner', () => {
     // 함수와 그래프 added nine more and finished 고1. 94 before the 중학교 backfill began
     // with 소인수분해 and 좌표평면, which are six more, 도형 opened with another six, and
     // 입체도형·자료의 정리 finished 중1 with six more. 중2의 도형 두 과정이 여덟을 더했고,
-    // 피타고라스 정리와 확률이 일곱을 더해 중2가 끝났다.
-    expect(line).toHaveLength(127);
+    // 피타고라스 정리와 확률이 일곱을 더해 중2가 끝났고, 삼각비·원의 성질·대푯값과
+    // 산포도가 아홉을 더해 중3의 빈 곳까지 메워졌다.
+    expect(line).toHaveLength(136);
     expect(graph.keys.length).toBeGreaterThan(line.length);
     for (const key of ['cost-price', 'discount-rate', 'concentration', 'speed']) expect(line).not.toContain(key);
   });

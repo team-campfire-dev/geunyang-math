@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "trig-ratio",
+      "label": "삼각비",
+      "assessable": true
+    },
+    {
+      "key": "special-angles",
+      "label": "특별한 각의 삼각비",
+      "assessable": true
+    },
+    {
+      "key": "trig-use",
+      "label": "삼각비의 활용",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "trig-ratio",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "삼각비",
+      "summary": "각 하나가 변의 비를 정해요.",
+      "blocks": [
+        {
+          "blockId": "global:trig-ratio:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "직각삼각형에서 직각이 아닌 한 각이 정해지면 세 각이 모두 정해지고, 그런 삼각형들은 모두 닮음이라 변의 비가 같아요. 그 비에 이름을 붙인 것이 삼각비예요. 기준이 되는 각을 $A$라 할 때 $\\sin A$는 맞변을 빗변으로, $\\cos A$는 밑변을 빗변으로, $\\tan A$는 맞변을 밑변으로 나눈 값이에요. $\\tan A$는 $\\dfrac{\\sin A}{\\cos A}$와 같고요. 삼각비는 길이가 아니라 비라서 삼각형을 키워도 값이 그대로예요. 각이 바뀌면 맞변과 밑변도 바뀌니 기준 각을 먼저 찍어야 해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "직각삼각형의 각과 변을 잇고 싶을 때"
+    },
+    {
+      "conceptKey": "special-angles",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "특별한 각의 삼각비",
+      "summary": "그려서 얻는 값들이에요.",
+      "blocks": [
+        {
+          "blockId": "global:special-angles:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "한 변이 $2$인 정삼각형을 반으로 가르면 $30°$와 $60°$가 나오고 변이 $1$, $\\sqrt{3}$, $2$가 돼요. 한 변이 $1$인 정사각형을 대각선으로 가르면 $45°$ 둘이 나오고 변이 $1$, $1$, $\\sqrt{2}$가 되고요. 그래서 $\\sin 30° = \\cos 60° = \\dfrac{1}{2}$, $\\tan 45° = 1$이에요. $0°$와 $90°$는 각을 줄이거나 키워 가며 보면 $\\sin 0° = 0$, $\\cos 0° = 1$, $\\sin 90° = 1$, $\\cos 90° = 0$이에요. 각이 커질수록 사인은 커지고 코사인은 작아져요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "삼각비의 값이 기억나지 않을 때"
+    },
+    {
+      "conceptKey": "trig-use",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "삼각비의 활용",
+      "summary": "잴 수 없는 길이를 구해요.",
+      "blocks": [
+        {
+          "blockId": "global:trig-use:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "빗변을 알면 맞변은 빗변 곱하기 사인, 밑변은 빗변 곱하기 코사인이에요. 밑변을 알면 맞변은 밑변 곱하기 탄젠트고요. 무엇을 알고 무엇을 구하는지에 따라 셋 중 하나를 골라요. 빗변이 있으면 사인이나 코사인, 없으면 탄젠트예요. 삼각형의 넓이에도 씁니다. 두 변을 $a$, $b$라 하고 낀 각을 $C$라 하면 높이가 $b\\sin C$이므로 넓이는 $\\dfrac{1}{2}ab\\sin C$예요. 같은 삼각형을 하나 돌려 붙이면 평행사변형이 되니 그 절반인 거예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "높이나 넓이를 각으로 구할 때"
+    }
+  ]
+}
