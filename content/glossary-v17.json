@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "polynomial-division",
+      "label": "다항식의 나눗셈",
+      "assessable": true
+    },
+    {
+      "key": "remainder-theorem",
+      "label": "나머지정리",
+      "assessable": true
+    },
+    {
+      "key": "factor-theorem",
+      "label": "인수정리",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "polynomial-division",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "다항식의 나눗셈",
+      "summary": "수를 나누듯 차수가 높은 항부터 덜어 내요.",
+      "blocks": [
+        {
+          "blockId": "global:polynomial-division:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$17 \\div 5$의 몫이 $3$, 나머지가 $2$이듯 다항식도 몫과 나머지를 구해요. 차수가 가장 높은 항을 만들 수 있는 항을 몫에 세우고, 곱해서 덜어 내기를 되풀이해요. 나머지의 차수가 나누는 식보다 낮아지면 멈춰요. 결과는 $A = BQ + R$ 한 줄로 적어 둬요. 나머지가 $0$이면 나누어떨어진 것이고, 그때 나누는 식은 인수예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "다항식을 다항식으로 나눌 때"
+    },
+    {
+      "conceptKey": "remainder-theorem",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "나머지정리",
+      "summary": "x - a로 나눈 나머지는 f(a)예요.",
+      "blocks": [
+        {
+          "blockId": "global:remainder-theorem:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$f(x) = (x-a)Q(x) + R$에 $x = a$를 넣으면 앞 덩어리가 통째로 사라져 $R = f(a)$가 돼요. 그래서 나눗셈을 하지 않고 대입 한 번으로 나머지를 알 수 있어요. 넣을 수는 나누는 식을 $0$으로 만드는 수예요. $x+2$로 나눈다면 $f(-2)$를 구해요. 거꾸로 나머지를 알려 주고 계수를 묻는 문제는 일차방정식이 돼요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "나머지만 필요할 때"
+    },
+    {
+      "conceptKey": "factor-theorem",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "인수정리",
+      "summary": "f(a)가 0이면 x - a가 인수예요.",
+      "blocks": [
+        {
+          "blockId": "global:factor-theorem:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "나머지정리에서 나머지가 $0$인 경우예요. $f(a) = 0$이면 $f(x) = (x-a)Q(x)$이니 $x-a$가 인수이고, 거꾸로도 성립해요. 삼차 이상의 식에는 인수분해 공식이 없어서 이 정리로 차수를 낮춰요. 값이 $0$이 되는 수를 하나 찾아 그 인수로 나누면 몫이 이차식이 되고, 그다음은 아는 방법으로 끝내요. 넣어 볼 수는 상수항의 약수 중에서 고르면 돼요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "삼차 이상의 식을 인수분해할 때"
+    }
+  ]
+}

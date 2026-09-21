@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "quadratic-function",
+      "label": "이차함수",
+      "assessable": true
+    },
+    {
+      "key": "vertex",
+      "label": "꼭짓점",
+      "assessable": true
+    },
+    {
+      "key": "parabola-shift",
+      "label": "포물선의 평행이동",
+      "assessable": true
+    },
+    {
+      "key": "quadratic-max-min",
+      "label": "최댓값과 최솟값",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "quadratic-function",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "이차함수",
+      "summary": "차수가 2인 함수이고 그래프는 포물선이에요.",
+      "blocks": [
+        {
+          "blockId": "global:quadratic-function:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$y = ax^2 + bx + c$처럼 차수가 $2$인 함수예요. 그래프는 직선이 아니라 포물선이고, 세로축을 사이에 두고 좌우가 같아요. 부호만 다른 수를 넣으면 같은 값이 나오기 때문이에요. $x^2$의 계수가 양수이면 아래가 둥글고 음수이면 위가 둥글며, 계수의 크기가 클수록 가파르고 좁아요. 그래프가 가로축과 만나는 자리는 $y=0$으로 둔 이차방정식의 해예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "제곱이 들어간 관계를 그래프로 볼 때"
+    },
+    {
+      "conceptKey": "vertex",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "꼭짓점",
+      "summary": "포물선에서 가장 낮거나 가장 높은 점이에요.",
+      "blocks": [
+        {
+          "blockId": "global:vertex:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "아래가 둥근 포물선에서는 가장 낮은 점, 위가 둥근 포물선에서는 가장 높은 점이에요. $y = a(x-p)^2 + q$ 꼴이면 꼭짓점은 $(p, q)$로 식에서 바로 읽혀요. 이 꼴을 표준형이라고 불러요. 괄호 안의 부호를 뒤집어 읽는다는 것만 조심하세요. $y = (x+3)^2 - 1$의 꼭짓점은 $(-3, -1)$이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "포물선의 자리를 말할 때"
+    },
+    {
+      "conceptKey": "parabola-shift",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "포물선의 평행이동",
+      "summary": "모양은 그대로 두고 자리만 옮기는 것이에요.",
+      "blocks": [
+        {
+          "blockId": "global:parabola-shift:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "위로 $q$만큼 옮기면 상수항이 붙어 $y = x^2 + q$가 되고, 오른쪽으로 $p$만큼 옮기면 괄호 안에서 빼 $y = (x-p)^2$이 돼요. 좌우가 뺄셈인 이유는 옮긴 그래프에서 $x = p$일 때 원래 그래프의 $x = 0$과 같은 값이 나와야 하기 때문이에요. 둘을 함께 하면 $y = a(x-p)^2 + q$이고 꼭짓점은 $(p, q)$예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "같은 모양의 포물선을 옮길 때"
+    },
+    {
+      "conceptKey": "quadratic-max-min",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "최댓값과 최솟값",
+      "summary": "꼭짓점의 y좌표가 그 값이에요.",
+      "blocks": [
+        {
+          "blockId": "global:quadratic-max-min:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "아래가 둥근 포물선은 꼭짓점에서 가장 작은 값을 가지고 위로는 끝없이 올라가니 가장 큰 값이 없어요. 위가 둥글면 반대예요. 풀어 쓴 식에서는 완전제곱식을 만들어 표준형으로 되돌린 뒤 읽어요. $y = x^2 - 4x + 1$이면 $4$를 더하고 곧바로 빼서 $y = (x-2)^2 - 3$, 가장 작은 값은 $-3$이에요. $x^2$의 계수가 $1$이 아니면 먼저 묶어내고, 괄호 밖으로 나올 때 곱해진다는 것을 조심해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "가장 크거나 작은 값을 물을 때"
+    }
+  ]
+}
