@@ -1,0 +1,3096 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "basic-shapes",
+      "title": "기본 도형",
+      "summary": "도형을 다루는 말부터 정해요. 각을 재고, 평행선이 만드는 관계를 보고, 두 도형이 같다는 것이 무엇인지 정합니다.",
+      "order": 150,
+      "track": "middle",
+      "stage": "middle-1",
+      "lessons": [
+        {
+          "key": "angle-basics",
+          "order": 1
+        },
+        {
+          "key": "parallel-lines",
+          "order": 2
+        },
+        {
+          "key": "construction-congruence",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "angle-basics",
+      "label": "각과 맞꼭지각",
+      "assessable": true
+    },
+    {
+      "key": "parallel-lines",
+      "label": "평행선과 동위각",
+      "assessable": true
+    },
+    {
+      "key": "construction-congruence",
+      "label": "작도와 합동",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "angle-basics",
+        "versionId": "angle-basics:v1",
+        "title": "각과 맞꼭지각: 두 직선이 만나면",
+        "summary": "각을 크기로 가르고, 두 직선이 만나 생기는 네 각의 관계를 봐요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "angle-basics"
+        ],
+        "prerequisiteConceptKeys": [],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "angle-basics:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "angle-basics:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "한 점에서 그은 두 반직선이 벌어진 정도를 각이라고 해요. 벌어진 만큼을 도(°)로 재고요.\n\n크기로 이름이 갈려요. $90°$보다 작으면 예각, 꼭 $90°$이면 직각, $90°$와 $180°$ 사이면 둔각, $180°$이면 평각이에요. 평각은 두 반직선이 일직선으로 펴진 것이니 각이라기보다 곧은 선이죠.\n\n두 직선이 한 점에서 만나면 각이 넷 생겨요. 이때 관계가 두 가지 보여요.\n\n이웃한 두 각은 합이 $180°$예요. 둘을 합치면 평각이 되니까요.\n\n마주 보는 두 각은 서로 같아요. 이것을 맞꼭지각이라고 해요.\n\n왜 같은지는 방금 것으로 설명돼요. $a + b = 180°$이고 $b + c = 180°$이면 $a$와 $c$는 둘 다 $180° - b$이니 같을 수밖에 없어요. 한 직선을 아무리 돌려도 이 관계는 변하지 않아요.\n\n두 직선이 만나 이루는 각이 직각이면 두 직선이 수직이라 하고, 그중 한 직선을 다른 직선의 수선이라고 해요. 수선을 그어 잰 거리가 점과 직선 사이의 거리예요. 가장 짧은 길이거든요.",
+                "definitions": [
+                  {
+                    "conceptKey": "angle-basics",
+                    "surface": "맞꼭지각",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "angle-basics:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "두 직선이 만나 이룬 네 각 중 마주 보는 두 각이 함께 변하는 그림",
+                "caption": "한 직선을 돌려도 마주 보는 각은 늘 서로 같아요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 56,
+                    "y1": 104,
+                    "x2": 264,
+                    "y2": 104,
+                    "stroke": "ink",
+                    "strokeWidth": 1.8,
+                    "id": "fixed"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 84,
+                    "y1": 48,
+                    "x2": 236,
+                    "y2": 160,
+                    "stroke": "green",
+                    "strokeWidth": 1.8,
+                    "id": "turning"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160,
+                    "cy": 104,
+                    "rx": 4,
+                    "ry": 4,
+                    "fill": "ink",
+                    "id": "hinge"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 196,
+                    "y": 88,
+                    "text": "$a$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "a1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 124,
+                    "y": 122,
+                    "text": "$a$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "a2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 146,
+                    "y": 74,
+                    "text": "$b$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "b1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 176,
+                    "y": 136,
+                    "text": "$b$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "b2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 24,
+                    "text": "두 직선이 만나면 각이 넷",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 186,
+                    "text": "마주 보는 각끼리 늘 같아요",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "note",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "두 직선이 한 점에서 만나면 각이 넷 생겨요.",
+                    "changes": [
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "한 직선을 돌려 볼게요. 각의 크기가 바뀌어요.",
+                    "changes": [
+                      {
+                        "id": "turning",
+                        "opacity": 1,
+                        "rotate": -24
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "바뀌어도 마주 보는 두 각은 서로 같아요. 이것을 맞꼭지각이라고 해요.",
+                    "changes": [
+                      {
+                        "id": "turning",
+                        "opacity": 1,
+                        "rotate": -24
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "angle-basics:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "angle-basics:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 직선이 만나 생긴 네 각 중 하나가 $50°$라고 해요. 나머지 세 각을 구해 볼게요.\n\n$50°$와 이웃한 각은 합이 $180°$이니 $180° - 50° = 130°$예요. 이런 이웃이 둘 있어요.\n\n$50°$와 마주 보는 각은 맞꼭지각이니 그대로 $50°$고요.\n\n네 각은 $50°$, $130°$, $50°$, $130°$예요. 모두 더하면 $360°$로 한 바퀴가 맞아요.\n\n조금 다르게 물어볼게요. 한 각이 다른 각보다 $40°$ 크고 둘이 이웃해 있다면 각각 몇 도일까요.\n\n작은 각을 $x$라 하면 큰 각은 $x + 40$이고, 이웃하니 합이 $180$이에요.\n\n$x + (x + 40) = 180$에서 $2x = 140$, $x = 70$이에요. 두 각은 $70°$와 $110°$예요. 도형 문제가 방정식 문제로 바뀌는 자리예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "angle-basics:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "angle-basics:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "angle-basics:practice",
+                "problemSetVersionId": "angle-basics:practice:v1",
+                "problemVersionIds": [
+                  "angle-basics:practice-1:v1",
+                  "angle-basics:practice-2:v1",
+                  "angle-basics:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "angle-basics:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "angle-basics:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "angle-basics:check",
+                "problemSetVersionId": "angle-basics:check:v1",
+                "problemVersionIds": [
+                  "angle-basics:check-1:v1",
+                  "angle-basics:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "angle-basics:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "angle-basics:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "각은 크기로 예각·직각·둔각·평각으로 갈려요.\n\n두 직선이 만나면 이웃한 두 각의 합이 $180°$이고, 마주 보는 두 각은 서로 같아요. 그것이 맞꼭지각이에요.\n\n맞꼭지각이 같은 이유는 둘 다 같은 각의 나머지이기 때문이에요.\n\n직각으로 만나면 수직이고, 수선을 그어 잰 것이 점과 직선 사이의 가장 짧은 거리예요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "angle-basics:review",
+        "problemSetVersionId": "angle-basics:review:v1",
+        "problemVersionIds": [
+          "angle-basics:homework-1:v1",
+          "angle-basics:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "parallel-lines",
+        "versionId": "parallel-lines:v1",
+        "title": "평행선과 동위각: 같은 자리의 각",
+        "summary": "평행한 두 직선을 가로지르는 직선에서 어떤 각들이 같아지는지 봐요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "parallel-lines"
+        ],
+        "prerequisiteConceptKeys": [
+          "angle-basics"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "parallel-lines:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "parallel-lines:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "평행한 두 직선을 다른 직선 하나가 가로지르면 각이 여덟 개 생겨요. 많아 보이지만 관계는 단순해요.\n\n두 교차점에서 「같은 자리」에 있는 각을 동위각이라고 해요. 둘 다 오른쪽 위, 둘 다 왼쪽 아래 같은 식이에요.\n\n평행하면 동위각의 크기가 서로 같아요. 위쪽 교차점 전체를 아래로 미끄러뜨려 아래쪽 교차점에 포개면 딱 맞거든요. 두 직선이 평행하다는 것이 그 미끄러뜨림을 가능하게 해요.\n\n안쪽에서 엇갈린 자리에 있는 두 각은 엇각이라고 해요. 엇각도 서로 같아요.\n\n엇각이 같은 이유는 이미 아는 것으로 설명돼요. 동위각으로 같고, 맞꼭지각으로 또 같으니 결국 같은 각이거든요. 새 규칙이 아니라 앞 수업의 규칙 둘을 이어 붙인 거예요.\n\n거꾸로도 성립해요. 동위각이나 엇각이 같으면 두 직선은 평행해요. 평행한지 확인하는 방법이 되는 셈이에요.\n\n안쪽 같은 쪽에 있는 두 각은 합이 $180°$예요. 한쪽이 $70°$이면 다른 쪽은 $110°$죠. 이것도 동위각과 이웃각을 이어 붙이면 나와요.",
+                "definitions": [
+                  {
+                    "conceptKey": "parallel-lines",
+                    "surface": "동위각",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "parallel-lines:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "평행한 두 직선을 가로지르는 직선에서 같은 자리의 각이 아래로 미끄러져 겹치는 그림",
+                "caption": "평행하면 같은 자리의 각이 서로 같아요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 36,
+                    "y1": 72,
+                    "x2": 284,
+                    "y2": 72,
+                    "stroke": "ink",
+                    "strokeWidth": 1.8
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 36,
+                    "y1": 140,
+                    "x2": 284,
+                    "y2": 140,
+                    "stroke": "ink",
+                    "strokeWidth": 1.8
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 96,
+                    "y1": 30,
+                    "x2": 216,
+                    "y2": 182,
+                    "stroke": "green",
+                    "strokeWidth": 1.8
+                  },
+                  {
+                    "kind": "text",
+                    "x": 292,
+                    "y": 72,
+                    "text": "$l$",
+                    "size": 11,
+                    "anchor": "end",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 292,
+                    "y": 140,
+                    "text": "$m$",
+                    "size": 11,
+                    "anchor": "end",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 130,
+                    "cy": 72,
+                    "rx": 3.5,
+                    "ry": 3.5,
+                    "fill": "ink",
+                    "id": "x1"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 184,
+                    "cy": 140,
+                    "rx": 3.5,
+                    "ry": 3.5,
+                    "fill": "ink",
+                    "id": "x2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 152,
+                    "y": 62,
+                    "text": "$a$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "mark"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 206,
+                    "y": 130,
+                    "text": "$a$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "land",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 22,
+                    "text": "$l$과 $m$은 평행",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 186,
+                    "text": "같은 자리의 각끼리 같아요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "note",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "평행한 두 직선을 다른 직선이 가로질러요.",
+                    "changes": [
+                      {
+                        "id": "land",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "위쪽 교차점에서 오른쪽 위에 있는 각을 하나 봐요.",
+                    "changes": [
+                      {
+                        "id": "land",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "아래 교차점에도 같은 자리의 각이 있어요. 평행하니 두 각은 서로 같아요.",
+                    "changes": [
+                      {
+                        "id": "mark",
+                        "dx": 54,
+                        "dy": 68,
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "land",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "parallel-lines:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "parallel-lines:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "평행한 두 직선을 한 직선이 가로지르고, 위쪽 교차점의 한 각이 $65°$라고 해요.\n\n그 각과 같은 자리에 있는 아래쪽 각은 동위각이니 $65°$예요.\n\n그 동위각의 맞꼭지각도 $65°$이고, 그 각이 처음 각의 엇각이에요. 그래서 엇각도 $65°$예요.\n\n안쪽 같은 쪽에 있는 각은 어떨까요. 동위각 $65°$와 이웃하니 $180° - 65° = 115°$예요.\n\n여덟 각이 결국 $65°$ 넷과 $115°$ 넷으로 갈려요. 하나만 알면 전부 알 수 있어요.\n\n각을 구하는 문제는 대개 이 길을 따라가요. 아는 각에서 출발해 동위각·엇각·맞꼭지각·이웃각으로 한 걸음씩 옮기는 거예요.\n\n종이접기나 지그재그로 꺾인 선 문제에서도 같은 일을 해요. 꺾인 점을 지나는 평행선을 하나 그으면 엇각이 보이거든요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "parallel-lines:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "parallel-lines:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "parallel-lines:practice",
+                "problemSetVersionId": "parallel-lines:practice:v1",
+                "problemVersionIds": [
+                  "parallel-lines:practice-1:v1",
+                  "parallel-lines:practice-2:v1",
+                  "parallel-lines:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "parallel-lines:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "parallel-lines:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "parallel-lines:check",
+                "problemSetVersionId": "parallel-lines:check:v1",
+                "problemVersionIds": [
+                  "parallel-lines:check-1:v1",
+                  "parallel-lines:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "parallel-lines:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "parallel-lines:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "평행한 두 직선을 가로지르는 직선에서, 같은 자리의 각(동위각)은 서로 같아요.\n\n안쪽에서 엇갈린 각(엇각)도 서로 같아요. 동위각과 맞꼭지각을 이어 붙이면 나오는 결과예요.\n\n안쪽 같은 쪽의 두 각은 합이 $180°$예요.\n\n거꾸로 동위각이나 엇각이 같으면 두 직선은 평행해요. 평행을 확인하는 방법이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "parallel-lines:review",
+        "problemSetVersionId": "parallel-lines:review:v1",
+        "problemVersionIds": [
+          "parallel-lines:homework-1:v1",
+          "parallel-lines:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "construction-congruence",
+        "versionId": "construction-congruence:v1",
+        "title": "작도와 합동: 같은 도형을 다시 그리기",
+        "summary": "자와 컴퍼스만으로 도형을 옮겨 그리고, 두 도형이 같다는 것이 무엇인지 정해요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "construction-congruence"
+        ],
+        "prerequisiteConceptKeys": [
+          "angle-basics",
+          "parallel-lines"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "construction-congruence:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "construction-congruence:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "눈금 없는 자와 컴퍼스만으로 도형을 그리는 것을 작도라고 해요. 자는 선을 긋는 데만, 컴퍼스는 길이를 옮기고 원을 그리는 데만 써요. 재지 않고 옮기는 것이 핵심이에요.\n\n길이를 옮기는 것부터 해 볼게요. 컴퍼스를 선분의 양 끝에 맞춰 벌린 뒤, 그 벌림을 그대로 다른 곳에 찍으면 같은 길이가 옮겨져요. 자로 재어 옮기는 것과 달리 어긋날 일이 없어요.\n\n각도 같은 방법으로 옮겨요. 각을 이루는 두 변을 원으로 자른 뒤, 잘린 두 점 사이의 거리를 컴퍼스로 옮기면 같은 각이 그려져요.\n\n두 도형을 포개었을 때 완전히 겹쳐지면 합동이라고 해요. 옮기거나 뒤집어서 겹쳐도 합동이에요. 크기와 모양이 같다는 뜻이죠.\n\n삼각형은 세 가지 조건 중 하나만 맞으면 합동이에요. 세 변이 각각 같거나(SSS), 두 변과 그 사이 각이 같거나(SAS), 한 변과 그 양 끝 각이 같으면(ASA) 합동이에요.\n\n여섯 개(세 변·세 각)를 다 확인하지 않아도 된다는 것이 이 조건들의 쓸모예요. 세 개만 맞으면 나머지는 따라오거든요.\n\n다만 아무 세 개나 되는 것은 아니에요. 세 각이 같아도 크기가 다를 수 있어요. 그것은 합동이 아니라 닮음이고, 중학교 2학년에서 만나요.",
+                "definitions": [
+                  {
+                    "conceptKey": "construction-congruence",
+                    "surface": "합동",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "construction-congruence:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "따로 그린 두 삼각형이 옮겨져 하나로 포개지는 그림",
+                "caption": "옮겨서 포개지면 두 도형은 합동이에요",
+                "items": [
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        54,
+                        150
+                      ],
+                      [
+                        126,
+                        150
+                      ],
+                      [
+                        78,
+                        78
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "id": "t1"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        194,
+                        150
+                      ],
+                      [
+                        266,
+                        150
+                      ],
+                      [
+                        218,
+                        78
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "id": "t2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 90,
+                    "y": 166,
+                    "text": "세 변이 $3, 4, 5$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "l1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 230,
+                    "y": 166,
+                    "text": "세 변이 $3, 4, 5$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "l2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 24,
+                    "text": "세 변의 길이가 같은 두 삼각형",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 186,
+                    "text": "포개졌어요. 두 도형은 합동이에요",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "note",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "따로 그린 두 삼각형이에요. 세 변의 길이가 각각 같아요.",
+                    "changes": [
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "하나를 들어 옮겨 볼게요.",
+                    "changes": [
+                      {
+                        "id": "t2",
+                        "dx": -70
+                      },
+                      {
+                        "id": "l2",
+                        "dx": -70,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "딱 포개졌어요. 이렇게 완전히 겹쳐지는 두 도형을 합동이라고 해요.",
+                    "changes": [
+                      {
+                        "id": "t2",
+                        "dx": -140
+                      },
+                      {
+                        "id": "l2",
+                        "dx": -140,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "construction-congruence:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "construction-congruence:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 삼각형이 합동인지 가려 볼게요.\n\n첫째 짝은 세 변이 각각 $3$cm, $4$cm, $5$cm예요. 세 변이 모두 같으니 SSS로 합동이에요.\n\n둘째 짝은 두 변이 $6$cm와 $8$cm이고 그 사이 각이 $50°$로 같아요. SAS로 합동이에요.\n\n「사이 각」이라는 말이 중요해요. 두 변과 사이가 아닌 각이 같은 경우는 합동이 아닐 수 있어요.\n\n셋째 짝은 한 변이 $7$cm이고 그 양 끝 각이 $40°$와 $60°$로 같아요. ASA로 합동이에요.\n\n넷째 짝은 세 각이 각각 $50°$, $60°$, $70°$로 같아요. 합동일까요? 아니에요. 모양은 같지만 크기가 다를 수 있어요. 큰 삼각형과 작은 삼각형도 세 각은 같을 수 있거든요.\n\n합동이면 대응하는 변과 각이 모두 같아요. 그래서 합동임을 밝히면 아직 모르는 변의 길이나 각의 크기를 알아낼 수 있어요. 도형을 증명하는 일의 대부분이 이것이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "construction-congruence:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "construction-congruence:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "construction-congruence:practice",
+                "problemSetVersionId": "construction-congruence:practice:v1",
+                "problemVersionIds": [
+                  "construction-congruence:practice-1:v1",
+                  "construction-congruence:practice-2:v1",
+                  "construction-congruence:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "construction-congruence:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "construction-congruence:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "construction-congruence:check",
+                "problemSetVersionId": "construction-congruence:check:v1",
+                "problemVersionIds": [
+                  "construction-congruence:check-1:v1",
+                  "construction-congruence:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "construction-congruence:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "construction-congruence:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "눈금 없는 자와 컴퍼스로만 그리는 것이 작도예요. 길이와 각을 재지 않고 옮겨요.\n\n포개어 완전히 겹쳐지면 합동이에요.\n\n삼각형은 SSS, SAS, ASA 중 하나만 맞으면 합동이에요. 여섯 개를 다 보지 않아도 되는 것이 쓸모예요.\n\n세 각이 같은 것만으로는 합동이 아니에요. 그것은 닮음이고 중학교 2학년에서 만나요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "construction-congruence:review",
+        "problemSetVersionId": "construction-congruence:review:v1",
+        "problemVersionIds": [
+          "construction-congruence:homework-1:v1",
+          "construction-congruence:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "angle-basics:practice",
+      "courseKey": "basic-shapes",
+      "name": "각과 맞꼭지각 연습",
+      "versionId": "angle-basics:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "angle-basics:practice-1:v1",
+          "conceptKeys": [
+            "angle-basics"
+          ],
+          "promptContent": [
+            {
+              "blockId": "angle-basics:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 직선이 만나 생긴 한 각이 $50°$일 때 그 맞꼭지각의 크기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 50
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "angle-basics:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "마주 보는 각은 서로 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "angle-basics:practice-2:v1",
+          "conceptKeys": [
+            "angle-basics"
+          ],
+          "promptContent": [
+            {
+              "blockId": "angle-basics:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$50°$와 이웃한 각의 크기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 130
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "angle-basics:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합이 $180°$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "angle-basics:practice-3:v1",
+          "conceptKeys": [
+            "angle-basics"
+          ],
+          "promptContent": [
+            {
+              "blockId": "angle-basics:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$120°$인 각은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "둔각"
+              },
+              {
+                "id": "b",
+                "text": "예각"
+              },
+              {
+                "id": "c",
+                "text": "직각"
+              },
+              {
+                "id": "d",
+                "text": "평각"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "둔각"
+              },
+              {
+                "id": "b",
+                "text": "예각"
+              },
+              {
+                "id": "c",
+                "text": "직각"
+              },
+              {
+                "id": "d",
+                "text": "평각"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "angle-basics:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$90°$와 $180°$ 사이예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "angle-basics:check",
+      "courseKey": "basic-shapes",
+      "name": "각과 맞꼭지각 확인",
+      "versionId": "angle-basics:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "angle-basics:check-1:v1",
+          "conceptKeys": [
+            "angle-basics"
+          ],
+          "promptContent": [
+            {
+              "blockId": "angle-basics:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이웃한 두 각의 크기가 각각 $x$와 $x + 40$일 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 70
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "angle-basics:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합이 $180$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "angle-basics:check-2:v1",
+          "conceptKeys": [
+            "angle-basics"
+          ],
+          "promptContent": [
+            {
+              "blockId": "angle-basics:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 직선이 만나 생긴 네 각의 합은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 360
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "angle-basics:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 바퀴예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "angle-basics:review",
+      "courseKey": "basic-shapes",
+      "name": "각과 맞꼭지각 복습",
+      "versionId": "angle-basics:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "angle-basics:homework-1:v1",
+          "conceptKeys": [
+            "angle-basics"
+          ],
+          "promptContent": [
+            {
+              "blockId": "angle-basics:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 직선이 만나 생긴 한 각이 $75°$일 때 이웃한 각의 크기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 105
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "angle-basics:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$180 - 75$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "angle-basics:homework-2:v1",
+          "conceptKeys": [
+            "angle-basics"
+          ],
+          "promptContent": [
+            {
+              "blockId": "angle-basics:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "맞꼭지각이 서로 같은 이유로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "둘 다 같은 각의 나머지이기 때문"
+              },
+              {
+                "id": "b",
+                "text": "둘 다 직각이기 때문"
+              },
+              {
+                "id": "c",
+                "text": "두 직선이 평행하기 때문"
+              },
+              {
+                "id": "d",
+                "text": "한 바퀴가 $360°$이기 때문"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "둘 다 같은 각의 나머지이기 때문"
+              },
+              {
+                "id": "b",
+                "text": "둘 다 직각이기 때문"
+              },
+              {
+                "id": "c",
+                "text": "두 직선이 평행하기 때문"
+              },
+              {
+                "id": "d",
+                "text": "한 바퀴가 $360°$이기 때문"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "angle-basics:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$180°$에서 같은 각을 뺀 것이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "parallel-lines:practice",
+      "courseKey": "basic-shapes",
+      "name": "평행선과 동위각 연습",
+      "versionId": "parallel-lines:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "parallel-lines:practice-1:v1",
+          "conceptKeys": [
+            "parallel-lines"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallel-lines:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행한 두 직선에서 한 각이 $65°$일 때 그 동위각의 크기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 65
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallel-lines:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 자리의 각이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "parallel-lines:practice-2:v1",
+          "conceptKeys": [
+            "parallel-lines"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallel-lines:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행한 두 직선에서 한 각이 $65°$일 때 그 엇각의 크기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 65
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallel-lines:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "엇각도 서로 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "parallel-lines:practice-3:v1",
+          "conceptKeys": [
+            "parallel-lines"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallel-lines:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행한 두 직선에서 안쪽 같은 쪽의 한 각이 $65°$일 때 다른 각의 크기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 115
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallel-lines:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합이 $180°$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "parallel-lines:check",
+      "courseKey": "basic-shapes",
+      "name": "평행선과 동위각 확인",
+      "versionId": "parallel-lines:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "parallel-lines:check-1:v1",
+          "conceptKeys": [
+            "parallel-lines"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallel-lines:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행한 두 직선에서 한 각이 $110°$일 때 그 엇각의 크기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 110
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallel-lines:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "엇각은 서로 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "parallel-lines:check-2:v1",
+          "conceptKeys": [
+            "parallel-lines"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallel-lines:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 직선이 평행함을 확인하는 방법으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "동위각이 서로 같은지 본다"
+              },
+              {
+                "id": "b",
+                "text": "길이가 같은지 본다"
+              },
+              {
+                "id": "c",
+                "text": "두 직선이 만나는지 본다"
+              },
+              {
+                "id": "d",
+                "text": "각이 직각인지 본다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "동위각이 서로 같은지 본다"
+              },
+              {
+                "id": "b",
+                "text": "길이가 같은지 본다"
+              },
+              {
+                "id": "c",
+                "text": "두 직선이 만나는지 본다"
+              },
+              {
+                "id": "d",
+                "text": "각이 직각인지 본다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallel-lines:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 자리의 각을 견줘요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "parallel-lines:review",
+      "courseKey": "basic-shapes",
+      "name": "평행선과 동위각 복습",
+      "versionId": "parallel-lines:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "parallel-lines:homework-1:v1",
+          "conceptKeys": [
+            "parallel-lines"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallel-lines:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행한 두 직선을 한 직선이 가로질러 생긴 여덟 각 중 $72°$인 각은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallel-lines:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$72°$ 넷과 $108°$ 넷으로 갈려요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "parallel-lines:homework-2:v1",
+          "conceptKeys": [
+            "parallel-lines"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallel-lines:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "엇각이 서로 같은 이유로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "동위각과 맞꼭지각을 이어 붙이면 나온다"
+              },
+              {
+                "id": "b",
+                "text": "합이 $180°$이기 때문"
+              },
+              {
+                "id": "c",
+                "text": "두 각이 이웃하기 때문"
+              },
+              {
+                "id": "d",
+                "text": "직각이기 때문"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "동위각과 맞꼭지각을 이어 붙이면 나온다"
+              },
+              {
+                "id": "b",
+                "text": "합이 $180°$이기 때문"
+              },
+              {
+                "id": "c",
+                "text": "두 각이 이웃하기 때문"
+              },
+              {
+                "id": "d",
+                "text": "직각이기 때문"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallel-lines:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "새 규칙이 아니라 앞의 둘을 이은 것이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "construction-congruence:practice",
+      "courseKey": "basic-shapes",
+      "name": "작도와 합동 연습",
+      "versionId": "construction-congruence:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "construction-congruence:practice-1:v1",
+          "conceptKeys": [
+            "construction-congruence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "construction-congruence:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "작도에 쓰는 도구로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "눈금 없는 자와 컴퍼스"
+              },
+              {
+                "id": "b",
+                "text": "눈금 있는 자와 각도기"
+              },
+              {
+                "id": "c",
+                "text": "각도기와 컴퍼스"
+              },
+              {
+                "id": "d",
+                "text": "자와 계산기"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "눈금 없는 자와 컴퍼스"
+              },
+              {
+                "id": "b",
+                "text": "눈금 있는 자와 각도기"
+              },
+              {
+                "id": "c",
+                "text": "각도기와 컴퍼스"
+              },
+              {
+                "id": "d",
+                "text": "자와 계산기"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "construction-congruence:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "재지 않고 옮기는 것이 핵심이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "construction-congruence:practice-2:v1",
+          "conceptKeys": [
+            "construction-congruence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "construction-congruence:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변의 길이가 각각 같은 두 삼각형은 합동인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "합동이다"
+              },
+              {
+                "id": "b",
+                "text": "합동이 아니다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "합동이다"
+              },
+              {
+                "id": "b",
+                "text": "합동이 아니다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "construction-congruence:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "SSS 조건이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "construction-congruence:practice-3:v1",
+          "conceptKeys": [
+            "construction-congruence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "construction-congruence:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 합동 조건은 모두 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "construction-congruence:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "SSS, SAS, ASA예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "construction-congruence:check",
+      "courseKey": "basic-shapes",
+      "name": "작도와 합동 확인",
+      "versionId": "construction-congruence:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "construction-congruence:check-1:v1",
+          "conceptKeys": [
+            "construction-congruence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "construction-congruence:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 각이 각각 같은 두 삼각형은 합동인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "합동이 아닐 수 있다"
+              },
+              {
+                "id": "b",
+                "text": "언제나 합동이다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "합동이 아닐 수 있다"
+              },
+              {
+                "id": "b",
+                "text": "언제나 합동이다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "construction-congruence:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "모양은 같아도 크기가 다를 수 있어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "construction-congruence:check-2:v1",
+          "conceptKeys": [
+            "construction-congruence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "construction-congruence:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 변과 그 사이 각이 같을 때의 합동 조건을 무엇이라 하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "SAS"
+              },
+              {
+                "id": "b",
+                "text": "SSS"
+              },
+              {
+                "id": "c",
+                "text": "ASA"
+              },
+              {
+                "id": "d",
+                "text": "AAA"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "SAS"
+              },
+              {
+                "id": "b",
+                "text": "SSS"
+              },
+              {
+                "id": "c",
+                "text": "ASA"
+              },
+              {
+                "id": "d",
+                "text": "AAA"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "construction-congruence:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "변-각-변의 차례예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "construction-congruence:review",
+      "courseKey": "basic-shapes",
+      "name": "작도와 합동 복습",
+      "versionId": "construction-congruence:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "construction-congruence:homework-1:v1",
+          "conceptKeys": [
+            "construction-congruence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "construction-congruence:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합동인 두 도형에 대한 설명으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "대응하는 변과 각이 모두 같다"
+              },
+              {
+                "id": "b",
+                "text": "넓이만 같다"
+              },
+              {
+                "id": "c",
+                "text": "모양만 같다"
+              },
+              {
+                "id": "d",
+                "text": "둘레만 같다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "대응하는 변과 각이 모두 같다"
+              },
+              {
+                "id": "b",
+                "text": "넓이만 같다"
+              },
+              {
+                "id": "c",
+                "text": "모양만 같다"
+              },
+              {
+                "id": "d",
+                "text": "둘레만 같다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "construction-congruence:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "포개면 완전히 겹쳐져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "construction-congruence:homework-2:v1",
+          "conceptKeys": [
+            "construction-congruence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "construction-congruence:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 변과 각은 모두 여섯 개인데, 합동을 보이려면 몇 개를 확인하면 되나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "construction-congruence:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 개만 맞으면 나머지는 따라와요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "basic-shapes:drill",
+      "courseKey": "basic-shapes",
+      "name": "기본 도형 모아 풀기",
+      "versionId": "basic-shapes:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "basic-shapes:drill-1:v1",
+          "conceptKeys": [
+            "angle-basics"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$45°$인 각은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "예각"
+              },
+              {
+                "id": "b",
+                "text": "직각"
+              },
+              {
+                "id": "c",
+                "text": "둔각"
+              },
+              {
+                "id": "d",
+                "text": "평각"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "예각"
+              },
+              {
+                "id": "b",
+                "text": "직각"
+              },
+              {
+                "id": "c",
+                "text": "둔각"
+              },
+              {
+                "id": "d",
+                "text": "평각"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$90°$보다 작아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-2:v1",
+          "conceptKeys": [
+            "angle-basics"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$180°$인 각을 무엇이라 하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "평각"
+              },
+              {
+                "id": "b",
+                "text": "직각"
+              },
+              {
+                "id": "c",
+                "text": "둔각"
+              },
+              {
+                "id": "d",
+                "text": "예각"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "평각"
+              },
+              {
+                "id": "b",
+                "text": "직각"
+              },
+              {
+                "id": "c",
+                "text": "둔각"
+              },
+              {
+                "id": "d",
+                "text": "예각"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "일직선으로 펴진 각이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-3:v1",
+          "conceptKeys": [
+            "angle-basics"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 직선이 만나 생긴 한 각이 $30°$일 때 그 맞꼭지각의 크기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "마주 보는 각은 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-4:v1",
+          "conceptKeys": [
+            "angle-basics"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 직선이 만나 생긴 한 각이 $30°$일 때 이웃한 각의 크기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 150
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합이 $180°$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-5:v1",
+          "conceptKeys": [
+            "angle-basics"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이웃한 두 각의 크기가 각각 $x$와 $2x$일 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x = 180$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-6:v1",
+          "conceptKeys": [
+            "angle-basics"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 직선이 수직으로 만날 때 생기는 각의 크기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 90
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-7:v1",
+          "conceptKeys": [
+            "angle-basics"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점과 직선 사이의 거리를 재는 방법으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "수선을 그어 잰다"
+              },
+              {
+                "id": "b",
+                "text": "아무 선이나 그어 잰다"
+              },
+              {
+                "id": "c",
+                "text": "평행선을 그어 잰다"
+              },
+              {
+                "id": "d",
+                "text": "잴 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "수선을 그어 잰다"
+              },
+              {
+                "id": "b",
+                "text": "아무 선이나 그어 잰다"
+              },
+              {
+                "id": "c",
+                "text": "평행선을 그어 잰다"
+              },
+              {
+                "id": "d",
+                "text": "잴 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 짧은 길이예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-8:v1",
+          "conceptKeys": [
+            "parallel-lines"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행한 두 직선에서 한 각이 $40°$일 때 그 동위각의 크기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 40
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 자리의 각이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-9:v1",
+          "conceptKeys": [
+            "parallel-lines"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행한 두 직선에서 한 각이 $130°$일 때 그 엇각의 크기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 130
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "엇각도 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-10:v1",
+          "conceptKeys": [
+            "parallel-lines"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행한 두 직선에서 안쪽 같은 쪽의 한 각이 $80°$일 때 다른 각의 크기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 100
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합이 $180°$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-11:v1",
+          "conceptKeys": [
+            "parallel-lines"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행한 두 직선을 한 직선이 가로질러 생기는 각은 모두 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "교차점마다 넷씩이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-12:v1",
+          "conceptKeys": [
+            "parallel-lines"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 자리에 있는 두 각을 무엇이라 하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "동위각"
+              },
+              {
+                "id": "b",
+                "text": "엇각"
+              },
+              {
+                "id": "c",
+                "text": "맞꼭지각"
+              },
+              {
+                "id": "d",
+                "text": "평각"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "동위각"
+              },
+              {
+                "id": "b",
+                "text": "엇각"
+              },
+              {
+                "id": "c",
+                "text": "맞꼭지각"
+              },
+              {
+                "id": "d",
+                "text": "평각"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「같은 자리」예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-13:v1",
+          "conceptKeys": [
+            "parallel-lines"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행한 두 직선에서 한 각이 $55°$일 때 여덟 각 중 $55°$인 각은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$55°$ 넷과 $125°$ 넷으로 갈려요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-14:v1",
+          "conceptKeys": [
+            "parallel-lines"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "엇각이 같으면 두 직선은 어떤가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "평행하다"
+              },
+              {
+                "id": "b",
+                "text": "수직이다"
+              },
+              {
+                "id": "c",
+                "text": "만난다"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "평행하다"
+              },
+              {
+                "id": "b",
+                "text": "수직이다"
+              },
+              {
+                "id": "c",
+                "text": "만난다"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "거꾸로도 성립해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-15:v1",
+          "conceptKeys": [
+            "construction-congruence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 합동 조건은 모두 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "SSS, SAS, ASA예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-16:v1",
+          "conceptKeys": [
+            "construction-congruence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 변과 그 양 끝 각이 같을 때의 합동 조건을 무엇이라 하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "ASA"
+              },
+              {
+                "id": "b",
+                "text": "SAS"
+              },
+              {
+                "id": "c",
+                "text": "SSS"
+              },
+              {
+                "id": "d",
+                "text": "AAA"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "ASA"
+              },
+              {
+                "id": "b",
+                "text": "SAS"
+              },
+              {
+                "id": "c",
+                "text": "SSS"
+              },
+              {
+                "id": "d",
+                "text": "AAA"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "각-변-각의 차례예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-17:v1",
+          "conceptKeys": [
+            "construction-congruence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 각이 같은 두 삼각형에 대한 설명으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "합동이 아닐 수 있다"
+              },
+              {
+                "id": "b",
+                "text": "언제나 합동이다"
+              },
+              {
+                "id": "c",
+                "text": "넓이가 같다"
+              },
+              {
+                "id": "d",
+                "text": "둘레가 같다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "합동이 아닐 수 있다"
+              },
+              {
+                "id": "b",
+                "text": "언제나 합동이다"
+              },
+              {
+                "id": "c",
+                "text": "넓이가 같다"
+              },
+              {
+                "id": "d",
+                "text": "둘레가 같다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "크기가 다를 수 있어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-18:v1",
+          "conceptKeys": [
+            "construction-congruence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "작도에서 컴퍼스가 하는 일로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "길이를 옮기고 원을 그린다"
+              },
+              {
+                "id": "b",
+                "text": "각을 잰다"
+              },
+              {
+                "id": "c",
+                "text": "길이를 잰다"
+              },
+              {
+                "id": "d",
+                "text": "선을 긋는다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "길이를 옮기고 원을 그린다"
+              },
+              {
+                "id": "b",
+                "text": "각을 잰다"
+              },
+              {
+                "id": "c",
+                "text": "길이를 잰다"
+              },
+              {
+                "id": "d",
+                "text": "선을 긋는다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "재지 않고 옮겨요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-19:v1",
+          "conceptKeys": [
+            "construction-congruence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합동인 두 삼각형에서 대응하는 변의 길이는 어떤가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "서로 같다"
+              },
+              {
+                "id": "b",
+                "text": "두 배 차이가 난다"
+              },
+              {
+                "id": "c",
+                "text": "알 수 없다"
+              },
+              {
+                "id": "d",
+                "text": "합이 같다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "서로 같다"
+              },
+              {
+                "id": "b",
+                "text": "두 배 차이가 난다"
+              },
+              {
+                "id": "c",
+                "text": "알 수 없다"
+              },
+              {
+                "id": "d",
+                "text": "합이 같다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "포개면 겹쳐지니까요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "basic-shapes:drill-20:v1",
+          "conceptKeys": [
+            "construction-congruence"
+          ],
+          "promptContent": [
+            {
+              "blockId": "basic-shapes:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 변과 각 여섯 개 중 합동을 보이는 데 필요한 개수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "basic-shapes:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 개면 나머지가 따라와요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}

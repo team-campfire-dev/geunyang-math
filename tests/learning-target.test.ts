@@ -18,7 +18,11 @@ const seeds = readdirSync('prisma/seed').filter((name) => name.endsWith('.json')
   .map((name) => parseContentBundle(JSON.parse(readFileSync(`prisma/seed/${name}`, 'utf8'))));
 // A seeded lesson does not name its course — the course names its lessons, and the server joins them.
 const owner = new Map(seeds.flatMap((seed) => seed.courses).flatMap((course) => course.lessons.map((lesson) => [lesson.key, course.key])));
-const inCatalogueOrder = seeds.flatMap((seed) => seed.courses).flatMap((course) => course.lessons.map((lesson) => lesson.key));
+// The server hands the catalogue out in `Course.order`, not in the order the seed files happen to
+// be named in. Sorting by the file name only looked right while the file names and the order
+// agreed: 기본 도형 arrived as `basic-shapes.json` and sorted in front of 분수.
+const inCatalogueOrder = [...seeds.flatMap((seed) => seed.courses)].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+  .flatMap((course) => course.lessons.map((lesson) => lesson.key));
 const lessons: PublicLesson[] = seeds.flatMap((seed) => (seed.lessons as StoredLesson[]).map((lesson) => ({ ...lesson.public, courseKey: owner.get(lesson.public.lessonKey)! })))
   .sort((a, b) => inCatalogueOrder.indexOf(a.lessonKey) - inCatalogueOrder.indexOf(b.lessonKey));
 const labels = Object.fromEntries(seeds.flatMap((seed) => seed.concepts).map((concept) => [concept.key, concept.label]));

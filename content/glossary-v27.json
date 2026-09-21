@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "polygon-angles",
+      "label": "다각형의 내각과 외각",
+      "assessable": true
+    },
+    {
+      "key": "circle-measure",
+      "label": "원의 둘레와 넓이",
+      "assessable": true
+    },
+    {
+      "key": "sector",
+      "label": "부채꼴",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "polygon-angles",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "다각형의 내각과 외각",
+      "summary": "삼각형으로 갈라서 세요.",
+      "blocks": [
+        {
+          "blockId": "global:polygon-angles:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$n$각형은 한 꼭짓점에서 그은 대각선으로 삼각형 $n-2$개로 갈라져요. 삼각형 하나가 $180°$이니 내각의 합은 $180° \\times (n-2)$예요. 외각은 한 변을 늘였을 때 이웃 변과 이루는 각이라 내각과 합이 $180°$고요. 외각의 합은 몇 각형이든 늘 $360°$예요. 둘레를 한 바퀴 걸으며 꼭짓점마다 도는 각을 모두 더하면 제자리로 돌아오기 때문이에요. 정다각형은 나누기만 하면 되고, 외각을 거치는 길이 대개 짧아요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "다각형의 각을 구할 때"
+    },
+    {
+      "conceptKey": "circle-measure",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "원의 둘레와 넓이",
+      "summary": "지름을 세 번 대고도 조금 남아요.",
+      "blocks": [
+        {
+          "blockId": "global:circle-measure:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "어떤 원이든 「둘레 ÷ 지름」이 같고, 그 값이 원주율 $\\pi$예요. $3.14159\\cdots$로 끝없이 이어지는 무리수고요. 둘레는 $2\\pi r$, 넓이는 $\\pi r^2$이에요. 넓이의 식은 원을 아주 가는 부채꼴로 잘라 번갈아 끼워 맞추면 가로가 $\\pi r$, 세로가 $r$인 직사각형에 가까워지는 데서 나와요. 반지름이 두 배면 둘레는 두 배지만 넓이는 네 배예요. $r$이 두 번 들어 있으니까요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "원의 길이나 넓이를 구할 때"
+    },
+    {
+      "conceptKey": "sector",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "부채꼴",
+      "summary": "중심각이 전체의 몫을 정해요.",
+      "blocks": [
+        {
+          "blockId": "global:sector:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "두 반지름과 호로 둘러싸인 부분이고, 두 반지름이 벌어진 각이 중심각이에요. 중심각이 $x$도이면 전체의 $\\dfrac{x}{360}$이고, 호의 길이도 넓이도 그만큼이에요. 중심각에 정비례하거든요. 그래서 호는 $2\\pi r \\times \\dfrac{x}{360}$, 넓이는 $\\pi r^2 \\times \\dfrac{x}{360}$ — 외울 것은 「원 전체에 몫을 곱한다」 하나예요. 넓이는 $\\dfrac{1}{2} \\times$ 호 $\\times$ 반지름으로도 구해요. 다만 현의 길이는 중심각에 정비례하지 않아요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "원의 일부를 다룰 때"
+    }
+  ]
+}
