@@ -536,7 +536,7 @@
     {
       "public": {
         "lessonKey": "ncs-arithmetic",
-        "versionId": "ncs-arithmetic:v2",
+        "versionId": "ncs-arithmetic:v3",
         "title": "기초연산: 빠르게, 그리고 틀리지 않게",
         "summary": "계산을 쉽게 바꾸는 법칙, 계산보다 먼저 보는 단위, 답을 확인하는 검산을 익혀요.",
         "estimatedMinutes": 20,
@@ -554,12 +554,12 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-arithmetic:overview:v2",
+          "sectionId": "ncs-arithmetic:overview:v3",
           "role": "explanation",
           "title": "계산이 어려워서 틀리는 게 아니다",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:overview:text:v2",
+              "blockId": "ncs-arithmetic:overview:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -571,12 +571,12 @@
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:order:v2",
+          "sectionId": "ncs-arithmetic:order:v3",
           "role": "explanation",
           "title": "25 × 32 × 4를 어떻게 10초에 푸나",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:order:text:v2",
+              "blockId": "ncs-arithmetic:order:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -586,7 +586,7 @@
               }
             },
             {
-              "blockId": "ncs-arithmetic:order:drawing:v2",
+              "blockId": "ncs-arithmetic:order:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -746,12 +746,12 @@
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:try-order:v2",
+          "sectionId": "ncs-arithmetic:try-order:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:try-order:problems:v2",
+              "blockId": "ncs-arithmetic:try-order:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -767,12 +767,12 @@
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:units:v2",
+          "sectionId": "ncs-arithmetic:units:v3",
           "role": "explanation",
           "title": "900이 미터인가 피트인가",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:units:text:v2",
+              "blockId": "ncs-arithmetic:units:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -782,7 +782,7 @@
               }
             },
             {
-              "blockId": "ncs-arithmetic:units:table:v2",
+              "blockId": "ncs-arithmetic:units:table:v3",
               "kind": "core.table",
               "typeVersion": 1,
               "required": true,
@@ -843,12 +843,12 @@
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:try-units:v2",
+          "sectionId": "ncs-arithmetic:try-units:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:try-units:problems:v2",
+              "blockId": "ncs-arithmetic:try-units:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -863,29 +863,102 @@
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:verify:v2",
+          "sectionId": "ncs-arithmetic:verify:v3",
           "role": "explanation",
           "title": "답이 맞았는지 어떻게 아나",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:verify:text:v2",
+              "blockId": "ncs-arithmetic:verify:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "공식 기준은 기초연산의 목표 셋 중 하나를 통째로 검산에 씁니다. 업무에서는 틀린 계산을 걸러 내는 일이 계산만큼 중요하기 때문이에요.\n\n역연산은 되돌려 보는 방법이에요. 덧셈은 뺄셈으로, 곱셈은 나눗셈으로. $438 + 276 = 714$가 맞는지는 $714 - 276$이 $438$인지 보면 돼요. 확실하지만 시간이 들어요.\n\n구거법은 더 빠릅니다. 각 자리 수를 모두 더하고, 두 자리가 되면 또 더해요. $47 \\times 23 = 1{,}081$을 볼게요. $47 \\rightarrow 4+7 = 11 \\rightarrow 2$, $23 \\rightarrow 5$, 둘을 곱하면 $10 \\rightarrow 1$. 답 $1{,}081 \\rightarrow 1+0+8+1 = 10 \\rightarrow 1$. 같으니 통과예요.\n\n구거법은 틀린 것을 잡는 그물이지 맞았다는 증명은 아니에요. 다르면 반드시 틀린 것이고, 같아도 자리를 바꿔 쓴 실수는 걸러지지 않아요.",
+                "text": "업무에서는 틀린 계산을 걸러 내는 일이 계산만큼 중요해요. 공식 기준이 기초연산의 목표 셋 중 하나를 통째로 검산에 쓰는 이유예요.\n\n가장 확실한 것은 역연산이에요. 되돌려 보는 거죠. $438 + 276 = 714$가 맞는지는 $714 - 276$이 $438$인지 보면 돼요. 덧셈은 뺄셈으로, 곱셈은 나눗셈으로. 다만 시간이 듭니다.\n\n빠른 쪽이 구거법이에요. 이름 그대로 「9를 버리는 법」이에요. 어떤 수든 9로 나눈 나머지만 남겨 놓고 그것끼리 맞춰 보는 거예요.\n\n9로 나눈 나머지는 나눗셈 없이 구해요. 자리 수를 모두 더하면 됩니다. 두 자리가 되면 또 더하고, 9가 나오면 버려서 $0$으로 둬요. $47$은 $4+7=11$, 다시 $1+1=2$. 이 $2$가 $47$을 9로 나눈 나머지이고, 구거법은 이 수를 검산 수라고 불러요.",
                 "definitions": []
+              }
+            },
+            {
+              "blockId": "ncs-arithmetic:verify:table:v3",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "47 × 23 = 1,081을 구거법으로 검산하기",
+                "rowHeader": true,
+                "note": "곱하는 수끼리의 검산 수를 곱한 값과, 답의 검산 수가 같으면 통과예요.",
+                "columns": [
+                  {
+                    "label": "계산",
+                    "align": "start"
+                  },
+                  {
+                    "label": "수",
+                    "align": "end"
+                  },
+                  {
+                    "label": "자리 수의 합",
+                    "align": "end"
+                  },
+                  {
+                    "label": "검산 수",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "곱하는 수",
+                      "47",
+                      "4+7 = 11 → 2",
+                      "2"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "곱하는 수",
+                      "23",
+                      "2+3 = 5",
+                      "5"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "검산 수끼리",
+                      "2 × 5 = 10",
+                      "1+0 = 1",
+                      "1"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "답",
+                      "1,081",
+                      "1+0+8+1 = 10 → 1",
+                      "1"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-arithmetic:verify:after:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "definitions": [],
+                "text": "둘 다 $1$이니 통과예요. 만약 답을 $1{,}071$로 잘못 썼다면 $1+0+7+1 = 9$, 9는 버리니 검산 수가 $0$이에요. $1$과 다르니 그 자리에서 틀렸다는 것을 알 수 있어요.\n\n다만 구거법은 틀린 것을 잡는 그물이지 맞았다는 증명은 아니에요. 검산 수가 다르면 반드시 틀린 것이지만, 같다고 맞은 것은 아니에요. $1{,}801$처럼 자리를 바꿔 쓴 실수는 검산 수가 그대로 $1$이라 빠져나가요."
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:try-verify:v2",
+          "sectionId": "ncs-arithmetic:try-verify:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:try-verify:problems:v2",
+              "blockId": "ncs-arithmetic:try-verify:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -900,12 +973,12 @@
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:example:v2",
+          "sectionId": "ncs-arithmetic:example:v3",
           "role": "worked_example",
           "title": "셋을 한 문항에서 함께 쓰기",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:example:text:v2",
+              "blockId": "ncs-arithmetic:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -917,12 +990,12 @@
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:check:v2",
+          "sectionId": "ncs-arithmetic:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:check:problems:v2",
+              "blockId": "ncs-arithmetic:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -939,12 +1012,12 @@
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:summary:v2",
+          "sectionId": "ncs-arithmetic:summary:v3",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:summary:text:v2",
+              "blockId": "ncs-arithmetic:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1294,7 +1367,7 @@
     {
       "public": {
         "lessonKey": "ncs-chart-basics",
-        "versionId": "ncs-chart-basics:v2",
+        "versionId": "ncs-chart-basics:v3",
         "title": "도표분석: 고르는 눈과, 읽을 때 갈리는 자리",
         "summary": "자료에 맞는 그래프를 고르고, 증감률·비중·%p에서 미끄러지지 않아요.",
         "estimatedMinutes": 20,
@@ -1311,12 +1384,12 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-chart-basics:overview:v2",
+          "sectionId": "ncs-chart-basics:overview:v3",
           "role": "explanation",
           "title": "문항이 가장 많은 자리",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-basics:overview:text:v2",
+              "blockId": "ncs-chart-basics:overview:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1328,12 +1401,12 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-basics:kinds:v2",
+          "sectionId": "ncs-chart-basics:kinds:v3",
           "role": "explanation",
           "title": "무엇을 보여 주려는가가 그래프를 고른다",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-basics:kinds:text:v2",
+              "blockId": "ncs-chart-basics:kinds:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1343,7 +1416,7 @@
               }
             },
             {
-              "blockId": "ncs-chart-basics:kinds:drawing:v2",
+              "blockId": "ncs-chart-basics:kinds:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1613,12 +1686,12 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-basics:try-kinds:v2",
+          "sectionId": "ncs-chart-basics:try-kinds:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-basics:try-kinds:problems:v2",
+              "blockId": "ncs-chart-basics:try-kinds:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1634,29 +1707,29 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-basics:pitfalls:v2",
+          "sectionId": "ncs-chart-basics:pitfalls:v3",
           "role": "explanation",
           "title": "40% 깎고 또 40% 깎으면 얼마나 깎인 걸까",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-basics:pitfalls:text:v2",
+              "blockId": "ncs-chart-basics:pitfalls:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$80\\%$가 아니에요. $10{,}000$원이 $6{,}000$원이 되고 다시 $3{,}600$원이 되니 전체로는 $64\\%$ 할인이에요. 두 번째 할인의 기준이 달라졌기 때문이에요. 같은 이유로 식사값 $15\\%$와 술값 $15\\%$가 할인돼도 회식비는 $30\\%$가 아니라 $15\\%$ 할인이에요.\n\n기준이 바뀐다는 이 한 가지가 도표 읽기에서 갈리는 자리 대부분을 설명해요. 증감률의 기준은 언제나 이전 값이고($250 \\rightarrow 300$은 $\\frac{50}{250} = 20\\%$), 점유율이 $10\\%$에서 $12\\%$가 되면 $2$%p 오른 것이지 $2\\%$ 오른 것이 아니에요.\n\n여기에 하나만 더하면 돼요. **총량이 늘어난 것과 비율이 늘어난 것은 다른 이야기예요.** 시장이 줄어드는 중이라면 점유율이 올라도 매출은 줄 수 있어요.",
+                "text": "$80\\%$가 아니에요. $10{,}000$원이 $6{,}000$원이 되고 다시 $3{,}600$원이 되니 전체로는 $64\\%$ 할인이에요. 두 번째 할인의 기준이 달라졌기 때문이에요. 같은 이유로 식사값 $15\\%$와 술값 $15\\%$가 할인돼도 회식비는 $30\\%$가 아니라 $15\\%$ 할인이에요.\n\n기준이 바뀐다는 이 한 가지가 도표 읽기에서 갈리는 자리 대부분을 설명해요. 증감률의 기준은 언제나 이전 값이고($250 \\rightarrow 300$은 $\\frac{50}{250} = 20\\%$), 점유율이 $10\\%$에서 $12\\%$가 되면 $2$%p 오른 것이지 $2\\%$ 오른 것이 아니에요.\n\n여기에 하나만 더하면 돼요. 총량이 늘어난 것과 비율이 늘어난 것은 다른 이야기예요. 시장이 줄어드는 중이라면 점유율이 올라도 매출은 줄 수 있어요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-chart-basics:try-rate:v2",
+          "sectionId": "ncs-chart-basics:try-rate:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-basics:try-rate:problems:v2",
+              "blockId": "ncs-chart-basics:try-rate:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1671,12 +1744,12 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-basics:example:v2",
+          "sectionId": "ncs-chart-basics:example:v3",
           "role": "worked_example",
           "title": "표가 말하지 않은 것",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-basics:example:text:v2",
+              "blockId": "ncs-chart-basics:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1688,12 +1761,12 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-basics:check:v2",
+          "sectionId": "ncs-chart-basics:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-basics:check:problems:v2",
+              "blockId": "ncs-chart-basics:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1709,12 +1782,12 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-basics:summary:v2",
+          "sectionId": "ncs-chart-basics:summary:v3",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-basics:summary:text:v2",
+              "blockId": "ncs-chart-basics:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,

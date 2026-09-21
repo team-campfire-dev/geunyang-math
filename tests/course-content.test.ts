@@ -170,6 +170,27 @@ describe('the installed courses', () => {
     }
   });
 
+  it('writes emphasis in words, since the renderer draws prose and math and nothing else', () => {
+    // `**굵게**` shipped its asterisks to the learner four times before anyone looked: the renderer
+    // splits prose on `$...$` and leaves everything else as a text node, markdown included.
+    for (const seed of seeds) {
+      for (const lesson of seed.bundle.lessons as StoredLesson[]) {
+        for (const block of blocksOf(lesson)) {
+          const written = typeof block.payload.text === 'string' ? block.payload.text : '';
+          expect(written, `${lesson.public.lessonKey}의 ${block.blockId}`).not.toMatch(/\*\*/);
+        }
+      }
+      for (const set of seed.bundle.problemSets) {
+        for (const problem of set.problems) {
+          for (const block of [...problem.promptContent, ...problem.hints, ...problem.solution]) {
+            const written = typeof block.payload.text === 'string' ? block.payload.text : '';
+            expect(written, problem.problemVersionId).not.toMatch(/\*\*/);
+          }
+        }
+      }
+    }
+  });
+
   it('gives every course a big set of its own that no lesson shows', () => {
     // Somebody who wants to solve rather than be taught picks one of these. It belongs to the
     // course, not to a lesson, so nothing in the lessons has to change for it to exist.
