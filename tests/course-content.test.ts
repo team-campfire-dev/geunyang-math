@@ -299,4 +299,25 @@ describe('the installed courses', () => {
       }
     }
   });
+
+  it('marks every named wrong answer wrong, and names one the marker can read', () => {
+    let named = 0;
+    for (const seed of seeds) {
+      for (const set of seed.bundle.problemSets) {
+        for (const problem of set.problems) {
+          for (const entry of problem.misreadings ?? []) {
+            named += 1;
+            const result = gradeAnswer(entry.answer, problem.gradingSpec, false, problem.misreadings);
+            // Not merely different from the answer: actually marked wrong by the grader a learner
+            // meets. A value that is refused as unreadable would never reach the name either.
+            expect(result.status, `${problem.problemVersionId} ← ${entry.answer}`).toBe('incorrect');
+            // And the name that comes back is the author's, not a shape read off the number.
+            expect(result.misconception, `${problem.problemVersionId} ← ${entry.answer}`).toBe(entry.misconception);
+          }
+        }
+      }
+    }
+    // The catalogue is only beginning to carry these, so the floor is what has been written so far.
+    expect(named).toBeGreaterThan(150);
+  });
 });

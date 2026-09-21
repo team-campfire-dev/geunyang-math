@@ -2494,7 +2494,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "flip-inequality-direction"
+            },
+            {
+              "answer": "d",
+              "misconception": "strict-for-inclusive"
+            }
+          ]
         },
         {
           "problemVersionId": "inequalities:drill-4:v1",
@@ -2826,7 +2836,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "c",
+              "misconception": "flip-on-any-multiply"
+            }
+          ]
         },
         {
           "problemVersionId": "inequalities:drill-12:v1",
@@ -3195,7 +3211,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "c",
+              "misconception": "swap-sides-keep-sign"
+            }
+          ]
         }
       ]
     }

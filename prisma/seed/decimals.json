@@ -2078,7 +2078,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "decimal-place-shift"
+            },
+            {
+              "answer": "c",
+              "misconception": "decimal-place-shift"
+            },
+            {
+              "answer": "d",
+              "misconception": "decimal-place-shift"
+            }
+          ]
         },
         {
           "problemVersionId": "decimals:drill-6:v1",
@@ -2151,7 +2165,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "d",
+              "misconception": "longer-decimal-is-bigger"
+            }
+          ]
         },
         {
           "problemVersionId": "decimals:drill-7:v1",
@@ -2491,7 +2511,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "add-decimals-separately"
+            },
+            {
+              "answer": "c",
+              "misconception": "add-decimals-separately"
+            },
+            {
+              "answer": "d",
+              "misconception": "decimal-place-shift"
+            }
+          ]
         },
         {
           "problemVersionId": "decimals:drill-15:v1",

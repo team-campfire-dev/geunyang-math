@@ -2596,7 +2596,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "misses-what-the-table-holds"
+            },
+            {
+              "answer": "c",
+              "misconception": "misses-what-the-table-holds"
+            },
+            {
+              "answer": "d",
+              "misconception": "misses-what-the-table-holds"
+            }
+          ]
         }
       ]
     },
@@ -3264,7 +3278,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "percent-point-confusion"
+            },
+            {
+              "answer": "c",
+              "misconception": "percent-point-confusion"
+            },
+            {
+              "answer": "d",
+              "misconception": "change-over-later"
+            }
+          ]
         }
       ]
     },
@@ -3729,7 +3757,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "reads-beyond-the-table"
+            },
+            {
+              "answer": "c",
+              "misconception": "reads-beyond-the-table"
+            },
+            {
+              "answer": "d",
+              "misconception": "reads-beyond-the-table"
+            }
+          ]
         }
       ]
     },
@@ -3987,7 +4029,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "reads-beyond-the-table"
+            },
+            {
+              "answer": "c",
+              "misconception": "reads-beyond-the-table"
+            },
+            {
+              "answer": "d",
+              "misconception": "reads-beyond-the-table"
+            }
+          ]
         }
       ]
     },
@@ -4187,7 +4243,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "misses-what-the-table-holds"
+            },
+            {
+              "answer": "c",
+              "misconception": "misses-what-the-table-holds"
+            },
+            {
+              "answer": "d",
+              "misconception": "misses-what-the-table-holds"
+            }
+          ]
         }
       ]
     },
@@ -4771,7 +4841,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "misses-what-the-table-holds"
+            },
+            {
+              "answer": "c",
+              "misconception": "misses-what-the-table-holds"
+            },
+            {
+              "answer": "d",
+              "misconception": "misses-what-the-table-holds"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-data:drill-7:v1",
@@ -5188,7 +5272,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "percent-point-confusion"
+            },
+            {
+              "answer": "d",
+              "misconception": "percent-point-confusion"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-data:drill-13:v1",
@@ -5372,7 +5466,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "reads-beyond-the-table"
+            },
+            {
+              "answer": "c",
+              "misconception": "reads-beyond-the-table"
+            },
+            {
+              "answer": "d",
+              "misconception": "reads-beyond-the-table"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-data:drill-17:v1",
@@ -5445,7 +5553,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "misses-what-the-table-holds"
+            },
+            {
+              "answer": "c",
+              "misconception": "misses-what-the-table-holds"
+            },
+            {
+              "answer": "d",
+              "misconception": "misses-what-the-table-holds"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-data:drill-18:v1",
@@ -5747,7 +5869,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "highest-for-fastest"
+            },
+            {
+              "answer": "c",
+              "misconception": "highest-for-fastest"
+            }
+          ]
         }
       ]
     },
@@ -5828,7 +5960,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "stacked-top-as-value"
+            },
+            {
+              "answer": "c",
+              "misconception": "stacked-top-as-value"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-graph:check-2:v1",
@@ -5949,7 +6091,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "baseline-not-zero"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-graph:homework-2:v1",
@@ -6719,7 +6867,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "change-over-later"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-data:drill2-8:v1",
@@ -6866,7 +7020,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "reads-beyond-the-table"
+            },
+            {
+              "answer": "c",
+              "misconception": "reads-beyond-the-table"
+            },
+            {
+              "answer": "d",
+              "misconception": "reads-beyond-the-table"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-data:drill2-11:v1",
@@ -6976,7 +7144,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "reads-beyond-the-table"
+            },
+            {
+              "answer": "c",
+              "misconception": "reads-beyond-the-table"
+            },
+            {
+              "answer": "d",
+              "misconception": "reads-beyond-the-table"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-data:drill2-13:v1",
@@ -7123,7 +7305,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "stacked-top-as-value"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-data:drill2-16:v1",
@@ -7196,7 +7384,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "highest-for-fastest"
+            },
+            {
+              "answer": "c",
+              "misconception": "highest-for-fastest"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-data:drill2-17:v1",

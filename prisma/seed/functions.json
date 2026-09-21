@@ -2479,7 +2479,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "function-as-product"
+            }
+          ]
         },
         {
           "problemVersionId": "functions:drill-8:v1",

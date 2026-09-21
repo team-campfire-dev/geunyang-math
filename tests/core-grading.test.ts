@@ -138,6 +138,20 @@ describe('exact arithmetic grading', () => {
     expect(gradeAnswer('3', { kind: 'integer', value: 30 })).toMatchObject({ misreading: 'tenfold' });
   });
 
+  it('names the right value written in a form the question refuses', () => {
+    // `6/9` is `2/3`, so it is not a wrong value — but a question that wants a reduced fraction
+    // marks it wrong, and what it means is a step, not a general remark about reducing.
+    const spec = { kind: 'rational' as const, numerator: 2, denominator: 3, requiredForm: 'reduced_fraction' as const };
+    const named = [{ answer: '6/9', misconception: 'stop-reducing-early' }];
+    expect(gradeAnswer('6/9', spec, false, named)).toMatchObject({ status: 'incorrect', misconception: 'stop-reducing-early' });
+    // Naming one spelling names every spelling of it, because the comparison is by value: `4/6`
+    // and `6/9` are one wrong answer, and an author should not have to list them.
+    expect(gradeAnswer('4/6', spec, false, named)).toMatchObject({ status: 'incorrect', misconception: 'stop-reducing-early' });
+    // Without a name it keeps the general message it always had, and the right form is still right.
+    expect(gradeAnswer('4/6', spec)).toMatchObject({ status: 'incorrect', misreading: 'unreduced' });
+    expect(gradeAnswer('2/3', spec, false, named)).toMatchObject({ status: 'correct' });
+  });
+
   it('names a picked answer too, and never names the right one', () => {
     const spec = { kind: 'choice' as const, correct: 'b',
       options: [{ id: 'a', text: '$\\frac{2}{5}$' }, { id: 'b', text: '$\\frac{5}{6}$' }, { id: 'c', text: '$\\frac{1}{5}$' }] };

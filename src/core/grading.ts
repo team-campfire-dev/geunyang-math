@@ -103,7 +103,10 @@ export function gradeAnswer(answer: string, spec: StoredProblem['gradingSpec'], 
       ?? { status: 'incorrect', assisted, ...(read ? { misreading: read, message: misreadingMessages[read] } : { message: '아직 답이 맞지 않아요. 풀이를 한 번 더 확인해 보세요.' }) };
   }
   if (spec.kind === 'rational' && spec.requiredForm === 'reduced_fraction' && (!parsed.fraction || !parsed.reduced)) {
-    return { status: 'incorrect', message: misreadingMessages.unreduced, misreading: 'unreduced', assisted };
+    // The right value in a form this question refuses is still a wrong answer, and often a named
+    // one: `6/9` against `2/3` is 「약분을 도중에 멈추기」, not a general remark about reducing.
+    return named(answer, spec, expected, assisted)
+      ?? { status: 'incorrect', message: misreadingMessages.unreduced, misreading: 'unreduced', assisted };
   }
   return { status: 'correct', message: assisted ? '맞았어요. 다음에는 힌트 없이도 한 번 풀어 봐요.' : '맞았어요. 잘 풀었어요!', assisted };
 }
