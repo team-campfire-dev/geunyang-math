@@ -91,7 +91,7 @@ describe('the placement bank', () => {
   it('leaves every earlier bank published exactly as it was', () => {
     const earlier = bundles.flatMap((bundle) => bundle.problemSets).find((item) => item.versionId === 'placement:v1')!;
     expect(earlier.problems).toHaveLength(39);
-    expect(versions.map((item) => item.versionId)).toEqual(['placement-v4', 'placement-v5', 'placement-v6', 'placement-v7', 'placement-v8', 'placement-v9', 'placement-v10', 'placement-v11', 'placement-v12', 'placement-v13', 'placement-v14']);
+    expect(versions.map((item) => item.versionId)).toEqual(['placement-v4', 'placement-v5', 'placement-v6', 'placement-v7', 'placement-v8', 'placement-v9', 'placement-v10', 'placement-v11', 'placement-v12', 'placement-v13', 'placement-v14', 'placement-v15']);
   });
 
   it('leaves the fraction-only bank published exactly as it was', () => {

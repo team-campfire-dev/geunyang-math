@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "composite-function",
+      "label": "합성함수",
+      "assessable": true
+    },
+    {
+      "key": "inverse-function",
+      "label": "역함수",
+      "assessable": true
+    },
+    {
+      "key": "rational-function",
+      "label": "유리함수",
+      "assessable": true
+    },
+    {
+      "key": "asymptote",
+      "label": "점근선",
+      "assessable": true
+    },
+    {
+      "key": "irrational-function",
+      "label": "무리함수",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "composite-function",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "합성함수",
+      "summary": "상자 둘을 이어 붙인 것이에요.",
+      "blocks": [
+        {
+          "blockId": "global:composite-function:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$f$에서 나온 값을 그대로 $g$에 넣는 것이고 $g(f(x))$로 적어요. 안쪽부터 바깥쪽으로 읽어요. $f(x) = 2x$, $g(x) = x+3$이면 $g(f(1))$은 $f(1) = 2$를 $g$에 넣어 $5$예요. 순서를 바꾸면 결과가 달라져요. $f(g(1))$은 $8$이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "함수를 차례로 지나게 할 때"
+    },
+    {
+      "conceptKey": "inverse-function",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "역함수",
+      "summary": "왔던 길을 거꾸로 가는 함수예요.",
+      "blocks": [
+        {
+          "blockId": "global:inverse-function:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$f$가 두 배로 만들었다면 역함수는 반으로 나눠요. $f^{-1}$로 적어요. 구하는 법은 $y = f(x)$를 $x$에 대해 풀고 $x$와 $y$를 바꿔 쓰는 것이에요. $x$와 $y$를 바꾸니 그래프는 직선 $y = x$에 대해 뒤집힌 모양이 돼요. $f^{-1}(a)$는 「$f$에 무엇을 넣으면 $a$가 나오는가」로 바꿔 생각하면 빨라요. 서로 다른 두 값이 같은 값으로 가는 함수에는 역함수가 없어요. 되돌아갈 데를 정할 수 없으니까요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "값을 되돌려야 할 때"
+    },
+    {
+      "conceptKey": "rational-function",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "유리함수",
+      "summary": "분모에 문자가 든 함수예요.",
+      "blocks": [
+        {
+          "blockId": "global:rational-function:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$y = \\dfrac{1}{x}$처럼 분모에 문자가 있는 함수예요. 분모를 $0$으로 만드는 $x$에서는 값이 없어요. 어떤 수도 $0$으로는 나눌 수 없으니까요. $x$를 키우면 $y$가 $0$에 가까워지기만 하고 닿지는 않아요. 그래프는 두 갈래로 나뉜 곡선이에요. 옮기는 방법은 포물선과 같아요. 괄호 안이 좌우, 뒤에 더한 것이 위아래예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "분모에 문자가 있을 때"
+    },
+    {
+      "conceptKey": "asymptote",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "점근선",
+      "summary": "한없이 다가가되 닿지 않는 선이에요.",
+      "blocks": [
+        {
+          "blockId": "global:asymptote:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "그래프가 가까워지기만 하고 결코 만나지 않는 선이에요. $y = \\dfrac{1}{x-2} + 3$이면 분모를 $0$으로 만드는 $x = 2$가 세로 점근선, 뒤에 더한 $y = 3$이 가로 점근선이에요. 곡선을 옮기면 점근선도 함께 옮겨 가요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "유리함수의 그래프를 그릴 때"
+    },
+    {
+      "conceptKey": "irrational-function",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "무리함수",
+      "summary": "근호 안에 문자가 든 함수예요.",
+      "blocks": [
+        {
+          "blockId": "global:irrational-function:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$y = \\sqrt{x}$처럼 근호 안에 문자가 있는 함수예요. 근호 안은 음수가 될 수 없으니 그릴 수 있는 범위부터 가려요. $y = \\sqrt{x-3}$이면 $x - 3 \\ge 0$에서 $x \\ge 3$이고, $y = \\sqrt{5-x}$처럼 문자 앞에 부호가 붙으면 방향이 뒤집혀 $x \\le 5$예요. 그래프는 시작점에서 가파르게 올랐다가 점점 완만해져요. $y = x^2$의 오른쪽 반과는 서로 역함수라 $y = x$에 대해 뒤집힌 모양이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "근호 안에 문자가 있을 때"
+    }
+  ]
+}

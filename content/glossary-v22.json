@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "distance-formula",
+      "label": "두 점 사이의 거리",
+      "assessable": true
+    },
+    {
+      "key": "line-equation",
+      "label": "직선의 방정식",
+      "assessable": true
+    },
+    {
+      "key": "parallel-perpendicular",
+      "label": "평행과 수직",
+      "assessable": true
+    },
+    {
+      "key": "circle-equation",
+      "label": "원의 방정식",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "distance-formula",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "두 점 사이의 거리",
+      "summary": "가로와 세로를 두 변으로 하는 직각삼각형의 빗변이에요.",
+      "blocks": [
+        {
+          "blockId": "global:distance-formula:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "좌표를 빼면 가로로 얼마, 세로로 얼마 떨어졌는지가 나오고, 두 점을 잇는 선분은 그 둘을 두 변으로 하는 직각삼각형의 빗변이에요. 그래서 거리는 $\\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$이고, 제곱하니 빼는 순서는 상관없어요. 한가운데 점은 좌표를 각각 더해 $2$로 나눈 평균이에요. 가로도 반, 세로도 반이니까요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "좌표평면에서 길이를 잴 때"
+    },
+    {
+      "conceptKey": "line-equation",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "직선의 방정식",
+      "summary": "점 하나와 기울기 하나면 정해져요.",
+      "blocks": [
+        {
+          "blockId": "global:line-equation:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "기울기가 $m$이고 점 $(x_1, y_1)$을 지나는 직선은 $y - y_1 = m(x - x_1)$이에요. 두 점이 주어지면 세로 차이를 가로 차이로 나눠 기울기부터 구하고, 그다음은 같아요. 직선 하나를 정하는 데 필요한 것은 「어디를 지나는가」와 「얼마나 기울었는가」 둘뿐이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "조건에서 직선을 세울 때"
+    },
+    {
+      "conceptKey": "parallel-perpendicular",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "평행과 수직",
+      "summary": "기울기가 같으면 평행, 곱해서 마이너스 1이면 수직이에요.",
+      "blocks": [
+        {
+          "blockId": "global:parallel-perpendicular:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "기울기가 같은 두 직선은 아무리 가도 만나지 않아요. 평행이에요. 두 기울기를 곱해 $-1$이 되면 직각으로 만나요. 기울기가 $2$인 직선에 수직인 직선의 기울기는 $-\\dfrac{1}{2}$예요. 「부호가 반대이고 뒤집힌 수」로 기억하면 편해요. 가파르게 올라가는 직선에 수직인 직선은 완만하게 내려가요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "두 직선의 관계를 따질 때"
+    },
+    {
+      "conceptKey": "circle-equation",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "원의 방정식",
+      "summary": "중심에서 거리가 같은 점을 모은 식이에요.",
+      "blocks": [
+        {
+          "blockId": "global:circle-equation:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "원은 한 점에서 거리가 같은 점을 모두 모은 것이니, 거리를 재는 식이 곧 원의 식이 돼요. $(x-a)^2 + (y-b)^2 = r^2$에서 중심은 $(a, b)$, 반지름은 $r$이고, 괄호 안의 부호는 뒤집어 읽어요. $x^2 + y^2 - 4x + 2y + 1 = 0$처럼 풀어 쓴 꼴은 $x$끼리 $y$끼리 모아 완전제곱식을 만들어 되돌려요. 완전제곱식 만들기가 이차방정식과 이차함수에 이어 세 번째로 쓰이는 자리예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "원을 식으로 다룰 때"
+    }
+  ]
+}
