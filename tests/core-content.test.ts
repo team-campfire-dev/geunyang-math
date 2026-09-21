@@ -260,7 +260,7 @@ describe('versioned lesson content', () => {
     expect(() => check(record)).toThrow(/At most 50 sections per lesson/);
   });
 
-  it('bounds a problem set to 200 distinct questions', () => {
+  it('bounds a problem set to 600 distinct questions', () => {
     const [set] = setsOf(structuredClone(seedLessons[0]));
     const addQuestion = (index: number) => {
       const problem = structuredClone(set.problems[0]);
@@ -270,10 +270,12 @@ describe('versioned lesson content', () => {
       }
       set.problems.push(problem);
     };
-    for (let index = set.problems.length; index < 200; index++) addQuestion(index);
+    // The bank the placement draws from is one set that grows with the catalogue — two
+    // questions per concept taught — so the ceiling sits well above any set a learner is handed.
+    for (let index = set.problems.length; index < 600; index++) addQuestion(index);
     expect(() => validateProblemSet(set)).not.toThrow();
-    addQuestion(200);
-    expect(() => validateProblemSet(set)).toThrow(/At most 200 problems per problem set/);
+    addQuestion(600);
+    expect(() => validateProblemSet(set)).toThrow(/At most 600 problems per problem set/);
   });
 
   it('bounds blocks in a section', () => {

@@ -102,8 +102,8 @@ describe('placing a learner', () => {
     // was installed beside it, although the graph now holds 52.
     const line = placementScope(graph, schoolLine.flatMap((lesson) => lesson.conceptKeys));
     // 48 before 제곱근과 실수, 54 before 인수분해와 이차방정식, 63 before 이차함수와 다항식,
-    // 70 before 복소수와 이차부등식 added eight more.
-    expect(line).toHaveLength(78);
+    // 70 before 복소수와 이차부등식, 78 before 경우의 수와 집합·명제 added seven more.
+    expect(line).toHaveLength(85);
     expect(graph.keys.length).toBeGreaterThan(line.length);
     for (const key of ['cost-price', 'discount-rate', 'concentration', 'speed']) expect(line).not.toContain(key);
   });

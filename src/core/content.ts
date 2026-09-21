@@ -335,8 +335,13 @@ export const problemSetRefSchema = problemSetRefOf(50);
  * A placement names the pool it may ask from, not a list it puts to anybody: the descent settles a
  * concept from one answer and stops, so a bank that covers a wider catalogue does not make a longer
  * placement. It may therefore name as many questions as the set it draws on actually holds.
+ *
+ * The ceiling is only a sanity bound, and it moves with the catalogue: the bank owes two questions
+ * to every concept taught, so it is about twice the concept count. 200 was enough while that count
+ * was under a hundred; the school line passed that on the way to 고등학교, and 600 leaves room to
+ * finish it. The placement a learner actually sits stays about fifteen questions long either way.
  */
-export const diagnosticPoolRefSchema = problemSetRefOf(200);
+export const diagnosticPoolRefSchema = problemSetRefOf(600);
 const storedLessonSchema = z.object({
   public: z.object({
     lessonKey: id,
@@ -361,7 +366,10 @@ const storedProblemSetSchema = z.object({
   courseKey: id.max(100),
   name: z.string().trim().min(1).max(191).nullable(),
   versionId: id,
-  problems: z.array(problemSchema).min(1).max(200, 'At most 200 problems per problem set'),
+  // 600 for the same reason the placement pool is 600: one set in the catalogue is a bank that
+  // owes two questions to every concept taught, and it grows as the catalogue does. Sets a
+  // learner is handed stay at twenty or fewer, and `tests/course-content.test.ts` holds them there.
+  problems: z.array(problemSchema).min(1).max(600, 'At most 600 problems per problem set'),
 }).strict();
 
 function requireUnique(values: string[], label: string): void {

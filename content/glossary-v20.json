@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "counting-rule",
+      "label": "합의 법칙과 곱의 법칙",
+      "assessable": true
+    },
+    {
+      "key": "permutation",
+      "label": "순열",
+      "assessable": true
+    },
+    {
+      "key": "combination",
+      "label": "조합",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "counting-rule",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "합의 법칙과 곱의 법칙",
+      "summary": "또는이면 더하고 그리고면 곱해요.",
+      "blocks": [
+        {
+          "blockId": "global:counting-rule:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "둘 중 하나를 고르는 일이면 가짓수를 더하고, 둘 다 잇달아 고르는 일이면 곱해요. 버스 $3$개와 지하철 $2$개 중 하나로 가면 $5$가지, 윗옷 $2$벌과 바지 $3$벌을 함께 입으면 $6$가지예요. 더할 때는 겹치는 것이 없는지 보세요. 겹치면 두 번 센 만큼 빼야 해요. 헷갈리면 갈래를 그려 보세요. 갈래마다 또 갈래를 그린 수형도에서 끝의 개수가 답이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "경우를 셀 때 가장 먼저"
+    },
+    {
+      "conceptKey": "permutation",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "순열",
+      "summary": "뽑아서 줄을 세우는 경우예요.",
+      "blocks": [
+        {
+          "blockId": "global:permutation:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "순서가 다르면 다른 경우로 세는 뽑기예요. $n$개를 모두 줄 세우면 $n$부터 $1$까지 곱한 $n!$이고, $n$개에서 $r$개만 뽑아 줄 세우면 $n$부터 하나씩 줄여 $r$번 곱해요. 앉을 때마다 고를 수 있는 자리가 하나씩 줄기 때문이에요. 회장과 부회장을 뽑거나, 자리에 앉히거나, 번호를 매기는 일이 모두 순열이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "뽑은 것들의 자리가 서로 다를 때"
+    },
+    {
+      "conceptKey": "combination",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "조합",
+      "summary": "뽑기만 하고 줄은 세우지 않아요.",
+      "blocks": [
+        {
+          "blockId": "global:combination:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "순서를 따지지 않는 뽑기예요. 순열로 센 다음 뽑는 개수의 팩토리얼로 나누면 돼요. $5$명 중 대표 $2$명은 $5 \\times 4 = 20$을 $2$로 나눈 $10$가지예요. 「가나」와 「나가」가 같은 경우이기 때문이에요. $n$개에서 $r$개를 뽑는 것은 남길 $n-r$개를 고르는 것과 같아 두 값이 늘 같아요. 순열인지 조합인지는 「뽑힌 것들끼리 자리가 다른가」만 물어보면 갈려요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "뽑기만 하고 차례는 없을 때"
+    }
+  ]
+}

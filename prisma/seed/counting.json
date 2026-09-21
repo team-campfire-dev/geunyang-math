@@ -1,0 +1,3212 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "counting",
+      "title": "경우의 수",
+      "summary": "빠뜨리지도 겹치지도 않게 세는 법을 익히고, 줄을 세우는 뽑기와 그냥 뽑는 뽑기를 가려 세요.",
+      "order": 22,
+      "track": "math",
+      "lessons": [
+        {
+          "key": "counting-rule",
+          "order": 1
+        },
+        {
+          "key": "permutation",
+          "order": 2
+        },
+        {
+          "key": "combination",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "counting-rule",
+      "label": "합의 법칙과 곱의 법칙",
+      "assessable": true
+    },
+    {
+      "key": "permutation",
+      "label": "순열",
+      "assessable": true
+    },
+    {
+      "key": "combination",
+      "label": "조합",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "counting-rule",
+        "versionId": "counting-rule:v1",
+        "title": "합의 법칙과 곱의 법칙: 더할 때와 곱할 때",
+        "summary": "빠뜨리지도 겹치지도 않게 세는 두 가지 길을 가르고, 언제 더하고 언제 곱하는지 정해요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "counting-rule"
+        ],
+        "prerequisiteConceptKeys": [
+          "addition",
+          "exponent-law"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "counting-rule:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "counting-rule:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "세는 일에도 규칙이 있어요. 빠뜨리지도 않고 겹치지도 않게 세려면 두 가지만 가리면 됩니다. 「둘 중 하나를 고르는가」와 「둘 다 잇달아 고르는가」예요.\n\n버스로 가는 길이 $3$개, 지하철로 가는 길이 $2$개라고 해 볼게요. 버스를 타든 지하철을 타든 학교에 가면 되니 길은 $3 + 2 = 5$개예요. 둘 중 하나를 고르는 일이라 더해요. 이것을 합의 법칙이라고 해요.\n\n이번에는 윗옷 $2$벌과 바지 $3$벌이에요. 윗옷만 입고 나갈 수는 없죠. 둘 다 골라야 해요. 윗옷 하나마다 바지 고르는 방법이 $3$가지씩이니 $2 \\times 3 = 6$가지예요. 이것이 곱의 법칙이에요.\n\n가르는 기준은 「또는」과 「그리고」예요. 또는이면 더하고, 그리고면 곱해요.\n\n합의 법칙에는 조건이 하나 붙어요. 두 경우가 겹치지 않아야 해요. 겹치는 것이 있으면 두 번 센 만큼 빼 줘야 하고요.\n\n그림으로 그려 보면 헷갈릴 일이 줄어요. 갈래를 그리고 갈래마다 또 갈래를 그리면, 끝의 개수가 답이에요. 이렇게 그린 그림을 수형도라고 해요.\n\n세 단계 이상이어도 같아요. $1$부터 $5$까지 적힌 카드에서 한 장씩 세 번 뽑아 세 자리 수를 만든다면 (뽑은 카드를 다시 넣는다면) $5 \\times 5 \\times 5 = 125$가지예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "counting-rule",
+                    "surface": "합의 법칙",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "counting-rule:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "윗옷 두 벌에서 갈라진 가지마다 바지 세 벌이 다시 갈라져 끝이 여섯 개가 되는 그림",
+                "caption": "갈래마다 또 갈라지니 곱하는 거예요",
+                "items": [
+                  {
+                    "kind": "ellipse",
+                    "cx": 160,
+                    "cy": 40,
+                    "rx": 6,
+                    "ry": 6,
+                    "fill": "ink",
+                    "id": "root"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160,
+                    "y1": 46,
+                    "x2": 96,
+                    "y2": 82,
+                    "stroke": "line",
+                    "strokeWidth": 1.4,
+                    "id": "b1"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160,
+                    "y1": 46,
+                    "x2": 224,
+                    "y2": 82,
+                    "stroke": "line",
+                    "strokeWidth": 1.4,
+                    "id": "b2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 84,
+                    "y": 78,
+                    "text": "윗옷 $2$",
+                    "size": 11,
+                    "anchor": "end",
+                    "fill": "muted",
+                    "id": "lab1"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 96,
+                    "cy": 88,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "id": "s1"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 224,
+                    "cy": 88,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "id": "s2"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 96,
+                    "y1": 94,
+                    "x2": 64,
+                    "y2": 130,
+                    "stroke": "line",
+                    "strokeWidth": 1.2,
+                    "id": "c1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 96,
+                    "y1": 94,
+                    "x2": 96,
+                    "y2": 130,
+                    "stroke": "line",
+                    "strokeWidth": 1.2,
+                    "id": "c2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 96,
+                    "y1": 94,
+                    "x2": 128,
+                    "y2": 130,
+                    "stroke": "line",
+                    "strokeWidth": 1.2,
+                    "id": "c3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 224,
+                    "y1": 94,
+                    "x2": 192,
+                    "y2": 130,
+                    "stroke": "line",
+                    "strokeWidth": 1.2,
+                    "id": "c4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 224,
+                    "y1": 94,
+                    "x2": 224,
+                    "y2": 130,
+                    "stroke": "line",
+                    "strokeWidth": 1.2,
+                    "id": "c5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 224,
+                    "y1": 94,
+                    "x2": 256,
+                    "y2": 130,
+                    "stroke": "line",
+                    "strokeWidth": 1.2,
+                    "id": "c6",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 44,
+                    "y": 126,
+                    "text": "바지 $3$",
+                    "size": 11,
+                    "anchor": "end",
+                    "fill": "muted",
+                    "id": "lab2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 64,
+                    "cy": 136,
+                    "rx": 4,
+                    "ry": 4,
+                    "fill": "orange",
+                    "id": "e1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 96,
+                    "cy": 136,
+                    "rx": 4,
+                    "ry": 4,
+                    "fill": "orange",
+                    "id": "e2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 128,
+                    "cy": 136,
+                    "rx": 4,
+                    "ry": 4,
+                    "fill": "orange",
+                    "id": "e3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 192,
+                    "cy": 136,
+                    "rx": 4,
+                    "ry": 4,
+                    "fill": "orange",
+                    "id": "e4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 224,
+                    "cy": 136,
+                    "rx": 4,
+                    "ry": 4,
+                    "fill": "orange",
+                    "id": "e5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 256,
+                    "cy": 136,
+                    "rx": 4,
+                    "ry": 4,
+                    "fill": "orange",
+                    "id": "e6",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 176,
+                    "text": "$2 \\times 3 = 6$가지",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "ans",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "윗옷을 고르는 갈래가 둘이에요.",
+                    "changes": [
+                      {
+                        "id": "c1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c6",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lab2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "e1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "e2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "e3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "e4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "e5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "e6",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "갈래마다 바지를 고르는 갈래가 셋씩 또 생겨요.",
+                    "changes": [
+                      {
+                        "id": "c1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c6",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lab2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "e1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "e2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "e3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "e4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "e5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "e6",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "끝이 여섯 개예요. 잇달아 고르는 일이라 더하지 않고 곱해요.",
+                    "changes": [
+                      {
+                        "id": "c1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c6",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lab2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "e1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "e2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "e3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "e4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "e5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "e6",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "counting-rule:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "counting-rule:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "동전 하나와 주사위 하나를 함께 던질 때 나올 수 있는 경우를 세어 볼게요.\n\n동전은 앞면과 뒷면으로 $2$가지, 주사위는 $1$부터 $6$까지 $6$가지예요.\n\n둘을 함께 던지니 둘 다 정해져야 한 경우가 돼요. 「그리고」이니 곱해요. $2 \\times 6 = 12$가지예요.\n\n이번에는 다른 물음이에요. 주사위 하나를 던질 때 $2$의 배수 또는 $5$ 이상이 나오는 경우는 몇 가지일까요.\n\n$2$의 배수는 $2, 4, 6$으로 $3$가지, $5$ 이상은 $5, 6$으로 $2$가지예요. 「또는」이니 더하고 싶지만, 잠깐요.\n\n$6$이 양쪽에 다 들어 있어요. 그냥 더하면 $6$을 두 번 세게 돼요.\n\n$3 + 2 - 1 = 4$가지예요. 겹치는 것을 한 번 빼 줘야 해요. 실제로 세어 보면 $2, 4, 5, 6$으로 네 가지가 맞아요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "counting-rule:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "counting-rule:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "counting-rule:practice",
+                "problemSetVersionId": "counting-rule:practice:v1",
+                "problemVersionIds": [
+                  "counting-rule:practice-1:v1",
+                  "counting-rule:practice-2:v1",
+                  "counting-rule:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "counting-rule:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "counting-rule:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "counting-rule:check",
+                "problemSetVersionId": "counting-rule:check:v1",
+                "problemVersionIds": [
+                  "counting-rule:check-1:v1",
+                  "counting-rule:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "counting-rule:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "counting-rule:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "「또는」이면 더하고 「그리고」면 곱해요. 이 한 줄이 세는 일의 뼈대예요.\n\n더할 때는 겹치는 것이 없는지 보세요. 있으면 두 번 센 만큼 빼요.\n\n잇달아 고르는 일은 단계마다의 가짓수를 곱해요. 단계가 셋이면 셋을 곱하고요.\n\n헷갈리면 수형도를 그려 보세요. 끝의 개수가 답이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "counting-rule:review",
+        "problemSetVersionId": "counting-rule:review:v1",
+        "problemVersionIds": [
+          "counting-rule:homework-1:v1",
+          "counting-rule:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "permutation",
+        "versionId": "permutation:v1",
+        "title": "순열: 순서가 있는 뽑기",
+        "summary": "뽑아서 줄을 세우는 경우를 세고, 곱이 하나씩 줄어드는 이유를 봐요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "permutation"
+        ],
+        "prerequisiteConceptKeys": [
+          "counting-rule",
+          "exponent-law"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "permutation:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "permutation:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "세 사람 가, 나, 다가 세 자리에 앉는 방법은 몇 가지일까요.\n\n곱의 법칙으로 세면 돼요. 첫 사람은 세 자리 중 아무 데나 앉을 수 있으니 $3$가지. 그러면 남은 자리는 둘이니 둘째 사람은 $2$가지. 셋째 사람에게는 한 자리만 남으니 $1$가지.\n\n$3 \\times 2 \\times 1 = 6$가지예요. 고를 수 있는 것이 하나씩 줄어드는 것이 핵심이에요.\n\n이렇게 $1$부터 $n$까지 모두 곱한 것을 $n!$이라 쓰고 「$n$ 팩토리얼」이라고 읽어요. $3! = 6$이에요.\n\n다섯 사람 중 세 사람만 뽑아 줄을 세운다면요? 끝까지 곱하지 않고 세 번만 곱해요. $5 \\times 4 \\times 3 = 60$가지예요.\n\n이것을 순열이라 하고 $_5\\mathrm{P}_3$로 적어요. $n$개에서 $r$개를 뽑아 줄 세우는 것은 $n$부터 하나씩 줄여 가며 $r$번 곱하면 돼요.\n\n「줄을 세운다」는 말이 중요해요. 순열은 순서를 따져요. 가나다와 다나가를 서로 다른 경우로 세는 거예요. 자리에 앉히거나, 번호를 매기거나, 회장과 부회장을 뽑는 일이 모두 그래요.",
+                "definitions": [
+                  {
+                    "conceptKey": "permutation",
+                    "surface": "순열",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "permutation:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "세 사람이 세 자리에 차례로 앉으며 남은 자리가 줄어드는 그림",
+                "caption": "앉을 때마다 고를 수 있는 자리가 하나씩 줄어요",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "x": 56,
+                    "y": 96,
+                    "width": 56,
+                    "height": 44,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 6,
+                    "id": "s1"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 132,
+                    "y": 96,
+                    "width": 56,
+                    "height": 44,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 6,
+                    "id": "s2"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 208,
+                    "y": 96,
+                    "width": 56,
+                    "height": 44,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 6,
+                    "id": "s3"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 84,
+                    "y": 158,
+                    "text": "$3$가지",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "n1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 158,
+                    "text": "$2$가지",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "n2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 236,
+                    "y": 158,
+                    "text": "$1$가지",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "n3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 84,
+                    "cy": 48,
+                    "rx": 15,
+                    "ry": 15,
+                    "fill": "sand",
+                    "id": "pa"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 84,
+                    "y": 53,
+                    "text": "가",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "pat"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160,
+                    "cy": 48,
+                    "rx": 15,
+                    "ry": 15,
+                    "fill": "sand",
+                    "id": "pb"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 53,
+                    "text": "나",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "pbt"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 236,
+                    "cy": 48,
+                    "rx": 15,
+                    "ry": 15,
+                    "fill": "sand",
+                    "id": "pc"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 236,
+                    "y": 53,
+                    "text": "다",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "pct"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 186,
+                    "text": "$3 \\times 2 \\times 1 = 6$가지",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "ans",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "세 사람이 세 자리에 앉아요. 첫 사람은 세 자리 중 아무 데나 앉을 수 있어요.",
+                    "changes": [
+                      {
+                        "id": "n2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "첫 사람이 앉으면 남은 자리는 둘이에요. 둘째 사람이 고를 수 있는 자리가 하나 줄었어요.",
+                    "changes": [
+                      {
+                        "id": "pa",
+                        "dy": 66
+                      },
+                      {
+                        "id": "pat",
+                        "dy": 66
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "셋째 사람에게는 한 자리만 남아요. 그래서 $3$부터 $1$까지 곱해요.",
+                    "changes": [
+                      {
+                        "id": "pa",
+                        "dy": 66
+                      },
+                      {
+                        "id": "pat",
+                        "dy": 66
+                      },
+                      {
+                        "id": "pb",
+                        "dy": 66
+                      },
+                      {
+                        "id": "pbt",
+                        "dy": 66
+                      },
+                      {
+                        "id": "pc",
+                        "dy": 66
+                      },
+                      {
+                        "id": "pct",
+                        "dy": 66
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "permutation:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "permutation:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$1$, $2$, $3$, $4$가 적힌 카드 넉 장에서 두 장을 뽑아 두 자리 수를 만들어 볼게요. 몇 개나 만들 수 있을까요.\n\n십의 자리에 올 수 있는 카드는 넉 장 모두이니 $4$가지예요.\n\n일의 자리에는 남은 석 장 중 하나가 오니 $3$가지예요.\n\n$4 \\times 3 = 12$개예요. $_4\\mathrm{P}_2$를 계산한 것과 같아요.\n\n여기서 $12$와 $21$은 서로 다른 수죠. 순서가 다르면 다른 경우예요. 그래서 순열이에요.\n\n만약 카드를 뽑은 뒤 다시 넣는다면 답이 달라져요. 일의 자리에도 넉 장 모두 올 수 있으니 $4 \\times 4 = 16$개예요.\n\n다시 넣느냐 아니냐가 곱하는 수를 정해요. 문제를 읽을 때 꼭 확인하세요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "permutation:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "permutation:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "permutation:practice",
+                "problemSetVersionId": "permutation:practice:v1",
+                "problemVersionIds": [
+                  "permutation:practice-1:v1",
+                  "permutation:practice-2:v1",
+                  "permutation:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "permutation:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "permutation:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "permutation:check",
+                "problemSetVersionId": "permutation:check:v1",
+                "problemVersionIds": [
+                  "permutation:check-1:v1",
+                  "permutation:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "permutation:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "permutation:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "뽑아서 줄을 세우는 경우를 세는 것이 순열이에요. 순서가 다르면 다른 경우로 세요.\n\n$n$개를 모두 줄 세우면 $n$부터 $1$까지 곱한 $n!$이에요.\n\n$n$개에서 $r$개만 뽑아 줄 세우면 $n$부터 하나씩 줄여 $r$번 곱해요.\n\n뽑은 것을 다시 넣는지 아닌지에 따라 곱하는 수가 달라져요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "permutation:review",
+        "problemSetVersionId": "permutation:review:v1",
+        "problemVersionIds": [
+          "permutation:homework-1:v1",
+          "permutation:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "combination",
+        "versionId": "combination:v1",
+        "title": "조합: 순서가 없는 뽑기",
+        "summary": "뽑기만 하고 줄은 세우지 않는 경우를 세고, 순열에서 순서를 지워 구해요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "combination"
+        ],
+        "prerequisiteConceptKeys": [
+          "permutation",
+          "counting-rule"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "combination:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "combination:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$5$명 중 대표 $2$명을 뽑는다고 해 볼게요. 회장과 부회장이 아니라 그냥 대표 둘이에요.\n\n순열로 세면 $5 \\times 4 = 20$가지예요. 그런데 이 셈에는 「가나」와 「나가」가 따로 들어 있어요. 둘 다 가와 나가 뽑힌 같은 경우인데 말이죠.\n\n뽑힌 사람이 같으면 한 가지로 세야 해요. 순서를 따지지 않는 이런 뽑기를 조합이라고 해요.\n\n구하는 법은 간단해요. 순열로 센 다음, 한 덩어리 안에 몇 개가 들어 있는지로 나눠요. 둘을 줄 세우는 방법이 $2! = 2$가지이니 $20 \\div 2 = 10$가지예요.\n\n$n$개에서 $r$개를 뽑는 조합은 $_n\\mathrm{C}_r$로 적고, $_n\\mathrm{P}_r$을 $r!$로 나눈 값이에요.\n\n셋을 뽑는다면 $3! = 6$으로 나눠요. $5$명 중 $3$명을 뽑는 경우는 $(5 \\times 4 \\times 3) \\div 6 = 10$가지예요.\n\n$5$명 중 $3$명을 뽑는 것과 $2$명을 뽑는 것이 둘 다 $10$가지인 게 우연이 아니에요. $3$명을 고르는 일은 남길 $2$명을 고르는 일과 같으니까요.\n\n순열인지 조합인지는 한 가지만 물어보면 갈려요. 뽑힌 것들끼리 자리가 다른가요? 회장과 부회장이면 다르니 순열, 그냥 대표 둘이면 같으니 조합이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "combination",
+                    "surface": "조합",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "combination:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "흩어져 있던 여섯 줄이 같은 것끼리 세 칸으로 모여 덩어리가 셋이 되는 그림",
+                "caption": "순서만 다른 것끼리 모으면 덩어리가 셋이에요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 30,
+                    "text": "가, 나, 다 중 둘 뽑기",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 40,
+                    "y": 52,
+                    "width": 72,
+                    "height": 30,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 6,
+                    "id": "r1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 76,
+                    "y": 72,
+                    "text": "가나",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "t1"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 128,
+                    "y": 88,
+                    "width": 72,
+                    "height": 30,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 6,
+                    "id": "r2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 164,
+                    "y": 108,
+                    "text": "나가",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "t2"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 128,
+                    "y": 52,
+                    "width": 72,
+                    "height": 30,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 6,
+                    "id": "r3"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 164,
+                    "y": 72,
+                    "text": "가다",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "t3"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 216,
+                    "y": 88,
+                    "width": 72,
+                    "height": 30,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 6,
+                    "id": "r4"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 252,
+                    "y": 108,
+                    "text": "다가",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "t4"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 216,
+                    "y": 52,
+                    "width": 72,
+                    "height": 30,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 6,
+                    "id": "r5"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 252,
+                    "y": 72,
+                    "text": "나다",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "t5"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 40,
+                    "y": 88,
+                    "width": 72,
+                    "height": 30,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 6,
+                    "id": "r6"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 76,
+                    "y": 108,
+                    "text": "다나",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "t6"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 76,
+                    "y": 140,
+                    "text": "한 덩어리",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "g1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 164,
+                    "y": 140,
+                    "text": "한 덩어리",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "g2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 252,
+                    "y": 140,
+                    "text": "한 덩어리",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "g3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 172,
+                    "text": "순서를 따지면 $6$가지",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "many"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 172,
+                    "text": "따지지 않으면 $6 \\div 2 = 3$가지",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "ans",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "셋 중 둘을 뽑아 줄 세우면 여섯 가지예요.",
+                    "changes": [
+                      {
+                        "id": "g1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "그런데 「가나」와 「나가」는 뽑힌 사람이 같아요. 순서만 다를 뿐이죠. 같은 것끼리 모아 볼게요.",
+                    "changes": [
+                      {
+                        "id": "r2",
+                        "dx": -88
+                      },
+                      {
+                        "id": "t2",
+                        "dx": -88
+                      },
+                      {
+                        "id": "r4",
+                        "dx": -88
+                      },
+                      {
+                        "id": "t4",
+                        "dx": -88
+                      },
+                      {
+                        "id": "r6",
+                        "dx": 176
+                      },
+                      {
+                        "id": "t6",
+                        "dx": 176
+                      },
+                      {
+                        "id": "g1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "덩어리가 셋이에요. 순서를 따지지 않으면 셋이라는 뜻이에요.",
+                    "changes": [
+                      {
+                        "id": "r2",
+                        "dx": -88
+                      },
+                      {
+                        "id": "t2",
+                        "dx": -88
+                      },
+                      {
+                        "id": "r4",
+                        "dx": -88
+                      },
+                      {
+                        "id": "t4",
+                        "dx": -88
+                      },
+                      {
+                        "id": "r6",
+                        "dx": 176
+                      },
+                      {
+                        "id": "t6",
+                        "dx": 176
+                      },
+                      {
+                        "id": "g1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "g2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "g3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "many",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "combination:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "combination:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$6$명 중 청소 당번 $2$명을 뽑는 방법을 세어 볼게요.\n\n먼저 순서를 따져 세요. $6 \\times 5 = 30$가지예요.\n\n당번 둘 사이에는 차례가 없어요. 「가와 나」와 「나와 가」는 같은 경우죠.\n\n둘을 줄 세우는 방법이 $2$가지이니 한 덩어리에 둘씩 들어 있어요. $30 \\div 2 = 15$가지예요.\n\n이번에는 $7$명 중 $3$명을 뽑아 볼게요.\n\n순서를 따지면 $7 \\times 6 \\times 5 = 210$가지예요. 셋을 줄 세우는 방법은 $3! = 6$가지고요.\n\n$210 \\div 6 = 35$가지예요.\n\n나눌 때 $2$로 나눌지 $6$으로 나눌지는 뽑는 개수가 정해요. 뽑는 개수의 팩토리얼로 나누면 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "combination:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "combination:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "combination:practice",
+                "problemSetVersionId": "combination:practice:v1",
+                "problemVersionIds": [
+                  "combination:practice-1:v1",
+                  "combination:practice-2:v1",
+                  "combination:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "combination:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "combination:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "combination:check",
+                "problemSetVersionId": "combination:check:v1",
+                "problemVersionIds": [
+                  "combination:check-1:v1",
+                  "combination:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "combination:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "combination:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "뽑기만 하고 줄은 세우지 않는 것이 조합이에요.\n\n순열로 센 다음 뽑는 개수의 팩토리얼로 나누면 돼요. 순서만 다른 것들이 한 덩어리로 묶여요.\n\n$n$개에서 $r$개를 뽑는 것은 남길 $n-r$개를 고르는 것과 같아, 두 값이 늘 같아요.\n\n순열과 조합을 가르는 물음은 하나예요. 뽑힌 것들끼리 자리가 다른가요?",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "combination:review",
+        "problemSetVersionId": "combination:review:v1",
+        "problemVersionIds": [
+          "combination:homework-1:v1",
+          "combination:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "counting-rule:practice",
+      "courseKey": "counting",
+      "name": "합의 법칙과 곱의 법칙 연습",
+      "versionId": "counting-rule:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "counting-rule:practice-1:v1",
+          "conceptKeys": [
+            "counting-rule"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting-rule:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "윗옷 $2$벌과 바지 $3$벌로 입을 수 있는 옷차림은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting-rule:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘 다 골라야 하니 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting-rule:practice-2:v1",
+          "conceptKeys": [
+            "counting-rule"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting-rule:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "버스 $3$개 노선과 지하철 $2$개 노선 중 하나로 갈 때 가는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting-rule:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘 중 하나를 고르니 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting-rule:practice-3:v1",
+          "conceptKeys": [
+            "counting-rule"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting-rule:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 하나와 주사위 하나를 함께 던질 때 나올 수 있는 경우는 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting-rule:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 \\times 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "counting-rule:check",
+      "courseKey": "counting",
+      "name": "합의 법칙과 곱의 법칙 확인",
+      "versionId": "counting-rule:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "counting-rule:check-1:v1",
+          "conceptKeys": [
+            "counting-rule"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting-rule:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 $2$의 배수 또는 $5$ 이상이 나오는 경우는 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting-rule:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6$이 양쪽에 다 들어 있어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting-rule:check-2:v1",
+          "conceptKeys": [
+            "counting-rule"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting-rule:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$부터 $5$까지 적힌 카드에서 한 장 뽑아 적고 다시 넣기를 세 번 하면 만들 수 있는 세 자리 수는 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 125
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting-rule:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "단계마다 $5$가지예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "counting-rule:review",
+      "courseKey": "counting",
+      "name": "합의 법칙과 곱의 법칙 복습",
+      "versionId": "counting-rule:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "counting-rule:homework-1:v1",
+          "conceptKeys": [
+            "counting-rule"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting-rule:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 세 개를 던질 때 나올 수 있는 경우는 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting-rule:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 \\times 2 \\times 2$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting-rule:homework-2:v1",
+          "conceptKeys": [
+            "counting-rule"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting-rule:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「또는」으로 이어진 두 경우를 셀 때 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "겹치지 않으면 더한다"
+              },
+              {
+                "id": "b",
+                "text": "언제나 곱한다"
+              },
+              {
+                "id": "c",
+                "text": "언제나 뺀다"
+              },
+              {
+                "id": "d",
+                "text": "큰 쪽만 센다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "겹치지 않으면 더한다"
+              },
+              {
+                "id": "b",
+                "text": "언제나 곱한다"
+              },
+              {
+                "id": "c",
+                "text": "언제나 뺀다"
+              },
+              {
+                "id": "d",
+                "text": "큰 쪽만 센다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting-rule:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "겹치면 두 번 센 만큼 빼요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "permutation:practice",
+      "courseKey": "counting",
+      "name": "순열 연습",
+      "versionId": "permutation:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "permutation:practice-1:v1",
+          "conceptKeys": [
+            "permutation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "permutation:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 사람이 세 자리에 앉는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "permutation:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3 \\times 2 \\times 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "permutation:practice-2:v1",
+          "conceptKeys": [
+            "permutation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "permutation:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4! $의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 24
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "permutation:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4 \\times 3 \\times 2 \\times 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "permutation:practice-3:v1",
+          "conceptKeys": [
+            "permutation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "permutation:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5$명 중 $3$명을 뽑아 줄을 세우는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "permutation:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5 \\times 4 \\times 3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "permutation:check",
+      "courseKey": "counting",
+      "name": "순열 확인",
+      "versionId": "permutation:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "permutation:check-1:v1",
+          "conceptKeys": [
+            "permutation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "permutation:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$, $2$, $3$, $4$에서 서로 다른 두 장을 뽑아 만들 수 있는 두 자리 수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "permutation:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4 \\times 3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "permutation:check-2:v1",
+          "conceptKeys": [
+            "permutation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "permutation:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6$명 중 회장과 부회장을 한 명씩 뽑는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "permutation:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "회장을 먼저 뽑으면 부회장 후보가 하나 줄어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "permutation:review",
+      "courseKey": "counting",
+      "name": "순열 복습",
+      "versionId": "permutation:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "permutation:homework-1:v1",
+          "conceptKeys": [
+            "permutation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "permutation:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5!$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 120
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "permutation:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5 \\times 4!$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "permutation:homework-2:v1",
+          "conceptKeys": [
+            "permutation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "permutation:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "순열로 세야 하는 경우는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$5$명 중 회장과 부회장을 뽑는다"
+              },
+              {
+                "id": "b",
+                "text": "$5$명 중 대표 $2$명을 뽑는다"
+              },
+              {
+                "id": "c",
+                "text": "$5$명이 함께 사진을 찍는다"
+              },
+              {
+                "id": "d",
+                "text": "$5$명의 키를 잰다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$5$명 중 회장과 부회장을 뽑는다"
+              },
+              {
+                "id": "b",
+                "text": "$5$명 중 대표 $2$명을 뽑는다"
+              },
+              {
+                "id": "c",
+                "text": "$5$명이 함께 사진을 찍는다"
+              },
+              {
+                "id": "d",
+                "text": "$5$명의 키를 잰다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "permutation:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "뽑힌 둘의 자리가 서로 다른가요?"
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "combination:practice",
+      "courseKey": "counting",
+      "name": "조합 연습",
+      "versionId": "combination:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "combination:practice-1:v1",
+          "conceptKeys": [
+            "combination"
+          ],
+          "promptContent": [
+            {
+              "blockId": "combination:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5$명 중 대표 $2$명을 뽑는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "combination:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5 \\times 4$를 $2$로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "combination:practice-2:v1",
+          "conceptKeys": [
+            "combination"
+          ],
+          "promptContent": [
+            {
+              "blockId": "combination:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6$명 중 청소 당번 $2$명을 뽑는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "combination:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$30 \\div 2$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "combination:practice-3:v1",
+          "conceptKeys": [
+            "combination"
+          ],
+          "promptContent": [
+            {
+              "blockId": "combination:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4$명 중 $3$명을 뽑는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "combination:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$명을 고르는 것은 남길 $1$명을 고르는 것과 같아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "combination:check",
+      "courseKey": "counting",
+      "name": "조합 확인",
+      "versionId": "combination:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "combination:check-1:v1",
+          "conceptKeys": [
+            "combination"
+          ],
+          "promptContent": [
+            {
+              "blockId": "combination:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$7$명 중 $3$명을 뽑는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 35
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "combination:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$210$을 $6$으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "combination:check-2:v1",
+          "conceptKeys": [
+            "combination"
+          ],
+          "promptContent": [
+            {
+              "blockId": "combination:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "조합으로 세야 하는 경우는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$8$명 중 대표 $2$명을 뽑는다"
+              },
+              {
+                "id": "b",
+                "text": "$8$명 중 회장과 총무를 뽑는다"
+              },
+              {
+                "id": "c",
+                "text": "$8$명이 한 줄로 선다"
+              },
+              {
+                "id": "d",
+                "text": "$8$명에게 번호를 매긴다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$8$명 중 대표 $2$명을 뽑는다"
+              },
+              {
+                "id": "b",
+                "text": "$8$명 중 회장과 총무를 뽑는다"
+              },
+              {
+                "id": "c",
+                "text": "$8$명이 한 줄로 선다"
+              },
+              {
+                "id": "d",
+                "text": "$8$명에게 번호를 매긴다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "combination:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "뽑힌 둘 사이에 차례가 있나요?"
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "combination:review",
+      "courseKey": "counting",
+      "name": "조합 복습",
+      "versionId": "combination:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "combination:homework-1:v1",
+          "conceptKeys": [
+            "combination"
+          ],
+          "promptContent": [
+            {
+              "blockId": "combination:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5$명 중 $3$명을 뽑는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "combination:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$60 \\div 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "combination:homework-2:v1",
+          "conceptKeys": [
+            "combination"
+          ],
+          "promptContent": [
+            {
+              "blockId": "combination:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10$명 중 $2$명을 뽑는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 45
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "combination:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$90 \\div 2$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "counting:drill",
+      "courseKey": "counting",
+      "name": "경우의 수 모아 풀기",
+      "versionId": "counting:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "counting:drill-1:v1",
+          "conceptKeys": [
+            "counting-rule"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "윗옷 $4$벌과 바지 $3$벌로 입을 수 있는 옷차림은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘 다 골라야 하니 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-2:v1",
+          "conceptKeys": [
+            "counting-rule"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "버스 $2$개 노선과 지하철 $4$개 노선 중 하나로 갈 때 가는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘 중 하나이니 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-3:v1",
+          "conceptKeys": [
+            "counting-rule"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 하나와 주사위 하나를 함께 던질 때 나올 수 있는 경우는 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 \\times 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-4:v1",
+          "conceptKeys": [
+            "counting-rule"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 네 개를 던질 때 나올 수 있는 경우는 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 16
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$를 네 번 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-5:v1",
+          "conceptKeys": [
+            "counting-rule"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 $3$의 배수 또는 $4$ 이상이 나오는 경우는 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6$이 양쪽에 다 들어 있어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-6:v1",
+          "conceptKeys": [
+            "counting-rule"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 두 개를 던질 때 나올 수 있는 경우는 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 36
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6 \\times 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-7:v1",
+          "conceptKeys": [
+            "counting-rule"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「그리고」로 이어진 두 단계를 셀 때 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "단계마다의 가짓수를 곱한다"
+              },
+              {
+                "id": "b",
+                "text": "언제나 더한다"
+              },
+              {
+                "id": "c",
+                "text": "큰 쪽만 센다"
+              },
+              {
+                "id": "d",
+                "text": "뺀다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "단계마다의 가짓수를 곱한다"
+              },
+              {
+                "id": "b",
+                "text": "언제나 더한다"
+              },
+              {
+                "id": "c",
+                "text": "큰 쪽만 센다"
+              },
+              {
+                "id": "d",
+                "text": "뺀다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "갈래마다 또 갈라져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-8:v1",
+          "conceptKeys": [
+            "permutation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4$명이 한 줄로 서는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 24
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4!$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-9:v1",
+          "conceptKeys": [
+            "permutation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3!$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3 \\times 2 \\times 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-10:v1",
+          "conceptKeys": [
+            "permutation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6$명 중 $2$명을 뽑아 줄을 세우는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6 \\times 5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-11:v1",
+          "conceptKeys": [
+            "permutation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$부터 $5$까지 적힌 카드에서 서로 다른 두 장을 뽑아 만드는 두 자리 수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5 \\times 4$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-12:v1",
+          "conceptKeys": [
+            "permutation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5$명 중 회장, 부회장, 총무를 한 명씩 뽑는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5 \\times 4 \\times 3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-13:v1",
+          "conceptKeys": [
+            "permutation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6!$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 720
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6 \\times 5!$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-14:v1",
+          "conceptKeys": [
+            "permutation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "순서를 따져 세야 하는 경우는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$4$명이 한 줄로 선다"
+              },
+              {
+                "id": "b",
+                "text": "$4$명 중 대표 $2$명을 뽑는다"
+              },
+              {
+                "id": "c",
+                "text": "$4$명이 악수를 한다"
+              },
+              {
+                "id": "d",
+                "text": "$4$명 중 청소 당번 $2$명을 뽑는다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$4$명이 한 줄로 선다"
+              },
+              {
+                "id": "b",
+                "text": "$4$명 중 대표 $2$명을 뽑는다"
+              },
+              {
+                "id": "c",
+                "text": "$4$명이 악수를 한다"
+              },
+              {
+                "id": "d",
+                "text": "$4$명 중 청소 당번 $2$명을 뽑는다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "자리가 서로 다른가요?"
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-15:v1",
+          "conceptKeys": [
+            "combination"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6$명 중 대표 $2$명을 뽑는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$30 \\div 2$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-16:v1",
+          "conceptKeys": [
+            "combination"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5$명 중 $3$명을 뽑는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$60 \\div 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-17:v1",
+          "conceptKeys": [
+            "combination"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$8$명 중 $2$명을 뽑는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 28
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$56 \\div 2$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-18:v1",
+          "conceptKeys": [
+            "combination"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6$명이 서로 한 번씩 악수하면 악수는 모두 몇 번인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘을 뽑는 일이고 순서는 없어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-19:v1",
+          "conceptKeys": [
+            "combination"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$7$명 중 $5$명을 뽑는 방법은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 21
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "남길 $2$명을 고르는 것과 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting:drill-20:v1",
+          "conceptKeys": [
+            "combination"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "순서를 따지지 않는 뽑기를 셀 때 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "순열로 센 뒤 뽑는 개수의 팩토리얼로 나눈다"
+              },
+              {
+                "id": "b",
+                "text": "순열로 센 값에 더한다"
+              },
+              {
+                "id": "c",
+                "text": "순열과 같다"
+              },
+              {
+                "id": "d",
+                "text": "언제나 절반이다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "순열로 센 뒤 뽑는 개수의 팩토리얼로 나눈다"
+              },
+              {
+                "id": "b",
+                "text": "순열로 센 값에 더한다"
+              },
+              {
+                "id": "c",
+                "text": "순열과 같다"
+              },
+              {
+                "id": "d",
+                "text": "언제나 절반이다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "순서만 다른 것들이 한 덩어리로 묶여요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}
