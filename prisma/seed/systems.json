@@ -5,7 +5,7 @@
       "key": "systems",
       "title": "연립방정식",
       "summary": "미지수가 둘인 식은 혼자서 답을 정하지 못해요. 두 식을 함께 놓고 문자를 하나씩 없애며 풀어요.",
-      "order": 9,
+      "order": 230,
       "lessons": [
         {
           "key": "two-variable-equation",

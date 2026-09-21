@@ -5,7 +5,7 @@
       "key": "complex-numbers",
       "title": "복소수와 이차방정식",
       "summary": "제곱해서 음수가 되는 수가 없다는 벽을 넘어 수를 한 칸 넓히고, 근을 구하지 않고도 두 근의 합과 곱을 읽어요.",
-      "order": 20,
+      "order": 420,
       "track": "high",
       "lessons": [
         {

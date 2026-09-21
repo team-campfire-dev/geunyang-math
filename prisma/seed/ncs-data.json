@@ -5,7 +5,7 @@
       "key": "ncs-data",
       "title": "자료해석",
       "summary": "표에서 값을 찾고, 증감률을 구하고, 표가 말하지 않은 것을 가려내요. 시험에서 문항이 가장 많은 자리예요.",
-      "order": 14,
+      "order": 940,
       "track": "ncs",
       "lessons": [
         {

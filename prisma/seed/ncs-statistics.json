@@ -5,7 +5,7 @@
       "key": "ncs-statistics",
       "title": "기초통계",
       "summary": "세고, 비중을 내고, 평균을 구하고, 흩어진 정도까지 읽어요. 자료해석의 바탕이 되는 계산이에요.",
-      "order": 13,
+      "order": 930,
       "track": "ncs",
       "lessons": [
         {

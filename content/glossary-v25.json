@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "coordinate-plane",
+      "label": "좌표평면",
+      "assessable": true
+    },
+    {
+      "key": "direct-proportion",
+      "label": "정비례",
+      "assessable": true
+    },
+    {
+      "key": "inverse-proportion",
+      "label": "반비례",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "coordinate-plane",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "좌표평면",
+      "summary": "두 수로 자리를 가리키는 바닥이에요.",
+      "blocks": [
+        {
+          "blockId": "global:coordinate-plane:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "수직선 두 개를 직각으로 겹쳐 놓은 것이에요. 가로가 $x$축, 세로가 $y$축, 두 축이 만나는 자리가 원점이에요. 자리는 $(3, 2)$처럼 순서쌍으로 적고, 앞이 가로 뒤가 세로라는 약속을 지켜야 해요. $(3,2)$와 $(2,3)$은 다른 자리예요. 축이 평면을 넷으로 가른 것이 사분면이고 부호로 가릴 수 있어요. 축 위의 점은 어느 사분면에도 속하지 않아요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "평면 위의 자리를 말할 때"
+    },
+    {
+      "conceptKey": "direct-proportion",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "정비례",
+      "summary": "한쪽이 몇 배가 되면 다른 쪽도 같은 배가 돼요.",
+      "blocks": [
+        {
+          "blockId": "global:direct-proportion:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$y = ax$ 꼴이고 $a$가 비례상수예요. $\\dfrac{y}{x}$가 늘 일정하다는 것이 다른 얼굴이에요. 그래프는 원점을 지나는 직선이에요. $x$가 $0$이면 $y$도 $0$이기 때문이에요. 값 하나를 알면 비례상수를 구할 수 있고, 그러면 어느 쪽을 물어도 답할 수 있어요. 중학교 $2$학년의 일차함수는 이 직선을 위아래로 옮긴 것이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "함께 커지는 두 양을 다룰 때"
+    },
+    {
+      "conceptKey": "inverse-proportion",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "반비례",
+      "summary": "한쪽이 몇 배가 되면 다른 쪽은 그만큼 나뉘어요.",
+      "blocks": [
+        {
+          "blockId": "global:inverse-proportion:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$y = \\dfrac{a}{x}$ 꼴이고, 곱 $xy$가 늘 일정해요. 정비례는 몫이, 반비례는 곱이 일정하다고 기억하면 갈리지 않아요. $x$는 $0$이 될 수 없어요. $0$으로는 나눌 수 없으니까요. 그래프는 직선이 아니라 두 갈래로 나뉜 곡선이고, 축에 한없이 가까워지되 닿지 않아요. 같은 거리를 갈 때의 속력과 시간, 같은 일을 할 때의 사람 수와 날수가 이 관계예요. 고등학교의 유리함수가 이 곡선이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "한쪽이 커지면 다른 쪽이 작아질 때"
+    }
+  ]
+}

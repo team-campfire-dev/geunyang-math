@@ -104,8 +104,9 @@ describe('placing a learner', () => {
     const line = placementScope(graph, schoolLine.flatMap((lesson) => lesson.conceptKeys));
     // 48 before 제곱근과 실수, 54 before 인수분해와 이차방정식, 63 before 이차함수와 다항식,
     // 70 before 복소수와 이차부등식, 78 before 경우의 수와 집합·명제, 85 before 도형의 방정식과
-    // 함수와 그래프 added nine more and finished 고1.
-    expect(line).toHaveLength(94);
+    // 함수와 그래프 added nine more and finished 고1. 94 before the 중학교 backfill began
+    // with 소인수분해 and 좌표평면, which are six more.
+    expect(line).toHaveLength(100);
     expect(graph.keys.length).toBeGreaterThan(line.length);
     for (const key of ['cost-price', 'discount-rate', 'concentration', 'speed']) expect(line).not.toContain(key);
   });

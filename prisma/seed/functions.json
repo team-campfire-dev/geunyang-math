@@ -5,7 +5,7 @@
       "key": "functions",
       "title": "일차함수",
       "summary": "넣는 값마다 나오는 값이 하나로 정해지는 관계를 다루고, 그 관계를 직선 그래프로 읽어요.",
-      "order": 10,
+      "order": 240,
       "lessons": [
         {
           "key": "function-meaning",

@@ -1,0 +1,3074 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "coordinate-plane",
+      "title": "좌표평면과 그래프",
+      "summary": "두 수로 자리를 가리키는 법을 익히고, 함께 커지는 관계와 한쪽이 작아지는 관계를 그래프로 봐요.",
+      "order": 140,
+      "track": "middle",
+      "stage": "middle-1",
+      "lessons": [
+        {
+          "key": "coordinate-plane",
+          "order": 1
+        },
+        {
+          "key": "direct-proportion",
+          "order": 2
+        },
+        {
+          "key": "inverse-proportion",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "coordinate-plane",
+      "label": "좌표평면",
+      "assessable": true
+    },
+    {
+      "key": "direct-proportion",
+      "label": "정비례",
+      "assessable": true
+    },
+    {
+      "key": "inverse-proportion",
+      "label": "반비례",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "coordinate-plane",
+        "versionId": "coordinate-plane:v1",
+        "title": "순서쌍과 좌표평면: 두 수로 자리를 가리키기",
+        "summary": "수직선 하나로는 모자란 자리를, 두 수를 짝지어 가리키는 법을 익혀요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "coordinate-plane"
+        ],
+        "prerequisiteConceptKeys": [
+          "negative-number",
+          "integer"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "coordinate-plane:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "coordinate-plane:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "수직선 위의 자리는 수 하나로 가리킬 수 있었어요. 그런데 교실의 자리나 지도의 위치는 수 하나로 부족해요. 앞에서 몇 번째인지와 옆에서 몇 번째인지, 둘이 있어야 하죠.\n\n그래서 수직선 두 개를 직각으로 겹쳐 놓아요. 가로를 $x$축, 세로를 $y$축, 두 축이 만나는 자리를 원점이라 해요. 이렇게 만든 바닥을 좌표평면이라고 합니다.\n\n자리는 두 수를 짝지어 $(3, 2)$처럼 적어요. 이것을 순서쌍이라고 해요.\n\n「순서」라는 말이 붙은 이유가 있어요. $(3, 2)$와 $(2, 3)$은 서로 다른 자리예요. 앞의 수가 가로, 뒤의 수가 세로라는 약속을 지켜야 해요.\n\n찾아가는 순서도 같아요. 원점에서 가로로 먼저 가고, 그다음 세로로 움직여요.\n\n축이 평면을 넷으로 가르는데 이것을 사분면이라고 해요. 오른쪽 위부터 시계 반대 방향으로 제$1$사분면, 제$2$, 제$3$, 제$4$사분면이에요. 부호로 가릴 수 있어요. 둘 다 양수면 제$1$사분면, 둘 다 음수면 제$3$사분면이에요.\n\n축 위의 점은 어느 사분면에도 속하지 않아요. 경계는 어느 쪽도 아니거든요.",
+                "definitions": [
+                  {
+                    "conceptKey": "coordinate-plane",
+                    "surface": "좌표평면",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "coordinate-plane:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "가로로 먼저 가고 세로로 올라가 점 하나를 찾아가는 그림",
+                "caption": "가로 먼저, 세로 나중. 순서가 정해져 있어요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 24,
+                    "y1": 140,
+                    "x2": 296,
+                    "y2": 140,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 88,
+                    "y1": 26,
+                    "x2": 88,
+                    "y2": 190,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 120,
+                    "y1": 136,
+                    "x2": 120,
+                    "y2": 144,
+                    "stroke": "ink",
+                    "strokeWidth": 1.1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 152,
+                    "y1": 136,
+                    "x2": 152,
+                    "y2": 144,
+                    "stroke": "ink",
+                    "strokeWidth": 1.1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 184,
+                    "y1": 136,
+                    "x2": 184,
+                    "y2": 144,
+                    "stroke": "ink",
+                    "strokeWidth": 1.1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 88,
+                    "y1": 108,
+                    "x2": 84,
+                    "y2": 108,
+                    "stroke": "ink",
+                    "strokeWidth": 1.1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 88,
+                    "y1": 76,
+                    "x2": 84,
+                    "y2": 76,
+                    "stroke": "ink",
+                    "strokeWidth": 1.1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 184,
+                    "y": 156,
+                    "text": "$3$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 76,
+                    "y": 78,
+                    "text": "$2$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 78,
+                    "y": 154,
+                    "text": "$0$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 88,
+                    "y1": 140,
+                    "x2": 184,
+                    "y2": 140,
+                    "stroke": "green",
+                    "strokeWidth": 3,
+                    "id": "across",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 184,
+                    "y1": 140,
+                    "x2": 184,
+                    "y2": 76,
+                    "stroke": "green",
+                    "strokeWidth": 3,
+                    "id": "up",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 184,
+                    "cy": 76,
+                    "rx": 6,
+                    "ry": 6,
+                    "fill": "orange",
+                    "id": "pt",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 214,
+                    "y": 68,
+                    "text": "$(3, 2)$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "lab",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 20,
+                    "text": "점 하나를 어떻게 가리킬까요",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "좌표평면은 가로선과 세로선이 만나 이루는 바닥이에요.",
+                    "changes": [
+                      {
+                        "id": "across",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "up",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "pt",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lab",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "원점에서 가로로 먼저 가요. 오른쪽으로 $3$칸이요.",
+                    "changes": [
+                      {
+                        "id": "across",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "up",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "pt",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lab",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "그다음 세로로 올라가요. 위로 $2$칸. 그 자리를 $(3, 2)$라고 적어요.",
+                    "changes": [
+                      {
+                        "id": "across",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "up",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "pt",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lab",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "coordinate-plane:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "coordinate-plane:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "점 $(-2, 3)$이 어느 사분면에 있는지 알아볼게요.\n\n가로 좌표가 $-2$로 음수이니 원점에서 왼쪽이에요.\n\n세로 좌표가 $3$으로 양수이니 위쪽이고요.\n\n왼쪽 위, 곧 제$2$사분면이에요.\n\n부호만 보면 바로 알 수 있어요. 제$1$사분면은 $(+, +)$, 제$2$는 $(-, +)$, 제$3$은 $(-, -)$, 제$4$는 $(+, -)$예요.\n\n$(0, 5)$는 어떨까요. 가로로 움직이지 않았으니 $y$축 위에 있어요. 축 위의 점은 사분면에 속하지 않아요.\n\n$(4, -1)$과 $(-1, 4)$도 견줘 볼게요. 숫자는 같지만 앞뒤가 다르니 한쪽은 제$4$사분면, 다른 쪽은 제$2$사분면이에요. 순서쌍에서 순서가 왜 중요한지 보여 주는 예예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "coordinate-plane:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "coordinate-plane:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "coordinate-plane:practice",
+                "problemSetVersionId": "coordinate-plane:practice:v1",
+                "problemVersionIds": [
+                  "coordinate-plane:practice-1:v1",
+                  "coordinate-plane:practice-2:v1",
+                  "coordinate-plane:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "coordinate-plane:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "coordinate-plane:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "coordinate-plane:check",
+                "problemSetVersionId": "coordinate-plane:check:v1",
+                "problemVersionIds": [
+                  "coordinate-plane:check-1:v1",
+                  "coordinate-plane:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "coordinate-plane:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "coordinate-plane:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "수직선 두 개를 직각으로 겹쳐 놓은 것이 좌표평면이에요. 가로가 $x$축, 세로가 $y$축이에요.\n\n자리는 $(가로, 세로)$ 순서로 적고, 순서를 바꾸면 다른 자리가 돼요.\n\n축이 평면을 넷으로 가르고, 좌표의 부호로 어느 사분면인지 알 수 있어요.\n\n축 위의 점은 어느 사분면에도 속하지 않아요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "coordinate-plane:review",
+        "problemSetVersionId": "coordinate-plane:review:v1",
+        "problemVersionIds": [
+          "coordinate-plane:homework-1:v1",
+          "coordinate-plane:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "direct-proportion",
+        "versionId": "direct-proportion:v1",
+        "title": "정비례: 같은 비로 함께 커진다",
+        "summary": "한쪽이 두 배가 되면 다른 쪽도 두 배가 되는 관계를 식과 그래프로 봐요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "direct-proportion"
+        ],
+        "prerequisiteConceptKeys": [
+          "coordinate-plane",
+          "ratio",
+          "rate"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "direct-proportion:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "direct-proportion:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "한 자루에 $2$천 원인 연필을 사요. 한 자루면 $2$천 원, 두 자루면 $4$천 원, 세 자루면 $6$천 원이에요.\n\n자루 수가 두 배가 되면 값도 두 배가 돼요. 세 배가 되면 값도 세 배고요. 이렇게 한쪽이 몇 배가 될 때 다른 쪽도 같은 배로 커지는 관계를 정비례라고 해요.\n\n식으로 적으면 $y = 2x$예요. 일반적으로 $y = ax$ 꼴이고, 이 $a$를 비례상수라고 불러요.\n\n다르게 보는 법도 있어요. $\\dfrac{y}{x}$가 늘 같아요. $\\dfrac{2}{1} = \\dfrac{4}{2} = \\dfrac{6}{3} = 2$죠. 몫이 일정하다는 것이 정비례의 다른 얼굴이에요.\n\n그래프로 그리면 특징이 뚜렷해요. 점을 찍어 이으면 원점을 지나는 곧은 직선이 돼요.\n\n원점을 지나는 이유는 분명해요. 연필을 $0$자루 사면 $0$원이니까요. $x$가 $0$이면 $y$도 $0$이에요.\n\n비례상수가 음수이면 오른쪽으로 갈수록 내려가는 직선이 돼요. 그래도 원점을 지나는 것은 같아요. 중학교 2학년에서 배울 일차함수는 이 직선을 위아래로 옮긴 것이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "direct-proportion",
+                    "surface": "정비례",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "direct-proportion:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "한 칸 갈 때마다 같은 높이만큼 올라가는 점들이 원점을 지나는 직선이 되는 그림",
+                "caption": "같은 비로 함께 커지면 원점을 지나는 직선이에요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 40,
+                    "y1": 160,
+                    "x2": 288,
+                    "y2": 160,
+                    "stroke": "ink",
+                    "strokeWidth": 1.3,
+                    "arrow": "end"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 64,
+                    "y1": 30,
+                    "x2": 64,
+                    "y2": 184,
+                    "stroke": "ink",
+                    "strokeWidth": 1.3,
+                    "arrow": "end"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 64,
+                    "cy": 160,
+                    "rx": 4,
+                    "ry": 4,
+                    "fill": "muted",
+                    "id": "o"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 112,
+                    "cy": 130,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "id": "p1"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160,
+                    "cy": 100,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "id": "p2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 208,
+                    "cy": 70,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "id": "p3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 256,
+                    "cy": 40,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "id": "p4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "path",
+                    "d": "M64 160 L268 32",
+                    "fill": "none",
+                    "stroke": "green",
+                    "strokeWidth": 2,
+                    "id": "ray",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 112,
+                    "y": 176,
+                    "text": "$1$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 176,
+                    "text": "$2$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 208,
+                    "y": 176,
+                    "text": "$3$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 256,
+                    "y": 176,
+                    "text": "$4$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 22,
+                    "text": "$y = 2x$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 232,
+                    "y": 118,
+                    "text": "한 칸마다 같은 만큼",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "note",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$x$가 $1$일 때 $y$가 $2$예요. 점 하나를 찍었어요.",
+                    "changes": [
+                      {
+                        "id": "p2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "p3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "p4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ray",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "한 칸 갈 때마다 같은 높이씩 올라가요.",
+                    "changes": [
+                      {
+                        "id": "p2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "p3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "p4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ray",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "이어 보면 원점을 지나는 곧은 직선이에요.",
+                    "changes": [
+                      {
+                        "id": "p2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "p3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "p4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ray",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "direct-proportion:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "direct-proportion:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$y$가 $x$에 정비례하고 $x = 3$일 때 $y = 12$라고 해요. 식을 구해 볼게요.\n\n정비례이니 $y = ax$ 꼴이에요. 여기에 아는 값을 넣어요.\n\n$12 = a \\times 3$에서 $a = 4$예요. 그러니 $y = 4x$예요.\n\n이제 $x = 7$일 때의 $y$도 구할 수 있어요. $y = 4 \\times 7 = 28$이에요.\n\n비례상수는 $\\dfrac{y}{x}$로 바로 구할 수도 있어요. $\\dfrac{12}{3} = 4$죠. 어느 쪽이든 같아요.\n\n반대로 $y = 24$일 때의 $x$도 구해 볼게요. $24 = 4x$에서 $x = 6$이에요.\n\n식 하나를 손에 넣으면 어느 쪽을 물어도 답할 수 있어요. 그것이 관계를 식으로 적는 이유예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "direct-proportion:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "direct-proportion:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "direct-proportion:practice",
+                "problemSetVersionId": "direct-proportion:practice:v1",
+                "problemVersionIds": [
+                  "direct-proportion:practice-1:v1",
+                  "direct-proportion:practice-2:v1",
+                  "direct-proportion:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "direct-proportion:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "direct-proportion:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "direct-proportion:check",
+                "problemSetVersionId": "direct-proportion:check:v1",
+                "problemVersionIds": [
+                  "direct-proportion:check-1:v1",
+                  "direct-proportion:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "direct-proportion:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "direct-proportion:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "한쪽이 몇 배가 될 때 다른 쪽도 같은 배로 커지면 정비례예요.\n\n식은 $y = ax$이고 $a$가 비례상수예요. $\\dfrac{y}{x}$가 늘 $a$로 일정해요.\n\n그래프는 원점을 지나는 직선이에요. $x$가 $0$이면 $y$도 $0$이니까요.\n\n값 하나를 알면 비례상수를 구할 수 있고, 그러면 어느 쪽이든 답할 수 있어요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "direct-proportion:review",
+        "problemSetVersionId": "direct-proportion:review:v1",
+        "problemVersionIds": [
+          "direct-proportion:homework-1:v1",
+          "direct-proportion:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "inverse-proportion",
+        "versionId": "inverse-proportion:v1",
+        "title": "반비례: 한쪽이 커지면 다른 쪽이 작아진다",
+        "summary": "곱이 늘 같은 관계를 만나고, 직선이 아닌 곡선 그래프를 처음 봐요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "inverse-proportion"
+        ],
+        "prerequisiteConceptKeys": [
+          "direct-proportion",
+          "coordinate-plane",
+          "rate"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "inverse-proportion:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "inverse-proportion:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "넓이가 $12$인 직사각형을 여러 개 만들어 볼게요. 가로가 $2$면 세로는 $6$, 가로가 $3$이면 세로는 $4$, 가로가 $4$면 세로는 $3$이에요.\n\n가로가 커질수록 세로가 작아져요. 넓이를 지켜야 하니까요. 이렇게 한쪽이 몇 배가 될 때 다른 쪽이 그만큼 나뉘는 관계를 반비례라고 해요.\n\n정비례에서는 몫이 일정했는데 반비례에서는 곱이 일정해요. $2 \\times 6 = 3 \\times 4 = 4 \\times 3 = 12$죠.\n\n식으로 적으면 $xy = 12$, 또는 $y = \\dfrac{12}{x}$예요. 일반적으로 $y = \\dfrac{a}{x}$ 꼴이고 $a$가 비례상수예요.\n\n$x$가 $0$이 될 수 없다는 점이 중요해요. 가로가 $0$인 직사각형은 없고, $0$으로 나눌 수도 없으니까요.\n\n그래프를 그리면 직선이 아니에요. 두 갈래로 나뉜 곡선이 되고, 축에 한없이 가까워지되 닿지는 않아요. 가로를 아무리 늘려도 세로가 $0$이 되지는 않거든요. 넓이가 $0$이 되어 버리니까요.\n\n고등학교에서 배울 유리함수가 바로 이 곡선이에요. 여기서 처음 만나는 셈이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "inverse-proportion",
+                    "surface": "반비례",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "inverse-proportion:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "넓이가 같은 직사각형이 가로로 길어질수록 세로가 낮아지는 그림",
+                "caption": "곱이 같으면 한쪽이 커질 때 다른 쪽은 작아져요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 26,
+                    "text": "넓이가 늘 $12$인 직사각형",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 48,
+                    "y": 64,
+                    "width": 40,
+                    "height": 96,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "r1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 68,
+                    "y": 116,
+                    "text": "$2$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "t1"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 104,
+                    "y": 112,
+                    "width": 60,
+                    "height": 48,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "r2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 134,
+                    "y": 140,
+                    "text": "$4$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "t2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 180,
+                    "y": 136,
+                    "width": 120,
+                    "height": 24,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "r3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 240,
+                    "y": 152,
+                    "text": "$6$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "t3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 68,
+                    "y": 54,
+                    "text": "세로 $6$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 134,
+                    "y": 100,
+                    "text": "세로 $3$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "s2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 240,
+                    "y": 124,
+                    "text": "세로 $2$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "s3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 182,
+                    "text": "$x \\times y = 12$, 곧 $y = \\dfrac{12}{x}$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "law",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "가로 $2$, 세로 $6$인 직사각형이에요. 넓이는 $12$고요.",
+                    "changes": [
+                      {
+                        "id": "r2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "t2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "r3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "t3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "가로를 늘리면 넓이를 지키려고 세로가 낮아져요.",
+                    "changes": [
+                      {
+                        "id": "r2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "r3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "t3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "더 늘리면 더 낮아져요. 곱이 늘 같은 것이 반비례예요.",
+                    "changes": [
+                      {
+                        "id": "r2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "r3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "inverse-proportion:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "inverse-proportion:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$y$가 $x$에 반비례하고 $x = 4$일 때 $y = 9$라고 해요. 식을 구해 볼게요.\n\n반비례이니 곱이 일정해요. $4 \\times 9 = 36$이 비례상수예요.\n\n식은 $y = \\dfrac{36}{x}$예요.\n\n$x = 6$일 때는 $y = \\dfrac{36}{6} = 6$이에요. $x$가 $1.5$배가 되니 $y$는 $1.5$로 나뉘었네요.\n\n$y = 12$일 때의 $x$도 구해 볼게요. $12 = \\dfrac{36}{x}$에서 $12x = 36$, 곧 $x = 3$이에요.\n\n생활에서도 자주 보여요. 같은 거리를 갈 때 속력과 걸리는 시간, 같은 일을 할 때 사람 수와 걸리는 날수가 그래요.\n\n$12$명이 $5$일 걸리는 일을 $15$명이 하면 며칠 걸릴까요. 곱이 $60$으로 일정하니 $60 \\div 15 = 4$일이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "inverse-proportion:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "inverse-proportion:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "inverse-proportion:practice",
+                "problemSetVersionId": "inverse-proportion:practice:v1",
+                "problemVersionIds": [
+                  "inverse-proportion:practice-1:v1",
+                  "inverse-proportion:practice-2:v1",
+                  "inverse-proportion:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "inverse-proportion:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "inverse-proportion:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "inverse-proportion:check",
+                "problemSetVersionId": "inverse-proportion:check:v1",
+                "problemVersionIds": [
+                  "inverse-proportion:check-1:v1",
+                  "inverse-proportion:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "inverse-proportion:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "inverse-proportion:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "한쪽이 몇 배가 될 때 다른 쪽이 그만큼 나뉘면 반비례예요. 곱이 늘 같아요.\n\n식은 $y = \\dfrac{a}{x}$이고 $a$가 비례상수예요. $x$는 $0$이 될 수 없어요.\n\n그래프는 직선이 아니라 두 갈래로 나뉜 곡선이고, 축에 가까워지되 닿지 않아요.\n\n정비례는 몫이, 반비례는 곱이 일정하다고 기억하면 갈리지 않아요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "inverse-proportion:review",
+        "problemSetVersionId": "inverse-proportion:review:v1",
+        "problemVersionIds": [
+          "inverse-proportion:homework-1:v1",
+          "inverse-proportion:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "coordinate-plane:practice",
+      "courseKey": "coordinate-plane",
+      "name": "좌표평면 연습",
+      "versionId": "coordinate-plane:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "coordinate-plane:practice-1:v1",
+          "conceptKeys": [
+            "coordinate-plane"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(3, 2)$는 제몇 사분면에 있나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘 다 양수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:practice-2:v1",
+          "conceptKeys": [
+            "coordinate-plane"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(-2, 3)$은 제몇 사분면에 있나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "왼쪽 위예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:practice-3:v1",
+          "conceptKeys": [
+            "coordinate-plane"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(4, -1)$은 제몇 사분면에 있나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "오른쪽 아래예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "coordinate-plane:check",
+      "courseKey": "coordinate-plane",
+      "name": "좌표평면 확인",
+      "versionId": "coordinate-plane:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "coordinate-plane:check-1:v1",
+          "conceptKeys": [
+            "coordinate-plane"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(-5, -2)$는 제몇 사분면에 있나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘 다 음수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:check-2:v1",
+          "conceptKeys": [
+            "coordinate-plane"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(0, 5)$에 대한 설명으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$y$축 위에 있고 사분면에 속하지 않는다"
+              },
+              {
+                "id": "b",
+                "text": "제$1$사분면에 있다"
+              },
+              {
+                "id": "c",
+                "text": "$x$축 위에 있다"
+              },
+              {
+                "id": "d",
+                "text": "원점이다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$y$축 위에 있고 사분면에 속하지 않는다"
+              },
+              {
+                "id": "b",
+                "text": "제$1$사분면에 있다"
+              },
+              {
+                "id": "c",
+                "text": "$x$축 위에 있다"
+              },
+              {
+                "id": "d",
+                "text": "원점이다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로로 움직이지 않았어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "coordinate-plane:review",
+      "courseKey": "coordinate-plane",
+      "name": "좌표평면 복습",
+      "versionId": "coordinate-plane:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "coordinate-plane:homework-1:v1",
+          "conceptKeys": [
+            "coordinate-plane"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(-1, 4)$는 제몇 사분면에 있나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "왼쪽 위예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:homework-2:v1",
+          "conceptKeys": [
+            "coordinate-plane"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(3,2)$와 $(2,3)$에 대한 설명으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "서로 다른 자리다"
+              },
+              {
+                "id": "b",
+                "text": "같은 자리다"
+              },
+              {
+                "id": "c",
+                "text": "둘 다 원점이다"
+              },
+              {
+                "id": "d",
+                "text": "둘 다 축 위에 있다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "서로 다른 자리다"
+              },
+              {
+                "id": "b",
+                "text": "같은 자리다"
+              },
+              {
+                "id": "c",
+                "text": "둘 다 원점이다"
+              },
+              {
+                "id": "d",
+                "text": "둘 다 축 위에 있다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "앞이 가로, 뒤가 세로예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "direct-proportion:practice",
+      "courseKey": "coordinate-plane",
+      "name": "정비례 연습",
+      "versionId": "direct-proportion:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "direct-proportion:practice-1:v1",
+          "conceptKeys": [
+            "direct-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "direct-proportion:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$가 $x$에 정비례하고 $x = 3$일 때 $y = 12$입니다. 비례상수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "direct-proportion:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\dfrac{12}{3}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "direct-proportion:practice-2:v1",
+          "conceptKeys": [
+            "direct-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "direct-proportion:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 4x$에서 $x = 7$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 28
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "direct-proportion:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4 \\times 7$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "direct-proportion:practice-3:v1",
+          "conceptKeys": [
+            "direct-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "direct-proportion:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 4x$에서 $y = 24$일 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "direct-proportion:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4x = 24$를 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "direct-proportion:check",
+      "courseKey": "coordinate-plane",
+      "name": "정비례 확인",
+      "versionId": "direct-proportion:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "direct-proportion:check-1:v1",
+          "conceptKeys": [
+            "direct-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "direct-proportion:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$가 $x$에 정비례하고 $x = 5$일 때 $y = 35$입니다. $x = 2$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 14
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "direct-proportion:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비례상수는 $7$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "direct-proportion:check-2:v1",
+          "conceptKeys": [
+            "direct-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "direct-proportion:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정비례 관계의 그래프에 대한 설명으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원점을 지나는 직선"
+              },
+              {
+                "id": "b",
+                "text": "원점을 지나지 않는 직선"
+              },
+              {
+                "id": "c",
+                "text": "포물선"
+              },
+              {
+                "id": "d",
+                "text": "두 갈래로 나뉜 곡선"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원점을 지나는 직선"
+              },
+              {
+                "id": "b",
+                "text": "원점을 지나지 않는 직선"
+              },
+              {
+                "id": "c",
+                "text": "포물선"
+              },
+              {
+                "id": "d",
+                "text": "두 갈래로 나뉜 곡선"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "direct-proportion:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$가 $0$이면 $y$도 $0$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "direct-proportion:review",
+      "courseKey": "coordinate-plane",
+      "name": "정비례 복습",
+      "versionId": "direct-proportion:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "direct-proportion:homework-1:v1",
+          "conceptKeys": [
+            "direct-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "direct-proportion:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = -3x$에서 $x = 4$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "direct-proportion:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비례상수가 음수여도 계산은 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "direct-proportion:homework-2:v1",
+          "conceptKeys": [
+            "direct-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "direct-proportion:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$가 $x$에 정비례하고 $x = 2$일 때 $y = 10$입니다. $y = 45$일 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "direct-proportion:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비례상수는 $5$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "inverse-proportion:practice",
+      "courseKey": "coordinate-plane",
+      "name": "반비례 연습",
+      "versionId": "inverse-proportion:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "inverse-proportion:practice-1:v1",
+          "conceptKeys": [
+            "inverse-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inverse-proportion:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$가 $x$에 반비례하고 $x = 4$일 때 $y = 9$입니다. 비례상수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 36
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inverse-proportion:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "곱이 비례상수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inverse-proportion:practice-2:v1",
+          "conceptKeys": [
+            "inverse-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inverse-proportion:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{36}{x}$에서 $x = 6$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inverse-proportion:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$36 \\div 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inverse-proportion:practice-3:v1",
+          "conceptKeys": [
+            "inverse-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inverse-proportion:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{36}{x}$에서 $y = 12$일 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inverse-proportion:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$12x = 36$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "inverse-proportion:check",
+      "courseKey": "coordinate-plane",
+      "name": "반비례 확인",
+      "versionId": "inverse-proportion:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "inverse-proportion:check-1:v1",
+          "conceptKeys": [
+            "inverse-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inverse-proportion:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$12$명이 $5$일 걸리는 일을 $15$명이 하면 며칠 걸리나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inverse-proportion:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "사람 수와 날수의 곱이 일정해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inverse-proportion:check-2:v1",
+          "conceptKeys": [
+            "inverse-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inverse-proportion:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반비례 관계에서 일정한 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 수의 곱"
+              },
+              {
+                "id": "b",
+                "text": "두 수의 몫"
+              },
+              {
+                "id": "c",
+                "text": "두 수의 합"
+              },
+              {
+                "id": "d",
+                "text": "두 수의 차"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 수의 곱"
+              },
+              {
+                "id": "b",
+                "text": "두 수의 몫"
+              },
+              {
+                "id": "c",
+                "text": "두 수의 합"
+              },
+              {
+                "id": "d",
+                "text": "두 수의 차"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inverse-proportion:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정비례는 몫, 반비례는 곱이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "inverse-proportion:review",
+      "courseKey": "coordinate-plane",
+      "name": "반비례 복습",
+      "versionId": "inverse-proportion:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "inverse-proportion:homework-1:v1",
+          "conceptKeys": [
+            "inverse-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inverse-proportion:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$가 $x$에 반비례하고 $x = 2$일 때 $y = 10$입니다. $x = 5$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inverse-proportion:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비례상수는 $20$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inverse-proportion:homework-2:v1",
+          "conceptKeys": [
+            "inverse-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inverse-proportion:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{a}{x}$에서 $x$가 될 수 없는 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inverse-proportion:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0$으로는 나눌 수 없어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "coordinate-plane:drill",
+      "courseKey": "coordinate-plane",
+      "name": "좌표평면과 그래프 모아 풀기",
+      "versionId": "coordinate-plane:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "coordinate-plane:drill-1:v1",
+          "conceptKeys": [
+            "coordinate-plane"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(5, 1)$은 제몇 사분면에 있나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘 다 양수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-2:v1",
+          "conceptKeys": [
+            "coordinate-plane"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(-3, 7)$은 제몇 사분면에 있나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "왼쪽 위예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-3:v1",
+          "conceptKeys": [
+            "coordinate-plane"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(-4, -6)$은 제몇 사분면에 있나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘 다 음수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-4:v1",
+          "conceptKeys": [
+            "coordinate-plane"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(8, -2)$는 제몇 사분면에 있나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "오른쪽 아래예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-5:v1",
+          "conceptKeys": [
+            "coordinate-plane"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(0, 0)$을 부르는 이름은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원점"
+              },
+              {
+                "id": "b",
+                "text": "제$1$사분면"
+              },
+              {
+                "id": "c",
+                "text": "$x$절편"
+              },
+              {
+                "id": "d",
+                "text": "꼭짓점"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원점"
+              },
+              {
+                "id": "b",
+                "text": "제$1$사분면"
+              },
+              {
+                "id": "c",
+                "text": "$x$절편"
+              },
+              {
+                "id": "d",
+                "text": "꼭짓점"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 축이 만나는 자리예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-6:v1",
+          "conceptKeys": [
+            "coordinate-plane"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$축 위의 점에 대한 설명으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$y$좌표가 $0$이다"
+              },
+              {
+                "id": "b",
+                "text": "$x$좌표가 $0$이다"
+              },
+              {
+                "id": "c",
+                "text": "제$1$사분면에 있다"
+              },
+              {
+                "id": "d",
+                "text": "원점이다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$y$좌표가 $0$이다"
+              },
+              {
+                "id": "b",
+                "text": "$x$좌표가 $0$이다"
+              },
+              {
+                "id": "c",
+                "text": "제$1$사분면에 있다"
+              },
+              {
+                "id": "d",
+                "text": "원점이다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세로로 움직이지 않았어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-7:v1",
+          "conceptKeys": [
+            "coordinate-plane"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(-7, 0)$은 어느 축 위에 있나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x$축"
+              },
+              {
+                "id": "b",
+                "text": "$y$축"
+              },
+              {
+                "id": "c",
+                "text": "둘 다"
+              },
+              {
+                "id": "d",
+                "text": "어느 축도 아니다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x$축"
+              },
+              {
+                "id": "b",
+                "text": "$y$축"
+              },
+              {
+                "id": "c",
+                "text": "둘 다"
+              },
+              {
+                "id": "d",
+                "text": "어느 축도 아니다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$좌표가 $0$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-8:v1",
+          "conceptKeys": [
+            "direct-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 5x$에서 $x = 6$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5 \\times 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-9:v1",
+          "conceptKeys": [
+            "direct-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$가 $x$에 정비례하고 $x = 2$일 때 $y = 14$입니다. 비례상수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\dfrac{14}{2}$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-10:v1",
+          "conceptKeys": [
+            "direct-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 3x$에서 $y = 27$일 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x = 27$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-11:v1",
+          "conceptKeys": [
+            "direct-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = -2x$에서 $x = 5$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비례상수가 음수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-12:v1",
+          "conceptKeys": [
+            "direct-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정비례 관계에서 일정한 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 수의 몫"
+              },
+              {
+                "id": "b",
+                "text": "두 수의 곱"
+              },
+              {
+                "id": "c",
+                "text": "두 수의 합"
+              },
+              {
+                "id": "d",
+                "text": "두 수의 차"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 수의 몫"
+              },
+              {
+                "id": "b",
+                "text": "두 수의 곱"
+              },
+              {
+                "id": "c",
+                "text": "두 수의 합"
+              },
+              {
+                "id": "d",
+                "text": "두 수의 차"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\dfrac{y}{x}$가 비례상수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-13:v1",
+          "conceptKeys": [
+            "direct-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$가 $x$에 정비례하고 $x = 4$일 때 $y = 20$입니다. $x = 9$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 45
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비례상수는 $5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-14:v1",
+          "conceptKeys": [
+            "direct-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정비례 그래프가 반드시 지나는 점은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원점"
+              },
+              {
+                "id": "b",
+                "text": "$(1,1)$"
+              },
+              {
+                "id": "c",
+                "text": "$(0,1)$"
+              },
+              {
+                "id": "d",
+                "text": "$(1,0)$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원점"
+              },
+              {
+                "id": "b",
+                "text": "$(1,1)$"
+              },
+              {
+                "id": "c",
+                "text": "$(0,1)$"
+              },
+              {
+                "id": "d",
+                "text": "$(1,0)$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$가 $0$이면 $y$도 $0$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-15:v1",
+          "conceptKeys": [
+            "inverse-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{24}{x}$에서 $x = 4$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$24 \\div 4$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-16:v1",
+          "conceptKeys": [
+            "inverse-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$가 $x$에 반비례하고 $x = 3$일 때 $y = 8$입니다. 비례상수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 24
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "곱이 비례상수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-17:v1",
+          "conceptKeys": [
+            "inverse-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{30}{x}$에서 $y = 5$일 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5x = 30$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-18:v1",
+          "conceptKeys": [
+            "inverse-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$20$명이 $6$일 걸리는 일을 $24$명이 하면 며칠 걸리나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "곱이 $120$으로 일정해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-19:v1",
+          "conceptKeys": [
+            "inverse-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반비례 그래프의 모양으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 갈래로 나뉜 곡선"
+              },
+              {
+                "id": "b",
+                "text": "원점을 지나는 직선"
+              },
+              {
+                "id": "c",
+                "text": "포물선"
+              },
+              {
+                "id": "d",
+                "text": "원"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 갈래로 나뉜 곡선"
+              },
+              {
+                "id": "b",
+                "text": "원점을 지나는 직선"
+              },
+              {
+                "id": "c",
+                "text": "포물선"
+              },
+              {
+                "id": "d",
+                "text": "원"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "축에 가까워지되 닿지 않아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-plane:drill-20:v1",
+          "conceptKeys": [
+            "inverse-proportion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-plane:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$가 $x$에 반비례하고 $x = 5$일 때 $y = 6$입니다. $x = 10$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-plane:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비례상수는 $30$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}
