@@ -7,7 +7,7 @@ import { problemSetRefs, storedLessonOf, validateLesson, validateProblemSet, typ
 import { gradeAnswer } from '@/core/grading';
 import { frozenProblemSet, lessonRecord, importContent, problemSetRecords, lessonRecords, publishedProblemRecords, definitionRecords, currentDefinitions } from './content-store';
 import { AppError } from './errors';
-import type { AnswerSpec } from '@/shared/answer';
+import { choiceLimits, type AnswerSpec } from '@/shared/answer';
 import type { ContentBlock, LessonSection, ProblemSetRef } from '@/shared/api';
 import {
   lessonKeyPattern, mayEditEveryDraft, mayGrantRoles, mayPublish, newProblem, nextBlockId, nextProblemVersionId,
@@ -56,6 +56,10 @@ const problemEditSchema = z.object({
     z.object({ kind: z.literal('integer'), value: answerNumber }).strict(),
     z.object({ kind: z.literal('rational'), numerator: answerNumber, denominator: answerNumber,
       requiredForm: z.literal('reduced_fraction').optional() }).strict(),
+    // Structural only, like the rest of a draft: an unfinished set of options saves and refuses to publish.
+    z.object({ kind: z.literal('choice'),
+      options: z.array(z.object({ id: id.max(40), text: z.string().max(choiceLimits.maxText) }).strict()).max(choiceLimits.maxOptions),
+      correct: z.string().max(40) }).strict(),
   ]),
   hints: blockList,
   solution: blockList,

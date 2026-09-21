@@ -2,6 +2,8 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { parseContentBundle } from '@/core/content-bundle';
 import type { StoredLesson } from '@/core/content';
+import { gradeAnswer } from '@/core/grading';
+import { writtenAnswer } from './fixtures/content';
 
 /**
  * What the installed courses are made of. The renderer grew scenes that move and drawings a learner
@@ -96,6 +98,52 @@ describe('the installed courses', () => {
     }
   });
 
+  it('keeps a drawing\'s shapes apart and on the page in every scene it plays', () => {
+    // A frame that moves a tile too far, or not far enough, draws something the caption does not
+    // describe — tiles sitting on top of each other, or a gap where the words say「나란히 붙이면」.
+    // Three of these shipped before anyone played the scenes through on a phone.
+    const published = new Set(['signed-addition']);  // An arrow that enters from off the page, already published.
+    type Box = { id?: string; x: number; y: number; width: number; height: number };
+    for (const lesson of lessons) {
+      for (const block of scenes(lesson)) {
+        const items = block.payload.items as Record<string, number | string | boolean>[];
+        const width = Number(block.payload.width), height = Number(block.payload.height);
+        for (const [index, frame] of ((block.payload.frames ?? []) as { changes: Record<string, number | boolean>[] }[]).entries()) {
+          const changes = new Map(frame.changes.map((change) => [String(change.id), change]));
+          const shown = (item: typeof items[number]) => {
+            const change = changes.get(String(item.id));
+            if (change?.hidden || change?.opacity === 0) return false;
+            return change?.opacity !== undefined || item.opacity !== 0;
+          };
+          const boxes: Box[] = items.filter((item) => item.kind === 'rect' && shown(item)).map((item) => ({
+            id: String(item.id ?? ''), x: Number(item.x) + Number(changes.get(String(item.id))?.dx ?? 0),
+            y: Number(item.y) + Number(changes.get(String(item.id))?.dy ?? 0),
+            width: Number(item.width), height: Number(item.height),
+          }));
+          for (let a = 0; a < boxes.length; a += 1) for (let b = a + 1; b < boxes.length; b += 1) {
+            const [one, two] = [boxes[a], boxes[b]];
+            const hit = one.x < two.x + two.width && two.x < one.x + one.width && one.y < two.y + two.height && two.y < one.y + one.height;
+            expect(hit, `${lesson.public.lessonKey} 장면 ${index + 1}에서 ${one.id}와 ${two.id}가 겹친다`).toBe(false);
+          }
+          if (published.has(lesson.public.lessonKey)) continue;
+          for (const item of items) {
+            const change = changes.get(String(item.id));
+            for (const [key, shift] of [['x', 'dx'], ['x1', 'dx'], ['x2', 'dx'], ['cx', 'dx']] as const) {
+              if (typeof item[key] !== 'number') continue;
+              const at = item[key] + Number(change?.[shift] ?? 0);
+              expect(at >= -6 && at <= width + 6, `${lesson.public.lessonKey} 장면 ${index + 1}: ${item.id} ${key}=${at}`).toBe(true);
+            }
+            for (const [key, shift] of [['y', 'dy'], ['y1', 'dy'], ['y2', 'dy'], ['cy', 'dy']] as const) {
+              if (typeof item[key] !== 'number') continue;
+              const at = item[key] + Number(change?.[shift] ?? 0);
+              expect(at >= -6 && at <= height + 6, `${lesson.public.lessonKey} 장면 ${index + 1}: ${item.id} ${key}=${at}`).toBe(true);
+            }
+          }
+        }
+      }
+    }
+  });
+
   it('never asks a learner to arrange a drawing that is also moving on its own', () => {
     for (const block of arranged) {
       expect(block.payload.frames, block.blockId).toBeUndefined();
@@ -108,6 +156,53 @@ describe('the installed courses', () => {
     for (const lesson of lessons) {
       expect(lesson.public.summary, lesson.public.lessonKey).not.toMatch(/\$/);
       expect(lesson.public.title, lesson.public.lessonKey).not.toMatch(/\$/);
+    }
+  });
+
+  it('gives every course a big set of its own that no lesson shows', () => {
+    // Somebody who wants to solve rather than be taught picks one of these. It belongs to the
+    // course, not to a lesson, so nothing in the lessons has to change for it to exist.
+    for (const seed of seeds) {
+      for (const course of seed.bundle.courses) {
+        if (!course.lessons.length) continue;
+        const drill = seed.bundle.problemSets.find((set) => set.problemSetId === `${course.key}:drill`);
+        expect(drill, `${course.key}에 모아 푸는 문제집이 없다`).toBeDefined();
+        expect(drill!.problems.length, course.key).toBe(20);
+        expect(drill!.name, course.key).toBeTruthy();
+        // No step and no review pool names it, which is what makes it a set of its own.
+        const shown = (seed.bundle.lessons as StoredLesson[]).flatMap((lesson) =>
+          [...blocksOf(lesson).filter((block) => block.kind === 'core.problem_set').map((block) => String(block.payload.problemSetId)),
+            ...(lesson.review ? [lesson.review.problemSetId] : [])]);
+        expect(shown, course.key).not.toContain(drill!.problemSetId);
+        // It practises the course, so it asks about what the course teaches and nothing else.
+        const taught = new Set((seed.bundle.lessons as StoredLesson[]).flatMap((lesson) => lesson.public.conceptKeys));
+        const asked = new Set(drill!.problems.flatMap((problem) => problem.conceptKeys));
+        expect([...asked].filter((key) => !taught.has(key)), course.key).toEqual([]);
+        expect([...taught].filter((key) => !asked.has(key)), `${course.key}에서 묻지 않는 개념`).toEqual([]);
+      }
+    }
+  });
+
+  it('marks its own answer key correct on every question a course keeps', () => {
+    for (const seed of seeds) {
+      for (const set of seed.bundle.problemSets) {
+        for (const problem of set.problems) {
+          expect(gradeAnswer(writtenAnswer(problem), problem.gradingSpec).status, problem.problemVersionId).toBe('correct');
+        }
+      }
+    }
+  });
+
+  it('never sends the answer to a question that is answered by picking', () => {
+    const picked = seeds.flatMap((seed) => seed.bundle.problemSets).flatMap((set) => set.problems)
+      .filter((problem) => problem.gradingSpec.kind === 'choice');
+    expect(picked.length, '객관식 문항이 하나도 없다').toBeGreaterThan(20);
+    for (const problem of picked) {
+      const spec = problem.gradingSpec as { kind: 'choice'; options: { id: string; text: string }[]; correct: string };
+      // The learner's copy offers the same options and says nothing about which one is right.
+      expect(problem.responseSpec.options, problem.problemVersionId).toEqual(spec.options);
+      expect(JSON.stringify(problem.responseSpec), problem.problemVersionId).not.toContain('correct');
+      expect(gradeAnswer(spec.options.find((option) => option.id !== spec.correct)!.id, spec).status, problem.problemVersionId).toBe('incorrect');
     }
   });
 

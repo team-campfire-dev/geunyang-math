@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { gradeAnswer } from '@/core/grading';
-import { seedLessons } from './fixtures/content';
+import { seedLessons, writtenAnswer } from './fixtures/content';
 
 const half = { kind: 'rational' as const, numerator: 1, denominator: 2 };
 
@@ -75,11 +75,21 @@ describe('exact arithmetic grading', () => {
     expect(() => gradeAnswer('1', { kind: 'integer', value: 1.2 })).toThrow(/Invalid integer/);
   });
 
+  it('grades a picked answer by which option it names, not by what the option says', () => {
+    const options = [{ id: 'a', text: '$2x$' }, { id: 'b', text: '$2x$' }, { id: 'c', text: '$x^2$' }];
+    const spec = { kind: 'choice' as const, options, correct: 'b' };
+    // Two options read alike here on purpose: only the name decides, so the first is still wrong.
+    expect(gradeAnswer('b', spec).status).toBe('correct');
+    expect(gradeAnswer('a', spec).status).toBe('incorrect');
+    expect(gradeAnswer(' b ', spec).status, '앞뒤 공백').toBe('correct');
+    // Anything that is not an option is not an answer to this question at all.
+    for (const written of ['d', '', '2x', '1']) expect(gradeAnswer(written, spec).status, written).toBe('invalid');
+    expect(gradeAnswer('b', spec, true)).toMatchObject({ status: 'correct', assisted: true });
+  });
+
   it('can grade the canonical answer for every published sample question', () => {
     for (const record of seedLessons) for (const problem of record.problems) {
-      const spec = problem.gradingSpec;
-      const answer = spec.kind === 'integer' ? String(spec.value) : `${spec.numerator}/${spec.denominator}`;
-      expect(gradeAnswer(answer, spec).status, problem.problemVersionId).toBe('correct');
+      expect(gradeAnswer(writtenAnswer(problem), problem.gradingSpec).status, problem.problemVersionId).toBe('correct');
     }
   });
 });

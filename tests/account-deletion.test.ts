@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { getActivityProblemIds, type StoredProblem } from '@/core/content';
-import { lessonBundle, seedLessons } from './fixtures/content';
+import { lessonBundle, seedLessons, writtenAnswer } from './fixtures/content';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { importContent } from '@/server/content-store';
@@ -11,8 +11,7 @@ import { deleteAccount } from '@/server/account-service';
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
 const record = seedLessons[0];
 const problemById = (id: string) => record.problems.find((problem) => problem.problemVersionId === id)!;
-const fixtureAnswer = (problem: StoredProblem) => problem.gradingSpec.kind === 'integer'
-  ? String(problem.gradingSpec.value) : `${problem.gradingSpec.numerator}/${problem.gradingSpec.denominator}`;
+const fixtureAnswer = writtenAnswer;
 /** Column names come from the database's own catalogue, but a name still has to look like one. */
 const safeName = (value: string) => /^[A-Za-z0-9_]+$/.test(value);
 

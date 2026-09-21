@@ -1,6 +1,7 @@
 import initial from './fractions-v1.json';
 import { parseContentBundle, type ContentBundle } from '@/core/content-bundle';
 import { problemSetRefs, storedLessonOf, type LessonRecord, type StoredLesson, type StoredProblem, type StoredProblemSet } from '@/core/content';
+import type { AnswerSpec } from '@/shared/answer';
 
 // Historical v1 content: keeps compatibility and learning-policy tests stable as the live curriculum changes.
 // The production seed has separate contract tests in seed-content.test.ts.
@@ -45,6 +46,16 @@ export function lessonBundle(records: LessonRecord[], course: { key: string; tit
   return { schemaVersion: 1, concepts: [...bundle.concepts], diagnostics: [], definitions: [],
     courses: [{ key: course.key, title: course.title, lessons: records.map((record, index) => ({ key: record.public.lessonKey, order: 1000 + index })), diagnostics: [] }],
     lessons: records.map(storedLessonOf), problemSets: records.flatMap((record) => setsOf(record, course.key)) };
+}
+/**
+ * The answer a question expects, written the way a learner gives it. Answers are fixture inputs;
+ * the grading suite verifies the arithmetic and the picking themselves.
+ */
+export function writtenAnswer(problem: { gradingSpec: AnswerSpec }): string {
+  const spec = problem.gradingSpec;
+  if (spec.kind === 'choice') return spec.correct;
+  if (spec.kind === 'integer') return String(spec.value);
+  return `${spec.numerator}/${spec.denominator}`;
 }
 export const seedProblemSets = deepFreeze(bundle.problemSets);
 export const seedLessons = deepFreeze(bundle.lessons.map((lesson) => assembleLesson(lesson, bundle.problemSets)));

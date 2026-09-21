@@ -107,8 +107,11 @@ export function editShape(edit: DraftEdit): string {
   return `${sections}#${problems}#${review}`;
 }
 
+/** The half of an answer a learner may see: how to answer, and for a picked answer what to pick from. */
 export const responseSpecOf = (spec: AnswerSpec): PublicProblem['responseSpec'] =>
-  (spec.kind === 'rational' && spec.requiredForm ? { kind: 'rational', requiredForm: spec.requiredForm } : { kind: spec.kind });
+  spec.kind === 'choice' ? { kind: 'choice', options: spec.options.map((option) => ({ ...option })) }
+  : spec.kind === 'rational' && spec.requiredForm ? { kind: 'rational', requiredForm: spec.requiredForm }
+  : { kind: spec.kind };
 /** The half of a question a learner may see. The preview reads questions the way the lesson will. */
 export const toPublicProblem = (problem: DraftProblem): PublicProblem => ({
   problemVersionId: problem.problemVersionId, conceptKeys: [...problem.conceptKeys],

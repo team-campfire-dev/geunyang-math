@@ -467,127 +467,127 @@
                 "items": [
                   {
                     "kind": "text",
-                    "x": 160,
-                    "y": 20,
+                    "x": 252,
+                    "y": 44,
                     "text": "$y = 2x - 1$",
-                    "size": 15,
+                    "size": 13,
                     "anchor": "middle",
                     "fill": "muted"
                   },
                   {
                     "kind": "line",
-                    "x1": 92,
-                    "y1": 112,
-                    "x2": 232,
-                    "y2": 112,
+                    "x1": 68,
+                    "y1": 108,
+                    "x2": 193,
+                    "y2": 108,
                     "stroke": "ink",
                     "strokeWidth": 1.3,
                     "arrow": "both"
                   },
                   {
                     "kind": "line",
-                    "x1": 150,
-                    "y1": 170,
-                    "x2": 150,
-                    "y2": 30,
-                    "stroke": "ink",
-                    "strokeWidth": 1.3,
-                    "arrow": "both"
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 102,
-                    "y1": 109,
-                    "x2": 102,
-                    "y2": 115,
-                    "stroke": "ink",
-                    "strokeWidth": 1
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 147,
+                    "x1": 120,
                     "y1": 160,
-                    "x2": 153,
-                    "y2": 160,
+                    "x2": 120,
+                    "y2": 35,
+                    "stroke": "ink",
+                    "strokeWidth": 1.3,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 78,
+                    "y1": 105,
+                    "x2": 78,
+                    "y2": 111,
                     "stroke": "ink",
                     "strokeWidth": 1
                   },
                   {
                     "kind": "line",
-                    "x1": 126,
-                    "y1": 109,
-                    "x2": 126,
-                    "y2": 115,
+                    "x1": 117,
+                    "y1": 150,
+                    "x2": 123,
+                    "y2": 150,
                     "stroke": "ink",
                     "strokeWidth": 1
                   },
                   {
                     "kind": "line",
-                    "x1": 147,
-                    "y1": 136,
-                    "x2": 153,
-                    "y2": 136,
+                    "x1": 99,
+                    "y1": 105,
+                    "x2": 99,
+                    "y2": 111,
                     "stroke": "ink",
                     "strokeWidth": 1
                   },
                   {
                     "kind": "line",
-                    "x1": 174,
-                    "y1": 109,
-                    "x2": 174,
-                    "y2": 115,
+                    "x1": 117,
+                    "y1": 129,
+                    "x2": 123,
+                    "y2": 129,
                     "stroke": "ink",
                     "strokeWidth": 1
                   },
                   {
                     "kind": "line",
-                    "x1": 147,
-                    "y1": 88,
-                    "x2": 153,
-                    "y2": 88,
+                    "x1": 141,
+                    "y1": 105,
+                    "x2": 141,
+                    "y2": 111,
                     "stroke": "ink",
                     "strokeWidth": 1
                   },
                   {
                     "kind": "line",
-                    "x1": 198,
-                    "y1": 109,
-                    "x2": 198,
-                    "y2": 115,
+                    "x1": 117,
+                    "y1": 87,
+                    "x2": 123,
+                    "y2": 87,
                     "stroke": "ink",
                     "strokeWidth": 1
                   },
                   {
                     "kind": "line",
-                    "x1": 147,
-                    "y1": 64,
-                    "x2": 153,
-                    "y2": 64,
+                    "x1": 162,
+                    "y1": 105,
+                    "x2": 162,
+                    "y2": 111,
                     "stroke": "ink",
                     "strokeWidth": 1
                   },
                   {
                     "kind": "line",
-                    "x1": 222,
-                    "y1": 109,
-                    "x2": 222,
-                    "y2": 115,
+                    "x1": 117,
+                    "y1": 66,
+                    "x2": 123,
+                    "y2": 66,
                     "stroke": "ink",
                     "strokeWidth": 1
                   },
                   {
                     "kind": "line",
-                    "x1": 147,
-                    "y1": 40,
-                    "x2": 153,
-                    "y2": 40,
+                    "x1": 183,
+                    "y1": 105,
+                    "x2": 183,
+                    "y2": 111,
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 117,
+                    "y1": 45,
+                    "x2": 123,
+                    "y2": 45,
                     "stroke": "ink",
                     "strokeWidth": 1
                   },
                   {
                     "kind": "text",
-                    "x": 143,
-                    "y": 126,
+                    "x": 113,
+                    "y": 122,
                     "text": "0",
                     "size": 11,
                     "anchor": "middle",
@@ -595,8 +595,8 @@
                   },
                   {
                     "kind": "ellipse",
-                    "cx": 126,
-                    "cy": 184,
+                    "cx": 99,
+                    "cy": 171,
                     "rx": 5,
                     "ry": 5,
                     "fill": "green",
@@ -607,8 +607,8 @@
                   },
                   {
                     "kind": "ellipse",
-                    "cx": 150,
-                    "cy": 136,
+                    "cx": 120,
+                    "cy": 129,
                     "rx": 5,
                     "ry": 5,
                     "fill": "green",
@@ -619,8 +619,8 @@
                   },
                   {
                     "kind": "ellipse",
-                    "cx": 174,
-                    "cy": 88,
+                    "cx": 141,
+                    "cy": 87,
                     "rx": 5,
                     "ry": 5,
                     "fill": "green",
@@ -631,8 +631,8 @@
                   },
                   {
                     "kind": "ellipse",
-                    "cx": 198,
-                    "cy": 40,
+                    "cx": 162,
+                    "cy": 45,
                     "rx": 5,
                     "ry": 5,
                     "fill": "green",
@@ -643,10 +643,10 @@
                   },
                   {
                     "kind": "line",
-                    "x1": 122.4,
-                    "y1": 191.2,
-                    "x2": 205.2,
-                    "y2": 25.6,
+                    "x1": 94.8,
+                    "y1": 179.4,
+                    "x2": 167.25,
+                    "y2": 34.5,
                     "stroke": "green",
                     "strokeWidth": 2,
                     "id": "ln",
@@ -654,8 +654,8 @@
                   },
                   {
                     "kind": "text",
-                    "x": 258,
-                    "y": 168,
+                    "x": 200,
+                    "y": 122,
                     "text": "$x$",
                     "size": 12,
                     "anchor": "middle",
@@ -663,8 +663,8 @@
                   },
                   {
                     "kind": "text",
-                    "x": 164,
-                    "y": 28,
+                    "x": 130,
+                    "y": 42,
                     "text": "$y$",
                     "size": 12,
                     "anchor": "middle",
@@ -672,10 +672,10 @@
                   },
                   {
                     "kind": "text",
-                    "x": 160,
-                    "y": 186,
-                    "text": "점을 이으면 직선 하나가 나와요",
-                    "size": 12,
+                    "x": 252,
+                    "y": 78,
+                    "text": "이으면 직선 하나예요",
+                    "size": 11,
                     "anchor": "middle",
                     "fill": "muted",
                     "id": "note",
@@ -1116,7 +1116,7 @@
                   },
                   {
                     "kind": "text",
-                    "x": 114.5,
+                    "x": 136,
                     "y": 99,
                     "text": "오른쪽 $1$",
                     "size": 10,
@@ -1139,8 +1139,8 @@
                   {
                     "kind": "text",
                     "x": 160,
-                    "y": 182,
-                    "text": "기울기 $2$는 오른쪽 한 칸에 위로 두 칸이라는 뜻",
+                    "y": 190,
+                    "text": "기울기 $2$는 오른쪽 한 칸에 위로 두 칸",
                     "size": 11,
                     "anchor": "middle",
                     "fill": "muted",
@@ -2171,6 +2171,865 @@
               "required": true,
               "payload": {
                 "text": "$3 = 2 \\times 1 + b$를 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "functions:drill",
+      "courseKey": "functions",
+      "name": "일차함수 모아 풀기",
+      "versionId": "functions:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "functions:drill-1:v1",
+          "conceptKeys": [
+            "function-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = 3x$일 때 $f(5)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$ 자리에 $5$를 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-2:v1",
+          "conceptKeys": [
+            "function-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = 2x - 7$일 때 $f(4)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 \\times 4 - 7$을 계산해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-3:v1",
+          "conceptKeys": [
+            "function-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = -3x + 2$일 때 $f(-1)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "음수는 괄호로 감싸 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-4:v1",
+          "conceptKeys": [
+            "function-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = \\frac{x}{4} + 2$일 때 $f(8)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$8$을 $4$로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-5:v1",
+          "conceptKeys": [
+            "function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = 6x$일 때 $f(x) = 30$이 되는 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6x = 30$을 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-6:v1",
+          "conceptKeys": [
+            "function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x - 7$일 때 $f(x) = 0$이 되는 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x - 7 = 0$을 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-7:v1",
+          "conceptKeys": [
+            "function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(3)$은 무엇을 뜻하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$f$와 $3$을 곱한 값"
+              },
+              {
+                "id": "b",
+                "text": "$3$을 넣었을 때 나오는 값"
+              },
+              {
+                "id": "c",
+                "text": "$f$를 $3$으로 나눈 값"
+              },
+              {
+                "id": "d",
+                "text": "$f$에 $3$을 더한 값"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$f$와 $3$을 곱한 값"
+              },
+              {
+                "id": "b",
+                "text": "$3$을 넣었을 때 나오는 값"
+              },
+              {
+                "id": "c",
+                "text": "$f$를 $3$으로 나눈 값"
+              },
+              {
+                "id": "d",
+                "text": "$f$에 $3$을 더한 값"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "곱셈이 아니에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-8:v1",
+          "conceptKeys": [
+            "function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 $y$가 $x$의 함수가 아닌 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$y = 2x$"
+              },
+              {
+                "id": "b",
+                "text": "$y = x + 1$"
+              },
+              {
+                "id": "c",
+                "text": "$x$가 $y$의 제곱인 관계"
+              },
+              {
+                "id": "d",
+                "text": "$y = -x$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$y = 2x$"
+              },
+              {
+                "id": "b",
+                "text": "$y = x + 1$"
+              },
+              {
+                "id": "c",
+                "text": "$x$가 $y$의 제곱인 관계"
+              },
+              {
+                "id": "d",
+                "text": "$y = -x$"
+              }
+            ],
+            "correct": "c"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "하나를 넣어 둘이 나오면 함수가 아니에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-9:v1",
+          "conceptKeys": [
+            "linear-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 4x - 3$에서 $x = 2$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4 \\times 2 - 3$을 계산해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-10:v1",
+          "conceptKeys": [
+            "linear-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = -3x + 12$의 그래프가 가로축과 만나는 점의 $x$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 0$으로 두고 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-11:v1",
+          "conceptKeys": [
+            "linear-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 5x + 1$에서 $y = 26$일 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5x + 1 = 26$을 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-12:v1",
+          "conceptKeys": [
+            "linear-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 2x - 1$의 그래프가 점 $(4, \\square)$를 지날 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x = 4$를 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-13:v1",
+          "conceptKeys": [
+            "linear-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 일차함수가 아닌 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$y = 3x + 1$"
+              },
+              {
+                "id": "b",
+                "text": "$y = -x$"
+              },
+              {
+                "id": "c",
+                "text": "$y = 5$"
+              },
+              {
+                "id": "d",
+                "text": "$y = \\frac{x}{2} - 4$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$y = 3x + 1$"
+              },
+              {
+                "id": "b",
+                "text": "$y = -x$"
+              },
+              {
+                "id": "c",
+                "text": "$y = 5$"
+              },
+              {
+                "id": "d",
+                "text": "$y = \\frac{x}{2} - 4$"
+              }
+            ],
+            "correct": "c"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "문자가 없으면 일차함수가 아니에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-14:v1",
+          "conceptKeys": [
+            "slope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = -6x + 5$의 기울기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$ 앞의 수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-15:v1",
+          "conceptKeys": [
+            "slope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(1, 4)$와 $(3, 10)$을 지나는 직선의 기울기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$의 변화량을 $x$의 변화량으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-16:v1",
+          "conceptKeys": [
+            "slope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(0, 7)$과 $(2, 1)$을 지나는 직선의 기울기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$가 줄었으니 음수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-17:v1",
+          "conceptKeys": [
+            "slope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "오른쪽으로 $4$만큼 갈 때 위로 $6$만큼 오르는 직선의 기울기를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "오른 만큼을 간 만큼으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-18:v1",
+          "conceptKeys": [
+            "intercept"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 8x - 5$의 $y$절편을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x = 0$을 넣어 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-19:v1",
+          "conceptKeys": [
+            "intercept"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 3x + 9$의 그래프가 가로축과 만나는 점의 $x$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 0$으로 두고 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "functions:drill-20:v1",
+          "conceptKeys": [
+            "intercept"
+          ],
+          "promptContent": [
+            {
+              "blockId": "functions:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기울기가 $3$이고 점 $(2, 10)$을 지나는 직선의 $y$절편을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "functions:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10 = 3 \\times 2 + b$를 풀어요."
               }
             }
           ],

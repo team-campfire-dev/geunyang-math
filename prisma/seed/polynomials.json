@@ -107,7 +107,7 @@
                   },
                   {
                     "kind": "rect",
-                    "x": 46,
+                    "x": 88,
                     "y": 56,
                     "width": 24,
                     "height": 30,
@@ -118,7 +118,7 @@
                   },
                   {
                     "kind": "text",
-                    "x": 58,
+                    "x": 100,
                     "y": 77,
                     "text": "$a$",
                     "size": 13,
@@ -128,7 +128,7 @@
                   },
                   {
                     "kind": "rect",
-                    "x": 76,
+                    "x": 118,
                     "y": 56,
                     "width": 24,
                     "height": 30,
@@ -139,7 +139,7 @@
                   },
                   {
                     "kind": "text",
-                    "x": 88,
+                    "x": 130,
                     "y": 77,
                     "text": "$a$",
                     "size": 13,
@@ -149,7 +149,7 @@
                   },
                   {
                     "kind": "text",
-                    "x": 73,
+                    "x": 115,
                     "y": 106,
                     "text": "두 번",
                     "size": 11,
@@ -263,31 +263,31 @@
                     "changes": [
                       {
                         "id": "r1",
-                        "dx": -42
+                        "dx": -30
                       },
                       {
                         "id": "r1t",
-                        "dx": -42
+                        "dx": -30
                       },
                       {
                         "id": "r2",
-                        "dx": -42
+                        "dx": -30
                       },
                       {
                         "id": "r2t",
-                        "dx": -42
+                        "dx": -30
                       },
                       {
                         "id": "r3",
-                        "dx": -42
+                        "dx": -30
                       },
                       {
                         "id": "r3t",
-                        "dx": -42
+                        "dx": -30
                       },
                       {
                         "id": "cr",
-                        "dx": -42
+                        "dx": -30
                       },
                       {
                         "id": "note",
@@ -300,31 +300,31 @@
                     "changes": [
                       {
                         "id": "r1",
-                        "dx": -42
+                        "dx": -30
                       },
                       {
                         "id": "r1t",
-                        "dx": -42
+                        "dx": -30
                       },
                       {
                         "id": "r2",
-                        "dx": -42
+                        "dx": -30
                       },
                       {
                         "id": "r2t",
-                        "dx": -42
+                        "dx": -30
                       },
                       {
                         "id": "r3",
-                        "dx": -42
+                        "dx": -30
                       },
                       {
                         "id": "r3t",
-                        "dx": -42
+                        "dx": -30
                       },
                       {
                         "id": "cr",
-                        "dx": -42,
+                        "dx": -30,
                         "opacity": 0
                       },
                       {
@@ -599,19 +599,23 @@
                     "changes": [
                       {
                         "id": "numv",
-                        "opacity": 0.25,
-                        "dx": 52,
-                        "dy": 42
+                        "opacity": 0
                       },
                       {
                         "id": "letv",
-                        "opacity": 0.25,
-                        "dx": -52,
-                        "dy": 42
+                        "opacity": 0
                       },
                       {
                         "id": "out",
                         "opacity": 1.0
+                      },
+                      {
+                        "id": "nums",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lets",
+                        "opacity": 0
                       }
                     ]
                   }
@@ -773,7 +777,7 @@
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "두 줄로 놓인 타일이 같은 모양끼리 모여 정리되는 그림",
+                "alt": "두 줄로 놓인 타일이 같은 모양끼리 한 줄로 모이는 그림",
                 "caption": "같은 항끼리만 더해진다",
                 "items": [
                   {
@@ -886,33 +890,13 @@
                   },
                   {
                     "kind": "text",
-                    "x": 147,
-                    "y": 138,
-                    "text": "$-1$",
-                    "size": 10,
-                    "anchor": "middle",
-                    "fill": "muted",
-                    "id": "d1t"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 160,
-                    "y": 170,
-                    "text": "$5x + 2$",
-                    "size": 18,
-                    "anchor": "middle",
-                    "fill": "ink",
-                    "id": "out",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
                     "x": 272,
                     "y": 61,
                     "text": "$2x+3$",
                     "size": 12,
                     "anchor": "middle",
-                    "fill": "muted"
+                    "fill": "muted",
+                    "id": "rowA"
                   },
                   {
                     "kind": "text",
@@ -921,7 +905,19 @@
                     "text": "$3x-1$",
                     "size": 12,
                     "anchor": "middle",
-                    "fill": "muted"
+                    "fill": "muted",
+                    "id": "rowB"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 168,
+                    "text": "$5x + 2$",
+                    "size": 18,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "out",
+                    "opacity": 0
                   }
                 ],
                 "frames": [
@@ -934,23 +930,43 @@
                     "changes": [
                       {
                         "id": "c1",
-                        "dx": 60
+                        "dx": 60,
+                        "dy": -54
                       },
                       {
                         "id": "c2",
-                        "dx": 60
+                        "dx": 60,
+                        "dy": -54
                       },
                       {
                         "id": "c3",
-                        "dx": 60
+                        "dx": 60,
+                        "dy": -54
+                      },
+                      {
+                        "id": "b1",
+                        "dx": 80
+                      },
+                      {
+                        "id": "b2",
+                        "dx": 80
+                      },
+                      {
+                        "id": "b3",
+                        "dx": 80
                       },
                       {
                         "id": "d1",
-                        "dx": -18
+                        "dx": 104,
+                        "dy": -54
                       },
                       {
-                        "id": "d1t",
-                        "dx": -18
+                        "id": "rowA",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rowB",
+                        "opacity": 0
                       }
                     ]
                   },
@@ -959,28 +975,44 @@
                     "changes": [
                       {
                         "id": "c1",
-                        "dx": 60
+                        "dx": 60,
+                        "dy": -54
                       },
                       {
                         "id": "c2",
-                        "dx": 60
+                        "dx": 60,
+                        "dy": -54
                       },
                       {
                         "id": "c3",
-                        "dx": 60
+                        "dx": 60,
+                        "dy": -54
                       },
                       {
-                        "id": "d1",
-                        "dx": -18,
-                        "opacity": 0
+                        "id": "b1",
+                        "dx": 80
                       },
                       {
-                        "id": "d1t",
-                        "dx": -18,
-                        "opacity": 0
+                        "id": "b2",
+                        "dx": 80
                       },
                       {
                         "id": "b3",
+                        "dx": 80,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "d1",
+                        "dx": 104,
+                        "dy": -54,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rowA",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rowB",
                         "opacity": 0
                       },
                       {
@@ -1943,6 +1975,862 @@
               "required": true,
               "payload": {
                 "text": "$x$항끼리는 서로 지워져요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "polynomials:drill",
+      "courseKey": "polynomials",
+      "name": "식의 계산 모아 풀기",
+      "versionId": "polynomials:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "polynomials:drill-1:v1",
+          "conceptKeys": [
+            "exponent-law"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$a^4 \\times a^6 = a^{\\square}$일 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "지수끼리 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-2:v1",
+          "conceptKeys": [
+            "exponent-law"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^9 \\div x^4 = x^{\\square}$일 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "나누면 지수가 빠져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-3:v1",
+          "conceptKeys": [
+            "exponent-law"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(y^3)^5 = y^{\\square}$일 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "거듭제곱의 거듭제곱은 지수끼리 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-4:v1",
+          "conceptKeys": [
+            "exponent-law"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(2a)^3 = \\square a^3$일 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호 안 $2$에도 지수가 걸려요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-5:v1",
+          "conceptKeys": [
+            "exponent-law"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$a^7 \\div a^7$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 것끼리 나누면 $1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-6:v1",
+          "conceptKeys": [
+            "exponent-law"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$a^2 \\times a^3 = a^6$"
+              },
+              {
+                "id": "b",
+                "text": "$a^2 + a^3 = a^5$"
+              },
+              {
+                "id": "c",
+                "text": "$a^2 \\times a^3 = a^5$"
+              },
+              {
+                "id": "d",
+                "text": "$(a^2)^3 = a^5$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$a^2 \\times a^3 = a^6$"
+              },
+              {
+                "id": "b",
+                "text": "$a^2 + a^3 = a^5$"
+              },
+              {
+                "id": "c",
+                "text": "$a^2 \\times a^3 = a^5$"
+              },
+              {
+                "id": "d",
+                "text": "$(a^2)^3 = a^5$"
+              }
+            ],
+            "correct": "c"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "곱하면 더하고, 거듭제곱하면 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-7:v1",
+          "conceptKeys": [
+            "exponent-law"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3^2 \\times 3^3$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 243
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3^5$을 계산해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-8:v1",
+          "conceptKeys": [
+            "monomial"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4x \\times 7x = \\square x^2$일 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 28
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "수끼리 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-9:v1",
+          "conceptKeys": [
+            "monomial"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(-5a^2) \\times 4a = \\square a^3$일 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부호는 수 쪽에 붙여요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-10:v1",
+          "conceptKeys": [
+            "monomial"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$24x^6 \\div 6x^2 = \\square x^4$일 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "수끼리 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-11:v1",
+          "conceptKeys": [
+            "monomial"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(-2x) \\times (-9x) = \\square x^2$일 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 18
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "음수끼리 곱하면 양수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-12:v1",
+          "conceptKeys": [
+            "monomial"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 단항식이 아닌 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3x^2$"
+              },
+              {
+                "id": "b",
+                "text": "$-5ab$"
+              },
+              {
+                "id": "c",
+                "text": "$2x + 1$"
+              },
+              {
+                "id": "d",
+                "text": "$\\frac{a}{2}$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3x^2$"
+              },
+              {
+                "id": "b",
+                "text": "$-5ab$"
+              },
+              {
+                "id": "c",
+                "text": "$2x + 1$"
+              },
+              {
+                "id": "d",
+                "text": "$\\frac{a}{2}$"
+              }
+            ],
+            "correct": "c"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "덧셈으로 이어져 있으면 항이 둘이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-13:v1",
+          "conceptKeys": [
+            "polynomial"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x^2 - 7x + 4$의 차수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 높은 차수를 찾아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-14:v1",
+          "conceptKeys": [
+            "polynomial"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-6b$의 차수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$b$는 한 번만 곱해져 있어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-15:v1",
+          "conceptKeys": [
+            "polynomial"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^3 - 2x + 5$의 항은 모두 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$+$와 $-$에서 끊어 세어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-16:v1",
+          "conceptKeys": [
+            "polynomial-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(4x + 7) + (3x - 10)$을 정리하면 $7x + \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "수끼리 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-17:v1",
+          "conceptKeys": [
+            "polynomial-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(8y - 2) - (8y + 6)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$항이 모두 사라져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-18:v1",
+          "conceptKeys": [
+            "polynomial-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(5x^2 - x) - (2x^2 + 3x)$를 정리하면 $3x^2 + \\square x$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-x-3x$를 계산해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-19:v1",
+          "conceptKeys": [
+            "polynomial-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 $(2x+3) - (x-1)$을 바르게 푼 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2x+3-x-1$"
+              },
+              {
+                "id": "b",
+                "text": "$2x+3-x+1$"
+              },
+              {
+                "id": "c",
+                "text": "$2x-3-x+1$"
+              },
+              {
+                "id": "d",
+                "text": "$2x+3+x-1$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2x+3-x-1$"
+              },
+              {
+                "id": "b",
+                "text": "$2x+3-x+1$"
+              },
+              {
+                "id": "c",
+                "text": "$2x-3-x+1$"
+              },
+              {
+                "id": "d",
+                "text": "$2x+3+x-1$"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빼기 괄호는 안쪽 모든 부호를 바꿔요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polynomials:drill-20:v1",
+          "conceptKeys": [
+            "polynomial-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polynomials:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x^2 + 4x) + (2x^2 - 4x)$를 정리하면 $\\square x^2$이에요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polynomials:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$항끼리 서로 지워져요."
               }
             }
           ],

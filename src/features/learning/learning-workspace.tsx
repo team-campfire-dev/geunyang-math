@@ -433,9 +433,11 @@ export function LearningWorkspace() {
         {open && <ul className="shelf-set-list">{sets.map((set, index) => {
           const run = started.get(set.problemSetId);
           const labels = set.conceptKeys.map((key) => taughtConcepts.find((concept) => concept.key === key)?.label).filter(Boolean);
-          // The sets arrive in lesson order, so a heading is drawn wherever the lesson changes.
-          const heading = set.lessonKey && set.lessonKey !== sets[index - 1]?.lessonKey
-            ? lessons.find((lesson) => lesson.lessonKey === set.lessonKey)?.title : null;
+          // The sets arrive in lesson order, so a heading is drawn wherever the lesson changes. The
+          // ones no lesson shows come last and are named for what they are rather than by a lesson.
+          const heading = set.lessonKey === sets[index - 1]?.lessonKey ? null
+            : set.lessonKey ? lessons.find((lesson) => lesson.lessonKey === set.lessonKey)?.title
+            : '수업과 따로, 모아 풀기';
           return <li key={set.problemSetId}>
             {heading && <p className="shelf-lesson">{heading}</p>}
             <button className="shelf-set" disabled={busy} onClick={() => void startProblemSet(set.problemSetId)}>

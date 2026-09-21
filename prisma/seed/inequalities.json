@@ -2340,6 +2340,862 @@
           "solution": []
         }
       ]
+    },
+    {
+      "problemSetId": "inequalities:drill",
+      "courseKey": "inequalities",
+      "name": "일차부등식 모아 풀기",
+      "versionId": "inequalities:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "inequalities:drill-1:v1",
+          "conceptKeys": [
+            "inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$가 $12$ 미만의 자연수일 때 가장 큰 $x$를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 11
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「미만」은 같은 경우를 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-2:v1",
+          "conceptKeys": [
+            "inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "키가 $150$cm 이상이어야 탈 수 있어요. 탈 수 있는 가장 작은 키를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 150
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「이상」은 같은 경우를 포함해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-3:v1",
+          "conceptKeys": [
+            "inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「$x$는 $7$보다 크지 않다」를 부등호로 옮기면 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x > 7$"
+              },
+              {
+                "id": "b",
+                "text": "$x \\geq 7$"
+              },
+              {
+                "id": "c",
+                "text": "$x \\leq 7$"
+              },
+              {
+                "id": "d",
+                "text": "$x < 7$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x > 7$"
+              },
+              {
+                "id": "b",
+                "text": "$x \\geq 7$"
+              },
+              {
+                "id": "c",
+                "text": "$x \\leq 7$"
+              },
+              {
+                "id": "d",
+                "text": "$x < 7$"
+              }
+            ],
+            "correct": "c"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "크지 않다는 것은 작거나 같다는 뜻이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-4:v1",
+          "conceptKeys": [
+            "inequality-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x > 9$를 만족하는 가장 작은 정수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$9$는 포함되지 않아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-5:v1",
+          "conceptKeys": [
+            "inequality-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x \\leq -5$를 만족하는 가장 큰 정수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\leq$는 경계를 포함해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-6:v1",
+          "conceptKeys": [
+            "inequality-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-4 \\leq x < 3$을 만족하는 정수는 모두 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$은 빠져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-7:v1",
+          "conceptKeys": [
+            "inequality-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0 < x \\leq 6$을 만족하는 자연수는 모두 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$부터 세어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-8:v1",
+          "conceptKeys": [
+            "inequality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-6x < 18$의 양변을 $-6$으로 나누면 $x > \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "음수로 나누면 방향이 뒤집혀요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-9:v1",
+          "conceptKeys": [
+            "inequality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 < 7$의 양변에 $-3$을 곱하면 왼쪽은 $-6$이에요. 오른쪽은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -21
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$7$에 $-3$을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-10:v1",
+          "conceptKeys": [
+            "inequality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x - 5 > 1$의 양변에 $5$를 더하면 $x > \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "더할 때는 방향이 그대로예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-11:v1",
+          "conceptKeys": [
+            "inequality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 부등호의 방향이 뒤집히는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "양변에 $5$를 더하기"
+              },
+              {
+                "id": "b",
+                "text": "양변에서 $5$를 빼기"
+              },
+              {
+                "id": "c",
+                "text": "양변에 $5$를 곱하기"
+              },
+              {
+                "id": "d",
+                "text": "양변을 $-5$로 나누기"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "양변에 $5$를 더하기"
+              },
+              {
+                "id": "b",
+                "text": "양변에서 $5$를 빼기"
+              },
+              {
+                "id": "c",
+                "text": "양변에 $5$를 곱하기"
+              },
+              {
+                "id": "d",
+                "text": "양변을 $-5$로 나누기"
+              }
+            ],
+            "correct": "d"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "음수를 곱하거나 나눌 때만 뒤집혀요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-12:v1",
+          "conceptKeys": [
+            "inequality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-x \\geq 9$의 양변을 $-1$로 나누면 $x \\leq \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "방향이 뒤집혀요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-13:v1",
+          "conceptKeys": [
+            "linear-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4x - 3 \\leq 17$을 만족하는 가장 큰 정수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4x \\leq 20$이 돼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-14:v1",
+          "conceptKeys": [
+            "linear-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-3x + 2 > 11$을 풀면 $x < \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-3$으로 나누며 뒤집어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-15:v1",
+          "conceptKeys": [
+            "linear-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5x \\geq 2x + 12$를 만족하는 가장 작은 정수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x \\geq 12$가 돼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-16:v1",
+          "conceptKeys": [
+            "linear-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2(x-3) < x$를 풀면 $x < \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호를 먼저 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-17:v1",
+          "conceptKeys": [
+            "linear-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{x}{3} + 1 \\leq 3$을 만족하는 가장 큰 정수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "양변에 $3$을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-18:v1",
+          "conceptKeys": [
+            "linear-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-2(x+2) \\geq 6$을 풀면 $x \\leq \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호를 풀면 $-2x-4 \\geq 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-19:v1",
+          "conceptKeys": [
+            "linear-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 개에 $800$원인 빵을 $5000$원으로 살 때 가장 많이 살 수 있는 개수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$800x \\leq 5000$을 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "inequalities:drill-20:v1",
+          "conceptKeys": [
+            "linear-inequality"
+          ],
+          "promptContent": [
+            {
+              "blockId": "inequalities:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 $x \\geq 2$와 같은 뜻인 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2 > x$"
+              },
+              {
+                "id": "b",
+                "text": "$2 \\leq x$"
+              },
+              {
+                "id": "c",
+                "text": "$2 \\geq x$"
+              },
+              {
+                "id": "d",
+                "text": "$x < 2$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2 > x$"
+              },
+              {
+                "id": "b",
+                "text": "$2 \\leq x$"
+              },
+              {
+                "id": "c",
+                "text": "$2 \\geq x$"
+              },
+              {
+                "id": "d",
+                "text": "$x < 2$"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "inequalities:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "양쪽을 바꾸면 부등호도 뒤집어 읽어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
     }
   ],
   "diagnostics": [],

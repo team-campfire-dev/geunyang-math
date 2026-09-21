@@ -2441,6 +2441,912 @@
           "solution": []
         }
       ]
+    },
+    {
+      "problemSetId": "fractions:drill",
+      "courseKey": "fractions",
+      "name": "분수 모아 풀기",
+      "versionId": "fractions:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "fractions:drill-1:v1",
+          "conceptKeys": [
+            "fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "피자 한 판을 똑같이 8조각으로 나눠 3조각을 먹었어요. 먹은 양을 분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 조각 수가 분모예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-2:v1",
+          "conceptKeys": [
+            "denominator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{5}{9}$의 분모를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "아래쪽 수가 분모예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-3:v1",
+          "conceptKeys": [
+            "numerator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{5}{9}$의 분자를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "위쪽 수가 분자예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-4:v1",
+          "conceptKeys": [
+            "fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 $\\frac{3}{4}$을 바르게 읽은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "사분의 삼"
+              },
+              {
+                "id": "b",
+                "text": "삼분의 사"
+              },
+              {
+                "id": "c",
+                "text": "삼 나누기 사분"
+              },
+              {
+                "id": "d",
+                "text": "사 분의 사"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "사분의 삼"
+              },
+              {
+                "id": "b",
+                "text": "삼분의 사"
+              },
+              {
+                "id": "c",
+                "text": "삼 나누기 사분"
+              },
+              {
+                "id": "d",
+                "text": "사 분의 사"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모를 먼저 읽고 분자를 읽어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-5:v1",
+          "conceptKeys": [
+            "denominator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "리본 1m를 똑같이 6도막으로 잘랐어요. 한 도막을 분수로 쓸 때 분모를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "몇 도막으로 나눴는지가 분모예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-6:v1",
+          "conceptKeys": [
+            "equivalent-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{2}{5} = \\frac{\\square}{15}$일 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모가 3배가 됐어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-7:v1",
+          "conceptKeys": [
+            "equivalent-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 $\\frac{1}{3}$과 크기가 같은 분수는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\frac{2}{5}$"
+              },
+              {
+                "id": "b",
+                "text": "$\\frac{3}{9}$"
+              },
+              {
+                "id": "c",
+                "text": "$\\frac{1}{6}$"
+              },
+              {
+                "id": "d",
+                "text": "$\\frac{3}{4}$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\frac{2}{5}$"
+              },
+              {
+                "id": "b",
+                "text": "$\\frac{3}{9}$"
+              },
+              {
+                "id": "c",
+                "text": "$\\frac{1}{6}$"
+              },
+              {
+                "id": "d",
+                "text": "$\\frac{3}{4}$"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분자와 분모에 같은 수를 곱해 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-8:v1",
+          "conceptKeys": [
+            "reduce"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{12}{18}$을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 2,
+            "denominator": 3,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분자와 분모를 $6$으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-9:v1",
+          "conceptKeys": [
+            "reduce"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{15}{25}$을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 5,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5$로 나눠 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-10:v1",
+          "conceptKeys": [
+            "reduce"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 이미 기약분수인 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\frac{4}{6}$"
+              },
+              {
+                "id": "b",
+                "text": "$\\frac{9}{12}$"
+              },
+              {
+                "id": "c",
+                "text": "$\\frac{7}{10}$"
+              },
+              {
+                "id": "d",
+                "text": "$\\frac{6}{8}$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\frac{4}{6}$"
+              },
+              {
+                "id": "b",
+                "text": "$\\frac{9}{12}$"
+              },
+              {
+                "id": "c",
+                "text": "$\\frac{7}{10}$"
+              },
+              {
+                "id": "d",
+                "text": "$\\frac{6}{8}$"
+              }
+            ],
+            "correct": "c"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "더 나눌 공약수가 없는 것을 찾아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-11:v1",
+          "conceptKeys": [
+            "common-denominator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{4}$과 $\\frac{1}{6}$을 통분할 때 가장 작은 공통분모를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4$와 $6$의 최소공배수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-12:v1",
+          "conceptKeys": [
+            "common-denominator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{2}{3}$과 $\\frac{3}{5}$의 가장 작은 공통분모를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$과 $5$를 곱해 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-13:v1",
+          "conceptKeys": [
+            "addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{2}{7} + \\frac{3}{7}$을 계산해 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모가 같으니 분자만 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-14:v1",
+          "conceptKeys": [
+            "addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{2} + \\frac{1}{3}$을 계산해 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모를 $6$으로 맞춰요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-15:v1",
+          "conceptKeys": [
+            "common-denominator",
+            "addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{4} + \\frac{1}{6}$을 계산해 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모를 $12$로 맞춰요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-16:v1",
+          "conceptKeys": [
+            "addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 계산이 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\frac{1}{2}+\\frac{1}{3}=\\frac{2}{5}$"
+              },
+              {
+                "id": "b",
+                "text": "$\\frac{1}{2}+\\frac{1}{3}=\\frac{5}{6}$"
+              },
+              {
+                "id": "c",
+                "text": "$\\frac{1}{2}+\\frac{1}{3}=\\frac{1}{5}$"
+              },
+              {
+                "id": "d",
+                "text": "$\\frac{1}{2}+\\frac{1}{3}=\\frac{2}{6}$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\frac{1}{2}+\\frac{1}{3}=\\frac{2}{5}$"
+              },
+              {
+                "id": "b",
+                "text": "$\\frac{1}{2}+\\frac{1}{3}=\\frac{5}{6}$"
+              },
+              {
+                "id": "c",
+                "text": "$\\frac{1}{2}+\\frac{1}{3}=\\frac{1}{5}$"
+              },
+              {
+                "id": "d",
+                "text": "$\\frac{1}{2}+\\frac{1}{3}=\\frac{2}{6}$"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모끼리 더하는 것이 아니에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-17:v1",
+          "conceptKeys": [
+            "addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{3}{8} + \\frac{1}{8}$을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "더한 뒤 약분해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-18:v1",
+          "conceptKeys": [
+            "fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{7}{7}$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체를 모두 세었어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-19:v1",
+          "conceptKeys": [
+            "numerator"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{4}{9}$과 분모가 같고 값이 더 큰 분수를 만들려면 분자를 얼마보다 크게 해야 하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모가 같으면 분자가 클수록 커요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "fractions:drill-20:v1",
+          "conceptKeys": [
+            "equivalent-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "fractions:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{3}{4} = \\frac{9}{\\square}$일 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "fractions:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분자가 $3$배가 됐어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
     }
   ],
   "diagnostics": [
