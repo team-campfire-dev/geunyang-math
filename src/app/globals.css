@@ -372,4 +372,25 @@
 
 @media(max-width:520px){.math-keypad{max-width:280px;gap:7px}
 .math-key{min-height:48px;font-size:17px}
+
+/* A set of twenty questions is ten screens on a phone, and the two things a learner keeps wanting
+   — how far along they are, and the way out — used to sit at the two far ends of that scroll. The
+   strip carries both along. It is only worth its own room when the questions cannot share a screen. */
+.solve-progress{position:sticky;top:0;z-index:15;display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:760px;margin:0 auto 20px;padding:12px 16px;background:var(--paper);border:1px solid var(--line);border-radius:9px}
+.solve-count{display:flex;align-items:center;gap:9px;font-size:13px;color:#7d8a5e;white-space:nowrap}
+.solve-count strong{font-weight:600;color:#5d7048}
+.solve-meter{display:block;width:96px;height:5px;border-radius:3px;background:#e3e7d6;overflow:hidden}
+.solve-meter i{display:block;height:100%;background:#8ba36d;border-radius:3px;transition:width .25s ease}
+.solve-progress .text-button{min-height:36px}
+.solve-progress .button{min-height:38px;padding:9px 14px;font-size:13px}
+/* The strip stands over the top of whatever was scrolled to, so a question keeps room for it. */
+.assignment-problems>section{scroll-margin-top:74px}
+.assignment-submit>div .text-button{margin-top:9px}
+/* What form the answer has to take is something to read before writing, not after the button. */
+.answer-form-note{margin-top:14px}
+.answer-form-note+.answer-form{margin-top:11px}
+
+@media(max-width:520px){.solve-progress{margin-bottom:16px;padding:10px 13px;gap:10px}
+.solve-meter{width:60px}
+.assignment-problems>section{scroll-margin-top:66px}
 }
