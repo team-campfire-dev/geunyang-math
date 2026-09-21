@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "set",
+      "label": "집합",
+      "assessable": true
+    },
+    {
+      "key": "set-operation",
+      "label": "집합의 연산",
+      "assessable": true
+    },
+    {
+      "key": "proposition",
+      "label": "명제",
+      "assessable": true
+    },
+    {
+      "key": "contrapositive",
+      "label": "대우",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "set",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "집합",
+      "summary": "무엇이 드는지 누구나 똑같이 가릴 수 있는 모임이에요.",
+      "blocks": [
+        {
+          "blockId": "global:set:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "「$10$보다 작은 $3$의 배수」는 누가 세어도 $3, 6, 9$라 집합이지만, 「키가 큰 사람」은 기준이 사람마다 갈려 집합이 아니에요. 집합에 든 하나하나가 원소이고, 원소를 다 적거나 조건을 적어 나타내요. 한 집합의 원소가 모두 다른 집합에도 들어 있으면 부분집합이에요. 원소가 $n$개이면 부분집합은 $2^n$개예요. 원소마다 넣고 빼는 두 갈래가 있는 곱의 법칙 그대로예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "무엇을 모아 다룰 때"
+    },
+    {
+      "conceptKey": "set-operation",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "집합의 연산",
+      "summary": "겹치는 것, 모은 것, 빠진 것이에요.",
+      "blocks": [
+        {
+          "blockId": "global:set-operation:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "양쪽에 다 든 것이 교집합, 어느 한쪽에라도 든 것이 합집합, 전체에서 빠진 것이 여집합이에요. 개수를 셀 때는 $n(A \\cup B) = n(A) + n(B) - n(A \\cap B)$예요. 겹치는 것을 두 번 세니 한 번 빼는 거예요. 합의 법칙에서 겹치는 경우를 뺐던 것과 똑같은 일이에요. 「하나도 아닌」 경우는 전체에서 「하나라도 인」 경우를 빼면 나와요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "두 집합을 견주거나 셀 때"
+    },
+    {
+      "conceptKey": "proposition",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "명제",
+      "summary": "참인지 거짓인지 분명히 가려지는 문장이에요.",
+      "blocks": [
+        {
+          "blockId": "global:proposition:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "「$2$는 짝수다」는 참인 명제, 「$3$은 짝수다」는 거짓인 명제예요. 「이 음식은 맛있다」는 사람마다 달라 명제가 아니에요. 집합에서 「키가 큰 사람」이 집합이 아닌 것과 같은 이유예요. 「$p$이면 $q$」 꼴에서 앞이 가정, 뒤가 결론이에요. 거짓임을 보이려면 가정은 맞는데 결론이 틀린 예 하나를 찾으면 돼요. 그 하나를 반례라고 해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "참·거짓을 따질 때"
+    },
+    {
+      "conceptKey": "contrapositive",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "대우",
+      "summary": "자리를 바꾸고 둘 다 부정한 것이에요.",
+      "blocks": [
+        {
+          "blockId": "global:contrapositive:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "「$p$이면 $q$」에서 자리만 바꾼 「$q$이면 $p$」는 역, 둘 다 부정한 것은 이, 자리도 바꾸고 부정도 한 「$q$가 아니면 $p$가 아니다」가 대우예요. 역과 이는 참·거짓이 달라질 수 있지만 대우는 처음 명제와 늘 같아요. 「비가 오면 땅이 젖는다」가 참이어도 역은 거짓일 수 있지만(물을 뿌렸을 수도 있죠), 대우인 「땅이 젖지 않았으면 비가 오지 않았다」는 반드시 참이에요. 그래서 증명하기 어려운 명제는 대우를 대신 증명하기도 해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "명제를 뒤집어 볼 때"
+    }
+  ]
+}

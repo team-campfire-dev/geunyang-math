@@ -1,0 +1,3285 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "sets-logic",
+      "title": "집합과 명제",
+      "summary": "누가 가려도 같은 답이 나오는 모임을 다루고, 참·거짓이 분명한 문장을 뒤집어도 같은 말인지 따져요.",
+      "order": 23,
+      "track": "math",
+      "lessons": [
+        {
+          "key": "set-basics",
+          "order": 1
+        },
+        {
+          "key": "set-operation",
+          "order": 2
+        },
+        {
+          "key": "proposition",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "set",
+      "label": "집합",
+      "assessable": true
+    },
+    {
+      "key": "set-operation",
+      "label": "집합의 연산",
+      "assessable": true
+    },
+    {
+      "key": "proposition",
+      "label": "명제",
+      "assessable": true
+    },
+    {
+      "key": "contrapositive",
+      "label": "대우",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "set-basics",
+        "versionId": "set-basics:v1",
+        "title": "집합과 원소: 조건이 분명해야 집합이다",
+        "summary": "무엇이 들어가고 무엇이 빠지는지 누구나 똑같이 가릴 수 있을 때만 집합이에요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "set"
+        ],
+        "prerequisiteConceptKeys": [
+          "inequality-solution",
+          "rational-number"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "set-basics:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "set-basics:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "「$10$보다 작은 $3$의 배수」라고 하면 무엇이 들어갈까요. $3$, $6$, $9$예요. 누가 세어도 같아요.\n\n「키가 큰 사람」이라고 하면 어떨까요. $175$cm는 큰 걸까요? 사람마다 답이 달라요. 이렇게 기준이 사람에 따라 갈리면 모임은 되어도 집합은 아니에요.\n\n들어가는지 아닌지를 누구나 똑같이 가릴 수 있는 모임, 그것이 집합이에요. 집합에 든 하나하나를 원소라고 해요.\n\n적는 법은 두 가지예요. 원소를 다 적는 $\\{3, 6, 9\\}$와, 조건을 적는 「$10$보다 작은 $3$의 배수」예요. 원소가 많거나 끝이 없으면 조건으로 적는 편이 낫고요.\n\n$3$이 집합 $A$의 원소라는 것을 $3 \\in A$로 적어요. 아니면 $\\notin$이고요.\n\n집합 $A$의 원소가 모두 집합 $B$에도 들어 있으면 $A$를 $B$의 부분집합이라고 해요. $\\{1, 2\\}$는 $\\{1, 2, 3\\}$의 부분집합이에요.\n\n부분집합을 셀 때는 앞 과정의 곱의 법칙이 그대로 쓰여요. 원소 하나하나에 대해 「넣는다」와 「뺀다」 두 갈래가 있으니, 원소가 $n$개면 부분집합은 $2^n$개예요. 아무것도 넣지 않은 것과 전부 넣은 것까지 포함해서요.",
+                "definitions": [
+                  {
+                    "conceptKey": "set",
+                    "surface": "집합",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "set-basics:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "조건에 맞는 수만 울타리 안으로 들어오고 맞지 않는 수는 밖으로 밀려나는 그림",
+                "caption": "조건이 분명해야 넣을지 말지가 갈려요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 26,
+                    "text": "$10$보다 작은 $3$의 배수",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160,
+                    "cy": 110,
+                    "rx": 74,
+                    "ry": 52,
+                    "fill": "none",
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "dash": true
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 48,
+                    "cy": 62,
+                    "rx": 15,
+                    "ry": 15,
+                    "fill": "sand",
+                    "id": "n3"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 48,
+                    "y": 67,
+                    "text": "$3$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "n3t"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 112,
+                    "cy": 62,
+                    "rx": 15,
+                    "ry": 15,
+                    "fill": "sand",
+                    "id": "n6"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 112,
+                    "y": 67,
+                    "text": "$6$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "n6t"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 176,
+                    "cy": 62,
+                    "rx": 15,
+                    "ry": 15,
+                    "fill": "sand",
+                    "id": "n9"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 176,
+                    "y": 67,
+                    "text": "$9$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "n9t"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 240,
+                    "cy": 62,
+                    "rx": 15,
+                    "ry": 15,
+                    "fill": "fill-soft",
+                    "id": "n4"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 240,
+                    "y": 67,
+                    "text": "$4$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "n4t"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 288,
+                    "cy": 62,
+                    "rx": 15,
+                    "ry": 15,
+                    "fill": "fill-soft",
+                    "id": "n12"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 288,
+                    "y": 67,
+                    "text": "$12$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "n12t"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 182,
+                    "text": "원소 $3$개",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "ans",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "수를 몇 개 늘어놓고, 조건에 맞는 것만 모아 볼게요.",
+                    "changes": [
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$3$, $6$, $9$는 조건에 맞아요. 울타리 안으로 들어와요.",
+                    "changes": [
+                      {
+                        "id": "n3",
+                        "dx": 68,
+                        "dy": 48
+                      },
+                      {
+                        "id": "n3t",
+                        "dx": 68,
+                        "dy": 48
+                      },
+                      {
+                        "id": "n6",
+                        "dx": 48,
+                        "dy": 48
+                      },
+                      {
+                        "id": "n6t",
+                        "dx": 48,
+                        "dy": 48
+                      },
+                      {
+                        "id": "n9",
+                        "dx": 28,
+                        "dy": 48
+                      },
+                      {
+                        "id": "n9t",
+                        "dx": 28,
+                        "dy": 48
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$4$는 $3$의 배수가 아니고 $12$는 $10$보다 커요. 둘 다 밖에 남아요.",
+                    "changes": [
+                      {
+                        "id": "n3",
+                        "dx": 68,
+                        "dy": 48
+                      },
+                      {
+                        "id": "n3t",
+                        "dx": 68,
+                        "dy": 48
+                      },
+                      {
+                        "id": "n6",
+                        "dx": 48,
+                        "dy": 48
+                      },
+                      {
+                        "id": "n6t",
+                        "dx": 48,
+                        "dy": 48
+                      },
+                      {
+                        "id": "n9",
+                        "dx": 28,
+                        "dy": 48
+                      },
+                      {
+                        "id": "n9t",
+                        "dx": 28,
+                        "dy": 48
+                      },
+                      {
+                        "id": "n4",
+                        "dy": -34
+                      },
+                      {
+                        "id": "n4t",
+                        "dy": -34
+                      },
+                      {
+                        "id": "n12",
+                        "dy": -34
+                      },
+                      {
+                        "id": "n12t",
+                        "dy": -34
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "set-basics:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "set-basics:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$A = \\{1, 2, 3\\}$의 부분집합을 모두 적어 볼게요.\n\n원소마다 넣을지 말지를 정하면 하나의 부분집합이 정해져요. $1$을 넣거나 빼고, $2$를 넣거나 빼고, $3$을 넣거나 빼요.\n\n갈래가 $2 \\times 2 \\times 2 = 8$가지이니 부분집합도 $8$개예요.\n\n적어 보면 $\\{\\}$, $\\{1\\}$, $\\{2\\}$, $\\{3\\}$, $\\{1,2\\}$, $\\{1,3\\}$, $\\{2,3\\}$, $\\{1,2,3\\}$이에요.\n\n아무것도 넣지 않은 $\\{\\}$도 부분집합이에요. 이것을 공집합이라고 해요. 전부 넣은 $A$ 자신도 부분집합이고요.\n\n그래서 원소가 $n$개인 집합의 부분집합은 늘 $2^n$개예요. 원소가 넷이면 $16$개, 다섯이면 $32$개예요.\n\n$2^n$이라는 식이 어디서 왔는지 보이시죠. 새 공식이 아니라 곱의 법칙이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "set-basics:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "set-basics:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "set-basics:practice",
+                "problemSetVersionId": "set-basics:practice:v1",
+                "problemVersionIds": [
+                  "set-basics:practice-1:v1",
+                  "set-basics:practice-2:v1",
+                  "set-basics:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "set-basics:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "set-basics:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "set-basics:check",
+                "problemSetVersionId": "set-basics:check:v1",
+                "problemVersionIds": [
+                  "set-basics:check-1:v1",
+                  "set-basics:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "set-basics:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "set-basics:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "들어가는지 아닌지를 누구나 똑같이 가릴 수 있어야 집합이에요. 「키가 큰 사람」은 집합이 아니에요.\n\n원소를 다 적거나 조건을 적어 나타내요.\n\n원소가 모두 다른 집합에 들어 있으면 부분집합이에요. 공집합과 자기 자신도 포함해요.\n\n원소가 $n$개이면 부분집합은 $2^n$개예요. 원소마다 넣고 빼는 두 갈래가 있기 때문이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "set-basics:review",
+        "problemSetVersionId": "set-basics:review:v1",
+        "problemVersionIds": [
+          "set-basics:homework-1:v1",
+          "set-basics:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "set-operation",
+        "versionId": "set-operation:v1",
+        "title": "교집합과 합집합, 여집합: 겹치는 것과 모은 것",
+        "summary": "두 집합을 겹쳐 보고, 모아 보고, 뒤집어 보며 원소의 개수를 세요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "set-operation"
+        ],
+        "prerequisiteConceptKeys": [
+          "set",
+          "counting-rule"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "set-operation:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "set-operation:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$A = \\{1, 2, 3\\}$, $B = \\{2, 3, 4\\}$를 두고 볼게요.\n\n양쪽에 다 든 원소를 모은 것을 교집합이라 하고 $A \\cap B$로 적어요. 여기서는 $\\{2, 3\\}$이에요.\n\n어느 한쪽에라도 든 것을 모두 모은 것은 합집합이고 $A \\cup B$로 적어요. $\\{1, 2, 3, 4\\}$예요.\n\n생각하는 전체 범위를 정해 두고 그 안에서 $A$에 들지 않은 것을 모으면 여집합이에요. 전체가 $\\{1,2,3,4,5\\}$라면 $A$의 여집합은 $\\{4, 5\\}$고요.\n\n개수를 셀 때 주의할 곳이 하나 있어요. $A$의 원소가 $3$개, $B$의 원소가 $3$개인데 합집합은 $6$개가 아니라 $4$개예요.\n\n겹치는 $2$와 $3$을 두 번 셌기 때문이에요. 그래서 한 번 빼 줘야 해요. $n(A \\cup B) = n(A) + n(B) - n(A \\cap B)$예요.\n\n앞 과정에서 「또는」을 셀 때 겹치는 것을 뺐던 것과 똑같은 일이에요. 그때는 경우를 셌고 지금은 원소를 셀 뿐이에요.\n\n그림으로는 울타리 두 개를 겹쳐 그려요. 겹친 부분이 교집합, 두 울타리가 덮은 전체가 합집합, 울타리 밖이 여집합이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "set-operation",
+                    "surface": "교집합",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "set-operation:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "두 울타리가 다가와 겹치고 겹친 자리에 든 원소가 드러나는 그림",
+                "caption": "두 울타리가 겹치는 자리가 교집합이에요",
+                "items": [
+                  {
+                    "kind": "ellipse",
+                    "cx": 112,
+                    "cy": 104,
+                    "rx": 62,
+                    "ry": 50,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.3,
+                    "opacity": 0.85,
+                    "id": "ca"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 292,
+                    "cy": 104,
+                    "rx": 62,
+                    "ry": 50,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.3,
+                    "opacity": 0.55,
+                    "id": "cb"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 78,
+                    "y": 62,
+                    "text": "$A$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "la"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 258,
+                    "y": 62,
+                    "text": "$B$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "lb"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 82,
+                    "y": 108,
+                    "text": "$1$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "e1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 272,
+                    "y": 108,
+                    "text": "$4$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "e4"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 96,
+                    "text": "$2$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "e2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 120,
+                    "text": "$3$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "e3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 170,
+                    "text": "겹치는 자리에 $2$와 $3$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "ans",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 30,
+                    "text": "$A = \\{1,2,3\\}$, $B = \\{2,3,4\\}$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "두 집합을 따로 그렸어요.",
+                    "changes": [
+                      {
+                        "id": "e2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "e3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$B$를 가져와 겹쳐 봐요. 양쪽에 다 든 원소가 있어요.",
+                    "changes": [
+                      {
+                        "id": "cb",
+                        "dx": -84,
+                        "opacity": 0.55
+                      },
+                      {
+                        "id": "lb",
+                        "dx": -84
+                      },
+                      {
+                        "id": "e4",
+                        "dx": -84
+                      },
+                      {
+                        "id": "e2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "e3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$2$와 $3$이 겹치는 자리에 놓여요. 이것이 교집합이에요.",
+                    "changes": [
+                      {
+                        "id": "cb",
+                        "dx": -84,
+                        "opacity": 0.55
+                      },
+                      {
+                        "id": "lb",
+                        "dx": -84
+                      },
+                      {
+                        "id": "e4",
+                        "dx": -84
+                      },
+                      {
+                        "id": "e2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "e3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "set-operation:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "set-operation:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "어느 반 학생 $30$명 중 축구를 좋아하는 학생이 $18$명, 야구를 좋아하는 학생이 $15$명, 둘 다 좋아하는 학생이 $7$명이라고 해요. 둘 중 하나라도 좋아하는 학생은 몇 명일까요.\n\n$18 + 15 = 33$이라고 답하면 반 전체보다 많아져요. 뭔가 잘못됐죠.\n\n둘 다 좋아하는 $7$명을 양쪽에서 한 번씩, 그러니까 두 번 셌기 때문이에요.\n\n$18 + 15 - 7 = 26$명이에요.\n\n이번에는 둘 다 좋아하지 않는 학생을 구해 볼게요.\n\n전체 $30$명에서 하나라도 좋아하는 $26$명을 빼면 $4$명이에요. 이것이 여집합을 쓰는 방식이에요.\n\n「하나라도」의 반대는 「하나도 아닌」이에요. 전체에서 빼면 바로 나와요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "set-operation:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "set-operation:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "set-operation:practice",
+                "problemSetVersionId": "set-operation:practice:v1",
+                "problemVersionIds": [
+                  "set-operation:practice-1:v1",
+                  "set-operation:practice-2:v1",
+                  "set-operation:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "set-operation:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "set-operation:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "set-operation:check",
+                "problemSetVersionId": "set-operation:check:v1",
+                "problemVersionIds": [
+                  "set-operation:check-1:v1",
+                  "set-operation:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "set-operation:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "set-operation:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "양쪽에 다 든 것이 교집합, 어느 한쪽에라도 든 것이 합집합, 전체에서 빠진 것이 여집합이에요.\n\n$n(A \\cup B) = n(A) + n(B) - n(A \\cap B)$예요. 겹치는 것을 두 번 세니 한 번 빼요.\n\n「하나도 아닌」 경우는 전체에서 「하나라도 인」 경우를 빼면 나와요.\n\n울타리 두 개를 그려 놓고 세는 것이 가장 안전해요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "set-operation:review",
+        "problemSetVersionId": "set-operation:review:v1",
+        "problemVersionIds": [
+          "set-operation:homework-1:v1",
+          "set-operation:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "proposition",
+        "versionId": "proposition:v1",
+        "title": "명제와 대우: 뒤집어도 같은 말",
+        "summary": "참인지 거짓인지 가려지는 문장을 다루고, 뒤집어도 참·거짓이 변하지 않는 짝을 찾아요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "proposition",
+          "contrapositive"
+        ],
+        "prerequisiteConceptKeys": [
+          "set-operation",
+          "set"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "proposition:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "proposition:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "「$2$는 짝수다」는 참이고 「$3$은 짝수다」는 거짓이에요. 이렇게 참인지 거짓인지 분명히 가려지는 문장을 명제라고 해요.\n\n「이 음식은 맛있다」는 명제가 아니에요. 사람마다 다르니까요. 집합에서 「키가 큰 사람」이 집합이 아니었던 것과 같은 이유예요.\n\n「비가 오면 땅이 젖는다」처럼 「$p$이면 $q$」 꼴이 자주 나와요. 앞을 가정, 뒤를 결론이라고 해요.\n\n여기서 셋을 만들 수 있어요. 자리만 바꾼 「$q$이면 $p$」는 역, 둘 다 부정한 「$p$가 아니면 $q$가 아니다」는 이, 자리도 바꾸고 부정도 한 「$q$가 아니면 $p$가 아니다」는 대우예요.\n\n중요한 것은 이거예요. 역과 이는 처음 명제와 참·거짓이 다를 수 있지만, 대우는 늘 같아요.\n\n「비가 오면 땅이 젖는다」가 참이어도 역인 「땅이 젖으면 비가 왔다」는 거짓일 수 있어요. 물을 뿌렸을 수도 있으니까요. 하지만 대우인 「땅이 젖지 않았으면 비가 오지 않았다」는 반드시 참이에요.\n\n그래서 어떤 명제를 증명하기 어려울 때 대우를 대신 증명하기도 해요. 같은 말이니까요. $p$인 것들의 모임이 $q$인 것들의 모임 안에 쏙 들어가 있다고 그려 보면 왜 그런지 보여요.",
+                "definitions": [
+                  {
+                    "conceptKey": "proposition",
+                    "surface": "명제",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "contrapositive",
+                    "surface": "대우",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "proposition:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "가정과 결론 상자가 자리를 바꾸고 각각 부정이 붙어 대우가 되는 그림",
+                "caption": "자리를 바꾸고 부정을 붙이면 대우예요",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "x": 48,
+                    "y": 60,
+                    "width": 88,
+                    "height": 40,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 6,
+                    "id": "p"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 92,
+                    "y": 84,
+                    "text": "비가 온다",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "pt"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 184,
+                    "y": 60,
+                    "width": 88,
+                    "height": 40,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 6,
+                    "id": "q"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 228,
+                    "y": 84,
+                    "text": "땅이 젖는다",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "qt"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 140,
+                    "y1": 80,
+                    "x2": 180,
+                    "y2": 80,
+                    "stroke": "ink",
+                    "strokeWidth": 1.6,
+                    "arrow": "end",
+                    "id": "arrow"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 34,
+                    "text": "명제",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "name1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 34,
+                    "text": "대우",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "name2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 92,
+                    "y": 122,
+                    "text": "아니다",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "negp",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 228,
+                    "y": 122,
+                    "text": "아니다",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "negq",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 166,
+                    "text": "땅이 젖지 않으면 비가 오지 않았다",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "ans",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 188,
+                    "text": "처음 명제와 참·거짓이 늘 같아요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "note",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "「비가 오면 땅이 젖는다」. 앞이 가정, 뒤가 결론이에요.",
+                    "changes": [
+                      {
+                        "id": "name2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "negp",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "negq",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "두 상자의 자리를 바꿔요. 화살표의 방향이 뒤집히는 셈이에요.",
+                    "changes": [
+                      {
+                        "id": "p",
+                        "dx": 136
+                      },
+                      {
+                        "id": "pt",
+                        "dx": 136
+                      },
+                      {
+                        "id": "q",
+                        "dx": -136
+                      },
+                      {
+                        "id": "qt",
+                        "dx": -136
+                      },
+                      {
+                        "id": "name2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "negp",
+                        "dx": 136,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "negq",
+                        "dx": -136,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "각각에 「아니다」를 붙이면 대우예요. 처음 명제가 참이면 대우도 반드시 참이에요.",
+                    "changes": [
+                      {
+                        "id": "p",
+                        "dx": 136
+                      },
+                      {
+                        "id": "pt",
+                        "dx": 136
+                      },
+                      {
+                        "id": "q",
+                        "dx": -136
+                      },
+                      {
+                        "id": "qt",
+                        "dx": -136
+                      },
+                      {
+                        "id": "name1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "name2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "negp",
+                        "dx": 136,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "negq",
+                        "dx": -136,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ans",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "proposition:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "proposition:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "「$x = 2$이면 $x^2 = 4$이다」를 보고 역과 대우를 만들어 볼게요.\n\n먼저 이 명제 자체는 참이에요. $2$를 제곱하면 $4$니까요.\n\n역은 자리를 바꾼 「$x^2 = 4$이면 $x = 2$이다」예요. 이것은 거짓이에요. $x$가 $-2$일 수도 있거든요.\n\n이렇게 참이 아닌 예 하나를 찾으면 거짓임이 밝혀져요. 그 하나를 반례라고 해요.\n\n대우는 자리도 바꾸고 부정도 한 「$x^2 \\ne 4$이면 $x \\ne 2$이다」예요. 이것은 참이에요.\n\n처음 명제가 참이었으니 대우도 참인 것이 당연해요. 둘은 같은 말이니까요.\n\n역이 거짓인데 대우가 참인 것을 보면, 역과 대우가 아주 다른 것임을 알 수 있어요. 자리만 바꾼 것과 자리를 바꾸고 부정까지 한 것의 차이예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "proposition:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "proposition:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "proposition:practice",
+                "problemSetVersionId": "proposition:practice:v1",
+                "problemVersionIds": [
+                  "proposition:practice-1:v1",
+                  "proposition:practice-2:v1",
+                  "proposition:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "proposition:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "proposition:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "proposition:check",
+                "problemSetVersionId": "proposition:check:v1",
+                "problemVersionIds": [
+                  "proposition:check-1:v1",
+                  "proposition:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "proposition:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "proposition:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "참인지 거짓인지 분명히 가려지는 문장이 명제예요.\n\n「$p$이면 $q$」에서 자리를 바꾸면 역, 둘 다 부정하면 이, 자리를 바꾸고 부정하면 대우예요.\n\n역과 이는 참·거짓이 달라질 수 있지만 대우는 처음 명제와 늘 같아요.\n\n거짓임을 보이려면 반례 하나면 충분해요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "proposition:review",
+        "problemSetVersionId": "proposition:review:v1",
+        "problemVersionIds": [
+          "proposition:homework-1:v1",
+          "proposition:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "set-basics:practice",
+      "courseKey": "sets-logic",
+      "name": "집합과 원소 연습",
+      "versionId": "set-basics:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "set-basics:practice-1:v1",
+          "conceptKeys": [
+            "set"
+          ],
+          "promptContent": [
+            {
+              "blockId": "set-basics:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 집합인 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$10$보다 작은 $3$의 배수의 모임"
+              },
+              {
+                "id": "b",
+                "text": "키가 큰 사람의 모임"
+              },
+              {
+                "id": "c",
+                "text": "맛있는 음식의 모임"
+              },
+              {
+                "id": "d",
+                "text": "큰 수의 모임"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$10$보다 작은 $3$의 배수의 모임"
+              },
+              {
+                "id": "b",
+                "text": "키가 큰 사람의 모임"
+              },
+              {
+                "id": "c",
+                "text": "맛있는 음식의 모임"
+              },
+              {
+                "id": "d",
+                "text": "큰 수의 모임"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "set-basics:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "누가 가려도 같은 답이 나오나요?"
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "set-basics:practice-2:v1",
+          "conceptKeys": [
+            "set"
+          ],
+          "promptContent": [
+            {
+              "blockId": "set-basics:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A = \\{1, 2, 3, 4\\}$의 원소는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "set-basics:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "들어 있는 것을 세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "set-basics:practice-3:v1",
+          "conceptKeys": [
+            "set"
+          ],
+          "promptContent": [
+            {
+              "blockId": "set-basics:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\{1, 2\\}$의 부분집합은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "set-basics:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원소마다 넣고 빼는 두 갈래예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "set-basics:check",
+      "courseKey": "sets-logic",
+      "name": "집합과 원소 확인",
+      "versionId": "set-basics:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "set-basics:check-1:v1",
+          "conceptKeys": [
+            "set"
+          ],
+          "promptContent": [
+            {
+              "blockId": "set-basics:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\{1, 2, 3, 4\\}$의 부분집합은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 16
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "set-basics:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2^4$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "set-basics:check-2:v1",
+          "conceptKeys": [
+            "set"
+          ],
+          "promptContent": [
+            {
+              "blockId": "set-basics:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 집합이 아닌 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "무거운 물건의 모임"
+              },
+              {
+                "id": "b",
+                "text": "$10$ 이하의 소수의 모임"
+              },
+              {
+                "id": "c",
+                "text": "한 자리 자연수의 모임"
+              },
+              {
+                "id": "d",
+                "text": "$4$의 약수의 모임"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "무거운 물건의 모임"
+              },
+              {
+                "id": "b",
+                "text": "$10$ 이하의 소수의 모임"
+              },
+              {
+                "id": "c",
+                "text": "한 자리 자연수의 모임"
+              },
+              {
+                "id": "d",
+                "text": "$4$의 약수의 모임"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "set-basics:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기준이 사람마다 갈리는 것을 찾아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "set-basics:review",
+      "courseKey": "sets-logic",
+      "name": "집합과 원소 복습",
+      "versionId": "set-basics:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "set-basics:homework-1:v1",
+          "conceptKeys": [
+            "set"
+          ],
+          "promptContent": [
+            {
+              "blockId": "set-basics:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원소가 $5$개인 집합의 부분집합은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 32
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "set-basics:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2^5$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "set-basics:homework-2:v1",
+          "conceptKeys": [
+            "set"
+          ],
+          "promptContent": [
+            {
+              "blockId": "set-basics:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\{1, 2, 3\\}$의 부분집합 중 공집합을 뺀 것은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "set-basics:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$8$개에서 하나를 빼요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "set-operation:practice",
+      "courseKey": "sets-logic",
+      "name": "집합의 연산 연습",
+      "versionId": "set-operation:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "set-operation:practice-1:v1",
+          "conceptKeys": [
+            "set-operation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "set-operation:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A = \\{1,2,3\\}$, $B = \\{2,3,4\\}$일 때 교집합의 원소는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "set-operation:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "양쪽에 다 든 것을 세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "set-operation:practice-2:v1",
+          "conceptKeys": [
+            "set-operation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "set-operation:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A = \\{1,2,3\\}$, $B = \\{2,3,4\\}$일 때 합집합의 원소는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "set-operation:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "겹치는 것을 한 번만 세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "set-operation:practice-3:v1",
+          "conceptKeys": [
+            "set-operation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "set-operation:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$n(A) = 5$, $n(B) = 3$, $n(A \\cap B) = 2$일 때 $n(A \\cup B)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "set-operation:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5 + 3 - 2$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "set-operation:check",
+      "courseKey": "sets-logic",
+      "name": "집합의 연산 확인",
+      "versionId": "set-operation:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "set-operation:check-1:v1",
+          "conceptKeys": [
+            "set-operation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "set-operation:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체가 $\\{1,2,3,4,5\\}$이고 $A = \\{1,2\\}$일 때 $A$의 여집합의 원소는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "set-operation:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A$에 들지 않은 것을 세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "set-operation:check-2:v1",
+          "conceptKeys": [
+            "set-operation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "set-operation:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "학생 $30$명 중 축구를 좋아하는 $18$명, 야구를 좋아하는 $15$명, 둘 다 좋아하는 $7$명일 때 하나라도 좋아하는 학생은 몇 명인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 26
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "set-operation:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$18 + 15 - 7$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "set-operation:review",
+      "courseKey": "sets-logic",
+      "name": "집합의 연산 복습",
+      "versionId": "set-operation:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "set-operation:homework-1:v1",
+          "conceptKeys": [
+            "set-operation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "set-operation:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$n(A \\cup B) = 10$, $n(A) = 6$, $n(B) = 7$일 때 $n(A \\cap B)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "set-operation:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6 + 7 - 10$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "set-operation:homework-2:v1",
+          "conceptKeys": [
+            "set-operation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "set-operation:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "학생 $30$명 중 하나라도 좋아하는 학생이 $26$명일 때 둘 다 좋아하지 않는 학생은 몇 명인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "set-operation:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체에서 빼요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "proposition:practice",
+      "courseKey": "sets-logic",
+      "name": "명제와 대우 연습",
+      "versionId": "proposition:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "proposition:practice-1:v1",
+          "conceptKeys": [
+            "proposition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "proposition:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「$x = 2$이면 $x^2 = 4$이다」는 참인가요 거짓인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "참"
+              },
+              {
+                "id": "b",
+                "text": "거짓"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "참"
+              },
+              {
+                "id": "b",
+                "text": "거짓"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "proposition:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$를 제곱해 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "proposition:practice-2:v1",
+          "conceptKeys": [
+            "proposition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "proposition:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「$x^2 = 4$이면 $x = 2$이다」는 참인가요 거짓인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "거짓"
+              },
+              {
+                "id": "b",
+                "text": "참"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "거짓"
+              },
+              {
+                "id": "b",
+                "text": "참"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "proposition:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x = -2$를 넣어 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "proposition:practice-3:v1",
+          "conceptKeys": [
+            "contrapositive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "proposition:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「$x > 3$이면 $x > 1$이다」의 대우는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x \\le 1$이면 $x \\le 3$이다"
+              },
+              {
+                "id": "b",
+                "text": "$x > 1$이면 $x > 3$이다"
+              },
+              {
+                "id": "c",
+                "text": "$x \\le 3$이면 $x \\le 1$이다"
+              },
+              {
+                "id": "d",
+                "text": "$x < 1$이면 $x < 3$이다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x \\le 1$이면 $x \\le 3$이다"
+              },
+              {
+                "id": "b",
+                "text": "$x > 1$이면 $x > 3$이다"
+              },
+              {
+                "id": "c",
+                "text": "$x \\le 3$이면 $x \\le 1$이다"
+              },
+              {
+                "id": "d",
+                "text": "$x < 1$이면 $x < 3$이다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "proposition:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "자리를 바꾸고 둘 다 부정해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "proposition:check",
+      "courseKey": "sets-logic",
+      "name": "명제와 대우 확인",
+      "versionId": "proposition:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "proposition:check-1:v1",
+          "conceptKeys": [
+            "contrapositive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "proposition:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어떤 명제가 참일 때 반드시 참인 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "대우"
+              },
+              {
+                "id": "b",
+                "text": "역"
+              },
+              {
+                "id": "c",
+                "text": "이"
+              },
+              {
+                "id": "d",
+                "text": "없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "대우"
+              },
+              {
+                "id": "b",
+                "text": "역"
+              },
+              {
+                "id": "c",
+                "text": "이"
+              },
+              {
+                "id": "d",
+                "text": "없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "proposition:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "처음 명제와 같은 말인 것을 고르세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "proposition:check-2:v1",
+          "conceptKeys": [
+            "proposition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "proposition:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 명제가 아닌 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "이 음식은 맛있다"
+              },
+              {
+                "id": "b",
+                "text": "$2$는 짝수다"
+              },
+              {
+                "id": "c",
+                "text": "$3$은 $6$의 약수다"
+              },
+              {
+                "id": "d",
+                "text": "$1 + 1 = 3$이다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "이 음식은 맛있다"
+              },
+              {
+                "id": "b",
+                "text": "$2$는 짝수다"
+              },
+              {
+                "id": "c",
+                "text": "$3$은 $6$의 약수다"
+              },
+              {
+                "id": "d",
+                "text": "$1 + 1 = 3$이다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "proposition:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "참·거짓이 사람마다 갈리는 것을 찾아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "proposition:review",
+      "courseKey": "sets-logic",
+      "name": "명제와 대우 복습",
+      "versionId": "proposition:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "proposition:homework-1:v1",
+          "conceptKeys": [
+            "contrapositive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "proposition:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「$x$가 $4$의 배수이면 $x$는 짝수다」의 대우는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x$가 짝수가 아니면 $x$는 $4$의 배수가 아니다"
+              },
+              {
+                "id": "b",
+                "text": "$x$가 짝수이면 $x$는 $4$의 배수다"
+              },
+              {
+                "id": "c",
+                "text": "$x$가 $4$의 배수가 아니면 $x$는 짝수가 아니다"
+              },
+              {
+                "id": "d",
+                "text": "$x$는 짝수다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x$가 짝수가 아니면 $x$는 $4$의 배수가 아니다"
+              },
+              {
+                "id": "b",
+                "text": "$x$가 짝수이면 $x$는 $4$의 배수다"
+              },
+              {
+                "id": "c",
+                "text": "$x$가 $4$의 배수가 아니면 $x$는 짝수가 아니다"
+              },
+              {
+                "id": "d",
+                "text": "$x$는 짝수다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "proposition:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "자리를 바꾸고 둘 다 부정해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "proposition:homework-2:v1",
+          "conceptKeys": [
+            "proposition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "proposition:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「$x^2 = 1$이면 $x = 1$이다」가 거짓임을 보이는 반례는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x = -1$"
+              },
+              {
+                "id": "b",
+                "text": "$x = 1$"
+              },
+              {
+                "id": "c",
+                "text": "$x = 0$"
+              },
+              {
+                "id": "d",
+                "text": "$x = 2$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x = -1$"
+              },
+              {
+                "id": "b",
+                "text": "$x = 1$"
+              },
+              {
+                "id": "c",
+                "text": "$x = 0$"
+              },
+              {
+                "id": "d",
+                "text": "$x = 2$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "proposition:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가정은 맞는데 결론이 틀린 예를 찾아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "sets-logic:drill",
+      "courseKey": "sets-logic",
+      "name": "집합과 명제 모아 풀기",
+      "versionId": "sets-logic:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "sets-logic:drill-1:v1",
+          "conceptKeys": [
+            "set"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\{2, 4, 6, 8\\}$의 원소는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "들어 있는 것을 세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-2:v1",
+          "conceptKeys": [
+            "set"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\{1, 2, 3\\}$의 부분집합은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2^3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-3:v1",
+          "conceptKeys": [
+            "set"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원소가 $6$개인 집합의 부분집합은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 64
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2^6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-4:v1",
+          "conceptKeys": [
+            "set"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 집합인 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$12$의 약수의 모임"
+              },
+              {
+                "id": "b",
+                "text": "좋은 노래의 모임"
+              },
+              {
+                "id": "c",
+                "text": "예쁜 색의 모임"
+              },
+              {
+                "id": "d",
+                "text": "먼 나라의 모임"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$12$의 약수의 모임"
+              },
+              {
+                "id": "b",
+                "text": "좋은 노래의 모임"
+              },
+              {
+                "id": "c",
+                "text": "예쁜 색의 모임"
+              },
+              {
+                "id": "d",
+                "text": "먼 나라의 모임"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "누가 가려도 같은 답이 나오나요?"
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-5:v1",
+          "conceptKeys": [
+            "set"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\{1, 2, 3, 4\\}$의 부분집합 중 자기 자신을 뺀 것은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$16$개에서 하나를 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-6:v1",
+          "conceptKeys": [
+            "set"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$12$의 약수의 집합의 원소는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1, 2, 3, 4, 6, 12$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-7:v1",
+          "conceptKeys": [
+            "set-operation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A = \\{1,2,3,4\\}$, $B = \\{3,4,5\\}$일 때 교집합의 원소는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "양쪽에 다 든 것을 세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-8:v1",
+          "conceptKeys": [
+            "set-operation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A = \\{1,2,3,4\\}$, $B = \\{3,4,5\\}$일 때 합집합의 원소는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "겹치는 것을 한 번만 세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-9:v1",
+          "conceptKeys": [
+            "set-operation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$n(A) = 8$, $n(B) = 6$, $n(A \\cap B) = 3$일 때 $n(A \\cup B)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 11
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$8 + 6 - 3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-10:v1",
+          "conceptKeys": [
+            "set-operation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$n(A \\cup B) = 12$, $n(A) = 7$, $n(B) = 9$일 때 $n(A \\cap B)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$7 + 9 - 12$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-11:v1",
+          "conceptKeys": [
+            "set-operation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체가 $\\{1,2,3,4,5,6\\}$이고 $A = \\{2,4\\}$일 때 $A$의 여집합의 원소는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A$에 들지 않은 것을 세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-12:v1",
+          "conceptKeys": [
+            "set-operation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "학생 $40$명 중 수학을 좋아하는 $22$명, 과학을 좋아하는 $18$명, 둘 다 좋아하는 $10$명일 때 하나라도 좋아하는 학생은 몇 명인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$22 + 18 - 10$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-13:v1",
+          "conceptKeys": [
+            "set-operation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "학생 $40$명 중 하나라도 좋아하는 학생이 $30$명일 때 둘 다 좋아하지 않는 학생은 몇 명인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체에서 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-14:v1",
+          "conceptKeys": [
+            "proposition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「$3$은 홀수다」는 참인가요 거짓인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "참"
+              },
+              {
+                "id": "b",
+                "text": "거짓"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "참"
+              },
+              {
+                "id": "b",
+                "text": "거짓"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$을 $2$로 나누면 나머지가 있나요?"
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-15:v1",
+          "conceptKeys": [
+            "proposition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 명제가 아닌 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "이 그림은 아름답다"
+              },
+              {
+                "id": "b",
+                "text": "$5$는 소수다"
+              },
+              {
+                "id": "c",
+                "text": "$2 + 3 = 6$이다"
+              },
+              {
+                "id": "d",
+                "text": "$4$는 짝수다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "이 그림은 아름답다"
+              },
+              {
+                "id": "b",
+                "text": "$5$는 소수다"
+              },
+              {
+                "id": "c",
+                "text": "$2 + 3 = 6$이다"
+              },
+              {
+                "id": "d",
+                "text": "$4$는 짝수다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "참·거짓이 갈리지 않는 것을 찾아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-16:v1",
+          "conceptKeys": [
+            "proposition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「$x^2 = 9$이면 $x = 3$이다」는 참인가요 거짓인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "거짓"
+              },
+              {
+                "id": "b",
+                "text": "참"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "거짓"
+              },
+              {
+                "id": "b",
+                "text": "참"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x = -3$을 넣어 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-17:v1",
+          "conceptKeys": [
+            "proposition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「$x^2 = 1$이면 $x = 1$이다」의 반례는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x = -1$"
+              },
+              {
+                "id": "b",
+                "text": "$x = 1$"
+              },
+              {
+                "id": "c",
+                "text": "$x = 2$"
+              },
+              {
+                "id": "d",
+                "text": "$x = 0$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x = -1$"
+              },
+              {
+                "id": "b",
+                "text": "$x = 1$"
+              },
+              {
+                "id": "c",
+                "text": "$x = 2$"
+              },
+              {
+                "id": "d",
+                "text": "$x = 0$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가정은 맞는데 결론이 틀린 예예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-18:v1",
+          "conceptKeys": [
+            "contrapositive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「$x > 5$이면 $x > 2$이다」의 대우는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x \\le 2$이면 $x \\le 5$이다"
+              },
+              {
+                "id": "b",
+                "text": "$x > 2$이면 $x > 5$이다"
+              },
+              {
+                "id": "c",
+                "text": "$x \\le 5$이면 $x \\le 2$이다"
+              },
+              {
+                "id": "d",
+                "text": "$x < 2$이면 $x < 5$이다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x \\le 2$이면 $x \\le 5$이다"
+              },
+              {
+                "id": "b",
+                "text": "$x > 2$이면 $x > 5$이다"
+              },
+              {
+                "id": "c",
+                "text": "$x \\le 5$이면 $x \\le 2$이다"
+              },
+              {
+                "id": "d",
+                "text": "$x < 2$이면 $x < 5$이다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "자리를 바꾸고 둘 다 부정해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-19:v1",
+          "conceptKeys": [
+            "contrapositive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "명제가 참일 때 반드시 참인 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "대우"
+              },
+              {
+                "id": "b",
+                "text": "역"
+              },
+              {
+                "id": "c",
+                "text": "이"
+              },
+              {
+                "id": "d",
+                "text": "없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "대우"
+              },
+              {
+                "id": "b",
+                "text": "역"
+              },
+              {
+                "id": "c",
+                "text": "이"
+              },
+              {
+                "id": "d",
+                "text": "없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 말인 것을 고르세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sets-logic:drill-20:v1",
+          "conceptKeys": [
+            "contrapositive"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sets-logic:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「$p$이면 $q$」의 역은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$q$이면 $p$"
+              },
+              {
+                "id": "b",
+                "text": "$p$가 아니면 $q$가 아니다"
+              },
+              {
+                "id": "c",
+                "text": "$q$가 아니면 $p$가 아니다"
+              },
+              {
+                "id": "d",
+                "text": "$p$이고 $q$이다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$q$이면 $p$"
+              },
+              {
+                "id": "b",
+                "text": "$p$가 아니면 $q$가 아니다"
+              },
+              {
+                "id": "c",
+                "text": "$q$가 아니면 $p$가 아니다"
+              },
+              {
+                "id": "d",
+                "text": "$p$이고 $q$이다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sets-logic:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "자리만 바꾼 것이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}
