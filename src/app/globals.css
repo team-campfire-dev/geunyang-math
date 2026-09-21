@@ -220,6 +220,20 @@
 .scene-zone.open { stroke: var(--green); fill: #eaf0e1; }
 .scene-zone.filled { stroke: #86a364; stroke-dasharray: none; fill: transparent; }
 .scene-zone-label { font-size: 9.5px; fill: #92a17b; }
+/* A chart the learner draws. The grid is quiet and the bars are not, because the bar is the
+   thing being moved; a bar that already matches the data settles into the darker green. */
+.chart-build { padding: 22px; background: #f3f6ea; border: 1px solid #e6edd9; border-radius: 8px; }
+.chart-build .builder-prompt { margin-bottom: 16px; }
+.chart-build .data-table { margin-bottom: 14px; }
+.chart-build .chart-plot { padding: 0; background: none; border: 0; }
+.chart-build svg { touch-action: none; }
+.chart-build [role="slider"]:focus-visible { outline: 3px solid #b38151; outline-offset: 2px; }
+.chart-axis { stroke: #b6c3a4; stroke-width: 1.2; }
+.chart-grid { stroke: #dde4d2; stroke-width: 1; stroke-dasharray: 4 3; }
+.chart-tick, .chart-name { font-size: 9.5px; fill: #92a17b; }
+.chart-bar { fill: #cdd9bd; stroke: #a7b993; stroke-width: 1; transition: y .12s, height .12s, fill .2s; }
+.chart-bar.settled { fill: #8daa69; stroke: #6f8c50; }
+@media (max-width: 520px) { .chart-build { padding: 15px; } }
 .scene-task { padding: 22px; background: #f3f6ea; border: 1px solid #e6edd9; border-radius: 8px; }
 .scene-task .builder-prompt { margin-bottom: 16px; }
 .scene-task .scene-figure { padding: 0; background: none; border: 0; }

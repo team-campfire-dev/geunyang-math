@@ -85,7 +85,8 @@ describe('the installed courses', () => {
       const kinds = new Set(blocksOf(lesson).map((block) => block.kind));
       const where = lesson.public.lessonKey;
       expect(kinds.has('core.rich_text'), `${where}에 글이 없다`).toBe(true);
-      expect(kinds.has('core.scene'), `${where}에 그림이 없다`).toBe(true);
+      // A chart the learner draws counts as the figure: it is a picture, and one they make.
+      expect(kinds.has('core.scene') || kinds.has('core.chart_build'), `${where}에 그림이 없다`).toBe(true);
       expect(kinds.has('core.problem_set'), `${where}에 문항이 없다`).toBe(true);
     }
   });
@@ -95,13 +96,15 @@ describe('the installed courses', () => {
     expect(arranged.length, '학습자가 놓아 보는 그림이 하나도 없다').toBeGreaterThan(0);
   });
 
-  it('gives every lesson something that moves or something to arrange', () => {
-    // Reached 12 of 12 once; a lesson added without either is a lesson that only talks.
+  it('gives every lesson something that moves, something to arrange, or something to draw', () => {
+    // Reached 12 of 12 once; a lesson added without any of them is a lesson that only talks.
+    // 도표작성 added the third kind: the learner puts the data up on a grid themselves.
     for (const lesson of lessons) {
       const drawings = scenes(lesson);
       const alive = drawings.some((block) => Array.isArray(block.payload.frames) && block.payload.frames.length > 1)
-        || drawings.some((block) => Array.isArray(block.payload.zones) && block.payload.zones.length > 0);
-      expect(alive, `${lesson.public.lessonKey}에 움직이거나 놓아 보는 그림이 없다`).toBe(true);
+        || drawings.some((block) => Array.isArray(block.payload.zones) && block.payload.zones.length > 0)
+        || blocksOf(lesson).some((block) => block.kind === 'core.chart_build');
+      expect(alive, `${lesson.public.lessonKey}에 움직이거나 놓아 보거나 그려 보는 것이 없다`).toBe(true);
     }
   });
 

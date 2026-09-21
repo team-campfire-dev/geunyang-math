@@ -172,6 +172,63 @@ describe('a table of numbers', () => {
   });
 });
 
+describe('a chart the learner draws', () => {
+  const chart = (payload: Record<string, unknown> = {}) => block('core.chart_build', 1, {
+    caption: '지점별 접수 건수', note: '단위: 건', axisMax: 40, axisStep: 10,
+    prompt: '표의 값을 막대그래프로 옮겨 그려 보세요.',
+    successText: '자료와 똑같아졌어요.',
+    bars: [{ label: 'A지점', value: 30 }, { label: 'B지점', value: 10 }],
+    ...payload,
+  });
+
+  it('shows the data beside the grid, since the learner is transcribing and not guessing', () => {
+    render(<ContentBlocks blocks={[chart()]} />);
+    expect(screen.getByRole('group', { name: '지점별 접수 건수' })).toBeDefined();
+    expect(screen.getByText('표의 값을 막대그래프로 옮겨 그려 보세요.')).toBeDefined();
+    expect(screen.getByText('막대 2개 중 0개가 자료와 같아요.')).toBeDefined();
+  });
+
+  it('finishes from the keyboard alone, with nothing dragged', () => {
+    render(<ContentBlocks blocks={[chart()]} />);
+    const first = screen.getByRole('slider', { name: 'A지점' });
+    expect(first.getAttribute('aria-valuenow')).toBe('0');
+    expect(first.getAttribute('aria-valuemax')).toBe('40');
+    for (let press = 0; press < 3; press += 1) fireEvent.keyDown(first, { key: 'ArrowUp' });
+    expect(first.getAttribute('aria-valuenow')).toBe('30');
+    expect(screen.getByText('막대 2개 중 1개가 자료와 같아요.')).toBeDefined();
+    fireEvent.keyDown(screen.getByRole('slider', { name: 'B지점' }), { key: 'ArrowUp' });
+    expect(screen.getByText('자료와 똑같아졌어요.')).toBeDefined();
+  });
+
+  it('keeps a bar on the axis however long a key is held', () => {
+    render(<ContentBlocks blocks={[chart()]} />);
+    const bar = screen.getByRole('slider', { name: 'A지점' });
+    fireEvent.keyDown(bar, { key: 'ArrowDown' });
+    expect(bar.getAttribute('aria-valuenow')).toBe('0');
+    fireEvent.keyDown(bar, { key: 'End' });
+    expect(bar.getAttribute('aria-valuenow')).toBe('40');
+    fireEvent.keyDown(bar, { key: 'ArrowUp' });
+    expect(bar.getAttribute('aria-valuenow')).toBe('40');
+    fireEvent.keyDown(bar, { key: 'Home' });
+    expect(bar.getAttribute('aria-valuenow')).toBe('0');
+  });
+
+  it('puts every bar back on the floor', () => {
+    render(<ContentBlocks blocks={[chart()]} />);
+    fireEvent.keyDown(screen.getByRole('slider', { name: 'A지점' }), { key: 'End' });
+    fireEvent.click(screen.getByRole('button', { name: '처음으로' }));
+    expect(screen.getByRole('slider', { name: 'A지점' }).getAttribute('aria-valuenow')).toBe('0');
+  });
+
+  it('draws nothing at all when a value could never be reached', () => {
+    // The bars move a tick at a time, so 25 on a 10-tick axis is a task with no ending. Drawing it
+    // anyway would leave the learner trying; refusing it is what sends the author back to fix it.
+    const { container } = render(<ContentBlocks blocks={[chart({ bars: [{ label: 'A', value: 25 }, { label: 'B', value: 10 }] })]} />);
+    expect(container.querySelector('.chart-build')).toBeNull();
+    expect(container.querySelector('.unsupported-block')).not.toBeNull();
+  });
+});
+
 describe('a drawing the learner arranges', () => {
   const items: SceneItem[] = [{ kind: 'rect', id: 'piece', label: '조각', draggable: true, x: 10, y: 120, width: 40, height: 40 }];
   const zones: SceneZone[] = [{ id: 'slot', x: 200, y: 20, width: 60, height: 60, label: '빈 자리' }];
