@@ -5,7 +5,7 @@
       "key": "polynomials",
       "title": "식의 계산",
       "summary": "같은 문자를 거듭 곱한 식을 지수로 다루고, 항이 여럿인 식을 곱하고 더하고 빼며 정리해요.",
-      "order": 7,
+      "order": 210,
       "lessons": [
         {
           "key": "exponent-law",

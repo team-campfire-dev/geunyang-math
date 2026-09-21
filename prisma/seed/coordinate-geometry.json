@@ -5,7 +5,7 @@
       "key": "coordinate-geometry",
       "title": "도형의 방정식",
       "summary": "도형을 좌표평면에 올려놓고 자 없이 계산으로 다뤄요. 거리를 재고, 직선을 식으로 적고, 원을 식으로 적어요.",
-      "order": 24,
+      "order": 460,
       "track": "high",
       "stage": "high-1",
       "lessons": [

@@ -5,7 +5,7 @@
       "key": "ncs-applied",
       "title": "응용계산",
       "summary": "원가와 할인, 소금물의 농도, 속력을 시험이 묻는 방식 그대로 계산해요.",
-      "order": 12,
+      "order": 920,
       "track": "ncs",
       "lessons": [
         {

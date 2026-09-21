@@ -5,7 +5,7 @@
       "key": "equations",
       "title": "일차방정식",
       "summary": "어떤 수를 넣어야 양쪽이 같아지는지를 묻고, 등식의 성질로 문자만 남겨 그 수를 찾아요.",
-      "order": 6,
+      "order": 130,
       "lessons": [
         {
           "key": "equation-meaning",

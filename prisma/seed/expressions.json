@@ -5,7 +5,7 @@
       "key": "expressions",
       "title": "문자와 식",
       "summary": "아직 모르는 수를 문자로 세워 규칙을 한 줄로 적고, 수를 넣어 값을 구하고, 같은 것끼리 모아 정리해요.",
-      "order": 5,
+      "order": 120,
       "lessons": [
         {
           "key": "variable-expression",

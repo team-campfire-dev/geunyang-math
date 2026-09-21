@@ -5,7 +5,7 @@
       "key": "decimals",
       "title": "소수",
       "summary": "소수점으로 쓴 수를 읽고, 분수와 오가며, 자리를 맞춰 더해요.",
-      "order": 2,
+      "order": 20,
       "lessons": [
         {
           "key": "decimal-meaning",

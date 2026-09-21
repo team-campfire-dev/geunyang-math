@@ -5,7 +5,7 @@
       "key": "inequalities",
       "title": "일차부등식",
       "summary": "같다가 아니라 크다·작다를 묻는 식을 세우고, 음수를 곱하거나 나눌 때 방향이 뒤집힌다는 것에 주의하며 풀어요.",
-      "order": 8,
+      "order": 220,
       "lessons": [
         {
           "key": "inequality-meaning",

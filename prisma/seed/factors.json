@@ -1,0 +1,2885 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "factors",
+      "title": "소인수분해",
+      "summary": "수를 더 쪼갤 수 없을 때까지 갈라 보고, 두 수가 무엇을 나눠 갖는지 찾아요. 약분과 통분의 뒷면이에요.",
+      "order": 100,
+      "track": "middle",
+      "stage": "middle-1",
+      "lessons": [
+        {
+          "key": "prime-number",
+          "order": 1
+        },
+        {
+          "key": "prime-factorization",
+          "order": 2
+        },
+        {
+          "key": "gcd-lcm",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "prime-number",
+      "label": "소수와 합성수",
+      "assessable": true
+    },
+    {
+      "key": "prime-factorization",
+      "label": "소인수분해",
+      "assessable": true
+    },
+    {
+      "key": "gcd-lcm",
+      "label": "최대공약수와 최소공배수",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "prime-number",
+        "versionId": "prime-number:v1",
+        "title": "소수와 합성수: 더 쪼갤 수 있는가",
+        "summary": "수를 직사각형으로 놓아 보며 더 쪼개지는 수와 그렇지 않은 수를 갈라요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "prime-number"
+        ],
+        "prerequisiteConceptKeys": [
+          "fraction",
+          "reduce"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "prime-number:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "prime-number:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "바둑돌 $12$개를 직사각형으로 늘어놓아 볼게요. $2$줄로 $6$개씩, $3$줄로 $4$개씩, 여러 방법이 있어요.\n\n$13$개는 어떨까요. 한 줄로 늘어놓는 것 말고는 방법이 없어요. $13$은 $1$과 $13$ 말고는 나누어떨어지지 않으니까요.\n\n이렇게 $1$보다 큰 자연수 중 $1$과 자기 자신으로만 나누어떨어지는 수를 소수라고 해요. $2, 3, 5, 7, 11, 13, \\ldots$이 그래요.\n\n그렇지 않은 수, 곧 더 쪼갤 수 있는 수는 합성수라고 해요. $4, 6, 8, 9, 12$ 같은 수들이에요.\n\n$1$은 어느 쪽도 아니에요. 소수도 합성수도 아닌 특별한 수로 따로 둡니다.\n\n$2$는 소수 중에 유일하게 짝수예요. 다른 짝수는 모두 $2$로 나누어떨어지니 합성수거든요.\n\n어떤 수가 소수인지 알아보려면 작은 소수부터 나눠 보면 돼요. $2$, $3$, $5$, $7$로 나눠 떨어지지 않으면 $50$보다 작은 수는 소수예요. 제곱해서 그 수를 넘는 소수까지만 확인하면 되거든요.",
+                "definitions": [
+                  {
+                    "conceptKey": "prime-number",
+                    "surface": "소수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "prime-number:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "직사각형으로 놓이는 수는 지워지고 한 줄로만 놓이는 수가 남는 그림",
+                "caption": "직사각형으로 놓을 수 없는 수가 소수예요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 24,
+                    "text": "$12$개는 어떻게 놓을까요",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 52,
+                    "y": 44,
+                    "width": 96,
+                    "height": 24,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "r1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 100,
+                    "y": 60,
+                    "text": "$1 \\times 12$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "t1"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 52,
+                    "y": 72,
+                    "width": 96,
+                    "height": 24,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "r2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 100,
+                    "y": 88,
+                    "text": "$2 \\times 6$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "t2"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 52,
+                    "y": 100,
+                    "width": 96,
+                    "height": 24,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "r3"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 100,
+                    "y": 116,
+                    "text": "$3 \\times 4$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "t3"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 180,
+                    "y": 44,
+                    "width": 96,
+                    "height": 24,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "p1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 228,
+                    "y": 60,
+                    "text": "$1 \\times 13$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "s1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 228,
+                    "y": 92,
+                    "text": "그것뿐",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "s2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 228,
+                    "y": 24,
+                    "text": "$13$개는요?",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 100,
+                    "y": 152,
+                    "text": "합성수",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "lab1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 228,
+                    "y": 152,
+                    "text": "소수",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "lab2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 182,
+                    "text": "나누어떨어지는 수가 $1$과 자기 자신뿐이면 소수",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "note",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$12$개를 직사각형으로 놓는 방법은 여럿이에요.",
+                    "changes": [
+                      {
+                        "id": "s1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lab1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lab2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$13$개는 한 줄로 늘어놓는 것 말고는 방법이 없어요.",
+                    "changes": [
+                      {
+                        "id": "s1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lab1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lab2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "나누어떨어지는 수가 $1$과 자기 자신뿐인 수를 소수라고 해요.",
+                    "changes": [
+                      {
+                        "id": "s1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lab1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lab2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "prime-number:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "prime-number:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$91$이 소수인지 알아볼게요.\n\n작은 소수부터 차례로 나눠 봐요. $2$로는 안 돼요. 홀수니까요.\n\n$3$으로도 안 돼요. 자리 수를 더하면 $9 + 1 = 10$인데 $3$의 배수가 아니에요.\n\n$5$로도 안 돼요. 끝자리가 $0$이나 $5$가 아니니까요.\n\n$7$은 어떨까요. $91 \\div 7 = 13$이에요. 나누어떨어졌어요.\n\n그러니 $91 = 7 \\times 13$인 합성수예요. 소수처럼 보여도 나눠 봐야 알 수 있어요.\n\n어디까지 나눠 봐야 할까요. 제곱해서 그 수를 넘는 소수까지만 보면 돼요. $91$이라면 $9^2 = 81$, $10^2 = 100$이니 $10$보다 작은 소수, 곧 $2, 3, 5, 7$까지만 확인하면 충분해요. 더 큰 수로 나누어떨어진다면 짝이 되는 작은 수가 이미 걸렸을 테니까요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "prime-number:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "prime-number:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "prime-number:practice",
+                "problemSetVersionId": "prime-number:practice:v1",
+                "problemVersionIds": [
+                  "prime-number:practice-1:v1",
+                  "prime-number:practice-2:v1",
+                  "prime-number:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "prime-number:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "prime-number:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "prime-number:check",
+                "problemSetVersionId": "prime-number:check:v1",
+                "problemVersionIds": [
+                  "prime-number:check-1:v1",
+                  "prime-number:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "prime-number:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "prime-number:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$1$과 자기 자신으로만 나누어떨어지는 수가 소수, 더 쪼갤 수 있는 수가 합성수예요.\n\n$1$은 어느 쪽도 아니고, $2$는 소수 중 유일한 짝수예요.\n\n소수인지 보려면 작은 소수부터 나눠 보되, 제곱해서 그 수를 넘는 소수까지만 확인하면 돼요.\n\n다음 수업에서는 합성수를 소수들의 곱으로 쪼개요. 그러면 약수와 배수가 한눈에 보여요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "prime-number:review",
+        "problemSetVersionId": "prime-number:review:v1",
+        "problemVersionIds": [
+          "prime-number:homework-1:v1",
+          "prime-number:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "prime-factorization",
+        "versionId": "prime-factorization:v1",
+        "title": "소인수분해: 소수들의 곱으로 쪼개기",
+        "summary": "합성수를 더 쪼갤 수 없을 때까지 갈라, 그 수가 무엇으로 이루어졌는지 봐요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "prime-factorization"
+        ],
+        "prerequisiteConceptKeys": [
+          "prime-number"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "prime-factorization:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "prime-factorization:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "합성수는 더 쪼갤 수 있다고 했죠. 끝까지 쪼개 보면 어떻게 될까요.\n\n$60$을 갈라 볼게요. $60 = 2 \\times 30$이에요. $30$은 아직 합성수니 또 갈라요. $30 = 2 \\times 15$. $15$도 $3 \\times 5$로 갈라지고요.\n\n이제 끝에 남은 $2, 2, 3, 5$는 모두 소수라 더 갈라지지 않아요. $60 = 2 \\times 2 \\times 3 \\times 5$이고, 같은 수를 거듭제곱으로 묶어 $2^2 \\times 3 \\times 5$로 적어요.\n\n이것을 소인수분해라고 해요. 합성수를 소수들의 곱으로 나타내는 일이에요.\n\n갈라 가는 순서를 달리해도 결과는 같아요. $60 = 6 \\times 10$으로 시작해도 끝에는 똑같이 $2^2 \\times 3 \\times 5$가 나와요. 수마다 소인수분해가 하나뿐이라는 것이 이 일의 핵심이에요.\n\n쪼개 놓으면 약수가 한눈에 보여요. $60$의 약수는 $2$를 $0$개나 $1$개나 $2$개, $3$을 $0$개나 $1$개, $5$를 $0$개나 $1$개 쓰는 모든 조합이에요.\n\n그래서 약수의 개수는 $3 \\times 2 \\times 2 = 12$개예요. 지수에 $1$을 더해 곱하면 되는 거예요. 하나하나 세지 않아도 되죠.",
+                "definitions": [
+                  {
+                    "conceptKey": "prime-factorization",
+                    "surface": "소인수분해",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "prime-factorization:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "수가 두 갈래로 갈라지기를 되풀이해 마지막에 소수만 남는 그림",
+                "caption": "더 쪼개지지 않을 때까지 갈라요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 34,
+                    "text": "$60$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 152,
+                    "y1": 44,
+                    "x2": 120,
+                    "y2": 68,
+                    "stroke": "line",
+                    "strokeWidth": 1.3,
+                    "id": "a1"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 168,
+                    "y1": 44,
+                    "x2": 200,
+                    "y2": 68,
+                    "stroke": "line",
+                    "strokeWidth": 1.3,
+                    "id": "a2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 112,
+                    "y": 82,
+                    "text": "$2$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "n2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 204,
+                    "y": 82,
+                    "text": "$30$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "n30"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 196,
+                    "y1": 92,
+                    "x2": 168,
+                    "y2": 116,
+                    "stroke": "line",
+                    "strokeWidth": 1.3,
+                    "id": "a3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 212,
+                    "y1": 92,
+                    "x2": 240,
+                    "y2": 116,
+                    "stroke": "line",
+                    "strokeWidth": 1.3,
+                    "id": "a4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 130,
+                    "text": "$2$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "n2b",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 244,
+                    "y": 130,
+                    "text": "$15$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "n15",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 236,
+                    "y1": 140,
+                    "x2": 212,
+                    "y2": 162,
+                    "stroke": "line",
+                    "strokeWidth": 1.3,
+                    "id": "a5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 252,
+                    "y1": 140,
+                    "x2": 276,
+                    "y2": 162,
+                    "stroke": "line",
+                    "strokeWidth": 1.3,
+                    "id": "a6",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 206,
+                    "y": 176,
+                    "text": "$3$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "n3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 280,
+                    "y": 176,
+                    "text": "$5$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "n5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 74,
+                    "y": 150,
+                    "text": "$60 = 2^2 \\times 3 \\times 5$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "law",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$60$을 두 수의 곱으로 갈라요. $2 \\times 30$이에요.",
+                    "changes": [
+                      {
+                        "id": "a3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "a4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n2b",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n15",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "a5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "a6",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$30$은 아직 더 갈라져요. $2 \\times 15$예요.",
+                    "changes": [
+                      {
+                        "id": "a3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n2b",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n15",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "a6",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$15$도 갈라 $3 \\times 5$. 이제 끝의 수가 모두 소수예요.",
+                    "changes": [
+                      {
+                        "id": "a3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n2b",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n15",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a6",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "prime-factorization:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "prime-factorization:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$72$를 소인수분해해 볼게요.\n\n작은 소수부터 나눠요. $72 \\div 2 = 36$, $36 \\div 2 = 18$, $18 \\div 2 = 9$예요.\n\n$9$는 $2$로 나누어떨어지지 않으니 다음 소수로 넘어가요. $9 \\div 3 = 3$, $3 \\div 3 = 1$이에요.\n\n$1$이 될 때까지 나눴으니 끝이에요. 나눈 소수를 모으면 $2, 2, 2, 3, 3$이고, $72 = 2^3 \\times 3^2$이에요.\n\n약수의 개수도 구해 볼게요. 지수가 $3$과 $2$이니 각각 $1$을 더해 곱하면 $4 \\times 3 = 12$개예요.\n\n확인해 볼까요. $72$의 약수는 $1, 2, 3, 4, 6, 8, 9, 12, 18, 24, 36, 72$로 정말 $12$개예요.\n\n제곱근에서도 이 일이 쓰여요. $\\sqrt{72}$를 간단히 할 때 $72 = 2^3 \\times 3^2$으로 쪼개면 짝이 맞는 것을 밖으로 꺼내 $6\\sqrt{2}$가 된다는 것이 바로 보여요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "prime-factorization:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "prime-factorization:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "prime-factorization:practice",
+                "problemSetVersionId": "prime-factorization:practice:v1",
+                "problemVersionIds": [
+                  "prime-factorization:practice-1:v1",
+                  "prime-factorization:practice-2:v1",
+                  "prime-factorization:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "prime-factorization:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "prime-factorization:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "prime-factorization:check",
+                "problemSetVersionId": "prime-factorization:check:v1",
+                "problemVersionIds": [
+                  "prime-factorization:check-1:v1",
+                  "prime-factorization:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "prime-factorization:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "prime-factorization:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "합성수를 더 쪼갤 수 없을 때까지 갈라 소수들의 곱으로 적는 것이 소인수분해예요.\n\n같은 소수는 거듭제곱으로 묶어 적고, 갈라 가는 순서를 바꿔도 결과는 하나예요.\n\n약수의 개수는 지수에 각각 $1$을 더해 곱하면 나와요.\n\n다음 수업에서는 두 수를 함께 쪼개 공통된 것과 모자란 것을 찾아요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "prime-factorization:review",
+        "problemSetVersionId": "prime-factorization:review:v1",
+        "problemVersionIds": [
+          "prime-factorization:homework-1:v1",
+          "prime-factorization:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "gcd-lcm",
+        "versionId": "gcd-lcm:v1",
+        "title": "최대공약수와 최소공배수: 겹치는 것과 모두 모은 것",
+        "summary": "두 수를 나란히 쪼개 공통으로 든 것과 합쳐야 할 것을 찾아요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "gcd-lcm"
+        ],
+        "prerequisiteConceptKeys": [
+          "prime-factorization",
+          "common-denominator",
+          "reduce"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "gcd-lcm:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "gcd-lcm:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$12$와 $18$을 나란히 쪼개 볼게요. $12 = 2^2 \\times 3$이고 $18 = 2 \\times 3^2$이에요.\n\n두 수를 모두 나누어떨어지게 하는 수를 공약수라 하고, 그중 가장 큰 것을 최대공약수라고 해요.\n\n쪼개 놓으면 바로 보여요. 양쪽에 다 있는 것만 챙기면 돼요. $2$는 양쪽에 있고($12$에는 두 개, $18$에는 한 개) 적은 쪽인 한 개만, $3$도 한 개만 챙겨 $2 \\times 3 = 6$이에요.\n\n반대로 두 수의 배수이면서 가장 작은 수를 최소공배수라고 해요. 이번에는 양쪽 것을 모두 모으되 겹치는 것은 많은 쪽을 챙겨요. $2^2 \\times 3^2 = 36$이에요.\n\n「적은 쪽을 챙기면 최대공약수, 많은 쪽을 챙기면 최소공배수」로 기억하면 편해요.\n\n이미 쓰고 있던 것이기도 해요. 분수를 약분할 때 분자와 분모의 최대공약수로 나누면 한 번에 기약분수가 되고, 통분할 때 분모의 최소공배수를 쓰면 수가 가장 작게 유지돼요.\n\n두 수의 곱은 최대공약수와 최소공배수의 곱과 같아요. $12 \\times 18 = 216$이고 $6 \\times 36 = 216$이죠. 겹치는 것을 한 번씩 세느냐 두 번 세느냐의 차이라 그래요.",
+                "definitions": [
+                  {
+                    "conceptKey": "gcd-lcm",
+                    "surface": "최대공약수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "gcd-lcm:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "두 수를 쪼갠 소인수가 겹치는 자리와 합친 자리로 나뉘는 그림",
+                "caption": "겹치는 것이 최대공약수, 모두 모은 것이 최소공배수예요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 76,
+                    "y": 34,
+                    "text": "$12 = 2^2 \\times 3$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 244,
+                    "y": 34,
+                    "text": "$18 = 2 \\times 3^2$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 116,
+                    "cy": 104,
+                    "rx": 62,
+                    "ry": 46,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "opacity": 0.8,
+                    "id": "ca"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 204,
+                    "cy": 104,
+                    "rx": 62,
+                    "ry": 46,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "opacity": 0.55,
+                    "id": "cb"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 84,
+                    "y": 104,
+                    "text": "$2$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "only1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 236,
+                    "y": 104,
+                    "text": "$3$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "only2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 96,
+                    "text": "$2$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "both1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 118,
+                    "text": "$3$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "both2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 166,
+                    "text": "겹치는 것 $2 \\times 3 = 6$이 최대공약수",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "g",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 186,
+                    "text": "모두 모은 $2^2 \\times 3^2 = 36$이 최소공배수",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "l",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "두 수를 각각 소인수로 쪼갰어요.",
+                    "changes": [
+                      {
+                        "id": "both1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "both2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "l",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "양쪽에 다 있는 것이 가운데로 모여요.",
+                    "changes": [
+                      {
+                        "id": "both1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "both2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "g",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "l",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "겹치는 것만 곱하면 최대공약수, 양쪽 것을 모두 모으면 최소공배수예요.",
+                    "changes": [
+                      {
+                        "id": "both1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "both2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "g",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "l",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "gcd-lcm:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "gcd-lcm:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$24$와 $36$의 최대공약수와 최소공배수를 구해 볼게요.\n\n먼저 쪼개요. $24 = 2^3 \\times 3$이고 $36 = 2^2 \\times 3^2$이에요.\n\n최대공약수는 겹치는 것만, 적은 쪽으로 챙겨요. $2$는 세 개와 두 개 중 두 개, $3$은 한 개와 두 개 중 한 개예요. $2^2 \\times 3 = 12$예요.\n\n최소공배수는 모두 모으되 많은 쪽으로 챙겨요. $2^3 \\times 3^2 = 72$예요.\n\n확인해 볼까요. $24 \\times 36 = 864$이고 $12 \\times 72 = 864$로 같아요.\n\n쓸모를 하나 볼게요. $\\dfrac{24}{36}$을 기약분수로 만들려면 최대공약수 $12$로 나눠요. $\\dfrac{2}{3}$이에요.\n\n또 $\\dfrac{1}{24} + \\dfrac{1}{36}$을 계산하려면 최소공배수 $72$로 통분해요. $\\dfrac{3}{72} + \\dfrac{2}{72} = \\dfrac{5}{72}$예요. 분수에서 하던 일의 뒷면이 이것이었어요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "gcd-lcm:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "gcd-lcm:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "gcd-lcm:practice",
+                "problemSetVersionId": "gcd-lcm:practice:v1",
+                "problemVersionIds": [
+                  "gcd-lcm:practice-1:v1",
+                  "gcd-lcm:practice-2:v1",
+                  "gcd-lcm:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "gcd-lcm:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "gcd-lcm:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "gcd-lcm:check",
+                "problemSetVersionId": "gcd-lcm:check:v1",
+                "problemVersionIds": [
+                  "gcd-lcm:check-1:v1",
+                  "gcd-lcm:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "gcd-lcm:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "gcd-lcm:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 수를 소인수로 쪼개 놓으면 최대공약수와 최소공배수가 한눈에 보여요.\n\n겹치는 것을 적은 쪽으로 챙기면 최대공약수, 모두 모아 많은 쪽으로 챙기면 최소공배수예요.\n\n두 수의 곱은 최대공약수와 최소공배수의 곱과 같아요.\n\n약분에는 최대공약수를, 통분에는 최소공배수를 써요. 분수에서 이미 하던 일이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "gcd-lcm:review",
+        "problemSetVersionId": "gcd-lcm:review:v1",
+        "problemVersionIds": [
+          "gcd-lcm:homework-1:v1",
+          "gcd-lcm:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "prime-number:practice",
+      "courseKey": "factors",
+      "name": "소수와 합성수 연습",
+      "versionId": "prime-number:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "prime-number:practice-1:v1",
+          "conceptKeys": [
+            "prime-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "prime-number:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$20$보다 작은 소수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "prime-number:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2, 3, 5, 7, 11, 13, 17, 19$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "prime-number:practice-2:v1",
+          "conceptKeys": [
+            "prime-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "prime-number:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 소수인 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$17$"
+              },
+              {
+                "id": "b",
+                "text": "$21$"
+              },
+              {
+                "id": "c",
+                "text": "$27$"
+              },
+              {
+                "id": "d",
+                "text": "$1$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$17$"
+              },
+              {
+                "id": "b",
+                "text": "$21$"
+              },
+              {
+                "id": "c",
+                "text": "$27$"
+              },
+              {
+                "id": "d",
+                "text": "$1$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "prime-number:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$과 자기 자신 말고 나누어떨어지는 수가 있나요?"
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "prime-number:practice-3:v1",
+          "conceptKeys": [
+            "prime-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "prime-number:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$12$의 약수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "prime-number:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1, 2, 3, 4, 6, 12$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "prime-number:check",
+      "courseKey": "factors",
+      "name": "소수와 합성수 확인",
+      "versionId": "prime-number:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "prime-number:check-1:v1",
+          "conceptKeys": [
+            "prime-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "prime-number:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$91$을 나누어떨어지게 하는 가장 작은 소수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "prime-number:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$, $3$, $5$로는 나누어떨어지지 않아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "prime-number:check-2:v1",
+          "conceptKeys": [
+            "prime-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "prime-number:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소수도 합성수도 아닌 수는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$1$"
+              },
+              {
+                "id": "b",
+                "text": "$2$"
+              },
+              {
+                "id": "c",
+                "text": "$9$"
+              },
+              {
+                "id": "d",
+                "text": "$0$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$1$"
+              },
+              {
+                "id": "b",
+                "text": "$2$"
+              },
+              {
+                "id": "c",
+                "text": "$9$"
+              },
+              {
+                "id": "d",
+                "text": "$0$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "prime-number:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "약수가 자기 자신 하나뿐인 수예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "prime-number:review",
+      "courseKey": "factors",
+      "name": "소수와 합성수 복습",
+      "versionId": "prime-number:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "prime-number:homework-1:v1",
+          "conceptKeys": [
+            "prime-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "prime-number:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$30$보다 작은 소수 중 가장 큰 것을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 29
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "prime-number:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$29$는 어떤 수로 나누어떨어지나요?"
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "prime-number:homework-2:v1",
+          "conceptKeys": [
+            "prime-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "prime-number:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소수 중 유일한 짝수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "prime-number:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다른 짝수는 모두 $2$로 나누어떨어져요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "prime-factorization:practice",
+      "courseKey": "factors",
+      "name": "소인수분해 연습",
+      "versionId": "prime-factorization:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "prime-factorization:practice-1:v1",
+          "conceptKeys": [
+            "prime-factorization"
+          ],
+          "promptContent": [
+            {
+              "blockId": "prime-factorization:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$60 = 2^a \\times 3 \\times 5$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "prime-factorization:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$로 몇 번 나누어지나요?"
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "prime-factorization:practice-2:v1",
+          "conceptKeys": [
+            "prime-factorization"
+          ],
+          "promptContent": [
+            {
+              "blockId": "prime-factorization:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$72 = 2^3 \\times 3^b$일 때 $b$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "prime-factorization:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$8$로 나누면 $9$가 남아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "prime-factorization:practice-3:v1",
+          "conceptKeys": [
+            "prime-factorization"
+          ],
+          "promptContent": [
+            {
+              "blockId": "prime-factorization:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$72$의 약수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "prime-factorization:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "지수에 $1$씩 더해 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "prime-factorization:check",
+      "courseKey": "factors",
+      "name": "소인수분해 확인",
+      "versionId": "prime-factorization:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "prime-factorization:check-1:v1",
+          "conceptKeys": [
+            "prime-factorization"
+          ],
+          "promptContent": [
+            {
+              "blockId": "prime-factorization:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$45$를 소인수분해하면 $3^a \\times 5$입니다. $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "prime-factorization:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$45 = 9 \\times 5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "prime-factorization:check-2:v1",
+          "conceptKeys": [
+            "prime-factorization"
+          ],
+          "promptContent": [
+            {
+              "blockId": "prime-factorization:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$100$의 약수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "prime-factorization:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$100 = 2^2 \\times 5^2$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "prime-factorization:review",
+      "courseKey": "factors",
+      "name": "소인수분해 복습",
+      "versionId": "prime-factorization:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "prime-factorization:homework-1:v1",
+          "conceptKeys": [
+            "prime-factorization"
+          ],
+          "promptContent": [
+            {
+              "blockId": "prime-factorization:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$84$를 소인수분해하면 $2^2 \\times 3 \\times a$입니다. $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "prime-factorization:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$84 \\div 12$를 계산해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "prime-factorization:homework-2:v1",
+          "conceptKeys": [
+            "prime-factorization"
+          ],
+          "promptContent": [
+            {
+              "blockId": "prime-factorization:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2^4 \\times 3^2$의 약수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "prime-factorization:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5 \\times 3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "gcd-lcm:practice",
+      "courseKey": "factors",
+      "name": "최대공약수와 최소공배수 연습",
+      "versionId": "gcd-lcm:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "gcd-lcm:practice-1:v1",
+          "conceptKeys": [
+            "gcd-lcm"
+          ],
+          "promptContent": [
+            {
+              "blockId": "gcd-lcm:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$12$와 $18$의 최대공약수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "gcd-lcm:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "겹치는 소인수를 적은 쪽으로 챙겨요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "gcd-lcm:practice-2:v1",
+          "conceptKeys": [
+            "gcd-lcm"
+          ],
+          "promptContent": [
+            {
+              "blockId": "gcd-lcm:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$12$와 $18$의 최소공배수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 36
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "gcd-lcm:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "모두 모으되 많은 쪽으로 챙겨요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "gcd-lcm:practice-3:v1",
+          "conceptKeys": [
+            "gcd-lcm"
+          ],
+          "promptContent": [
+            {
+              "blockId": "gcd-lcm:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$24$와 $36$의 최대공약수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "gcd-lcm:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2^2 \\times 3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "gcd-lcm:check",
+      "courseKey": "factors",
+      "name": "최대공약수와 최소공배수 확인",
+      "versionId": "gcd-lcm:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "gcd-lcm:check-1:v1",
+          "conceptKeys": [
+            "gcd-lcm"
+          ],
+          "promptContent": [
+            {
+              "blockId": "gcd-lcm:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$24$와 $36$의 최소공배수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 72
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "gcd-lcm:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2^3 \\times 3^2$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "gcd-lcm:check-2:v1",
+          "conceptKeys": [
+            "gcd-lcm"
+          ],
+          "promptContent": [
+            {
+              "blockId": "gcd-lcm:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\dfrac{24}{36}$을 기약분수로 나타낼 때 분자를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "gcd-lcm:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "최대공약수 $12$로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "gcd-lcm:review",
+      "courseKey": "factors",
+      "name": "최대공약수와 최소공배수 복습",
+      "versionId": "gcd-lcm:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "gcd-lcm:homework-1:v1",
+          "conceptKeys": [
+            "gcd-lcm"
+          ],
+          "promptContent": [
+            {
+              "blockId": "gcd-lcm:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$8$과 $20$의 최소공배수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 40
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "gcd-lcm:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2^3 \\times 5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "gcd-lcm:homework-2:v1",
+          "conceptKeys": [
+            "gcd-lcm"
+          ],
+          "promptContent": [
+            {
+              "blockId": "gcd-lcm:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 수의 곱이 $216$이고 최대공약수가 $6$일 때 최소공배수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 36
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "gcd-lcm:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 수의 곱은 최대공약수와 최소공배수의 곱과 같아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "factors:drill",
+      "courseKey": "factors",
+      "name": "소인수분해 모아 풀기",
+      "versionId": "factors:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "factors:drill-1:v1",
+          "conceptKeys": [
+            "prime-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10$보다 작은 소수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2, 3, 5, 7$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-2:v1",
+          "conceptKeys": [
+            "prime-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 합성수인 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$21$"
+              },
+              {
+                "id": "b",
+                "text": "$19$"
+              },
+              {
+                "id": "c",
+                "text": "$23$"
+              },
+              {
+                "id": "d",
+                "text": "$11$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$21$"
+              },
+              {
+                "id": "b",
+                "text": "$19$"
+              },
+              {
+                "id": "c",
+                "text": "$23$"
+              },
+              {
+                "id": "d",
+                "text": "$11$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$으로 나누어떨어지나요?"
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-3:v1",
+          "conceptKeys": [
+            "prime-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$18$의 약수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1,2,3,6,9,18$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-4:v1",
+          "conceptKeys": [
+            "prime-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$40$보다 작은 소수 중 가장 큰 것을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 37
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$37$을 나눠 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-5:v1",
+          "conceptKeys": [
+            "prime-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$51$을 나누어떨어지게 하는 가장 작은 소수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "자리 수의 합이 $6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-6:v1",
+          "conceptKeys": [
+            "prime-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$에 대한 설명으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "소수도 합성수도 아니다"
+              },
+              {
+                "id": "b",
+                "text": "소수다"
+              },
+              {
+                "id": "c",
+                "text": "합성수다"
+              },
+              {
+                "id": "d",
+                "text": "짝수다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "소수도 합성수도 아니다"
+              },
+              {
+                "id": "b",
+                "text": "소수다"
+              },
+              {
+                "id": "c",
+                "text": "합성수다"
+              },
+              {
+                "id": "d",
+                "text": "짝수다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "약수가 자기 자신 하나뿐이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-7:v1",
+          "conceptKeys": [
+            "prime-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$부터 $30$까지의 자연수 중 소수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2,3,5,7,11,13,17,19,23,29$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-8:v1",
+          "conceptKeys": [
+            "prime-factorization"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$48 = 2^a \\times 3$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$48 \\div 3 = 16$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-9:v1",
+          "conceptKeys": [
+            "prime-factorization"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$90 = 2 \\times 3^2 \\times a$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$90 \\div 18$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-10:v1",
+          "conceptKeys": [
+            "prime-factorization"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$36$의 약수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$36 = 2^2 \\times 3^2$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-11:v1",
+          "conceptKeys": [
+            "prime-factorization"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2^3 \\times 5^2$의 약수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4 \\times 3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-12:v1",
+          "conceptKeys": [
+            "prime-factorization"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$54 = 2 \\times 3^a$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$54 \\div 2 = 27$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-13:v1",
+          "conceptKeys": [
+            "prime-factorization"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{50}$을 간단히 하면 $a\\sqrt{2}$입니다. $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$50 = 2 \\times 5^2$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-14:v1",
+          "conceptKeys": [
+            "prime-factorization"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$64$의 약수는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$64 = 2^6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-15:v1",
+          "conceptKeys": [
+            "gcd-lcm"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$16$과 $24$의 최대공약수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "겹치는 $2$를 적은 쪽으로 챙겨요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-16:v1",
+          "conceptKeys": [
+            "gcd-lcm"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$16$과 $24$의 최소공배수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 48
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2^4 \\times 3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-17:v1",
+          "conceptKeys": [
+            "gcd-lcm"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$9$와 $15$의 최대공약수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$만 겹쳐요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-18:v1",
+          "conceptKeys": [
+            "gcd-lcm"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6$과 $10$의 최소공배수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 \\times 3 \\times 5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-19:v1",
+          "conceptKeys": [
+            "gcd-lcm"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\dfrac{18}{24}$을 기약분수로 나타낼 때 분모를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "최대공약수 $6$으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "factors:drill-20:v1",
+          "conceptKeys": [
+            "gcd-lcm"
+          ],
+          "promptContent": [
+            {
+              "blockId": "factors:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\dfrac{1}{6} + \\dfrac{1}{4}$을 계산할 때 쓰는 공통분모로 가장 작은 것을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "factors:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6$과 $4$의 최소공배수예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}
