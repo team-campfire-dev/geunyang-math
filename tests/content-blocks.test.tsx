@@ -120,6 +120,58 @@ describe('a drawing', () => {
   });
 });
 
+describe('a table of numbers', () => {
+  const table = (payload: Record<string, unknown>) => block('core.table', 1, {
+    caption: '지점별 매출', note: '단위: 만 원', rowHeader: true,
+    columns: [{ label: '지점' }, { label: '2023년', align: 'end' }, { label: '2024년', align: 'end' }],
+    rows: [{ cells: ['A지점', '3,200', '3,600'] }, { cells: ['B지점', '2,800', '2,700'] }],
+    ...payload,
+  });
+
+  it('names every value with its row and its column, which is what prose cannot do', () => {
+    render(<ContentBlocks blocks={[table({})]} />);
+    // The caption is the table's accessible name, so the whole thing can be found by it.
+    const drawn = screen.getByRole('table', { name: /지점별 매출/ });
+    // A column header is a column header and a row name is a row name, not bold text.
+    expect(within(drawn).getByRole('columnheader', { name: '2024년' })).toBeDefined();
+    expect(within(drawn).getByRole('rowheader', { name: 'A지점' })).toBeDefined();
+    expect(within(drawn).getAllByRole('row')).toHaveLength(3);
+    expect(within(drawn).getByText('3,600')).toBeDefined();
+    expect(screen.getByText('단위: 만 원')).toBeDefined();
+  });
+
+  it('lines up the digits of a column that holds numbers', () => {
+    const { container } = render(<ContentBlocks blocks={[table({})]} />);
+    // The first column names the rows and reads as words; the other two are read down as numbers.
+    expect([...container.querySelectorAll('tbody tr:first-child td')].map((cell) => cell.className))
+      .toEqual(['is-end', 'is-end']);
+  });
+
+  it('draws math in a cell the way prose draws it', () => {
+    const { container } = render(<ContentBlocks blocks={[table({
+      rowHeader: false,
+      columns: [{ label: '식' }, { label: '값', align: 'end' }],
+      rows: [{ cells: ['$\\frac{1}{2}$', '0.5'] }],
+    })]} />);
+    expect(container.querySelector('tbody .katex')).not.toBeNull();
+  });
+
+  it('is not drawn at all when a row does not line up with the columns', () => {
+    // A hole in a table of numbers reads as a value, and there is no value there.
+    const crooked = table({ rows: [{ cells: ['A지점', '3,200'] }] });
+    render(<ContentBlocks blocks={[crooked]} />);
+    expect(screen.getByRole('alert').textContent).toContain('이 단계를 완료할 수 없어요');
+    expect(unsupportedRequiredBlocks([crooked])).toBe(true);
+  });
+
+  it('can be scrolled sideways by somebody who is not using a pointer', () => {
+    const { container } = render(<ContentBlocks blocks={[table({})]} />);
+    const box = container.querySelector('.data-table')!;
+    expect(box.getAttribute('tabindex')).toBe('0');
+    expect(box.getAttribute('aria-label')).toBe('지점별 매출');
+  });
+});
+
 describe('a drawing the learner arranges', () => {
   const items: SceneItem[] = [{ kind: 'rect', id: 'piece', label: '조각', draggable: true, x: 10, y: 120, width: 40, height: 40 }];
   const zones: SceneZone[] = [{ id: 'slot', x: 200, y: 20, width: 60, height: 60, label: '빈 자리' }];

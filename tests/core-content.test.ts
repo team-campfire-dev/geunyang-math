@@ -71,6 +71,28 @@ describe('versioned lesson content', () => {
     expect(() => check(record)).not.toThrow();
   });
 
+  it('registers the table format and refuses a table that cannot be read', () => {
+    expect(supportedBlockTypes).toContainEqual({ kind: 'core.table', typeVersion: 1 });
+    const withTable = (payload: Record<string, unknown>) => {
+      const record = structuredClone(seedLessons[0]);
+      record.sections[0].contentBlocks.push({ blockId: 'table:1', kind: 'core.table', typeVersion: 1, required: true, payload });
+      return record;
+    };
+    const sound = {
+      caption: '지점별 매출', note: '단위: 만 원', rowHeader: true,
+      columns: [{ label: '지점' }, { label: '2024년', align: 'end' }],
+      rows: [{ cells: ['A지점', '3,600'] }],
+    };
+    expect(() => check(withTable(sound))).not.toThrow();
+    // A row that does not line up with the columns leaves a hole, and a hole in a table of numbers
+    // reads as a value.
+    expect(() => check(withTable({ ...sound, rows: [{ cells: ['A지점'] }] }))).toThrow(/열의 수와 칸의 수/);
+    // The caption is the accessible name, announced before the numbers, so it is read not drawn.
+    expect(() => check(withTable({ ...sound, caption: '$\\frac{1}{2}$ 매출' }))).toThrow(/Accessible text/);
+    // A named row whose name is missing is a value belonging to nothing.
+    expect(() => check(withTable({ ...sound, rows: [{ cells: ['', '3,600'] }] }))).toThrow(/줄 이름/);
+  });
+
   it('registers both figure and fraction strip formats and validates their payload', () => {
     expect(supportedBlockTypes).toContainEqual({ kind: 'core.figure', typeVersion: 1 });
     expect(supportedBlockTypes).toContainEqual({ kind: 'math.fraction_strip', typeVersion: 1 });

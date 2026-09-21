@@ -3,6 +3,7 @@ import 'server-only';
 import { z } from 'zod';
 import type { LessonDocument, LessonSection, ContentBlock, GlossaryEntry, ProblemSetRef, PublicLesson, PublicProblem } from '@/shared/api';
 import { frameLimits, isSceneColor, itemIdPattern, pathPattern, sceneLimits, stripLimits } from '@/shared/scene';
+import { tableIssue, tableLimits, type Table } from '@/shared/table';
 import { choiceIssue, choiceLimits, type AnswerOption, type AnswerSpec } from '@/shared/answer';
 import { locateTerms, definitionRefId, type DefinitionLink, type DefinitionRef } from '@/shared/rich-text';
 
@@ -144,6 +145,24 @@ const blockSchemas = {
   'math.fraction_strip@1': z.object({ ...fractionStripShape, labelAlt: plainText(200).optional() }).strict()
     .refine((value) => value.filled <= value.parts, 'filled must not exceed parts')
     .refine((value) => !carriesMath(value.label) || !!value.labelAlt, 'A label containing math requires labelAlt for the accessible name'),
+  // A table given as data. The numbers of 자료해석 are read down a column and across a row, and the
+  // header cells have to be announced with each value — which is what a paragraph of numbers cannot
+  // do. The caption is the table's accessible name, so it is plain; cells and the note may carry math.
+  'core.table@1': z.object({
+    caption: plainText(tableLimits.maxCaption),
+    note: z.string().trim().max(tableLimits.maxNote).optional(),
+    columns: z.array(z.object({
+      label: z.string().trim().min(1).max(tableLimits.maxLabel),
+      align: z.enum(['start', 'end']).optional(),
+    }).strict()).min(1).max(tableLimits.maxColumns),
+    rows: z.array(z.object({
+      cells: z.array(z.string().trim().max(tableLimits.maxCell)).min(1).max(tableLimits.maxColumns),
+    }).strict()).min(1).max(tableLimits.maxRows),
+    rowHeader: z.boolean().optional(),
+  }).strict().superRefine((payload, ctx) => {
+    const issue = tableIssue(payload as Table);
+    if (issue) ctx.addIssue({ code: 'custom', message: issue });
+  }),
   // A drawing given as data. Every value lands in an attribute of an element the renderer creates,
   // so an author — or later a generator — can describe any picture without describing any markup.
   'core.scene@1': z.object({

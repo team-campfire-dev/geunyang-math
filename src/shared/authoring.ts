@@ -527,7 +527,7 @@ export type BlockField = {
 export type BlockList = { key: string; label: string; addLabel: string; max: number; fields: BlockField[]; create: () => Record<string, unknown> };
 export type BlockForm = {
   kind: string; typeVersion: number; label: string; hint: string;
-  fields: BlockField[]; list?: BlockList; editsProblems?: boolean; editsScene?: boolean;
+  fields: BlockField[]; list?: BlockList; editsProblems?: boolean; editsScene?: boolean; editsTable?: boolean;
   /** Published lessons still hold these, so the editor can open one; nothing new is made with them. */
   retired?: boolean;
   create: () => Record<string, unknown>;
@@ -590,6 +590,20 @@ export const blockForms: BlockForm[] = [
       { key: 'caption', label: '캡션', kind: 'text', optional: true },
     ],
     editsScene: true,
+  },
+  {
+    kind: 'core.table', typeVersion: 1, label: '표',
+    hint: '자료해석처럼 수를 줄과 열로 보여 줘요. 칸 안에서도 $...$로 수식을 쓸 수 있어요.',
+    // A new table is already a table: the validator refuses a row whose name is missing, and a
+    // block that arrives refused is a block the author has to repair before they can write in it.
+    create: () => ({ caption: '표 제목', rowHeader: true,
+      columns: [{ label: '항목', align: 'start' }, { label: '값', align: 'end' }],
+      rows: [{ cells: ['첫째 줄', '0'] }, { cells: ['둘째 줄', '0'] }] }),
+    fields: [
+      { key: 'caption', label: '표 제목', kind: 'text', hint: '화면 낭독에서 이 표의 이름이 돼요. 수식 없이 평문으로 씁니다.' },
+      { key: 'note', label: '단위·출처', kind: 'text', optional: true, hint: '「단위: 만 원」처럼 표 아래 한 줄로 붙어요.' },
+    ],
+    editsTable: true,
   },
   {
     kind: 'core.problem_set', typeVersion: 2, label: '문제',

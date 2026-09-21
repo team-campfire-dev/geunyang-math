@@ -455,3 +455,23 @@
 .editor-choice-correct{display:flex;align-items:center}
 .editor-choice-correct input{accent-color:var(--green);width:17px;height:17px}
 .editor-choice-actions{display:flex;gap:14px;margin-top:9px}
+
+/* The table block's editor: the cells sit where the learner will read them, so an author types
+   into the shape rather than into a form that describes it. */
+.table-editor { margin-top: 16px; display: flex; flex-direction: column; gap: 11px; }
+.table-editor .inline-check { flex-direction: row; align-items: center; gap: 8px; font-size: 13px; margin-top: 0; }
+.table-editor .inline-check input { width: 16px; height: 16px; accent-color: var(--green); }
+.table-editor-grid { overflow-x: auto; overscroll-behavior-x: contain; border: 1px solid var(--line); border-radius: 8px; background: var(--white); }
+.table-editor-grid table { border-collapse: collapse; width: 100%; }
+.table-editor-grid th, .table-editor-grid td { border: 1px solid var(--line); padding: 7px; vertical-align: top; }
+.table-editor-grid thead th { background: #f2f4ea; min-width: 132px; }
+.table-editor-grid input { width: 100%; min-width: 108px; border: 1px solid transparent; border-radius: 5px; padding: 6px 7px; background: transparent; font-size: 13px; color: var(--ink); }
+.table-editor-grid input:hover { border-color: var(--line); }
+.table-editor-grid input:focus { border-color: var(--green); background: var(--white); outline: none; }
+.table-editor-grid input.is-end { text-align: right; font-variant-numeric: tabular-nums; }
+.table-editor-column-tools { display: flex; align-items: center; gap: 4px; margin-top: 5px; }
+.table-editor-column-tools select { flex: 1; min-width: 0; font-size: 12px; padding: 4px 6px; border: 1px solid var(--line); border-radius: 5px; background: var(--white); color: var(--muted); }
+.table-editor-add { width: 1%; white-space: nowrap; background: #fbfcf6; }
+.table-editor-add .text-button { font-size: 12px; gap: 4px; }
+.table-editor-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--muted); }
+
