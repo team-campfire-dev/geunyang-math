@@ -1,0 +1,3653 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "real-numbers",
+      "title": "제곱근과 실수",
+      "summary": "분수를 소수로 폈을 때 끝나지 않는 수를 만나고, 넓이에서 한 변을 되묻는 제곱근으로 수직선의 빈틈을 채워요.",
+      "order": 15,
+      "track": "math",
+      "lessons": [
+        {
+          "key": "repeating-decimal",
+          "order": 1
+        },
+        {
+          "key": "square-root",
+          "order": 2
+        },
+        {
+          "key": "irrational-number",
+          "order": 3
+        },
+        {
+          "key": "radical-arithmetic",
+          "order": 4
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "repeating-decimal",
+      "label": "순환소수",
+      "assessable": true
+    },
+    {
+      "key": "decimal-to-fraction",
+      "label": "순환소수를 분수로",
+      "assessable": true
+    },
+    {
+      "key": "square-root",
+      "label": "제곱근",
+      "assessable": true
+    },
+    {
+      "key": "irrational-number",
+      "label": "무리수",
+      "assessable": true
+    },
+    {
+      "key": "radical-arithmetic",
+      "label": "근호의 계산",
+      "assessable": true
+    },
+    {
+      "key": "rationalizing",
+      "label": "분모의 유리화",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "repeating-decimal",
+        "versionId": "repeating-decimal:v1",
+        "title": "유한소수와 순환소수: 분수를 소수로 폈을 때",
+        "summary": "분수를 소수로 고쳐 보고, 어떤 분수가 딱 떨어지고 어떤 분수가 끝없이 되풀이되는지 미리 가려내요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "repeating-decimal",
+          "decimal-to-fraction"
+        ],
+        "prerequisiteConceptKeys": [
+          "decimal-fraction",
+          "reduce",
+          "equivalent-fraction"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "repeating-decimal:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "repeating-decimal:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{4}$을 소수로 고치면 $0.25$에서 딱 끝나요. $\\frac{1}{3}$은 $0.333\\cdots$으로 아무리 나눠도 끝나지 않아요.\n\n끝이 있는 소수를 유한소수, 같은 숫자가 끝없이 되풀이되는 소수를 순환소수라고 해요.\n\n되풀이되는 부분을 순환마디라 하고, 그 부분의 처음과 끝 숫자 위에 점을 찍어 적어요. $0.333\\cdots$은 $0.\\dot{3}$, $0.272727\\cdots$은 $0.\\dot{2}\\dot{7}$이에요.\n\n나눠 보기 전에도 어느 쪽인지 알 수 있어요. 먼저 기약분수로 만들고 분모를 곱셈으로 쪼개 봐요. $2$와 $5$만 남으면 유한소수예요.\n\n이유는 간단해요. 유한소수는 $0.25 = \\frac{25}{100}$처럼 분모가 $10$, $100$, $1000$인 분수로 쓸 수 있는 수인데, $10 = 2 \\times 5$이니 분모에 $2$와 $5$ 말고 다른 수가 있으면 아무리 곱해도 $10$의 거듭제곱이 되지 않아요.\n\n$\\frac{7}{20}$은 $20 = 2 \\times 2 \\times 5$라 유한소수, $\\frac{3}{14}$는 $14 = 2 \\times 7$이라 $7$이 걸려 순환소수예요.\n\n반대로 순환소수를 분수로 되돌릴 수도 있어요. 되풀이되는 부분을 같은 자리에 겹쳐 놓고 빼 버리는 것이 요령이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "repeating-decimal",
+                    "surface": "순환소수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "decimal-to-fraction",
+                    "surface": "분수로 되돌릴",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "repeating-decimal:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "1을 3으로 나눌 때 몫에 3이 끝없이 이어지는 그림",
+                "caption": "나머지가 같으면 같은 일이 되풀이돼요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 30,
+                    "text": "$1 \\div 3$",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 84,
+                    "y": 108,
+                    "text": "$0.$",
+                    "size": 19,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 100,
+                    "y": 80,
+                    "width": 34,
+                    "height": 38,
+                    "radius": 4,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "d1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 117,
+                    "y": 107,
+                    "text": "$3$",
+                    "size": 18,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "t1"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 140,
+                    "y": 80,
+                    "width": 34,
+                    "height": 38,
+                    "radius": 4,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "d2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 157,
+                    "y": 107,
+                    "text": "$3$",
+                    "size": 18,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "t2"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 180,
+                    "y": 80,
+                    "width": 34,
+                    "height": 38,
+                    "radius": 4,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "d3"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 197,
+                    "y": 107,
+                    "text": "$3$",
+                    "size": 18,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "t3"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 230,
+                    "y": 107,
+                    "text": "…",
+                    "size": 18,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "dots"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 150,
+                    "text": "나머지가 늘 $1$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "note"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 174,
+                    "text": "$0.\\dot{3}$",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "dotted",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$1$을 $3$으로 나누면 몫에 $3$, 나머지는 $1$이에요.",
+                    "changes": [
+                      {
+                        "id": "d2",
+                        "hidden": true
+                      },
+                      {
+                        "id": "t2",
+                        "hidden": true
+                      },
+                      {
+                        "id": "d3",
+                        "hidden": true
+                      },
+                      {
+                        "id": "t3",
+                        "hidden": true
+                      },
+                      {
+                        "id": "dots",
+                        "hidden": true
+                      },
+                      {
+                        "id": "dotted",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "나머지 $1$에 $0$을 붙여 다시 나눠도 몫은 또 $3$, 나머지도 또 $1$이에요.",
+                    "changes": [
+                      {
+                        "id": "d3",
+                        "hidden": true
+                      },
+                      {
+                        "id": "t3",
+                        "hidden": true
+                      },
+                      {
+                        "id": "dots",
+                        "hidden": true
+                      },
+                      {
+                        "id": "dotted",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "처음과 똑같은 자리로 돌아왔으니 끝나지 않아요. 되풀이되는 자리에 점을 찍어 적어요.",
+                    "changes": [
+                      {
+                        "id": "dotted",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "repeating-decimal:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "repeating-decimal:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$0.\\dot{4}$를 분수로 고쳐 볼게요.\n\n구하려는 수에 이름을 붙여요. $x = 0.444\\cdots$\n\n순환마디가 한 자리니 $10$을 곱해 소수점을 한 칸 옮겨요. $10x = 4.444\\cdots$\n\n두 식의 소수점 아래가 똑같아졌어요. 빼면 그 부분이 통째로 사라져요.\n\n$10x - x = 4.444\\cdots - 0.444\\cdots = 4$이므로 $9x = 4$, 곧 $x = \\frac{4}{9}$예요.\n\n순환마디가 두 자리인 $0.\\dot{1}\\dot{2}$라면 $100$을 곱해요. $100x - x = 12$이니 $99x = 12$, $x = \\frac{12}{99} = \\frac{4}{33}$이에요.\n\n곱하는 수는 늘 $10$이 아니라 「순환마디의 자릿수만큼」 $10$을 거듭 곱한 수예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "repeating-decimal:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "repeating-decimal:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "repeating-decimal:practice",
+                "problemSetVersionId": "repeating-decimal:practice:v1",
+                "problemVersionIds": [
+                  "repeating-decimal:practice-1:v1",
+                  "repeating-decimal:practice-2:v1",
+                  "repeating-decimal:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "repeating-decimal:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "repeating-decimal:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "repeating-decimal:check",
+                "problemSetVersionId": "repeating-decimal:check:v1",
+                "problemVersionIds": [
+                  "repeating-decimal:check-1:v1",
+                  "repeating-decimal:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "repeating-decimal:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "repeating-decimal:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "분수를 소수로 고치면 딱 끝나거나, 끝없이 되풀이되거나 둘 중 하나예요. 세 번째 경우는 없어요.\n\n어느 쪽인지는 기약분수의 분모로 알 수 있어요. $2$와 $5$만 있으면 유한소수, 다른 수가 섞이면 순환소수예요.\n\n순환소수를 분수로 되돌릴 때는 순환마디의 자릿수만큼 $10$을 곱해 두 식을 만들고, 빼서 되풀이되는 부분을 지워요.\n\n끝나지도 않고 되풀이되지도 않는 소수가 남았는데, 그것이 다음 수업에서 만날 수예요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "repeating-decimal:review",
+        "problemSetVersionId": "repeating-decimal:review:v1",
+        "problemVersionIds": [
+          "repeating-decimal:homework-1:v1",
+          "repeating-decimal:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "square-root",
+        "versionId": "square-root:v1",
+        "title": "제곱근: 제곱해서 그 수가 되는 수",
+        "summary": "넓이를 알 때 한 변을 되묻는 물음으로 제곱근을 만나고, 근호를 읽고 쓰는 법을 익혀요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "square-root"
+        ],
+        "prerequisiteConceptKeys": [
+          "exponent-law",
+          "absolute-value",
+          "negative-number"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "square-root:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "square-root:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$3$을 두 번 곱하면 $9$예요. 거꾸로 물어볼게요. 두 번 곱해서 $9$가 되는 수는 무엇일까요?\n\n$3$이 맞지만 하나 더 있어요. $(-3) \\times (-3)$도 $9$예요. 이렇게 제곱해서 $a$가 되는 수를 $a$의 제곱근이라고 해요.\n\n양수의 제곱근은 늘 두 개, 부호만 다른 짝이에요. $0$의 제곱근은 $0$ 하나뿐이고, 음수의 제곱근은 없어요. 어떤 수를 제곱해도 음수가 나오지 않으니까요.\n\n$9$처럼 운 좋게 딱 떨어지는 수도 있지만 $2$의 제곱근은 우리가 아는 어떤 분수로도 적을 수 없어요. 그래서 근호라는 기호를 만들어 $\\sqrt{2}$라고 적어요.\n\n$\\sqrt{a}$는 $a$의 제곱근 중 「양수인 쪽」만 가리켜요. 음수인 쪽은 $-\\sqrt{a}$라고 써요. $9$의 제곱근은 $\\pm 3$ 두 개지만, $\\sqrt{9}$라고 쓰면 그중 $3$ 하나예요.\n\n여기서 자주 미끄러져요. $\\sqrt{(-5)^2}$은 $-5$가 아니라 $5$예요. 괄호 안을 먼저 제곱하면 $25$이고, 근호는 양수인 쪽을 내놓으니까요. 근호를 벗기면 절댓값이 남는다고 기억해 두면 편해요.\n\n크기 견주기는 그대로예요. 넓이가 넓으면 한 변도 길어요. $11 < 13$이니 $\\sqrt{11} < \\sqrt{13}$이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "square-root",
+                    "surface": "제곱근",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "square-root:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "넓이가 9인 정사각형과 넓이가 2인 정사각형의 한 변을 견주는 그림",
+                "caption": "넓이를 알 때 한 변을 되묻는 것이 제곱근이에요",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "x": 38,
+                    "y": 54,
+                    "width": 78,
+                    "height": 78,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "id": "big"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 77,
+                    "y": 98,
+                    "text": "넓이 $9$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "bigarea"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 77,
+                    "y": 150,
+                    "text": "한 변 $3$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "bigside"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 206,
+                    "y": 66,
+                    "width": 66,
+                    "height": 66,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "id": "small"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 239,
+                    "y": 104,
+                    "text": "넓이 $2$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "smallarea"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 239,
+                    "y": 150,
+                    "text": "한 변 $?$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "ask"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 239,
+                    "y": 150,
+                    "text": "한 변 $\\sqrt{2}$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "named",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 30,
+                    "text": "$3 \\times 3 = 9$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "top"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$3$을 두 번 곱하면 $9$. 넓이가 $9$인 정사각형의 한 변은 $3$이에요.",
+                    "changes": [
+                      {
+                        "id": "small",
+                        "hidden": true
+                      },
+                      {
+                        "id": "smallarea",
+                        "hidden": true
+                      },
+                      {
+                        "id": "ask",
+                        "hidden": true
+                      },
+                      {
+                        "id": "named",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "넓이가 $2$라면 한 변은 얼마일까요? 두 번 곱해 $2$가 되는 수예요.",
+                    "changes": [
+                      {
+                        "id": "named",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "그런 수를 적을 이름이 없어서 기호를 만들었어요. 그것이 $\\sqrt{2}$예요.",
+                    "changes": [
+                      {
+                        "id": "ask",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "named",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "square-root:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "square-root:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{(-6)^2}$의 값을 구해 볼게요.\n\n근호 안부터 계산해요. $(-6)^2 = 36$이에요. 음수를 두 번 곱했으니 양수가 됐어요.\n\n이제 $\\sqrt{36}$이고, 제곱해서 $36$이 되는 수 중 양수인 쪽이니 $6$이에요.\n\n$-6$이라고 답하기 쉬운데, 근호가 내놓는 값은 늘 $0$ 이상이에요. 안에 있던 부호는 제곱하는 순간 사라졌어요.\n\n하나 더 볼게요. $\\sqrt{7}$과 $3$ 중 어느 쪽이 클까요? 근호를 없애기보다 둘 다 제곱해서 견주는 편이 쉬워요.\n\n$(\\sqrt{7})^2 = 7$이고 $3^2 = 9$예요. $7 < 9$이니 $\\sqrt{7} < 3$이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "square-root:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "square-root:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "square-root:practice",
+                "problemSetVersionId": "square-root:practice:v1",
+                "problemVersionIds": [
+                  "square-root:practice-1:v1",
+                  "square-root:practice-2:v1",
+                  "square-root:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "square-root:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "square-root:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "square-root:check",
+                "problemSetVersionId": "square-root:check:v1",
+                "problemVersionIds": [
+                  "square-root:check-1:v1",
+                  "square-root:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "square-root:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "square-root:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "제곱근은 「제곱해서 그 수가 되는 수」예요. 넓이를 알 때 한 변을 되묻는 물음과 같아요.\n\n양수에는 제곱근이 두 개 있고 부호만 달라요. $\\sqrt{a}$는 그중 양수인 쪽, $-\\sqrt{a}$는 음수인 쪽이에요.\n\n근호를 벗기면 절댓값이 남아요. $\\sqrt{(-5)^2} = 5$예요.\n\n크기는 근호 안의 수로 견주고, 근호가 있는 수와 없는 수는 둘 다 제곱해서 견줘요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "square-root:review",
+        "problemSetVersionId": "square-root:review:v1",
+        "problemVersionIds": [
+          "square-root:homework-1:v1",
+          "square-root:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "irrational-number",
+        "versionId": "irrational-number:v1",
+        "title": "무리수와 실수: 수직선에 빈틈이 없으려면",
+        "summary": "분수로 적을 수 없는 수가 있다는 것을 보고, 유리수와 합쳐 수직선을 채우는 수 전체를 만나요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "irrational-number"
+        ],
+        "prerequisiteConceptKeys": [
+          "square-root",
+          "repeating-decimal",
+          "rational-number"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "irrational-number:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "irrational-number:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "앞에서 분수를 소수로 고치면 딱 끝나거나 되풀이되거나 둘 중 하나라고 했어요. 뒤집어 말하면, 끝나지도 않고 되풀이되지도 않는 소수는 분수로 적을 수 없다는 뜻이에요.\n\n$\\sqrt{2} = 1.41421356\\cdots$이 그래요. 아무리 자리를 늘려도 끝나지 않고, 되풀이되는 마디도 나타나지 않아요. 이런 수를 무리수라고 해요. 분수의 「비」로 나타낼 수 없는 수라는 뜻이에요.\n\n원주율 $\\pi = 3.141592\\cdots$도 무리수예요.\n\n근호가 붙었다고 모두 무리수는 아니에요. $\\sqrt{4} = 2$, $\\sqrt{0.25} = 0.5$처럼 딱 떨어지면 유리수예요. 근호 안이 어떤 수의 제곱인지부터 보세요.\n\n유리수와 무리수를 모두 합친 것을 실수라고 해요. 실수는 수직선을 빈틈없이 채워요. 수직선 위의 점 하나마다 실수 하나가, 실수 하나마다 점 하나가 있어요.\n\n크기를 견줄 때는 제곱해서 견주면 편해요. $\\sqrt{5}$와 $2$ 중 어느 쪽이 클까요? 제곱하면 $5$와 $4$이고 $5 > 4$이니 $\\sqrt{5}$가 커요.\n\n어림잡는 것도 같은 방법이에요. $\\sqrt{30}$은 $5^2 = 25$와 $6^2 = 36$ 사이에 있으니 $5$와 $6$ 사이의 수예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "irrational-number",
+                    "surface": "무리수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "irrational-number:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "수직선 위에 분수로 적을 수 있는 수를 찍어도 남는 자리가 있고, 그 자리에 루트 2가 놓이는 그림",
+                "caption": "유리수만으로는 수직선이 채워지지 않아요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 24,
+                    "y1": 110,
+                    "x2": 296,
+                    "y2": 110,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "arrow": "both"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 44,
+                    "y1": 103,
+                    "x2": 44,
+                    "y2": 117,
+                    "stroke": "ink",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 132,
+                    "y1": 103,
+                    "x2": 132,
+                    "y2": 117,
+                    "stroke": "ink",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 220,
+                    "y1": 103,
+                    "x2": 220,
+                    "y2": 117,
+                    "stroke": "ink",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "text",
+                    "x": 44,
+                    "y": 136,
+                    "text": "$0$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 132,
+                    "y": 136,
+                    "text": "$1$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 220,
+                    "y": 136,
+                    "text": "$2$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 88,
+                    "cy": 110,
+                    "rx": 3.5,
+                    "ry": 3.5,
+                    "fill": "green",
+                    "id": "q1"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 110,
+                    "cy": 110,
+                    "rx": 3.5,
+                    "ry": 3.5,
+                    "fill": "green",
+                    "id": "q2"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 198,
+                    "cy": 110,
+                    "rx": 3.5,
+                    "ry": 3.5,
+                    "fill": "green",
+                    "id": "q3"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 242,
+                    "cy": 110,
+                    "rx": 3.5,
+                    "ry": 3.5,
+                    "fill": "green",
+                    "id": "q4"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 88,
+                    "y": 92,
+                    "text": "$\\frac{1}{2}$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "q1t"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 168,
+                    "cy": 110,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "orange",
+                    "id": "root",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 168,
+                    "y": 88,
+                    "text": "$\\sqrt{2}$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "roott",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 174,
+                    "text": "유리수와 무리수를 합친 것이 실수예요",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "all",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "분수로 적을 수 있는 수를 수직선에 찍어 봐요. 촘촘하게 얼마든지 찍을 수 있어요.",
+                    "changes": [
+                      {
+                        "id": "root",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "roott",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "all",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "그런데 넓이가 $2$인 정사각형의 한 변, 곧 $\\sqrt{2}$의 자리는 어떤 분수로도 찍히지 않아요.",
+                    "changes": [
+                      {
+                        "id": "root",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "roott",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "all",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "그런 수까지 더해야 수직선에 빈틈이 없어져요.",
+                    "changes": [
+                      {
+                        "id": "root",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "roott",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "all",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "irrational-number:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "irrational-number:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{50}$이 어느 두 정수 사이에 있는지 알아볼게요.\n\n근호를 없애려 하지 말고, 가까운 제곱수를 양옆에서 찾아요.\n\n$7^2 = 49$이고 $8^2 = 64$예요. $49 < 50 < 64$이니 $\\sqrt{49} < \\sqrt{50} < \\sqrt{64}$, 곧 $7 < \\sqrt{50} < 8$이에요.\n\n$50$은 $49$에 아주 가까우니 $\\sqrt{50}$도 $7$에 가깝겠다는 것까지 알 수 있어요.\n\n이번에는 $3 < \\sqrt{n} < 4$인 자연수 $n$이 몇 개인지 세어 볼게요.\n\n세 변을 모두 제곱하면 $9 < n < 16$이에요. 부등호에 등호가 없으니 $9$와 $16$은 빼고, $10$부터 $15$까지 여섯 개예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "irrational-number:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "irrational-number:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "irrational-number:practice",
+                "problemSetVersionId": "irrational-number:practice:v1",
+                "problemVersionIds": [
+                  "irrational-number:practice-1:v1",
+                  "irrational-number:practice-2:v1",
+                  "irrational-number:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "irrational-number:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "irrational-number:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "irrational-number:check",
+                "problemSetVersionId": "irrational-number:check:v1",
+                "problemVersionIds": [
+                  "irrational-number:check-1:v1",
+                  "irrational-number:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "irrational-number:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "irrational-number:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "끝나지도 않고 되풀이되지도 않는 소수가 무리수예요. 분수로는 적을 수 없어요.\n\n근호가 있다고 다 무리수는 아니에요. 근호 안이 제곱수이면 딱 떨어지는 유리수예요.\n\n유리수와 무리수를 합친 실수가 수직선을 빈틈없이 채워요.\n\n크기를 견주거나 어림잡을 때는 제곱해서, 또는 가까운 제곱수를 양옆에서 찾아 견줘요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "irrational-number:review",
+        "problemSetVersionId": "irrational-number:review:v1",
+        "problemVersionIds": [
+          "irrational-number:homework-1:v1",
+          "irrational-number:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "radical-arithmetic",
+        "versionId": "radical-arithmetic:v1",
+        "title": "근호의 계산: 곱하고 나누고, 분모를 정리하기",
+        "summary": "근호끼리 곱하고 나누는 규칙을 익히고, 근호 안을 간단히 하거나 분모에서 걷어내요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "radical-arithmetic",
+          "rationalizing"
+        ],
+        "prerequisiteConceptKeys": [
+          "square-root",
+          "exponent-law",
+          "like-term"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "radical-arithmetic:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "radical-arithmetic:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "근호끼리 곱할 때는 안의 수끼리 곱하면 돼요. $\\sqrt{2} \\times \\sqrt{3} = \\sqrt{6}$이에요. 나눗셈도 마찬가지로 $\\frac{\\sqrt{6}}{\\sqrt{2}} = \\sqrt{3}$이에요.\n\n넓이로 보면 당연해요. 두 번 곱해서 $2$가 되는 수와 두 번 곱해서 $3$이 되는 수를 곱하면, 그것을 두 번 곱했을 때 $2 \\times 3 = 6$이 되니까요.\n\n이 규칙을 거꾸로 쓰면 근호 안을 간단히 할 수 있어요. $\\sqrt{12} = \\sqrt{4 \\times 3} = \\sqrt{4} \\times \\sqrt{3} = 2\\sqrt{3}$. 근호 안에서 제곱수를 찾아 밖으로 꺼내는 거예요.\n\n덧셈은 사정이 달라요. $\\sqrt{2} + \\sqrt{3}$은 $\\sqrt{5}$가 아니에요. 넓이가 $2$인 정사각형과 $3$인 정사각형의 한 변을 이어 붙여도 넓이 $5$짜리 한 변이 되지는 않아요.\n\n근호의 덧셈과 뺄셈은 동류항을 모으듯 해요. $\\sqrt{3}$을 하나의 문자처럼 보면 $2\\sqrt{3} + 3\\sqrt{3} = 5\\sqrt{3}$이에요. 근호 안이 다르면 모을 수 없어요.\n\n마지막으로 하나 더. 분모에 근호가 있으면 값을 가늠하기 어려워요. $\\frac{1}{\\sqrt{2}}$가 얼마쯤인지 바로 안 떠오르죠.\n\n분자와 분모에 같은 수를 곱해도 값은 그대로라는 성질을 써서 분모의 근호를 걷어내요. $\\frac{1}{\\sqrt{2}} = \\frac{\\sqrt{2}}{2}$이고, 이러면 $1.414 \\div 2$로 대번에 어림할 수 있어요. 이것을 분모의 유리화라고 해요.",
+                "definitions": [
+                  {
+                    "conceptKey": "radical-arithmetic",
+                    "surface": "근호 안을 간단히",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "rationalizing",
+                    "surface": "분모의 유리화",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "radical-arithmetic:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "넓이가 12인 정사각형을 넓이 3짜리 정사각형 네 개로 나누어 한 변을 읽는 그림",
+                "caption": "넓이 3짜리 두 칸이 한 변이니 루트 12는 2루트 3이에요",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "x": 100,
+                    "y": 46,
+                    "width": 52,
+                    "height": 52,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q1"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 156,
+                    "y": 46,
+                    "width": 52,
+                    "height": 52,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q2"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 100,
+                    "y": 102,
+                    "width": 52,
+                    "height": 52,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q3"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 156,
+                    "y": 102,
+                    "width": 52,
+                    "height": 52,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "q4"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 126,
+                    "y": 77,
+                    "text": "$3$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "n1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 182,
+                    "y": 77,
+                    "text": "$3$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "n2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 126,
+                    "y": 133,
+                    "text": "$3$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "n3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 182,
+                    "y": 133,
+                    "text": "$3$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "n4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 154,
+                    "y": 30,
+                    "text": "넓이 $12$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "area"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 154,
+                    "y": 178,
+                    "text": "한 변 $= \\sqrt{12}$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "side"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 154,
+                    "y": 178,
+                    "text": "한 변 $= 2\\sqrt{3}$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "side2",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "넓이가 $12$인 정사각형의 한 변이 $\\sqrt{12}$예요.",
+                    "changes": [
+                      {
+                        "id": "n1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "side2",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "넓이 $3$짜리 정사각형 네 개로 똑같이 나눌 수 있어요.",
+                    "changes": [
+                      {
+                        "id": "n1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "side2",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "한 변은 작은 정사각형 두 개만큼이니 $\\sqrt{3}$의 두 배예요.",
+                    "changes": [
+                      {
+                        "id": "n1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "side",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "side2",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "radical-arithmetic:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "radical-arithmetic:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{48}$을 간단히 해 볼게요.\n\n$48$ 안에서 가장 큰 제곱수를 찾아요. $48 = 16 \\times 3$이고 $16 = 4^2$이에요.\n\n$\\sqrt{48} = \\sqrt{16} \\times \\sqrt{3} = 4\\sqrt{3}$이에요.\n\n$48 = 4 \\times 12$로 잡아도 틀리지 않아요. $2\\sqrt{12}$가 되는데 $\\sqrt{12}$가 또 간단해지니 $2 \\times 2\\sqrt{3} = 4\\sqrt{3}$으로 같은 답에 닿아요. 한 번에 끝내려면 가장 큰 제곱수를 찾는 편이 빨라요.\n\n이번에는 $\\frac{6}{\\sqrt{3}}$의 분모를 유리화해 볼게요.\n\n분모의 $\\sqrt{3}$을 없애려면 $\\sqrt{3}$을 한 번 더 곱하면 돼요. 분자에도 똑같이 곱해요.\n\n$\\frac{6}{\\sqrt{3}} = \\frac{6 \\times \\sqrt{3}}{\\sqrt{3} \\times \\sqrt{3}} = \\frac{6\\sqrt{3}}{3} = 2\\sqrt{3}$이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "radical-arithmetic:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "radical-arithmetic:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "radical-arithmetic:practice",
+                "problemSetVersionId": "radical-arithmetic:practice:v1",
+                "problemVersionIds": [
+                  "radical-arithmetic:practice-1:v1",
+                  "radical-arithmetic:practice-2:v1",
+                  "radical-arithmetic:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "radical-arithmetic:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "radical-arithmetic:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "radical-arithmetic:check",
+                "problemSetVersionId": "radical-arithmetic:check:v1",
+                "problemVersionIds": [
+                  "radical-arithmetic:check-1:v1",
+                  "radical-arithmetic:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "radical-arithmetic:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "radical-arithmetic:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "곱셈과 나눗셈은 근호 안의 수끼리 하면 돼요. 이 규칙을 거꾸로 쓰면 근호 안의 제곱수를 밖으로 꺼낼 수 있어요.\n\n덧셈과 뺄셈은 동류항처럼 모아요. 근호 안이 같아야 모을 수 있고, 다르면 그대로 둬요.\n\n분모에 근호가 있으면 분자와 분모에 같은 근호를 곱해 걷어내요. 값이 얼마쯤인지 가늠하기 위해서예요.\n\n여기까지가 제곱근을 다루는 손놀림이에요. 다음 과정에서 이차방정식을 풀 때 그대로 쓰게 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "radical-arithmetic:review",
+        "problemSetVersionId": "radical-arithmetic:review:v1",
+        "problemVersionIds": [
+          "radical-arithmetic:homework-1:v1",
+          "radical-arithmetic:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "repeating-decimal:practice",
+      "courseKey": "real-numbers",
+      "name": "유한소수와 순환소수 연습",
+      "versionId": "repeating-decimal:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "repeating-decimal:practice-1:v1",
+          "conceptKeys": [
+            "repeating-decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "repeating-decimal:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{7}{20}$을 소수로 고치면 어느 쪽인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "finite",
+                "text": "유한소수"
+              },
+              {
+                "id": "repeat",
+                "text": "순환소수"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "finite",
+                "text": "유한소수"
+              },
+              {
+                "id": "repeat",
+                "text": "순환소수"
+              }
+            ],
+            "correct": "finite"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "repeating-decimal:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$20$을 곱셈으로 쪼개 보면 $2 \\times 2 \\times 5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "repeating-decimal:practice-2:v1",
+          "conceptKeys": [
+            "repeating-decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "repeating-decimal:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.\\dot{4}\\dot{5}$의 순환마디는 몇 자리인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "repeating-decimal:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점이 찍힌 두 숫자 사이가 되풀이되는 부분이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "repeating-decimal:practice-3:v1",
+          "conceptKeys": [
+            "decimal-to-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "repeating-decimal:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.\\dot{6}$을 기약분수로 나타내 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 2,
+            "denominator": 3,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "repeating-decimal:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x = 0.\\dot{6}$으로 두고 $10x$에서 $x$를 빼면 $9x = 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "repeating-decimal:check",
+      "courseKey": "real-numbers",
+      "name": "유한소수와 순환소수 확인",
+      "versionId": "repeating-decimal:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "repeating-decimal:check-1:v1",
+          "conceptKeys": [
+            "repeating-decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "repeating-decimal:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{3}{14}$을 소수로 고치면 어느 쪽인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "finite",
+                "text": "유한소수"
+              },
+              {
+                "id": "repeat",
+                "text": "순환소수"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "finite",
+                "text": "유한소수"
+              },
+              {
+                "id": "repeat",
+                "text": "순환소수"
+              }
+            ],
+            "correct": "repeat"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "repeating-decimal:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$14 = 2 \\times 7$이에요. $2$와 $5$ 말고 다른 수가 있나요?"
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "repeating-decimal:check-2:v1",
+          "conceptKeys": [
+            "decimal-to-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "repeating-decimal:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.\\dot{2}\\dot{7}$을 기약분수로 나타내 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 11,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "repeating-decimal:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "순환마디가 두 자리이니 $100$을 곱해요. $99x = 27$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "repeating-decimal:review",
+      "courseKey": "real-numbers",
+      "name": "유한소수와 순환소수 복습",
+      "versionId": "repeating-decimal:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "repeating-decimal:homework-1:v1",
+          "conceptKeys": [
+            "repeating-decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "repeating-decimal:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{9}{30}$을 소수로 고치면 어느 쪽인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "finite",
+                "text": "유한소수"
+              },
+              {
+                "id": "repeat",
+                "text": "순환소수"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "finite",
+                "text": "유한소수"
+              },
+              {
+                "id": "repeat",
+                "text": "순환소수"
+              }
+            ],
+            "correct": "finite"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "repeating-decimal:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "먼저 약분해서 기약분수로 만들어요. $\\frac{9}{30} = \\frac{3}{10}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "repeating-decimal:homework-2:v1",
+          "conceptKeys": [
+            "decimal-to-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "repeating-decimal:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x = 0.\\dot{5}$일 때 $9x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "repeating-decimal:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10x - x$를 계산하면 소수점 아래가 사라져요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "square-root:practice",
+      "courseKey": "real-numbers",
+      "name": "제곱근 연습",
+      "versionId": "square-root:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "square-root:practice-1:v1",
+          "conceptKeys": [
+            "square-root"
+          ],
+          "promptContent": [
+            {
+              "blockId": "square-root:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{49}$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "square-root:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "제곱해서 $49$가 되는 수 중 양수인 쪽이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "square-root:practice-2:v1",
+          "conceptKeys": [
+            "square-root"
+          ],
+          "promptContent": [
+            {
+              "blockId": "square-root:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$16$의 제곱근을 모두 바르게 말한 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "plus",
+                "text": "$4$ 하나뿐이다"
+              },
+              {
+                "id": "both",
+                "text": "$4$와 $-4$ 두 개다"
+              },
+              {
+                "id": "none",
+                "text": "없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "plus",
+                "text": "$4$ 하나뿐이다"
+              },
+              {
+                "id": "both",
+                "text": "$4$와 $-4$ 두 개다"
+              },
+              {
+                "id": "none",
+                "text": "없다"
+              }
+            ],
+            "correct": "both"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "square-root:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "제곱해서 $16$이 되는 수를 부호까지 생각해 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "square-root:practice-3:v1",
+          "conceptKeys": [
+            "square-root"
+          ],
+          "promptContent": [
+            {
+              "blockId": "square-root:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(-\\sqrt{5})^2$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "square-root:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "음수를 두 번 곱하면 양수가 되고, 근호는 제곱하면 벗겨져요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "square-root:check",
+      "courseKey": "real-numbers",
+      "name": "제곱근 확인",
+      "versionId": "square-root:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "square-root:check-1:v1",
+          "conceptKeys": [
+            "square-root"
+          ],
+          "promptContent": [
+            {
+              "blockId": "square-root:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{(-6)^2}$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "square-root:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "근호 안을 먼저 계산하면 $36$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "square-root:check-2:v1",
+          "conceptKeys": [
+            "square-root"
+          ],
+          "promptContent": [
+            {
+              "blockId": "square-root:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{11}$과 $\\sqrt{13}$ 중 더 큰 수는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\sqrt{11}$"
+              },
+              {
+                "id": "b",
+                "text": "$\\sqrt{13}$"
+              },
+              {
+                "id": "same",
+                "text": "두 수는 같다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\sqrt{11}$"
+              },
+              {
+                "id": "b",
+                "text": "$\\sqrt{13}$"
+              },
+              {
+                "id": "same",
+                "text": "두 수는 같다"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "square-root:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "근호 안의 수가 크면 값도 커요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "square-root:review",
+      "courseKey": "real-numbers",
+      "name": "제곱근 복습",
+      "versionId": "square-root:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "square-root:homework-1:v1",
+          "conceptKeys": [
+            "square-root"
+          ],
+          "promptContent": [
+            {
+              "blockId": "square-root:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-\\sqrt{81}$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "square-root:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{81} = 9$이고 앞에 음의 부호가 붙어 있어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "square-root:homework-2:v1",
+          "conceptKeys": [
+            "square-root"
+          ],
+          "promptContent": [
+            {
+              "blockId": "square-root:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{0.25}$의 값을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "square-root:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.25 = \\frac{1}{4}$이고, 제곱해서 $\\frac{1}{4}$이 되는 양수를 찾아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "irrational-number:practice",
+      "courseKey": "real-numbers",
+      "name": "무리수와 실수 연습",
+      "versionId": "irrational-number:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "irrational-number:practice-1:v1",
+          "conceptKeys": [
+            "irrational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "irrational-number:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 무리수인 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\sqrt{16}$"
+              },
+              {
+                "id": "b",
+                "text": "$0.\\dot{3}$"
+              },
+              {
+                "id": "c",
+                "text": "$\\sqrt{7}$"
+              },
+              {
+                "id": "d",
+                "text": "$\\frac{22}{7}$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\sqrt{16}$"
+              },
+              {
+                "id": "b",
+                "text": "$0.\\dot{3}$"
+              },
+              {
+                "id": "c",
+                "text": "$\\sqrt{7}$"
+              },
+              {
+                "id": "d",
+                "text": "$\\frac{22}{7}$"
+              }
+            ],
+            "correct": "c"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "irrational-number:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "근호 안이 어떤 수의 제곱인지 확인해 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "irrational-number:practice-2:v1",
+          "conceptKeys": [
+            "irrational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "irrational-number:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{2}$보다 작은 정수 중 가장 큰 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "irrational-number:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1 < \\sqrt{2} < 2$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "irrational-number:practice-3:v1",
+          "conceptKeys": [
+            "irrational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "irrational-number:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{50}$은 어느 두 정수 사이에 있나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$6$과 $7$ 사이"
+              },
+              {
+                "id": "b",
+                "text": "$7$과 $8$ 사이"
+              },
+              {
+                "id": "c",
+                "text": "$8$과 $9$ 사이"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$6$과 $7$ 사이"
+              },
+              {
+                "id": "b",
+                "text": "$7$과 $8$ 사이"
+              },
+              {
+                "id": "c",
+                "text": "$8$과 $9$ 사이"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "irrational-number:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$49$와 $64$가 각각 어떤 수의 제곱인지 떠올려 보세요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "irrational-number:check",
+      "courseKey": "real-numbers",
+      "name": "무리수와 실수 확인",
+      "versionId": "irrational-number:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "irrational-number:check-1:v1",
+          "conceptKeys": [
+            "irrational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "irrational-number:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 무리수인 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\pi$"
+              },
+              {
+                "id": "b",
+                "text": "$\\sqrt{0.04}$"
+              },
+              {
+                "id": "c",
+                "text": "$1.2\\dot{3}$"
+              },
+              {
+                "id": "d",
+                "text": "$-\\sqrt{9}$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\pi$"
+              },
+              {
+                "id": "b",
+                "text": "$\\sqrt{0.04}$"
+              },
+              {
+                "id": "c",
+                "text": "$1.2\\dot{3}$"
+              },
+              {
+                "id": "d",
+                "text": "$-\\sqrt{9}$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "irrational-number:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "되풀이되는 소수와 딱 떨어지는 근호는 모두 유리수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "irrational-number:check-2:v1",
+          "conceptKeys": [
+            "irrational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "irrational-number:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{30}$에 가장 가까운 정수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "irrational-number:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5^2 = 25$, $6^2 = 36$이에요. $30$은 어느 쪽에 더 가까운가요?"
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "irrational-number:review",
+      "courseKey": "real-numbers",
+      "name": "무리수와 실수 복습",
+      "versionId": "irrational-number:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "irrational-number:homework-1:v1",
+          "conceptKeys": [
+            "irrational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "irrational-number:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{5}$와 $2$ 중 더 큰 수는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\sqrt{5}$"
+              },
+              {
+                "id": "b",
+                "text": "$2$"
+              },
+              {
+                "id": "same",
+                "text": "두 수는 같다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\sqrt{5}$"
+              },
+              {
+                "id": "b",
+                "text": "$2$"
+              },
+              {
+                "id": "same",
+                "text": "두 수는 같다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "irrational-number:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘 다 제곱해서 견줘 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "irrational-number:homework-2:v1",
+          "conceptKeys": [
+            "irrational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "irrational-number:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3 < \\sqrt{n} < 4$를 만족하는 자연수 $n$은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "irrational-number:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변을 모두 제곱하면 $9 < n < 16$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "radical-arithmetic:practice",
+      "courseKey": "real-numbers",
+      "name": "근호의 계산 연습",
+      "versionId": "radical-arithmetic:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "radical-arithmetic:practice-1:v1",
+          "conceptKeys": [
+            "radical-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "radical-arithmetic:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{3} \\times \\sqrt{12}$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "radical-arithmetic:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "근호 안의 수끼리 곱하면 $\\sqrt{36}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "radical-arithmetic:practice-2:v1",
+          "conceptKeys": [
+            "radical-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "radical-arithmetic:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{48} = a\\sqrt{3}$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "radical-arithmetic:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$48$ 안에서 제곱수 $16$을 찾아 밖으로 꺼내요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "radical-arithmetic:practice-3:v1",
+          "conceptKeys": [
+            "radical-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "radical-arithmetic:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5\\sqrt{2} - 2\\sqrt{2} = k\\sqrt{2}$일 때 $k$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "radical-arithmetic:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{2}$를 하나의 문자처럼 보고 계수끼리 빼요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "radical-arithmetic:check",
+      "courseKey": "real-numbers",
+      "name": "근호의 계산 확인",
+      "versionId": "radical-arithmetic:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "radical-arithmetic:check-1:v1",
+          "conceptKeys": [
+            "radical-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "radical-arithmetic:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{\\sqrt{18}}{\\sqrt{2}}$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "radical-arithmetic:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "나눗셈도 근호 안의 수끼리 하면 돼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "radical-arithmetic:check-2:v1",
+          "conceptKeys": [
+            "rationalizing"
+          ],
+          "promptContent": [
+            {
+              "blockId": "radical-arithmetic:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{6}{\\sqrt{3}} = a\\sqrt{3}$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "radical-arithmetic:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분자와 분모에 $\\sqrt{3}$을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "radical-arithmetic:review",
+      "courseKey": "real-numbers",
+      "name": "근호의 계산 복습",
+      "versionId": "radical-arithmetic:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "radical-arithmetic:homework-1:v1",
+          "conceptKeys": [
+            "radical-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "radical-arithmetic:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{2}(\\sqrt{8} + \\sqrt{2})$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "radical-arithmetic:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호를 풀어 두 번 곱하면 $\\sqrt{16} + \\sqrt{4}$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "radical-arithmetic:homework-2:v1",
+          "conceptKeys": [
+            "rationalizing"
+          ],
+          "promptContent": [
+            {
+              "blockId": "radical-arithmetic:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{\\sqrt{5}}{\\sqrt{20}}$을 기약분수로 나타내 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "radical-arithmetic:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "근호 안끼리 먼저 나누면 $\\sqrt{\\frac{1}{4}}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "real-numbers:drill",
+      "courseKey": "real-numbers",
+      "name": "제곱근과 실수 모아 풀기",
+      "versionId": "real-numbers:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "real-numbers:drill-1:v1",
+          "conceptKeys": [
+            "repeating-decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{11}{40}$을 소수로 고치면 어느 쪽인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "finite",
+                "text": "유한소수"
+              },
+              {
+                "id": "repeat",
+                "text": "순환소수"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "finite",
+                "text": "유한소수"
+              },
+              {
+                "id": "repeat",
+                "text": "순환소수"
+              }
+            ],
+            "correct": "finite"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$40 = 2 \\times 2 \\times 2 \\times 5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-2:v1",
+          "conceptKeys": [
+            "repeating-decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{5}{12}$를 소수로 고치면 어느 쪽인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "finite",
+                "text": "유한소수"
+              },
+              {
+                "id": "repeat",
+                "text": "순환소수"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "finite",
+                "text": "유한소수"
+              },
+              {
+                "id": "repeat",
+                "text": "순환소수"
+              }
+            ],
+            "correct": "repeat"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$12 = 2 \\times 2 \\times 3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-3:v1",
+          "conceptKeys": [
+            "repeating-decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.1\\dot{2}\\dot{3}$의 순환마디는 몇 자리인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점이 찍힌 두 숫자 사이가 되풀이되는 부분이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-4:v1",
+          "conceptKeys": [
+            "decimal-to-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.\\dot{8}$을 기약분수로 나타내 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 8,
+            "denominator": 9,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$9x = 8$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-5:v1",
+          "conceptKeys": [
+            "decimal-to-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.\\dot{1}\\dot{8}$을 기약분수로 나타내 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 2,
+            "denominator": 11,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$99x = 18$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-6:v1",
+          "conceptKeys": [
+            "decimal-to-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x = 0.\\dot{7}$일 때 $9x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10x$에서 $x$를 빼 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-7:v1",
+          "conceptKeys": [
+            "square-root"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{64}$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "제곱해서 $64$가 되는 양수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-8:v1",
+          "conceptKeys": [
+            "square-root"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{(-10)^2}$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "근호 안을 먼저 제곱하면 $100$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-9:v1",
+          "conceptKeys": [
+            "square-root"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(-\\sqrt{7})^2$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "음수를 두 번 곱하면 양수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-10:v1",
+          "conceptKeys": [
+            "square-root"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$25$의 제곱근을 바르게 말한 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "one",
+                "text": "$5$ 하나뿐이다"
+              },
+              {
+                "id": "both",
+                "text": "$5$와 $-5$ 두 개다"
+              },
+              {
+                "id": "none",
+                "text": "없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "one",
+                "text": "$5$ 하나뿐이다"
+              },
+              {
+                "id": "both",
+                "text": "$5$와 $-5$ 두 개다"
+              },
+              {
+                "id": "none",
+                "text": "없다"
+              }
+            ],
+            "correct": "both"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "제곱해서 $25$가 되는 수를 부호까지 생각해 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-11:v1",
+          "conceptKeys": [
+            "irrational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 무리수인 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\sqrt{3}$"
+              },
+              {
+                "id": "b",
+                "text": "$\\sqrt{36}$"
+              },
+              {
+                "id": "c",
+                "text": "$0.\\dot{5}$"
+              },
+              {
+                "id": "d",
+                "text": "$-\\frac{3}{7}$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\sqrt{3}$"
+              },
+              {
+                "id": "b",
+                "text": "$\\sqrt{36}$"
+              },
+              {
+                "id": "c",
+                "text": "$0.\\dot{5}$"
+              },
+              {
+                "id": "d",
+                "text": "$-\\frac{3}{7}$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "근호 안이 제곱수이면 딱 떨어져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-12:v1",
+          "conceptKeys": [
+            "irrational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{80}$은 어느 두 정수 사이에 있나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$7$과 $8$ 사이"
+              },
+              {
+                "id": "b",
+                "text": "$8$과 $9$ 사이"
+              },
+              {
+                "id": "c",
+                "text": "$9$와 $10$ 사이"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$7$과 $8$ 사이"
+              },
+              {
+                "id": "b",
+                "text": "$8$과 $9$ 사이"
+              },
+              {
+                "id": "c",
+                "text": "$9$와 $10$ 사이"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$64$와 $81$이 각각 어떤 수의 제곱인지 떠올려 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-13:v1",
+          "conceptKeys": [
+            "irrational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{17}$에 가장 가까운 정수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4^2 = 16$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-14:v1",
+          "conceptKeys": [
+            "irrational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{10}$과 $3$ 중 더 큰 수는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\sqrt{10}$"
+              },
+              {
+                "id": "b",
+                "text": "$3$"
+              },
+              {
+                "id": "same",
+                "text": "두 수는 같다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\sqrt{10}$"
+              },
+              {
+                "id": "b",
+                "text": "$3$"
+              },
+              {
+                "id": "same",
+                "text": "두 수는 같다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘 다 제곱해서 견줘 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-15:v1",
+          "conceptKeys": [
+            "radical-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{5} \\times \\sqrt{20}$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "근호 안의 수끼리 곱하면 $\\sqrt{100}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-16:v1",
+          "conceptKeys": [
+            "radical-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{72} = a\\sqrt{2}$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$72 = 36 \\times 2$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-17:v1",
+          "conceptKeys": [
+            "radical-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4\\sqrt{7} + 3\\sqrt{7} = k\\sqrt{7}$일 때 $k$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{7}$을 하나의 문자처럼 보고 계수끼리 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-18:v1",
+          "conceptKeys": [
+            "radical-arithmetic"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{\\sqrt{45}}{\\sqrt{5}}$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "근호 안끼리 나누면 $\\sqrt{9}$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-19:v1",
+          "conceptKeys": [
+            "rationalizing"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{10}{\\sqrt{5}} = a\\sqrt{5}$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분자와 분모에 $\\sqrt{5}$를 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "real-numbers:drill-20:v1",
+          "conceptKeys": [
+            "rationalizing"
+          ],
+          "promptContent": [
+            {
+              "blockId": "real-numbers:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{\\sqrt{3}}{\\sqrt{12}}$을 기약분수로 나타내 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "real-numbers:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "근호 안끼리 먼저 나누면 $\\sqrt{\\frac{1}{4}}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}
