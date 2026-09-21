@@ -50,7 +50,7 @@
     {
       "public": {
         "lessonKey": "multiplication-formula",
-        "versionId": "multiplication-formula:v1",
+        "versionId": "multiplication-formula:v2",
         "title": "곱셈 공식: 자주 나오는 모양은 외워서 쓴다",
         "summary": "괄호가 있는 곱셈을 하나하나 풀어 보고, 자주 나오는 세 모양을 넓이 그림으로 확인해요.",
         "estimatedMinutes": 12,
@@ -67,12 +67,12 @@
       },
       "sections": [
         {
-          "sectionId": "multiplication-formula:explanation:v1",
+          "sectionId": "multiplication-formula:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "multiplication-formula:explanation:text:v1",
+              "blockId": "multiplication-formula:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -93,20 +93,56 @@
               }
             },
             {
-              "blockId": "multiplication-formula:explanation:drawing:v1",
+              "blockId": "multiplication-formula:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "한 변이 a 더하기 b인 정사각형을 네 조각으로 나누어 넓이를 세는 그림",
-                "caption": "정사각형을 네 조각으로 나누면 곱셈 공식이 보여요",
+                "alt": "한 변이 a 더하기 b인 정사각형이 네 조각으로 갈라져 넓이가 보이는 그림",
+                "caption": "갈라 보면 ab짜리가 두 개예요",
                 "items": [
                   {
+                    "kind": "text",
+                    "x": 122,
+                    "y": 32,
+                    "text": "$a$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 182,
+                    "y": 32,
+                    "text": "$b$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 74,
+                    "y": 82,
+                    "text": "$a$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 74,
+                    "y": 138,
+                    "text": "$b$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
                     "kind": "rect",
-                    "x": 86,
-                    "y": 42,
+                    "x": 88,
+                    "y": 44,
                     "width": 76,
                     "height": 76,
                     "fill": "fill-soft",
@@ -117,8 +153,8 @@
                   {
                     "kind": "rect",
                     "x": 164,
-                    "y": 42,
-                    "width": 46,
+                    "y": 44,
+                    "width": 44,
                     "height": 76,
                     "fill": "sand",
                     "stroke": "ink",
@@ -127,10 +163,10 @@
                   },
                   {
                     "kind": "rect",
-                    "x": 86,
+                    "x": 88,
                     "y": 120,
                     "width": 76,
-                    "height": 46,
+                    "height": 44,
                     "fill": "sand",
                     "stroke": "ink",
                     "strokeWidth": 1,
@@ -140,8 +176,8 @@
                     "kind": "rect",
                     "x": 164,
                     "y": 120,
-                    "width": 46,
-                    "height": 46,
+                    "width": 44,
+                    "height": 44,
                     "fill": "light-green",
                     "stroke": "ink",
                     "strokeWidth": 1,
@@ -149,8 +185,8 @@
                   },
                   {
                     "kind": "text",
-                    "x": 124,
-                    "y": 86,
+                    "x": 126,
+                    "y": 88,
                     "text": "$a^2$",
                     "size": 15,
                     "anchor": "middle",
@@ -160,10 +196,10 @@
                   },
                   {
                     "kind": "text",
-                    "x": 187,
-                    "y": 86,
+                    "x": 186,
+                    "y": 88,
                     "text": "$ab$",
-                    "size": 14,
+                    "size": 13,
                     "anchor": "middle",
                     "fill": "ink",
                     "id": "t2",
@@ -171,10 +207,10 @@
                   },
                   {
                     "kind": "text",
-                    "x": 124,
+                    "x": 126,
                     "y": 148,
                     "text": "$ab$",
-                    "size": 14,
+                    "size": 13,
                     "anchor": "middle",
                     "fill": "ink",
                     "id": "t3",
@@ -182,10 +218,10 @@
                   },
                   {
                     "kind": "text",
-                    "x": 187,
+                    "x": 186,
                     "y": 148,
                     "text": "$b^2$",
-                    "size": 14,
+                    "size": 13,
                     "anchor": "middle",
                     "fill": "ink",
                     "id": "t4",
@@ -193,44 +229,8 @@
                   },
                   {
                     "kind": "text",
-                    "x": 124,
-                    "y": 32,
-                    "text": "$a$",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 187,
-                    "y": 32,
-                    "text": "$b$",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 72,
-                    "y": 86,
-                    "text": "$a$",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 72,
-                    "y": 148,
-                    "text": "$b$",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
                     "x": 160,
-                    "y": 188,
+                    "y": 190,
                     "text": "$(a+b)^2 = a^2 + 2ab + b^2$",
                     "size": 14,
                     "anchor": "middle",
@@ -266,22 +266,50 @@
                     ]
                   },
                   {
-                    "caption": "가로와 세로를 각각 $a$와 $b$로 끊으면 네 조각이 돼요.",
+                    "caption": "가로와 세로를 각각 $a$와 $b$에서 끊으면 네 조각으로 갈라져요.",
                     "changes": [
                       {
+                        "id": "aa",
+                        "dx": -5,
+                        "dy": -5
+                      },
+                      {
+                        "id": "ab1",
+                        "dx": 5,
+                        "dy": -5
+                      },
+                      {
+                        "id": "ab2",
+                        "dx": -5,
+                        "dy": 5
+                      },
+                      {
+                        "id": "bb",
+                        "dx": 5,
+                        "dy": 5
+                      },
+                      {
                         "id": "t1",
+                        "dx": -5,
+                        "dy": -5,
                         "opacity": 1
                       },
                       {
                         "id": "t2",
+                        "dx": 5,
+                        "dy": -5,
                         "opacity": 1
                       },
                       {
                         "id": "t3",
+                        "dx": -5,
+                        "dy": 5,
                         "opacity": 1
                       },
                       {
                         "id": "t4",
+                        "dx": 5,
+                        "dy": 5,
                         "opacity": 1
                       },
                       {
@@ -291,22 +319,50 @@
                     ]
                   },
                   {
-                    "caption": "$ab$짜리가 두 개예요. 그래서 가운데 항이 $2ab$인 거예요.",
+                    "caption": "$ab$짜리가 두 조각이에요. 그래서 가운데 항이 $2ab$인 거예요.",
                     "changes": [
                       {
+                        "id": "aa",
+                        "dx": -5,
+                        "dy": -5
+                      },
+                      {
+                        "id": "ab1",
+                        "dx": 5,
+                        "dy": -5
+                      },
+                      {
+                        "id": "ab2",
+                        "dx": -5,
+                        "dy": 5
+                      },
+                      {
+                        "id": "bb",
+                        "dx": 5,
+                        "dy": 5
+                      },
+                      {
                         "id": "t1",
+                        "dx": -5,
+                        "dy": -5,
                         "opacity": 1
                       },
                       {
                         "id": "t2",
+                        "dx": 5,
+                        "dy": -5,
                         "opacity": 1
                       },
                       {
                         "id": "t3",
+                        "dx": -5,
+                        "dy": 5,
                         "opacity": 1
                       },
                       {
                         "id": "t4",
+                        "dx": 5,
+                        "dy": 5,
                         "opacity": 1
                       },
                       {
@@ -315,18 +371,19 @@
                       }
                     ]
                   }
-                ]
+                ],
+                "frameMs": 1700
               }
             }
           ]
         },
         {
-          "sectionId": "multiplication-formula:example:v1",
+          "sectionId": "multiplication-formula:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "multiplication-formula:example:text:v1",
+              "blockId": "multiplication-formula:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -338,12 +395,12 @@
           ]
         },
         {
-          "sectionId": "multiplication-formula:practice:v1",
+          "sectionId": "multiplication-formula:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "multiplication-formula:practice:problems:v1",
+              "blockId": "multiplication-formula:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -360,12 +417,12 @@
           ]
         },
         {
-          "sectionId": "multiplication-formula:check:v1",
+          "sectionId": "multiplication-formula:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "multiplication-formula:check:problems:v1",
+              "blockId": "multiplication-formula:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -381,12 +438,12 @@
           ]
         },
         {
-          "sectionId": "multiplication-formula:summary:v1",
+          "sectionId": "multiplication-formula:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "multiplication-formula:summary:text:v1",
+              "blockId": "multiplication-formula:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -410,7 +467,7 @@
     {
       "public": {
         "lessonKey": "common-factor",
-        "versionId": "common-factor:v1",
+        "versionId": "common-factor:v2",
         "title": "인수분해: 더한 식을 곱한 식으로 되돌리기",
         "summary": "전개의 반대 방향으로 가는 길을 열고, 모든 항에 함께 든 것을 앞으로 빼내요.",
         "estimatedMinutes": 12,
@@ -426,12 +483,12 @@
       },
       "sections": [
         {
-          "sectionId": "common-factor:explanation:v1",
+          "sectionId": "common-factor:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "common-factor:explanation:text:v1",
+              "blockId": "common-factor:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -447,22 +504,31 @@
               }
             },
             {
-              "blockId": "common-factor:explanation:drawing:v1",
+              "blockId": "common-factor:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "3x 타일과 6 타일에서 공통으로 든 3을 찾아 하나로 묶는 그림",
-                "caption": "두 항에 함께 든 것을 앞으로 빼내는 것이 인수분해예요",
+                "alt": "3x와 6에 들어 있던 3이 앞으로 나와 하나로 묶이는 그림",
+                "caption": "함께 든 것을 앞으로 빼내면 덧셈이 곱셈이 돼요",
                 "items": [
                   {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 36,
+                    "text": "$3x + 6$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
                     "kind": "rect",
-                    "x": 44,
-                    "y": 56,
-                    "width": 88,
-                    "height": 54,
+                    "x": 78,
+                    "y": 62,
+                    "width": 72,
+                    "height": 46,
                     "fill": "fill-soft",
                     "stroke": "ink",
                     "strokeWidth": 1,
@@ -470,10 +536,10 @@
                   },
                   {
                     "kind": "rect",
-                    "x": 152,
-                    "y": 56,
+                    "x": 170,
+                    "y": 62,
                     "width": 72,
-                    "height": 54,
+                    "height": 46,
                     "fill": "sand",
                     "stroke": "ink",
                     "strokeWidth": 1,
@@ -481,68 +547,82 @@
                   },
                   {
                     "kind": "text",
-                    "x": 88,
-                    "y": 88,
+                    "x": 114,
+                    "y": 90,
                     "text": "$3x$",
                     "size": 16,
                     "anchor": "middle",
-                    "fill": "ink"
+                    "fill": "ink",
+                    "id": "lt"
                   },
                   {
                     "kind": "text",
-                    "x": 188,
-                    "y": 88,
+                    "x": 206,
+                    "y": 90,
                     "text": "$6$",
                     "size": 16,
                     "anchor": "middle",
-                    "fill": "ink"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 142,
-                    "y": 88,
-                    "text": "$+$",
-                    "size": 15,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 88,
-                    "y": 130,
-                    "text": "$3 \\times x$",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "green",
-                    "id": "split1",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 188,
-                    "y": 130,
-                    "text": "$3 \\times 2$",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "green",
-                    "id": "split2",
-                    "opacity": 0
+                    "fill": "ink",
+                    "id": "rt"
                   },
                   {
                     "kind": "text",
                     "x": 160,
-                    "y": 34,
-                    "text": "$3x + 6$",
+                    "y": 90,
+                    "text": "$+$",
                     "size": 14,
                     "anchor": "middle",
-                    "fill": "muted"
+                    "fill": "muted",
+                    "id": "plus"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 98,
+                    "cy": 132,
+                    "rx": 12,
+                    "ry": 12,
+                    "fill": "light-green",
+                    "id": "c1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 98,
+                    "y": 137,
+                    "text": "$3$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "c1t",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 190,
+                    "cy": 132,
+                    "rx": 12,
+                    "ry": 12,
+                    "fill": "light-green",
+                    "id": "c2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 190,
+                    "y": 137,
+                    "text": "$3$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "c2t",
+                    "opacity": 0
                   },
                   {
                     "kind": "text",
                     "x": 160,
-                    "y": 168,
+                    "y": 178,
                     "text": "$3(x + 2)$",
-                    "size": 17,
+                    "size": 18,
                     "anchor": "middle",
                     "fill": "orange",
                     "id": "done",
@@ -554,11 +634,19 @@
                     "caption": "$3x$와 $6$을 더한 식이에요. 지금은 항이 둘인 덧셈이에요.",
                     "changes": [
                       {
-                        "id": "split1",
+                        "id": "c1",
                         "opacity": 0
                       },
                       {
-                        "id": "split2",
+                        "id": "c1t",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c2t",
                         "opacity": 0
                       },
                       {
@@ -571,11 +659,19 @@
                     "caption": "두 항을 곱으로 쪼개 보면 둘 다 $3$을 품고 있어요.",
                     "changes": [
                       {
-                        "id": "split1",
+                        "id": "c1",
                         "opacity": 1
                       },
                       {
-                        "id": "split2",
+                        "id": "c1t",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c2t",
                         "opacity": 1
                       },
                       {
@@ -585,15 +681,31 @@
                     ]
                   },
                   {
-                    "caption": "함께 든 $3$을 앞으로 빼내면 덧셈이 곱셈으로 바뀌어요.",
+                    "caption": "품고 있던 $3$을 앞으로 빼내면 덧셈이 곱셈으로 바뀌어요.",
                     "changes": [
                       {
-                        "id": "split1",
+                        "id": "c1",
+                        "dx": -46,
+                        "dy": 34,
                         "opacity": 1
                       },
                       {
-                        "id": "split2",
+                        "id": "c1t",
+                        "dx": -46,
+                        "dy": 34,
                         "opacity": 1
+                      },
+                      {
+                        "id": "c2",
+                        "dx": -138,
+                        "dy": 34,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c2t",
+                        "dx": -138,
+                        "dy": 34,
+                        "opacity": 0
                       },
                       {
                         "id": "done",
@@ -601,18 +713,19 @@
                       }
                     ]
                   }
-                ]
+                ],
+                "frameMs": 1700
               }
             }
           ]
         },
         {
-          "sectionId": "common-factor:example:v1",
+          "sectionId": "common-factor:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "common-factor:example:text:v1",
+              "blockId": "common-factor:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -624,12 +737,12 @@
           ]
         },
         {
-          "sectionId": "common-factor:practice:v1",
+          "sectionId": "common-factor:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "common-factor:practice:problems:v1",
+              "blockId": "common-factor:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -646,12 +759,12 @@
           ]
         },
         {
-          "sectionId": "common-factor:check:v1",
+          "sectionId": "common-factor:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "common-factor:check:problems:v1",
+              "blockId": "common-factor:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -667,12 +780,12 @@
           ]
         },
         {
-          "sectionId": "common-factor:summary:v1",
+          "sectionId": "common-factor:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "common-factor:summary:text:v1",
+              "blockId": "common-factor:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -696,7 +809,7 @@
     {
       "public": {
         "lessonKey": "factorization-formula",
-        "versionId": "factorization-formula:v1",
+        "versionId": "factorization-formula:v2",
         "title": "공식으로 인수분해: 더해서 얼마, 곱해서 얼마",
         "summary": "곱셈 공식을 오른쪽에서 왼쪽으로 읽어, 공통인수가 없는 식도 곱의 꼴로 되돌려요.",
         "estimatedMinutes": 12,
@@ -712,12 +825,12 @@
       },
       "sections": [
         {
-          "sectionId": "factorization-formula:explanation:v1",
+          "sectionId": "factorization-formula:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "factorization-formula:explanation:text:v1",
+              "blockId": "factorization-formula:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -733,20 +846,56 @@
               }
             },
             {
-              "blockId": "factorization-formula:explanation:drawing:v1",
+              "blockId": "factorization-formula:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "가로가 x 더하기 2, 세로가 x 더하기 3인 직사각형을 네 조각으로 나누어 넓이를 세는 그림",
+                "alt": "가로 x 더하기 2, 세로 x 더하기 3인 직사각형이 네 조각으로 갈라져 넓이가 보이는 그림",
                 "caption": "더해서 5, 곱해서 6이 되는 두 수가 가로와 세로예요",
                 "items": [
                   {
+                    "kind": "text",
+                    "x": 124,
+                    "y": 32,
+                    "text": "$x$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 182,
+                    "y": 32,
+                    "text": "$2$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 74,
+                    "y": 82,
+                    "text": "$x$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 74,
+                    "y": 140,
+                    "text": "$3$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
                     "kind": "rect",
                     "x": 88,
-                    "y": 40,
+                    "y": 44,
                     "width": 74,
                     "height": 74,
                     "fill": "fill-soft",
@@ -756,8 +905,8 @@
                   },
                   {
                     "kind": "rect",
-                    "x": 164,
-                    "y": 40,
+                    "x": 162,
+                    "y": 44,
                     "width": 40,
                     "height": 74,
                     "fill": "sand",
@@ -768,7 +917,7 @@
                   {
                     "kind": "rect",
                     "x": 88,
-                    "y": 116,
+                    "y": 118,
                     "width": 74,
                     "height": 44,
                     "fill": "sand",
@@ -778,8 +927,8 @@
                   },
                   {
                     "kind": "rect",
-                    "x": 164,
-                    "y": 116,
+                    "x": 162,
+                    "y": 118,
                     "width": 40,
                     "height": 44,
                     "fill": "light-green",
@@ -790,7 +939,7 @@
                   {
                     "kind": "text",
                     "x": 125,
-                    "y": 82,
+                    "y": 86,
                     "text": "$x^2$",
                     "size": 15,
                     "anchor": "middle",
@@ -800,10 +949,10 @@
                   },
                   {
                     "kind": "text",
-                    "x": 184,
-                    "y": 82,
+                    "x": 182,
+                    "y": 86,
                     "text": "$2x$",
-                    "size": 13,
+                    "size": 12,
                     "anchor": "middle",
                     "fill": "ink",
                     "id": "l2",
@@ -812,9 +961,9 @@
                   {
                     "kind": "text",
                     "x": 125,
-                    "y": 142,
+                    "y": 146,
                     "text": "$3x$",
-                    "size": 13,
+                    "size": 12,
                     "anchor": "middle",
                     "fill": "ink",
                     "id": "l3",
@@ -822,10 +971,10 @@
                   },
                   {
                     "kind": "text",
-                    "x": 184,
-                    "y": 142,
+                    "x": 182,
+                    "y": 146,
                     "text": "$6$",
-                    "size": 13,
+                    "size": 12,
                     "anchor": "middle",
                     "fill": "ink",
                     "id": "l4",
@@ -833,44 +982,8 @@
                   },
                   {
                     "kind": "text",
-                    "x": 125,
-                    "y": 30,
-                    "text": "$x$",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 184,
-                    "y": 30,
-                    "text": "$2$",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 74,
-                    "y": 82,
-                    "text": "$x$",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 74,
-                    "y": 142,
-                    "text": "$3$",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
                     "x": 160,
-                    "y": 184,
+                    "y": 190,
                     "text": "$x^2 + 5x + 6 = (x+2)(x+3)$",
                     "size": 14,
                     "anchor": "middle",
@@ -906,22 +1019,50 @@
                     ]
                   },
                   {
-                    "caption": "네 조각의 넓이를 세면 $x^2$, $2x$, $3x$, $6$이에요.",
+                    "caption": "네 조각으로 갈라 넓이를 세면 $x^2$, $2x$, $3x$, $6$이에요.",
                     "changes": [
                       {
+                        "id": "xx",
+                        "dx": -5,
+                        "dy": -5
+                      },
+                      {
+                        "id": "two",
+                        "dx": 5,
+                        "dy": -5
+                      },
+                      {
+                        "id": "three",
+                        "dx": -5,
+                        "dy": 5
+                      },
+                      {
+                        "id": "six",
+                        "dx": 5,
+                        "dy": 5
+                      },
+                      {
                         "id": "l1",
+                        "dx": -5,
+                        "dy": -5,
                         "opacity": 1
                       },
                       {
                         "id": "l2",
+                        "dx": 5,
+                        "dy": -5,
                         "opacity": 1
                       },
                       {
                         "id": "l3",
+                        "dx": -5,
+                        "dy": 5,
                         "opacity": 1
                       },
                       {
                         "id": "l4",
+                        "dx": 5,
+                        "dy": 5,
                         "opacity": 1
                       },
                       {
@@ -931,22 +1072,50 @@
                     ]
                   },
                   {
-                    "caption": "$2x$와 $3x$를 모으면 $5x$. 더해서 $5$, 곱해서 $6$인 두 수가 $2$와 $3$이에요.",
+                    "caption": "$2x$와 $3x$를 모으면 $5x$. 더해서 $5$, 곱해서 $6$인 두 수가 가로와 세로예요.",
                     "changes": [
                       {
+                        "id": "xx",
+                        "dx": -5,
+                        "dy": -5
+                      },
+                      {
+                        "id": "two",
+                        "dx": 5,
+                        "dy": -5
+                      },
+                      {
+                        "id": "three",
+                        "dx": -5,
+                        "dy": 5
+                      },
+                      {
+                        "id": "six",
+                        "dx": 5,
+                        "dy": 5
+                      },
+                      {
                         "id": "l1",
+                        "dx": -5,
+                        "dy": -5,
                         "opacity": 1
                       },
                       {
                         "id": "l2",
+                        "dx": 5,
+                        "dy": -5,
                         "opacity": 1
                       },
                       {
                         "id": "l3",
+                        "dx": -5,
+                        "dy": 5,
                         "opacity": 1
                       },
                       {
                         "id": "l4",
+                        "dx": 5,
+                        "dy": 5,
                         "opacity": 1
                       },
                       {
@@ -955,18 +1124,19 @@
                       }
                     ]
                   }
-                ]
+                ],
+                "frameMs": 1700
               }
             }
           ]
         },
         {
-          "sectionId": "factorization-formula:example:v1",
+          "sectionId": "factorization-formula:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "factorization-formula:example:text:v1",
+              "blockId": "factorization-formula:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -978,12 +1148,12 @@
           ]
         },
         {
-          "sectionId": "factorization-formula:practice:v1",
+          "sectionId": "factorization-formula:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "factorization-formula:practice:problems:v1",
+              "blockId": "factorization-formula:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1000,12 +1170,12 @@
           ]
         },
         {
-          "sectionId": "factorization-formula:check:v1",
+          "sectionId": "factorization-formula:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "factorization-formula:check:problems:v1",
+              "blockId": "factorization-formula:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1021,12 +1191,12 @@
           ]
         },
         {
-          "sectionId": "factorization-formula:summary:v1",
+          "sectionId": "factorization-formula:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "factorization-formula:summary:text:v1",
+              "blockId": "factorization-formula:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
