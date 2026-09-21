@@ -50,7 +50,7 @@
     {
       "public": {
         "lessonKey": "quadratic-function",
-        "versionId": "quadratic-function:v1",
+        "versionId": "quadratic-function:v2",
         "title": "이차함수의 그래프: 직선이 아닌 길",
         "summary": "제곱이 들어간 함수를 점으로 찍어 보고, 계수가 그래프의 방향과 폭을 어떻게 정하는지 봐요.",
         "estimatedMinutes": 12,
@@ -66,12 +66,12 @@
       },
       "sections": [
         {
-          "sectionId": "quadratic-function:explanation:v1",
+          "sectionId": "quadratic-function:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-function:explanation:text:v1",
+              "blockId": "quadratic-function:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -87,7 +87,7 @@
               }
             },
             {
-              "blockId": "quadratic-function:explanation:drawing:v1",
+              "blockId": "quadratic-function:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -274,18 +274,19 @@
                       }
                     ]
                   }
-                ]
+                ],
+                "frameMs": 1600
               }
             }
           ]
         },
         {
-          "sectionId": "quadratic-function:example:v1",
+          "sectionId": "quadratic-function:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-function:example:text:v1",
+              "blockId": "quadratic-function:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -297,12 +298,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-function:practice:v1",
+          "sectionId": "quadratic-function:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-function:practice:problems:v1",
+              "blockId": "quadratic-function:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -319,12 +320,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-function:check:v1",
+          "sectionId": "quadratic-function:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-function:check:problems:v1",
+              "blockId": "quadratic-function:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -340,12 +341,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-function:summary:v1",
+          "sectionId": "quadratic-function:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-function:summary:text:v1",
+              "blockId": "quadratic-function:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -369,7 +370,7 @@
     {
       "public": {
         "lessonKey": "parabola-shift",
-        "versionId": "parabola-shift:v1",
+        "versionId": "parabola-shift:v2",
         "title": "평행이동: 포물선을 통째로 옮기기",
         "summary": "같은 모양의 포물선을 옆으로 위로 옮겨 보고, 옮긴 자리를 식에서 바로 읽어내요.",
         "estimatedMinutes": 12,
@@ -385,12 +386,12 @@
       },
       "sections": [
         {
-          "sectionId": "parabola-shift:explanation:v1",
+          "sectionId": "parabola-shift:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "parabola-shift:explanation:text:v1",
+              "blockId": "parabola-shift:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -411,7 +412,7 @@
               }
             },
             {
-              "blockId": "parabola-shift:explanation:drawing:v1",
+              "blockId": "parabola-shift:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -591,18 +592,19 @@
                       }
                     ]
                   }
-                ]
+                ],
+                "frameMs": 1800
               }
             }
           ]
         },
         {
-          "sectionId": "parabola-shift:example:v1",
+          "sectionId": "parabola-shift:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "parabola-shift:example:text:v1",
+              "blockId": "parabola-shift:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -614,12 +616,12 @@
           ]
         },
         {
-          "sectionId": "parabola-shift:practice:v1",
+          "sectionId": "parabola-shift:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "parabola-shift:practice:problems:v1",
+              "blockId": "parabola-shift:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -636,12 +638,12 @@
           ]
         },
         {
-          "sectionId": "parabola-shift:check:v1",
+          "sectionId": "parabola-shift:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "parabola-shift:check:problems:v1",
+              "blockId": "parabola-shift:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -657,12 +659,12 @@
           ]
         },
         {
-          "sectionId": "parabola-shift:summary:v1",
+          "sectionId": "parabola-shift:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "parabola-shift:summary:text:v1",
+              "blockId": "parabola-shift:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -686,7 +688,7 @@
     {
       "public": {
         "lessonKey": "quadratic-max-min",
-        "versionId": "quadratic-max-min:v1",
+        "versionId": "quadratic-max-min:v2",
         "title": "풀어 쓴 식에서 꼭짓점 찾기와 가장 큰 값, 가장 작은 값",
         "summary": "완전제곱식 만들기로 표준형을 되찾고, 꼭짓점에서 최댓값과 최솟값을 읽어요.",
         "estimatedMinutes": 12,
@@ -702,12 +704,12 @@
       },
       "sections": [
         {
-          "sectionId": "quadratic-max-min:explanation:v1",
+          "sectionId": "quadratic-max-min:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-max-min:explanation:text:v1",
+              "blockId": "quadratic-max-min:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -723,185 +725,176 @@
               }
             },
             {
-              "blockId": "quadratic-max-min:explanation:drawing:v1",
+              "blockId": "quadratic-max-min:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "풀어 쓴 식을 표준형으로 고쳐 꼭짓점을 찾고 가장 작은 값을 읽는 세 단계 그림",
-                "caption": "표준형으로 고치면 꼭짓점이 보여요",
+                "alt": "가로선이 포물선을 따라 내려오다 꼭짓점에서 멈추는 그림",
+                "caption": "더 내려갈 수 없는 높이가 가장 작은 값이에요",
                 "items": [
                   {
-                    "kind": "rect",
-                    "x": 62,
-                    "y": 34,
-                    "width": 196,
-                    "height": 36,
-                    "radius": 6,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b1"
+                    "kind": "line",
+                    "x1": 30,
+                    "y1": 158,
+                    "x2": 296,
+                    "y2": 158,
+                    "stroke": "line",
+                    "strokeWidth": 1.4
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 150,
+                    "y1": 24,
+                    "x2": 150,
+                    "y2": 182,
+                    "stroke": "line",
+                    "strokeWidth": 1.4
+                  },
+                  {
+                    "kind": "path",
+                    "d": "M92 44 Q182 218 262 60",
+                    "fill": "none",
+                    "stroke": "green",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 60,
+                    "y1": 74,
+                    "x2": 280,
+                    "y2": 74,
+                    "stroke": "orange",
+                    "strokeWidth": 1.6,
+                    "id": "bar",
+                    "dash": true
                   },
                   {
                     "kind": "text",
-                    "x": 160,
-                    "y": 57,
-                    "text": "$y = x^2 - 4x + 1$",
-                    "size": 15,
-                    "anchor": "middle",
-                    "fill": "ink"
+                    "x": 292,
+                    "y": 68,
+                    "text": "높이",
+                    "size": 11,
+                    "anchor": "end",
+                    "fill": "muted",
+                    "id": "barlab"
                   },
                   {
-                    "kind": "rect",
-                    "x": 62,
-                    "y": 82,
-                    "width": 196,
-                    "height": 36,
-                    "radius": 6,
-                    "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b2",
+                    "kind": "ellipse",
+                    "cx": 182,
+                    "cy": 130,
+                    "rx": 4.5,
+                    "ry": 4.5,
+                    "fill": "orange",
+                    "id": "vtx",
                     "opacity": 0
                   },
                   {
                     "kind": "text",
-                    "x": 160,
-                    "y": 105,
-                    "text": "$y = (x-2)^2 - 3$",
-                    "size": 15,
-                    "anchor": "middle",
-                    "fill": "ink",
-                    "id": "t2",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 62,
-                    "y": 130,
-                    "width": 196,
-                    "height": 36,
-                    "radius": 6,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b3",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 160,
-                    "y": 153,
-                    "text": "꼭짓점 $(2, -3)$",
-                    "size": 14,
-                    "anchor": "middle",
-                    "fill": "ink",
-                    "id": "t3",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 160,
-                    "y": 186,
-                    "text": "가장 작은 값은 $-3$이에요",
+                    "x": 214,
+                    "y": 128,
+                    "text": "꼭짓점",
                     "size": 12,
                     "anchor": "middle",
                     "fill": "orange",
-                    "id": "note",
+                    "id": "vlab",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 190,
+                    "text": "$y = x^2 - 4x + 1$을 고치면 $y = (x-2)^2 - 3$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "eq",
                     "opacity": 0
                   }
                 ],
                 "frames": [
                   {
-                    "caption": "이렇게 풀어 쓴 꼴에서는 꼭짓점이 보이지 않아요.",
+                    "caption": "포물선 위로 가로선을 하나 그어요. 이 높이에서 만나는 점이 둘이에요.",
                     "changes": [
                       {
-                        "id": "b2",
+                        "id": "vtx",
                         "opacity": 0
                       },
                       {
-                        "id": "t2",
+                        "id": "vlab",
                         "opacity": 0
                       },
                       {
-                        "id": "b3",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "t3",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "note",
+                        "id": "eq",
                         "opacity": 0
                       }
                     ]
                   },
                   {
-                    "caption": "완전제곱식을 만들어 표준형으로 고쳐요. $4$를 더하고 다시 빼요.",
+                    "caption": "선을 내려요. 더 내릴수록 두 점이 가까워져요.",
                     "changes": [
                       {
-                        "id": "b2",
-                        "opacity": 1
+                        "id": "bar",
+                        "dy": 40
                       },
                       {
-                        "id": "t2",
-                        "opacity": 1
+                        "id": "barlab",
+                        "dy": 40
                       },
                       {
-                        "id": "b3",
+                        "id": "vtx",
                         "opacity": 0
                       },
                       {
-                        "id": "t3",
+                        "id": "vlab",
                         "opacity": 0
                       },
                       {
-                        "id": "note",
+                        "id": "eq",
                         "opacity": 0
                       }
                     ]
                   },
                   {
-                    "caption": "이제 꼭짓점이 바로 읽혀요. 아래가 둥그니 그 자리가 가장 낮아요.",
+                    "caption": "한 점으로 붙는 데서 멈춰요. 더 내려가면 만나지 않아요. 그 높이가 가장 작은 값이에요.",
                     "changes": [
                       {
-                        "id": "b2",
+                        "id": "bar",
+                        "dy": 56
+                      },
+                      {
+                        "id": "barlab",
+                        "dy": 56
+                      },
+                      {
+                        "id": "vtx",
                         "opacity": 1
                       },
                       {
-                        "id": "t2",
+                        "id": "vlab",
                         "opacity": 1
                       },
                       {
-                        "id": "b3",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "t3",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "note",
+                        "id": "eq",
                         "opacity": 1
                       }
                     ]
                   }
-                ]
+                ],
+                "frameMs": 1700
               }
             }
           ]
         },
         {
-          "sectionId": "quadratic-max-min:example:v1",
+          "sectionId": "quadratic-max-min:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-max-min:example:text:v1",
+              "blockId": "quadratic-max-min:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -913,12 +906,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-max-min:practice:v1",
+          "sectionId": "quadratic-max-min:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-max-min:practice:problems:v1",
+              "blockId": "quadratic-max-min:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -935,12 +928,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-max-min:check:v1",
+          "sectionId": "quadratic-max-min:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-max-min:check:problems:v1",
+              "blockId": "quadratic-max-min:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -956,12 +949,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-max-min:summary:v1",
+          "sectionId": "quadratic-max-min:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-max-min:summary:text:v1",
+              "blockId": "quadratic-max-min:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,

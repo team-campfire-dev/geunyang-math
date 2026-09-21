@@ -55,7 +55,7 @@
     {
       "public": {
         "lessonKey": "quadratic-equation",
-        "versionId": "quadratic-equation:v1",
+        "versionId": "quadratic-equation:v2",
         "title": "이차방정식과 그 해: 곱이 0이 될 때",
         "summary": "차수가 둘인 방정식을 만나고, 곱이 0이 되는 자리를 찾아 인수분해로 풀어요.",
         "estimatedMinutes": 12,
@@ -72,12 +72,12 @@
       },
       "sections": [
         {
-          "sectionId": "quadratic-equation:explanation:v1",
+          "sectionId": "quadratic-equation:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-equation:explanation:text:v1",
+              "blockId": "quadratic-equation:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -98,93 +98,119 @@
               }
             },
             {
-              "blockId": "quadratic-equation:explanation:drawing:v1",
+              "blockId": "quadratic-equation:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "두 수의 곱이 0이면 둘 중 하나가 0이어야 한다는 것을 두 갈래로 보여 주는 그림",
+                "alt": "곱이 0인 식이 두 갈래로 갈라져 각각 일차방정식이 되는 그림",
                 "caption": "곱이 0이면 둘 중 하나는 반드시 0이에요",
                 "items": [
                   {
                     "kind": "text",
                     "x": 160,
-                    "y": 34,
+                    "y": 30,
                     "text": "$(x-2)(x+3) = 0$",
                     "size": 16,
                     "anchor": "middle",
                     "fill": "ink"
                   },
                   {
-                    "kind": "line",
-                    "x1": 160,
-                    "y1": 46,
-                    "x2": 92,
-                    "y2": 78,
-                    "stroke": "line",
-                    "strokeWidth": 1.4,
-                    "arrow": "end",
-                    "id": "arm1"
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 160,
-                    "y1": 46,
-                    "x2": 228,
-                    "y2": 78,
-                    "stroke": "line",
-                    "strokeWidth": 1.4,
-                    "arrow": "end",
-                    "id": "arm2"
-                  },
-                  {
                     "kind": "rect",
-                    "x": 40,
-                    "y": 82,
-                    "width": 104,
-                    "height": 40,
-                    "radius": 6,
+                    "x": 96,
+                    "y": 52,
+                    "width": 62,
+                    "height": 38,
                     "fill": "fill-soft",
                     "stroke": "ink",
                     "strokeWidth": 1,
+                    "radius": 6,
                     "id": "box1"
                   },
                   {
                     "kind": "rect",
-                    "x": 176,
-                    "y": 82,
-                    "width": 104,
-                    "height": 40,
-                    "radius": 6,
+                    "x": 162,
+                    "y": 52,
+                    "width": 62,
+                    "height": 38,
                     "fill": "fill-soft",
                     "stroke": "ink",
                     "strokeWidth": 1,
+                    "radius": 6,
                     "id": "box2"
                   },
                   {
                     "kind": "text",
-                    "x": 92,
-                    "y": 107,
+                    "x": 127,
+                    "y": 76,
+                    "text": "$x-2$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "bt1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 193,
+                    "y": 76,
+                    "text": "$x+3$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "bt2"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 127,
+                    "y1": 96,
+                    "x2": 96,
+                    "y2": 118,
+                    "stroke": "line",
+                    "strokeWidth": 1.4,
+                    "arrow": "end",
+                    "id": "arm1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 193,
+                    "y1": 96,
+                    "x2": 224,
+                    "y2": 118,
+                    "stroke": "line",
+                    "strokeWidth": 1.4,
+                    "arrow": "end",
+                    "id": "arm2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 80,
+                    "y": 138,
                     "text": "$x - 2 = 0$",
-                    "size": 14,
+                    "size": 13,
                     "anchor": "middle",
-                    "fill": "ink"
+                    "fill": "ink",
+                    "id": "eq1",
+                    "opacity": 0
                   },
                   {
                     "kind": "text",
-                    "x": 228,
-                    "y": 107,
+                    "x": 240,
+                    "y": 138,
                     "text": "$x + 3 = 0$",
-                    "size": 14,
+                    "size": 13,
                     "anchor": "middle",
-                    "fill": "ink"
+                    "fill": "ink",
+                    "id": "eq2",
+                    "opacity": 0
                   },
                   {
                     "kind": "text",
-                    "x": 92,
-                    "y": 146,
+                    "x": 80,
+                    "y": 172,
                     "text": "$x = 2$",
                     "size": 15,
                     "anchor": "middle",
@@ -194,39 +220,20 @@
                   },
                   {
                     "kind": "text",
-                    "x": 228,
-                    "y": 146,
+                    "x": 240,
+                    "y": 172,
                     "text": "$x = -3$",
                     "size": 15,
                     "anchor": "middle",
                     "fill": "orange",
                     "id": "ans2",
                     "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 160,
-                    "y": 180,
-                    "text": "해가 둘이에요",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "muted",
-                    "id": "note",
-                    "opacity": 0
                   }
                 ],
                 "frames": [
                   {
-                    "caption": "두 수를 곱했더니 $0$이 됐어요. 어떤 경우에 그럴까요?",
+                    "caption": "두 식을 곱했더니 $0$이 됐어요. 어떤 경우에 그럴까요?",
                     "changes": [
-                      {
-                        "id": "box1",
-                        "hidden": true
-                      },
-                      {
-                        "id": "box2",
-                        "hidden": true
-                      },
                       {
                         "id": "arm1",
                         "opacity": 0
@@ -236,22 +243,13 @@
                         "opacity": 0
                       },
                       {
-                        "id": "ans1",
+                        "id": "eq1",
                         "opacity": 0
                       },
                       {
-                        "id": "ans2",
+                        "id": "eq2",
                         "opacity": 0
                       },
-                      {
-                        "id": "note",
-                        "opacity": 0
-                      }
-                    ]
-                  },
-                  {
-                    "caption": "둘 중 하나가 $0$일 때뿐이에요. 그래서 갈래가 둘이에요.",
-                    "changes": [
                       {
                         "id": "ans1",
                         "opacity": 0
@@ -259,42 +257,116 @@
                       {
                         "id": "ans2",
                         "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "둘 중 하나가 $0$일 때뿐이에요. 그래서 갈래가 둘로 나뉘어요.",
+                    "changes": [
+                      {
+                        "id": "box1",
+                        "dx": -48
                       },
                       {
-                        "id": "note",
+                        "id": "bt1",
+                        "dx": -48
+                      },
+                      {
+                        "id": "box2",
+                        "dx": 48
+                      },
+                      {
+                        "id": "bt2",
+                        "dx": 48
+                      },
+                      {
+                        "id": "arm1",
+                        "dx": -48,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "arm2",
+                        "dx": 48,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "eq1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "eq2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ans1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ans2",
                         "opacity": 0
                       }
                     ]
                   },
                   {
-                    "caption": "각 갈래는 일차방정식이라 이미 풀 줄 알아요.",
+                    "caption": "갈래마다 일차방정식이라 이미 풀 줄 알아요. 그래서 해가 둘이에요.",
                     "changes": [
+                      {
+                        "id": "box1",
+                        "dx": -48
+                      },
+                      {
+                        "id": "bt1",
+                        "dx": -48
+                      },
+                      {
+                        "id": "box2",
+                        "dx": 48
+                      },
+                      {
+                        "id": "bt2",
+                        "dx": 48
+                      },
+                      {
+                        "id": "arm1",
+                        "dx": -48,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "arm2",
+                        "dx": 48,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "eq1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "eq2",
+                        "opacity": 1
+                      },
                       {
                         "id": "ans1",
                         "opacity": 1
                       },
                       {
                         "id": "ans2",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "note",
                         "opacity": 1
                       }
                     ]
                   }
-                ]
+                ],
+                "frameMs": 1700
               }
             }
           ]
         },
         {
-          "sectionId": "quadratic-equation:example:v1",
+          "sectionId": "quadratic-equation:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-equation:example:text:v1",
+              "blockId": "quadratic-equation:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -306,12 +378,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-equation:practice:v1",
+          "sectionId": "quadratic-equation:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-equation:practice:problems:v1",
+              "blockId": "quadratic-equation:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -328,12 +400,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-equation:check:v1",
+          "sectionId": "quadratic-equation:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-equation:check:problems:v1",
+              "blockId": "quadratic-equation:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -349,12 +421,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-equation:summary:v1",
+          "sectionId": "quadratic-equation:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-equation:summary:text:v1",
+              "blockId": "quadratic-equation:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -378,7 +450,7 @@
     {
       "public": {
         "lessonKey": "completing-square",
-        "versionId": "completing-square:v1",
+        "versionId": "completing-square:v2",
         "title": "제곱근으로 풀기와 완전제곱식 만들기",
         "summary": "인수분해가 되지 않는 이차방정식을 제곱의 꼴로 고쳐, 제곱근으로 풀어요.",
         "estimatedMinutes": 12,
@@ -394,12 +466,12 @@
       },
       "sections": [
         {
-          "sectionId": "completing-square:explanation:v1",
+          "sectionId": "completing-square:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "completing-square:explanation:text:v1",
+              "blockId": "completing-square:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -415,100 +487,16 @@
               }
             },
             {
-              "blockId": "completing-square:explanation:drawing:v1",
+              "blockId": "completing-square:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "가로 x 세로 x인 정사각형에 3x짜리 띠 두 개를 붙이고 빈 모서리에 9를 채워 큰 정사각형을 만드는 그림",
-                "caption": "모자란 모서리를 채우면 정사각형이 돼요",
+                "alt": "6x짜리 띠를 반으로 갈라 한 조각을 돌려 아래에 붙이니 모서리 한 칸이 비는 그림",
+                "caption": "반으로 갈라 두 변에 붙이면 모서리 한 칸이 비어요",
                 "items": [
-                  {
-                    "kind": "rect",
-                    "x": 82,
-                    "y": 40,
-                    "width": 76,
-                    "height": 76,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "sq"
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 160,
-                    "y": 40,
-                    "width": 38,
-                    "height": 76,
-                    "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "strip1"
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 82,
-                    "y": 118,
-                    "width": 76,
-                    "height": 38,
-                    "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "strip2"
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 160,
-                    "y": 118,
-                    "width": 38,
-                    "height": 38,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "dash": true,
-                    "id": "corner",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 120,
-                    "y": 84,
-                    "text": "$x^2$",
-                    "size": 15,
-                    "anchor": "middle",
-                    "fill": "ink"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 179,
-                    "y": 84,
-                    "text": "$3x$",
-                    "size": 12,
-                    "anchor": "middle",
-                    "fill": "ink"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 120,
-                    "y": 142,
-                    "text": "$3x$",
-                    "size": 12,
-                    "anchor": "middle",
-                    "fill": "ink"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 179,
-                    "y": 142,
-                    "text": "$9$",
-                    "size": 12,
-                    "anchor": "middle",
-                    "fill": "ink",
-                    "id": "nine",
-                    "opacity": 0
-                  },
                   {
                     "kind": "text",
                     "x": 160,
@@ -519,9 +507,105 @@
                     "fill": "muted"
                   },
                   {
+                    "kind": "rect",
+                    "x": 84,
+                    "y": 44,
+                    "width": 76,
+                    "height": 76,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "sq"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 122,
+                    "y": 88,
+                    "text": "$x^2$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 160,
+                    "y": 44,
+                    "width": 24,
+                    "height": 76,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "half1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 172,
+                    "y": 86,
+                    "text": "$3x$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "lab1"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 184,
+                    "y": 44,
+                    "width": 24,
+                    "height": 76,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "half2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 196,
+                    "y": 86,
+                    "text": "$3x$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "lab2"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 160,
+                    "y": 120,
+                    "width": 24,
+                    "height": 24,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "dash": true,
+                    "id": "corner",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 172,
+                    "y": 137,
+                    "text": "$9$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "nine",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 236,
+                    "y": 96,
+                    "text": "$6x$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "whole"
+                  },
+                  {
                     "kind": "text",
                     "x": 160,
-                    "y": 182,
+                    "y": 178,
                     "text": "$x^2 + 6x + 9 = (x+3)^2$",
                     "size": 14,
                     "anchor": "middle",
@@ -532,7 +616,7 @@
                 ],
                 "frames": [
                   {
-                    "caption": "$x^2$에 $3x$짜리 띠 두 개를 붙였어요. 이것이 $x^2 + 6x$예요.",
+                    "caption": "$x^2$ 옆에 $6x$짜리 띠가 붙어 있어요. 이대로는 정사각형이 아니에요.",
                     "changes": [
                       {
                         "id": "corner",
@@ -549,15 +633,30 @@
                     ]
                   },
                   {
-                    "caption": "모서리 한 칸이 비었어요. 그 칸의 넓이는 $3 \\times 3 = 9$예요.",
+                    "caption": "띠를 반으로 갈라 한 조각을 돌려 아래에 붙여요. 각각 $3x$예요.",
                     "changes": [
                       {
+                        "id": "half2",
+                        "dx": -74,
+                        "dy": 50,
+                        "rotate": 90
+                      },
+                      {
+                        "id": "lab2",
+                        "dx": -74,
+                        "dy": 48
+                      },
+                      {
+                        "id": "whole",
+                        "opacity": 0
+                      },
+                      {
                         "id": "corner",
-                        "opacity": 1
+                        "opacity": 0
                       },
                       {
                         "id": "nine",
-                        "opacity": 1
+                        "opacity": 0
                       },
                       {
                         "id": "done",
@@ -566,8 +665,23 @@
                     ]
                   },
                   {
-                    "caption": "$9$를 채우면 한 변이 $x+3$인 정사각형이 돼요.",
+                    "caption": "모서리 한 칸이 비었어요. 그 칸은 $3 \\times 3 = 9$. 채우면 한 변이 $x+3$인 정사각형이에요.",
                     "changes": [
+                      {
+                        "id": "half2",
+                        "dx": -74,
+                        "dy": 50,
+                        "rotate": 90
+                      },
+                      {
+                        "id": "lab2",
+                        "dx": -74,
+                        "dy": 48
+                      },
+                      {
+                        "id": "whole",
+                        "opacity": 0
+                      },
                       {
                         "id": "corner",
                         "opacity": 1
@@ -582,18 +696,19 @@
                       }
                     ]
                   }
-                ]
+                ],
+                "frameMs": 1800
               }
             }
           ]
         },
         {
-          "sectionId": "completing-square:example:v1",
+          "sectionId": "completing-square:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "completing-square:example:text:v1",
+              "blockId": "completing-square:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -605,12 +720,12 @@
           ]
         },
         {
-          "sectionId": "completing-square:practice:v1",
+          "sectionId": "completing-square:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "completing-square:practice:problems:v1",
+              "blockId": "completing-square:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -627,12 +742,12 @@
           ]
         },
         {
-          "sectionId": "completing-square:check:v1",
+          "sectionId": "completing-square:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "completing-square:check:problems:v1",
+              "blockId": "completing-square:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -648,12 +763,12 @@
           ]
         },
         {
-          "sectionId": "completing-square:summary:v1",
+          "sectionId": "completing-square:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "completing-square:summary:text:v1",
+              "blockId": "completing-square:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -677,7 +792,7 @@
     {
       "public": {
         "lessonKey": "quadratic-formula",
-        "versionId": "quadratic-formula:v1",
+        "versionId": "quadratic-formula:v2",
         "title": "근의 공식: 어떤 이차방정식에도 통하는 하나의 길",
         "summary": "완전제곱식 만들기를 문자로 한 번에 해 두고, 계수만 넣으면 풀리는 공식으로 써요.",
         "estimatedMinutes": 12,
@@ -694,12 +809,12 @@
       },
       "sections": [
         {
-          "sectionId": "quadratic-formula:explanation:v1",
+          "sectionId": "quadratic-formula:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-formula:explanation:text:v1",
+              "blockId": "quadratic-formula:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -720,92 +835,113 @@
               }
             },
             {
-              "blockId": "quadratic-formula:explanation:drawing:v1",
+              "blockId": "quadratic-formula:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "식에서 a b c를 읽어 근의 공식에 넣는 과정을 세 칸으로 보여 주는 그림",
-                "caption": "계수 셋을 읽어 공식에 넣기만 하면 돼요",
+                "alt": "식에서 읽은 a b c가 공식의 빈칸으로 옮겨 들어가 해가 나오는 그림",
+                "caption": "부호까지 그대로 읽어 빈칸에 넣어요",
                 "items": [
                   {
                     "kind": "text",
                     "x": 160,
-                    "y": 32,
+                    "y": 28,
                     "text": "$2x^2 - 7x + 3 = 0$",
-                    "size": 16,
+                    "size": 15,
                     "anchor": "middle",
                     "fill": "ink"
                   },
                   {
-                    "kind": "rect",
-                    "x": 44,
-                    "y": 56,
-                    "width": 62,
-                    "height": 40,
-                    "radius": 6,
+                    "kind": "ellipse",
+                    "cx": 70,
+                    "cy": 60,
+                    "rx": 15,
+                    "ry": 15,
                     "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "ba"
+                    "id": "ca"
                   },
                   {
-                    "kind": "rect",
-                    "x": 128,
-                    "y": 56,
-                    "width": 62,
-                    "height": 40,
-                    "radius": 6,
+                    "kind": "text",
+                    "x": 70,
+                    "y": 65,
+                    "text": "$2$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "cat"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160,
+                    "cy": 60,
+                    "rx": 15,
+                    "ry": 15,
                     "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "bb"
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 212,
-                    "y": 56,
-                    "width": 62,
-                    "height": 40,
-                    "radius": 6,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "bc"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 75,
-                    "y": 81,
-                    "text": "$a = 2$",
-                    "size": 14,
-                    "anchor": "middle",
-                    "fill": "ink"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 159,
-                    "y": 81,
-                    "text": "$b = -7$",
-                    "size": 14,
-                    "anchor": "middle",
-                    "fill": "ink"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 243,
-                    "y": 81,
-                    "text": "$c = 3$",
-                    "size": 14,
-                    "anchor": "middle",
-                    "fill": "ink"
+                    "id": "cb"
                   },
                   {
                     "kind": "text",
                     "x": 160,
-                    "y": 128,
+                    "y": 65,
+                    "text": "$-7$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "cbt"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 250,
+                    "cy": 60,
+                    "rx": 15,
+                    "ry": 15,
+                    "fill": "light-green",
+                    "id": "cc"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 250,
+                    "y": 65,
+                    "text": "$3$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "cct"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 70,
+                    "y": 88,
+                    "text": "$a$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 88,
+                    "text": "$b$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 250,
+                    "y": 88,
+                    "text": "$c$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 130,
                     "text": "$x = \\dfrac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$",
                     "size": 15,
                     "anchor": "middle",
@@ -816,7 +952,7 @@
                   {
                     "kind": "text",
                     "x": 160,
-                    "y": 180,
+                    "y": 182,
                     "text": "$x = 3$ 또는 $x = \\dfrac{1}{2}$",
                     "size": 15,
                     "anchor": "middle",
@@ -827,7 +963,7 @@
                 ],
                 "frames": [
                   {
-                    "caption": "먼저 한쪽을 $0$으로 만들고 계수 셋을 읽어요.",
+                    "caption": "먼저 한쪽을 $0$으로 만들고 계수 셋을 읽어요. $b$는 $7$이 아니라 $-7$이에요.",
                     "changes": [
                       {
                         "id": "law",
@@ -840,11 +976,35 @@
                     ]
                   },
                   {
-                    "caption": "부호까지 그대로 읽는 것이 중요해요. $b$는 $7$이 아니라 $-7$이에요.",
+                    "caption": "공식의 $a$, $b$, $c$ 자리에 그대로 넣어요.",
                     "changes": [
                       {
                         "id": "law",
                         "opacity": 1
+                      },
+                      {
+                        "id": "ca",
+                        "dy": 30
+                      },
+                      {
+                        "id": "cat",
+                        "dy": 30
+                      },
+                      {
+                        "id": "cb",
+                        "dy": 30
+                      },
+                      {
+                        "id": "cbt",
+                        "dy": 30
+                      },
+                      {
+                        "id": "cc",
+                        "dy": 30
+                      },
+                      {
+                        "id": "cct",
+                        "dy": 30
                       },
                       {
                         "id": "ans",
@@ -853,11 +1013,41 @@
                     ]
                   },
                   {
-                    "caption": "공식에 넣고 계산하면 해가 나와요.",
+                    "caption": "계산하면 해가 나와요. 인수분해가 보이지 않을 때 꺼내는 길이에요.",
                     "changes": [
                       {
                         "id": "law",
                         "opacity": 1
+                      },
+                      {
+                        "id": "ca",
+                        "dy": 30,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "cat",
+                        "dy": 30,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "cb",
+                        "dy": 30,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "cbt",
+                        "dy": 30,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "cc",
+                        "dy": 30,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "cct",
+                        "dy": 30,
+                        "opacity": 0
                       },
                       {
                         "id": "ans",
@@ -865,18 +1055,19 @@
                       }
                     ]
                   }
-                ]
+                ],
+                "frameMs": 1800
               }
             }
           ]
         },
         {
-          "sectionId": "quadratic-formula:example:v1",
+          "sectionId": "quadratic-formula:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-formula:example:text:v1",
+              "blockId": "quadratic-formula:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -888,12 +1079,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-formula:practice:v1",
+          "sectionId": "quadratic-formula:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-formula:practice:problems:v1",
+              "blockId": "quadratic-formula:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -910,12 +1101,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-formula:check:v1",
+          "sectionId": "quadratic-formula:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-formula:check:problems:v1",
+              "blockId": "quadratic-formula:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -931,12 +1122,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-formula:summary:v1",
+          "sectionId": "quadratic-formula:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-formula:summary:text:v1",
+              "blockId": "quadratic-formula:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,

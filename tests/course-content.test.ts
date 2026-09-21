@@ -18,6 +18,33 @@ const scenes = (lesson: StoredLesson) => blocksOf(lesson).filter((block) => bloc
 const moving = lessons.flatMap(scenes).filter((block) => Array.isArray(block.payload.frames) && block.payload.frames.length > 1);
 const arranged = lessons.flatMap(scenes).filter((block) => Array.isArray(block.payload.zones) && block.payload.zones.length > 0);
 
+type Box = { id?: string; x: number; y: number; width: number; height: number; rotate: number };
+/** The four corners a tile actually covers, turned about its own centre the way both the
+ *  renderer's `rotate` and a frame's `rotate` turn it. */
+const corners = (box: Box) => {
+  const [cx, cy] = [box.x + box.width / 2, box.y + box.height / 2];
+  const radians = (box.rotate * Math.PI) / 180, [cos, sin] = [Math.cos(radians), Math.sin(radians)];
+  return [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([sx, sy]) => {
+    const [dx, dy] = [(sx * box.width) / 2, (sy * box.height) / 2];
+    return [cx + dx * cos - dy * sin, cy + dx * sin + dy * cos] as const;
+  });
+};
+/** Two tiles miss when some edge of one of them separates them. Tiles that merely touch — which
+ *  is how a square is built out of four — leave no gap and are not an overlap. */
+const overlapping = (one: Box, two: Box) => {
+  for (const box of [one, two]) {
+    const [first, second, , fourth] = corners(box);
+    for (const edge of [[second[0] - first[0], second[1] - first[1]], [fourth[0] - first[0], fourth[1] - first[1]]]) {
+      const length = Math.hypot(edge[0], edge[1]) || 1;
+      const [nx, ny] = [edge[0] / length, edge[1] / length];
+      const span = (item: Box) => corners(item).map(([x, y]) => x * nx + y * ny);
+      const [a, b] = [span(one), span(two)];
+      if (Math.max(...a) <= Math.min(...b) + 1e-6 || Math.max(...b) <= Math.min(...a) + 1e-6) return false;
+    }
+  }
+  return true;
+};
+
 describe('the installed courses', () => {
   it('has more than one course, each with lessons in order', () => {
     const courses = seeds.flatMap((seed) => seed.bundle.courses);
@@ -103,7 +130,6 @@ describe('the installed courses', () => {
     // describe — tiles sitting on top of each other, or a gap where the words say「나란히 붙이면」.
     // Three of these shipped before anyone played the scenes through on a phone.
     const published = new Set(['signed-addition']);  // An arrow that enters from off the page, already published.
-    type Box = { id?: string; x: number; y: number; width: number; height: number };
     for (const lesson of lessons) {
       for (const block of scenes(lesson)) {
         const items = block.payload.items as Record<string, number | string | boolean>[];
@@ -119,11 +145,11 @@ describe('the installed courses', () => {
             id: String(item.id ?? ''), x: Number(item.x) + Number(changes.get(String(item.id))?.dx ?? 0),
             y: Number(item.y) + Number(changes.get(String(item.id))?.dy ?? 0),
             width: Number(item.width), height: Number(item.height),
+            rotate: Number(changes.get(String(item.id))?.rotate ?? item.rotate ?? 0),
           }));
           for (let a = 0; a < boxes.length; a += 1) for (let b = a + 1; b < boxes.length; b += 1) {
             const [one, two] = [boxes[a], boxes[b]];
-            const hit = one.x < two.x + two.width && two.x < one.x + one.width && one.y < two.y + two.height && two.y < one.y + one.height;
-            expect(hit, `${lesson.public.lessonKey} 장면 ${index + 1}에서 ${one.id}와 ${two.id}가 겹친다`).toBe(false);
+            expect(overlapping(one, two), `${lesson.public.lessonKey} 장면 ${index + 1}에서 ${one.id}와 ${two.id}가 겹친다`).toBe(false);
           }
           if (published.has(lesson.public.lessonKey)) continue;
           for (const item of items) {
@@ -142,6 +168,18 @@ describe('the installed courses', () => {
         }
       }
     }
+  });
+
+  it('reads a turned tile by where it lands, not by the width it was written with', () => {
+    // A quarter turn makes a tile as wide as it was tall. Before this, a strip written as 24 by 76
+    // and laid flat under a square was still read as standing 76 tall, so the one honest way to
+    // draw 완전제곱식 — cut the strip in two and turn one half onto the other side — was refused.
+    const square = { id: 'sq', x: 84, y: 44, width: 76, height: 76, rotate: 0 };
+    const strip = { id: 'strip', x: 110, y: 94, width: 24, height: 76, rotate: 90 };
+    expect(overlapping(square, { ...strip, rotate: 0 }), '돌리지 않으면 정사각형을 뚫고 지나간다').toBe(true);
+    expect(overlapping(square, strip), '돌려서 아래에 누우면 맞닿기만 한다').toBe(false);
+    // And touching is still not overlapping, which is how four tiles make one square.
+    expect(overlapping(square, { id: 'next', x: 160, y: 44, width: 24, height: 76, rotate: 0 })).toBe(false);
   });
 
   it('never asks a learner to arrange a drawing that is also moving on its own', () => {
