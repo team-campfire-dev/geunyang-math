@@ -2141,7 +2141,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "profit-over-price"
+            },
+            {
+              "answer": "d",
+              "misconception": "percent-place-value"
+            }
+          ]
         }
       ]
     },

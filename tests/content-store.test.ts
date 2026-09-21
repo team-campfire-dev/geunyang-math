@@ -5,7 +5,7 @@ import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { canonicalJson, parseContentBundle, validateReferences } from '@/core/content-bundle';
-import { blockOf, lessonRecord, currentDiagnostic, currentDefinitions, diagnosticDefinitions, exportContent, importContent, indexLessonDocument, publishBundle, verifyContent } from '@/server/content-store';
+import { blockOf, lessonRecord, currentDiagnostic, currentDefinitions, diagnosticDefinitions, exportContent, importContent, indexLessonDocument, publishBundle, publishedProblemRecords, verifyContent } from '@/server/content-store';
 import initial from './fixtures/fractions-v1.json';
 import { diagnosticProblems, seedLessons, setsOf } from './fixtures/content';
 import { storedLessonOf } from '@/core/content';
@@ -225,6 +225,39 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     await expect(importContent(db, { ...empty(), ...publish(second) })).rejects.toThrow(/immutable/);
     expect(await db.lessonVersion.findUnique({ where: { id: second.public.versionId } })).toBeNull();
   });
+  it('lets a published question gain a worked solution without gaining a new version', async () => {
+    const first = newLesson();
+    const input = { ...empty(), ...publish(first) };
+    // Published first with no solution at all, which is what every question in the catalogue is.
+    input.problemSets[0].problems[0].solution = [];
+    await importContent(db, input);
+    const setVersion = input.problemSets[0].versionId;
+    const target = input.problemSets[0].problems[0];
+    expect((await publishedProblemRecords(db, [target.problemVersionId])).get(target.problemVersionId)!.solution).toEqual([]);
+    // A solution is written after the fact, on the version that is already published.
+    const solution = [{ blockId: `${target.problemVersionId}:solution:b1`, kind: 'core.rich_text', typeVersion: 1, required: true,
+      payload: { text: '분모가 넷이므로 한 조각은 전체의 $\\frac{1}{4}$이에요.' } }];
+    const withSolution = structuredClone(input);
+    withSolution.problemSets[0].problems[0].solution = solution;
+    await expect(importContent(db, withSolution)).resolves.toBeTruthy();
+    expect((await publishedProblemRecords(db, [target.problemVersionId])).get(target.problemVersionId)!.solution).toEqual(solution);
+    // Rewriting it replaces what was there rather than piling a second copy on the same version.
+    const rewritten = structuredClone(withSolution);
+    rewritten.problemSets[0].problems[0].solution[0].payload.text = '고쳐 쓴 풀이예요.';
+    await importContent(db, rewritten);
+    const after = (await publishedProblemRecords(db, [target.problemVersionId])).get(target.problemVersionId)!;
+    expect(after.solution).toHaveLength(1);
+    expect(after.solution[0].payload.text).toBe('고쳐 쓴 풀이예요.');
+    // Everything else about the question is still frozen, and the version is still the same version.
+    expect(await db.problemSetVersion.count({ where: { id: setVersion } })).toBe(1);
+    const changed = structuredClone(withSolution);
+    changed.problemSets[0].problems[0].promptContent[0].payload.text = '바꾼 지문';
+    await expect(importContent(db, changed)).rejects.toThrow(/immutable/);
+    // A hint is read while the question is still open, so it stays frozen along with the question.
+    const hinted = structuredClone(withSolution);
+    hinted.problemSets[0].problems[0].hints = [{ ...solution[0], blockId: `${target.problemVersionId}:hint:b1` }];
+    await expect(importContent(db, hinted)).rejects.toThrow(/immutable/);
+  });
   it('selects the last newly published version while pinning existing enrollment and homework', async () => {
     const first = newLesson(); await importContent(db, { ...empty(), ...publish(first) });
     const user = await learner(), scope = await db.learningScope.findUniqueOrThrow({ where: { ownerUserId: user.id } });
@@ -298,7 +331,8 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
       await expect(verifyContent(db)).rejects.toThrow(/Problem is not in the problem set version/);
     } finally {
       await db.publishedProblem.create({ data: { ...removed,
-        conceptKeys: removed.conceptKeys as never, responseSpec: removed.responseSpec as never, gradingSpec: removed.gradingSpec as never } });
+        conceptKeys: removed.conceptKeys as never, responseSpec: removed.responseSpec as never, gradingSpec: removed.gradingSpec as never,
+        misreadings: (removed.misreadings ?? undefined) as never } });
     }
     expect((await verifyContent(db)).indexedProblems).toBeGreaterThanOrEqual(rows.length);
   });

@@ -187,7 +187,7 @@ describe('naming a question, and keeping an answered one as it was answered', ()
   it('shows the preview the half of a question a learner may see', () => {
     const problem = newProblem('fraction-meaning:practice-1:v2', ['fraction.meaning']);
     expect(toPublicProblem(problem)).toEqual({ problemVersionId: problem.problemVersionId, conceptKeys: ['fraction.meaning'],
-      promptContent: problem.promptContent, responseSpec: { kind: 'integer' }, hintAvailable: false });
+      promptContent: problem.promptContent, responseSpec: { kind: 'integer' }, hintAvailable: false, solutionAvailable: false });
     problem.hints.push({ blockId: 'fraction-meaning:practice-1:v2:hint', kind: 'core.rich_text', typeVersion: 1, required: true, payload: { text: '힌트' } });
     problem.gradingSpec = { kind: 'rational', numerator: 1, denominator: 2, requiredForm: 'reduced_fraction' };
     expect(toPublicProblem(problem)).toMatchObject({ hintAvailable: true, responseSpec: { kind: 'rational', requiredForm: 'reduced_fraction' } });

@@ -3,12 +3,15 @@
 import { useState } from 'react';
 import type { ContentBlock } from '@/shared/api';
 import { displayedAnswer, type AnswerInput } from '@/shared/authoring-checks';
-import { answerSpec, answerText, choiceIssue, choiceLimits, type AnswerOption, type AnswerSpec } from '@/shared/answer';
+import { answerSpec, answerText, choiceIssue, choiceLimits, matchMisreading, misreadingsIssue, type AnswerOption, type AnswerSpec, type ExpectedMisreading } from '@/shared/answer';
+import { misconceptionKeys, misconceptions } from '@/shared/misconception';
 import {
   copyProblem, insertAfter, moveBlock, newProblem, nextProblemBlockId, nextProblemVersionId, problemBlockForms,
-  problemGist, type DraftProblem, type ConceptChoice, type DefinitionChoice, type ProblemSetChoice,
+  problemGist, type DraftProblem, type ConceptChoice, type DefinitionChoice, type ProblemSetChoice, type WrongAnswer,
 } from '@/shared/authoring';
 import { Icon } from '@/features/learning/icons';
+import { RichText } from '@/features/learning/content-blocks';
+import { useWrongAnswers } from './wrong-answers';
 import { AddBlock, BlockCard } from './block-editor';
 import { useRemovalNotice } from './edit-history';
 import { useExpertMode } from './expert-mode';
@@ -132,6 +135,71 @@ export function ConceptPicker({ concepts, chosen, onChange, label = '이 문제�
   </div>;
 }
 
+/**
+ * What a question's wrong answers mean, and the log of the ones learners really wrote.
+ *
+ * The two belong together on one panel because they are two halves of one job. Naming a wrong
+ * answer is guesswork on its own — an author has to imagine what somebody would do — and the log
+ * removes the guessing: it says `2/8` came up from four people, and all that is left is to say
+ * what `2/8` means. A picked question's options are the author's guesses at the same thing, so
+ * they are offered here too, by their text rather than by their name.
+ */
+function MisreadingField({ problem, onChange }: { problem: DraftProblem; onChange: (next: DraftProblem) => void }) {
+  const ask = useWrongAnswers();
+  const [observed, setObserved] = useState<WrongAnswer[] | null>(null);
+  const [asking, setAsking] = useState(false);
+  const [failed, setFailed] = useState('');
+  const named = problem.misreadings ?? [];
+  const spec = problem.gradingSpec;
+  const write = (next: ExpectedMisreading[]) => onChange({ ...problem, misreadings: next.length ? next : undefined });
+  const nameFor = (answer: string) => matchMisreading(answer, spec, named);
+  const set = (answer: string, key: string) => write([
+    ...named.filter((entry) => matchMisreading(entry.answer, spec, [{ answer, misconception: '' }]) === null),
+    ...(key ? [{ answer, misconception: key }] : []),
+  ]);
+  const issue = named.length ? misreadingsIssue(spec, named, (key) => misconceptionKeys.includes(key)) : null;
+  // Every option of a picked question is a candidate already; a written one has only what was typed.
+  const offered: WrongAnswer[] = spec.kind === 'choice'
+    ? spec.options.filter((option) => option.id !== spec.correct).map((option) => {
+        const seen = observed?.find((row) => row.answer === option.id);
+        return { answer: option.id, text: option.text, count: seen?.count ?? 0, learners: seen?.learners ?? 0 };
+      })
+    : observed ?? [];
+  const load = async () => {
+    if (!ask) return;
+    setAsking(true); setFailed('');
+    try { setObserved(await ask(problem.problemVersionId)); }
+    catch (error) { setFailed(error instanceof Error ? error.message : '오답 기록을 불러오지 못했어요.'); }
+    finally { setAsking(false); }
+  };
+  const chooser = (row: WrongAnswer) => <label key={row.answer} className="editor-misreading">
+    <span className="editor-misreading-answer">{row.text ? <RichText text={row.text} /> : row.answer}
+      {/* Silent until the log has been asked for: 「아무도 쓰지 않았어요」 about an unread log would
+          be a claim the screen has no way of making. */}
+      {observed && <small>{row.count ? `${row.count}번 · ${row.learners}명` : '아직 아무도 쓰지 않았어요'}</small>}</span>
+    <select aria-label={`${row.text ? row.answer : row.answer}에 뜻 달기`} value={nameFor(row.answer) ?? ''}
+      onChange={(event) => set(row.answer, event.target.value)}>
+      <option value="">이름 없음</option>
+      {misconceptions.map((record) => <option key={record.key} value={record.key}>{record.label}</option>)}
+    </select>
+  </label>;
+  return <details className="editor-fold">
+    <summary>오답의 뜻 · {named.length ? `${named.length}개` : '없음'}</summary>
+    <p className="editor-note">어떤 오답이 어떤 착각인지 적어 두면, 그 답을 낸 학습자에게 그 자리에서 설명이 가고 「자꾸 되풀이되는 것」으로도 모여요. 채점 결과는 달라지지 않아요.</p>
+    {offered.map(chooser)}
+    {/* A name written against an answer nobody offered — an older log, or a value typed by hand. */}
+    {named.filter((entry) => !offered.some((row) => matchMisreading(row.answer, spec, [entry]) !== null)).map((entry) =>
+      chooser({ answer: entry.answer, count: 0, learners: 0 }))}
+    {ask && <div className="editor-misreading-actions">
+      <button type="button" className="text-button" disabled={asking} onClick={() => void load()}>
+        {asking ? '불러오는 중…' : observed ? '오답 기록 다시 보기' : '학습자가 쓴 오답 보기'}</button>
+      {observed?.length === 0 && <span className="editor-note">아직 이 문항에 틀린 답이 들어온 적이 없어요.</span>}
+    </div>}
+    {failed && <small className="editor-warn" role="alert">{failed}</small>}
+    {issue && <small className="editor-warn" role="alert">{issue} 이 입력을 고치기 전에는 발행할 수 없어요.</small>}
+  </details>;
+}
+
 function ProblemBlocks({ label, hint, part, problem, blocks, taken, definitionChoices, omitText, named = true, onChange }: {
   label: string; hint?: string; part: 'prompt' | 'hint' | 'solution'; problem: DraftProblem;
   blocks: ContentBlock[]; taken: string[]; definitionChoices: DefinitionChoice[]; omitText?: boolean; named?: boolean;
@@ -190,6 +258,7 @@ export function ProblemPanel({ problem, number, total, concepts, taken, definiti
       hint={offSheet ? '이 문항의 지문은 여기에만 있어요. 글과 그림을 모두 여기에서 씁니다.'
         : '글은 수업 화면에서 고치고, 그림처럼 지문에 더 넣을 것이 있으면 여기에서 더합니다.'}
       onChange={(promptContent) => onChange({ ...problem, promptContent })} omitText={!offSheet} />
+    <MisreadingField problem={problem} onChange={onChange} />
     <ProblemBlocks label="힌트" part="hint" problem={problem} blocks={problem.hints} taken={taken} definitionChoices={definitionChoices}
       hint="힌트를 하나라도 두면 학습 화면에 힌트 버튼이 생겨요. 힌트를 열고 맞히면 도움을 받은 풀이로 기록합니다."
       onChange={(hints) => onChange({ ...problem, hints })} />

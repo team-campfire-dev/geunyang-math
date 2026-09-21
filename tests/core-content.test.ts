@@ -34,7 +34,8 @@ describe('versioned lesson content', () => {
     const publicLesson = toPublicLesson(seedLessons[0], 'fractions');
     expect(publicLesson.problems).toHaveLength(5);
     for (const problem of publicLesson.problems) {
-      expect(Object.keys(problem).sort()).toEqual(['conceptKeys', 'hintAvailable', 'problemVersionId', 'promptContent', 'responseSpec']);
+      // `solutionAvailable` says a worked solution exists; the solution itself stays on the server.
+      expect(Object.keys(problem).sort()).toEqual(['conceptKeys', 'hintAvailable', 'problemVersionId', 'promptContent', 'responseSpec', 'solutionAvailable']);
       expect(problem).not.toHaveProperty('gradingSpec');
       expect(problem).not.toHaveProperty('hints');
       expect(problem).not.toHaveProperty('solution');

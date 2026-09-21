@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from './render';
 import { ConceptPicker, ProblemPanel, ProblemSetEditor } from '@/features/authoring/problem-editor';
 import { ExpertMode } from '@/features/authoring/expert-mode';
+import { WrongAnswers } from '@/features/authoring/wrong-answers';
 import type { AnswerSpec } from '@/shared/answer';
 import type { ContentBlock } from '@/shared/api';
 import type { ConceptChoice, DraftProblem } from '@/shared/authoring';
@@ -136,5 +137,59 @@ describe('the questions one activity holds', () => {
     const [block, problems] = onChange.mock.calls[0];
     expect(block.payload.problemVersionIds[1]).toBe(problems[2].problemVersionId);
     expect(problems[2].gradingSpec).toEqual({ kind: 'integer', value: 3 });
+  });
+});
+
+describe('naming what a wrong answer means', () => {
+  const open = () => {
+    const spec: AnswerSpec = { kind: 'rational', numerator: 5, denominator: 6 };
+    const changes: DraftProblem[] = [];
+    const ask = vi.fn(async () => [
+      { answer: '2/5', count: 7, learners: 4 },
+      { answer: '0.9', count: 1, learners: 1 },
+    ]);
+    render(<WrongAnswers.Provider value={ask}>
+      {panel(problem('sum:v1', spec), { onChange: (next: DraftProblem) => changes.push(next) })}
+    </WrongAnswers.Provider>);
+    fireEvent.click(screen.getByText(/오답의 뜻/));
+    return { changes, ask };
+  };
+
+  it('offers what learners really wrote, commonest first, with how many people wrote it', async () => {
+    const { ask } = open();
+    // Nothing is asked for until somebody asks: a panel that opened would fetch on every question.
+    expect(ask).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: '학습자가 쓴 오답 보기' }));
+    await screen.findByText('2/5');
+    expect(ask).toHaveBeenCalledWith('sum:v1');
+    expect(screen.getByText('7번 · 4명')).toBeDefined();
+    expect(screen.getByText('1번 · 1명')).toBeDefined();
+  });
+
+  it('writes the name onto the question, by value rather than by spelling', async () => {
+    const { changes } = open();
+    fireEvent.click(screen.getByRole('button', { name: '학습자가 쓴 오답 보기' }));
+    await screen.findByText('2/5');
+    fireEvent.change(screen.getByLabelText('2/5에 뜻 달기'), { target: { value: 'add-denominators' } });
+    expect(changes.at(-1)!.misreadings).toEqual([{ answer: '2/5', misconception: 'add-denominators' }]);
+  });
+
+  it('shows a picked question its own options, by what they say rather than by their letter', () => {
+    const spec: AnswerSpec = { kind: 'choice', correct: 'b',
+      options: [{ id: 'a', text: '분모끼리 더해요' }, { id: 'b', text: '통분해요' }, { id: 'c', text: '그대로 둬요' }] };
+    render(panel(problem('pick:v1', spec)));
+    fireEvent.click(screen.getByText(/오답의 뜻/));
+    // The right one is not offered: naming it would tell a learner who got it right they were wrong.
+    expect(screen.getByText('분모끼리 더해요')).toBeDefined();
+    expect(screen.getByText('그대로 둬요')).toBeDefined();
+    expect(screen.queryByText('통분해요')).toBeNull();
+  });
+
+  it('says what publishing would refuse, where the author can still fix it', () => {
+    const spec: AnswerSpec = { kind: 'rational', numerator: 5, denominator: 6 };
+    const named = { ...problem('sum:v1', spec), misreadings: [{ answer: '10/12', misconception: 'add-denominators' }] };
+    render(panel(named));
+    fireEvent.click(screen.getByText('오답의 뜻 · ', { exact: false, selector: 'summary' }));
+    expect(screen.getByRole('alert').textContent).toMatch(/맞는 답으로 채점될 값/);
   });
 });

@@ -1,6 +1,19 @@
 // Public HTTP DTOs. Never import server content or grading answers into this module.
 import type { ConceptScope, DefinitionRef } from './rich-text';
-export type GradeResult = { status: 'correct' | 'incorrect' | 'invalid'; message: string; assisted: boolean };
+import type { Misreading } from './misreading';
+/**
+ * What the marker decided, and — when it could read one — what kind of slip the answer looks like.
+ * `misreading` is the part a report can add up: the message is written for the one moment after an
+ * answer, while the name behind it is the same name in every course and every set.
+ */
+export type GradeResult = { status: 'correct' | 'incorrect' | 'invalid'; message: string; assisted: boolean;
+  misreading?: Misreading;
+  /**
+   * The name of the mistake this question was built to catch, when the answer is one the author
+   * named. It beats `misreading`, which is a shape read off the number and a good guess; this is
+   * what the question was actually designed to find.
+   */
+  misconception?: string };
 export type ContentBlock = {
   blockId: string;
   kind: string;
@@ -17,6 +30,12 @@ export type PublicProblem = {
   // options to pick from — and never which of them is right, which stays with the question.
   responseSpec: { kind: 'integer' | 'rational' | 'choice'; requiredForm?: string; options?: { id: string; text: string }[] };
   hintAvailable: boolean;
+  /**
+   * Whether this question has a worked solution to ask for. A hint is for while you are stuck; a
+   * solution is for after you have answered, so saying it exists is safe and asking for it is not
+   * always allowed — the server decides that when it is asked.
+   */
+  solutionAvailable: boolean;
 };
 /** How a lesson names questions: a problem set, a frozen version of it, and the questions it picked. */
 export type ProblemSetRef = { problemSetId: string; problemSetVersionId: string; problemVersionIds: string[] };
@@ -132,7 +151,12 @@ export type AssignmentView = {
   problemSetId: string;
   recommendedAt: string; opensAt: string | null; dueAt: string | null;
   policy: AssignmentPolicy; status: 'assigned' | 'submitted';
-  items: { id: string; problem: PublicProblem; attempt: AttemptView | null }[];
+  /**
+   * Each question, and how this learner got there rather than only where they arrived: `tries`
+   * counts the answers they sent and `firstResult` is the first one that was a real answer. A
+   * report about a finished set is about the working, so the last answer alone would not do.
+   */
+  items: { id: string; problem: PublicProblem; attempt: AttemptView | null; tries: number; firstResult: GradeResult | null }[];
   submissionId: string;
   reason?: string;
   glossary: GlossaryEntry[];
@@ -153,6 +177,18 @@ export type DiagnosticView = {
 };
 // `inferred`: the placement did not ask about this concept, it followed from an answer above or below it.
 export type ConceptReadiness = { key: string; label: string; readiness: 'unknown' | 'needs-practice' | 'ready'; source: 'none' | 'diagnostic' | 'inferred' | 'learning' };
+/**
+ * What the whole record says about a concept, as opposed to what one round of questions says.
+ *
+ * Earned across sittings and across sets: `independent` takes two different questions answered
+ * right, first time and without a hint, and `retained` takes that again after a gap. One answer
+ * never moves it, which is exactly why a report about one round has to show this beside its own
+ * reading rather than in place of it.
+ */
+export type ConceptState = 'unknown' | 'practicing' | 'independent' | 'retained';
+export const conceptStateLabels: Record<ConceptState, string> = {
+  unknown: '아직 확인 전', practicing: '연습하는 중', independent: '스스로 해결', retained: '꾸준히 기억',
+};
 export type Recommendation = { lessonKey: string; reason: string; kind: 'start' | 'continue' | 'revisit'; suggestedMinutes: number };
 export type PersonalPlan = {
   version: string;
@@ -172,7 +208,7 @@ export type LearningState = {
   diagnosticOffering: DiagnosticOffering | null;
   plan: PersonalPlan;
   recommendationHistory: RecommendationHistoryView[];
-  concepts: { key: string; label: string; state: 'unknown' | 'practicing' | 'independent' | 'retained' }[];
+  concepts: { key: string; label: string; state: ConceptState }[];
 };
 export type LearningAction =
   | { action: 'recommendation.choose'; lessonKey: string | null }
@@ -185,5 +221,6 @@ export type LearningAction =
   | { action: 'hint.open'; context: 'lesson' | 'assignment'; contextId: string; problemVersionId: string }
   | { action: 'lesson.complete'; enrollmentId: string }
   | { action: 'assignment.submit'; recipientId: string; requestId: string }
-  | { action: 'problemSet.start'; problemSetId: string };
-export type ActionResponse = { state: LearningState; result?: GradeResult; hint?: ContentBlock[]; enrollmentId?: string; recipientId?: string };
+  | { action: 'problemSet.start'; problemSetId: string }
+  | { action: 'solution.open'; context: 'lesson' | 'assignment'; contextId: string; problemVersionId: string };
+export type ActionResponse = { state: LearningState; result?: GradeResult; hint?: ContentBlock[]; solution?: ContentBlock[]; enrollmentId?: string; recipientId?: string };
