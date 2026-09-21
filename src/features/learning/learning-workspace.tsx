@@ -540,8 +540,16 @@ export function LearningWorkspace() {
         // looks at a course; the shelf is where they go once they know there is something to go to.
         const sets = problemSets.filter((set) => set.courseKey === course.key);
         return <section className="dashboard-section course-section" key={course.key}><div className="catalog-banner"><Icon name="book" size={24} /><div><h3>{course.title}</h3><p>{course.summary || '설명을 읽고, 직접 풀며 한 단계씩 이해해요.'}</p></div><span>{state ? `${complete} / ${held.length}개 완료` : `${held.length}개 수업`}</span></div>
-          <div className="class-grid">{held.map((item, index) => <div className="class-option" key={item.lessonKey}><LessonCard item={item} index={index} courseTitle={course.title} enrollment={state?.enrollments.find((entry) => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />{state && <button className="text-button course-preference" disabled={busy} onClick={() => { void dispatch({ action: 'recommendation.choose', lessonKey: item.lessonKey }).then(() => navigate('home')).catch(() => {}); }}>{state.plan.preferredLessonKey === item.lessonKey ? '내가 고른 수업 ✓' : '이 수업부터 배우기'}</button>}</div>)}</div>
-          {sets.length > 0 && <div className="course-sets"><button className="text-button" disabled={busy} onClick={() => openCourseSets(course.key)}>이 코스의 문제집 {sets.length}개 풀기<Icon name="arrow" size={15} /></button><span className="muted small">문제 {sets.reduce((sum, set) => sum + set.questionCount, 0)}개 · 설명 없이 문제만 풀고 싶을 때</span></div>}
+          <div className="class-grid">{held.map((item, index) => <div className="class-option" key={item.lessonKey}><LessonCard item={item} index={index} courseTitle={course.title} enrollment={state?.enrollments.find((entry) => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />{state && <button className="text-button course-preference" disabled={busy} onClick={() => { void dispatch({ action: 'recommendation.choose', lessonKey: item.lessonKey }).then(() => navigate('home')).catch(() => {}); }}>{state.plan.preferredLessonKey === item.lessonKey ? '내가 고른 수업 ✓' : '이 수업부터 배우기'}</button>}</div>)}
+            {/* The door to this course's problem sets, drawn as a card because it stands among cards —
+                a line of text between them reads as a footnote rather than as a thing to open. */}
+            {sets.length > 0 && <div className="class-option"><button className="class-card set-card" disabled={busy} onClick={() => openCourseSets(course.key)}>
+              <LessonArt lessonKey={`${course.key}:sets`} />
+              <div className="class-card-content"><div className="class-card-meta"><span>{course.title} · 문제집</span></div>
+                <h3>문제집 {sets.length}개 풀기</h3><p>설명 없이 문제만 풀고 싶을 때. 수업에서 쓰는 문제집을 그대로 골라 풀 수 있어요.</p>
+                <div className="class-card-footer"><span><Icon name="pencil" size={14} />문제 {sets.reduce((sum, set) => sum + set.questionCount, 0)}개</span><Icon name="arrow" size={18} /></div>
+              </div>
+            </button></div>}</div>
         </section>;
       })])}</div>)}
       {!lessons.length && <EmptyState title="수업을 준비하고 있어요" text="잠시 후 다시 확인해 주세요." />}</>;

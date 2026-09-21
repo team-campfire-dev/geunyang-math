@@ -558,9 +558,11 @@ describe('picking a problem set to solve', () => {
     render(<LearningWorkspace />);
     await until(() => expect(screen.getAllByRole('button', { name: '수업' }).length).toBeGreaterThan(0));
     fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
-    // A course says what it keeps besides its lessons, which is the only reason anybody knows to look.
-    await until(() => expect(screen.getByRole('button', { name: /이 코스의 문제집 2개 풀기/ })).toBeDefined());
-    fireEvent.click(screen.getByRole('button', { name: /이 코스의 문제집 2개 풀기/ }));
+    // A course says what it keeps besides its lessons, which is the only reason anybody knows to look,
+    // and it says it on a card among the lesson cards rather than in a line of text under them.
+    await until(() => expect(screen.getByRole('button', { name: /문제집 2개 풀기/ })).toBeDefined());
+    expect(screen.getByRole('button', { name: /문제집 2개 풀기/ }).classList.contains('class-card')).toBe(true);
+    fireEvent.click(screen.getByRole('button', { name: /문제집 2개 풀기/ }));
     // Arriving this way, the sets are already there — no second click to undo the hiding.
     await until(() => expect(screen.getByText('분수의 의미 연습')).toBeDefined());
     expect(screen.getByText('문제집 골라 풀기')).toBeDefined();

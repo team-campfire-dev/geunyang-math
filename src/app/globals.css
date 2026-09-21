@@ -275,7 +275,9 @@
 .readiness-details summary { cursor: pointer; color: var(--deep-green); }
 .assignment-info small { line-height: 1.7; }
 /* The way from a course, a lesson, or the home screen to the problem sets they keep. */
-.course-sets { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-top: 15px; }
+/* The card that opens a course's problem sets. It keeps a lesson card's shape and weight — a dashed
+   or faded one would read as something not ready yet — and says what it is on its meta line. */
+.set-card .class-card-meta span { color: var(--green); font-weight: 600; }
 /* A problem set wears its lesson's drawing at the size of a list row. */
 .class-art.small { width: 54px; min-width: 54px; height: 44px; min-height: 44px; border-radius: 8px; flex-shrink: 0; }
 .class-art.small .course-art-shapes { transform: scale(.19); }
