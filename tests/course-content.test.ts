@@ -235,7 +235,10 @@ describe('the installed courses', () => {
     for (const seed of seeds) {
       for (const course of seed.bundle.courses) {
         if (!course.lessons.length) continue;
-        const drill = seed.bundle.problemSets.find((set) => set.problemSetId === `${course.key}:drill`);
+        // The newest version of it: a published set cannot be edited, so when a course grows a
+        // lesson its drill grows by a new version and the old one stays behind, still 20 questions
+        // about the concepts the course had then.
+        const drill = seed.bundle.problemSets.filter((set) => set.problemSetId === `${course.key}:drill`).at(-1);
         expect(drill, `${course.key}에 모아 푸는 문제집이 없다`).toBeDefined();
         expect(drill!.problems.length, course.key).toBe(20);
         expect(drill!.name, course.key).toBeTruthy();

@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "chance",
+      "label": "경우의 수와 확률",
+      "assessable": true
+    },
+    {
+      "key": "graph-reading",
+      "label": "그래프 읽기",
+      "assessable": true
+    },
+    {
+      "key": "condition-pick",
+      "label": "조건을 걸어 고르기",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "chance",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "경우의 수와 확률",
+      "summary": "세어서 나누면 돼요.",
+      "blocks": [
+        {
+          "blockId": "global:chance:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "「또는」이면 더하고 「그리고」면 곱해 경우를 세요. 더할 때는 겹치는 것이 없는지 봐야 해요. 확률은 바라는 경우를 모든 경우로 나눈 값이고, 업무에서는 불량률·합격률·응답률처럼 백분율로 적는 일이 많아요. 「적어도 하나」가 보이면 $1$에서 반대 경우를 빼는 쪽이 훨씬 짧고, 이어지는 일은 확률을 곱해요. 확률이 $1$을 넘었다면 어딘가를 두 번 센 거예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "가짓수와 가능성을 구할 때"
+    },
+    {
+      "conceptKey": "graph-reading",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "그래프 읽기",
+      "summary": "눈금 한 칸이 얼마인지부터 세요.",
+      "blocks": [
+        {
+          "blockId": "global:graph-reading:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "표와 달리 그래프는 값을 읽어 내야 해요. 순서는 눈금 → 단위 → 값이에요. 눈금이 $0$에서 시작하지 않으면 차이가 실제보다 커 보이고, 「단위: 천 명」을 놓치면 자릿수가 통째로 틀려요. 꺾은선은 기울기를, 막대는 높이를, 원그래프는 비율을 봐요. 누적 막대는 각 칸의 값이 위 경계에서 아래 경계를 뺀 값이라, 꼭대기를 그대로 읽으면 그 칸이 아니라 여기까지의 합이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "그래프에서 값을 읽을 때"
+    },
+    {
+      "conceptKey": "condition-pick",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "조건을 걸어 고르기",
+      "summary": "다 따지지 말고 지워 나가요.",
+      "blocks": [
+        {
+          "blockId": "global:condition-pick:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "표 하나에 조건이 서넛 붙은 문항은 모든 후보에 모든 조건을 따지면 시간이 모자라요. 가장 많이 걸러 내는 조건을 먼저 걸고, 남은 후보에만 다음 조건을 적용해요. 계산이 필요한 조건은 마지막으로 미루고, 떨어진 후보는 지우고 다시 보지 않아요. 점수를 매겨 고르는 문항은 지울 수 없으니 모두 계산하되 가중치가 큰 항목부터 보고, 모든 후보에 공통으로 더해지는 값은 빼고 계산해도 순위가 바뀌지 않아요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "조건이 붙은 표 문항을 풀 때"
+    }
+  ]
+}

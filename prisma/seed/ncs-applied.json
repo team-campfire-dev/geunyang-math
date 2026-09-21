@@ -4,7 +4,7 @@
     {
       "key": "ncs-applied",
       "title": "응용계산",
-      "summary": "원가와 할인, 소금물의 농도, 속력을 시험이 묻는 방식 그대로 계산해요.",
+      "summary": "원가와 할인, 농도, 속력, 일률, 이자, 환율을 시험이 묻는 방식 그대로 계산해요.",
       "order": 920,
       "track": "ncs",
       "lessons": [
@@ -19,6 +19,18 @@
         {
           "key": "ncs-speed",
           "order": 3
+        },
+        {
+          "key": "ncs-work",
+          "order": 4
+        },
+        {
+          "key": "ncs-interest",
+          "order": 5
+        },
+        {
+          "key": "ncs-exchange",
+          "order": 6
         }
       ],
       "diagnostics": []
@@ -43,6 +55,21 @@
     {
       "key": "speed",
       "label": "속력",
+      "assessable": true
+    },
+    {
+      "key": "work-rate",
+      "label": "일률",
+      "assessable": true
+    },
+    {
+      "key": "interest",
+      "label": "이자와 원리합계",
+      "assessable": true
+    },
+    {
+      "key": "exchange-rate",
+      "label": "환율",
       "assessable": true
     }
   ],
@@ -870,6 +897,1011 @@
         "problemVersionIds": [
           "ncs-speed:homework-1:v1",
           "ncs-speed:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "ncs-work",
+        "versionId": "ncs-work:v1",
+        "title": "일률: 전체를 1로 두면 하루치가 보인다",
+        "summary": "혼자 며칠 걸리는지를 하루치로 바꾸어 더하고, 함께 하면 며칠인지 구해요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "work-rate"
+        ],
+        "prerequisiteConceptKeys": [
+          "rate",
+          "common-denominator",
+          "equation-solution"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-work:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-work:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "「$A$는 혼자 $6$일, $B$는 혼자 $12$일이 걸린다. 둘이 함께 하면 며칠인가」 — 시험에 자주 나오는 모양이에요.\n\n여기서 막히는 까닭은 더할 수 없는 것을 더하려 하기 때문이에요. $6$일과 $12$일을 더하거나 평균을 내면 답이 되지 않아요.\n\n더할 수 있는 것은 날수가 아니라 하루에 하는 양이에요. 이 양을 일률이라 해요.\n\n전체 일을 $1$로 두는 것이 시작이에요. 얼마짜리 일인지는 문제가 말해 주지 않고, 말해 줄 필요도 없거든요. $6$일이 걸리면 하루에 $\\dfrac{1}{6}$, $12$일이 걸리면 하루에 $\\dfrac{1}{12}$이에요.\n\n둘이 함께 하면 하루치가 더해져요. $\\dfrac{1}{6} + \\dfrac{1}{12} = \\dfrac{3}{12} = \\dfrac{1}{4}$이니 하루에 전체의 $\\dfrac{1}{4}$을 하고, $4$일이면 끝나요.\n\n걸리는 날수는 일률의 역수예요. 하루에 $\\dfrac{1}{4}$을 하면 $4$일, $\\dfrac{2}{5}$를 하면 $\\dfrac{5}{2}$일이에요. 마지막에 뒤집는 것을 잊기 쉬우니 조심해요.\n\n물탱크에 물을 채우고 빼는 문제도 같은 셈이에요. 빼는 쪽은 하루치를 빼면 되고요.\n\n중간에 사람이 바뀌는 문제는 한 일을 세어 가며 풀어요. $A$가 혼자 $2$일 했다면 $\\dfrac{2}{6} = \\dfrac{1}{3}$을 한 것이니 남은 일은 $\\dfrac{2}{3}$예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "work-rate",
+                    "surface": "일률",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-work:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "6일과 12일이 걸리는 두 사람의 하루치를 합쳐 하루에 전체의 얼마를 하는지 세는 그림",
+                "caption": "전체를 $1$로 두면 하루치끼리 더할 수 있어요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 20,
+                    "text": "전체 일을 $1$로 두면",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "strip",
+                    "x": 40,
+                    "y": 44,
+                    "width": 240,
+                    "height": 26,
+                    "parts": 12,
+                    "filled": 2,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 84,
+                    "text": "$A$는 하루에 $\\frac{1}{6}$ — 열두 칸 중 두 칸",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "strip",
+                    "x": 40,
+                    "y": 98,
+                    "width": 240,
+                    "height": 26,
+                    "parts": 12,
+                    "filled": 1,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 138,
+                    "text": "$B$는 하루에 $\\frac{1}{12}$ — 한 칸",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "strip",
+                    "x": 40,
+                    "y": 152,
+                    "width": 240,
+                    "height": 26,
+                    "parts": 12,
+                    "filled": 3,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "sum",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 192,
+                    "text": "함께 하면 하루에 세 칸, 곧 $\\frac{1}{4}$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$A$는 혼자 $6$일, $B$는 혼자 $12$일이 걸려요. 전체 일을 $1$로 두고 열두 칸으로 나눠 볼게요.",
+                    "changes": [
+                      {
+                        "id": "sum",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$A$의 하루치는 두 칸, $B$의 하루치는 한 칸이에요.",
+                    "changes": [
+                      {
+                        "id": "sum",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "둘이 함께면 하루에 세 칸이에요. 열두 칸 중 셋이니 $\\frac{1}{4}$, 나흘이면 끝나요.",
+                    "changes": [
+                      {
+                        "id": "sum",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-work:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-work:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$A$는 혼자 $6$일, $B$는 혼자 $12$일이 걸리는 일이 있어요. 둘이 함께 하면 며칠 걸릴까요.\n\n전체를 $1$로 두면 $A$의 하루치는 $\\dfrac{1}{6}$, $B$의 하루치는 $\\dfrac{1}{12}$이에요.\n\n함께 하면 하루에 $\\dfrac{1}{6} + \\dfrac{1}{12} = \\dfrac{2}{12} + \\dfrac{1}{12} = \\dfrac{3}{12} = \\dfrac{1}{4}$이에요.\n\n하루에 $\\dfrac{1}{4}$이니 뒤집어 $4$일이에요.\n\n조금 더 어려운 모양도 해 볼게요. 같은 일을 $A$가 혼자 $2$일 한 뒤 $B$가 이어받았다면 $B$는 며칠이 더 필요할까요.\n\n$A$가 한 일은 $\\dfrac{2}{6} = \\dfrac{1}{3}$이니 남은 일은 $\\dfrac{2}{3}$이에요. $B$는 하루에 $\\dfrac{1}{12}$을 하니 $\\dfrac{2}{3} \\div \\dfrac{1}{12} = 8$, 곧 $8$일이에요.\n\n날수를 더하려 하지 말고 하루치로 바꾸는 것, 그리고 마지막에 뒤집는 것 — 이 둘만 지키면 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-work:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-work:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-work:practice",
+                "problemSetVersionId": "ncs-work:practice:v1",
+                "problemVersionIds": [
+                  "ncs-work:practice-1:v1",
+                  "ncs-work:practice-2:v1",
+                  "ncs-work:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-work:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-work:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-work:check",
+                "problemSetVersionId": "ncs-work:check:v1",
+                "problemVersionIds": [
+                  "ncs-work:check-1:v1",
+                  "ncs-work:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-work:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-work:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "날수는 더할 수 없지만 하루치는 더할 수 있어요. 그래서 전체를 $1$로 두고 하루치로 바꿔요.\n\n$n$일이 걸리면 하루치는 $\\dfrac{1}{n}$이고, 함께 하면 하루치를 더해요.\n\n걸리는 날수는 합친 하루치의 역수예요. 마지막에 뒤집는 것을 잊지 마세요.\n\n중간에 사람이 바뀌면 한 일을 세어 남은 일부터 구해요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-work:review",
+        "problemSetVersionId": "ncs-work:review:v1",
+        "problemVersionIds": [
+          "ncs-work:homework-1:v1",
+          "ncs-work:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "ncs-interest",
+        "versionId": "ncs-interest:v1",
+        "title": "이자: 단리는 원금에만, 복리는 이자에도",
+        "summary": "단리와 복리가 어디에 이자를 붙이는지 가르고, 원리합계를 구해요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "interest"
+        ],
+        "prerequisiteConceptKeys": [
+          "percentage",
+          "percentage-of",
+          "exponent-law"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-interest:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-interest:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "돈을 맡기거나 빌리면 이자가 붙어요. 이자를 어디에 붙이느냐에 따라 두 가지로 갈려요.\n\n단리는 언제나 처음 맡긴 돈, 곧 원금에만 이자를 붙여요. 연 이자율이 $5\\%$이고 원금이 $100$만 원이면 해마다 꼭 $5$만 원씩 붙어요. $3$년이면 $15$만 원이고요.\n\n그러니 단리의 이자는 「원금 × 이자율 × 기간」이에요. 원금과 이자를 더한 값을 원리합계라 하고, $3$년 뒤 원리합계는 $115$만 원이에요.\n\n복리는 붙은 이자에도 다시 이자를 붙여요. 첫해에 $5$만 원이 붙으면 둘째 해에는 $105$만 원에 대해 $5\\%$가 붙어요.\n\n그래서 복리의 원리합계는 곱하기를 거듭해요. 원금을 $a$, 이자율을 $r$, 기간을 $n$년이라 하면 $a(1 + r)^n$이에요. $100$만 원을 연 $5\\%$ 복리로 $2$년 맡기면 $100 \\times 1.05 \\times 1.05 = 110.25$만 원이에요.\n\n첫해에는 둘이 같고, 해가 갈수록 벌어져요. 기간이 짧으면 차이가 크지 않다는 것도 함께 알아 두면 좋아요.\n\n시험에서 자주 걸리는 자리가 둘 있어요. 하나는 기간의 단위예요. 연 이자율에 개월 수를 그대로 곱하면 안 되고, 개월 수를 $12$로 나눠 연으로 바꿔야 해요.\n\n다른 하나는 묻는 것이 이자인지 원리합계인지예요. 「얼마를 받나」는 원리합계, 「이자는 얼마인가」는 원금을 뺀 값이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "interest",
+                    "surface": "원리합계",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-interest:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "단리는 같은 높이로 쌓이고 복리는 점점 두꺼워지는 것을 막대로 견주는 그림",
+                "caption": "단리는 늘 같은 만큼, 복리는 붙은 이자에도 이자가 붙어요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 84,
+                    "y": 22,
+                    "text": "단리",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 232,
+                    "y": 22,
+                    "text": "복리",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 52,
+                    "y": 132,
+                    "width": 64,
+                    "height": 40,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "p1"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 200,
+                    "y": 132,
+                    "width": 64,
+                    "height": 40,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "p2"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 84,
+                    "y": 156,
+                    "text": "원금",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 232,
+                    "y": 156,
+                    "text": "원금",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 52,
+                    "y": 112,
+                    "width": 64,
+                    "height": 20,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "s1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 52,
+                    "y": 92,
+                    "width": 64,
+                    "height": 20,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "s2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 52,
+                    "y": 72,
+                    "width": 64,
+                    "height": 20,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "s3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 200,
+                    "y": 112,
+                    "width": 64,
+                    "height": 20,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "c1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 200,
+                    "y": 90,
+                    "width": 64,
+                    "height": 22,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "c2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 200,
+                    "y": 66,
+                    "width": 64,
+                    "height": 24,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "c3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 40,
+                    "y1": 172,
+                    "x2": 280,
+                    "y2": 172,
+                    "stroke": "ink",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 192,
+                    "text": "해가 갈수록 벌어져요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "같은 원금을 같은 이자율로 맡겼어요. 왼쪽은 단리, 오른쪽은 복리예요.",
+                    "changes": [
+                      {
+                        "id": "s1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "한 해가 지나면 둘 다 같은 이자가 붙어요. 아직 차이가 없어요.",
+                    "changes": [
+                      {
+                        "id": "s1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "해가 갈수록 단리는 같은 높이로 쌓이고, 복리는 붙은 이자에도 이자가 붙어 두꺼워져요.",
+                    "changes": [
+                      {
+                        "id": "s1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-interest:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-interest:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "원금 $100$만 원을 연 이자율 $5\\%$ 단리로 $3$년 맡기면 원리합계는 얼마일까요.\n\n한 해 이자는 $100 \\times 0.05 = 5$만 원이에요. 단리는 해마다 같으니 $3$년이면 $15$만 원이고요.\n\n원리합계는 원금을 더한 $115$만 원이에요.\n\n같은 조건을 복리로 바꿔 $2$년만 맡겨 볼게요.\n\n첫해 말에는 $100 \\times 1.05 = 105$만 원이에요. 둘째 해에는 이 $105$만 원에 이자가 붙으니 $105 \\times 1.05 = 110.25$만 원이에요.\n\n같은 $2$년을 단리로 맡겼다면 $110$만 원이니, 복리가 $2500$원 더 많아요. 짧으면 차이가 작고 길수록 벌어져요.\n\n기간이 개월로 주어지면 먼저 고쳐요. 연 $6\\%$ 단리로 $6$개월이면 $0.06 \\times \\dfrac{6}{12} = 0.03$, 곧 $3\\%$예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-interest:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-interest:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-interest:practice",
+                "problemSetVersionId": "ncs-interest:practice:v1",
+                "problemVersionIds": [
+                  "ncs-interest:practice-1:v1",
+                  "ncs-interest:practice-2:v1",
+                  "ncs-interest:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-interest:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-interest:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-interest:check",
+                "problemSetVersionId": "ncs-interest:check:v1",
+                "problemVersionIds": [
+                  "ncs-interest:check-1:v1",
+                  "ncs-interest:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-interest:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-interest:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "단리는 원금에만 이자를 붙이니 이자가 「원금 × 이자율 × 기간」이에요.\n\n복리는 붙은 이자에도 이자를 붙이니 원리합계가 $a(1 + r)^n$이에요.\n\n첫해에는 둘이 같고 해가 갈수록 벌어져요.\n\n기간이 개월이면 $12$로 나눠 연으로 고치고, 묻는 것이 이자인지 원리합계인지 확인해요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-interest:review",
+        "problemSetVersionId": "ncs-interest:review:v1",
+        "problemVersionIds": [
+          "ncs-interest:homework-1:v1",
+          "ncs-interest:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "ncs-exchange",
+        "versionId": "ncs-exchange:v1",
+        "title": "환율과 수수료: 어느 쪽으로 바꾸는가",
+        "summary": "환율로 두 돈을 오가는 방향을 가르고, 수수료가 붙는 자리를 짚어요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "exchange-rate"
+        ],
+        "prerequisiteConceptKeys": [
+          "rate",
+          "percentage-of",
+          "unit-conversion"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-exchange:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-exchange:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "환율은 다른 나라 돈 하나가 우리 돈으로 얼마인지를 적은 값이에요. 「$1$달러 $=$ $1{,}300$원」이라면 환율이 $1{,}300$이에요.\n\n여기서 갈리는 것은 딱 하나, 어느 쪽으로 바꾸느냐예요.\n\n달러를 원으로 바꿀 때는 환율을 곱해요. $1{,}300$원짜리가 몇 개 있느냐를 묻는 것이니까요. $20$달러면 $20 \\times 1{,}300 = 26{,}000$원이에요.\n\n원을 달러로 바꿀 때는 나눠요. 가진 돈 안에 $1{,}300$원이 몇 번 들어가느냐를 묻는 것이거든요. $65{,}000$원이면 $65{,}000 \\div 1{,}300 = 50$달러예요.\n\n곱할지 나눌지 헷갈릴 때는 크기로 가늠해 보세요. 달러 수는 원 금액보다 훨씬 작은 수여야 해요. 답이 원 금액보다 크게 나왔다면 뒤집힌 거예요.\n\n환전에는 수수료가 붙는 일이 많아요. 수수료는 대개 바꾸는 금액에 대한 비율로 매겨요. $1\\%$라면 $26{,}000$원을 바꿀 때 $260$원을 더 내는 식이에요.\n\n수수료를 「더 내는지」 「받을 돈에서 빼는지」는 문제가 정해요. 사는 쪽이면 더 내고, 파는 쪽이면 받을 돈에서 빠진다고 보면 대개 맞아요.\n\n환율이 오르면 같은 달러를 사는 데 원이 더 들어요. 우리 돈의 값이 내려갔다는 뜻이고요.",
+                "definitions": [
+                  {
+                    "conceptKey": "exchange-rate",
+                    "surface": "환율",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-exchange:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "원화와 달러를 서로 바꿀 때 곱하는 쪽과 나누는 쪽이 반대임을 화살표로 보이는 그림",
+                "caption": "달러를 원으로 바꿀 때는 곱하고, 반대로는 나눠요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 22,
+                    "text": "$1$달러 $=$ $1{,}300$원",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 36,
+                    "y": 60,
+                    "width": 92,
+                    "height": 40,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 6,
+                    "id": "usd"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 82,
+                    "y": 84,
+                    "text": "달러",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 192,
+                    "y": 60,
+                    "width": 92,
+                    "height": 40,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 6,
+                    "id": "krw"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 238,
+                    "y": 84,
+                    "text": "원",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 132,
+                    "y1": 74,
+                    "x2": 188,
+                    "y2": 74,
+                    "stroke": "orange",
+                    "strokeWidth": 1.8,
+                    "arrow": "end",
+                    "id": "right",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 66,
+                    "text": "$\\times 1300$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "rl",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 188,
+                    "y1": 92,
+                    "x2": 132,
+                    "y2": 92,
+                    "stroke": "green",
+                    "strokeWidth": 1.8,
+                    "arrow": "end",
+                    "id": "left",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 110,
+                    "text": "$\\div 1300$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "ll",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 150,
+                    "text": "$20$달러 $\\rightarrow$ $26{,}000$원",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "ex1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 176,
+                    "text": "$65{,}000$원 $\\rightarrow$ $50$달러",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "ex2",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$1$달러가 $1{,}300$원이라고 해요. 어느 쪽으로 바꾸느냐에 따라 셈이 달라져요.",
+                    "changes": [
+                      {
+                        "id": "right",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rl",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "left",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ll",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ex1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ex2",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "달러를 원으로 바꿀 때는 환율을 곱해요. 하나에 $1{,}300$원짜리가 여러 개인 셈이니까요.",
+                    "changes": [
+                      {
+                        "id": "right",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "rl",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ex1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "left",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ll",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ex2",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "원을 달러로 바꿀 때는 나눠요. $1{,}300$원짜리가 몇 개나 되는지 묻는 것이니까요.",
+                    "changes": [
+                      {
+                        "id": "right",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "rl",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ex1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "left",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ll",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ex2",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-exchange:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-exchange:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "환율이 $1$달러에 $1{,}300$원이에요. $20$달러는 우리 돈으로 얼마일까요.\n\n달러를 원으로 바꾸니 곱해요. $20 \\times 1{,}300 = 26{,}000$원이에요.\n\n거꾸로 $65{,}000$원은 몇 달러일까요. 원을 달러로 바꾸니 나눠요. $65{,}000 \\div 1{,}300 = 50$달러예요.\n\n수수료도 얹어 볼게요. $26{,}000$원어치를 살 때 수수료가 $1\\%$라면 $26{,}000 \\times 0.01 = 260$원을 더 내니 모두 $26{,}260$원이에요.\n\n환율이 바뀌면 어떻게 될까요. $1{,}300$원에서 $1{,}400$원으로 올랐다면 같은 $20$달러를 사는 데 $28{,}000$원이 들어요. $2{,}000$원을 더 내는 셈이죠.\n\n환율이 오르면 달러가 비싸진 것이고, 우리 돈의 값은 그만큼 내려간 거예요. 수출하는 쪽에는 반가운 일이고 수입하는 쪽에는 부담이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-exchange:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-exchange:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-exchange:practice",
+                "problemSetVersionId": "ncs-exchange:practice:v1",
+                "problemVersionIds": [
+                  "ncs-exchange:practice-1:v1",
+                  "ncs-exchange:practice-2:v1",
+                  "ncs-exchange:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-exchange:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-exchange:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-exchange:check",
+                "problemSetVersionId": "ncs-exchange:check:v1",
+                "problemVersionIds": [
+                  "ncs-exchange:check-1:v1",
+                  "ncs-exchange:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-exchange:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-exchange:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "달러를 원으로 바꿀 때는 환율을 곱하고, 원을 달러로 바꿀 때는 나눠요.\n\n달러 수는 원 금액보다 훨씬 작아야 하니, 크기로 한 번 가늠해 보면 뒤집힌 것을 잡을 수 있어요.\n\n수수료는 대개 바꾸는 금액에 대한 비율이에요.\n\n환율이 오르면 같은 달러를 사는 데 원이 더 들고, 우리 돈의 값은 내려간 거예요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-exchange:review",
+        "problemSetVersionId": "ncs-exchange:review:v1",
+        "problemVersionIds": [
+          "ncs-exchange:homework-1:v1",
+          "ncs-exchange:homework-2:v1"
         ]
       }
     }
@@ -2684,6 +3716,1684 @@
               "required": true,
               "payload": {
                 "text": "정가의 $80\\%$가 $12{,}000$원이 되어야 해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-work:practice",
+      "courseKey": "ncs-applied",
+      "name": "일률 연습",
+      "versionId": "ncs-work:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-work:practice-1:v1",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-work:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "혼자 하면 $6$일이 걸리는 일의 하루치를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 6,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-work:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체를 $1$로 둬요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-work:practice-2:v1",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-work:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A$는 혼자 $6$일, $B$는 혼자 $12$일이 걸리는 일을 둘이 함께 하면 며칠 걸리나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-work:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "하루치를 더하면 $\\frac{1}{4}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-work:practice-3:v1",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-work:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A$는 혼자 $4$일, $B$는 혼자 $12$일이 걸리는 일을 둘이 함께 하면 며칠 걸리나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-work:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "하루치를 더하면 $\\frac{1}{3}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-work:check",
+      "courseKey": "ncs-applied",
+      "name": "일률 확인",
+      "versionId": "ncs-work:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-work:check-1:v1",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-work:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A$는 혼자 $10$일, $B$는 혼자 $15$일이 걸리는 일을 둘이 함께 하면 며칠 걸리나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-work:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "하루치를 더하면 $\\frac{1}{6}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-work:check-2:v1",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-work:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "혼자 $6$일 걸리는 일을 $2$일 한 뒤 남은 일의 양을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 2,
+            "denominator": 3,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-work:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{2}{6}$을 했어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-work:review",
+      "courseKey": "ncs-applied",
+      "name": "일률 복습",
+      "versionId": "ncs-work:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-work:homework-1:v1",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-work:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A$는 혼자 $8$일, $B$는 혼자 $8$일이 걸리는 일을 둘이 함께 하면 며칠 걸리나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-work:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 사람 둘이면 절반이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-work:homework-2:v1",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-work:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "하루에 전체의 $\\frac{1}{7}$을 하면 일을 마치는 데 며칠 걸리나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-work:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "역수예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-interest:practice",
+      "courseKey": "ncs-applied",
+      "name": "이자 연습",
+      "versionId": "ncs-interest:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-interest:practice-1:v1",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-interest:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금 $100$만 원을 연 $5\\%$ 단리로 맡길 때 $1$년 이자는 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-interest:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금의 $5\\%$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-interest:practice-2:v1",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-interest:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금 $100$만 원을 연 $5\\%$ 단리로 $3$년 맡길 때 이자는 모두 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-interest:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "해마다 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-interest:practice-3:v1",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-interest:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금 $100$만 원을 연 $5\\%$ 단리로 $3$년 맡길 때 원리합계는 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 115
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-interest:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금을 더해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-interest:check",
+      "courseKey": "ncs-applied",
+      "name": "이자 확인",
+      "versionId": "ncs-interest:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-interest:check-1:v1",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-interest:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금 $200$만 원을 연 $4\\%$ 단리로 $2$년 맡길 때 이자는 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 16
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-interest:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$8$만 원씩 두 해예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-interest:check-2:v1",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-interest:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "연 $6\\%$ 단리로 $6$개월 맡기면 이자율은 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-interest:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$12$로 나눠 개월을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-interest:review",
+      "courseKey": "ncs-applied",
+      "name": "이자 복습",
+      "versionId": "ncs-interest:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-interest:homework-1:v1",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-interest:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금 $500$만 원을 연 $3\\%$ 단리로 $2$년 맡길 때 원리합계는 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 530
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-interest:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이자가 $30$만 원이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-interest:homework-2:v1",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-interest:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "단리와 복리에 대한 설명으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "복리는 붙은 이자에도 이자가 붙는다"
+              },
+              {
+                "id": "b",
+                "text": "단리가 언제나 더 많다"
+              },
+              {
+                "id": "c",
+                "text": "첫해부터 복리가 더 많다"
+              },
+              {
+                "id": "d",
+                "text": "둘은 늘 같다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "복리는 붙은 이자에도 이자가 붙는다"
+              },
+              {
+                "id": "b",
+                "text": "단리가 언제나 더 많다"
+              },
+              {
+                "id": "c",
+                "text": "첫해부터 복리가 더 많다"
+              },
+              {
+                "id": "d",
+                "text": "둘은 늘 같다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-interest:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "첫해에는 둘이 같아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-exchange:practice",
+      "courseKey": "ncs-applied",
+      "name": "환율 연습",
+      "versionId": "ncs-exchange:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-exchange:practice-1:v1",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-exchange:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$달러가 $1{,}300$원일 때 $20$달러는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 26000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-exchange:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "달러를 원으로 바꾸니 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-exchange:practice-2:v1",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-exchange:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$달러가 $1{,}300$원일 때 $65{,}000$원은 몇 달러인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 50
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-exchange:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원을 달러로 바꾸니 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-exchange:practice-3:v1",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-exchange:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$26{,}000$원을 환전할 때 수수료가 $1\\%$라면 수수료는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 260
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-exchange:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "금액의 $1\\%$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-exchange:check",
+      "courseKey": "ncs-applied",
+      "name": "환율 확인",
+      "versionId": "ncs-exchange:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-exchange:check-1:v1",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-exchange:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$달러가 $1{,}400$원일 때 $20$달러는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 28000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-exchange:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "환율이 올랐어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-exchange:check-2:v1",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-exchange:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "환율이 오르면 어떤 일이 생기나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "같은 달러를 사는 데 원이 더 든다"
+              },
+              {
+                "id": "b",
+                "text": "달러가 싸진다"
+              },
+              {
+                "id": "c",
+                "text": "우리 돈의 값이 오른다"
+              },
+              {
+                "id": "d",
+                "text": "아무 변화가 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "같은 달러를 사는 데 원이 더 든다"
+              },
+              {
+                "id": "b",
+                "text": "달러가 싸진다"
+              },
+              {
+                "id": "c",
+                "text": "우리 돈의 값이 오른다"
+              },
+              {
+                "id": "d",
+                "text": "아무 변화가 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-exchange:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "달러가 비싸진 거예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-exchange:review",
+      "courseKey": "ncs-applied",
+      "name": "환율 복습",
+      "versionId": "ncs-exchange:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-exchange:homework-1:v1",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-exchange:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$달러가 $1{,}200$원일 때 $36{,}000$원은 몇 달러인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-exchange:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-exchange:homework-2:v1",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-exchange:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$달러가 $1{,}250$원일 때 $8$달러는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-exchange:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "곱해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-applied:drill",
+      "courseKey": "ncs-applied",
+      "name": "NCS 응용계산 모아 풀기",
+      "versionId": "ncs-applied:drill:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-applied:drill2-1:v1",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가가 $12{,}000$원인 물건에 $20\\%$ 이익을 붙인 정가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 14400
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가의 $1.2$배예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-2:v1",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가가 $8{,}000$원이고 정가가 $10{,}000$원일 때 이익은 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가에서 원가를 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-3:v1",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가가 $20{,}000$원인 물건에 $15\\%$ 이익을 붙인 정가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 23000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가의 $1.15$배예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-4:v1",
+          "conceptKeys": [
+            "discount-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가가 $20{,}000$원인 물건을 $15\\%$ 할인하면 판매가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 17000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가의 $85\\%$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-5:v1",
+          "conceptKeys": [
+            "discount-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가가 $50{,}000$원인 물건을 $40{,}000$원에 팔았다면 할인율은 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "깎인 돈을 정가로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-6:v1",
+          "conceptKeys": [
+            "discount-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가가 $30{,}000$원인 물건을 $10\\%$ 할인하면 판매가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 27000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가의 $90\\%$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-7:v1",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10\\%$ 소금물 $200$g에 들어 있는 소금은 몇 g인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금물에 농도를 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-8:v1",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금 $30$g이 녹아 있는 소금물 $300$g의 농도는 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금을 소금물로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-9:v1",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$8\\%$ 소금물 $250$g에 들어 있는 소금은 몇 g인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금물에 농도를 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-10:v1",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시속 $60$km로 $3$시간 달리면 몇 km를 가나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 180
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "속력에 시간을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-11:v1",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$240$km를 $4$시간에 갔다면 시속은 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "거리를 시간으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-12:v1",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시속 $80$km로 $180$km를 가려면 몇 분이 걸리나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 135
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2.25$시간이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-13:v1",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A$는 혼자 $6$일, $B$는 혼자 $12$일이 걸리는 일을 둘이 함께 하면 며칠 걸리나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "하루치를 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-14:v1",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A$는 혼자 $10$일, $B$는 혼자 $15$일이 걸리는 일을 둘이 함께 하면 며칠 걸리나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "하루치를 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-15:v1",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "혼자 하면 $9$일이 걸리는 일의 하루치를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 9,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체를 $1$로 둬요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-16:v1",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금 $100$만 원을 연 $5\\%$ 단리로 $3$년 맡길 때 원리합계는 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 115
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이자가 $15$만 원이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-17:v1",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금 $300$만 원을 연 $2\\%$ 단리로 $2$년 맡길 때 이자는 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6$만 원씩 두 해예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-18:v1",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "연 $8\\%$ 단리로 $3$개월 맡기면 이자율은 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$12$로 나눠 개월을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-19:v1",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$달러가 $1{,}300$원일 때 $30$달러는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 39000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-20:v1",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$달러가 $1{,}200$원일 때 $60{,}000$원은 몇 달러인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 50
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "나눠요."
               }
             }
           ],
