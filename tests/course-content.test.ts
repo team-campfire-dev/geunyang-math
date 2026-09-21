@@ -159,6 +159,17 @@ describe('the installed courses', () => {
     }
   });
 
+  it('keeps a step\'s name readable too, for the same reason', () => {
+    // The outline and the sheet both draw a step's title as plain text, so `$...$` in one shows its
+    // dollars instead of its formula. Written before anything caught it: a title with math in it
+    // read「$25 \\times 32 \\times 4$를 어떻게 10초에 푸나」in the step list.
+    for (const lesson of lessons) {
+      for (const section of lesson.sections) {
+        expect(section.title, `${lesson.public.lessonKey}의 ${section.sectionId}`).not.toMatch(/\$/);
+      }
+    }
+  });
+
   it('gives every course a big set of its own that no lesson shows', () => {
     // Somebody who wants to solve rather than be taught picks one of these. It belongs to the
     // course, not to a lesson, so nothing in the lessons has to change for it to exist.
