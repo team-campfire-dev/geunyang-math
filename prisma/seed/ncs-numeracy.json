@@ -1,0 +1,5321 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "ncs-numeracy",
+      "title": "수리능력 시작하기",
+      "summary": "시험이 무엇을 재는지 알고, 네 영역마다 무엇을 묻고 무엇을 알아야 하는지 짚어요.",
+      "order": 11,
+      "track": "ncs",
+      "lessons": [
+        {
+          "key": "ncs-why",
+          "order": 1
+        },
+        {
+          "key": "ncs-arithmetic",
+          "order": 2
+        },
+        {
+          "key": "ncs-stat-basics",
+          "order": 3
+        },
+        {
+          "key": "ncs-chart-basics",
+          "order": 4
+        },
+        {
+          "key": "ncs-chart-making",
+          "order": 5
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "numeracy-scope",
+      "label": "수리능력의 네 영역",
+      "assessable": true
+    },
+    {
+      "key": "calculation-order",
+      "label": "계산 순서와 법칙",
+      "assessable": true
+    },
+    {
+      "key": "unit-conversion",
+      "label": "단위환산",
+      "assessable": true
+    },
+    {
+      "key": "verification",
+      "label": "검산",
+      "assessable": true
+    },
+    {
+      "key": "statistics-reading",
+      "label": "통계로 읽기",
+      "assessable": true
+    },
+    {
+      "key": "chart-types",
+      "label": "도표의 종류",
+      "assessable": true
+    },
+    {
+      "key": "chart-reading",
+      "label": "도표 읽기",
+      "assessable": true
+    },
+    {
+      "key": "chart-making",
+      "label": "도표 만들기",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "ncs-why",
+        "versionId": "ncs-why:v1",
+        "title": "왜 수리능력을 보는가",
+        "summary": "시험이 무엇을 재는지 알고, 수리능력을 이루는 네 영역을 구분해요.",
+        "estimatedMinutes": 15,
+        "conceptKeys": [
+          "numeracy-scope"
+        ],
+        "prerequisiteConceptKeys": [],
+        "sectionCount": 6
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-why:opening:v1",
+          "role": "explanation",
+          "title": "이 과정을 시작하며",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-why:opening:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "채용 시험의 수리영역 앞에서 많은 사람이 「나는 수학을 못해서」라고 말해요. 그런데 이 시험이 재는 것은 수학 실력이 아니에요.\n\n공식 기준은 수리능력을 이렇게 말해요. 업무에서 요구되는 사칙연산과 기초적인 통계를 이해하고, 도표의 뜻을 파악하거나 도표를 이용해 결과를 효과적으로 제시하는 능력.\n\n여기 어려운 수학은 없어요. 필요한 것은 초등·중학 수준의 계산과, 표와 그래프를 정확히 읽는 습관이에요. 실제로 시험에서 틀리는 자리도 계산이 어려워서가 아니라 기준을 잘못 잡거나 단위를 놓쳐서인 경우가 대부분이에요.\n\n그래서 이 과정은 공식이 아니라 갈리는 자리를 다뤄요. 무엇을 기준으로 나누는지, 단위가 무엇인지, 읽은 값이 총량인지 비율인지 같은 것들이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-why:areas:v1",
+          "role": "explanation",
+          "title": "네 영역이 하는 일",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-why:areas:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "수리능력은 네 가지가 모인 이름이에요. 시험 문제는 언제나 이 넷 중 하나에 속해요.\n\n기초연산능력은 업무에서 필요한 계산을 하고 그 결과가 맞는지 확인하는 힘이에요. 예산을 세우고, 영수증을 정산하고, 단가를 견주는 일이 여기에 들어가요.\n\n기초통계능력은 여러 값을 하나의 수로 요약해 특성과 경향을 읽는 힘이에요. 합계·빈도·평균이 대표적이에요.\n\n도표분석능력은 표와 그래프에서 필요한 값을 찾아 뜻을 읽어 내는 힘이에요. 시험에서 문항 수가 가장 많은 자리예요.\n\n도표작성능력은 결과를 어떤 도표로 어떻게 보여 줄지 정하는 힘이에요. 직접 그리는 문항은 드물지만, 어떤 그래프가 알맞은지 고르는 문항으로 나와요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "ncs-why:areas:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "수리능력을 이루는 네 영역을 네 칸으로 늘어놓고 하나씩 짚는 그림",
+                "caption": "수리능력은 네 가지가 모인 이름이에요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "id": "top",
+                    "x": 160,
+                    "y": 40,
+                    "text": "수리능력",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "box-1",
+                    "x": 24,
+                    "y": 64,
+                    "width": 60,
+                    "height": 54,
+                    "radius": 6,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "box-2",
+                    "x": 92,
+                    "y": 64,
+                    "width": 60,
+                    "height": 54,
+                    "radius": 6,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "box-3",
+                    "x": 160,
+                    "y": 64,
+                    "width": 60,
+                    "height": 54,
+                    "radius": 6,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "box-4",
+                    "x": 228,
+                    "y": 64,
+                    "width": 60,
+                    "height": 54,
+                    "radius": 6,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-1",
+                    "x": 54,
+                    "y": 88,
+                    "text": "기초",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-1b",
+                    "x": 54,
+                    "y": 104,
+                    "text": "연산",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-2",
+                    "x": 122,
+                    "y": 88,
+                    "text": "기초",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-2b",
+                    "x": 122,
+                    "y": 104,
+                    "text": "통계",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-3",
+                    "x": 190,
+                    "y": 88,
+                    "text": "도표",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-3b",
+                    "x": 190,
+                    "y": 104,
+                    "text": "분석",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-4",
+                    "x": 258,
+                    "y": 88,
+                    "text": "도표",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-4b",
+                    "x": 258,
+                    "y": 104,
+                    "text": "작성",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "note",
+                    "x": 160,
+                    "y": 156,
+                    "text": "업무에서 수를 다루는 힘",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "계산을 하고 결과를 확인해요.",
+                    "changes": [
+                      {
+                        "id": "box-1",
+                        "fill": "fill"
+                      },
+                      {
+                        "id": "box-2",
+                        "opacity": 0.35
+                      },
+                      {
+                        "id": "box-3",
+                        "opacity": 0.35
+                      },
+                      {
+                        "id": "box-4",
+                        "opacity": 0.35
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "여러 값을 평균·비중처럼 하나의 수로 요약해요.",
+                    "changes": [
+                      {
+                        "id": "box-2",
+                        "fill": "fill"
+                      },
+                      {
+                        "id": "box-1",
+                        "opacity": 0.35
+                      },
+                      {
+                        "id": "box-3",
+                        "opacity": 0.35
+                      },
+                      {
+                        "id": "box-4",
+                        "opacity": 0.35
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "표와 그래프를 읽고 뜻을 찾아내요. 시험에서 가장 많이 나와요.",
+                    "changes": [
+                      {
+                        "id": "box-3",
+                        "fill": "fill"
+                      },
+                      {
+                        "id": "box-1",
+                        "opacity": 0.35
+                      },
+                      {
+                        "id": "box-2",
+                        "opacity": 0.35
+                      },
+                      {
+                        "id": "box-4",
+                        "opacity": 0.35
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "결과를 도표로 만들어 보여 줘요.",
+                    "changes": [
+                      {
+                        "id": "box-4",
+                        "fill": "fill"
+                      },
+                      {
+                        "id": "box-1",
+                        "opacity": 0.35
+                      },
+                      {
+                        "id": "box-2",
+                        "opacity": 0.35
+                      },
+                      {
+                        "id": "box-3",
+                        "opacity": 0.35
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1500
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-why:example:v1",
+          "role": "worked_example",
+          "title": "문항이 어느 영역인지 가려내기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-why:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "문항을 만나면 먼저 어느 영역인지 알아채는 것이 도움이 돼요. 영역을 알면 무엇을 먼저 볼지가 정해지기 때문이에요.\n\n「다음 표는 연도별 매출액이다. 2023년 대비 2024년의 증가율이 가장 큰 지점을 고르시오.」 이 문항은 표에서 값을 읽어 견주는 일이니 도표분석이에요. 먼저 볼 것은 표의 제목과 단위예요.\n\n「A상품의 원가가 12,000원이고 20%의 이익을 붙여 정가를 정했다. 정가는?」 이것은 계산 한 줄이니 기초연산이에요. 먼저 볼 것은 무엇을 기준으로 20%를 붙이는가예요.\n\n「네 지점의 평균 판매량은?」 이것은 여럿을 하나로 줄이는 일이니 기초통계예요. 먼저 볼 것은 개수가 같은지, 즉 단순 평균으로 되는지예요.\n\n영역이 정해지면 그 영역에서 늘 갈리는 자리를 떠올리면 돼요. 이 과정의 남은 네 수업이 각각 그 자리를 다뤄요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-why:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-why:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-why:practice",
+                "problemSetVersionId": "ncs-why:practice:v1",
+                "problemVersionIds": [
+                  "ncs-why:practice-1:v1",
+                  "ncs-why:practice-2:v1",
+                  "ncs-why:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-why:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-why:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-why:check",
+                "problemSetVersionId": "ncs-why:check:v1",
+                "problemVersionIds": [
+                  "ncs-why:check-1:v1",
+                  "ncs-why:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-why:summary:v1",
+          "role": "summary",
+          "title": "배운 것 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-why:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "시험이 재는 것은 수학 실력이 아니라 업무에서 수를 다루는 힘이에요. 수리능력은 기초연산·기초통계·도표분석·도표작성 네 영역으로 이루어져요.\n\n문항을 만나면 먼저 어느 영역인지 가려내고, 그 영역에서 늘 갈리는 자리를 떠올리세요. 남은 네 수업이 영역마다 그 자리와 필요한 사전지식을 다뤄요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-why:review",
+        "problemSetVersionId": "ncs-why:review:v1",
+        "problemVersionIds": [
+          "ncs-why:homework-1:v1",
+          "ncs-why:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "ncs-arithmetic",
+        "versionId": "ncs-arithmetic:v1",
+        "title": "기초연산: 무엇을 묻고, 무엇을 알아야 하나",
+        "summary": "계산 순서와 법칙, 단위환산, 검산 — 시험의 계산 문항이 딛고 서는 세 가지를 갖춰요.",
+        "estimatedMinutes": 20,
+        "conceptKeys": [
+          "calculation-order",
+          "unit-conversion",
+          "verification"
+        ],
+        "prerequisiteConceptKeys": [
+          "numeracy-scope",
+          "addition",
+          "decimal"
+        ],
+        "sectionCount": 8
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-arithmetic:overview:v1",
+          "role": "explanation",
+          "title": "이 영역이 묻는 것",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-arithmetic:overview:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "기초연산능력은 업무에서 필요한 계산을 하고 그 결과를 확인하는 힘이에요. 공식 기준은 이 영역에서 세 가지를 요구해요. 계산이 필요한 상황을 알아보는 것, 효과적으로 계산하는 것, 그리고 계산 결과가 맞는지 확인하는 것이에요.\n\n세 번째가 특히 눈여겨볼 곳이에요. 학교 시험은 답만 맞으면 됐지만, 업무에서는 틀린 계산을 걸러 내는 일이 계산 자체만큼 중요해요. 시험도 그래서 여러 단계를 거치는 계산을 냅니다.\n\n시험에 나오는 모습은 이래요. 예산을 항목별로 더하고 남은 돈을 구하기, 여러 업체의 단가를 견주어 가장 싼 곳 고르기, 할인과 수수료가 섞인 금액 정산하기. 계산 자체는 초등 수준인데 단계가 서너 개라, 한 곳만 어긋나도 답이 달라져요.\n\n그래서 이 수업은 계산을 빠르고 틀리지 않게 하는 세 가지 사전지식을 다뤄요. 계산 순서와 법칙, 단위환산, 그리고 검산이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-arithmetic:order:v1",
+          "role": "explanation",
+          "title": "사전지식 ① 계산 순서와 법칙",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-arithmetic:order:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "계산 순서는 괄호 먼저, 그다음 곱셈과 나눗셈, 마지막에 덧셈과 뺄셈이에요. 곱셈과 나눗셈끼리는, 또 덧셈과 뺄셈끼리는 앞에서부터 차례로 해요. $120 - 4 \\times (15 - 7)$은 괄호가 $8$, 곱셈이 $32$, 그래서 $88$이에요.\n\n순서를 아는 것만큼 쓸모 있는 것이 계산을 쉽게 바꾸는 법칙 셋이에요.\n\n교환법칙은 차례를 바꿔도 값이 같다는 것이에요. $a + b = b + a$, $a \\times b = b \\times a$. 결합법칙은 묶는 자리를 바꿔도 값이 같다는 것이에요. $a \\times (b \\times c) = (a \\times b) \\times c$. 둘을 합치면 $25 \\times 32 \\times 4$에서 $25$와 $4$를 먼저 묶어 $100 \\times 32 = 3{,}200$으로 끝낼 수 있어요.\n\n분배법칙은 $(a + b) \\times c = a \\times c + b \\times c$예요. $98 \\times 25$는 $(100 - 2) \\times 25 = 2{,}500 - 50 = 2{,}450$으로 바꾸면 암산이 돼요. 시간이 모자란 시험에서 이 세 법칙은 공식이 아니라 도구예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "ncs-arithmetic:order:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "곱셈의 차례를 바꿔 25와 4를 먼저 묶는 그림",
+                "caption": "차례를 바꿔도 곱은 같아요. 쉬운 짝을 먼저 묶어요",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "id": "tile-25",
+                    "x": 70,
+                    "y": 76,
+                    "width": 52,
+                    "height": 40,
+                    "radius": 5,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "tile-32",
+                    "x": 134,
+                    "y": 76,
+                    "width": 52,
+                    "height": 40,
+                    "radius": 5,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "tile-4",
+                    "x": 198,
+                    "y": 76,
+                    "width": 52,
+                    "height": 40,
+                    "radius": 5,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "num-25",
+                    "x": 96,
+                    "y": 101,
+                    "text": "25",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "num-32",
+                    "x": 160,
+                    "y": 101,
+                    "text": "32",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "num-4",
+                    "x": 224,
+                    "y": 101,
+                    "text": "4",
+                    "size": 16,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "head",
+                    "x": 160,
+                    "y": 52,
+                    "text": "$25 \\times 32 \\times 4$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "answer",
+                    "x": 160,
+                    "y": 158,
+                    "text": "$100 \\times 32 = 3{,}200$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "앞에서부터 곱하면 25 × 32부터 해야 해요.",
+                    "changes": [
+                      {
+                        "id": "answer",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "차례를 바꿔 25와 4를 먼저 묶어요.",
+                    "changes": [
+                      {
+                        "id": "tile-4",
+                        "dx": -64
+                      },
+                      {
+                        "id": "num-4",
+                        "dx": -64
+                      },
+                      {
+                        "id": "tile-32",
+                        "dx": 64
+                      },
+                      {
+                        "id": "num-32",
+                        "dx": 64
+                      },
+                      {
+                        "id": "answer",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "25 × 4 = 100. 남은 계산은 암산으로 끝나요.",
+                    "changes": [
+                      {
+                        "id": "tile-4",
+                        "dx": -64
+                      },
+                      {
+                        "id": "num-4",
+                        "dx": -64
+                      },
+                      {
+                        "id": "tile-32",
+                        "dx": 64
+                      },
+                      {
+                        "id": "num-32",
+                        "dx": 64
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1400
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-arithmetic:units:v1",
+          "role": "explanation",
+          "title": "사전지식 ② 단위환산",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-arithmetic:units:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "단위를 놓쳐 틀리는 일은 시험에서도 업무에서도 흔해요. 1999년 대한항공 화물기 사고는 관제탑의 $900$m 지시를 $900$ft로 잘못 알아들어 일어났고, 같은 해 화성 기후탐사선은 야드로 쓴 값을 미터로 읽어 폭발했어요. 단위는 계산보다 먼저 봐야 하는 것이에요.\n\n자주 쓰는 환산은 이만큼이에요.\n\n길이: $1$cm $= 10$mm, $1$m $= 100$cm, $1$km $= 1{,}000$m\n\n넓이: $1$cm$^2 = 100$mm$^2$, $1$m$^2 = 10{,}000$cm$^2$, $1$km$^2 = 1{,}000{,}000$m$^2$\n\n부피와 들이: $1$mL $= 1$cm$^3$, $1$L $= 1{,}000$cm$^3$, $1$m$^3 = 1{,}000$L\n\n무게: $1$kg $= 1{,}000$g, $1$t $= 1{,}000$kg\n\n시간: $1$분 $= 60$초, $1$시간 $= 60$분 $= 3{,}600$초\n\n할푼리: $1$할 $= 10\\%$, $1$푼 $= 1\\%$, $1$리 $= 0.1\\%$\n\n넓이와 부피에서 특히 자주 틀려요. 길이가 $100$배면 넓이는 $100^2 = 10{,}000$배, 부피는 $100^3$배가 돼요. 자료해석에서는 천·만·억과 %, %p도 단위로 다뤄야 해요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-arithmetic:verify:v1",
+          "role": "explanation",
+          "title": "사전지식 ③ 검산",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-arithmetic:verify:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "검산은 계산을 두 번 하는 것이 아니라, 다른 길로 같은 곳에 닿는지 보는 것이에요. 방법은 둘이에요.\n\n역연산은 덧셈을 뺄셈으로, 뺄셈을 덧셈으로, 곱셈을 나눗셈으로, 나눗셈을 곱셈으로 되돌려 확인하는 방법이에요. $438 + 276 = 714$가 맞는지 보려면 $714 - 276$이 $438$인지 보면 돼요. 가장 확실하지만 시간이 들어요.\n\n구거법은 $9$를 버리고 남은 수로 대조하는 더 빠른 방법이에요. 각 자리 수를 모두 더하고, 그 수가 두 자리면 다시 더해요. $569{,}342$는 $5+6+9+3+4+2 = 29$, 다시 $2+9 = 11$, 다시 $1+1 = 2$가 검산 수예요.\n\n쓰는 법은 이래요. $47 \\times 23 = 1{,}081$을 검산해 볼게요. $47$의 검산 수는 $4+7 = 11 \\rightarrow 2$, $23$은 $2+3 = 5$예요. 둘을 곱하면 $10 \\rightarrow 1$이에요. 답 $1{,}081$의 검산 수는 $1+0+8+1 = 10 \\rightarrow 1$. 같으니 통과예요.\n\n구거법은 틀린 것을 잡아내는 그물이지 맞았다는 증명은 아니에요. 검산 수가 다르면 반드시 틀린 것이고, 같아도 자리를 바꿔 쓴 실수는 걸러지지 않아요. 시간이 없을 때 먼저 훑는 용도로 쓰세요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-arithmetic:example:v1",
+          "role": "worked_example",
+          "title": "다단계 계산과 검산",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-arithmetic:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "사무용품을 사려고 해요. 볼펜 $12$자루가 한 묶음에 $4{,}800$원, 노트 $25$권이 한 권에 $1{,}200$원, 배송비가 $3{,}000$원이에요. 예산이 $40{,}000$원이면 얼마가 남는지 구해 볼게요.\n\n볼펜은 한 묶음이니 $4{,}800$원이에요. 자루 수에 홀리지 않는 것이 첫 번째 관문이에요.\n\n노트는 $25 \\times 1{,}200$원이에요. $25 \\times 12 = 300$이니 $30{,}000$원이에요. 여기서 결합법칙을 쓰면 $25 \\times 1{,}200 = 25 \\times 4 \\times 300 = 100 \\times 300$으로도 같은 값에 닿아요.\n\n합계는 $4{,}800 + 30{,}000 + 3{,}000 = 37{,}800$원이고, 남는 돈은 $40{,}000 - 37{,}800 = 2{,}200$원이에요.\n\n이제 검산이에요. 역연산으로 $37{,}800 + 2{,}200 = 40{,}000$이 되는지 보면 맞아요. 구거법으로는 $37{,}800$의 검산 수가 $3+7+8 = 18 \\rightarrow 9 \\rightarrow 0$, $2{,}200$이 $4$, 더하면 $4$예요. $40{,}000$의 검산 수도 $4$니 통과예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-arithmetic:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-arithmetic:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-arithmetic:practice",
+                "problemSetVersionId": "ncs-arithmetic:practice:v1",
+                "problemVersionIds": [
+                  "ncs-arithmetic:practice-1:v1",
+                  "ncs-arithmetic:practice-2:v1",
+                  "ncs-arithmetic:practice-3:v1",
+                  "ncs-arithmetic:practice-4:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-arithmetic:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-arithmetic:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-arithmetic:check",
+                "problemSetVersionId": "ncs-arithmetic:check:v1",
+                "problemVersionIds": [
+                  "ncs-arithmetic:check-1:v1",
+                  "ncs-arithmetic:check-2:v1",
+                  "ncs-arithmetic:check-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-arithmetic:summary:v1",
+          "role": "summary",
+          "title": "배운 것 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-arithmetic:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "기초연산은 계산을 하고 그 결과를 확인하는 영역이에요. 계산 자체는 쉬운데 단계가 여럿이라 갈려요.\n\n계산 순서는 괄호·곱나눗·덧뺄이고, 교환·결합·분배법칙은 계산을 쉽게 바꾸는 도구예요. 단위는 계산보다 먼저 확인하고, 답을 낸 뒤에는 역연산이나 구거법으로 한 번 훑으세요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-arithmetic:review",
+        "problemSetVersionId": "ncs-arithmetic:review:v1",
+        "problemVersionIds": [
+          "ncs-arithmetic:homework-1:v1",
+          "ncs-arithmetic:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "ncs-stat-basics",
+        "versionId": "ncs-stat-basics:v1",
+        "title": "기초통계: 무엇을 묻고, 무엇을 알아야 하나",
+        "summary": "합계·평균으로 여럿을 하나로 줄이고, 대푯값과 흩어진 정도를 구분해 읽어요.",
+        "estimatedMinutes": 15,
+        "conceptKeys": [
+          "statistics-reading"
+        ],
+        "prerequisiteConceptKeys": [
+          "numeracy-scope",
+          "rate",
+          "percentage"
+        ],
+        "sectionCount": 7
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-stat-basics:overview:v1",
+          "role": "explanation",
+          "title": "이 영역이 묻는 것",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-stat-basics:overview:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "기초통계능력은 평균·합계·빈도 같은 기초적인 통계로 자료의 특성과 경향을 읽는 힘이에요. 공식 기준은 통계가 무엇인지, 업무에서 쓰는 대표적인 통계치가 무엇인지, 통계자료를 어떻게 해석하는지를 요구해요.\n\n시험에서는 이 영역이 혼자 나오기보다 자료해석에 섞여 나와요. 표에서 값을 읽은 다음 평균을 구하거나, 비중을 내거나, 두 집단을 견주는 식이에요. 그래서 계산은 쉬운데 자료를 잘못 읽으면 통째로 틀려요.\n\n여기서는 그 바탕이 되는 두 가지를 잡아요. 여럿을 하나로 줄이는 법과, 그 하나가 무엇을 숨기는지예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-stat-basics:reduce:v1",
+          "role": "explanation",
+          "title": "사전지식 ① 여럿을 하나로",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-stat-basics:reduce:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "가장 많이 쓰는 요약은 합계와 평균이에요. $\\text{평균} = \\frac{\\text{합계}}{\\text{개수}}$이고, 이 식은 뒤집어서 더 자주 씁니다. $\\text{합계} = \\text{평균} \\times \\text{개수}$예요.\n\n시험은 뒤집은 쪽을 좋아해요. 「네 달 평균이 $250$개인데 앞의 세 달이 $230$, $260$, $240$개였다면 남은 달은?」 같은 물음은 평균을 합계 $1{,}000$개로 바꾸는 순간 뺄셈 하나로 끝나요.\n\n한 가지만 조심하세요. 인원이 다른 두 집단의 평균은 더해서 반으로 나눌 수 없어요. $20$명 평균 $80$점과 $30$명 평균 $70$점을 합치면 $75$점이 아니라 $\\frac{1{,}600 + 2{,}100}{50} = 74$점이에요. 값은 언제나 사람이 많은 쪽으로 끌려가요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "ncs-stat-basics:reduce:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "다섯 개의 값이 하나의 대푯값 막대로 모이는 그림",
+                "caption": "통계는 여럿을 하나의 수로 줄이는 일이에요",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "id": "v1",
+                    "x": 30,
+                    "y": 96,
+                    "width": 36,
+                    "height": 54,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "v2",
+                    "x": 74,
+                    "y": 76,
+                    "width": 36,
+                    "height": 74,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "v3",
+                    "x": 118,
+                    "y": 110,
+                    "width": 36,
+                    "height": 40,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "v4",
+                    "x": 162,
+                    "y": 86,
+                    "width": 36,
+                    "height": 64,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "v5",
+                    "x": 206,
+                    "y": 102,
+                    "width": 36,
+                    "height": 48,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "avg",
+                    "x": 262,
+                    "y": 94,
+                    "width": 36,
+                    "height": 56,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "id": "base",
+                    "x1": 24,
+                    "y1": 150,
+                    "x2": 304,
+                    "y2": 150,
+                    "stroke": "line",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "line",
+                    "id": "level",
+                    "x1": 24,
+                    "y1": 94,
+                    "x2": 304,
+                    "y2": 94,
+                    "stroke": "green",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "kind": "text",
+                    "id": "avg-name",
+                    "x": 280,
+                    "y": 168,
+                    "text": "평균",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "values",
+                    "x": 136,
+                    "y": 168,
+                    "text": "다섯 지점의 판매량",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "caution",
+                    "x": 160,
+                    "y": 44,
+                    "text": "같은 평균, 다른 흩어짐",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "값이 여럿이면 한눈에 견주기 어려워요.",
+                    "changes": [
+                      {
+                        "id": "avg",
+                        "hidden": true
+                      },
+                      {
+                        "id": "avg-name",
+                        "hidden": true
+                      },
+                      {
+                        "id": "level",
+                        "hidden": true
+                      },
+                      {
+                        "id": "caution",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "더해서 개수로 나누면 하나의 수, 평균이 나와요.",
+                    "changes": [
+                      {
+                        "id": "caution",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "다만 평균 하나로는 흩어진 정도를 알 수 없어요.",
+                    "changes": []
+                  }
+                ],
+                "frameMs": 1400
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-stat-basics:spread:v1",
+          "role": "explanation",
+          "title": "사전지식 ② 대푯값과 흩어진 정도",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-stat-basics:spread:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "대푯값은 평균만이 아니에요. 크기 순의 한가운데인 중앙값, 가장 여러 번 나타난 최빈값이 함께 있어요.\n\n월 급여가 $150$만 원 $6$명, $200$만 원 $5$명, $1{,}000$만 원 $2$명인 회사의 평균은 $300$만 원인데, 그 돈을 받는 사람은 하나도 없어요. 임원 둘이 평균을 끌어올린 거예요. 이럴 때는 중앙값 $200$만 원이 더 알맞아요. 유난히 크거나 작은 값이 섞이면 평균을 의심하세요.\n\n대푯값이 같아도 자료가 같지는 않아요. 평균 수심이 $140$cm인 강을 평균 키 $165$cm인 부대가 건너다 사고를 당한 이야기가 그것을 말해 줘요. 그래서 흩어진 정도를 함께 봐요. 가장 간단한 것은 $\\text{범위} = \\text{최댓값} - \\text{최솟값}$이고, 표준편차는 값들이 평균에서 떨어진 정도를 하나의 수로 나타낸 것이에요. 크면 넓게 퍼져 있다는 뜻이에요.\n\n여기까지가 자료해석을 읽는 데 필요한 최소한이에요. 계산을 손에 익히는 것은 기초통계 과정에서 따로 다뤄요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-stat-basics:example:v1",
+          "role": "worked_example",
+          "title": "표 한 줄에서 평균까지",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-stat-basics:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "네 지점의 이번 달 매출이 A지점 $3{,}200$만 원, B지점 $2{,}800$만 원, C지점 $4{,}400$만 원, D지점 $3{,}600$만 원이라고 해요.\n\n평균은 합계 $14{,}000$만 원을 $4$로 나눈 $3{,}500$만 원이에요.\n\nC지점의 비중은 $\\frac{4{,}400}{14{,}000} = 0.3142\\ldots$, 약 $31.4\\%$예요. 비중을 물으면 전체를 먼저 구하는 것이 첫 걸음이에요.\n\n범위는 $4{,}400 - 2{,}800 = 1{,}600$만 원이에요. 네 지점이 평균 $3{,}500$만 원 언저리에 모여 있는지, 아니면 벌어져 있는지를 이 수가 말해 줘요.\n\n여기서 흔한 함정 하나. 「A지점이 평균보다 적으니 부진하다」는 말은 성급해요. 지점 규모가 다르면 평균과의 비교가 아니라 지점별 목표 대비로 봐야 해요. 통계는 답을 주는 것이 아니라 물음을 좁혀 주는 도구예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-stat-basics:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-stat-basics:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-stat-basics:practice",
+                "problemSetVersionId": "ncs-stat-basics:practice:v1",
+                "problemVersionIds": [
+                  "ncs-stat-basics:practice-1:v1",
+                  "ncs-stat-basics:practice-2:v1",
+                  "ncs-stat-basics:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-stat-basics:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-stat-basics:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-stat-basics:check",
+                "problemSetVersionId": "ncs-stat-basics:check:v1",
+                "problemVersionIds": [
+                  "ncs-stat-basics:check-1:v1",
+                  "ncs-stat-basics:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-stat-basics:summary:v1",
+          "role": "summary",
+          "title": "배운 것 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-stat-basics:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "기초통계는 여럿을 하나의 수로 줄여 특성과 경향을 읽는 영역이에요. 평균과 합계는 서로 뒤집어 쓰고, 인원이 다르면 가중평균으로 구해요.\n\n대푯값에는 평균·중앙값·최빈값이 있고, 유난한 값이 섞이면 중앙값이 알맞아요. 범위와 표준편차는 평균이 숨긴 흩어짐을 보여 줘요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-stat-basics:review",
+        "problemSetVersionId": "ncs-stat-basics:review:v1",
+        "problemVersionIds": [
+          "ncs-stat-basics:homework-1:v1",
+          "ncs-stat-basics:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "ncs-chart-basics",
+        "versionId": "ncs-chart-basics:v1",
+        "title": "도표분석: 무엇을 묻고, 무엇을 알아야 하나",
+        "summary": "도표의 종류와 쓰임을 알고, 증감률·비중처럼 읽을 때 갈리는 자리를 익혀요.",
+        "estimatedMinutes": 20,
+        "conceptKeys": [
+          "chart-types",
+          "chart-reading"
+        ],
+        "prerequisiteConceptKeys": [
+          "numeracy-scope",
+          "percentage",
+          "rate"
+        ],
+        "sectionCount": 7
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-chart-basics:overview:v1",
+          "role": "explanation",
+          "title": "이 영역이 묻는 것",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chart-basics:overview:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "도표분석능력은 표·그래프·그림에서 필요한 값을 찾아 뜻을 읽어 내는 힘이에요. 공식 기준은 도표의 종류, 종류별 특징, 그리고 분석 방법을 요구해요.\n\n채용 시험에서 문항이 가장 많이 나오는 자리가 여기예요. 그런데 계산이 어려워서 틀리는 경우는 드물어요. 대부분은 표의 제목과 단위를 지나치거나, 총량과 비율을 섞거나, 표가 말하지 않은 것을 읽어 내서 틀려요.\n\n그래서 이 수업은 그래프의 생김새와, 읽을 때 갈리는 자리를 다뤄요. 표에서 수를 직접 읽는 연습은 표를 화면에 싣는 기능이 준비되면 이어서 다룰 거예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chart-basics:kinds:v1",
+          "role": "explanation",
+          "title": "사전지식 ① 도표의 종류와 쓰임",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chart-basics:kinds:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "도표는 보여 주려는 것에 따라 골라요. 대표적인 다섯 가지예요.\n\n꺾은선그래프는 시간의 흐름에 따른 변화를 선의 기울기로 보여 줘요. 월별 매출, 연도별 인구처럼 추이를 볼 때 써요.\n\n막대그래프는 견주려는 값을 막대 길이로 보여 줘요. 지점별 판매량처럼 무엇이 더 큰지 볼 때 써요.\n\n원그래프는 전체를 나눈 몫, 즉 구성비를 보여 줘요. 예산에서 항목별 비중 같은 것이에요.\n\n점그래프는 가로와 세로에 두 요소를 두고 어떤 자리에 있는지를 보여 주고, 방사형그래프는 여러 항목의 균형을 한 번에 보여 줘요.\n\n시험은 「이 자료에 알맞은 그래프는?」을 그대로 묻기도 해요. 추이는 꺾은선, 비교는 막대, 구성비는 원 — 이 셋만 확실히 해도 대부분 풀려요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "ncs-chart-basics:kinds:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "꺾은선·막대·원그래프를 나란히 그려 각각 언제 쓰는지 짚는 그림",
+                "caption": "무엇을 보여 주려는가가 그래프를 고릅니다",
+                "items": [
+                  {
+                    "kind": "line",
+                    "id": "line-axis",
+                    "x1": 24,
+                    "y1": 110,
+                    "x2": 96,
+                    "y2": 110,
+                    "stroke": "line",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "polygon",
+                    "id": "line-plot",
+                    "points": [
+                      [
+                        28,
+                        100
+                      ],
+                      [
+                        45,
+                        84
+                      ],
+                      [
+                        62,
+                        92
+                      ],
+                      [
+                        79,
+                        66
+                      ],
+                      [
+                        94,
+                        58
+                      ]
+                    ],
+                    "closed": false,
+                    "fill": "none",
+                    "stroke": "green",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "text",
+                    "id": "line-name",
+                    "x": 60,
+                    "y": 130,
+                    "text": "꺾은선",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "line-use",
+                    "x": 60,
+                    "y": 148,
+                    "text": "시간에 따른 변화",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "line",
+                    "id": "bar-axis",
+                    "x1": 118,
+                    "y1": 110,
+                    "x2": 198,
+                    "y2": 110,
+                    "stroke": "line",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "bar-1",
+                    "x": 124,
+                    "y": 78,
+                    "width": 16,
+                    "height": 32,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "bar-2",
+                    "x": 146,
+                    "y": 62,
+                    "width": 16,
+                    "height": 48,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "bar-3",
+                    "x": 168,
+                    "y": 88,
+                    "width": 16,
+                    "height": 22,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "bar-name",
+                    "x": 158,
+                    "y": 130,
+                    "text": "막대",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "bar-use",
+                    "x": 158,
+                    "y": 148,
+                    "text": "크기 견주기",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "pie",
+                    "cx": 258,
+                    "cy": 86,
+                    "rx": 28,
+                    "ry": 28,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "path",
+                    "id": "pie-slice",
+                    "d": "M258 86 L258 58 A28 28 0 0 1 282 100 Z",
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "pie-name",
+                    "x": 258,
+                    "y": 130,
+                    "text": "원",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "pie-use",
+                    "x": 258,
+                    "y": 148,
+                    "text": "구성비",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "note",
+                    "x": 160,
+                    "y": 178,
+                    "text": "점그래프는 두 요소의 자리, 방사형은 여러 항목의 균형",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "시간에 따라 어떻게 변했는지는 꺾은선이에요.",
+                    "changes": [
+                      {
+                        "id": "bar-1",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "bar-2",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "bar-3",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "pie",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "pie-slice",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "note",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "무엇이 더 큰지 견줄 때는 막대예요.",
+                    "changes": [
+                      {
+                        "id": "line-plot",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "pie",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "pie-slice",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "note",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "전체에서 차지하는 몫은 원그래프예요.",
+                    "changes": [
+                      {
+                        "id": "line-plot",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "bar-1",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "bar-2",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "bar-3",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "note",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "쓰임이 다른 그래프가 더 있어요.",
+                    "changes": []
+                  }
+                ],
+                "frameMs": 1400
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chart-basics:pitfalls:v1",
+          "role": "explanation",
+          "title": "사전지식 ② 읽을 때 갈리는 자리",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chart-basics:pitfalls:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "공식 기준은 도표를 분석할 때 다섯 가지를 요구해요. 자료의 뜻을 정확히 알 것, 도표로 알 수 있는 것과 없는 것을 구별할 것, 총량의 증가와 비율의 증가를 구분할 것, 백분위수와 사분위수를 이해할 것, 그리고 필요한 지식을 넓혀 둘 것이에요.\n\n이 가운데 시험에서 가장 자주 갈리는 둘을 짚을게요.\n\n첫째, 증감률의 기준은 언제나 이전 값이에요. $250$만 원에서 $300$만 원이 되면 늘어난 $50$을 $250$으로 나눠 $20\\%$예요. $300$으로 나누면 안 돼요.\n\n둘째, 퍼센트는 마음대로 더할 수 없어요. $40\\%$ 할인한 뒤 다시 $40\\%$를 할인하면 $80\\%$가 아니에요. $10{,}000$원이 $6{,}000$원이 되고 다시 $3{,}600$원이 되니 전체로는 $64\\%$ 할인이에요. 기준이 달라졌기 때문이에요. 같은 이유로 식사값이 $15\\%$, 술값이 $15\\%$ 할인되었다고 회식비가 $30\\%$ 할인된 것은 아니고 여전히 $15\\%$예요.\n\n여기에 하나를 더하면 %와 %p의 구분이에요. 점유율이 $10\\%$에서 $12\\%$가 되면 $2$%p 오른 것이고, 비율로는 $20\\%$ 오른 것이에요. 시험은 이 둘을 바꿔 놓고 묻습니다.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chart-basics:example:v1",
+          "role": "worked_example",
+          "title": "표가 말하지 않은 것",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chart-basics:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "「$2023$년 A사 매출 $80$억 원, 시장점유율 $10\\%$. $2024$년 A사 매출 $92$억 원, 시장점유율 $12\\%$」라는 표가 있다고 해요.\n\n매출 증가율은 늘어난 $12$억 원을 이전 값 $80$억 원으로 나눈 $15\\%$예요.\n\n점유율은 $2$%p 올랐어요. 「$2\\%$ 올랐다」고 쓰면 틀려요. 비율로 따지면 $\\frac{2}{10} = 20\\%$ 오른 것이니, 같은 사실을 두고 $2$와 $20$이라는 두 수가 나오는 셈이에요. 어느 쪽을 묻는지 문장을 다시 읽어야 해요.\n\n시장 전체 규모도 알 수 있어요. $2023$년은 $80 \\div 0.1 = 800$억 원, $2024$년은 $92 \\div 0.12 = 766.6\\ldots$억 원이에요. 시장이 줄었는데 A사는 컸다는 뜻이에요.\n\n이 표가 말하지 않는 것도 있어요. A사의 이익이 늘었는지는 알 수 없어요. 매출과 이익은 다른 값이고 표에 없으니까요. 도표 문항에서 「알 수 없다」가 답인 경우가 드물지 않은 이유예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chart-basics:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chart-basics:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-chart-basics:practice",
+                "problemSetVersionId": "ncs-chart-basics:practice:v1",
+                "problemVersionIds": [
+                  "ncs-chart-basics:practice-1:v1",
+                  "ncs-chart-basics:practice-2:v1",
+                  "ncs-chart-basics:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chart-basics:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chart-basics:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-chart-basics:check",
+                "problemSetVersionId": "ncs-chart-basics:check:v1",
+                "problemVersionIds": [
+                  "ncs-chart-basics:check-1:v1",
+                  "ncs-chart-basics:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chart-basics:summary:v1",
+          "role": "summary",
+          "title": "배운 것 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chart-basics:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "도표분석은 표와 그래프에서 값을 찾아 뜻을 읽는 영역이고, 시험에서 문항이 가장 많아요. 추이는 꺾은선, 비교는 막대, 구성비는 원그래프예요.\n\n증감률의 기준은 언제나 이전 값이고, 퍼센트는 기준이 다르면 더할 수 없어요. %와 %p를 구분하고, 표가 말하지 않은 것은 읽지 마세요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-chart-basics:review",
+        "problemSetVersionId": "ncs-chart-basics:review:v1",
+        "problemVersionIds": [
+          "ncs-chart-basics:homework-1:v1",
+          "ncs-chart-basics:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "ncs-chart-making",
+        "versionId": "ncs-chart-making:v1",
+        "title": "도표작성: 무엇을 묻고, 무엇을 알아야 하나",
+        "summary": "도표를 만드는 절차와 유의사항을 익혀, 자료에 알맞은 도표를 고를 수 있어요.",
+        "estimatedMinutes": 15,
+        "conceptKeys": [
+          "chart-making"
+        ],
+        "prerequisiteConceptKeys": [
+          "numeracy-scope",
+          "chart-types"
+        ],
+        "sectionCount": 6
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-chart-making:overview:v1",
+          "role": "explanation",
+          "title": "이 영역이 묻는 것",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chart-making:overview:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "도표작성능력은 결과를 도표로 효과적으로 보여 주는 힘이에요. 공식 기준은 작성 절차, 작성 시 유의사항, 그리고 컴퓨터 프로그램으로 직접 작성하는 것을 요구해요.\n\n채용 시험에서 직접 그리게 하는 문항은 없어요. 대신 「이 자료에는 어떤 도표가 알맞은가」, 「이 도표에서 잘못된 곳은 어디인가」처럼 고르는 문항으로 나와요. 그래서 그리는 손보다 고르는 눈이 필요해요.\n\n이 수업은 절차와 유의사항을 다뤄요. 도표분석 수업에서 배운 종류별 쓰임이 여기서 다시 쓰여요 — 읽을 줄 알면 고를 줄도 알게 되니까요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chart-making:steps:v1",
+          "role": "explanation",
+          "title": "사전지식 ① 만드는 차례",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chart-making:steps:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "도표는 다섯 걸음으로 만들어요.\n\n첫째, 무엇을 전할지 정해요. 「지점별로 견주고 싶다」인지 「해마다 어떻게 변했는지 보이고 싶다」인지가 먼저예요.\n\n둘째, 전할 것에 맞는 도표를 골라요. 추이는 꺾은선, 비교는 막대, 구성비는 원그래프예요.\n\n셋째, 가로축과 세로축에 무엇을 둘지 정해요. 시간은 가로축에 두고 왼쪽에서 오른쪽으로 흐르게 하는 것이 관례예요.\n\n넷째, 눈금의 크기를 정하고 값을 표시해요. 눈금을 $0$이 아닌 곳에서 시작하면 작은 차이가 크게 보여요. 속이려는 뜻이 없어도 그렇게 읽히니 조심해야 해요.\n\n다섯째, 제목과 단위를 붙여요. 제목이 없으면 무엇에 대한 도표인지 알 수 없고, 단위가 없으면 $900$이 미터인지 피트인지 알 수 없어요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "ncs-chart-making:steps:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "도표를 만드는 다섯 단계가 차례로 켜지는 그림",
+                "caption": "그리기 전에 정할 것이 넷, 그린 뒤에 붙일 것이 하나",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "id": "s1",
+                    "x": 20,
+                    "y": 70,
+                    "width": 54,
+                    "height": 44,
+                    "radius": 5,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "s2",
+                    "x": 82,
+                    "y": 70,
+                    "width": 54,
+                    "height": 44,
+                    "radius": 5,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "s3",
+                    "x": 144,
+                    "y": 70,
+                    "width": 54,
+                    "height": 44,
+                    "radius": 5,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "s4",
+                    "x": 206,
+                    "y": 70,
+                    "width": 54,
+                    "height": 44,
+                    "radius": 5,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "s5",
+                    "x": 268,
+                    "y": 70,
+                    "width": 34,
+                    "height": 44,
+                    "radius": 5,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "t1",
+                    "x": 47,
+                    "y": 88,
+                    "text": "무엇을",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "t1b",
+                    "x": 47,
+                    "y": 102,
+                    "text": "보일까",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "t2",
+                    "x": 109,
+                    "y": 88,
+                    "text": "어떤",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "t2b",
+                    "x": 109,
+                    "y": 102,
+                    "text": "도표로",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "t3",
+                    "x": 171,
+                    "y": 88,
+                    "text": "가로세로",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "t3b",
+                    "x": 171,
+                    "y": 102,
+                    "text": "무엇을",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "t4",
+                    "x": 233,
+                    "y": 88,
+                    "text": "눈금",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "t4b",
+                    "x": 233,
+                    "y": 102,
+                    "text": "크기",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "t5",
+                    "x": 285,
+                    "y": 95,
+                    "text": "제목",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "note",
+                    "x": 160,
+                    "y": 150,
+                    "text": "제목과 단위가 빠진 도표는 읽는 사람이 되묻게 해요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "먼저 무엇을 전할지 정해요.",
+                    "changes": [
+                      {
+                        "id": "note",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "전할 것에 맞는 도표를 골라요. 추이면 꺾은선, 구성비면 원이에요.",
+                    "changes": [
+                      {
+                        "id": "s2",
+                        "fill": "fill"
+                      },
+                      {
+                        "id": "note",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "가로축과 세로축에 무엇을 둘지, 눈금을 얼마로 할지 정해요.",
+                    "changes": [
+                      {
+                        "id": "s2",
+                        "fill": "fill"
+                      },
+                      {
+                        "id": "s3",
+                        "fill": "fill"
+                      },
+                      {
+                        "id": "s4",
+                        "fill": "fill"
+                      },
+                      {
+                        "id": "note",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "마지막으로 제목과 단위를 붙여요. 이것이 빠지면 도표가 아니에요.",
+                    "changes": [
+                      {
+                        "id": "s2",
+                        "fill": "fill"
+                      },
+                      {
+                        "id": "s3",
+                        "fill": "fill"
+                      },
+                      {
+                        "id": "s4",
+                        "fill": "fill"
+                      },
+                      {
+                        "id": "s5",
+                        "fill": "fill"
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1400
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chart-making:example:v1",
+          "role": "worked_example",
+          "title": "같은 자료, 다른 도표",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chart-making:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "네 지점의 분기별 매출 자료가 있다고 해요. 이 자료 하나로도 전할 것에 따라 도표가 달라져요.\n\n「올해 매출이 어떻게 변해 왔는가」를 전하려면 꺾은선그래프예요. 가로축에 분기를 두고 지점마다 선을 하나씩 그어요.\n\n「지점끼리 누가 더 팔았는가」를 전하려면 막대그래프예요. 가로축에 지점을 두고 분기별로 막대를 묶어 세워요.\n\n「전체 매출에서 각 지점이 차지하는 몫」을 전하려면 원그래프예요. 다만 원그래프는 시간의 변화를 담지 못하니, 한 분기만 골라 그려야 해요.\n\n세 도표 모두 같은 숫자에서 나왔지만 읽는 사람이 받는 인상은 전혀 달라요. 도표를 고르는 일이 곧 무엇을 말할지 정하는 일인 이유예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chart-making:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chart-making:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-chart-making:practice",
+                "problemSetVersionId": "ncs-chart-making:practice:v1",
+                "problemVersionIds": [
+                  "ncs-chart-making:practice-1:v1",
+                  "ncs-chart-making:practice-2:v1",
+                  "ncs-chart-making:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chart-making:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chart-making:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-chart-making:check",
+                "problemSetVersionId": "ncs-chart-making:check:v1",
+                "problemVersionIds": [
+                  "ncs-chart-making:check-1:v1",
+                  "ncs-chart-making:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chart-making:summary:v1",
+          "role": "summary",
+          "title": "배운 것 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chart-making:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "도표작성은 결과를 도표로 보여 주는 영역이고, 시험에서는 고르는 문항으로 나와요.\n\n만드는 차례는 전할 내용 → 도표 고르기 → 축 정하기 → 눈금과 표시 → 제목과 단위예요. 눈금의 시작점은 인상을 바꾸고, 제목과 단위가 빠진 도표는 읽는 사람이 되묻게 해요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-chart-making:review",
+        "problemSetVersionId": "ncs-chart-making:review:v1",
+        "problemVersionIds": [
+          "ncs-chart-making:homework-1:v1",
+          "ncs-chart-making:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "ncs-why:practice",
+      "courseKey": "ncs-numeracy",
+      "name": "왜 수리능력인가 연습",
+      "versionId": "ncs-why:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-why:practice-1:v1",
+          "conceptKeys": [
+            "numeracy-scope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-why:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「지난달 부서별 지출이 적힌 표를 보고 어느 부서의 비중이 가장 큰지 찾는다.」 이 일은 수리능력의 어느 영역에 가장 가까운가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "도표분석능력"
+              },
+              {
+                "id": "b",
+                "text": "기초연산능력"
+              },
+              {
+                "id": "c",
+                "text": "도표작성능력"
+              },
+              {
+                "id": "d",
+                "text": "해당 없음"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "도표분석능력"
+              },
+              {
+                "id": "b",
+                "text": "기초연산능력"
+              },
+              {
+                "id": "c",
+                "text": "도표작성능력"
+              },
+              {
+                "id": "d",
+                "text": "해당 없음"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-why:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이미 만들어진 표에서 뜻을 찾아내는 일이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-why:practice-2:v1",
+          "conceptKeys": [
+            "numeracy-scope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-why:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「영수증 금액을 더하고 거스름돈을 계산한 뒤, 틀리지 않았는지 다시 확인한다.」 이 일은 어느 영역인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "기초연산능력"
+              },
+              {
+                "id": "b",
+                "text": "기초통계능력"
+              },
+              {
+                "id": "c",
+                "text": "도표분석능력"
+              },
+              {
+                "id": "d",
+                "text": "도표작성능력"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "기초연산능력"
+              },
+              {
+                "id": "b",
+                "text": "기초통계능력"
+              },
+              {
+                "id": "c",
+                "text": "도표분석능력"
+              },
+              {
+                "id": "d",
+                "text": "도표작성능력"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-why:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "사칙연산과 검산에 대한 이야기예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-why:practice-3:v1",
+          "conceptKeys": [
+            "numeracy-scope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-why:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「월별 판매량을 정리해 회의 자료에 넣을 막대그래프를 만든다.」 이 일은 어느 영역인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "도표작성능력"
+              },
+              {
+                "id": "b",
+                "text": "도표분석능력"
+              },
+              {
+                "id": "c",
+                "text": "기초통계능력"
+              },
+              {
+                "id": "d",
+                "text": "기초연산능력"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "도표작성능력"
+              },
+              {
+                "id": "b",
+                "text": "도표분석능력"
+              },
+              {
+                "id": "c",
+                "text": "기초통계능력"
+              },
+              {
+                "id": "d",
+                "text": "기초연산능력"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-why:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "읽는 쪽이 아니라 만드는 쪽이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-why:check",
+      "courseKey": "ncs-numeracy",
+      "name": "왜 수리능력인가 확인",
+      "versionId": "ncs-why:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-why:check-1:v1",
+          "conceptKeys": [
+            "numeracy-scope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-why:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「팀원 여덟 명의 처리 건수를 하나의 수로 요약해 다른 팀과 견준다.」 이 일은 어느 영역인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "기초통계능력"
+              },
+              {
+                "id": "b",
+                "text": "기초연산능력"
+              },
+              {
+                "id": "c",
+                "text": "도표작성능력"
+              },
+              {
+                "id": "d",
+                "text": "해당 없음"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "기초통계능력"
+              },
+              {
+                "id": "b",
+                "text": "기초연산능력"
+              },
+              {
+                "id": "c",
+                "text": "도표작성능력"
+              },
+              {
+                "id": "d",
+                "text": "해당 없음"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-why:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평균처럼 여럿을 하나로 줄이는 일이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-why:check-2:v1",
+          "conceptKeys": [
+            "numeracy-scope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-why:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 수리능력의 하위능력이 아닌 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "문서작성능력"
+              },
+              {
+                "id": "b",
+                "text": "기초연산능력"
+              },
+              {
+                "id": "c",
+                "text": "기초통계능력"
+              },
+              {
+                "id": "d",
+                "text": "도표분석능력"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "문서작성능력"
+              },
+              {
+                "id": "b",
+                "text": "기초연산능력"
+              },
+              {
+                "id": "c",
+                "text": "기초통계능력"
+              },
+              {
+                "id": "d",
+                "text": "도표분석능력"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-why:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "네 영역의 이름을 떠올려 보세요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-why:review",
+      "courseKey": "ncs-numeracy",
+      "name": "왜 수리능력인가 복습",
+      "versionId": "ncs-why:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-why:homework-1:v1",
+          "conceptKeys": [
+            "numeracy-scope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-why:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「경쟁사와의 시장점유율이 원그래프로 주어졌고, 우리 회사의 몫이 몇 %인지 읽는다.」 이 일은 어느 영역인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "도표분석능력"
+              },
+              {
+                "id": "b",
+                "text": "도표작성능력"
+              },
+              {
+                "id": "c",
+                "text": "기초연산능력"
+              },
+              {
+                "id": "d",
+                "text": "기초통계능력"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "도표분석능력"
+              },
+              {
+                "id": "b",
+                "text": "도표작성능력"
+              },
+              {
+                "id": "c",
+                "text": "기초연산능력"
+              },
+              {
+                "id": "d",
+                "text": "기초통계능력"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-why:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주어진 그래프에서 값을 읽어 내는 일이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-why:homework-2:v1",
+          "conceptKeys": [
+            "numeracy-scope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-why:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "수리능력을 한마디로 가장 알맞게 말한 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "업무에서 사칙연산과 기초통계를 이해하고 도표의 뜻을 파악하거나 도표로 결과를 제시하는 능력"
+              },
+              {
+                "id": "b",
+                "text": "수학 문제를 빠르게 푸는 능력"
+              },
+              {
+                "id": "c",
+                "text": "암산을 정확하게 하는 능력"
+              },
+              {
+                "id": "d",
+                "text": "복잡한 수식을 세우는 능력"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "업무에서 사칙연산과 기초통계를 이해하고 도표의 뜻을 파악하거나 도표로 결과를 제시하는 능력"
+              },
+              {
+                "id": "b",
+                "text": "수학 문제를 빠르게 푸는 능력"
+              },
+              {
+                "id": "c",
+                "text": "암산을 정확하게 하는 능력"
+              },
+              {
+                "id": "d",
+                "text": "복잡한 수식을 세우는 능력"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-why:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시험이 재는 것은 계산 속도가 아니라 업무에서 수를 다루는 힘이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-arithmetic:practice",
+      "courseKey": "ncs-numeracy",
+      "name": "기초연산 사전지식 연습",
+      "versionId": "ncs-arithmetic:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-arithmetic:practice-1:v1",
+          "conceptKeys": [
+            "calculation-order"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-arithmetic:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$25 \\times 32 \\times 4$를 계산하면 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3200
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-arithmetic:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$25$와 $4$를 먼저 묶으면 $100$이 돼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-arithmetic:practice-2:v1",
+          "conceptKeys": [
+            "calculation-order"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-arithmetic:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$120 - 4 \\times (15 - 7)$을 계산하면 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 88
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-arithmetic:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호 먼저, 그다음 곱셈, 마지막에 뺄셈이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-arithmetic:practice-3:v1",
+          "conceptKeys": [
+            "unit-conversion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-arithmetic:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2.5$kg은 몇 g인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2500
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-arithmetic:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$kg은 $1{,}000$g이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-arithmetic:practice-4:v1",
+          "conceptKeys": [
+            "verification"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-arithmetic:practice-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$438 + 276 = 714$가 맞는지 역연산으로 확인하려면 무엇을 계산해야 하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$714 - 276$이 $438$인지 본다"
+              },
+              {
+                "id": "b",
+                "text": "$438 + 276$을 한 번 더 더한다"
+              },
+              {
+                "id": "c",
+                "text": "$714 + 276$을 계산한다"
+              },
+              {
+                "id": "d",
+                "text": "$438 \\times 276$을 계산한다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$714 - 276$이 $438$인지 본다"
+              },
+              {
+                "id": "b",
+                "text": "$438 + 276$을 한 번 더 더한다"
+              },
+              {
+                "id": "c",
+                "text": "$714 + 276$을 계산한다"
+              },
+              {
+                "id": "d",
+                "text": "$438 \\times 276$을 계산한다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-arithmetic:practice-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "덧셈은 뺄셈으로 되돌려 확인해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-arithmetic:check",
+      "courseKey": "ncs-numeracy",
+      "name": "기초연산 사전지식 확인",
+      "versionId": "ncs-arithmetic:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-arithmetic:check-1:v1",
+          "conceptKeys": [
+            "unit-conversion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-arithmetic:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$시간 $15$분은 몇 분인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 75
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-arithmetic:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$시간은 $60$분이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-arithmetic:check-2:v1",
+          "conceptKeys": [
+            "unit-conversion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-arithmetic:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "타율 $3$할 $2$푼은 백분율로 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 32
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-arithmetic:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$할은 $10\\%$, $1$푼은 $1\\%$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-arithmetic:check-3:v1",
+          "conceptKeys": [
+            "verification"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-arithmetic:check-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "구거법으로 검산할 때 $1{,}081$의 검산 수는 얼마인가요? (각 자리 수를 더해 $9$를 버리고 남는 수)"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-arithmetic:check-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1+0+8+1 = 10$이고, 다시 더하면 $1+0 = 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-arithmetic:review",
+      "courseKey": "ncs-numeracy",
+      "name": "기초연산 사전지식 복습",
+      "versionId": "ncs-arithmetic:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-arithmetic:homework-1:v1",
+          "conceptKeys": [
+            "unit-conversion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-arithmetic:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3{,}500$m는 몇 km인가요? 소수로 써도 좋아요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 7,
+            "denominator": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-arithmetic:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$km는 $1{,}000$m예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-arithmetic:homework-2:v1",
+          "conceptKeys": [
+            "calculation-order"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-arithmetic:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(18 + 12) \\div 6 \\times 5$를 계산하면 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-arithmetic:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호를 먼저 풀고, 나눗셈과 곱셈은 앞에서부터 차례로 해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-stat-basics:practice",
+      "courseKey": "ncs-numeracy",
+      "name": "기초통계 사전지식 연습",
+      "versionId": "ncs-stat-basics:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-stat-basics:practice-1:v1",
+          "conceptKeys": [
+            "statistics-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-stat-basics:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다섯 지점의 판매량이 $32$, $45$, $28$, $50$, $35$개예요. 평균은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 38
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-stat-basics:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합계 $190$개를 $5$로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-stat-basics:practice-2:v1",
+          "conceptKeys": [
+            "statistics-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-stat-basics:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "여덟 명의 평균 처리 건수가 $15$건이에요. 여덟 명이 처리한 건수는 모두 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 120
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-stat-basics:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평균에 개수를 곱하면 합계예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-stat-basics:practice-3:v1",
+          "conceptKeys": [
+            "statistics-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-stat-basics:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "월 급여가 $150$만 원인 직원 $6$명, $200$만 원인 직원 $5$명, $1{,}000$만 원인 임원 $2$명인 회사가 있어요. 이 회사의 급여를 대표하는 값으로 가장 알맞은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "중앙값 $200$만 원"
+              },
+              {
+                "id": "b",
+                "text": "평균 $300$만 원"
+              },
+              {
+                "id": "c",
+                "text": "최댓값 $1{,}000$만 원"
+              },
+              {
+                "id": "d",
+                "text": "합계 $3{,}900$만 원"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "중앙값 $200$만 원"
+              },
+              {
+                "id": "b",
+                "text": "평균 $300$만 원"
+              },
+              {
+                "id": "c",
+                "text": "최댓값 $1{,}000$만 원"
+              },
+              {
+                "id": "d",
+                "text": "합계 $3{,}900$만 원"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-stat-basics:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "임원 두 사람이 평균을 끌어올렸어요. 열세 명을 크기 순으로 놓으면 한가운데는 어디일까요?"
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-stat-basics:check",
+      "courseKey": "ncs-numeracy",
+      "name": "기초통계 사전지식 확인",
+      "versionId": "ncs-stat-basics:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-stat-basics:check-1:v1",
+          "conceptKeys": [
+            "statistics-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-stat-basics:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어느 주의 최고기온이 $18$, $21$, $25$, $19$, $27$도였어요. 범위는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-stat-basics:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "최댓값에서 최솟값을 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-stat-basics:check-2:v1",
+          "conceptKeys": [
+            "statistics-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-stat-basics:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$20$명의 평균이 $80$점인 A부서와 $30$명의 평균이 $70$점인 B부서를 합친 평균은 몇 점인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 74
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-stat-basics:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 평균의 한가운데인 $75$점이 아니에요. 합계를 더해 $50$명으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-stat-basics:review",
+      "courseKey": "ncs-numeracy",
+      "name": "기초통계 사전지식 복습",
+      "versionId": "ncs-stat-basics:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-stat-basics:homework-1:v1",
+          "conceptKeys": [
+            "statistics-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-stat-basics:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "엿새 동안 접수된 문의가 모두 $132$건이에요. 하루 평균은 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 22
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-stat-basics:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합계를 날수로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-stat-basics:homework-2:v1",
+          "conceptKeys": [
+            "statistics-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-stat-basics:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평균이 같은 두 팀 가운데 표준편차가 더 큰 팀에 대한 설명으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "값들이 평균에서 더 멀리 흩어져 있다"
+              },
+              {
+                "id": "b",
+                "text": "값의 합계가 더 크다"
+              },
+              {
+                "id": "c",
+                "text": "값의 개수가 더 많다"
+              },
+              {
+                "id": "d",
+                "text": "최빈값이 더 크다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "값들이 평균에서 더 멀리 흩어져 있다"
+              },
+              {
+                "id": "b",
+                "text": "값의 합계가 더 크다"
+              },
+              {
+                "id": "c",
+                "text": "값의 개수가 더 많다"
+              },
+              {
+                "id": "d",
+                "text": "최빈값이 더 크다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-stat-basics:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "표준편차는 평균에서 떨어진 정도를 하나의 수로 나타낸 것이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-chart-basics:practice",
+      "courseKey": "ncs-numeracy",
+      "name": "도표분석 사전지식 연습",
+      "versionId": "ncs-chart-basics:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-chart-basics:practice-1:v1",
+          "conceptKeys": [
+            "chart-types"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chart-basics:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "최근 $5$년 동안 매출이 어떻게 변해 왔는지 한눈에 보이려고 해요. 가장 알맞은 그래프는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "꺾은선그래프"
+              },
+              {
+                "id": "b",
+                "text": "원그래프"
+              },
+              {
+                "id": "c",
+                "text": "방사형그래프"
+              },
+              {
+                "id": "d",
+                "text": "점그래프"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "꺾은선그래프"
+              },
+              {
+                "id": "b",
+                "text": "원그래프"
+              },
+              {
+                "id": "c",
+                "text": "방사형그래프"
+              },
+              {
+                "id": "d",
+                "text": "점그래프"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chart-basics:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시간의 흐름에 따른 변화를 보여 주는 그래프예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-chart-basics:practice-2:v1",
+          "conceptKeys": [
+            "chart-types"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chart-basics:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 예산에서 항목별로 얼마씩 차지하는지 보여 주려고 해요. 가장 알맞은 그래프는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원그래프"
+              },
+              {
+                "id": "b",
+                "text": "꺾은선그래프"
+              },
+              {
+                "id": "c",
+                "text": "막대그래프"
+              },
+              {
+                "id": "d",
+                "text": "히스토그램"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원그래프"
+              },
+              {
+                "id": "b",
+                "text": "꺾은선그래프"
+              },
+              {
+                "id": "c",
+                "text": "막대그래프"
+              },
+              {
+                "id": "d",
+                "text": "히스토그램"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chart-basics:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "구성비를 보여 주는 그래프예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-chart-basics:practice-3:v1",
+          "conceptKeys": [
+            "chart-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chart-basics:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어느 지점의 매출이 지난달 $250$만 원에서 이번 달 $300$만 원이 되었어요. 증가율은 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chart-basics:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "늘어난 $50$만 원을 지난달 $250$만 원으로 나눠요. 기준은 언제나 이전 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-chart-basics:check",
+      "courseKey": "ncs-numeracy",
+      "name": "도표분석 사전지식 확인",
+      "versionId": "ncs-chart-basics:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-chart-basics:check-1:v1",
+          "conceptKeys": [
+            "chart-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chart-basics:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가 $10{,}000$원인 상품을 지난주에 $40\\%$ 할인했고, 이번 주에 그 가격에서 다시 $40\\%$를 할인했어요. 정가에 견준 전체 할인율은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$64\\%$"
+              },
+              {
+                "id": "b",
+                "text": "$80\\%$"
+              },
+              {
+                "id": "c",
+                "text": "$60\\%$"
+              },
+              {
+                "id": "d",
+                "text": "$16\\%$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$64\\%$"
+              },
+              {
+                "id": "b",
+                "text": "$80\\%$"
+              },
+              {
+                "id": "c",
+                "text": "$60\\%$"
+              },
+              {
+                "id": "d",
+                "text": "$16\\%$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chart-basics:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10{,}000 \\rightarrow 6{,}000 \\rightarrow 3{,}600$원이에요. 두 번째 할인의 기준이 달라졌어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-chart-basics:check-2:v1",
+          "conceptKeys": [
+            "chart-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chart-basics:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「A사의 시장점유율이 $10\\%$에서 $12\\%$로 올랐다」는 표를 보고 할 수 있는 말로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "점유율이 $2$%p 올랐고, 매출이 늘었는지는 이 표만으로 알 수 없다"
+              },
+              {
+                "id": "b",
+                "text": "매출이 $2\\%$ 늘었다"
+              },
+              {
+                "id": "c",
+                "text": "매출이 $20\\%$ 늘었다"
+              },
+              {
+                "id": "d",
+                "text": "경쟁사의 매출이 줄었다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "점유율이 $2$%p 올랐고, 매출이 늘었는지는 이 표만으로 알 수 없다"
+              },
+              {
+                "id": "b",
+                "text": "매출이 $2\\%$ 늘었다"
+              },
+              {
+                "id": "c",
+                "text": "매출이 $20\\%$ 늘었다"
+              },
+              {
+                "id": "d",
+                "text": "경쟁사의 매출이 줄었다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chart-basics:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비율이 오른 것과 총량이 는 것은 다른 이야기예요. 시장 자체가 줄었을 수도 있어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-chart-basics:review",
+      "courseKey": "ncs-numeracy",
+      "name": "도표분석 사전지식 복습",
+      "versionId": "ncs-chart-basics:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-chart-basics:homework-1:v1",
+          "conceptKeys": [
+            "chart-types"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chart-basics:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 지점의 이번 달 판매량을 서로 견주어 보여 주려고 해요. 가장 알맞은 그래프는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "막대그래프"
+              },
+              {
+                "id": "b",
+                "text": "원그래프"
+              },
+              {
+                "id": "c",
+                "text": "꺾은선그래프"
+              },
+              {
+                "id": "d",
+                "text": "방사형그래프"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "막대그래프"
+              },
+              {
+                "id": "b",
+                "text": "원그래프"
+              },
+              {
+                "id": "c",
+                "text": "꺾은선그래프"
+              },
+              {
+                "id": "d",
+                "text": "방사형그래프"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chart-basics:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "길이로 크기를 견주는 그래프예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-chart-basics:homework-2:v1",
+          "conceptKeys": [
+            "chart-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chart-basics:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "생산량이 $400$개에서 $460$개로 늘었어요. 증가율은 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chart-basics:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "늘어난 $60$개를 이전 값 $400$개로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-chart-making:practice",
+      "courseKey": "ncs-numeracy",
+      "name": "도표작성 사전지식 연습",
+      "versionId": "ncs-chart-making:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-chart-making:practice-1:v1",
+          "conceptKeys": [
+            "chart-making"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chart-making:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "도표를 만들 때 가장 먼저 해야 할 일은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "도표로 무엇을 전할지 정하는 것"
+              },
+              {
+                "id": "b",
+                "text": "눈금의 크기를 정하는 것"
+              },
+              {
+                "id": "c",
+                "text": "제목을 붙이는 것"
+              },
+              {
+                "id": "d",
+                "text": "색을 고르는 것"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "도표로 무엇을 전할지 정하는 것"
+              },
+              {
+                "id": "b",
+                "text": "눈금의 크기를 정하는 것"
+              },
+              {
+                "id": "c",
+                "text": "제목을 붙이는 것"
+              },
+              {
+                "id": "d",
+                "text": "색을 고르는 것"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chart-making:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전할 것이 정해져야 어떤 도표가 알맞은지도 정해져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-chart-making:practice-2:v1",
+          "conceptKeys": [
+            "chart-making"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chart-making:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "완성한 도표에 반드시 있어야 하는 것으로 가장 알맞게 묶은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "제목과 단위"
+              },
+              {
+                "id": "b",
+                "text": "색과 무늬"
+              },
+              {
+                "id": "c",
+                "text": "표와 그래프 둘 다"
+              },
+              {
+                "id": "d",
+                "text": "자료의 원본 파일"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "제목과 단위"
+              },
+              {
+                "id": "b",
+                "text": "색과 무늬"
+              },
+              {
+                "id": "c",
+                "text": "표와 그래프 둘 다"
+              },
+              {
+                "id": "d",
+                "text": "자료의 원본 파일"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chart-making:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "읽는 사람이 되묻지 않게 하는 두 가지예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-chart-making:practice-3:v1",
+          "conceptKeys": [
+            "chart-making"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chart-making:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세로축의 눈금을 $0$이 아니라 $90$에서 시작해 막대를 그렸어요. 이때 생기는 문제는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "작은 차이가 실제보다 크게 보인다"
+              },
+              {
+                "id": "b",
+                "text": "값이 잘못 계산된다"
+              },
+              {
+                "id": "c",
+                "text": "제목을 붙일 수 없다"
+              },
+              {
+                "id": "d",
+                "text": "단위가 바뀐다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "작은 차이가 실제보다 크게 보인다"
+              },
+              {
+                "id": "b",
+                "text": "값이 잘못 계산된다"
+              },
+              {
+                "id": "c",
+                "text": "제목을 붙일 수 없다"
+              },
+              {
+                "id": "d",
+                "text": "단위가 바뀐다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chart-making:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "눈금을 어디서 시작하느냐가 보는 사람의 인상을 바꿔요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-chart-making:check",
+      "courseKey": "ncs-numeracy",
+      "name": "도표작성 사전지식 확인",
+      "versionId": "ncs-chart-making:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-chart-making:check-1:v1",
+          "conceptKeys": [
+            "chart-making"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chart-making:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "월별 방문자 수의 변화를 보고서에 싣고 싶어요. 알맞은 도표와 축을 고른 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "꺾은선그래프, 가로축에 월·세로축에 방문자 수"
+              },
+              {
+                "id": "b",
+                "text": "원그래프, 월별로 조각을 나눔"
+              },
+              {
+                "id": "c",
+                "text": "꺾은선그래프, 가로축에 방문자 수·세로축에 월"
+              },
+              {
+                "id": "d",
+                "text": "방사형그래프, 축마다 월"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "꺾은선그래프, 가로축에 월·세로축에 방문자 수"
+              },
+              {
+                "id": "b",
+                "text": "원그래프, 월별로 조각을 나눔"
+              },
+              {
+                "id": "c",
+                "text": "꺾은선그래프, 가로축에 방문자 수·세로축에 월"
+              },
+              {
+                "id": "d",
+                "text": "방사형그래프, 축마다 월"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chart-making:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시간은 가로축에 두고 왼쪽에서 오른쪽으로 흐르게 해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-chart-making:check-2:v1",
+          "conceptKeys": [
+            "chart-making"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chart-making:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "도표작성에서 「정확한 단위 사용」이 중요한 이유로 가장 알맞은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "같은 수라도 단위에 따라 전혀 다른 양을 뜻하기 때문"
+              },
+              {
+                "id": "b",
+                "text": "단위를 쓰면 도표가 보기 좋아지기 때문"
+              },
+              {
+                "id": "c",
+                "text": "단위가 있으면 계산이 빨라지기 때문"
+              },
+              {
+                "id": "d",
+                "text": "단위는 제목을 대신할 수 있기 때문"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "같은 수라도 단위에 따라 전혀 다른 양을 뜻하기 때문"
+              },
+              {
+                "id": "b",
+                "text": "단위를 쓰면 도표가 보기 좋아지기 때문"
+              },
+              {
+                "id": "c",
+                "text": "단위가 있으면 계산이 빨라지기 때문"
+              },
+              {
+                "id": "d",
+                "text": "단위는 제목을 대신할 수 있기 때문"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chart-making:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$900$이 미터인지 피트인지에 따라 뜻이 달라져요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-chart-making:review",
+      "courseKey": "ncs-numeracy",
+      "name": "도표작성 사전지식 복습",
+      "versionId": "ncs-chart-making:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-chart-making:homework-1:v1",
+          "conceptKeys": [
+            "chart-making"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chart-making:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부서별 예산의 구성비를 한 장으로 보여 주려고 해요. 가장 알맞은 도표는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원그래프"
+              },
+              {
+                "id": "b",
+                "text": "꺾은선그래프"
+              },
+              {
+                "id": "c",
+                "text": "점그래프"
+              },
+              {
+                "id": "d",
+                "text": "방사형그래프"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원그래프"
+              },
+              {
+                "id": "b",
+                "text": "꺾은선그래프"
+              },
+              {
+                "id": "c",
+                "text": "점그래프"
+              },
+              {
+                "id": "d",
+                "text": "방사형그래프"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chart-making:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체를 나눈 몫을 보여 주는 도표예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-chart-making:homework-2:v1",
+          "conceptKeys": [
+            "chart-making"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-chart-making:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "도표를 만드는 절차를 바르게 늘어놓은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "전할 내용 정하기 → 도표 고르기 → 가로세로와 눈금 정하기 → 표시하기 → 제목과 단위 붙이기"
+              },
+              {
+                "id": "b",
+                "text": "제목 붙이기 → 도표 고르기 → 전할 내용 정하기 → 표시하기"
+              },
+              {
+                "id": "c",
+                "text": "도표 고르기 → 제목 붙이기 → 전할 내용 정하기 → 눈금 정하기"
+              },
+              {
+                "id": "d",
+                "text": "표시하기 → 도표 고르기 → 전할 내용 정하기 → 제목 붙이기"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "전할 내용 정하기 → 도표 고르기 → 가로세로와 눈금 정하기 → 표시하기 → 제목과 단위 붙이기"
+              },
+              {
+                "id": "b",
+                "text": "제목 붙이기 → 도표 고르기 → 전할 내용 정하기 → 표시하기"
+              },
+              {
+                "id": "c",
+                "text": "도표 고르기 → 제목 붙이기 → 전할 내용 정하기 → 눈금 정하기"
+              },
+              {
+                "id": "d",
+                "text": "표시하기 → 도표 고르기 → 전할 내용 정하기 → 제목 붙이기"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-chart-making:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "무엇을 전할지가 언제나 먼저예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-numeracy:drill",
+      "courseKey": "ncs-numeracy",
+      "name": "NCS 수리능력 모아 풀기",
+      "versionId": "ncs-numeracy:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-numeracy:drill-1:v1",
+          "conceptKeys": [
+            "numeracy-scope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「연도별 매출이 적힌 표에서 가장 많이 늘어난 해를 찾는다.」 어느 영역인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "도표분석능력"
+              },
+              {
+                "id": "b",
+                "text": "기초연산능력"
+              },
+              {
+                "id": "c",
+                "text": "도표작성능력"
+              },
+              {
+                "id": "d",
+                "text": "기초통계능력"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "도표분석능력"
+              },
+              {
+                "id": "b",
+                "text": "기초연산능력"
+              },
+              {
+                "id": "c",
+                "text": "도표작성능력"
+              },
+              {
+                "id": "d",
+                "text": "기초통계능력"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주어진 표에서 값을 읽어 견주는 일이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-2:v1",
+          "conceptKeys": [
+            "numeracy-scope"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「팀원들의 처리 건수를 평균 내어 다른 팀과 견준다.」 어느 영역인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "기초통계능력"
+              },
+              {
+                "id": "b",
+                "text": "도표작성능력"
+              },
+              {
+                "id": "c",
+                "text": "기초연산능력"
+              },
+              {
+                "id": "d",
+                "text": "도표분석능력"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "기초통계능력"
+              },
+              {
+                "id": "b",
+                "text": "도표작성능력"
+              },
+              {
+                "id": "c",
+                "text": "기초연산능력"
+              },
+              {
+                "id": "d",
+                "text": "도표분석능력"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "여럿을 하나의 수로 줄이는 일이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-3:v1",
+          "conceptKeys": [
+            "calculation-order"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4 \\times 25 \\times 7$을 계산하면 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 700
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4 \\times 25 = 100$을 먼저 묶어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-4:v1",
+          "conceptKeys": [
+            "calculation-order"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$200 - 3 \\times (12 + 8)$을 계산하면 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 140
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호 먼저, 그다음 곱셈이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-5:v1",
+          "conceptKeys": [
+            "calculation-order"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$99 \\times 14$를 계산하면 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1386
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(100 - 1) \\times 14$로 바꿔 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-6:v1",
+          "conceptKeys": [
+            "unit-conversion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1.2$t은 몇 kg인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1200
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$t은 $1{,}000$kg이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-7:v1",
+          "conceptKeys": [
+            "unit-conversion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$시간 $30$분은 몇 분인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 150
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$시간은 $60$분이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-8:v1",
+          "conceptKeys": [
+            "unit-conversion"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4$할 $5$푼은 백분율로 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 45
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$할은 $10\\%$, $1$푼은 $1\\%$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-9:v1",
+          "conceptKeys": [
+            "verification"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "곱셈의 결과를 역연산으로 검산하려면 무엇을 해야 하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "나눗셈으로 되돌려 본다"
+              },
+              {
+                "id": "b",
+                "text": "한 번 더 곱해 본다"
+              },
+              {
+                "id": "c",
+                "text": "덧셈으로 바꿔 본다"
+              },
+              {
+                "id": "d",
+                "text": "각 자리 수를 더해 본다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "나눗셈으로 되돌려 본다"
+              },
+              {
+                "id": "b",
+                "text": "한 번 더 곱해 본다"
+              },
+              {
+                "id": "c",
+                "text": "덧셈으로 바꿔 본다"
+              },
+              {
+                "id": "d",
+                "text": "각 자리 수를 더해 본다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "곱셈은 나눗셈으로 되돌려요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-10:v1",
+          "conceptKeys": [
+            "verification"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "구거법으로 검산할 때 $3{,}412$의 검산 수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3+4+1+2 = 10$이고, 다시 더하면 $1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-11:v1",
+          "conceptKeys": [
+            "statistics-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6$, $10$, $14$, $18$의 평균은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합계 $48$을 $4$로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-12:v1",
+          "conceptKeys": [
+            "statistics-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "일곱 명의 평균 처리 건수가 $30$건이에요. 일곱 명이 처리한 건수는 모두 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 210
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평균에 개수를 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-13:v1",
+          "conceptKeys": [
+            "statistics-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "자료에 유난히 크거나 작은 값이 섞여 있을 때 대푯값으로 더 알맞은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "중앙값"
+              },
+              {
+                "id": "b",
+                "text": "평균"
+              },
+              {
+                "id": "c",
+                "text": "합계"
+              },
+              {
+                "id": "d",
+                "text": "범위"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "중앙값"
+              },
+              {
+                "id": "b",
+                "text": "평균"
+              },
+              {
+                "id": "c",
+                "text": "합계"
+              },
+              {
+                "id": "d",
+                "text": "범위"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "임원 급여가 섞인 회사의 평균을 떠올려 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-14:v1",
+          "conceptKeys": [
+            "chart-types"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10$년 동안의 인구 변화를 보여 주려면 어떤 그래프가 알맞은가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "꺾은선그래프"
+              },
+              {
+                "id": "b",
+                "text": "원그래프"
+              },
+              {
+                "id": "c",
+                "text": "방사형그래프"
+              },
+              {
+                "id": "d",
+                "text": "점그래프"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "꺾은선그래프"
+              },
+              {
+                "id": "b",
+                "text": "원그래프"
+              },
+              {
+                "id": "c",
+                "text": "방사형그래프"
+              },
+              {
+                "id": "d",
+                "text": "점그래프"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시간에 따른 변화를 보여 주는 그래프예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-15:v1",
+          "conceptKeys": [
+            "chart-types"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 비용에서 항목별로 차지하는 몫을 보여 주려면 어떤 그래프가 알맞은가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원그래프"
+              },
+              {
+                "id": "b",
+                "text": "꺾은선그래프"
+              },
+              {
+                "id": "c",
+                "text": "막대그래프"
+              },
+              {
+                "id": "d",
+                "text": "점그래프"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원그래프"
+              },
+              {
+                "id": "b",
+                "text": "꺾은선그래프"
+              },
+              {
+                "id": "c",
+                "text": "막대그래프"
+              },
+              {
+                "id": "d",
+                "text": "점그래프"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "구성비를 보여 주는 그래프예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-16:v1",
+          "conceptKeys": [
+            "chart-types"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로와 세로에 두 요소를 두고 어떤 자리에 있는지를 보려면 어떤 그래프가 알맞은가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "점그래프"
+              },
+              {
+                "id": "b",
+                "text": "원그래프"
+              },
+              {
+                "id": "c",
+                "text": "꺾은선그래프"
+              },
+              {
+                "id": "d",
+                "text": "막대그래프"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "점그래프"
+              },
+              {
+                "id": "b",
+                "text": "원그래프"
+              },
+              {
+                "id": "c",
+                "text": "꺾은선그래프"
+              },
+              {
+                "id": "d",
+                "text": "막대그래프"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 요소의 자리를 찍어 보는 그래프예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-17:v1",
+          "conceptKeys": [
+            "chart-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "매출이 $80$억 원에서 $100$억 원이 되었어요. 증가율은 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "늘어난 $20$을 이전 값 $80$으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-18:v1",
+          "conceptKeys": [
+            "chart-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가격을 $20\\%$ 올렸다가 다시 $20\\%$ 내렸어요. 처음 가격과 견주면 어떻게 되나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "처음보다 $4\\%$ 낮다"
+              },
+              {
+                "id": "b",
+                "text": "처음과 같다"
+              },
+              {
+                "id": "c",
+                "text": "처음보다 $4\\%$ 높다"
+              },
+              {
+                "id": "d",
+                "text": "처음보다 $20\\%$ 낮다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "처음보다 $4\\%$ 낮다"
+              },
+              {
+                "id": "b",
+                "text": "처음과 같다"
+              },
+              {
+                "id": "c",
+                "text": "처음보다 $4\\%$ 높다"
+              },
+              {
+                "id": "d",
+                "text": "처음보다 $20\\%$ 낮다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$100 \\rightarrow 120 \\rightarrow 96$이에요. 내릴 때의 기준이 달라졌어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-19:v1",
+          "conceptKeys": [
+            "chart-making"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "완성한 도표에 반드시 붙여야 하는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "제목과 단위"
+              },
+              {
+                "id": "b",
+                "text": "작성자 이름"
+              },
+              {
+                "id": "c",
+                "text": "자료의 출처 파일"
+              },
+              {
+                "id": "d",
+                "text": "색 범례"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "제목과 단위"
+              },
+              {
+                "id": "b",
+                "text": "작성자 이름"
+              },
+              {
+                "id": "c",
+                "text": "자료의 출처 파일"
+              },
+              {
+                "id": "d",
+                "text": "색 범례"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "읽는 사람이 되묻지 않게 하는 것이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-numeracy:drill-20:v1",
+          "conceptKeys": [
+            "chart-making"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-numeracy:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "막대그래프의 세로축 눈금을 $0$이 아닌 값에서 시작하면 어떤 일이 생기나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "작은 차이가 실제보다 크게 보인다"
+              },
+              {
+                "id": "b",
+                "text": "값이 잘못 계산된다"
+              },
+              {
+                "id": "c",
+                "text": "단위가 바뀐다"
+              },
+              {
+                "id": "d",
+                "text": "제목을 붙일 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "작은 차이가 실제보다 크게 보인다"
+              },
+              {
+                "id": "b",
+                "text": "값이 잘못 계산된다"
+              },
+              {
+                "id": "c",
+                "text": "단위가 바뀐다"
+              },
+              {
+                "id": "d",
+                "text": "제목을 붙일 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-numeracy:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "눈금의 시작점이 보는 사람의 인상을 바꿔요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}

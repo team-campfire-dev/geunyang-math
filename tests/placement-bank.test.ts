@@ -58,6 +58,15 @@ describe('the placement bank', () => {
 
   it('marks its own answer key correct, and a wrong answer wrong', () => {
     for (const problem of problems) {
+      // The bank asks by writing and by picking. A concept like 「어느 영역인가」 has no number for
+      // an answer, and refusing it would mean the bank could not ask about it at all.
+      if (problem.gradingSpec.kind === 'choice') {
+        const spec = problem.gradingSpec;
+        expect(gradeAnswer(spec.correct, spec, false).status, `${problem.problemVersionId}의 정답 ${spec.correct}`).toBe('correct');
+        const other = spec.options.find((option) => option.id !== spec.correct)!.id;
+        expect(gradeAnswer(other, spec, false).status, `${problem.problemVersionId}의 오답 ${other}`).toBe('incorrect');
+        continue;
+      }
       const spec = problem.gradingSpec as { kind: 'integer'; value: number } | { kind: 'rational'; numerator: number; denominator: number };
       const written = spec.kind === 'integer' ? String(spec.value)
         : spec.denominator === 1 ? String(spec.numerator) : `${spec.numerator}/${spec.denominator}`;
@@ -82,7 +91,7 @@ describe('the placement bank', () => {
   it('leaves every earlier bank published exactly as it was', () => {
     const earlier = bundles.flatMap((bundle) => bundle.problemSets).find((item) => item.versionId === 'placement:v1')!;
     expect(earlier.problems).toHaveLength(39);
-    expect(versions.map((item) => item.versionId)).toEqual(['placement-v4', 'placement-v5', 'placement-v6']);
+    expect(versions.map((item) => item.versionId)).toEqual(['placement-v4', 'placement-v5', 'placement-v6', 'placement-v7']);
   });
 
   it('leaves the fraction-only bank published exactly as it was', () => {
