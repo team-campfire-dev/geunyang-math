@@ -50,7 +50,7 @@
     {
       "public": {
         "lessonKey": "ratio-meaning",
-        "versionId": "ratio-meaning:v2",
+        "versionId": "ratio-meaning:v3",
         "title": "비와 비율: 두 양을 견주기",
         "summary": "두 양을 비로 나타내고, 기준량에 대한 비율을 하나의 수로 구해요.",
         "estimatedMinutes": 10,
@@ -67,12 +67,12 @@
       },
       "sections": [
         {
-          "sectionId": "ratio-meaning:explanation:v2",
+          "sectionId": "ratio-meaning:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "ratio-meaning:explanation:text:v2",
+              "blockId": "ratio-meaning:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -98,19 +98,17 @@
               }
             },
             {
-              "blockId": "ratio-meaning:explanation:drawing:v2",
+              "blockId": "ratio-meaning:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "width": 320,
-                "height": 200,
                 "alt": "원액 한 칸에 물 네 칸을 견준 막대",
                 "caption": "기준량을 정하고, 그것으로 나눠 하나의 수로",
                 "items": [
                   {
                     "kind": "strip",
-                    "x": 40,
+                    "x": 32,
                     "y": 45,
                     "width": 48,
                     "height": 32,
@@ -123,7 +121,7 @@
                   },
                   {
                     "kind": "text",
-                    "x": 64,
+                    "x": 56,
                     "y": 95,
                     "text": "원액",
                     "size": 12,
@@ -133,9 +131,9 @@
                   },
                   {
                     "kind": "strip",
-                    "x": 104,
+                    "x": 96,
                     "y": 45,
-                    "width": 176,
+                    "width": 192,
                     "height": 32,
                     "parts": 4,
                     "filled": 4,
@@ -163,11 +161,20 @@
                     "anchor": "middle",
                     "fill": "ink",
                     "id": "as-rate"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 170,
+                    "text": "한 칸의 크기가 같아야 견줄 수 있어요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
                   }
                 ],
                 "frames": [
                   {
-                    "caption": "견줄 두 양을 나란히 놓아요.",
+                    "caption": "견줄 두 양을 나란히 놓아요. 물은 원액과 같은 크기의 칸으로 넷이에요.",
                     "changes": [
                       {
                         "id": "as-rate",
@@ -176,7 +183,7 @@
                     ]
                   },
                   {
-                    "caption": "원액을 기준량으로 삼아요. 이 하나가 기준이에요.",
+                    "caption": "원액을 기준량으로 삼아요. 이 한 칸이 기준이에요.",
                     "changes": [
                       {
                         "id": "compared",
@@ -194,21 +201,36 @@
                   },
                   {
                     "caption": "기준량으로 나누면 비율 $4$가 나와요.",
-                    "changes": []
+                    "changes": [
+                      {
+                        "id": "compared",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "compared-name",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "as-rate",
+                        "opacity": 1
+                      }
+                    ]
                   }
                 ],
-                "frameMs": 1100
+                "frameMs": 1400,
+                "width": 320,
+                "height": 200
               }
             }
           ]
         },
         {
-          "sectionId": "ratio-meaning:example:v2",
+          "sectionId": "ratio-meaning:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ratio-meaning:example:text:v2",
+              "blockId": "ratio-meaning:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -226,12 +248,12 @@
           ]
         },
         {
-          "sectionId": "ratio-meaning:practice:v2",
+          "sectionId": "ratio-meaning:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ratio-meaning:practice:problems:v2",
+              "blockId": "ratio-meaning:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -248,12 +270,12 @@
           ]
         },
         {
-          "sectionId": "ratio-meaning:check:v2",
+          "sectionId": "ratio-meaning:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ratio-meaning:check:problems:v2",
+              "blockId": "ratio-meaning:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -269,12 +291,12 @@
           ]
         },
         {
-          "sectionId": "ratio-meaning:summary:v2",
+          "sectionId": "ratio-meaning:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ratio-meaning:summary:text:v2",
+              "blockId": "ratio-meaning:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -309,7 +331,7 @@
     {
       "public": {
         "lessonKey": "percentage-meaning",
-        "versionId": "percentage-meaning:v1",
+        "versionId": "percentage-meaning:v2",
         "title": "백분율: 기준량을 100으로 보기",
         "summary": "비율을 기준량 100에 대한 수로 바꿔 %로 나타내요.",
         "estimatedMinutes": 10,
@@ -326,12 +348,12 @@
       },
       "sections": [
         {
-          "sectionId": "percentage-meaning:explanation:v1",
+          "sectionId": "percentage-meaning:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "percentage-meaning:explanation:text:v1",
+              "blockId": "percentage-meaning:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -352,88 +374,391 @@
               }
             },
             {
-              "blockId": "percentage-meaning:explanation:drawing:v1",
+              "blockId": "percentage-meaning:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "width": 320,
-                "height": 200,
-                "alt": "비율 0.25가 분모 100인 분수를 거쳐 25퍼센트가 되는 과정",
-                "caption": "$0.25 \\rightarrow \\frac{25}{100} \\rightarrow 25\\%$",
+                "alt": "비율만큼 색칠한 막대에 0부터 100까지의 눈금을 대어 25를 읽는 그림",
+                "caption": "기준량을 $100$으로 보는 눈금을 대면 백분율이 읽혀요",
                 "items": [
                   {
                     "kind": "text",
-                    "id": "rate",
                     "x": 160,
-                    "y": 60,
-                    "text": "$0.25$",
-                    "size": 22,
+                    "y": 34,
+                    "text": "기준량은 막대 전체예요",
+                    "size": 11,
                     "anchor": "middle",
-                    "fill": "ink"
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "strip",
+                    "x": 40,
+                    "y": 48,
+                    "width": 240,
+                    "height": 34,
+                    "parts": 20,
+                    "filled": 5,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 40,
+                    "y1": 104,
+                    "x2": 280,
+                    "y2": 104,
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "id": "scale",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 40,
+                    "y1": 104,
+                    "x2": 40,
+                    "y2": 111,
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "t0",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 100,
+                    "y1": 104,
+                    "x2": 100,
+                    "y2": 111,
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "t1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160,
+                    "y1": 104,
+                    "x2": 160,
+                    "y2": 111,
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "t2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 220,
+                    "y1": 104,
+                    "x2": 220,
+                    "y2": 111,
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "t3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 280,
+                    "y1": 104,
+                    "x2": 280,
+                    "y2": 111,
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "t4",
+                    "opacity": 0
                   },
                   {
                     "kind": "text",
-                    "id": "hundredth",
-                    "x": 160,
-                    "y": 105,
-                    "text": "$\\frac{25}{100}$",
-                    "size": 22,
+                    "x": 40,
+                    "y": 126,
+                    "text": "0",
+                    "size": 10,
                     "anchor": "middle",
-                    "fill": "ink"
+                    "fill": "muted",
+                    "id": "n0",
+                    "opacity": 0
                   },
                   {
                     "kind": "text",
-                    "id": "percent",
-                    "x": 160,
-                    "y": 155,
-                    "text": "$25\\%$",
-                    "size": 24,
+                    "x": 100,
+                    "y": 126,
+                    "text": "25",
+                    "size": 10,
                     "anchor": "middle",
-                    "fill": "green",
-                    "weight": "bold"
+                    "fill": "muted",
+                    "id": "n1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 126,
+                    "text": "50",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "n2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 220,
+                    "y": 126,
+                    "text": "75",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "n3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 280,
+                    "y": 126,
+                    "text": "100",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "n4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 40,
+                    "y1": 42,
+                    "x2": 40,
+                    "y2": 112,
+                    "stroke": "orange",
+                    "strokeWidth": 2,
+                    "id": "mark",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 40,
+                    "y": 150,
+                    "text": "여기까지",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "markl",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 180,
+                    "text": "$0.25 = \\frac{25}{100} = 25\\%$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
                   }
                 ],
                 "frames": [
                   {
-                    "caption": "비율을 소수로 써요.",
+                    "caption": "비율 $0.25$만큼 색칠했어요. 기준량은 막대 전체고요.",
                     "changes": [
                       {
-                        "id": "hundredth",
-                        "hidden": true
+                        "id": "scale",
+                        "opacity": 0
                       },
                       {
-                        "id": "percent",
-                        "hidden": true
+                        "id": "t0",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "t1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "t2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "t3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "t4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n0",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "mark",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "markl",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
                       }
                     ]
                   },
                   {
-                    "caption": "기준량을 100으로 바꿔요.",
+                    "caption": "기준량 전체를 $100$으로 보는 눈금을 대어요. 왼쪽 끝이 $0$이에요.",
                     "changes": [
                       {
-                        "id": "percent",
-                        "hidden": true
+                        "id": "scale",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t0",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n0",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "mark",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "markl",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
                       }
                     ]
                   },
                   {
-                    "caption": "분자에 기호 %를 붙이면 백분율이에요.",
-                    "changes": []
+                    "caption": "색칠한 데까지 오면 눈금이 $25$예요. 그래서 $25\\%$라고 써요.",
+                    "changes": [
+                      {
+                        "id": "scale",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t0",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n0",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "mark",
+                        "dx": 60,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "markl",
+                        "dx": 60,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      }
+                    ]
                   }
                 ],
-                "frameMs": 1100
+                "frameMs": 1600,
+                "width": 320,
+                "height": 200
               }
             }
           ]
         },
         {
-          "sectionId": "percentage-meaning:example:v1",
+          "sectionId": "percentage-meaning:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "percentage-meaning:example:text:v1",
+              "blockId": "percentage-meaning:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -449,35 +774,20 @@
               }
             },
             {
-              "blockId": "percentage-meaning:example:drawing:v1",
+              "blockId": "percentage-meaning:example:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "width": 320,
-                "height": 200,
                 "alt": "4분의 1과 0.25와 25퍼센트를 각각의 이름 자리에 놓아 보는 그림",
                 "caption": "같은 양의 세 이름을 제자리에 놓아 보세요",
                 "items": [
                   {
                     "kind": "text",
-                    "id": "as-fraction",
-                    "label": "4분의 1",
-                    "draggable": true,
-                    "x": 55,
-                    "y": 40,
-                    "text": "$\\frac{1}{4}$",
-                    "size": 20,
-                    "anchor": "middle",
-                    "fill": "ink",
-                    "weight": "bold"
-                  },
-                  {
-                    "kind": "text",
                     "id": "as-decimal",
                     "label": "0.25",
                     "draggable": true,
-                    "x": 130,
+                    "x": 55,
                     "y": 40,
                     "text": "$0.25$",
                     "size": 20,
@@ -490,9 +800,22 @@
                     "id": "as-percent",
                     "label": "25퍼센트",
                     "draggable": true,
-                    "x": 215,
+                    "x": 140,
                     "y": 40,
                     "text": "$25\\%$",
+                    "size": 20,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "as-fraction",
+                    "label": "4분의 1",
+                    "draggable": true,
+                    "x": 225,
+                    "y": 40,
+                    "text": "$\\frac{1}{4}$",
                     "size": 20,
                     "anchor": "middle",
                     "fill": "ink",
@@ -538,18 +861,20 @@
                   "prompt": "같은 양을 부르는 세 이름을 각각 제자리에 놓아 보세요.",
                   "promptAlt": "같은 양을 부르는 세 이름을 각각 제자리에 놓아 보세요.",
                   "successText": "셋 다 같은 양이에요. 부르는 방식만 달라요."
-                }
+                },
+                "width": 320,
+                "height": 200
               }
             }
           ]
         },
         {
-          "sectionId": "percentage-meaning:practice:v1",
+          "sectionId": "percentage-meaning:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "percentage-meaning:practice:problems:v1",
+              "blockId": "percentage-meaning:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -566,12 +891,12 @@
           ]
         },
         {
-          "sectionId": "percentage-meaning:check:v1",
+          "sectionId": "percentage-meaning:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "percentage-meaning:check:problems:v1",
+              "blockId": "percentage-meaning:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -587,12 +912,12 @@
           ]
         },
         {
-          "sectionId": "percentage-meaning:summary:v1",
+          "sectionId": "percentage-meaning:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "percentage-meaning:summary:text:v1",
+              "blockId": "percentage-meaning:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,

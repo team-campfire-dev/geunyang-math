@@ -46,7 +46,7 @@
     {
       "public": {
         "lessonKey": "polyhedron",
-        "versionId": "polyhedron:v1",
+        "versionId": "polyhedron:v2",
         "title": "다면체와 회전체: 면으로 둘러싸인 것과 돌려서 만든 것",
         "summary": "입체도형을 두 갈래로 가르고, 이름이 무엇을 말하는지 읽어요.",
         "estimatedMinutes": 10,
@@ -61,12 +61,12 @@
       },
       "sections": [
         {
-          "sectionId": "polyhedron:explanation:v1",
+          "sectionId": "polyhedron:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "polyhedron:explanation:text:v1",
+              "blockId": "polyhedron:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -82,22 +82,20 @@
               }
             },
             {
-              "blockId": "polyhedron:explanation:drawing:v1",
+              "blockId": "polyhedron:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "width": 320,
-                "height": 200,
-                "alt": "직사각형이 축을 끼고 돌아 원기둥의 모양을 만드는 그림",
-                "caption": "평면도형을 축 둘레로 돌리면 입체가 돼요",
+                "alt": "직사각형이 축을 끼고 돌아 원기둥이 되는 그림",
+                "caption": "평면도형을 축 둘레로 한 바퀴 돌리면 입체가 돼요",
                 "items": [
                   {
                     "kind": "line",
                     "x1": 160,
-                    "y1": 30,
+                    "y1": 26,
                     "x2": 160,
-                    "y2": 186,
+                    "y2": 182,
                     "stroke": "line",
                     "strokeWidth": 1.4,
                     "dash": true
@@ -105,7 +103,7 @@
                   {
                     "kind": "text",
                     "x": 160,
-                    "y": 22,
+                    "y": 18,
                     "text": "축",
                     "size": 10,
                     "anchor": "middle",
@@ -114,7 +112,7 @@
                   {
                     "kind": "rect",
                     "x": 160,
-                    "y": 60,
+                    "y": 58,
                     "width": 52,
                     "height": 96,
                     "fill": "fill-soft",
@@ -123,60 +121,70 @@
                     "id": "sheet"
                   },
                   {
+                    "kind": "text",
+                    "x": 190,
+                    "y": 110,
+                    "text": "직사각형",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "src"
+                  },
+                  {
                     "kind": "ellipse",
                     "cx": 160,
-                    "cy": 60,
+                    "cy": 58,
                     "rx": 52,
-                    "ry": 14,
+                    "ry": 15,
                     "fill": "none",
                     "stroke": "orange",
-                    "strokeWidth": 1.6,
-                    "id": "top",
+                    "strokeWidth": 1.4,
+                    "id": "sweep-top",
                     "opacity": 0
                   },
                   {
                     "kind": "ellipse",
                     "cx": 160,
-                    "cy": 156,
+                    "cy": 154,
                     "rx": 52,
-                    "ry": 14,
+                    "ry": 15,
                     "fill": "none",
                     "stroke": "orange",
-                    "strokeWidth": 1.6,
-                    "id": "bottom",
+                    "strokeWidth": 1.4,
+                    "id": "sweep-bottom",
                     "opacity": 0
                   },
                   {
-                    "kind": "line",
-                    "x1": 108,
-                    "y1": 60,
-                    "x2": 108,
-                    "y2": 156,
-                    "stroke": "orange",
-                    "strokeWidth": 1.6,
-                    "id": "left",
+                    "kind": "path",
+                    "d": "M 108 58 L 108 154 A 52 15 0 0 0 212 154 L 212 58 Z",
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "id": "body",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160,
+                    "cy": 58,
+                    "rx": 52,
+                    "ry": 15,
+                    "fill": "paper",
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "id": "lid",
                     "opacity": 0
                   },
                   {
                     "kind": "text",
-                    "x": 244,
-                    "y": 96,
+                    "x": 160,
+                    "y": 190,
                     "text": "원기둥",
                     "size": 12,
                     "anchor": "middle",
                     "fill": "orange",
                     "id": "name",
                     "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 80,
-                    "y": 96,
-                    "text": "직사각형",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "muted",
-                    "id": "src"
                   }
                 ],
                 "frames": [
@@ -184,25 +192,33 @@
                     "caption": "축 옆에 직사각형을 하나 세워 두었어요.",
                     "changes": [
                       {
-                        "id": "top",
+                        "id": "sweep-top",
                         "opacity": 0
                       },
                       {
-                        "id": "bottom",
+                        "id": "sweep-bottom",
                         "opacity": 0
                       },
                       {
-                        "id": "left",
+                        "id": "body",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lid",
                         "opacity": 0
                       },
                       {
                         "id": "name",
                         "opacity": 0
+                      },
+                      {
+                        "id": "src",
+                        "opacity": 1
                       }
                     ]
                   },
                   {
-                    "caption": "축을 끼고 한 바퀴 돌려 봐요. 지나간 자리가 면이 돼요.",
+                    "caption": "축을 끼고 돌려 봐요. 위아래 변이 지나간 자리가 원을 그려요.",
                     "changes": [
                       {
                         "id": "sheet",
@@ -213,15 +229,19 @@
                         "opacity": 0.3
                       },
                       {
-                        "id": "top",
+                        "id": "sweep-top",
                         "opacity": 1
                       },
                       {
-                        "id": "bottom",
+                        "id": "sweep-bottom",
                         "opacity": 1
                       },
                       {
-                        "id": "left",
+                        "id": "body",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lid",
                         "opacity": 0
                       },
                       {
@@ -231,26 +251,30 @@
                     ]
                   },
                   {
-                    "caption": "돌아 나온 입체가 원기둥이에요. 이렇게 만든 도형을 회전체라고 해요.",
+                    "caption": "한 바퀴 다 돌면 원기둥이에요. 이렇게 돌려 만든 입체를 회전체라고 해요.",
                     "changes": [
                       {
                         "id": "sheet",
-                        "dx": -52
+                        "hidden": true
                       },
                       {
                         "id": "src",
-                        "opacity": 0.3
+                        "opacity": 0
                       },
                       {
-                        "id": "top",
+                        "id": "sweep-top",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "sweep-bottom",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "body",
                         "opacity": 1
                       },
                       {
-                        "id": "bottom",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "left",
+                        "id": "lid",
                         "opacity": 1
                       },
                       {
@@ -260,18 +284,20 @@
                     ]
                   }
                 ],
-                "frameMs": 1700
+                "frameMs": 1700,
+                "width": 320,
+                "height": 200
               }
             }
           ]
         },
         {
-          "sectionId": "polyhedron:example:v1",
+          "sectionId": "polyhedron:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "polyhedron:example:text:v1",
+              "blockId": "polyhedron:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -283,12 +309,12 @@
           ]
         },
         {
-          "sectionId": "polyhedron:practice:v1",
+          "sectionId": "polyhedron:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "polyhedron:practice:problems:v1",
+              "blockId": "polyhedron:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -305,12 +331,12 @@
           ]
         },
         {
-          "sectionId": "polyhedron:check:v1",
+          "sectionId": "polyhedron:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "polyhedron:check:problems:v1",
+              "blockId": "polyhedron:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -326,12 +352,12 @@
           ]
         },
         {
-          "sectionId": "polyhedron:summary:v1",
+          "sectionId": "polyhedron:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "polyhedron:summary:text:v1",
+              "blockId": "polyhedron:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -355,7 +381,7 @@
     {
       "public": {
         "lessonKey": "surface-area",
-        "versionId": "surface-area:v1",
+        "versionId": "surface-area:v2",
         "title": "겉넓이: 펼쳐서 모두 더한다",
         "summary": "입체의 겉면을 평면으로 펼쳐, 아는 넓이의 합으로 바꿔요.",
         "estimatedMinutes": 12,
@@ -371,12 +397,12 @@
       },
       "sections": [
         {
-          "sectionId": "surface-area:explanation:v1",
+          "sectionId": "surface-area:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "surface-area:explanation:text:v1",
+              "blockId": "surface-area:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -397,153 +423,233 @@
               }
             },
             {
-              "blockId": "surface-area:explanation:drawing:v1",
+              "blockId": "surface-area:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "width": 320,
-                "height": 200,
-                "alt": "상자의 면들이 펼쳐져 평면에 늘어서는 그림",
-                "caption": "펼쳐서 넓이를 모두 더하면 겉넓이예요",
+                "alt": "직육면체를 그려 두고 모서리를 따라 칼집을 내어 여섯 면의 전개도로 펼치는 그림",
+                "caption": "펼쳐 놓고 여섯 면의 넓이를 모두 더하면 겉넓이예요",
                 "items": [
                   {
                     "kind": "rect",
-                    "x": 124,
-                    "y": 68,
-                    "width": 52,
-                    "height": 52,
+                    "x": 24,
+                    "y": 80,
+                    "width": 72,
+                    "height": 72,
                     "fill": "fill-soft",
                     "stroke": "ink",
                     "strokeWidth": 1,
-                    "id": "front"
+                    "id": "bf"
                   },
                   {
-                    "kind": "rect",
-                    "x": 124,
-                    "y": 16,
-                    "width": 52,
-                    "height": 52,
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        24,
+                        80
+                      ],
+                      [
+                        50,
+                        58
+                      ],
+                      [
+                        122,
+                        58
+                      ],
+                      [
+                        96,
+                        80
+                      ]
+                    ],
+                    "closed": true,
                     "fill": "sand",
                     "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "top"
+                    "strokeWidth": 1.2,
+                    "id": "bt"
                   },
                   {
-                    "kind": "rect",
-                    "x": 124,
-                    "y": 120,
-                    "width": 52,
-                    "height": 52,
-                    "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "bottom"
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 72,
-                    "y": 68,
-                    "width": 52,
-                    "height": 52,
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        96,
+                        80
+                      ],
+                      [
+                        122,
+                        58
+                      ],
+                      [
+                        122,
+                        130
+                      ],
+                      [
+                        96,
+                        152
+                      ]
+                    ],
+                    "closed": true,
                     "fill": "light-green",
                     "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "left"
+                    "strokeWidth": 1.2,
+                    "id": "br"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 24,
+                    "y1": 80,
+                    "x2": 96,
+                    "y2": 80,
+                    "stroke": "orange",
+                    "strokeWidth": 2,
+                    "id": "cut",
+                    "opacity": 0,
+                    "dash": true
                   },
                   {
                     "kind": "rect",
                     "x": 176,
-                    "y": 68,
-                    "width": 52,
-                    "height": 52,
-                    "fill": "light-green",
+                    "y": 46,
+                    "width": 32,
+                    "height": 32,
+                    "fill": "sand",
                     "stroke": "ink",
                     "strokeWidth": 1,
-                    "id": "right"
+                    "id": "nt",
+                    "opacity": 0
                   },
                   {
                     "kind": "rect",
-                    "x": 228,
-                    "y": 68,
-                    "width": 52,
-                    "height": 52,
+                    "x": 144,
+                    "y": 78,
+                    "width": 32,
+                    "height": 32,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "nl",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 176,
+                    "y": 78,
+                    "width": 32,
+                    "height": 32,
                     "fill": "fill-soft",
                     "stroke": "ink",
                     "strokeWidth": 1,
-                    "id": "back"
+                    "id": "nf",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 208,
+                    "y": 78,
+                    "width": 32,
+                    "height": 32,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "nr",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 240,
+                    "y": 78,
+                    "width": 32,
+                    "height": 32,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "nk",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 176,
+                    "y": 110,
+                    "width": 32,
+                    "height": 32,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "nd",
+                    "opacity": 0
                   },
                   {
                     "kind": "text",
-                    "x": 150,
-                    "y": 98,
-                    "text": "앞",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "ink",
-                    "id": "f1"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 150,
-                    "y": 46,
+                    "x": 192,
+                    "y": 66,
                     "text": "위",
-                    "size": 11,
+                    "size": 9,
                     "anchor": "middle",
                     "fill": "ink",
-                    "id": "f2",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 150,
-                    "y": 150,
-                    "text": "아래",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "ink",
-                    "id": "f3",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 98,
-                    "y": 98,
-                    "text": "왼",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "ink",
-                    "id": "f4",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 202,
-                    "y": 98,
-                    "text": "오",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "ink",
-                    "id": "f5",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 254,
-                    "y": 98,
-                    "text": "뒤",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "ink",
-                    "id": "f6",
+                    "id": "lt",
                     "opacity": 0
                   },
                   {
                     "kind": "text",
                     "x": 160,
-                    "y": 190,
+                    "y": 98,
+                    "text": "왼",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "ll",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 192,
+                    "y": 98,
+                    "text": "앞",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "lf",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 224,
+                    "y": 98,
+                    "text": "오",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "lr",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 256,
+                    "y": 98,
+                    "text": "뒤",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "lk",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 192,
+                    "y": 130,
+                    "text": "아래",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "ld",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 208,
+                    "y": 166,
                     "text": "여섯 면의 넓이를 모두 더해요",
-                    "size": 11,
+                    "size": 10,
                     "anchor": "middle",
                     "fill": "orange",
                     "id": "note",
@@ -552,108 +658,217 @@
                 ],
                 "frames": [
                   {
-                    "caption": "상자를 앞에서 보면 한 면만 보여요.",
+                    "caption": "상자 하나예요. 앞에서 보면 세 면만 보이지만 면은 모두 여섯이에요.",
                     "changes": [
                       {
-                        "id": "top",
-                        "hidden": true
-                      },
-                      {
-                        "id": "bottom",
-                        "hidden": true
-                      },
-                      {
-                        "id": "left",
-                        "hidden": true
-                      },
-                      {
-                        "id": "right",
-                        "hidden": true
-                      },
-                      {
-                        "id": "back",
-                        "hidden": true
-                      },
-                      {
-                        "id": "f2",
+                        "id": "cut",
                         "opacity": 0
                       },
                       {
-                        "id": "f3",
+                        "id": "nt",
                         "opacity": 0
                       },
                       {
-                        "id": "f4",
+                        "id": "nl",
                         "opacity": 0
                       },
                       {
-                        "id": "f5",
+                        "id": "nf",
                         "opacity": 0
                       },
                       {
-                        "id": "f6",
+                        "id": "nr",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "nk",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "nd",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lt",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ll",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lf",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lr",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lk",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ld",
                         "opacity": 0
                       },
                       {
                         "id": "note",
                         "opacity": 0
+                      },
+                      {
+                        "id": "bf",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "bt",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "br",
+                        "opacity": 1
                       }
                     ]
                   },
                   {
-                    "caption": "칼집을 내어 펼치면 나머지 면이 드러나요.",
+                    "caption": "모서리를 따라 칼집을 내요.",
                     "changes": [
                       {
-                        "id": "back",
-                        "hidden": true
+                        "id": "cut",
+                        "opacity": 1
                       },
                       {
-                        "id": "f6",
+                        "id": "nt",
                         "opacity": 0
                       },
                       {
-                        "id": "f2",
-                        "opacity": 1
+                        "id": "nl",
+                        "opacity": 0
                       },
                       {
-                        "id": "f3",
-                        "opacity": 1
+                        "id": "nf",
+                        "opacity": 0
                       },
                       {
-                        "id": "f4",
-                        "opacity": 1
+                        "id": "nr",
+                        "opacity": 0
                       },
                       {
-                        "id": "f5",
-                        "opacity": 1
+                        "id": "nk",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "nd",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lt",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ll",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lf",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lr",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lk",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ld",
+                        "opacity": 0
                       },
                       {
                         "id": "note",
                         "opacity": 0
+                      },
+                      {
+                        "id": "bf",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "bt",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "br",
+                        "opacity": 1
                       }
                     ]
                   },
                   {
-                    "caption": "여섯 면이 모두 펼쳐졌어요. 넓이를 다 더한 것이 겉넓이예요.",
+                    "caption": "펼치면 여섯 면이 모두 드러나요. 이 그림이 전개도예요.",
                     "changes": [
                       {
-                        "id": "f2",
+                        "id": "cut",
+                        "dy": 72,
                         "opacity": 1
                       },
                       {
-                        "id": "f3",
+                        "id": "bf",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "bt",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "br",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "nt",
                         "opacity": 1
                       },
                       {
-                        "id": "f4",
+                        "id": "nl",
                         "opacity": 1
                       },
                       {
-                        "id": "f5",
+                        "id": "nf",
                         "opacity": 1
                       },
                       {
-                        "id": "f6",
+                        "id": "nr",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "nk",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "nd",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lt",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ll",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lf",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lr",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lk",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ld",
                         "opacity": 1
                       },
                       {
@@ -663,18 +878,20 @@
                     ]
                   }
                 ],
-                "frameMs": 1700
+                "frameMs": 1700,
+                "width": 320,
+                "height": 200
               }
             }
           ]
         },
         {
-          "sectionId": "surface-area:example:v1",
+          "sectionId": "surface-area:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "surface-area:example:text:v1",
+              "blockId": "surface-area:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -686,12 +903,12 @@
           ]
         },
         {
-          "sectionId": "surface-area:practice:v1",
+          "sectionId": "surface-area:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "surface-area:practice:problems:v1",
+              "blockId": "surface-area:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -708,12 +925,12 @@
           ]
         },
         {
-          "sectionId": "surface-area:check:v1",
+          "sectionId": "surface-area:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "surface-area:check:problems:v1",
+              "blockId": "surface-area:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -729,12 +946,12 @@
           ]
         },
         {
-          "sectionId": "surface-area:summary:v1",
+          "sectionId": "surface-area:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "surface-area:summary:text:v1",
+              "blockId": "surface-area:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -758,7 +975,7 @@
     {
       "public": {
         "lessonKey": "volume",
-        "versionId": "volume:v1",
+        "versionId": "volume:v2",
         "title": "부피: 밑넓이 곱하기 높이",
         "summary": "기둥의 부피가 왜 밑넓이 곱하기 높이인지 보고, 뿔과 구까지 넓혀요.",
         "estimatedMinutes": 12,
@@ -774,12 +991,12 @@
       },
       "sections": [
         {
-          "sectionId": "volume:explanation:v1",
+          "sectionId": "volume:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "volume:explanation:text:v1",
+              "blockId": "volume:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -795,91 +1012,369 @@
               }
             },
             {
-              "blockId": "volume:explanation:drawing:v1",
+              "blockId": "volume:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "width": 320,
-                "height": 200,
-                "alt": "밑면과 같은 층이 위로 쌓여 기둥이 되는 그림",
+                "alt": "같은 판을 높이만큼 쌓아 올려 기둥을 만드는 그림",
                 "caption": "같은 밑면이 높이만큼 쌓인 것이 기둥의 부피예요",
                 "items": [
                   {
                     "kind": "rect",
                     "x": 96,
-                    "y": 148,
-                    "width": 128,
-                    "height": 24,
+                    "y": 150,
+                    "width": 96,
+                    "height": 18,
                     "fill": "fill-soft",
                     "stroke": "ink",
                     "strokeWidth": 1,
-                    "id": "l1"
+                    "id": "f1"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        192,
+                        150
+                      ],
+                      [
+                        216,
+                        130
+                      ],
+                      [
+                        216,
+                        148
+                      ],
+                      [
+                        192,
+                        168
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "id": "s1"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        96,
+                        150
+                      ],
+                      [
+                        120,
+                        130
+                      ],
+                      [
+                        216,
+                        130
+                      ],
+                      [
+                        192,
+                        150
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "id": "t1"
                   },
                   {
                     "kind": "rect",
                     "x": 96,
-                    "y": 124,
-                    "width": 128,
-                    "height": 24,
+                    "y": 132,
+                    "width": 96,
+                    "height": 18,
                     "fill": "fill-soft",
                     "stroke": "ink",
                     "strokeWidth": 1,
-                    "id": "l2",
+                    "id": "f2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        192,
+                        132
+                      ],
+                      [
+                        216,
+                        112
+                      ],
+                      [
+                        216,
+                        130
+                      ],
+                      [
+                        192,
+                        150
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "id": "s2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        96,
+                        132
+                      ],
+                      [
+                        120,
+                        112
+                      ],
+                      [
+                        216,
+                        112
+                      ],
+                      [
+                        192,
+                        132
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "id": "t2",
                     "opacity": 0
                   },
                   {
                     "kind": "rect",
                     "x": 96,
-                    "y": 100,
-                    "width": 128,
-                    "height": 24,
+                    "y": 114,
+                    "width": 96,
+                    "height": 18,
                     "fill": "fill-soft",
                     "stroke": "ink",
                     "strokeWidth": 1,
-                    "id": "l3",
+                    "id": "f3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        192,
+                        114
+                      ],
+                      [
+                        216,
+                        94
+                      ],
+                      [
+                        216,
+                        112
+                      ],
+                      [
+                        192,
+                        132
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "id": "s3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        96,
+                        114
+                      ],
+                      [
+                        120,
+                        94
+                      ],
+                      [
+                        216,
+                        94
+                      ],
+                      [
+                        192,
+                        114
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "id": "t3",
                     "opacity": 0
                   },
                   {
                     "kind": "rect",
                     "x": 96,
-                    "y": 76,
-                    "width": 128,
-                    "height": 24,
+                    "y": 96,
+                    "width": 96,
+                    "height": 18,
                     "fill": "fill-soft",
                     "stroke": "ink",
                     "strokeWidth": 1,
-                    "id": "l4",
+                    "id": "f4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        192,
+                        96
+                      ],
+                      [
+                        216,
+                        76
+                      ],
+                      [
+                        216,
+                        94
+                      ],
+                      [
+                        192,
+                        114
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "id": "s4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        96,
+                        96
+                      ],
+                      [
+                        120,
+                        76
+                      ],
+                      [
+                        216,
+                        76
+                      ],
+                      [
+                        192,
+                        96
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "id": "t4",
                     "opacity": 0
                   },
                   {
                     "kind": "rect",
                     "x": 96,
-                    "y": 52,
-                    "width": 128,
-                    "height": 24,
+                    "y": 78,
+                    "width": 96,
+                    "height": 18,
                     "fill": "fill-soft",
                     "stroke": "ink",
                     "strokeWidth": 1,
-                    "id": "l5",
+                    "id": "f5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        192,
+                        78
+                      ],
+                      [
+                        216,
+                        58
+                      ],
+                      [
+                        216,
+                        76
+                      ],
+                      [
+                        192,
+                        96
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "id": "s5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        96,
+                        78
+                      ],
+                      [
+                        120,
+                        58
+                      ],
+                      [
+                        216,
+                        58
+                      ],
+                      [
+                        192,
+                        78
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "id": "t5",
                     "opacity": 0
                   },
                   {
                     "kind": "text",
-                    "x": 160,
-                    "y": 164,
+                    "x": 144,
+                    "y": 163,
                     "text": "밑넓이",
-                    "size": 11,
+                    "size": 10,
                     "anchor": "middle",
                     "fill": "muted",
                     "id": "base"
                   },
                   {
+                    "kind": "line",
+                    "x1": 236,
+                    "y1": 78,
+                    "x2": 236,
+                    "y2": 168,
+                    "stroke": "muted",
+                    "strokeWidth": 1,
+                    "arrow": "both",
+                    "id": "hbar",
+                    "opacity": 0
+                  },
+                  {
                     "kind": "text",
-                    "x": 252,
-                    "y": 100,
+                    "x": 258,
+                    "y": 124,
                     "text": "높이",
-                    "size": 11,
+                    "size": 10,
                     "anchor": "middle",
                     "fill": "muted",
                     "id": "h",
@@ -888,7 +1383,7 @@
                   {
                     "kind": "text",
                     "x": 160,
-                    "y": 34,
+                    "y": 26,
                     "text": "밑넓이 $\\times$ 높이",
                     "size": 13,
                     "anchor": "middle",
@@ -899,22 +1394,70 @@
                 ],
                 "frames": [
                   {
-                    "caption": "밑면을 얇은 판으로 한 장 깔았어요.",
+                    "caption": "밑면과 같은 모양의 얇은 판을 한 장 깔았어요.",
                     "changes": [
                       {
-                        "id": "l2",
+                        "id": "f1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "f2",
                         "opacity": 0
                       },
                       {
-                        "id": "l3",
+                        "id": "s2",
                         "opacity": 0
                       },
                       {
-                        "id": "l4",
+                        "id": "t2",
                         "opacity": 0
                       },
                       {
-                        "id": "l5",
+                        "id": "f3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "t3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "f4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "t4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "f5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "t5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "hbar",
                         "opacity": 0
                       },
                       {
@@ -928,27 +1471,81 @@
                     ]
                   },
                   {
-                    "caption": "같은 판을 위로 쌓아 올려요.",
+                    "caption": "같은 판을 더 준비했어요. 위에 올려 볼게요.",
                     "changes": [
                       {
-                        "id": "l2",
+                        "id": "f1",
                         "opacity": 1
                       },
                       {
-                        "id": "l3",
+                        "id": "s1",
                         "opacity": 1
                       },
                       {
-                        "id": "l4",
+                        "id": "t1",
+                        "hidden": true
+                      },
+                      {
+                        "id": "f2",
                         "opacity": 1
                       },
                       {
-                        "id": "l5",
+                        "id": "s2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t2",
+                        "hidden": true
+                      },
+                      {
+                        "id": "f3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "f4",
+                        "dy": -26,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s4",
+                        "dy": -26,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t4",
+                        "dy": -26,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "f5",
+                        "dy": -48,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s5",
+                        "dy": -48,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t5",
+                        "dy": -48,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "hbar",
                         "opacity": 0
                       },
                       {
                         "id": "h",
-                        "opacity": 1
+                        "opacity": 0
                       },
                       {
                         "id": "law",
@@ -960,19 +1557,67 @@
                     "caption": "높이만큼 쌓으면 기둥이 돼요. 그래서 부피는 밑넓이 곱하기 높이예요.",
                     "changes": [
                       {
-                        "id": "l2",
+                        "id": "f1",
                         "opacity": 1
                       },
                       {
-                        "id": "l3",
+                        "id": "s1",
                         "opacity": 1
                       },
                       {
-                        "id": "l4",
+                        "id": "t1",
+                        "hidden": true
+                      },
+                      {
+                        "id": "f2",
                         "opacity": 1
                       },
                       {
-                        "id": "l5",
+                        "id": "s2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t2",
+                        "hidden": true
+                      },
+                      {
+                        "id": "f3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t3",
+                        "hidden": true
+                      },
+                      {
+                        "id": "f4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t4",
+                        "hidden": true
+                      },
+                      {
+                        "id": "f5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "t5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "hbar",
                         "opacity": 1
                       },
                       {
@@ -986,18 +1631,20 @@
                     ]
                   }
                 ],
-                "frameMs": 1700
+                "frameMs": 1700,
+                "width": 320,
+                "height": 200
               }
             }
           ]
         },
         {
-          "sectionId": "volume:example:v1",
+          "sectionId": "volume:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "volume:example:text:v1",
+              "blockId": "volume:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1009,12 +1656,12 @@
           ]
         },
         {
-          "sectionId": "volume:practice:v1",
+          "sectionId": "volume:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "volume:practice:problems:v1",
+              "blockId": "volume:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1031,12 +1678,12 @@
           ]
         },
         {
-          "sectionId": "volume:check:v1",
+          "sectionId": "volume:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "volume:check:problems:v1",
+              "blockId": "volume:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1052,12 +1699,12 @@
           ]
         },
         {
-          "sectionId": "volume:summary:v1",
+          "sectionId": "volume:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "volume:summary:text:v1",
+              "blockId": "volume:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,

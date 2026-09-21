@@ -148,6 +148,9 @@ export function SceneEditor({ payload, onChange, arrangingRefusal }: {
         {/* Zones are drawn as outlines the author can drag and stretch like any other shape. */}
         {zones.map((current, index) => <g key={current.id}>
           <rect x={current.x} y={current.y} width={current.width} height={current.height} rx={3} className="scene-zone" />
+          {/* The canvas shows the seat's name where the learner will read it, so the author sees it too. */}
+          <text x={current.x + current.width / 2} y={current.y + current.height + 12} textAnchor="middle"
+            className="scene-zone-label" aria-hidden="true">{current.label}</text>
           <rect x={current.x} y={current.y} width={current.width} height={current.height} fill="transparent"
             style={{ cursor: 'move' }} onPointerDown={(event) => start(event, index, 'move', 'zone')} />
         </g>)}
