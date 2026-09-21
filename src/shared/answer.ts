@@ -3,9 +3,17 @@
  * learner will type it, so one parser decides both what is stored and what is accepted. Nothing
  * here grades: it reads a written number, and `gradeAnswer` alone compares one to an expectation.
  */
+/** One of the answers a multiple-choice question offers. Its text is prose with `$...$`, like any other. */
+export type AnswerOption = { id: string; text: string };
 export type AnswerSpec =
   | { kind: 'integer'; value: number }
-  | { kind: 'rational'; numerator: number; denominator: number; requiredForm?: 'reduced_fraction' };
+  | { kind: 'rational'; numerator: number; denominator: number; requiredForm?: 'reduced_fraction' }
+  /**
+   * A question answered by picking. The options are kept with the answer because they are what the
+   * answer means: `correct` alone says nothing without the list it names one of. What a learner is
+   * sent is this list without `correct`, which is why the two are stored apart at publication.
+   */
+  | { kind: 'choice'; options: AnswerOption[]; correct: string };
 export type ParsedAnswer = { numerator: bigint; denominator: bigint; fraction: boolean; reduced: boolean };
 
 function gcd(a: bigint, b: bigint): bigint {
@@ -79,7 +87,24 @@ export function answerSpec(input: string, requiredForm?: 'reduced_fraction' | nu
 }
 
 /** The written form of a stored expectation, so opening a question shows what was answered. */
-export function answerText(spec: { kind: 'integer' | 'rational'; value?: number; numerator?: number; denominator?: number }): string {
+export function answerText(spec: { kind: string; value?: number; numerator?: number; denominator?: number }): string {
+  // A picked answer is not written, so there is nothing to put in a box that takes writing.
+  if (spec.kind === 'choice') return '';
   if (spec.kind === 'integer') return Number.isFinite(spec.value) ? String(spec.value) : '';
   return Number.isFinite(spec.numerator) && Number.isFinite(spec.denominator) ? `${spec.numerator}/${spec.denominator}` : '';
 }
+
+/**
+ * What is wrong with a set of options, or null when nothing is. One reader for the editor, which
+ * says it while the author types, and for publication, which refuses it.
+ */
+export function choiceIssue(spec: { options: AnswerOption[]; correct: string }): string | null {
+  if (spec.options.length < 2) return '보기를 두 개 이상 써 주세요.';
+  if (spec.options.length > choiceLimits.maxOptions) return `보기는 ${choiceLimits.maxOptions}개까지 쓸 수 있어요.`;
+  if (spec.options.some((option) => !option.text.trim())) return '내용이 빈 보기가 있어요.';
+  if (spec.options.some((option) => option.text.length > choiceLimits.maxText)) return `보기 하나는 ${choiceLimits.maxText}자까지 쓸 수 있어요.`;
+  if (new Set(spec.options.map((option) => option.id)).size !== spec.options.length) return '보기의 이름이 겹쳐요.';
+  if (!spec.options.some((option) => option.id === spec.correct)) return '정답인 보기를 하나 골라 주세요.';
+  return null;
+}
+export const choiceLimits = { maxOptions: 6, maxText: 200 } as const;

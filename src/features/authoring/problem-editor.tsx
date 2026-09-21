@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import type { ContentBlock } from '@/shared/api';
 import { displayedAnswer, type AnswerInput } from '@/shared/authoring-checks';
-import { answerSpec, answerText, type AnswerSpec } from '@/shared/answer';
+import { answerSpec, answerText, choiceIssue, choiceLimits, type AnswerOption, type AnswerSpec } from '@/shared/answer';
 import {
   copyProblem, insertAfter, moveBlock, newProblem, nextProblemBlockId, nextProblemVersionId, problemBlockForms,
   problemGist, type DraftProblem, type ConceptChoice, type DefinitionChoice, type ProblemSetChoice,
@@ -12,6 +12,44 @@ import { Icon } from '@/features/learning/icons';
 import { AddBlock, BlockCard } from './block-editor';
 import { useRemovalNotice } from './edit-history';
 import { useExpertMode } from './expert-mode';
+
+/** A fresh set of options, so switching to a picked answer lands on something writable. */
+const blankChoices = (): AnswerSpec => ({ kind: 'choice', options: [{ id: 'a', text: '' }, { id: 'b', text: '' }], correct: 'a' });
+const optionNames = 'abcdef';
+
+/**
+ * A question answered by picking. The author writes each option and marks one of them, and the
+ * option's name — not its text — is what the answer is compared by, so rewording an option later
+ * does not silently change which answer was right.
+ */
+function ChoiceField({ spec, onChange }: { spec: Extract<AnswerSpec, { kind: 'choice' }>; onChange: (next: AnswerSpec) => void }) {
+  const issue = choiceIssue(spec);
+  const write = (options: AnswerOption[], correct = spec.correct) =>
+    onChange({ kind: 'choice', options, correct: options.some((option) => option.id === correct) ? correct : options[0].id });
+  return <div className="editor-answer">
+    <span className="editor-label">정답 · 객관식</span>
+    <ul className="editor-choices">
+      {spec.options.map((option, index) => <li key={option.id}>
+        <label className="editor-choice-correct">
+          <input type="radio" name={`correct-${spec.options.map((item) => item.id).join('')}`} checked={spec.correct === option.id}
+            onChange={() => write(spec.options, option.id)} />
+          <span className="sr-only">{index + 1}번째 보기를 정답으로</span>
+        </label>
+        <input aria-label={`${index + 1}번째 보기`} value={option.text} maxLength={choiceLimits.maxText} placeholder="보기 내용"
+          onChange={(event) => write(spec.options.map((item) => item.id === option.id ? { ...item, text: event.target.value } : item))} />
+        <button type="button" className="icon-button" aria-label={`${index + 1}번째 보기 지우기`} disabled={spec.options.length <= 2}
+          onClick={() => write(spec.options.filter((item) => item.id !== option.id))}><Icon name="close" size={15} /></button>
+      </li>)}
+    </ul>
+    <div className="editor-choice-actions">
+      <button type="button" className="text-button" disabled={spec.options.length >= choiceLimits.maxOptions}
+        onClick={() => write([...spec.options, { id: optionNames[spec.options.length] ?? `o${spec.options.length}`, text: '' }])}>보기 추가</button>
+      <button type="button" className="text-button" onClick={() => onChange({ kind: 'integer', value: 0 })}>숫자 답으로 바꾸기</button>
+    </div>
+    {issue ? <small className="editor-warn" role="alert">{issue} 이 입력을 고치기 전에는 저장하거나 발행할 수 없어요.</small>
+      : <small>동그라미를 친 보기가 정답이에요. 보기의 순서대로 학습자에게 보여요.</small>}
+  </div>;
+}
 
 /**
  * An author writes the answer the way a learner will type it, and the same reader decides both. A
@@ -26,6 +64,7 @@ function AnswerField({ spec, input, onInput, onChange }: { spec: AnswerSpec; inp
     onInput({ text: next, spec: JSON.stringify(parsed ?? spec) });
     if (parsed) onChange(parsed);
   };
+  if (spec.kind === 'choice') return <ChoiceField spec={spec} onChange={onChange} />;
   const parsed = answerSpec(written, requiredForm ?? null);
   // Said in the summary so the fold can stay shut: what a question accepts is worth knowing at a
   // glance, while changing it is rare enough not to hold a place on the screen.
@@ -42,18 +81,19 @@ function AnswerField({ spec, input, onInput, onChange }: { spec: AnswerSpec; inp
       <summary>답 인정 범위 바꾸기</summary>
       <label className="editor-field"><span className="editor-label">답안 형식</span>
         <select value={spec.kind} disabled={!parsed} onChange={event => {
+          if (event.target.value === 'choice') { onChange(blankChoices()); return; }
           const next: AnswerSpec = event.target.value === 'rational'
             ? spec.kind === 'integer' ? { kind: 'rational', numerator: spec.value, denominator: 1 } : spec
             : { kind: 'integer', value: spec.kind === 'integer' ? spec.value : spec.numerator / spec.denominator };
           onInput({ text: answerText(next), spec: JSON.stringify(next) }); onChange(next);
-        }}><option value="rational">숫자 · 정수, 소수, 분수</option><option value="integer" disabled={spec.kind === 'rational' && spec.numerator % spec.denominator !== 0}>정수만</option></select>
+        }}><option value="rational">숫자 · 정수, 소수, 분수</option><option value="integer" disabled={spec.kind === 'rational' && spec.numerator % spec.denominator !== 0}>정수만</option><option value="choice">객관식 · 보기에서 고르기</option></select>
       </label>
       {spec.kind === 'rational' && <label className="editor-check">
         <input type="checkbox" checked={!!requiredForm} disabled={!parsed} onChange={event => {
           const next: AnswerSpec = { kind: 'rational', numerator: spec.numerator, denominator: spec.denominator, ...(event.target.checked ? {requiredForm: 'reduced_fraction' as const} : {}) };
           onInput({text:written,spec:JSON.stringify(next)}); onChange(next);
         }} /><span>기약분수로 쓴 답만 인정</span></label>}
-      <p className="editor-note">자동 채점은 숫자 답안을 지원해요. 문자식·좌표쌍·증명은 설명이나 예시로 작성해 주세요.</p>
+      <p className="editor-note">자동 채점은 숫자 답안과 객관식을 지원해요. 문자식·좌표쌍·증명은 설명이나 예시로 작성해 주세요.</p>
     </details>
   </div>;
 }

@@ -2112,6 +2112,898 @@
           "solution": []
         }
       ]
+    },
+    {
+      "problemSetId": "systems:drill",
+      "courseKey": "systems",
+      "name": "연립방정식 모아 풀기",
+      "versionId": "systems:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "systems:drill-1:v1",
+          "conceptKeys": [
+            "two-variable-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + y = 12$에서 $x = 5$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5$에 얼마를 더해야 $12$일까요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-2:v1",
+          "conceptKeys": [
+            "two-variable-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x + y = 15$에서 $x = 4$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 \\times 4$를 먼저 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-3:v1",
+          "conceptKeys": [
+            "two-variable-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x - y = 8$에서 $x = 5$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$15 - y = 8$이 돼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-4:v1",
+          "conceptKeys": [
+            "two-variable-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + y = 6$의 해는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "하나예요"
+              },
+              {
+                "id": "b",
+                "text": "둘이에요"
+              },
+              {
+                "id": "c",
+                "text": "수없이 많아요"
+              },
+              {
+                "id": "d",
+                "text": "하나도 없어요"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "하나예요"
+              },
+              {
+                "id": "b",
+                "text": "둘이에요"
+              },
+              {
+                "id": "c",
+                "text": "수없이 많아요"
+              },
+              {
+                "id": "d",
+                "text": "하나도 없어요"
+              }
+            ],
+            "correct": "c"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "식 하나로는 짝이 줄줄이 나와요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-5:v1",
+          "conceptKeys": [
+            "simultaneous-equations"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + y = 10$과 $x - y = 4$를 모두 만족하는 짝에서 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 식을 더해 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-6:v1",
+          "conceptKeys": [
+            "simultaneous-equations"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + y = 10$과 $x - y = 4$를 모두 만족하는 짝에서 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$를 구해 되돌려 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-7:v1",
+          "conceptKeys": [
+            "simultaneous-equations"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 직선이 서로 나란하면 연립방정식의 해는 어떻게 되나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "하나예요"
+              },
+              {
+                "id": "b",
+                "text": "없어요"
+              },
+              {
+                "id": "c",
+                "text": "수없이 많아요"
+              },
+              {
+                "id": "d",
+                "text": "둘이에요"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "하나예요"
+              },
+              {
+                "id": "b",
+                "text": "없어요"
+              },
+              {
+                "id": "c",
+                "text": "수없이 많아요"
+              },
+              {
+                "id": "d",
+                "text": "둘이에요"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "나란한 직선은 만나지 않아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-8:v1",
+          "conceptKeys": [
+            "simultaneous-equations"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + y = 9$와 $x = 2y$를 모두 만족하는 짝에서 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2y + y = 9$가 돼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-9:v1",
+          "conceptKeys": [
+            "substitution-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = x + 3$과 $2x + y = 12$를 풀었을 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$ 자리에 $x+3$을 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-10:v1",
+          "conceptKeys": [
+            "substitution-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = x + 3$과 $2x + y = 12$를 풀었을 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$를 구해 되돌려 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-11:v1",
+          "conceptKeys": [
+            "substitution-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x = 4y$와 $x + y = 15$를 풀었을 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4y + y = 15$가 돼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-12:v1",
+          "conceptKeys": [
+            "substitution-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 2 - x$와 $3x + y = 8$을 풀었을 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$ 자리에 $2-x$를 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-13:v1",
+          "conceptKeys": [
+            "substitution-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = x - 2$를 $3y$에 넣을 때 바르게 쓴 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3x - 2$"
+              },
+              {
+                "id": "b",
+                "text": "$3(x-2)$"
+              },
+              {
+                "id": "c",
+                "text": "$3x + 2$"
+              },
+              {
+                "id": "d",
+                "text": "$x - 6$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3x - 2$"
+              },
+              {
+                "id": "b",
+                "text": "$3(x-2)$"
+              },
+              {
+                "id": "c",
+                "text": "$3x + 2$"
+              },
+              {
+                "id": "d",
+                "text": "$x - 6$"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호로 감싸 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-14:v1",
+          "conceptKeys": [
+            "elimination-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + y = 8$과 $x - y = 2$를 더하면 $\\square x = 10$이에요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$끼리 서로 지워져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-15:v1",
+          "conceptKeys": [
+            "elimination-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x + y = 17$과 $x + y = 7$을 빼서 구한 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y$의 계수가 같으니 빼면 사라져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-16:v1",
+          "conceptKeys": [
+            "elimination-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x - y = 5$와 $x + y = 7$을 더해서 구한 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x = 12$가 돼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-17:v1",
+          "conceptKeys": [
+            "elimination-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + 3y = 14$와 $x + y = 8$을 풀었을 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 식을 빼면 $2y = 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-18:v1",
+          "conceptKeys": [
+            "elimination-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x + 3y = 16$과 $x - y = 3$을 풀었을 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "아래 식에 $3$을 곱해 계수를 맞춰요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-19:v1",
+          "conceptKeys": [
+            "elimination-method"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "계수를 맞추려고 식의 양변에 수를 곱할 때 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "왼쪽만 곱한다"
+              },
+              {
+                "id": "b",
+                "text": "오른쪽만 곱한다"
+              },
+              {
+                "id": "c",
+                "text": "양변 모두에 곱한다"
+              },
+              {
+                "id": "d",
+                "text": "문자에만 곱한다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "왼쪽만 곱한다"
+              },
+              {
+                "id": "b",
+                "text": "오른쪽만 곱한다"
+              },
+              {
+                "id": "c",
+                "text": "양변 모두에 곱한다"
+              },
+              {
+                "id": "d",
+                "text": "문자에만 곱한다"
+              }
+            ],
+            "correct": "c"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한쪽만 곱하면 다른 식이 돼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "systems:drill-20:v1",
+          "conceptKeys": [
+            "simultaneous-equations"
+          ],
+          "promptContent": [
+            {
+              "blockId": "systems:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어른 $x$명과 아이 $y$명이 모두 $9$명이고, 어른이 아이보다 $3$명 많아요. 어른은 몇 명인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "systems:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x+y=9$, $x-y=3$을 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
     }
   ],
   "diagnostics": [],

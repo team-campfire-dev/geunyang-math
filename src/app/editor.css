@@ -447,3 +447,11 @@
   .draft-search { width: 100%; }
   .authoring-page .sheet-inline, .authoring-page .sheet-paragraph { font-size: max(16px, 1em); }
 }
+
+/* Writing the options of a question answered by picking. */
+.editor-choices{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:7px}
+.editor-choices li{display:flex;align-items:center;gap:9px}
+.editor-choices li input[type=text],.editor-choices li input:not([type]){flex:1;min-width:0}
+.editor-choice-correct{display:flex;align-items:center}
+.editor-choice-correct input{accent-color:var(--green);width:17px;height:17px}
+.editor-choice-actions{display:flex;gap:14px;margin-top:9px}

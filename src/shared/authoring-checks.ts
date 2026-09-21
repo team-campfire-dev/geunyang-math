@@ -1,4 +1,4 @@
-import { answerSpec, answerText, type AnswerSpec } from './answer';
+import { answerSpec, answerText, choiceIssue, type AnswerSpec } from './answer';
 import type { ContentBlock } from './api';
 import type { DraftEdit, DraftIssue, LessonChoice, DraftSummary } from './authoring';
 
@@ -7,7 +7,10 @@ export function displayedAnswer(spec: AnswerSpec, input?: AnswerInput) {
   return input?.spec === JSON.stringify(spec) ? input.text : answerText(spec);
 }
 export function invalidAnswers(edit: DraftEdit, inputs: Record<string, AnswerInput>) {
-  return edit.problems.filter(problem => !answerSpec(displayedAnswer(problem.gradingSpec, inputs[problem.problemVersionId])));
+  // A picked answer is not written, so what makes it wrong is its options, not a box of text.
+  return edit.problems.filter(problem => problem.gradingSpec.kind === 'choice'
+    ? choiceIssue(problem.gradingSpec) !== null
+    : !answerSpec(displayedAnswer(problem.gradingSpec, inputs[problem.problemVersionId])));
 }
 
 /** Old starter copy must not accidentally become a published lesson. Exact matches only. */

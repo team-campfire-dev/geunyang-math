@@ -6,7 +6,7 @@ import { AuthoringService, authoringRole, authoringRoleDetail, openAuthoring, op
 import { lessonRecord, importContent, definitionRecords, problemSetRecords } from '@/server/content-store';
 import type { LessonRecord, StoredLesson } from '@/core/content';
 import { newProblem, nextProblemVersionId, type DraftEdit, type DraftProblem } from '@/shared/authoring';
-import { lessonBundle, seedLessons } from './fixtures/content';
+import { lessonBundle, seedLessons, writtenAnswer } from './fixtures/content';
 
 const url = process.env.TEST_DATABASE_URL;
 describe.skipIf(!url)('content authoring on MySQL', () => {
@@ -187,9 +187,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     const created = await service.createDraft(admin.id, lessonKey);
     const draftId = created.draft!.id;
     const problem = created.draft!.edit.problems[0];
-    const written = problem.gradingSpec.kind === 'integer'
-      ? String(problem.gradingSpec.value)
-      : `${problem.gradingSpec.numerator}/${problem.gradingSpec.denominator}`;
+    const written = writtenAnswer(problem);
 
     const right = await service.tryAnswer(admin.id, draftId, problem.problemVersionId, written, false);
     expect(right.tried).toMatchObject({ status: 'correct', assisted: false });

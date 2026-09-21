@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { getActivityProblemIds, type LessonRecord, type StoredProblem } from '@/core/content';
-import { lessonBundle, seedLessons } from './fixtures/content';
+import { lessonBundle, seedLessons, writtenAnswer } from './fixtures/content';
 import { developmentLoginEnabled, sessionUser } from '@/server/auth';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
@@ -16,10 +16,7 @@ const asJson = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.I
 const requestId = () => randomUUID();
 const problemById = (id: string) => record.problems.find(problem => problem.problemVersionId === id)!;
 // Answers are fixture inputs; the separate grading suite verifies the arithmetic itself.
-function fixtureAnswer(problem: StoredProblem): string {
-  const spec = problem.gradingSpec;
-  return spec.kind === 'integer' ? String(spec.value) : `${spec.numerator}/${spec.denominator}`;
-}
+const fixtureAnswer = writtenAnswer;
 
 describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () => {
   let db: ReturnType<typeof createDatabase>;

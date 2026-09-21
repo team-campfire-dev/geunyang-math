@@ -1946,6 +1946,943 @@
           "solution": []
         }
       ]
+    },
+    {
+      "problemSetId": "integers:drill",
+      "courseKey": "integers",
+      "name": "정수와 유리수 모아 풀기",
+      "versionId": "integers:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "integers:drill-1:v1",
+          "conceptKeys": [
+            "negative-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "영하 $15$도를 부호를 붙인 수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "영하는 $0$보다 낮아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-2:v1",
+          "conceptKeys": [
+            "negative-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1000$원을 쓴 것을 부호를 붙인 수로 나타내 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -1000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빠져나가는 쪽이 음수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-3:v1",
+          "conceptKeys": [
+            "integer"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$에서 왼쪽으로 $7$칸 간 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$에서 세 칸 가면 $0$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-4:v1",
+          "conceptKeys": [
+            "integer"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 정수가 아닌 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$-5$"
+              },
+              {
+                "id": "b",
+                "text": "$0$"
+              },
+              {
+                "id": "c",
+                "text": "$\\frac{1}{2}$"
+              },
+              {
+                "id": "d",
+                "text": "$7$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$-5$"
+              },
+              {
+                "id": "b",
+                "text": "$0$"
+              },
+              {
+                "id": "c",
+                "text": "$\\frac{1}{2}$"
+              },
+              {
+                "id": "d",
+                "text": "$7$"
+              }
+            ],
+            "correct": "c"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "수직선의 눈금 자리에 있는 수가 정수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-5:v1",
+          "conceptKeys": [
+            "absolute-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$|-11|$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 11
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0$에서 떨어진 거리예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-6:v1",
+          "conceptKeys": [
+            "absolute-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "절댓값이 $8$인 음수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0$의 왼쪽으로 $8$만큼이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-7:v1",
+          "conceptKeys": [
+            "absolute-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 가장 작은 수는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$-7$"
+              },
+              {
+                "id": "b",
+                "text": "$-2$"
+              },
+              {
+                "id": "c",
+                "text": "$0$"
+              },
+              {
+                "id": "d",
+                "text": "$3$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$-7$"
+              },
+              {
+                "id": "b",
+                "text": "$-2$"
+              },
+              {
+                "id": "c",
+                "text": "$0$"
+              },
+              {
+                "id": "d",
+                "text": "$3$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "음수끼리는 절댓값이 클수록 작아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-8:v1",
+          "conceptKeys": [
+            "absolute-value"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$|-4|$와 $|4|$ 중 더 큰 값을 써 주세요. 같으면 그 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "절댓값은 방향을 담지 않아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-9:v1",
+          "conceptKeys": [
+            "signed-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-6 + 4$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "왼쪽으로 여섯, 오른쪽으로 넷 걸어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-10:v1",
+          "conceptKeys": [
+            "signed-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-3 + (-8)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -11
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부호가 같으면 절댓값을 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-11:v1",
+          "conceptKeys": [
+            "signed-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5 - 9$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빼기는 반대 부호를 더하는 것과 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-12:v1",
+          "conceptKeys": [
+            "signed-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-7 - (-3)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-(-3)$은 $+3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-13:v1",
+          "conceptKeys": [
+            "signed-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 값이 가장 큰 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$-2 + (-3)$"
+              },
+              {
+                "id": "b",
+                "text": "$-2 + 3$"
+              },
+              {
+                "id": "c",
+                "text": "$2 + (-3)$"
+              },
+              {
+                "id": "d",
+                "text": "$-5 + 1$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$-2 + (-3)$"
+              },
+              {
+                "id": "b",
+                "text": "$-2 + 3$"
+              },
+              {
+                "id": "c",
+                "text": "$2 + (-3)$"
+              },
+              {
+                "id": "d",
+                "text": "$-5 + 1$"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "하나씩 계산해 견주어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-14:v1",
+          "conceptKeys": [
+            "signed-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(-4) \\times (-5)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "음수끼리 곱하면 양수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-15:v1",
+          "conceptKeys": [
+            "signed-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(-18) \\div 3$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부호가 다르면 몫도 음수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-16:v1",
+          "conceptKeys": [
+            "rational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-\\frac{3}{6}$을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": -1,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$으로 약분해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-17:v1",
+          "conceptKeys": [
+            "rational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-0.5$를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": -1,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-\\frac{5}{10}$을 약분해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-18:v1",
+          "conceptKeys": [
+            "rational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 유리수가 아닌 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$-3$"
+              },
+              {
+                "id": "b",
+                "text": "$0.25$"
+              },
+              {
+                "id": "c",
+                "text": "$\\frac{2}{7}$"
+              },
+              {
+                "id": "d",
+                "text": "끝없이 불규칙하게 이어지는 소수"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$-3$"
+              },
+              {
+                "id": "b",
+                "text": "$0.25$"
+              },
+              {
+                "id": "c",
+                "text": "$\\frac{2}{7}$"
+              },
+              {
+                "id": "d",
+                "text": "끝없이 불규칙하게 이어지는 소수"
+              }
+            ],
+            "correct": "d"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정수의 비로 쓸 수 있어야 유리수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-19:v1",
+          "conceptKeys": [
+            "rational-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-\\frac{1}{4} + \\frac{3}{4}$의 값을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모가 같으니 분자만 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "integers:drill-20:v1",
+          "conceptKeys": [
+            "negative-number"
+          ],
+          "promptContent": [
+            {
+              "blockId": "integers:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0$은 양수인가요, 음수인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "양수예요"
+              },
+              {
+                "id": "b",
+                "text": "음수예요"
+              },
+              {
+                "id": "c",
+                "text": "둘 다 아니에요"
+              },
+              {
+                "id": "d",
+                "text": "둘 다예요"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "양수예요"
+              },
+              {
+                "id": "b",
+                "text": "음수예요"
+              },
+              {
+                "id": "c",
+                "text": "둘 다 아니에요"
+              },
+              {
+                "id": "d",
+                "text": "둘 다예요"
+              }
+            ],
+            "correct": "c"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "integers:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0$은 양쪽을 가르는 기준이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
     }
   ],
   "diagnostics": [],

@@ -1642,6 +1642,909 @@
           "solution": []
         }
       ]
+    },
+    {
+      "problemSetId": "decimals:drill",
+      "courseKey": "decimals",
+      "name": "소수 모아 풀기",
+      "versionId": "decimals:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "decimals:drill-1:v1",
+          "conceptKeys": [
+            "decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{7}{10}$을 소수로 쓰면 $0.\\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "십분의 일이 소수 첫째 자리예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-2:v1",
+          "conceptKeys": [
+            "decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.9$를 분모가 $10$인 분수로 쓸 때 분자를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소수 첫째 자리 수가 분자예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-3:v1",
+          "conceptKeys": [
+            "decimal-place"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3.146$에서 소수 둘째 자리 숫자를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소수점 오른쪽으로 두 번째예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-4:v1",
+          "conceptKeys": [
+            "decimal-place"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5.708$에서 소수 셋째 자리 숫자를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소수점에서 세 칸 오른쪽이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-5:v1",
+          "conceptKeys": [
+            "decimal-place"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 $2.5$와 크기가 같은 수는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2.05$"
+              },
+              {
+                "id": "b",
+                "text": "$2.50$"
+              },
+              {
+                "id": "c",
+                "text": "$25$"
+              },
+              {
+                "id": "d",
+                "text": "$0.25$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2.05$"
+              },
+              {
+                "id": "b",
+                "text": "$2.50$"
+              },
+              {
+                "id": "c",
+                "text": "$25$"
+              },
+              {
+                "id": "d",
+                "text": "$0.25$"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "끝에 붙은 $0$은 크기를 바꾸지 않아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-6:v1",
+          "conceptKeys": [
+            "decimal-place"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 가장 큰 수는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$0.7$"
+              },
+              {
+                "id": "b",
+                "text": "$0.68$"
+              },
+              {
+                "id": "c",
+                "text": "$0.709$"
+              },
+              {
+                "id": "d",
+                "text": "$0.7001$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$0.7$"
+              },
+              {
+                "id": "b",
+                "text": "$0.68$"
+              },
+              {
+                "id": "c",
+                "text": "$0.709$"
+              },
+              {
+                "id": "d",
+                "text": "$0.7001$"
+              }
+            ],
+            "correct": "c"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "앞 자리부터 차례로 견주어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-7:v1",
+          "conceptKeys": [
+            "decimal-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.25$를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 4,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{25}{100}$을 약분해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-8:v1",
+          "conceptKeys": [
+            "decimal-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.6$을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 5,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{6}{10}$을 약분해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-9:v1",
+          "conceptKeys": [
+            "decimal-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{5}$을 소수로 쓰면 $0.\\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모를 $10$으로 맞춰 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-10:v1",
+          "conceptKeys": [
+            "decimal-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{3}{4}$을 소수로 쓰면 $0.\\square 5$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모를 $100$으로 맞추면 $\\frac{75}{100}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-11:v1",
+          "conceptKeys": [
+            "decimal-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.4 + 0.3$을 소수로 계산한 값을 분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 7,
+            "denominator": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소수 첫째 자리끼리 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-12:v1",
+          "conceptKeys": [
+            "decimal-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1.25 + 0.75$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소수점을 맞춰 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-13:v1",
+          "conceptKeys": [
+            "decimal-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3.2 - 1.5$의 값을 분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 17,
+            "denominator": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소수점을 맞춰 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-14:v1",
+          "conceptKeys": [
+            "decimal-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 계산이 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$0.5+0.5=0.10$"
+              },
+              {
+                "id": "b",
+                "text": "$0.5+0.5=1$"
+              },
+              {
+                "id": "c",
+                "text": "$0.5+0.5=0.55$"
+              },
+              {
+                "id": "d",
+                "text": "$0.5+0.5=10$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$0.5+0.5=0.10$"
+              },
+              {
+                "id": "b",
+                "text": "$0.5+0.5=1$"
+              },
+              {
+                "id": "c",
+                "text": "$0.5+0.5=0.55$"
+              },
+              {
+                "id": "d",
+                "text": "$0.5+0.5=10$"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.5$는 절반이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-15:v1",
+          "conceptKeys": [
+            "decimal-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "물통에 $1.4$L가 있고 $0.85$L를 더 부었어요. 모두 몇 L인가요? 분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 225,
+            "denominator": 100
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소수점을 맞춰 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-16:v1",
+          "conceptKeys": [
+            "decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.07$을 분모가 $100$인 분수로 쓸 때 분자를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소수 둘째 자리까지 있어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-17:v1",
+          "conceptKeys": [
+            "decimal-place"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.0 3$처럼 $0.03$에서 $3$은 몇 번째 자리에 있나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소수점에서 오른쪽으로 세어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-18:v1",
+          "conceptKeys": [
+            "decimal-fraction"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 $0.125$와 같은 분수는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\frac{1}{8}$"
+              },
+              {
+                "id": "b",
+                "text": "$\\frac{1}{4}$"
+              },
+              {
+                "id": "c",
+                "text": "$\\frac{1}{5}$"
+              },
+              {
+                "id": "d",
+                "text": "$\\frac{1}{2}$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\frac{1}{8}$"
+              },
+              {
+                "id": "b",
+                "text": "$\\frac{1}{4}$"
+              },
+              {
+                "id": "c",
+                "text": "$\\frac{1}{5}$"
+              },
+              {
+                "id": "d",
+                "text": "$\\frac{1}{2}$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{125}{1000}$을 약분해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-19:v1",
+          "conceptKeys": [
+            "decimal-addition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 - 0.4$의 값을 분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 16,
+            "denominator": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$를 $2.0$으로 보고 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "decimals:drill-20:v1",
+          "conceptKeys": [
+            "decimal"
+          ],
+          "promptContent": [
+            {
+              "blockId": "decimals:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.1$이 $6$개이면 얼마인가요? 분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 6,
+            "denominator": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "decimals:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.1$씩 여섯 번 더해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
     }
   ],
   "diagnostics": [],

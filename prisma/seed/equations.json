@@ -2023,6 +2023,899 @@
           "solution": []
         }
       ]
+    },
+    {
+      "problemSetId": "equations:drill",
+      "courseKey": "equations",
+      "name": "일차방정식 모아 풀기",
+      "versionId": "equations:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "equations:drill-1:v1",
+          "conceptKeys": [
+            "equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4x = 28$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4$를 곱해 $28$이 되는 수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-2:v1",
+          "conceptKeys": [
+            "equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + 11 = 4$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4$보다 $11$만큼 작은 수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-3:v1",
+          "conceptKeys": [
+            "equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 방정식이 아닌 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x + 1 = 5$"
+              },
+              {
+                "id": "b",
+                "text": "$2x = x + x$"
+              },
+              {
+                "id": "c",
+                "text": "$3x - 2 = 7$"
+              },
+              {
+                "id": "d",
+                "text": "$x - 4 = 0$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x + 1 = 5$"
+              },
+              {
+                "id": "b",
+                "text": "$2x = x + x$"
+              },
+              {
+                "id": "c",
+                "text": "$3x - 2 = 7$"
+              },
+              {
+                "id": "d",
+                "text": "$x - 4 = 0$"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어떤 수를 넣어도 맞는 것은 항등식이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-4:v1",
+          "conceptKeys": [
+            "equation-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5x - 3 = 17$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5x$가 얼마인지 먼저 구해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-5:v1",
+          "conceptKeys": [
+            "equation-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$9 - x = 13$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$9$에서 얼마를 빼야 $13$일까요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-6:v1",
+          "conceptKeys": [
+            "equation-solution"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x=3$이 해인 방정식은 다음 중 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2x = 5$"
+              },
+              {
+                "id": "b",
+                "text": "$x + 4 = 8$"
+              },
+              {
+                "id": "c",
+                "text": "$3x - 2 = 7$"
+              },
+              {
+                "id": "d",
+                "text": "$x - 3 = 3$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2x = 5$"
+              },
+              {
+                "id": "b",
+                "text": "$x + 4 = 8$"
+              },
+              {
+                "id": "c",
+                "text": "$3x - 2 = 7$"
+              },
+              {
+                "id": "d",
+                "text": "$x - 3 = 3$"
+              }
+            ],
+            "correct": "c"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$을 넣어 양쪽이 같아지는지 봐요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-7:v1",
+          "conceptKeys": [
+            "equality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-4x = 24$의 양변을 $-4$로 나누면 $x$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "음수로 나누면 부호가 바뀌어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-8:v1",
+          "conceptKeys": [
+            "equality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{x}{5} = -2$의 양변에 $5$를 곱하면 $x$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-2$에 $5$를 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-9:v1",
+          "conceptKeys": [
+            "equality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x - 8 = 2$의 양변에 $8$을 더하면 $x$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "왼쪽에는 $x$만 남아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-10:v1",
+          "conceptKeys": [
+            "equality-property"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 등식의 성질로 할 수 없는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "양변에 $3$을 더하기"
+              },
+              {
+                "id": "b",
+                "text": "양변에 $3$을 곱하기"
+              },
+              {
+                "id": "c",
+                "text": "양변을 $0$으로 나누기"
+              },
+              {
+                "id": "d",
+                "text": "양변에서 $3$을 빼기"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "양변에 $3$을 더하기"
+              },
+              {
+                "id": "b",
+                "text": "양변에 $3$을 곱하기"
+              },
+              {
+                "id": "c",
+                "text": "양변을 $0$으로 나누기"
+              },
+              {
+                "id": "d",
+                "text": "양변에서 $3$을 빼기"
+              }
+            ],
+            "correct": "c"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0$으로 나누는 것만 안 돼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-11:v1",
+          "conceptKeys": [
+            "transposition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + 13 = 5$에서 $13$을 이항하면 $x = 5 - \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 13
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부호만 바꿔 옮겨요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-12:v1",
+          "conceptKeys": [
+            "transposition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$7x - 12 = 4x$에서 문자를 왼쪽으로 모으면 $\\square x = 12$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4x$를 $-4x$로 바꿔 옮겨요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-13:v1",
+          "conceptKeys": [
+            "transposition"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 이항을 바르게 한 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x+3=7 \\Rightarrow x=7+3$"
+              },
+              {
+                "id": "b",
+                "text": "$x+3=7 \\Rightarrow x=7-3$"
+              },
+              {
+                "id": "c",
+                "text": "$x-3=7 \\Rightarrow x=7-3$"
+              },
+              {
+                "id": "d",
+                "text": "$3x=7 \\Rightarrow x=7-3$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$x+3=7 \\Rightarrow x=7+3$"
+              },
+              {
+                "id": "b",
+                "text": "$x+3=7 \\Rightarrow x=7-3$"
+              },
+              {
+                "id": "c",
+                "text": "$x-3=7 \\Rightarrow x=7-3$"
+              },
+              {
+                "id": "d",
+                "text": "$3x=7 \\Rightarrow x=7-3$"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "옮기면서 부호가 바뀌어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-14:v1",
+          "conceptKeys": [
+            "linear-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6x + 5 = 35$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$+5$를 이항한 뒤 $6$으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-15:v1",
+          "conceptKeys": [
+            "linear-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3(x-2) = 9$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호를 먼저 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-16:v1",
+          "conceptKeys": [
+            "linear-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4x - 7 = x + 8$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "문자는 왼쪽, 수는 오른쪽으로 모아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-17:v1",
+          "conceptKeys": [
+            "linear-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{x}{3} - 2 = 1$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "양변에 $3$을 곱해 분수를 없애요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-18:v1",
+          "conceptKeys": [
+            "linear-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-x + 6 = 10$의 해를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-x$가 남으면 $-1$로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-19:v1",
+          "conceptKeys": [
+            "linear-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x + 1 = 4$의 해를 분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x = 3$에서 양변을 $2$로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "equations:drill-20:v1",
+          "conceptKeys": [
+            "linear-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "equations:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "연속한 두 자연수의 합이 $23$이에요. 작은 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 11
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "equations:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "작은 수를 $x$라 하면 $x + (x+1) = 23$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
     }
   ],
   "diagnostics": [],

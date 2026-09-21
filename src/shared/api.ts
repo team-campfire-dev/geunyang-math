@@ -13,7 +13,9 @@ export type PublicProblem = {
   problemVersionId: string;
   conceptKeys: string[];
   promptContent: ContentBlock[];
-  responseSpec: { kind: 'integer' | 'rational'; requiredForm?: string };
+  // What answering looks like. A written answer says how it is read; a picked one carries the
+  // options to pick from — and never which of them is right, which stays with the question.
+  responseSpec: { kind: 'integer' | 'rational' | 'choice'; requiredForm?: string; options?: { id: string; text: string }[] };
   hintAvailable: boolean;
 };
 /** How a lesson names questions: a problem set, a frozen version of it, and the questions it picked. */

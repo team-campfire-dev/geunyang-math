@@ -1692,6 +1692,872 @@
           "solution": []
         }
       ]
+    },
+    {
+      "problemSetId": "ratios:drill",
+      "courseKey": "ratios",
+      "name": "비와 비율 모아 풀기",
+      "versionId": "ratios:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "ratios:drill-1:v1",
+          "conceptKeys": [
+            "ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "사과 $4$개와 배 $6$개의 비를 $4 : \\square$로 쓸 때 $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "뒤에 오는 양이 기준량이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-2:v1",
+          "conceptKeys": [
+            "ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "남학생 $12$명과 여학생 $8$명의 비를 가장 간단히 하면 $3 : \\square$예요. $\\square$에 들어갈 수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘 다 $4$로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-3:v1",
+          "conceptKeys": [
+            "ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 $2 : 3$과 같은 비는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3 : 2$"
+              },
+              {
+                "id": "b",
+                "text": "$4 : 6$"
+              },
+              {
+                "id": "c",
+                "text": "$5 : 6$"
+              },
+              {
+                "id": "d",
+                "text": "$2 : 6$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3 : 2$"
+              },
+              {
+                "id": "b",
+                "text": "$4 : 6$"
+              },
+              {
+                "id": "c",
+                "text": "$5 : 6$"
+              },
+              {
+                "id": "d",
+                "text": "$2 : 6$"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 항에 같은 수를 곱해 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-4:v1",
+          "conceptKeys": [
+            "rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 $20$명 중 $8$명이 안경을 썼어요. 비율을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 2,
+            "denominator": 5,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비교하는 양을 기준량으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-5:v1",
+          "conceptKeys": [
+            "rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$50$문제 중 $35$문제를 맞혔어요. 비율을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 7,
+            "denominator": 10,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5$로 약분해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-6:v1",
+          "conceptKeys": [
+            "rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비율 $0.4$를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 2,
+            "denominator": 5,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{4}{10}$을 약분해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-7:v1",
+          "conceptKeys": [
+            "percentage"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비율 $\\frac{3}{4}$을 백분율로 쓰면 몇 %인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 75
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$100$을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-8:v1",
+          "conceptKeys": [
+            "percentage"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.08$을 백분율로 쓰면 몇 %인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$100$을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-9:v1",
+          "conceptKeys": [
+            "percentage"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$25$명 중 $5$명이 결석했어요. 결석률은 몇 %인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비율을 구한 뒤 $100$을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-10:v1",
+          "conceptKeys": [
+            "percentage"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 $\\frac{1}{5}$과 같은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$15\\%$"
+              },
+              {
+                "id": "b",
+                "text": "$20\\%$"
+              },
+              {
+                "id": "c",
+                "text": "$25\\%$"
+              },
+              {
+                "id": "d",
+                "text": "$50\\%$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$15\\%$"
+              },
+              {
+                "id": "b",
+                "text": "$20\\%$"
+              },
+              {
+                "id": "c",
+                "text": "$25\\%$"
+              },
+              {
+                "id": "d",
+                "text": "$50\\%$"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모를 $100$으로 맞춰 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-11:v1",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$400$원의 $25\\%$는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 100
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.25$를 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-12:v1",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1200$원짜리를 $20\\%$ 할인하면 얼마를 깎아 주나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 240
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.2$를 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-13:v1",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1200$원짜리를 $20\\%$ 할인하면 내야 하는 돈은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 960
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원래 값에서 깎이는 값을 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-14:v1",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5000$원을 연 이자율 $3\\%$로 한 해 맡기면 이자는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 150
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.03$을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-15:v1",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어떤 수의 $40\\%$가 $80$이에요. 어떤 수는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 200
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$80 \\div 0.4$를 계산해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-16:v1",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 $800$원의 $15\\%$를 바르게 구한 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$800 \\times 15$"
+              },
+              {
+                "id": "b",
+                "text": "$800 \\times 0.15$"
+              },
+              {
+                "id": "c",
+                "text": "$800 \\div 15$"
+              },
+              {
+                "id": "d",
+                "text": "$800 + 0.15$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$800 \\times 15$"
+              },
+              {
+                "id": "b",
+                "text": "$800 \\times 0.15$"
+              },
+              {
+                "id": "c",
+                "text": "$800 \\div 15$"
+              },
+              {
+                "id": "d",
+                "text": "$800 + 0.15$"
+              }
+            ],
+            "correct": "b"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "백분율은 $100$으로 나눠 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-17:v1",
+          "conceptKeys": [
+            "rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "거리 $120$km를 $2$시간에 갔어요. 한 시간에 간 거리는 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "거리를 시간으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-18:v1",
+          "conceptKeys": [
+            "percentage"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$120\\%$를 소수로 쓰면 얼마인가요? 분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 12,
+            "denominator": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$100$으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-19:v1",
+          "conceptKeys": [
+            "ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로와 세로의 비가 $3 : 2$인 직사각형에서 가로가 $9$cm이면 세로는 몇 cm인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$이 $9$가 됐으니 세 배예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ratios:drill-20:v1",
+          "conceptKeys": [
+            "percentage-of"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ratios:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$300$명의 $60\\%$는 몇 명인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 180
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ratios:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.6$을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
     }
   ],
   "diagnostics": [],

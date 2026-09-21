@@ -5,7 +5,7 @@ import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { diagnosticProblems } from './fixtures/content';
-import { lessonBundle, seedLessons } from './fixtures/content';
+import { lessonBundle, seedLessons, writtenAnswer } from './fixtures/content';
 import type { LessonRecord } from '@/core/content';
 import { getActivityProblemIds } from '@/core/content';
 import historical from './fixtures/fractions-v1.json';
@@ -138,8 +138,7 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     const enrollmentId = (await service.act(userId, { action: 'enrollment.start', lessonKey: record.public.lessonKey })).enrollmentId!;
     for (const section of record.sections) {
       for (const problemVersionId of getActivityProblemIds(record, section.sectionId)) {
-        const spec = record.problems.find(p => p.problemVersionId === problemVersionId)!.gradingSpec;
-        const correct = spec.kind === 'integer' ? String(spec.value) : `${spec.numerator}/${spec.denominator}`;
+        const correct = writtenAnswer(record.problems.find(p => p.problemVersionId === problemVersionId)!);
         const action = { action: 'attempt.submit', context: 'lesson', contextId: enrollmentId, problemVersionId, answer: correct, requestId: randomUUID() };
         if (incorrectFirst) await service.act(userId, { ...action, answer: '999', requestId: randomUUID() });
         await service.act(userId, action);

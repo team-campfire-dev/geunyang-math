@@ -3,17 +3,14 @@ import 'server-only';
 import { z } from 'zod';
 import type { LessonDocument, LessonSection, ContentBlock, GlossaryEntry, ProblemSetRef, PublicLesson, PublicProblem } from '@/shared/api';
 import { frameLimits, isSceneColor, itemIdPattern, pathPattern, sceneLimits, stripLimits } from '@/shared/scene';
+import { choiceIssue, choiceLimits, type AnswerOption, type AnswerSpec } from '@/shared/answer';
 import { locateTerms, definitionRefId, type DefinitionLink, type DefinitionRef } from '@/shared/rich-text';
 
 /** Private content records stay on the server; only toPublicLesson crosses the API boundary. */
 export type StoredProblem = PublicProblem & {
-  gradingSpec: {
-    kind: 'integer' | 'rational';
-    numerator?: number;
-    denominator?: number;
-    value?: number;
-    requiredForm?: 'reduced_fraction';
-  };
+  // What the answer is. A written answer is a number; a picked one is one of the options, and the
+  // options are here too because `correct` names one of them.
+  gradingSpec: AnswerSpec;
   hints: ContentBlock[];
   solution: ContentBlock[];
 };
@@ -238,6 +235,8 @@ const blockSchema = z.object({
   }
 });
 
+const canonicalOptions = (options?: AnswerOption[]) => JSON.stringify((options ?? []).map((option) => [option.id, option.text]));
+
 /** A drawing the learner arranges reports nothing, so it stays out of anything that is assessed:
  *  beside an answer box it would read as the answer itself. */
 const arrangeable = (block: { kind: string; payload: Record<string, unknown> }) =>
@@ -249,9 +248,14 @@ export const definitionBlockSchema = blockSchema.refine(
   { message: 'Definitions cannot embed problems or a drawing to arrange' },
 );
 
+/** An option of a multiple-choice question: a stable name and the prose a learner reads. */
+const choiceOption = z.object({ id: id.max(40), text: z.string().trim().min(1).max(choiceLimits.maxText) }).strict();
 const responseSchema = z.object({
-  kind: z.enum(['integer', 'rational']),
+  kind: z.enum(['integer', 'rational', 'choice']),
   requiredForm: z.literal('reduced_fraction').optional(),
+  // The options a picked answer picks from — everything the grading specification holds except
+  // which one is right. They are here because a learner cannot answer without seeing them.
+  options: z.array(choiceOption).min(2).max(choiceLimits.maxOptions).optional(),
 }).strict();
 
 // Problem groups belong to lesson sections. A problem cannot embed another problem group,
@@ -271,6 +275,7 @@ const problemShape = {
   gradingSpec: z.discriminatedUnion('kind', [
     z.object({ kind: z.literal('integer'), value: integer }).strict(),
     z.object({ kind: z.literal('rational'), numerator: integer, denominator: integer.refine((value) => value > 0), requiredForm: z.literal('reduced_fraction').optional() }).strict(),
+    z.object({ kind: z.literal('choice'), options: z.array(choiceOption).min(2).max(choiceLimits.maxOptions), correct: id.max(40) }).strict(),
   ]),
   hints: z.array(problemContentBlockSchema).max(100, 'At most 100 blocks per content array'),
   // A question may have no solution: a placement question is one, and whether a solution is shown is
@@ -284,6 +289,17 @@ function validateProblemFields(problem: StoredProblem, ctx: z.RefinementCtx) {
   const requiredForm = 'requiredForm' in problem.gradingSpec ? problem.gradingSpec.requiredForm : undefined;
   if (problem.responseSpec.requiredForm !== requiredForm) {
     ctx.addIssue({ code: 'custom', message: 'Response and grading form requirements must match' });
+  }
+  if (problem.gradingSpec.kind === 'choice') {
+    const issue = choiceIssue(problem.gradingSpec);
+    if (issue) ctx.addIssue({ code: 'custom', message: `Invalid choices: ${issue}` });
+    // The learner's copy must offer exactly the options the answer was written against, and must
+    // not carry which one is right: a published question is the only place that knows.
+    if (canonicalOptions(problem.responseSpec.options) !== canonicalOptions(problem.gradingSpec.options)) {
+      ctx.addIssue({ code: 'custom', message: 'Response and grading options must match' });
+    }
+  } else if (problem.responseSpec.options) {
+    ctx.addIssue({ code: 'custom', message: 'Only a picked answer offers options' });
   }
   if (problem.hintAvailable !== (problem.hints.length > 0)) {
     ctx.addIssue({ code: 'custom', message: 'hintAvailable must match the stored hints' });

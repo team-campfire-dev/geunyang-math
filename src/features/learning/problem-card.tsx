@@ -3,7 +3,7 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { leafGlossary } from '@/shared/definition-exploration';
 import type { AttemptView, ContentBlock, PublicProblem } from '@/shared/api';
-import { ContentBlocks, unsupportedRequiredBlocks, type GlossaryContext } from './content-blocks';
+import { ContentBlocks, RichText, unsupportedRequiredBlocks, type GlossaryContext } from './content-blocks';
 import { Icon } from './icons';
 
 const messageOf = (error: unknown) => (error instanceof Error ? error.message : '문제가 생겼어요. 다시 시도해 주세요.');
@@ -38,6 +38,7 @@ export function ProblemCard({ problem, attempt, actions, busy, disabled, ready =
   const [localError, setLocalError] = useState('');
   const requestRef = useRef<{ answer: string; id: string } | null>(null);
   const unsupported = unsupportedRequiredBlocks(problem.promptContent);
+  const options = problem.responseSpec.kind === 'choice' ? problem.responseSpec.options ?? [] : null;
   const changed = answer.trim() !== attempt?.answer;
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -60,8 +61,19 @@ export function ProblemCard({ problem, attempt, actions, busy, disabled, ready =
   return <article className="problem-card">
     <div className="problem-kicker"><Icon name="pencil" size={15} />직접 생각해 보기{attempt?.hintUsed && <span>힌트와 함께 푼 문제</span>}</div>
     <ContentBlocks blocks={problem.promptContent} glossary={glossary} />
-    <form onSubmit={submit} className="answer-form">
-      <label>나의 답<input aria-label="나의 답" type="text" inputMode="text" maxLength={100} placeholder={problem.responseSpec.kind === 'rational' ? '예: 3/4 또는 0.75' : '정수를 입력해 주세요'} value={answer} onChange={(event) => { setAnswer(event.target.value); onDraftChange?.(problem.problemVersionId, event.target.value.trim() !== (attempt?.answer ?? '')); }} disabled={busy || disabled || unsupported || !ready} autoComplete="off" spellCheck={false} /></label>
+    <form onSubmit={submit} className={options ? 'answer-form is-choice' : 'answer-form'}>
+      {options
+        // The option's name is the answer; its text is only what the learner reads. Two options may
+        // read alike and still be different answers, so nothing is compared by what it says.
+        ? <fieldset className="answer-choices" disabled={busy || disabled || unsupported || !ready}>
+            <legend>답 고르기</legend>
+            {options.map((option) => <label key={option.id} className={answer === option.id ? 'answer-choice is-picked' : 'answer-choice'}>
+              <input type="radio" name={`answer-${problem.problemVersionId}`} value={option.id} checked={answer === option.id}
+                onChange={() => { setAnswer(option.id); onDraftChange?.(problem.problemVersionId, option.id !== (attempt?.answer ?? '')); }} />
+              <span><RichText text={option.text} /></span>
+            </label>)}
+          </fieldset>
+        : <label>나의 답<input aria-label="나의 답" type="text" inputMode="text" maxLength={100} placeholder={problem.responseSpec.kind === 'rational' ? '예: 3/4 또는 0.75' : '정수를 입력해 주세요'} value={answer} onChange={(event) => { setAnswer(event.target.value); onDraftChange?.(problem.problemVersionId, event.target.value.trim() !== (attempt?.answer ?? '')); }} disabled={busy || disabled || unsupported || !ready} autoComplete="off" spellCheck={false} /></label>}
       <button className="button primary" disabled={busy || disabled || unsupported || !ready || !answer.trim()} type="submit">{busy ? '저장 중…' : submitLabel}</button>
     </form>
     {problem.responseSpec.requiredForm && <p className="input-help">답안 형식: {problem.responseSpec.requiredForm === 'simplest' || problem.responseSpec.requiredForm === 'simplest_fraction' || problem.responseSpec.requiredForm === 'reduced_fraction' ? '기약분수' : problem.responseSpec.requiredForm}</p>}

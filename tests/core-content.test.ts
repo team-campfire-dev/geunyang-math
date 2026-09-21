@@ -50,7 +50,7 @@ describe('versioned lesson content', () => {
     expect(Object.isFrozen(seedLessons)).toBe(true);
     expect(Object.isFrozen(seedLessons[0])).toBe(true);
     expect(Object.isFrozen(seedLessons[0].problems[0].gradingSpec)).toBe(true);
-    expect(() => { seedLessons[0].problems[0].gradingSpec.numerator = 99; }).toThrow();
+    expect(() => { (seedLessons[0].problems[0].gradingSpec as { numerator?: number }).numerator = 99; }).toThrow();
   });
 
   it.each(['kind', 'typeVersion'] as const)('rejects an unsupported required block %s', (field) => {
@@ -113,6 +113,31 @@ describe('versioned lesson content', () => {
     const [hintsSet] = setsOf(structuredClone(seedLessons[0]));
     hintsSet.problems[0].hintAvailable = false;
     expect(() => validateProblemSet(hintsSet)).toThrow(/hintAvailable/);
+  });
+
+  it('refuses a question answered by picking that the learner could not answer or could cheat', () => {
+    const options = [{ id: 'a', text: '$2x$' }, { id: 'b', text: '$3x$' }];
+    const picked = (over: Record<string, unknown> = {}) => {
+      const [set] = setsOf(structuredClone(seedLessons[0]));
+      set.problems = [set.problems[0]];
+      set.problems[0].gradingSpec = { kind: 'choice', options: structuredClone(options), correct: 'a' };
+      set.problems[0].responseSpec = { kind: 'choice', options: structuredClone(options) };
+      Object.assign(set.problems[0], over);
+      return set;
+    };
+    expect(() => validateProblemSet(picked())).not.toThrow();
+    // Which one is right belongs to the question, never to the copy a learner is sent.
+    expect(() => validateProblemSet(picked({ responseSpec: { kind: 'choice', options, correct: 'a' } }))).toThrow();
+    // Options the learner never sees cannot be the ones the answer was written against.
+    expect(() => validateProblemSet(picked({ responseSpec: { kind: 'choice', options: [options[0], { id: 'b', text: '$9x$' }] } })))
+      .toThrow(/options must match/);
+    expect(() => validateProblemSet(picked({ responseSpec: { kind: 'choice' } }))).toThrow(/options must match/);
+    // An answer that names no option is an answer nobody could give.
+    expect(() => validateProblemSet(picked({ gradingSpec: { kind: 'choice', options, correct: 'z' } }))).toThrow(/정답인 보기/);
+    // Only a picked answer offers options; a written one that carries them is a mistake.
+    const [numeric] = setsOf(structuredClone(seedLessons[0]));
+    numeric.problems[0].responseSpec = { ...numeric.problems[0].responseSpec, options };
+    expect(() => validateProblemSet(numeric)).toThrow(/Only a picked answer/);
   });
 
   it.each(['promptContent', 'hints', 'solution'] as const)('rejects a recursive problem group inside %s', (field) => {
