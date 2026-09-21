@@ -2137,7 +2137,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "negative-not-integer"
+            },
+            {
+              "answer": "b",
+              "misconception": "zero-not-integer"
+            }
+          ]
         },
         {
           "problemVersionId": "integers:drill-5:v1",
@@ -2284,7 +2294,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "compare-by-absolute"
+            }
+          ]
         },
         {
           "problemVersionId": "integers:drill-8:v1",
@@ -2882,7 +2898,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "zero-as-positive"
+            }
+          ]
         }
       ]
     }

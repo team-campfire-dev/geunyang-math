@@ -1344,7 +1344,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "axis-point-in-quadrant"
+            },
+            {
+              "answer": "c",
+              "misconception": "swap-coordinates"
+            }
+          ]
         }
       ]
     },
@@ -1462,7 +1472,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "swap-coordinates"
+            }
+          ]
         }
       ]
     },
@@ -1699,7 +1715,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "d",
+              "misconception": "direct-inverse-swap"
+            }
+          ]
         }
       ]
     },
@@ -2018,7 +2040,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "direct-inverse-swap"
+            }
+          ]
         }
       ]
     },
@@ -2402,7 +2430,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "swap-coordinates"
+            }
+          ]
         },
         {
           "problemVersionId": "coordinate-plane:drill-7:v1",
@@ -2475,7 +2509,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "swap-coordinates"
+            }
+          ]
         },
         {
           "problemVersionId": "coordinate-plane:drill-8:v1",
@@ -2696,7 +2736,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "direct-inverse-swap"
+            }
+          ]
         },
         {
           "problemVersionId": "coordinate-plane:drill-13:v1",
@@ -3027,7 +3073,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "direct-inverse-swap"
+            }
+          ]
         },
         {
           "problemVersionId": "coordinate-plane:drill-20:v1",

@@ -2655,7 +2655,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "move-without-sign"
+            },
+            {
+              "answer": "c",
+              "misconception": "move-without-sign"
+            },
+            {
+              "answer": "d",
+              "misconception": "move-a-factor"
+            }
+          ]
         },
         {
           "problemVersionId": "equations:drill-14:v1",

@@ -1252,7 +1252,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "composite-as-prime"
+            },
+            {
+              "answer": "c",
+              "misconception": "composite-as-prime"
+            },
+            {
+              "answer": "d",
+              "misconception": "one-as-prime"
+            }
+          ]
         },
         {
           "problemVersionId": "prime-number:practice-3:v1",
@@ -1407,7 +1421,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "two-not-prime"
+            }
+          ]
         }
       ]
     },
@@ -2173,7 +2193,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "prime-as-composite"
+            },
+            {
+              "answer": "c",
+              "misconception": "prime-as-composite"
+            },
+            {
+              "answer": "d",
+              "misconception": "prime-as-composite"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-3:v1",
@@ -2357,7 +2391,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "one-as-prime"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-7:v1",

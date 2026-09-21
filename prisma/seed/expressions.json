@@ -2228,7 +2228,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "number-after-letter"
+            },
+            {
+              "answer": "c",
+              "misconception": "product-as-sum"
+            }
+          ]
         },
         {
           "problemVersionId": "expressions:drill-4:v1",
@@ -2487,7 +2497,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "compare-by-absolute"
+            }
+          ]
         },
         {
           "problemVersionId": "expressions:drill-10:v1",
@@ -2708,7 +2724,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "minus-inside-square"
+            }
+          ]
         },
         {
           "problemVersionId": "expressions:drill-15:v1",
@@ -2855,7 +2877,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "like-terms-by-coefficient"
+            },
+            {
+              "answer": "b",
+              "misconception": "like-terms-by-coefficient"
+            },
+            {
+              "answer": "d",
+              "misconception": "like-terms-by-coefficient"
+            }
+          ]
         },
         {
           "problemVersionId": "expressions:drill-18:v1",

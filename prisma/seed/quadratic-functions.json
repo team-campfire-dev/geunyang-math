@@ -1092,7 +1092,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "sign-and-opening-flipped"
+            }
+          ]
         },
         {
           "problemVersionId": "quadratic-function:practice-3:v1",
@@ -1329,7 +1335,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "d",
+              "misconception": "smaller-coefficient-narrower"
+            }
+          ]
         }
       ]
     },
@@ -1484,7 +1496,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "shift-axis-swapped"
+            },
+            {
+              "answer": "c",
+              "misconception": "shift-axis-swapped"
+            }
+          ]
         }
       ]
     },
@@ -1602,7 +1624,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "shift-sign-flipped"
+            },
+            {
+              "answer": "c",
+              "misconception": "shift-axis-swapped"
+            },
+            {
+              "answer": "d",
+              "misconception": "shift-axis-swapped"
+            }
+          ]
         }
       ]
     },
@@ -2003,7 +2039,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "max-min-flipped"
+            }
+          ]
         }
       ]
     },
@@ -2232,7 +2274,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "sign-and-opening-flipped"
+            }
+          ]
         },
         {
           "problemVersionId": "quadratic-functions:drill-6:v1",
@@ -2527,7 +2575,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "shift-sign-flipped"
+            },
+            {
+              "answer": "c",
+              "misconception": "shift-axis-swapped"
+            },
+            {
+              "answer": "d",
+              "misconception": "shift-axis-swapped"
+            }
+          ]
         },
         {
           "problemVersionId": "quadratic-functions:drill-13:v1",
@@ -2637,7 +2699,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "shift-sign-flipped"
+            }
+          ]
         },
         {
           "problemVersionId": "quadratic-functions:drill-15:v1",
@@ -2895,7 +2963,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "max-min-flipped"
+            }
+          ]
         }
       ]
     }

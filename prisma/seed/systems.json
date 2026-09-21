@@ -2708,7 +2708,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "substitute-without-brackets"
+            }
+          ]
         },
         {
           "problemVersionId": "systems:drill-14:v1",
@@ -2966,7 +2972,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "scale-one-side"
+            },
+            {
+              "answer": "b",
+              "misconception": "scale-one-side"
+            }
+          ]
         },
         {
           "problemVersionId": "systems:drill-20:v1",

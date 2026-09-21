@@ -1453,7 +1453,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "angle-scales-with-ratio"
+            }
+          ]
         },
         {
           "problemVersionId": "similar-triangles:practice-3:v1",
@@ -2246,7 +2252,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "centroid-bisects-median"
+            }
+          ]
         }
       ]
     },
@@ -2565,7 +2577,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "area-ratio-as-length-ratio"
+            }
+          ]
         }
       ]
     },
@@ -2876,7 +2894,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "similar-as-congruent"
+            },
+            {
+              "answer": "c",
+              "misconception": "similar-as-congruent"
+            },
+            {
+              "answer": "d",
+              "misconception": "similar-as-congruent"
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-6:v1",
@@ -3539,7 +3571,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "area-ratio-as-length-ratio"
+            }
+          ]
         }
       ]
     }

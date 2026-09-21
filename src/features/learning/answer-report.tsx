@@ -4,6 +4,7 @@ import { conceptStateLabels, type ConceptState, type PublicConcept, type PublicL
 import { misreadingAdvice, misreadingLabels, type Misreading } from '@/shared/misreading';
 import { misconceptionLabel, misconceptionOf } from '@/shared/misconception';
 import { Icon } from './icons';
+import { RichText } from './content-blocks';
 
 /**
  * One question as a report reads it.
@@ -141,7 +142,7 @@ export function AnswerReport({ items, concepts, lessons, standings, onOpenLesson
 
     {bySlip.length > 0 && <div className="report-slips">
       <h3>자꾸 되풀이된 것</h3>
-      {bySlip.map(([id, slip]) => <div key={id}><strong>{slip.label}<span>{slip.count}번</span></strong><p>{slip.advice}</p></div>)}
+      {bySlip.map(([id, slip]) => <div key={id}><strong>{slip.label}<span>{slip.count}번</span></strong><p><RichText text={slip.advice} /></p></div>)}
     </div>}
 
     {next && <div className="report-next">

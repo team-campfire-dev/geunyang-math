@@ -2019,7 +2019,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "count-over-rate"
+            }
+          ]
         }
       ]
     },
@@ -2248,7 +2254,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "count-over-rate"
+            }
+          ]
         }
       ]
     },
@@ -2366,7 +2378,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "count-over-rate"
+            }
+          ]
         }
       ]
     },
@@ -3293,7 +3311,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "count-over-rate"
+            }
+          ]
         },
         {
           "problemVersionId": "data-basics:drill-20:v1",
@@ -3366,7 +3390,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "percent-place-value"
+            }
+          ]
         }
       ]
     }

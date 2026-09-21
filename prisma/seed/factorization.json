@@ -1736,7 +1736,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "partial-common-factor"
+            },
+            {
+              "answer": "c",
+              "misconception": "partial-common-factor"
+            },
+            {
+              "answer": "d",
+              "misconception": "forgets-to-divide-inside"
+            }
+          ]
         }
       ]
     },
@@ -1854,7 +1868,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "c",
+              "misconception": "forgets-to-divide-inside"
+            }
+          ]
         }
       ]
     },
@@ -2173,7 +2193,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "product-only-factoring"
+            },
+            {
+              "answer": "c",
+              "misconception": "product-only-factoring"
+            },
+            {
+              "answer": "d",
+              "misconception": "coefficients-as-factors"
+            }
+          ]
         }
       ]
     },
@@ -2587,7 +2621,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "square-termwise"
+            }
+          ]
         },
         {
           "problemVersionId": "factorization:drill-11:v1",
@@ -2771,7 +2811,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "c",
+              "misconception": "forgets-to-divide-inside"
+            }
+          ]
         },
         {
           "problemVersionId": "factorization:drill-15:v1",
@@ -3029,7 +3075,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "difference-as-square"
+            }
+          ]
         }
       ]
     }

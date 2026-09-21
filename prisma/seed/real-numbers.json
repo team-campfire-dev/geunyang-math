@@ -1729,7 +1729,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "finite",
+              "misconception": "finite-without-factoring"
+            }
+          ]
         },
         {
           "problemVersionId": "repeating-decimal:check-2:v1",
@@ -1834,7 +1840,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "repeat",
+              "misconception": "denominator-before-reducing"
+            }
+          ]
         },
         {
           "problemVersionId": "repeating-decimal:homework-2:v1",
@@ -1981,7 +1993,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "plus",
+              "misconception": "one-square-root"
+            }
+          ]
         },
         {
           "problemVersionId": "square-root:practice-3:v1",
@@ -2294,7 +2312,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "root-means-irrational"
+            },
+            {
+              "answer": "b",
+              "misconception": "repeating-as-irrational"
+            }
+          ]
         },
         {
           "problemVersionId": "irrational-number:practice-2:v1",
@@ -2477,7 +2505,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "root-means-irrational"
+            },
+            {
+              "answer": "c",
+              "misconception": "repeating-as-irrational"
+            },
+            {
+              "answer": "d",
+              "misconception": "root-means-irrational"
+            }
+          ]
         },
         {
           "problemVersionId": "irrational-number:check-2:v1",
@@ -3032,7 +3074,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "finite",
+              "misconception": "finite-without-factoring"
+            }
+          ]
         },
         {
           "problemVersionId": "real-numbers:drill-3:v1",
@@ -3362,7 +3410,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "one",
+              "misconception": "one-square-root"
+            }
+          ]
         },
         {
           "problemVersionId": "real-numbers:drill-11:v1",
@@ -3435,7 +3489,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "root-means-irrational"
+            },
+            {
+              "answer": "c",
+              "misconception": "repeating-as-irrational"
+            }
+          ]
         },
         {
           "problemVersionId": "real-numbers:drill-12:v1",

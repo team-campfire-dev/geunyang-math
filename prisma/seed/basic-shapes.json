@@ -1823,7 +1823,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "aaa-as-congruence"
+            }
+          ]
         },
         {
           "problemVersionId": "construction-congruence:check-2:v1",
@@ -1896,7 +1902,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "d",
+              "misconception": "aaa-as-congruence"
+            }
+          ]
         }
       ]
     },
@@ -1977,7 +1989,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "c",
+              "misconception": "congruent-as-similar"
+            }
+          ]
         },
         {
           "problemVersionId": "construction-congruence:homework-2:v1",
@@ -2830,7 +2848,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "d",
+              "misconception": "aaa-as-congruence"
+            }
+          ]
         },
         {
           "problemVersionId": "basic-shapes:drill-17:v1",
@@ -2903,7 +2927,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "aaa-as-congruence"
+            }
+          ]
         },
         {
           "problemVersionId": "basic-shapes:drill-18:v1",

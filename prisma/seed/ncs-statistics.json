@@ -2339,7 +2339,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "always-the-mean"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-spread:check-2:v1",
@@ -3093,7 +3099,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "part-over-part"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-statistics:drill-16:v1",
@@ -3166,7 +3178,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "average-of-rates"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-statistics:drill-17:v1",
@@ -4083,7 +4101,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "average-of-rates"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-statistics:drill2-11:v1",
@@ -4230,7 +4254,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "always-the-mean"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-statistics:drill2-14:v1",
@@ -4377,7 +4407,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "c",
+              "misconception": "same-mean-same-spread"
+            },
+            {
+              "answer": "d",
+              "misconception": "same-mean-same-spread"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-statistics:drill2-17:v1",

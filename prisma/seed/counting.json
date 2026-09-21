@@ -1709,7 +1709,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "or-and-swapped"
+            }
+          ]
         }
       ]
     },
@@ -2028,7 +2034,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "order-mattering-swapped"
+            }
+          ]
         }
       ]
     },
@@ -2265,7 +2277,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "order-mattering-swapped"
+            }
+          ]
         }
       ]
     },
@@ -2650,7 +2668,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "or-and-swapped"
+            }
+          ]
         },
         {
           "problemVersionId": "counting:drill-8:v1",
@@ -2945,7 +2969,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "order-mattering-swapped"
+            },
+            {
+              "answer": "d",
+              "misconception": "order-mattering-swapped"
+            }
+          ]
         },
         {
           "problemVersionId": "counting:drill-15:v1",
