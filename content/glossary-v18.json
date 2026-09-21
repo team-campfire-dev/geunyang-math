@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "imaginary-unit",
+      "label": "허수단위",
+      "assessable": true
+    },
+    {
+      "key": "complex-number",
+      "label": "복소수",
+      "assessable": true
+    },
+    {
+      "key": "complex-arithmetic",
+      "label": "복소수의 계산",
+      "assessable": true
+    },
+    {
+      "key": "conjugate",
+      "label": "켤레복소수",
+      "assessable": true
+    },
+    {
+      "key": "root-coefficient",
+      "label": "근과 계수의 관계",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "imaginary-unit",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "허수단위",
+      "summary": "제곱해서 마이너스 1이 되는 수로 둔 것이에요.",
+      "blocks": [
+        {
+          "blockId": "global:imaginary-unit:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "제곱해서 $-1$이 되는 실수는 없어요. 그래서 그런 수를 하나 두고 $i$라고 부르기로 했어요. 정의는 $i^2 = -1$ 한 줄이 전부예요. $i$가 있으면 음수의 제곱근도 적을 수 있어요. $\\sqrt{-9} = 3i$예요. $i$의 거듭제곱은 $i$, $-1$, $-i$, $1$로 네 개마다 되풀이되니 지수를 $4$로 나눈 나머지만 보면 돼요. $i$를 곱하는 일은 그림에서 사분의 일 바퀴 도는 일이고, 두 번 돌면 반대편이라는 것이 $i^2 = -1$이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "제곱해서 음수가 되는 수가 필요할 때"
+    },
+    {
+      "conceptKey": "complex-number",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "복소수",
+      "summary": "실수와 허수를 합쳐 a 더하기 bi로 쓴 수예요.",
+      "blocks": [
+        {
+          "blockId": "global:complex-number:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$a + bi$ 꼴로 쓴 수예요. $a$를 실수부, $b$를 허수부라고 해요. $b$가 $0$이면 그냥 실수이니, 복소수는 실수를 밀어낸 것이 아니라 품은 것이에요. 수를 넓혀 온 역사가 늘 이랬어요 — 빼기가 모자라 음수를, 나누기가 모자라 분수를, 제곱근이 모자라 무리수를 만들었고, 이번에는 음수의 제곱근이 모자라 복소수를 만들었어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "판별식이 음수인 방정식의 해를 말할 때"
+    },
+    {
+      "conceptKey": "complex-arithmetic",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "복소수의 계산",
+      "summary": "다항식처럼 하되 i 제곱만 마이너스 1로 바꿔요.",
+      "blocks": [
+        {
+          "blockId": "global:complex-arithmetic:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$i$를 문자 하나로 보고 다항식처럼 더하고 곱해요. 딱 하나, $i^2$이 나오면 그 자리에서 $-1$로 바꿔 줘요. 덧셈과 뺄셈은 실수끼리, $i$가 붙은 것끼리 모으고, 곱셈은 괄호를 풀어요. $(2 + 3i)(1 + i) = 2 + 2i + 3i + 3i^2 = -1 + 5i$가 그 예예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "복소수끼리 더하거나 곱할 때"
+    },
+    {
+      "conceptKey": "conjugate",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "켤레복소수",
+      "summary": "허수부의 부호만 뒤집은 짝이에요.",
+      "blocks": [
+        {
+          "blockId": "global:conjugate:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$a + bi$의 켤레는 $a - bi$예요. 켤레끼리 곱하면 $i$가 붙은 조각이 서로 지워져 $a^2 + b^2$, 실수만 남아요. 합과 차의 곱이 $a^2 - b^2$인데 $(bi)^2 = -b^2$이라 부호가 바뀌는 거예요. 그래서 분모에 $i$가 있으면 분자와 분모에 분모의 켤레를 곱해 분모를 실수로 만들어요. 분모의 유리화와 같은 손놀림이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "분모에 i가 남았을 때"
+    },
+    {
+      "conceptKey": "root-coefficient",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "근과 계수의 관계",
+      "summary": "두 근의 합과 곱이 계수에서 바로 읽혀요.",
+      "blocks": [
+        {
+          "blockId": "global:root-coefficient:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$ax^2 + bx + c = 0$의 두 근의 합은 $-\\dfrac{b}{a}$, 곱은 $\\dfrac{c}{a}$예요. 두 근이 $\\alpha$, $\\beta$이면 식이 $(x-\\alpha)(x-\\beta)$로 갈라지고, 펼치면 $x^2 - (\\alpha+\\beta)x + \\alpha\\beta$가 되기 때문이에요. 근이 무리수나 허수여도 합과 곱은 깔끔한 경우가 많아, 근을 구하지 않고 답하는 길이 돼요. $\\alpha^2 + \\beta^2$은 $(\\alpha+\\beta)^2 - 2\\alpha\\beta$로 바꿔 구해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "두 근의 합이나 곱만 물을 때"
+    }
+  ]
+}

@@ -90,7 +90,10 @@ describe('placing a learner', () => {
     // size. It went 12 to 14 for 농도, and that is the same rule read again: a course beside the
     // school line stands on two strands at once — 비와 비율 and 일차방정식 — so what it stands on is
     // the union of both. Only somebody who came for it is ever asked that much.
-    expect(worst).toBeLessThanOrEqual(14);
+    // 14 to 16 for 이차부등식, which is that rule a third time and now on the school line itself: it
+    // stands on 이차함수 and 일차부등식 together, so its scope is 41 concepts deep. The catalogue has
+    // grown past 90 concepts meanwhile, so the descent is still asking for about a sixth of them.
+    expect(worst).toBeLessThanOrEqual(16);
   });
 
   it('does not put a course beside the school line to somebody who chose nothing', () => {
@@ -98,8 +101,9 @@ describe('placing a learner', () => {
     // the catalogue is ordered along and no more — the same 48 concepts it covered before 응용계산
     // was installed beside it, although the graph now holds 52.
     const line = placementScope(graph, schoolLine.flatMap((lesson) => lesson.conceptKeys));
-    // 48 before 제곱근과 실수, 54 before 인수분해와 이차방정식, 63 before 이차함수 and 다항식과 나머지정리.
-    expect(line).toHaveLength(70);
+    // 48 before 제곱근과 실수, 54 before 인수분해와 이차방정식, 63 before 이차함수와 다항식,
+    // 70 before 복소수와 이차부등식 added eight more.
+    expect(line).toHaveLength(78);
     expect(graph.keys.length).toBeGreaterThan(line.length);
     for (const key of ['cost-price', 'discount-rate', 'concentration', 'speed']) expect(line).not.toContain(key);
   });
