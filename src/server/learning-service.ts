@@ -46,13 +46,15 @@ export const actionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('lesson.complete'), enrollmentId: id }).strict(),
   z.object({ action: z.literal('assignment.submit'), recipientId: id, requestId: z.string().min(8).max(100) }).strict(),
   z.object({ action: z.literal('problemSet.start'), problemSetId: id }).strict(),
+  z.object({ action: z.literal('solution.open'), context, contextId: id, problemVersionId: id }).strict(),
 ]);
 type Tx = Prisma.TransactionClient;
 const asJson = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 const notFound = () => new AppError(404, 'not_found', '학습 기록을 찾을 수 없어요.');
 const conflict = (message: string) => new AppError(409, 'conflict', message);
 function publicProblem(p: StoredProblem): PublicProblem {
-  return { problemVersionId: p.problemVersionId, conceptKeys: p.conceptKeys, promptContent: p.promptContent, responseSpec: p.responseSpec, hintAvailable: p.hintAvailable };
+  return { problemVersionId: p.problemVersionId, conceptKeys: p.conceptKeys, promptContent: p.promptContent, responseSpec: p.responseSpec,
+    hintAvailable: p.hintAvailable, solutionAvailable: p.solution.length > 0 };
 }
 function attemptView(a: Attempt): AttemptView {
   return { id: a.id, problemVersionId: a.problemVersionId, answer: a.answer, result: a.result as GradeResult, hintUsed: a.hintUsed };
@@ -296,8 +298,10 @@ export class LearningService {
         const visibleAttempt = submission.status === 'submitted'
           ? submission.items.find(selected => selected.assignmentItemId === item.id)?.selectedAttempt
           : matching[matching.length - 1];
-        // A policy without hints hides them the way a question without hints does.
-        return { id: item.id, problem: { ...publicProblem(p), hintAvailable: policy.hints && p.hintAvailable }, attempt: visibleAttempt ? attemptView(visibleAttempt) : null };
+        // A policy without hints hides them the way a question without hints does, and a policy
+        // that never shows a worked solution does not offer one either.
+        return { id: item.id, problem: { ...publicProblem(p), hintAvailable: policy.hints && p.hintAvailable,
+          solutionAvailable: policy.solutions !== 'never' && p.solution.length > 0 }, attempt: visibleAttempt ? attemptView(visibleAttempt) : null };
       });
       return { id: r.assignmentId, recipientId: r.id, title: r.assignment.title, lessonKey, problemSetId: r.assignment.problemSetId,
         recommendedAt: r.recommendedAt.toISOString(), opensAt: window.opensAt?.toISOString() ?? null, dueAt: window.dueAt?.toISOString() ?? null,
@@ -366,6 +370,37 @@ export class LearningService {
     if (!problem) throw notFound();
     return { problem, scopeId: recipient.assignment.ownerScopeId, enrollmentId: undefined, submissionId: submission.id, assignmentItemId: item.id,
       hints: parseAssignmentPolicy(recipient.assignment.policy).hints };
+  }
+
+  /**
+   * The question whose worked solution this learner may now read.
+   *
+   * Not the same door as answering, and deliberately the opposite one. `activity` turns away a
+   * finished lesson and a handed-in set, which is exactly when somebody wants the solution; what
+   * this asks for instead is that the work is done. In a lesson that means the learner has answered
+   * this question — a solution before an answer is not a solution, it is the answer. In an
+   * assignment it means the policy allows it and the set has been handed in, because everything in
+   * a set is still answerable until then.
+   */
+  private async solvable(tx: Tx, userId: string, kind: 'lesson' | 'assignment', contextId: string, problemId: string) {
+    if (kind === 'lesson') {
+      const { enrollment, record } = await this.ownedEnrollment(tx, userId, contextId);
+      const problem = record.problems.find(p => p.problemVersionId === problemId);
+      if (!problem) throw notFound();
+      const attempts = await tx.attempt.findMany({ where: { userId, enrollmentId: enrollment.id, problemVersionId: problemId } });
+      if (!attempts.some(a => (a.result as GradeResult).status !== 'invalid')) throw conflict('먼저 답을 써 보고 나서 풀이를 볼 수 있어요.');
+      return problem;
+    }
+    const recipient = await tx.assignmentRecipient.findFirst({ where: { id: contextId, learnerUserId: userId, assignment: { learningScope: { ownerUserId: userId, kind: 'personal' } } },
+      include: { assignment: { include: { items: true } }, submissions: { orderBy: { submissionIndex: 'desc' } } } });
+    if (!recipient) throw notFound();
+    if (parseAssignmentPolicy(recipient.assignment.policy).solutions === 'never') throw conflict('이 과제는 풀이를 보여 주지 않아요.');
+    if (recipient.submissions[0]?.status !== 'submitted') throw conflict('다 풀고 마무리한 뒤에 풀이를 볼 수 있어요.');
+    const item = recipient.assignment.items.find(item => item.problemVersionId === problemId);
+    if (!item) throw notFound();
+    const problem = (await publishedProblemRecords(tx, [item.problemVersionId])).get(item.problemVersionId);
+    if (!problem) throw notFound();
+    return problem;
   }
 
   async act(userId: string, input: unknown): Promise<ActionResponse> {
@@ -471,6 +506,13 @@ export class LearningService {
               await tx.hintUse.upsert({ where: { userId_contextKind_contextId_problemVersionId: { userId, contextKind: action.context, contextId: action.contextId, problemVersionId: action.problemVersionId } },
                 create: { userId, contextKind: action.context, contextId: action.contextId, problemVersionId: action.problemVersionId }, update: {} });
               return { hint: target.problem.hints };
+            }
+            case 'solution.open': {
+              const problem = await this.solvable(tx, userId, action.context, action.contextId, action.problemVersionId);
+              // Asking for a solution is reading, not learning: nothing about it is recorded, and a
+              // question without one says so rather than handing back an empty page.
+              if (!problem.solution.length) throw notFound();
+              return { solution: problem.solution };
             }
             case 'attempt.submit': {
               const previous = await tx.attempt.findUnique({ where: { userId_requestId: { userId, requestId: action.requestId } }, include: { submission: true } });

@@ -17,6 +17,12 @@ export type PublicProblem = {
   // options to pick from — and never which of them is right, which stays with the question.
   responseSpec: { kind: 'integer' | 'rational' | 'choice'; requiredForm?: string; options?: { id: string; text: string }[] };
   hintAvailable: boolean;
+  /**
+   * Whether this question has a worked solution to ask for. A hint is for while you are stuck; a
+   * solution is for after you have answered, so saying it exists is safe and asking for it is not
+   * always allowed — the server decides that when it is asked.
+   */
+  solutionAvailable: boolean;
 };
 /** How a lesson names questions: a problem set, a frozen version of it, and the questions it picked. */
 export type ProblemSetRef = { problemSetId: string; problemSetVersionId: string; problemVersionIds: string[] };
@@ -185,5 +191,6 @@ export type LearningAction =
   | { action: 'hint.open'; context: 'lesson' | 'assignment'; contextId: string; problemVersionId: string }
   | { action: 'lesson.complete'; enrollmentId: string }
   | { action: 'assignment.submit'; recipientId: string; requestId: string }
-  | { action: 'problemSet.start'; problemSetId: string };
-export type ActionResponse = { state: LearningState; result?: GradeResult; hint?: ContentBlock[]; enrollmentId?: string; recipientId?: string };
+  | { action: 'problemSet.start'; problemSetId: string }
+  | { action: 'solution.open'; context: 'lesson' | 'assignment'; contextId: string; problemVersionId: string };
+export type ActionResponse = { state: LearningState; result?: GradeResult; hint?: ContentBlock[]; solution?: ContentBlock[]; enrollmentId?: string; recipientId?: string };

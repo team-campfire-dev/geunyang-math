@@ -14,8 +14,12 @@ const moment = z.object({ kind: z.literal('at'), at: z.string().datetime() }).st
 const afterCompletion = z.object({ kind: z.literal('after'), days: z.number().int().positive() }).strict();
 export const assignmentScheduleSchema = z.object({ opens: moment.optional(), due: z.union([moment, afterCompletion]).optional() }).strict();
 
-/** The review a lesson issues for itself: hints allowed, each answer graded as it is saved, solutions kept back. */
-export const reviewPolicy: AssignmentPolicy = { kind: 'review', hints: true, results: 'per-item', solutions: 'never' };
+/**
+ * The review a lesson issues for itself: hints allowed, each answer graded as it is saved, and the
+ * worked solution readable once the review has been handed in — which is what `after-submission`
+ * has always meant and what nothing used to honour.
+ */
+export const reviewPolicy: AssignmentPolicy = { kind: 'review', hints: true, results: 'per-item', solutions: 'after-submission' };
 /**
  * A problem set the learner picked for themselves, to solve without the lesson around it.
  *
@@ -23,7 +27,7 @@ export const reviewPolicy: AssignmentPolicy = { kind: 'review', hints: true, res
  * separate value only because nobody assigned it. A screen that says「배정된 과제」would be lying
  * about work somebody chose, and a recommended moment means nothing for work started just now.
  */
-export const practicePolicy: AssignmentPolicy = { kind: 'practice', hints: true, results: 'per-item', solutions: 'never' };
+export const practicePolicy: AssignmentPolicy = { kind: 'practice', hints: true, results: 'per-item', solutions: 'after-submission' };
 
 export function parseAssignmentPolicy(value: unknown): AssignmentPolicy {
   return assignmentPolicySchema.parse(value);

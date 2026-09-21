@@ -2,6 +2,7 @@ import 'server-only';
 import { createHash } from 'node:crypto';
 import { Prisma, type PrismaClient, type DiagnosticVersion } from '@prisma/client';
 import { canonicalJson, ContentError, diagnosticDefinitionSchema, parseContentBundle, definitionSchema, validateReferences, type ContentBundle, type CourseDefinition, type DiagnosticDefinition, type DiagnosticRecord, type DefinitionRecord } from '@/core/content-bundle';
+import { frozenProblem } from '@/core/published-lock';
 import type { PublishedDefinition } from '@/core/glossary';
 import { problemSetRefs, storedLessonOf, type LessonRecord, type StoredLesson, type StoredProblem, type StoredProblemSet } from '@/core/content';
 import { defaultCourseTrack, type ContentBlock, type CourseStage, type CourseTrack } from '@/shared/api';
@@ -47,9 +48,19 @@ const problemSetRows = (record: StoredProblemSet) => record.problems.flatMap(pro
   ...blockRows('problem', record.versionId, problem.problemVersionId, 'hint', problem.hints),
   ...blockRows('problem', record.versionId, problem.problemVersionId, 'solution', problem.solution),
 ]);
-/** The frozen part of a problem set version: what its hash is taken over and what may not change. */
+/**
+ * The frozen part of a problem set version: what its hash is taken over and what may not change.
+ * A question's worked solution is not part of it — see `frozenProblem` for why — so it is the one
+ * thing about a published question that may still be written.
+ */
 export const frozenProblemSet = (record: StoredProblemSet) =>
-  ({ problemSetId: record.problemSetId, versionId: record.versionId, problems: record.problems });
+  ({ problemSetId: record.problemSetId, versionId: record.versionId, problems: record.problems.map(frozenProblem) });
+/** Replaces the worked solution of one question of one published version, in place. */
+async function rewriteSolution(db: Db, versionId: string, problem: StoredProblem) {
+  await db.contentBlock.deleteMany({ where: { ownerKind: 'problem', ownerVersionId: versionId, ownerId: problem.problemVersionId, slot: 'solution' } });
+  const rows = blockRows('problem', versionId, problem.problemVersionId, 'solution', problem.solution);
+  if (rows.length) await db.contentBlock.createMany({ data: rows });
+}
 /**
  * Writes every row a published lesson is read from — what it says about itself, its sections and
  * their blocks. Its questions are the problem sets' rows. Whoever publishes a lesson owes these.
@@ -393,6 +404,17 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
     for (const s of newSets) await db.problemSetVersion.create({ data: { id: s.versionId, problemSetId: s.problemSetId,
       contentHash: hash(frozenProblemSet(s)), publishedAt: publishedAt() } });
     for (const s of newSets) await indexProblemSetDocument(db, s);
+    // A published question's worked solution is not frozen, so one that has changed is rewritten
+    // where it stands. Every version of the set that holds the question is written, because a
+    // question is read from whichever of them is found first.
+    for (const s of incoming.problemSets) {
+      const old = oldSets.get(s.versionId);
+      if (!old) continue;
+      for (const problem of s.problems) {
+        const before = old.problems.find(p => p.problemVersionId === problem.problemVersionId);
+        if (before && canonicalJson(before.solution) !== canonicalJson(problem.solution)) await rewriteSolution(db, s.versionId, problem);
+      }
+    }
     for (const c of newLessons) await db.lessonVersion.create({ data: { id: c.public.versionId, lessonKey: c.public.lessonKey,
       title: c.public.title, metadata: json(lessonMetadata(c)),
       contentHash: hash(c), publishedAt: publishedAt() } });

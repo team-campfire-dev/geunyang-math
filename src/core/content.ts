@@ -8,8 +8,13 @@ import { chartBuildIssue, chartBuildLimits, type ChartBuild } from '@/shared/cha
 import { choiceIssue, choiceLimits, type AnswerOption, type AnswerSpec } from '@/shared/answer';
 import { locateTerms, definitionRefId, type DefinitionLink, type DefinitionRef } from '@/shared/rich-text';
 
-/** Private content records stay on the server; only toPublicLesson crosses the API boundary. */
-export type StoredProblem = PublicProblem & {
+/**
+ * Private content records stay on the server; only toPublicLesson crosses the API boundary.
+ *
+ * A stored question holds its worked solution, so it has nothing to say about whether one is
+ * available — that is read off the solution itself when the question is sent.
+ */
+export type StoredProblem = Omit<PublicProblem, 'solutionAvailable'> & {
   // What the answer is. A written answer is a number; a picked one is one of the options, and the
   // options are here too because `correct` names one of them.
   gradingSpec: AnswerSpec;
@@ -463,6 +468,7 @@ function publicProblem(problem: StoredProblem): PublicProblem {
     promptContent: structuredClone(problem.promptContent),
     responseSpec: { ...problem.responseSpec },
     hintAvailable: problem.hintAvailable,
+    solutionAvailable: problem.solution.length > 0,
   };
 }
 

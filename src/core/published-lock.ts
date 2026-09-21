@@ -24,9 +24,24 @@ function canonical(value: unknown): string {
 }
 const mark = (value: unknown) => createHash('sha256').update(canonical(value)).digest('hex').slice(0, 32);
 
+/**
+ * A question as the freeze sees it.
+ *
+ * A worked solution is left out. It is shown only after the answer is in, so it changes nothing
+ * about what was asked, what the answer is, or how the answer is marked — it is an aid beside the
+ * question, which is exactly the reason a definition is corrected in place and not frozen either
+ * (docs/content-management.md). Freezing it would mean that adding one to a published question
+ * costs a new question, a new set version and a new lesson version, and the catalogue would simply
+ * never get solutions.
+ *
+ * It is pinned to an empty list rather than dropped so that every fingerprint already written down
+ * still reads the same: no published version has a solution today, so nothing in the ledger moves.
+ */
+export const frozenProblem = <T extends object>(problem: T) => ({ ...problem, solution: [] });
+
 type Seed = {
   lessons: { public: { versionId: string } }[];
-  problemSets: { versionId: string; problemSetId: string; problems: unknown[] }[];
+  problemSets: { versionId: string; problemSetId: string; problems: object[] }[];
   diagnostics: { versionId: string }[];
 };
 
@@ -41,7 +56,7 @@ export function publishedFingerprints(): Map<string, string> {
     const seed = JSON.parse(readFileSync(join(seedDirectory, name), 'utf8')) as Seed;
     for (const lesson of seed.lessons) marks.set(lesson.public.versionId, mark(lesson));
     for (const set of seed.problemSets) {
-      marks.set(set.versionId, mark({ problemSetId: set.problemSetId, versionId: set.versionId, problems: set.problems }));
+      marks.set(set.versionId, mark({ problemSetId: set.problemSetId, versionId: set.versionId, problems: set.problems.map(frozenProblem) }));
     }
     for (const diagnostic of seed.diagnostics) marks.set(diagnostic.versionId, mark(diagnostic));
   }

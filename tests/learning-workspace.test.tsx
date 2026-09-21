@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, fireEvent, render, screen } from './render';
+import { act, cleanup, fireEvent, render, screen } from './render';
 import { LearningWorkspace } from '@/features/learning/learning-workspace';
 import type { AssignmentView, AttemptView, ContentBlock, LearningAction, LearningState, LessonDocument, PublicCourse, PublicLesson, PublicProblemSet } from '@/shared/api';
 
@@ -35,14 +35,14 @@ const document = (blocks?: ContentBlock[]): LessonDocument => ({
     { sectionId: 'fraction-meaning:practice:v2', role: 'practice', title: '직접 해보기', contentBlocks: [
       { blockId: 'set1', kind: 'core.problem_set', typeVersion: 2, required: true, payload: { problemVersionIds: [problemId] } }] },
   ],
-  problems: [{ problemVersionId: problemId, conceptKeys: ['term.denominator'], promptContent: [text('p1', '분모는 얼마인가요?')], responseSpec: { kind: 'integer' }, hintAvailable: true }],
+  problems: [{ problemVersionId: problemId, conceptKeys: ['term.denominator'], promptContent: [text('p1', '분모는 얼마인가요?')], responseSpec: { kind: 'integer' }, hintAvailable: true, solutionAvailable: false }],
   glossary: [],
 });
 const assignment = (overrides: Partial<AssignmentView> = {}): AssignmentView => ({
   id: 'a1', recipientId: 'r1', title: '분수의 의미 복습', lessonKey, problemSetId: 'fraction-meaning:review',
   recommendedAt: '2026-09-19T00:00:00.000Z', opensAt: null, dueAt: null,
   policy: { kind: 'review', hints: true, results: 'per-item', solutions: 'never' }, status: 'assigned',
-  items: [{ id: 'i1', problem: { problemVersionId: problemId, conceptKeys: ['term.denominator'], promptContent: [text('p1', '분모는 얼마인가요?')], responseSpec: { kind: 'integer' }, hintAvailable: true }, attempt: null }],
+  items: [{ id: 'i1', problem: { problemVersionId: problemId, conceptKeys: ['term.denominator'], promptContent: [text('p1', '분모는 얼마인가요?')], responseSpec: { kind: 'integer' }, hintAvailable: true, solutionAvailable: false }, attempt: null }],
   submissionId: 's1', glossary: [], ...overrides,
 });
 const learningState = (overrides: Partial<LearningState> = {}): LearningState => ({
@@ -95,6 +95,7 @@ function serve(options: { signedIn?: boolean; state?: LearningState; lesson?: Le
         return reply({ error: { code, message } }, status ?? 400);
       }
       if (state.after) state.learning = state.after(action);
+      if (action.action === 'solution.open') return reply({ state: state.learning, solution: [text('sol1', '넷으로 나눈 한 조각이니 분모는 4예요.')] });
       return reply({ state: state.learning });
     }
     throw new Error(`아무도 답하지 않는 요청: ${url}`);
@@ -281,7 +282,7 @@ describe('finishing an assignment', () => {
 
 describe('a set too long to hold on one screen', () => {
   const question = (id: string, prompt: string) => ({ problemVersionId: id, conceptKeys: ['term.denominator'],
-    promptContent: [text(`prompt-${id}`, prompt)], responseSpec: { kind: 'integer' as const }, hintAvailable: false });
+    promptContent: [text(`prompt-${id}`, prompt)], responseSpec: { kind: 'integer' as const }, hintAvailable: false, solutionAvailable: false });
   const judged = (problemVersionId: string, status: 'correct' | 'incorrect'): AttemptView => ({ id: `t-${problemVersionId}`,
     problemVersionId, answer: '4', result: { status, message: status === 'correct' ? '맞았어요.' : '아직 답이 맞지 않아요.', assisted: false }, hintUsed: false });
   const set = (attempts: (AttemptView | null)[]): AssignmentView => assignment({
@@ -335,6 +336,67 @@ describe('a set too long to hold on one screen', () => {
     await openSet(set([null, null]));
     expect(window.document.querySelector('.solve-progress')).toBeNull();
     expect(screen.getByText('문제 02')).toBeDefined();
+  });
+});
+
+describe('reading the worked solution', () => {
+  /** A lesson whose one question carries a solution, opened on the step that asks it. */
+  const withSolution = (attempt: AttemptView | null) => {
+    const solved = document();
+    solved.problems = [{ ...solved.problems[0], solutionAvailable: true }];
+    server = serve({ lesson: solved, state: { ...enrolled(['fraction-meaning:explanation:v2']),
+      enrollments: [{ id: 'e1', lessonKey, lessonVersionId: 'fraction-meaning:v2',
+        completedSectionIds: ['fraction-meaning:explanation:v2'], status: 'active', attempts: attempt ? [attempt] : [] }] } });
+  };
+  const answered: AttemptView = { id: 't1', problemVersionId: problemId, answer: '3',
+    result: { status: 'incorrect', message: '아직 답이 맞지 않아요.', assisted: false }, hintUsed: false };
+
+  it('offers nothing until the learner has answered', async () => {
+    withSolution(null);
+    await openLesson();
+    fireEvent.click(screen.getByRole('button', { name: /직접 해보기/ }));
+    await until(() => expect(screen.getByText('분모는 얼마인가요?')).toBeDefined());
+    // A solution handed out before an answer is not a solution, it is the answer.
+    expect(screen.queryByRole('button', { name: '풀이 보기' })).toBeNull();
+  });
+
+  it('opens it once an answer is in, even a wrong one, and folds it away again', async () => {
+    withSolution(answered);
+    await openLesson();
+    fireEvent.click(screen.getByRole('button', { name: /직접 해보기/ }));
+    await until(() => expect(screen.getByRole('button', { name: '풀이 보기' })).toBeDefined());
+    fireEvent.click(screen.getByRole('button', { name: '풀이 보기' }));
+    await until(() => expect(screen.getByText('넷으로 나눈 한 조각이니 분모는 4예요.')).toBeDefined());
+    expect(server.of('solution.open')[0]).toEqual({ action: 'solution.open', context: 'lesson',
+      contextId: 'e1', problemVersionId: problemId });
+    fireEvent.click(screen.getByRole('button', { name: '풀이 접기' }));
+    await tick();
+    expect(screen.queryByText('넷으로 나눈 한 조각이니 분모는 4예요.')).toBeNull();
+    // Folding it away does not ask the server for it a second time.
+    expect(server.of('solution.open')).toHaveLength(1);
+  });
+
+  it('waits for a set to be handed in, however many questions are answered', async () => {
+    const solved = (status: 'assigned' | 'submitted'): AssignmentView => assignment({ recipientId: 'r-own', title: '분수의 의미 연습',
+      problemSetId: 'fraction-meaning:practice', lessonKey: null, status,
+      policy: { kind: 'practice', hints: true, results: 'per-item', solutions: 'after-submission' },
+      items: [{ id: 'i1', problem: { problemVersionId: problemId, conceptKeys: ['term.denominator'], promptContent: [text('p1', '분모는 얼마인가요?')],
+        responseSpec: { kind: 'integer' }, hintAvailable: false, solutionAvailable: true }, attempt: answered }] });
+    const open = async (view: AssignmentView) => {
+      server = serve({ state: learningState({ assignments: [view] }) });
+      render(<LearningWorkspace />);
+      await until(() => expect(screen.getAllByRole('button', { name: '연습장' }).length).toBeGreaterThan(0));
+      fireEvent.click(screen.getAllByRole('button', { name: '연습장' })[0]);
+      await until(() => expect(screen.getByRole('button', { name: /분수의 의미 연습/ })).toBeDefined());
+      fireEvent.click(screen.getByRole('button', { name: /분수의 의미 연습/ }));
+      await until(() => expect(screen.getByRole('heading', { level: 1, name: '분수의 의미 연습' })).toBeDefined());
+    };
+    await open(solved('assigned'));
+    // Everything in a set stays answerable until it is handed in, so no solution is offered yet.
+    expect(screen.queryByRole('button', { name: '풀이 보기' })).toBeNull();
+    cleanup();
+    await open(solved('submitted'));
+    expect(screen.getByRole('button', { name: '풀이 보기' })).toBeDefined();
   });
 });
 

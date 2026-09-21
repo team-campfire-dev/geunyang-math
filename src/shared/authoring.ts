@@ -117,6 +117,9 @@ export const toPublicProblem = (problem: DraftProblem): PublicProblem => ({
   problemVersionId: problem.problemVersionId, conceptKeys: [...problem.conceptKeys],
   promptContent: problem.promptContent, responseSpec: responseSpecOf(problem.gradingSpec),
   hintAvailable: problem.hints.length > 0,
+  // The author may read the solution they are writing at any time, in the panel beside the question,
+  // so the preview does not repeat it behind a button a learner would have had to earn.
+  solutionAvailable: false,
 });
 export type LessonChoice = { conceptKeys?: string[]; lessonKey: string; courseKey: string; title: string; latestVersionId: string | null; suggestedVersionId: string; hasDraft: boolean };
 /** A course a new lesson may be started in. Every lesson has one from its first draft. */

@@ -194,6 +194,46 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     expect(await db.hintUse.count({ where: { userId: learner.userId } })).toBe(1);
   });
 
+  it('hands out a worked solution only once the work is done, and records nothing for it', async () => {
+    const learner = await newLearner();
+    const { enrollmentId, problem } = await openPractice(learner.userId);
+    const ask = { action: 'solution.open' as const, context: 'lesson' as const, contextId: enrollmentId, problemVersionId: problem.problemVersionId };
+    // Before an answer it is not a solution, it is the answer, so it is refused.
+    await expect(service.act(learner.userId, ask)).rejects.toMatchObject({ status: 409 });
+    await service.act(learner.userId, { action: 'attempt.submit', context: 'lesson', contextId: enrollmentId,
+      problemVersionId: problem.problemVersionId, answer: '999999', requestId: requestId() });
+    // A wrong answer is still an answer: this is exactly who the solution is for.
+    const opened = await service.act(learner.userId, ask);
+    expect(opened.solution).toEqual(problem.solution);
+    expect(opened.solution!.length).toBeGreaterThan(0);
+    // Reading it is not a hint and leaves no mark on what the learner has been recorded as doing.
+    expect(await db.hintUse.count({ where: { userId: learner.userId } })).toBe(0);
+    const again = await service.act(learner.userId, { action: 'attempt.submit', context: 'lesson', contextId: enrollmentId,
+      problemVersionId: problem.problemVersionId, answer: fixtureAnswer(problem), requestId: requestId() });
+    expect(again.result).toMatchObject({ status: 'correct', assisted: false });
+  });
+
+  it('keeps an assignment\u2019s solutions until it is handed in, and never when the policy says never', async () => {
+    const learner = await newLearner();
+    const recipient = await standaloneAssignment(learner);
+    const problemVersionId = recipient.assignment.items[0].problemVersionId;
+    const ask = { action: 'solution.open' as const, context: 'assignment' as const, contextId: recipient.id, problemVersionId };
+    // A set is answerable until it is handed in, so until then the solution would be the answer.
+    await expect(service.act(learner.userId, ask)).rejects.toMatchObject({ status: 409 });
+    const state = await service.state(learner.userId);
+    expect(state.assignments[0].items[0].problem.solutionAvailable).toBe(true);
+    for (const item of recipient.assignment.items) {
+      await service.act(learner.userId, { action: 'attempt.submit', context: 'assignment', contextId: recipient.id,
+        problemVersionId: item.problemVersionId, answer: '1', requestId: requestId() });
+    }
+    await service.act(learner.userId, { action: 'assignment.submit', recipientId: recipient.id, requestId: requestId() });
+    expect((await service.act(learner.userId, ask)).solution!.length).toBeGreaterThan(0);
+    // A policy that never shows one neither offers it nor hands it over, handed in or not.
+    await db.assignment.update({ where: { id: recipient.assignmentId }, data: { policy: { kind: 'exam', hints: false, results: 'after-submission', solutions: 'never' } } });
+    expect((await service.state(learner.userId)).assignments[0].items[0].problem.solutionAvailable).toBe(false);
+    await expect(service.act(learner.userId, ask)).rejects.toMatchObject({ status: 409 });
+  });
+
   it('keeps hints back when the assignment policy says so, and shows a recipient their own due date over the rule', async () => {
     const learner = await newLearner();
     const recipient = await standaloneAssignment(learner);
