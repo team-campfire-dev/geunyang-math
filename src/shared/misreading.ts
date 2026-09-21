@@ -16,12 +16,12 @@ export type Misreading = 'sign' | 'reciprocal' | 'hundredfold' | 'tenfold' | 'of
 
 /** What each looks like to a learner reading a report about themselves. */
 export const misreadingLabels: Record<Misreading, string> = {
-  sign: '부호를 놓침',
-  reciprocal: '분자와 분모를 바꿔 씀',
-  hundredfold: '비율과 백분율을 바꿔 씀',
-  tenfold: '자릿값이 한 자리 어긋남',
-  'off-by-one': '하나 더 세거나 덜 셈',
-  unreduced: '약분을 끝까지 하지 않음',
+  sign: '부호를 놓친 답',
+  reciprocal: '분자와 분모를 바꿔 쓴 답',
+  hundredfold: '비율과 백분율을 헷갈린 답',
+  tenfold: '자릿값이 한 자리 어긋난 답',
+  'off-by-one': '하나를 더 세거나 덜 센 답',
+  unreduced: '약분을 끝까지 하지 않은 답',
 };
 
 /** One line of advice per kind, for a report that would otherwise only name the mistake. */

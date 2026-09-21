@@ -349,7 +349,7 @@ describe('a set too long to hold on one screen', () => {
     await until(() => expect(window.document.querySelector('.answer-report')).not.toBeNull());
     expect(window.document.querySelector('.report-score')!.textContent).toBe('2 / 3');
     expect(window.document.querySelector('.report-count')!.textContent).toBe('2 / 3');
-    expect(screen.getByText('부호를 놓침')).toBeDefined();
+    expect(screen.getByText('부호를 놓친 답')).toBeDefined();
   });
 
   /** A pair of questions shares a screen, so the strip would only repeat what is already in view. */

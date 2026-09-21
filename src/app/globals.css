@@ -13,8 +13,11 @@
 .report-score strong { font-size: 27px; color: var(--deep-green); }
 .answer-report > .muted { margin-top: 12px; line-height: 1.8; word-break: keep-all; }
 .report-concepts { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; margin-top: 18px; }
+.report-legend { background: #f6f7f1; padding: 10px 16px; font-size: 12px; color: var(--muted); line-height: 1.6; word-break: keep-all; }
+.report-legend b { color: #7d8b6e; font-weight: 600; }
 .report-concept { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--white); padding: 13px 16px; font-size: 13px; }
 .report-concept-name { font-weight: 600; min-width: 96px; }
+.report-standing { font-size: 12px; color: #a4ab98; white-space: nowrap; }
 .report-dots { display: inline-flex; gap: 4px; }
 .report-dots i { width: 9px; height: 9px; border-radius: 50%; background: #dfe3d6; display: block; }
 .report-dots i.on { background: #71915a; }
@@ -23,6 +26,8 @@
 .report-concept.is-firm .report-verdict { color: #5d8a4e; }
 .report-concept.is-shaky .report-verdict { color: #a97a3f; }
 .report-concept.is-missing .report-verdict { color: #a35d4a; }
+/* One answer, or a bad day on something the record already trusts: said plainly, not in alarm. */
+.report-concept.is-thin .report-verdict, .report-concept.is-known .report-verdict { color: var(--muted); font-weight: 500; }
 .report-concept .text-button { margin: 0; color: var(--deep-green); }
 .report-slips { margin-top: 20px; }
 .report-slips h3 { font-size: 13px; color: #7d8b6e; font-weight: 600; margin-bottom: 10px; }

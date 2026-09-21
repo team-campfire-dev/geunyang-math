@@ -170,6 +170,18 @@ export type DiagnosticView = {
 };
 // `inferred`: the placement did not ask about this concept, it followed from an answer above or below it.
 export type ConceptReadiness = { key: string; label: string; readiness: 'unknown' | 'needs-practice' | 'ready'; source: 'none' | 'diagnostic' | 'inferred' | 'learning' };
+/**
+ * What the whole record says about a concept, as opposed to what one round of questions says.
+ *
+ * Earned across sittings and across sets: `independent` takes two different questions answered
+ * right, first time and without a hint, and `retained` takes that again after a gap. One answer
+ * never moves it, which is exactly why a report about one round has to show this beside its own
+ * reading rather than in place of it.
+ */
+export type ConceptState = 'unknown' | 'practicing' | 'independent' | 'retained';
+export const conceptStateLabels: Record<ConceptState, string> = {
+  unknown: '아직 확인 전', practicing: '연습하는 중', independent: '스스로 해결', retained: '꾸준히 기억',
+};
 export type Recommendation = { lessonKey: string; reason: string; kind: 'start' | 'continue' | 'revisit'; suggestedMinutes: number };
 export type PersonalPlan = {
   version: string;
@@ -189,7 +201,7 @@ export type LearningState = {
   diagnosticOffering: DiagnosticOffering | null;
   plan: PersonalPlan;
   recommendationHistory: RecommendationHistoryView[];
-  concepts: { key: string; label: string; state: 'unknown' | 'practicing' | 'independent' | 'retained' }[];
+  concepts: { key: string; label: string; state: ConceptState }[];
 };
 export type LearningAction =
   | { action: 'recommendation.choose'; lessonKey: string | null }
