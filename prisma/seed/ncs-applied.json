@@ -1,0 +1,2697 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "ncs-applied",
+      "title": "응용계산",
+      "summary": "원가와 할인, 소금물의 농도, 속력을 시험이 묻는 방식 그대로 계산해요.",
+      "order": 11,
+      "track": "ncs",
+      "lessons": [
+        {
+          "key": "ncs-price",
+          "order": 1
+        },
+        {
+          "key": "ncs-concentration",
+          "order": 2
+        },
+        {
+          "key": "ncs-speed",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "cost-price",
+      "label": "원가와 정가",
+      "assessable": true
+    },
+    {
+      "key": "discount-rate",
+      "label": "할인율",
+      "assessable": true
+    },
+    {
+      "key": "concentration",
+      "label": "농도",
+      "assessable": true
+    },
+    {
+      "key": "speed",
+      "label": "속력",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "ncs-price",
+        "versionId": "ncs-price:v1",
+        "title": "원가와 정가: 붙인 만큼과 깎은 만큼",
+        "summary": "원가에 이익을 붙여 정가를 정하고, 정가에서 깎아 판매가를 구해요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "cost-price",
+          "discount-rate"
+        ],
+        "prerequisiteConceptKeys": [
+          "percentage",
+          "percentage-of",
+          "rate"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-price:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-price:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "사 올 때 치른 값이 원가, 팔려고 내건 값이 정가예요. 정가는 보통 원가에 이익을 붙여 정해요.\n\n원가 $15{,}000$원에 $20\\%$의 이익을 붙이면 붙는 돈은 $15{,}000 \\times 0.2 = 3{,}000$원이고, 정가는 $18{,}000$원이에요.\n\n할인은 정가에서 깎는 거예요. $18{,}000$원을 $10\\%$ 깎으면 깎이는 돈은 $1{,}800$원, 판매가는 $16{,}200$원이에요.\n\n여기서 한 가지만 붙들면 돼요. 붙일 때의 기준은 원가이고, 깎을 때의 기준은 정가예요. $20\\%$ 붙였다가 $10\\%$ 깎았다고 해서 $10\\%$ 남는 것이 아닌 이유가 이거예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "ncs-price:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "원가 막대에 이익이 붙어 정가가 되고, 그 정가에서 깎인 판매가 막대",
+                "caption": "붙일 때의 기준과 깎을 때의 기준은 서로 달라요",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "id": "cost",
+                    "x": 30,
+                    "y": 52,
+                    "width": 150,
+                    "height": 32,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "margin",
+                    "x": 180,
+                    "y": 52,
+                    "width": 30,
+                    "height": 32,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "cost-name",
+                    "x": 105,
+                    "y": 44,
+                    "text": "원가 15,000원",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "margin-name",
+                    "x": 195,
+                    "y": 44,
+                    "text": "이익 20%",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "price-name",
+                    "x": 120,
+                    "y": 104,
+                    "text": "정가 18,000원",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "sale",
+                    "x": 30,
+                    "y": 118,
+                    "width": 162,
+                    "height": 32,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "sale-name",
+                    "x": 111,
+                    "y": 170,
+                    "text": "10% 깎은 판매가 16,200원",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "사 올 때 치른 값이 원가예요.",
+                    "changes": [
+                      {
+                        "id": "margin",
+                        "hidden": true
+                      },
+                      {
+                        "id": "margin-name",
+                        "hidden": true
+                      },
+                      {
+                        "id": "price-name",
+                        "hidden": true
+                      },
+                      {
+                        "id": "sale",
+                        "hidden": true
+                      },
+                      {
+                        "id": "sale-name",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "원가의 20%를 붙인 것이 정가예요. 여기서 기준은 원가예요.",
+                    "changes": [
+                      {
+                        "id": "sale",
+                        "hidden": true
+                      },
+                      {
+                        "id": "sale-name",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "정가의 10%를 깎은 것이 판매가예요. 이번 기준은 정가예요.",
+                    "changes": []
+                  }
+                ],
+                "frameMs": 1300
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-price:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-price:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "원가 $40{,}000$원인 신발에 $25\\%$ 이익을 붙였다가, 팔리지 않아 정가의 $20\\%$를 할인했어요. 판매가를 구해 볼게요.\n\n먼저 정가예요. 붙는 돈은 $40{,}000 \\times 0.25 = 10{,}000$원이니 정가는 $50{,}000$원이에요.\n\n이제 할인이에요. 기준은 원가가 아니라 정가 $50{,}000$원이에요. 깎이는 돈은 $50{,}000 \\times 0.2 = 10{,}000$원이고 판매가는 $40{,}000$원이에요.\n\n붙인 돈과 깎인 돈이 우연히 같아서 판매가가 원가와 같아졌어요. 이익은 $0$원이에요. 퍼센트가 같지 않아도 금액은 같아질 수 있다는 것을, 기준이 다르기 때문이라고 읽으면 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-price:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-price:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-price:practice",
+                "problemSetVersionId": "ncs-price:practice:v1",
+                "problemVersionIds": [
+                  "ncs-price:practice-1:v1",
+                  "ncs-price:practice-2:v1",
+                  "ncs-price:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-price:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-price:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-price:check",
+                "problemSetVersionId": "ncs-price:check:v1",
+                "problemVersionIds": [
+                  "ncs-price:check-1:v1",
+                  "ncs-price:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-price:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-price:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "원가는 사 온 값, 정가는 원가에 이익을 붙인 값, 판매가는 정가에서 할인을 뺀 값이에요.\n\n이익률은 이익을 원가로 나눈 것이고, 할인율은 깎인 돈을 정가로 나눈 것이에요. 무엇을 무엇으로 나누는지가 이 단원의 전부예요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-price:review",
+        "problemSetVersionId": "ncs-price:review:v1",
+        "problemVersionIds": [
+          "ncs-price:homework-1:v1",
+          "ncs-price:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "ncs-concentration",
+        "versionId": "ncs-concentration:v1",
+        "title": "소금물의 농도: 녹아 있는 양으로 따지기",
+        "summary": "소금물에서 소금이 차지하는 비율을 구하고, 물을 더하거나 날려 농도를 바꿔요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "concentration"
+        ],
+        "prerequisiteConceptKeys": [
+          "percentage",
+          "percentage-of",
+          "linear-equation"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-concentration:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-concentration:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "소금물의 농도는 소금물 전체에서 소금이 차지하는 비율이에요. 나누는 수가 물이 아니라 소금물 전체라는 점이 이 단원에서 가장 많이 틀리는 곳이에요.\n\n소금물 $200$g에 소금 $30$g이 녹아 있다면 농도는 $\\frac{30}{200} = 0.15$, 즉 $15\\%$예요. 물은 $170$g이지만 나눌 때 쓰는 수는 $200$이에요.\n\n반대로 농도와 소금물의 양을 알면 소금의 양은 $\\text{소금물} \\times \\text{농도}$로 구해요. 농도 $8\\%$인 소금물 $250$g에는 소금이 $20$g 들어 있어요.\n\n문제가 물을 더하라고 하든 끓여서 날리라고 하든, 소금의 양은 그대로예요. 움직이는 것은 소금물 전체의 양뿐이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "ncs-concentration:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "물과 소금으로 나뉜 소금물 비커에서 소금만 옆으로 꺼내 보는 그림",
+                "caption": "농도는 소금이 소금물에서 차지하는 비율",
+                "items": [
+                  {
+                    "kind": "polygon",
+                    "id": "beaker",
+                    "points": [
+                      [
+                        96,
+                        52
+                      ],
+                      [
+                        96,
+                        146
+                      ],
+                      [
+                        106,
+                        156
+                      ],
+                      [
+                        174,
+                        156
+                      ],
+                      [
+                        184,
+                        146
+                      ],
+                      [
+                        184,
+                        52
+                      ]
+                    ],
+                    "closed": false,
+                    "fill": "none",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "water",
+                    "x": 100,
+                    "y": 74,
+                    "width": 80,
+                    "height": 44,
+                    "fill": "sky",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "salt",
+                    "x": 100,
+                    "y": 118,
+                    "width": 80,
+                    "height": 34,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "total-name",
+                    "x": 140,
+                    "y": 44,
+                    "text": "소금물 200g",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "water-name",
+                    "x": 140,
+                    "y": 101,
+                    "text": "물 170g",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "salt-name",
+                    "x": 140,
+                    "y": 139,
+                    "text": "소금 30g",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "rate",
+                    "x": 160,
+                    "y": 184,
+                    "text": "$30 \\div 200 = 0.15 \\rightarrow 15\\%$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "소금물은 물과 소금이 함께 있는 거예요.",
+                    "changes": [
+                      {
+                        "id": "rate",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "녹아 있는 소금만 따로 꺼내 보면 30g이에요.",
+                    "changes": [
+                      {
+                        "id": "water",
+                        "opacity": 0.35
+                      },
+                      {
+                        "id": "water-name",
+                        "opacity": 0.35
+                      },
+                      {
+                        "id": "salt",
+                        "dx": 96
+                      },
+                      {
+                        "id": "salt-name",
+                        "dx": 96
+                      },
+                      {
+                        "id": "rate",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "소금 30g은 소금물 200g의 15%예요. 이 값이 농도예요.",
+                    "changes": [
+                      {
+                        "id": "water",
+                        "opacity": 0.35
+                      },
+                      {
+                        "id": "water-name",
+                        "opacity": 0.35
+                      },
+                      {
+                        "id": "salt",
+                        "dx": 96
+                      },
+                      {
+                        "id": "salt-name",
+                        "dx": 96
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1300
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-concentration:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-concentration:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "농도 $10\\%$인 소금물 $300$g에 물 $100$g을 더하면 농도가 어떻게 되는지 구해 볼게요.\n\n먼저 소금이에요. $300 \\times 0.1 = 30$g이에요. 물을 더해도 이 $30$g은 변하지 않아요.\n\n다음은 전체예요. $300 + 100 = 400$g이 되었어요.\n\n그러니 새 농도는 $\\frac{30}{400} = 0.075$, 즉 $7.5\\%$예요. 물을 $\\frac{1}{3}$만큼 더했는데 농도는 $10\\%$에서 $7.5\\%$로 내려갔어요.\n\n거꾸로 「농도를 $6\\%$로 만들려면 물을 얼마나 더할까」를 물으면, 더할 물을 $x$로 두고 $\\frac{30}{300+x} = 0.06$을 풀어요. $300+x = 500$이니 $x = 200$g이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-concentration:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-concentration:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-concentration:practice",
+                "problemSetVersionId": "ncs-concentration:practice:v1",
+                "problemVersionIds": [
+                  "ncs-concentration:practice-1:v1",
+                  "ncs-concentration:practice-2:v1",
+                  "ncs-concentration:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-concentration:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-concentration:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-concentration:check",
+                "problemSetVersionId": "ncs-concentration:check:v1",
+                "problemVersionIds": [
+                  "ncs-concentration:check-1:v1",
+                  "ncs-concentration:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-concentration:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-concentration:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "농도는 소금을 소금물 전체로 나눈 비율이고, 소금의 양은 소금물에 농도를 곱한 값이에요.\n\n물을 더하거나 날리는 문제는 소금을 먼저 구해 붙들어 두고, 전체가 얼마가 되는지만 따지면 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-concentration:review",
+        "problemSetVersionId": "ncs-concentration:review:v1",
+        "problemVersionIds": [
+          "ncs-concentration:homework-1:v1",
+          "ncs-concentration:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "ncs-speed",
+        "versionId": "ncs-speed:v1",
+        "title": "속력·시간·거리: 셋 중 둘을 알면",
+        "summary": "거리와 시간으로 속력을 구하고, 단위를 맞춰 왕복과 환산 문제를 풀어요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "speed"
+        ],
+        "prerequisiteConceptKeys": [
+          "rate",
+          "linear-equation"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-speed:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-speed:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "속력은 한 시간에 얼마나 가는지를 하나의 수로 나타낸 비율이에요. $\\text{속력} = \\frac{\\text{거리}}{\\text{시간}}$이고, 여기서 $\\text{거리} = \\text{속력} \\times \\text{시간}$과 $\\text{시간} = \\frac{\\text{거리}}{\\text{속력}}$이 따라 나와요. 외울 것은 하나예요.\n\n$180$km를 $3$시간에 갔다면 속력은 시속 $60$km예요. 같은 속력으로 계속 간다면 두 시간에 $120$km, 네 시간에 $240$km처럼 시간에 비례해요.\n\n시험에서 실제로 갈리는 곳은 계산이 아니라 단위예요. $30$분은 $0.5$시간, $90$분은 $1.5$시간이에요. 시속을 초속으로 바꿀 때는 $1$시간이 $3{,}600$초, $1$km가 $1{,}000$m라는 것만 쓰면 돼요.\n\n거리가 같은데 갈 때와 올 때의 속력이 다르면, 두 속력을 더해 반으로 나누지 않아요. 걸린 시간을 각각 구해 더하는 것이 언제나 맞는 길이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "ncs-speed:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "한 시간마다 60km씩 눈금을 지나가는 자동차",
+                "caption": "시속은 한 시간마다 나아가는 거리",
+                "items": [
+                  {
+                    "kind": "line",
+                    "id": "road",
+                    "x1": 24,
+                    "y1": 130,
+                    "x2": 300,
+                    "y2": 130,
+                    "stroke": "line",
+                    "strokeWidth": 3
+                  },
+                  {
+                    "kind": "line",
+                    "id": "tick-0",
+                    "x1": 24,
+                    "y1": 124,
+                    "x2": 24,
+                    "y2": 136,
+                    "stroke": "muted",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "id": "tick-1",
+                    "x1": 116,
+                    "y1": 124,
+                    "x2": 116,
+                    "y2": 136,
+                    "stroke": "muted",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "id": "tick-2",
+                    "x1": 208,
+                    "y1": 124,
+                    "x2": 208,
+                    "y2": 136,
+                    "stroke": "muted",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "line",
+                    "id": "tick-3",
+                    "x1": 300,
+                    "y1": 124,
+                    "x2": 300,
+                    "y2": 136,
+                    "stroke": "muted",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "mark-0",
+                    "x": 24,
+                    "y": 152,
+                    "text": "0",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "mark-1",
+                    "x": 116,
+                    "y": 152,
+                    "text": "60km",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "mark-2",
+                    "x": 208,
+                    "y": 152,
+                    "text": "120km",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "mark-3",
+                    "x": 300,
+                    "y": 152,
+                    "text": "180km",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "car",
+                    "x": 24,
+                    "y": 104,
+                    "width": 30,
+                    "height": 18,
+                    "radius": 4,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "clock",
+                    "x": 160,
+                    "y": 60,
+                    "text": "$60 \\times 3 = 180$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "한 시간 동안 60km를 갔어요.",
+                    "changes": [
+                      {
+                        "id": "clock",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "두 시간이면 120km. 같은 속력이면 시간에 비례해요.",
+                    "changes": [
+                      {
+                        "id": "car",
+                        "dx": 92
+                      },
+                      {
+                        "id": "clock",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "세 시간이면 180km. 이 차의 속력은 시속 60km예요.",
+                    "changes": [
+                      {
+                        "id": "car",
+                        "dx": 184
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1300
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-speed:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-speed:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$12$km 떨어진 곳에 갈 때는 시속 $4$km로 걷고, 올 때는 시속 $6$km로 걸었어요. 왕복에 걸린 시간을 구해 볼게요.\n\n갈 때 걸린 시간은 $\\frac{12}{4} = 3$시간이에요.\n\n올 때 걸린 시간은 $\\frac{12}{6} = 2$시간이에요.\n\n그래서 왕복은 $5$시간이에요. 두 속력의 평균인 시속 $5$km로 $24$km를 갔다고 보면 $4.8$시간이 나오는데, 이 값은 틀려요. 느리게 간 구간에 시간이 더 오래 쓰이기 때문이에요.\n\n거꾸로 왕복 시간만 주고 거리를 물으면 편도를 $x$로 둬요. $\\frac{x}{4} + \\frac{x}{6} = 5$에서 양변에 $12$를 곱하면 $3x + 2x = 60$, 즉 $x = 12$km예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-speed:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-speed:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-speed:practice",
+                "problemSetVersionId": "ncs-speed:practice:v1",
+                "problemVersionIds": [
+                  "ncs-speed:practice-1:v1",
+                  "ncs-speed:practice-2:v1",
+                  "ncs-speed:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-speed:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-speed:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-speed:check",
+                "problemSetVersionId": "ncs-speed:check:v1",
+                "problemVersionIds": [
+                  "ncs-speed:check-1:v1",
+                  "ncs-speed:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-speed:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-speed:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "속력은 거리를 시간으로 나눈 값이고, 나머지 둘은 여기서 따라 나와요.\n\n분은 시간으로, km는 m로 먼저 맞추고 계산해요. 왕복처럼 구간이 나뉘면 시간을 각각 구해 더하는 것이 안전해요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-speed:review",
+        "problemSetVersionId": "ncs-speed:review:v1",
+        "problemVersionIds": [
+          "ncs-speed:homework-1:v1",
+          "ncs-speed:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "ncs-price:practice",
+      "courseKey": "ncs-applied",
+      "name": "원가와 정가 연습",
+      "versionId": "ncs-price:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-price:practice-1:v1",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-price:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가가 $12{,}000$원인 물건에 원가의 $25\\%$를 이익으로 붙여 정가를 정했어요. 정가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-price:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$12{,}000$의 $25\\%$는 $3{,}000$원이에요. 원가에 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-price:practice-2:v1",
+          "conceptKeys": [
+            "discount-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-price:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가가 $20{,}000$원인 옷을 $30\\%$ 할인해서 팔아요. 판매가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 14000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-price:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$30\\%$를 깎으면 정가의 $70\\%$가 남아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-price:practice-3:v1",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-price:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가가 $8{,}000$원인 물건을 팔아 $2{,}000$원이 남았어요. 이익은 원가의 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-price:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2{,}000 \\div 8{,}000 = 0.25$예요. 백분율은 $100$을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-price:check",
+      "courseKey": "ncs-applied",
+      "name": "원가와 정가 확인",
+      "versionId": "ncs-price:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-price:check-1:v1",
+          "conceptKeys": [
+            "cost-price",
+            "discount-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-price:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가 $30{,}000$원인 물건에 $20\\%$의 이익을 붙여 정가를 정한 뒤, 그 정가에서 다시 $10\\%$를 깎아 팔았어요. 판매가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 32400
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-price:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가를 먼저 구하고, 깎는 것은 그 정가를 기준으로 해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-price:check-2:v1",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-price:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가가 $10{,}000$원인 물건을 $13{,}000$원에 팔았어요. 이익률은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$30\\%$"
+              },
+              {
+                "id": "b",
+                "text": "$23\\%$"
+              },
+              {
+                "id": "c",
+                "text": "$13\\%$"
+              },
+              {
+                "id": "d",
+                "text": "$3\\%$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$30\\%$"
+              },
+              {
+                "id": "b",
+                "text": "$23\\%$"
+              },
+              {
+                "id": "c",
+                "text": "$13\\%$"
+              },
+              {
+                "id": "d",
+                "text": "$3\\%$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-price:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이익 $3{,}000$원을 원가로 나눠요. 판매가로 나누지 않아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-price:review",
+      "courseKey": "ncs-applied",
+      "name": "원가와 정가 복습",
+      "versionId": "ncs-price:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-price:homework-1:v1",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-price:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가 $15{,}000$원에 $40\\%$의 이익을 붙인 정가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 21000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-price:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가의 $40\\%$는 $6{,}000$원이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-price:homework-2:v1",
+          "conceptKeys": [
+            "discount-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-price:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가 $25{,}000$원인 가방을 $20\\%$ 할인하면 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-price:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가의 $80\\%$가 판매가예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-concentration:practice",
+      "courseKey": "ncs-applied",
+      "name": "농도 연습",
+      "versionId": "ncs-concentration:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-concentration:practice-1:v1",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-concentration:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금 $30$g을 물에 녹여 소금물 $200$g을 만들었어요. 이 소금물의 농도는 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-concentration:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금의 양을 소금물 전체의 양으로 나눠요. 물의 양이 아니에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-concentration:practice-2:v1",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-concentration:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도가 $8\\%$인 소금물 $250$g에 녹아 있는 소금은 몇 g인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-concentration:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$250$의 $8\\%$를 구해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-concentration:practice-3:v1",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-concentration:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도가 $5\\%$인 소금물 $300$g에 물을 더 넣어 농도를 $3\\%$로 낮추려고 해요. 물을 몇 g 더 넣어야 하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 200
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-concentration:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "물을 넣어도 소금 $15$g은 그대로예요. 소금물 전체가 얼마가 되어야 $15$g이 $3\\%$가 되는지 생각해 보세요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-concentration:check",
+      "courseKey": "ncs-applied",
+      "name": "농도 확인",
+      "versionId": "ncs-concentration:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-concentration:check-1:v1",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-concentration:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도 $10\\%$인 소금물 $200$g과 농도 $4\\%$인 소금물 $100$g을 섞었어요. 섞은 소금물의 농도는 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-concentration:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "각각에 녹아 있는 소금을 먼저 구해 더하고, 전체 무게도 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-concentration:check-2:v1",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-concentration:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도 $6\\%$인 소금물 $150$g을 끓여 물 $50$g을 증발시켰어요. 남은 소금물의 농도는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$9\\%$"
+              },
+              {
+                "id": "b",
+                "text": "$6\\%$"
+              },
+              {
+                "id": "c",
+                "text": "$12\\%$"
+              },
+              {
+                "id": "d",
+                "text": "$4\\%$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$9\\%$"
+              },
+              {
+                "id": "b",
+                "text": "$6\\%$"
+              },
+              {
+                "id": "c",
+                "text": "$12\\%$"
+              },
+              {
+                "id": "d",
+                "text": "$4\\%$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-concentration:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "물만 날아가고 소금은 그대로예요. 소금물 전체의 양이 얼마가 되었는지 보세요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-concentration:review",
+      "courseKey": "ncs-applied",
+      "name": "농도 복습",
+      "versionId": "ncs-concentration:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-concentration:homework-1:v1",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-concentration:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금 $24$g이 녹아 있는 소금물 $300$g의 농도는 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-concentration:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$24 \\div 300$을 백분율로 바꿔요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-concentration:homework-2:v1",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-concentration:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도 $12\\%$인 소금물 $400$g에 녹아 있는 소금은 몇 g인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 48
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-concentration:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$400$의 $12\\%$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-speed:practice",
+      "courseKey": "ncs-applied",
+      "name": "속력 연습",
+      "versionId": "ncs-speed:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-speed:practice-1:v1",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-speed:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$180$km를 $3$시간에 달린 자동차의 속력은 시속 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-speed:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "거리를 시간으로 나누면 속력이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-speed:practice-2:v1",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-speed:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시속 $80$km로 $2$시간 $30$분 동안 달린 거리는 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 200
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-speed:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$시간 $30$분은 $2.5$시간이에요. 분은 시간으로 바꾼 뒤 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-speed:practice-3:v1",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-speed:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시속 $4$km로 걷는 사람이 $10$km를 가려면 몇 시간이 걸리나요? 분수나 소수로 써도 좋아요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-speed:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "거리를 속력으로 나누면 시간이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-speed:check",
+      "courseKey": "ncs-applied",
+      "name": "속력 확인",
+      "versionId": "ncs-speed:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-speed:check-1:v1",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-speed:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "집에서 학교까지 갈 때는 시속 $4$km, 올 때는 시속 $6$km로 같은 길을 걸었더니 왕복에 $2$시간 $30$분이 걸렸어요. 집에서 학교까지의 거리는 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-speed:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "편도 거리를 $x$로 두면 걸린 시간은 $\\frac{x}{4} + \\frac{x}{6}$이고, 이것이 $2.5$시간이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-speed:check-2:v1",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-speed:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시속 $72$km는 초속 몇 m인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "초속 $20$m"
+              },
+              {
+                "id": "b",
+                "text": "초속 $12$m"
+              },
+              {
+                "id": "c",
+                "text": "초속 $200$m"
+              },
+              {
+                "id": "d",
+                "text": "초속 $7.2$m"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "초속 $20$m"
+              },
+              {
+                "id": "b",
+                "text": "초속 $12$m"
+              },
+              {
+                "id": "c",
+                "text": "초속 $200$m"
+              },
+              {
+                "id": "d",
+                "text": "초속 $7.2$m"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-speed:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$72$km는 $72{,}000$m, 한 시간은 $3{,}600$초예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-speed:review",
+      "courseKey": "ncs-applied",
+      "name": "속력 복습",
+      "versionId": "ncs-speed:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-speed:homework-1:v1",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-speed:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$240$km를 $4$시간에 달린 기차의 속력은 시속 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-speed:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "거리를 시간으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-speed:homework-2:v1",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-speed:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시속 $60$km로 $90$분 동안 달린 거리는 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 90
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-speed:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$90$분은 $1.5$시간이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-applied:drill",
+      "courseKey": "ncs-applied",
+      "name": "NCS 응용계산 모아 풀기",
+      "versionId": "ncs-applied:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-applied:drill-1:v1",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가가 $20{,}000$원인 물건에 원가의 $15\\%$를 이익으로 붙였어요. 정가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 23000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "붙는 돈은 $3{,}000$원이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-2:v1",
+          "conceptKeys": [
+            "discount-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가가 $40{,}000$원인 물건을 $25\\%$ 할인해 팔면 판매가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가의 $75\\%$가 남아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-3:v1",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가 $5{,}000$원인 물건을 $6{,}500$원에 팔았어요. 이익률은 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이익 $1{,}500$원을 원가로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-4:v1",
+          "conceptKeys": [
+            "cost-price",
+            "discount-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가 $10{,}000$원, 정가 $12{,}000$원인 물건을 정가에서 $10\\%$ 할인해 팔았어요. 남은 이익은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$800$원"
+              },
+              {
+                "id": "b",
+                "text": "$1{,}200$원"
+              },
+              {
+                "id": "c",
+                "text": "$2{,}000$원"
+              },
+              {
+                "id": "d",
+                "text": "$200$원"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$800$원"
+              },
+              {
+                "id": "b",
+                "text": "$1{,}200$원"
+              },
+              {
+                "id": "c",
+                "text": "$2{,}000$원"
+              },
+              {
+                "id": "d",
+                "text": "$200$원"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "판매가를 먼저 구하고 원가를 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-5:v1",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어떤 물건의 정가가 원가보다 $8{,}000$원 비싸고, 이익률이 $40\\%$예요. 원가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가의 $40\\%$가 $8{,}000$원이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-6:v1",
+          "conceptKeys": [
+            "discount-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가에서 $30\\%$를 깎아 $21{,}000$원에 팔았어요. 정가는 몇 원이었나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$21{,}000$원이 정가의 $70\\%$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-7:v1",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금 $25$g이 녹아 있는 소금물 $500$g의 농도는 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금을 소금물 전체로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-8:v1",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도 $15\\%$인 소금물 $200$g에 녹아 있는 소금은 몇 g인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$200$의 $15\\%$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-9:v1",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도 $10\\%$인 소금물 $200$g에 물 $50$g을 더 넣으면 농도는 몇 $\\%$가 되나요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금 $20$g은 그대로예요. 전체만 $250$g이 돼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-10:v1",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도 $8\\%$인 소금물 $150$g과 농도 $12\\%$인 소금물 $50$g을 섞으면 농도는 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금끼리 더하고, 소금물끼리 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-11:v1",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도 $20\\%$인 소금물 $100$g을 끓여 물 $20$g을 증발시켰어요. 남은 소금물의 농도는 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금 $20$g은 남고 전체는 $80$g이 돼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-12:v1",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도 $6\\%$인 소금물 $300$g을 농도 $9\\%$로 만들려면 물을 몇 g 증발시켜야 하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$100$g"
+              },
+              {
+                "id": "b",
+                "text": "$50$g"
+              },
+              {
+                "id": "c",
+                "text": "$150$g"
+              },
+              {
+                "id": "d",
+                "text": "$200$g"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$100$g"
+              },
+              {
+                "id": "b",
+                "text": "$50$g"
+              },
+              {
+                "id": "c",
+                "text": "$150$g"
+              },
+              {
+                "id": "d",
+                "text": "$200$g"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금 $18$g이 전체의 $9\\%$가 되려면 소금물이 몇 g이어야 할까요?"
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-13:v1",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시속 $45$km로 $4$시간 동안 달린 거리는 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 180
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "속력에 시간을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-14:v1",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$300$km 떨어진 곳에 시속 $75$km로 가면 몇 시간이 걸리나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "거리를 속력으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-15:v1",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$시간 동안 $130$km를 달린 버스의 속력은 시속 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 65
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "거리를 시간으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-16:v1",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "초속 $15$m는 시속 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "시속 $54$km"
+              },
+              {
+                "id": "b",
+                "text": "시속 $15$km"
+              },
+              {
+                "id": "c",
+                "text": "시속 $90$km"
+              },
+              {
+                "id": "d",
+                "text": "시속 $4.2$km"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "시속 $54$km"
+              },
+              {
+                "id": "b",
+                "text": "시속 $15$km"
+              },
+              {
+                "id": "c",
+                "text": "시속 $90$km"
+              },
+              {
+                "id": "d",
+                "text": "시속 $4.2$km"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$시간은 $3{,}600$초, $1$km는 $1{,}000$m예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-17:v1",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시속 $6$km로 걷는 사람이 $30$분 동안 가는 거리는 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$30$분은 $0.5$시간이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-18:v1",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 길을 갈 때는 시속 $3$km, 올 때는 시속 $6$km로 걸었더니 왕복에 $3$시간이 걸렸어요. 편도 거리는 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "편도를 $x$로 두면 $\\frac{x}{3} + \\frac{x}{6} = 3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-19:v1",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기차가 $240$km를 시속 $80$km로 달린 뒤, 이어서 $60$km를 시속 $60$km로 달렸어요. 모두 몇 시간이 걸렸나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "구간마다 걸린 시간을 따로 구해 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-applied:drill-20:v1",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가가 $12{,}000$원인 물건을 정가에서 $20\\%$ 할인해 팔아도 손해가 없으려면, 정가를 원가보다 몇 $\\%$ 높게 정해야 하나요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가의 $80\\%$가 $12{,}000$원이 되어야 해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}

@@ -1,5 +1,6 @@
 import 'server-only';
 import { z } from 'zod';
+import { courseTracks, type CourseTrack } from '@/shared/api';
 import { blockDefinitionRefs, definitionBlockSchema, definitionReferences, diagnosticPoolRefSchema, problemSetRefs, validateLesson, validateProblemSet, type LessonRecord, type StoredLesson, type StoredProblem, type StoredProblemSet } from './content';
 import { definitionRefId, mayReferenceDefinition } from '@/shared/rich-text';
 
@@ -43,6 +44,9 @@ export const courseSchema = z.object({
   // Where the course sits in the catalogue, the way `order` places a lesson inside one. A bundle
   // written before courses were ordered names none and keeps the place it already has.
   order: z.number().int().min(0).max(1_000_000).optional(),
+  // Which line of study it is on. A bundle written before there was a second line names none and
+  // is on the first, which is what every course installed until now is.
+  track: z.enum(courseTracks as [CourseTrack, ...CourseTrack[]]).optional(),
   lessons: z.array(z.object({ key: id.max(100), order: z.number().int().min(0).max(1_000_000) }).strict()).max(500),
   diagnostics: z.array(id.max(100)).max(50),
 }).strict();

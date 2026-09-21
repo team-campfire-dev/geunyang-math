@@ -11,10 +11,15 @@ import type { StoredLesson } from '@/core/content';
  * twice the catalogue — which is why it was replaced. These tests hold the replacement to being
  * short **and** to being right: a descent that skipped questions by guessing would be short too.
  */
-const lessons = readdirSync('prisma/seed').filter((name) => name.endsWith('.json')).sort()
-  .flatMap((name) => parseContentBundle(JSON.parse(readFileSync(`prisma/seed/${name}`, 'utf8'))).lessons as StoredLesson[])
-  .map((lesson) => lesson.public);
+const bundles = readdirSync('prisma/seed').filter((name) => name.endsWith('.json')).sort()
+  .map((name) => parseContentBundle(JSON.parse(readFileSync(`prisma/seed/${name}`, 'utf8'))));
+const lessons = bundles.flatMap((bundle) => (bundle.lessons as StoredLesson[]).map((lesson) => lesson.public));
 const graph = conceptGraph(lessons);
+/** The lessons on the line the catalogue is ordered along, which is what an unchosen placement covers. */
+const schoolLine = (() => {
+  const tracks = new Map(bundles.flatMap((bundle) => bundle.courses.flatMap((course) => course.lessons.map((lesson) => [lesson.key, course.track ?? 'math'] as const))));
+  return lessons.filter((lesson) => tracks.get(lesson.lessonKey) === 'math');
+})();
 
 /** Runs a whole placement against a learner who knows exactly `known`, and reports what it cost. */
 function place(scope: string[], known: Set<string>) {
@@ -80,9 +85,22 @@ describe('placing a learner', () => {
       return [...scope, null].map((known) => place(scope, known ? new Set([known, ...graph.ancestors(known)]) : new Set()).asked);
     }));
     expect(worst, `최악 ${worst}문항, 전수 ${exhaustive}문항`).toBeLessThan(exhaustive / 2);
-    // 48 concepts, so 96 questions to name them all twice. The catalogue more than doubled when the
-    // middle-school courses landed and this went 9 to 12, because the descent pays for depth, not size.
-    expect(worst).toBeLessThanOrEqual(12);
+    // 52 concepts, so 104 questions to name them all twice. The catalogue more than doubled when the
+    // middle-school courses landed and this went 9 to 12, because the descent pays for depth, not
+    // size. It went 12 to 14 for 농도, and that is the same rule read again: a course beside the
+    // school line stands on two strands at once — 비와 비율 and 일차방정식 — so what it stands on is
+    // the union of both. Only somebody who came for it is ever asked that much.
+    expect(worst).toBeLessThanOrEqual(14);
+  });
+
+  it('does not put a course beside the school line to somebody who chose nothing', () => {
+    // Saying nothing is not asking for everything. Without a target the placement covers the line
+    // the catalogue is ordered along and no more — the same 48 concepts it covered before 응용계산
+    // was installed beside it, although the graph now holds 52.
+    const line = placementScope(graph, schoolLine.flatMap((lesson) => lesson.conceptKeys));
+    expect(line).toHaveLength(48);
+    expect(graph.keys.length).toBeGreaterThan(line.length);
+    for (const key of ['cost-price', 'discount-rate', 'concentration', 'speed']) expect(line).not.toContain(key);
   });
 
   it('costs an old starting point exactly what it cost before the catalogue grew', () => {
