@@ -164,6 +164,10 @@ export function SceneTaskFigure({ width, height, items, zones, task, alt, captio
   const surface = useRef<SVGSVGElement>(null);
   const done = taskComplete(zones, placement);
   const movable = items.filter((item) => item.draggable && item.id);
+  // A piece the learner picked up belongs on top of whatever it lands on. Drawn in the order the
+  // author wrote them, 분수 막대 was painted after the 조각 dropped into it and swallowed it whole —
+  // the learner could not see where the piece had gone.
+  const painted = [...items.filter((item) => !item.draggable), ...movable];
 
   const at = (event: React.PointerEvent) => {
     const box = surface.current?.getBoundingClientRect();
@@ -223,7 +227,7 @@ export function SceneTaskFigure({ width, height, items, zones, task, alt, captio
               onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); putInto(zone); } }} />
           </g>;
         })}
-        <SceneShapes items={items} offsetOf={offsetOf} />
+        <SceneShapes items={painted} offsetOf={offsetOf} />
         {movable.map((item) => {
           const bounds = itemBounds(item);
           const shift = offsetOf(item);
