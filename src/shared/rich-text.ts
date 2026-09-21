@@ -1,5 +1,13 @@
 // Shared by the publishing validator and the block renderer. Both sides must agree on where
 // math ends and prose begins, or a definition could be underlined inside a formula on one side only.
+/**
+ * How every side renders math, so a formula reads the same in prose, in a drawing's label and in
+ * the editor's preview. `strict: 'error'` is what refuses a Hangul word standing bare in math mode:
+ * KaTeX cannot typeset it, and with `throwOnError: false` it draws the TeX source in red instead of
+ * failing loudly. Korean belongs in prose, or inside `\\text{}` when a formula must name a quantity.
+ */
+export const mathOptions = { throwOnError: false, trust: false, strict: 'error' as const, maxExpand: 1000 };
+
 export type RichTextSegment =
   | { kind: 'text'; value: string; start: number }
   | { kind: 'math'; value: string; start: number; equation: string; display: boolean };

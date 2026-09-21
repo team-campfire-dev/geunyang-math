@@ -8,7 +8,7 @@ import {
   removeFromZone, sceneItemKinds, sceneLimits, stepFrameIndex, taskComplete, zoneAt, zoneOf,
   type ScenePlacement, type SceneFrame, type SceneItem, type SceneTask, type SceneZone,
 } from '@/shared/scene';
-import { locateTerms, splitRichText, definitionRefId, type DefinitionLink, type DefinitionRef } from '@/shared/rich-text';
+import { locateTerms, mathOptions, splitRichText, definitionRefId, type DefinitionLink, type DefinitionRef } from '@/shared/rich-text';
 import { readTable, type Table, type TableColumn, type TableRow } from '@/shared/table';
 import { Icon } from './icons';
 
@@ -86,10 +86,6 @@ export function RichText({ text, definitions = [], glossary = noGlossary, asCapt
  * markup ever reaches the document — so an arbitrary drawing stays as safe as a fixed one. The
  * figure carries the accessible name and the shapes themselves are hidden from a reader.
  */
-/** The one KaTeX call the app makes. Prose and a drawing's label share it so a formula cannot
- *  come out one way in a sentence and another way in the picture below it. `trust` stays off, so
- *  no TeX an author writes can reach `\\href`, `\\url` or raw HTML. */
-const mathOptions = { throwOnError: false, trust: false, strict: 'error' as const, maxExpand: 1000 };
 
 const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (character) =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]!);
