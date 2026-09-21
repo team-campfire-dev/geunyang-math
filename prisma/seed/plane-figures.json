@@ -1,0 +1,2774 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "plane-figures",
+      "title": "평면도형",
+      "summary": "다각형의 각을 삼각형으로 갈라 세고, 원의 둘레와 넓이를 구하고, 원의 일부가 전체의 얼마인지 재요.",
+      "order": 160,
+      "track": "middle",
+      "stage": "middle-1",
+      "lessons": [
+        {
+          "key": "polygon-angles",
+          "order": 1
+        },
+        {
+          "key": "circle-measure",
+          "order": 2
+        },
+        {
+          "key": "sector",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "polygon-angles",
+      "label": "다각형의 내각과 외각",
+      "assessable": true
+    },
+    {
+      "key": "circle-measure",
+      "label": "원의 둘레와 넓이",
+      "assessable": true
+    },
+    {
+      "key": "sector",
+      "label": "부채꼴",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "polygon-angles",
+        "versionId": "polygon-angles:v1",
+        "title": "다각형의 내각과 외각: 삼각형으로 갈라서 센다",
+        "summary": "다각형을 삼각형으로 갈라 내각의 합을 구하고, 외각의 합이 늘 같은 이유를 봐요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "polygon-angles"
+        ],
+        "prerequisiteConceptKeys": [
+          "angle-basics",
+          "parallel-lines"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "polygon-angles:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "polygon-angles:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 세 각을 더하면 $180°$예요. 세 각을 오려 한 점에 모아 붙이면 일직선이 되는 것으로 확인할 수 있어요. 평행선의 엇각으로 설명할 수도 있고요.\n\n그럼 오각형은요? 새로 재지 않아도 돼요. 한 꼭짓점에서 대각선을 그어 삼각형으로 가르면 되거든요.\n\n오각형은 삼각형 셋으로 갈라져요. 그러니 내각의 합은 $180° \\times 3 = 540°$예요.\n\n몇 개로 갈라지는지는 세어 보면 규칙이 보여요. 사각형은 둘, 오각형은 셋, 육각형은 넷이에요. $n$각형이면 $n - 2$개예요. 그래서 내각의 합은 $180° \\times (n-2)$예요.\n\n외각은 한 변을 늘였을 때 이웃 변과 이루는 각이에요. 내각과 이웃하니 둘을 더하면 $180°$고요.\n\n놀라운 것은 외각의 합이에요. 몇 각형이든 늘 $360°$예요. 다각형의 둘레를 한 바퀴 걸으며 꼭짓점마다 도는 각을 모두 더하면 결국 제자리로 돌아오니 한 바퀴, 곧 $360°$인 거예요.\n\n정다각형이면 모든 각이 같으니 나누기만 하면 돼요. 정육각형의 한 내각은 $720° \\div 6 = 120°$, 한 외각은 $360° \\div 6 = 60°$예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "polygon-angles",
+                    "surface": "내각의 합",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "polygon-angles:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "오각형이 한 꼭짓점에서 그은 대각선으로 삼각형 셋으로 갈라지는 그림",
+                "caption": "삼각형 몇 개로 갈라지는지가 내각의 합을 정해요",
+                "items": [
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        160,
+                        40
+                      ],
+                      [
+                        244,
+                        96
+                      ],
+                      [
+                        214,
+                        174
+                      ],
+                      [
+                        106,
+                        174
+                      ],
+                      [
+                        76,
+                        96
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.6,
+                    "id": "pent"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160,
+                    "y1": 40,
+                    "x2": 214,
+                    "y2": 174,
+                    "stroke": "green",
+                    "strokeWidth": 1.6,
+                    "id": "d1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160,
+                    "y1": 40,
+                    "x2": 106,
+                    "y2": 174,
+                    "stroke": "green",
+                    "strokeWidth": 1.6,
+                    "id": "d2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 196,
+                    "y": 112,
+                    "text": "$1$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "n1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 130,
+                    "text": "$2$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "n2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 124,
+                    "y": 112,
+                    "text": "$3$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "n3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 22,
+                    "text": "오각형",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 192,
+                    "text": "$180° \\times 3 = 540°$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "sum",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "오각형의 내각을 모두 더하면 몇 도일까요.",
+                    "changes": [
+                      {
+                        "id": "d1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "d2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "sum",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "한 꼭짓점에서 대각선을 그어 봐요. 삼각형 셋으로 갈라져요.",
+                    "changes": [
+                      {
+                        "id": "d1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "d2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sum",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "삼각형 하나의 내각의 합이 $180°$이니, 셋이면 $540°$예요.",
+                    "changes": [
+                      {
+                        "id": "d1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "d2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "n3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sum",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "polygon-angles:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "polygon-angles:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "정팔각형의 한 내각의 크기를 구해 볼게요.\n\n먼저 내각의 합이에요. $n = 8$이니 $180° \\times (8 - 2) = 180° \\times 6 = 1080°$예요.\n\n정다각형이라 여덟 각이 모두 같으니 $1080° \\div 8 = 135°$예요.\n\n외각으로 구하면 더 빨라요. 외각의 합은 늘 $360°$이니 한 외각은 $360° \\div 8 = 45°$이고, 내각은 $180° - 45° = 135°$예요. 같은 답이지만 계산이 훨씬 가벼워요.\n\n거꾸로 물어볼게요. 한 외각이 $30°$인 정다각형은 몇 각형일까요.\n\n외각의 합이 $360°$이니 $360° \\div 30° = 12$, 정십이각형이에요.\n\n내각으로 물으면 한 번 더 거쳐야 해요. 한 내각이 $150°$라면 외각이 $30°$이고, 그래서 정십이각형이에요. 외각을 거치는 길이 대개 짧아요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "polygon-angles:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "polygon-angles:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "polygon-angles:practice",
+                "problemSetVersionId": "polygon-angles:practice:v1",
+                "problemVersionIds": [
+                  "polygon-angles:practice-1:v1",
+                  "polygon-angles:practice-2:v1",
+                  "polygon-angles:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "polygon-angles:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "polygon-angles:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "polygon-angles:check",
+                "problemSetVersionId": "polygon-angles:check:v1",
+                "problemVersionIds": [
+                  "polygon-angles:check-1:v1",
+                  "polygon-angles:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "polygon-angles:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "polygon-angles:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$n$각형은 한 꼭짓점에서 그은 대각선으로 삼각형 $n-2$개로 갈라져요. 그래서 내각의 합이 $180° \\times (n-2)$예요.\n\n외각은 내각과 이웃해 합이 $180°$이고, 외각의 합은 몇 각형이든 늘 $360°$예요.\n\n한 바퀴 돌아 제자리로 오기 때문이에요.\n\n정다각형이면 나누기만 하면 되고, 외각을 거치는 길이 대개 짧아요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "polygon-angles:review",
+        "problemSetVersionId": "polygon-angles:review:v1",
+        "problemVersionIds": [
+          "polygon-angles:homework-1:v1",
+          "polygon-angles:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "circle-measure",
+        "versionId": "circle-measure:v1",
+        "title": "원의 둘레와 넓이: 지름을 세 번 대고도 조금",
+        "summary": "원주율이 무엇인지 재어 보고, 둘레와 넓이를 구하는 식을 세워요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "circle-measure"
+        ],
+        "prerequisiteConceptKeys": [
+          "ratio",
+          "rate",
+          "polygon-angles"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "circle-measure:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "circle-measure:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "둥근 통의 둘레를 실로 재어 펴 놓고, 그 통의 지름과 견주어 볼게요. 지름을 자 삼아 둘레에 대어 보면 세 번 대고도 조금 남아요.\n\n놀라운 것은 어떤 원이든 그렇다는 거예요. 큰 원이든 작은 원이든 「둘레 ÷ 지름」이 늘 같은 값이에요. 이 값을 원주율이라 하고 $\\pi$로 적어요. $3.14159\\cdots$로 끝없이 이어지는 무리수예요.\n\n그러니 둘레는 지름의 $\\pi$배예요. 반지름을 $r$이라 하면 지름이 $2r$이니 둘레는 $2\\pi r$이에요.\n\n넓이는 $\\pi r^2$이에요. 왜 그런지는 원을 아주 가는 부채꼴로 잘라 번갈아 끼워 맞춰 보면 보여요. 가로가 둘레의 절반($\\pi r$), 세로가 반지름($r$)인 직사각형에 가까워지거든요.\n\n그래서 넓이는 $\\pi r \\times r = \\pi r^2$이에요. 가늘게 자를수록 더 직사각형에 가까워져요.\n\n반지름이 두 배가 되면 둘레는 두 배지만 넓이는 네 배가 돼요. 넓이에는 $r$이 두 번 들어 있으니까요. 피자 크기를 고를 때 지름이 두 배면 양이 네 배라는 것이 이 때문이에요.\n\n답을 적을 때는 $\\pi$를 그대로 두는 편이 많아요. 반지름이 $5$인 원의 넓이는 $25\\pi$라고 적어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "circle-measure",
+                    "surface": "원주율",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "circle-measure:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "지름을 원 둘레에 세 번 대고도 조금 남는 것을 보이는 그림",
+                "caption": "지름을 세 번 대고도 조금 남아요. 그 조금이 파이예요",
+                "items": [
+                  {
+                    "kind": "ellipse",
+                    "cx": 88,
+                    "cy": 84,
+                    "rx": 32,
+                    "ry": 32,
+                    "fill": "none",
+                    "stroke": "ink",
+                    "strokeWidth": 1.8
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 48,
+                    "y1": 168,
+                    "x2": 249,
+                    "y2": 168,
+                    "stroke": "ink",
+                    "strokeWidth": 1.6
+                  },
+                  {
+                    "kind": "text",
+                    "x": 148,
+                    "y": 34,
+                    "text": "원의 둘레를 펴 놓으면",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 48,
+                    "y": 160,
+                    "width": 64,
+                    "height": 16,
+                    "fill": "fill-soft",
+                    "stroke": "none",
+                    "strokeWidth": 1,
+                    "radius": 4,
+                    "id": "m1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 112,
+                    "y": 160,
+                    "width": 64,
+                    "height": 16,
+                    "fill": "fill-soft",
+                    "stroke": "none",
+                    "strokeWidth": 1,
+                    "radius": 4,
+                    "id": "m2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 176,
+                    "y": 160,
+                    "width": 64,
+                    "height": 16,
+                    "fill": "fill-soft",
+                    "stroke": "none",
+                    "strokeWidth": 1,
+                    "radius": 4,
+                    "id": "m3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 56,
+                    "y1": 84,
+                    "x2": 120,
+                    "y2": 84,
+                    "stroke": "orange",
+                    "strokeWidth": 3,
+                    "id": "dia"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 88,
+                    "y": 70,
+                    "text": "지름",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "dial"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 268,
+                    "y": 168,
+                    "text": "조금 남아요",
+                    "size": 10,
+                    "anchor": "start",
+                    "fill": "orange",
+                    "id": "rest",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 232,
+                    "y": 74,
+                    "text": "둘레는 지름의 $\\pi$배",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "law",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 232,
+                    "y": 100,
+                    "text": "$\\pi = 3.14\\cdots$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "pi",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "원의 둘레를 펴서 곧게 놓았다고 해 볼게요. 지름을 자로 삼을 거예요.",
+                    "changes": [
+                      {
+                        "id": "m1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "m2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "m3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rest",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "pi",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "지름을 대어 봐요. 한 번, 두 번.",
+                    "changes": [
+                      {
+                        "id": "dia",
+                        "dx": 56,
+                        "dy": 84
+                      },
+                      {
+                        "id": "dial",
+                        "dx": 56,
+                        "dy": 84,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "m1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "m2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "m3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rest",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "pi",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "세 번 대고도 조금 남아요. 그 「세 번과 조금」이 원주율이에요.",
+                    "changes": [
+                      {
+                        "id": "dia",
+                        "dx": 120,
+                        "dy": 84
+                      },
+                      {
+                        "id": "dial",
+                        "dx": 120,
+                        "dy": 84,
+                        "opacity": 0
+                      },
+                      {
+                        "id": "m1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "m2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "m3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "rest",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "pi",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "circle-measure:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "circle-measure:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $6$인 원의 둘레와 넓이를 구해 볼게요.\n\n둘레는 $2\\pi r$이니 $2 \\times \\pi \\times 6 = 12\\pi$예요.\n\n넓이는 $\\pi r^2$이니 $\\pi \\times 6^2 = 36\\pi$예요.\n\n$\\pi$를 $3.14$로 어림하면 둘레는 약 $37.7$, 넓이는 약 $113$이에요. 필요할 때만 수로 바꿔요.\n\n거꾸로도 해 볼게요. 넓이가 $49\\pi$인 원의 반지름은 얼마일까요.\n\n$\\pi r^2 = 49\\pi$에서 $r^2 = 49$이니 $r = 7$이에요. 제곱근을 구하는 일이 여기서도 나와요.\n\n둘레가 $20\\pi$인 원이라면 $2\\pi r = 20\\pi$에서 $r = 10$이에요. $\\pi$는 양변에 똑같이 있으니 지워 버리면 계산이 가벼워져요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "circle-measure:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "circle-measure:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "circle-measure:practice",
+                "problemSetVersionId": "circle-measure:practice:v1",
+                "problemVersionIds": [
+                  "circle-measure:practice-1:v1",
+                  "circle-measure:practice-2:v1",
+                  "circle-measure:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "circle-measure:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "circle-measure:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "circle-measure:check",
+                "problemSetVersionId": "circle-measure:check:v1",
+                "problemVersionIds": [
+                  "circle-measure:check-1:v1",
+                  "circle-measure:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "circle-measure:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "circle-measure:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "어떤 원이든 「둘레 ÷ 지름」이 같고, 그 값이 원주율 $\\pi$예요. 대략 $3.14$고요.\n\n둘레는 $2\\pi r$, 넓이는 $\\pi r^2$이에요.\n\n넓이의 식은 원을 가는 부채꼴로 잘라 직사각형으로 맞춰 보면 나와요.\n\n반지름이 두 배면 둘레는 두 배, 넓이는 네 배예요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "circle-measure:review",
+        "problemSetVersionId": "circle-measure:review:v1",
+        "problemVersionIds": [
+          "circle-measure:homework-1:v1",
+          "circle-measure:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "sector",
+        "versionId": "sector:v1",
+        "title": "부채꼴: 중심각이 정하는 몫",
+        "summary": "원의 일부가 전체의 얼마인지를 중심각으로 재고, 호의 길이와 넓이를 구해요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "sector"
+        ],
+        "prerequisiteConceptKeys": [
+          "circle-measure",
+          "direct-proportion",
+          "ratio"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "sector:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "sector:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "원에서 두 반지름과 그 사이의 호로 둘러싸인 부분을 부채꼴이라고 해요. 피자 한 조각 모양이죠. 두 반지름이 벌어진 각을 중심각이라고 해요.\n\n중심각이 $90°$인 부채꼴은 원의 얼마일까요. 한 바퀴가 $360°$이니 $\\dfrac{90}{360} = \\dfrac{1}{4}$, 사분의 일이에요.\n\n그러면 호의 길이도 원 둘레의 사분의 일, 넓이도 원 넓이의 사분의 일이에요. 중심각을 두 배로 벌리면 호도 넓이도 두 배가 돼요. 앞 수업에서 배운 정비례예요.\n\n식으로 적으면 이래요. 반지름이 $r$이고 중심각이 $x$도인 부채꼴에서 호의 길이는 $2\\pi r \\times \\dfrac{x}{360}$, 넓이는 $\\pi r^2 \\times \\dfrac{x}{360}$이에요.\n\n외울 것이 둘로 보이지만 사실 하나예요. 「원 전체에 $\\dfrac{x}{360}$을 곱한다」가 전부거든요.\n\n부채꼴의 넓이를 호의 길이로 구하는 길도 있어요. 넓이는 $\\dfrac{1}{2} \\times$ 호의 길이 $\\times$ 반지름이에요. 삼각형의 넓이와 닮은 꼴인데, 부채꼴을 아주 가늘게 잘라 삼각형처럼 보면 그럴듯해요.\n\n같은 원에서 중심각이 같으면 호도 넓이도 같아요. 거꾸로 호가 같으면 중심각도 같고요. 다만 현의 길이는 중심각에 정비례하지 않아요. 각이 두 배가 되어도 현은 두 배가 안 돼요.",
+                "definitions": [
+                  {
+                    "conceptKey": "sector",
+                    "surface": "부채꼴",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "sector:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "중심각이 커질수록 호와 넓이가 같은 비로 커지는 그림",
+                "caption": "중심각이 두 배면 호도 넓이도 두 배예요",
+                "items": [
+                  {
+                    "kind": "ellipse",
+                    "cx": 116,
+                    "cy": 104,
+                    "rx": 60,
+                    "ry": 60,
+                    "fill": "none",
+                    "stroke": "line",
+                    "strokeWidth": 1.4,
+                    "dash": true
+                  },
+                  {
+                    "kind": "path",
+                    "d": "M116 104 L176 104 A60 60 0 0 0 116 44 Z",
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "id": "q1"
+                  },
+                  {
+                    "kind": "path",
+                    "d": "M116 104 L116 44 A60 60 0 0 0 56 104 Z",
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "id": "q2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 150,
+                    "y": 78,
+                    "text": "$90°$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "lab1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 232,
+                    "y": 66,
+                    "text": "$\\dfrac{1}{4}$바퀴",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "r1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 232,
+                    "y": 104,
+                    "text": "$\\dfrac{1}{2}$바퀴",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "r2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 232,
+                    "y": 142,
+                    "text": "중심각에 정비례",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "note",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 116,
+                    "y": 186,
+                    "text": "호의 길이도 넓이도 같은 비로 늘어요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "foot",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "원의 일부를 두 반지름으로 잘라 낸 것이 부채꼴이에요.",
+                    "changes": [
+                      {
+                        "id": "q2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "r1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "r2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "foot",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "중심각이 $90°$이면 한 바퀴의 사분의 일이에요. 호도 넓이도 사분의 일이고요.",
+                    "changes": [
+                      {
+                        "id": "q2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "r1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "r2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "foot",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "중심각을 두 배로 벌리면 호도 넓이도 두 배가 돼요.",
+                    "changes": [
+                      {
+                        "id": "q2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "r1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "r2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "foot",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "sector:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "sector:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $6$이고 중심각이 $60°$인 부채꼴의 호의 길이와 넓이를 구해 볼게요.\n\n먼저 전체의 얼마인지 봐요. $\\dfrac{60}{360} = \\dfrac{1}{6}$, 육분의 일이에요.\n\n원의 둘레는 $2\\pi \\times 6 = 12\\pi$이니 호의 길이는 $12\\pi \\times \\dfrac{1}{6} = 2\\pi$예요.\n\n원의 넓이는 $\\pi \\times 36 = 36\\pi$이니 부채꼴의 넓이는 $36\\pi \\times \\dfrac{1}{6} = 6\\pi$예요.\n\n다른 길로도 확인해 볼게요. 넓이 $= \\dfrac{1}{2} \\times$ 호 $\\times$ 반지름 $= \\dfrac{1}{2} \\times 2\\pi \\times 6 = 6\\pi$. 같아요.\n\n거꾸로도 물을 수 있어요. 반지름이 $9$이고 호의 길이가 $6\\pi$인 부채꼴의 중심각은 몇 도일까요.\n\n원 둘레가 $18\\pi$이니 호는 전체의 $\\dfrac{6\\pi}{18\\pi} = \\dfrac{1}{3}$이에요. 중심각은 $360° \\times \\dfrac{1}{3} = 120°$예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "sector:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "sector:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "sector:practice",
+                "problemSetVersionId": "sector:practice:v1",
+                "problemVersionIds": [
+                  "sector:practice-1:v1",
+                  "sector:practice-2:v1",
+                  "sector:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "sector:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "sector:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "sector:check",
+                "problemSetVersionId": "sector:check:v1",
+                "problemVersionIds": [
+                  "sector:check-1:v1",
+                  "sector:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "sector:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "sector:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "부채꼴은 두 반지름과 호로 둘러싸인 부분이고, 두 반지름이 벌어진 각이 중심각이에요.\n\n중심각이 전체의 $\\dfrac{x}{360}$이면 호도 넓이도 그만큼이에요. 정비례하니까요.\n\n호의 길이는 $2\\pi r \\times \\dfrac{x}{360}$, 넓이는 $\\pi r^2 \\times \\dfrac{x}{360}$이에요. 「원 전체에 몫을 곱한다」 하나예요.\n\n넓이는 $\\dfrac{1}{2} \\times$ 호 $\\times$ 반지름으로도 구해요. 다만 현의 길이는 중심각에 정비례하지 않아요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "sector:review",
+        "problemSetVersionId": "sector:review:v1",
+        "problemVersionIds": [
+          "sector:homework-1:v1",
+          "sector:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "polygon-angles:practice",
+      "courseKey": "plane-figures",
+      "name": "다각형의 각 연습",
+      "versionId": "polygon-angles:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "polygon-angles:practice-1:v1",
+          "conceptKeys": [
+            "polygon-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polygon-angles:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "오각형의 내각의 합은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 540
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polygon-angles:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형 셋으로 갈라져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polygon-angles:practice-2:v1",
+          "conceptKeys": [
+            "polygon-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polygon-angles:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "팔각형의 내각의 합은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1080
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polygon-angles:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$180 \\times 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polygon-angles:practice-3:v1",
+          "conceptKeys": [
+            "polygon-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polygon-angles:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정육각형의 한 외각의 크기는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polygon-angles:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$360 \\div 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "polygon-angles:check",
+      "courseKey": "plane-figures",
+      "name": "다각형의 각 확인",
+      "versionId": "polygon-angles:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "polygon-angles:check-1:v1",
+          "conceptKeys": [
+            "polygon-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polygon-angles:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정팔각형의 한 내각의 크기는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 135
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polygon-angles:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "외각이 $45°$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polygon-angles:check-2:v1",
+          "conceptKeys": [
+            "polygon-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polygon-angles:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 외각이 $30°$인 정다각형은 몇 각형인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polygon-angles:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$360 \\div 30$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "polygon-angles:review",
+      "courseKey": "plane-figures",
+      "name": "다각형의 각 복습",
+      "versionId": "polygon-angles:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "polygon-angles:homework-1:v1",
+          "conceptKeys": [
+            "polygon-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polygon-angles:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "십각형의 내각의 합은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1440
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polygon-angles:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$180 \\times 8$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polygon-angles:homework-2:v1",
+          "conceptKeys": [
+            "polygon-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polygon-angles:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다각형의 외각의 합은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 360
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polygon-angles:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "몇 각형이든 한 바퀴예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "circle-measure:practice",
+      "courseKey": "plane-figures",
+      "name": "원의 둘레와 넓이 연습",
+      "versionId": "circle-measure:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "circle-measure:practice-1:v1",
+          "conceptKeys": [
+            "circle-measure"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-measure:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $6$인 원의 둘레가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-measure:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2r$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-measure:practice-2:v1",
+          "conceptKeys": [
+            "circle-measure"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-measure:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $6$인 원의 넓이가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 36
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-measure:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$r^2$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-measure:practice-3:v1",
+          "conceptKeys": [
+            "circle-measure"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-measure:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "지름이 $10$인 원의 둘레가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-measure:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘레는 지름의 $\\pi$배예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "circle-measure:check",
+      "courseKey": "plane-figures",
+      "name": "원의 둘레와 넓이 확인",
+      "versionId": "circle-measure:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "circle-measure:check-1:v1",
+          "conceptKeys": [
+            "circle-measure"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-measure:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "넓이가 $49\\pi$인 원의 반지름을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-measure:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$r^2 = 49$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-measure:check-2:v1",
+          "conceptKeys": [
+            "circle-measure"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-measure:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘레가 $20\\pi$인 원의 반지름을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-measure:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2r = 20$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "circle-measure:review",
+      "courseKey": "plane-figures",
+      "name": "원의 둘레와 넓이 복습",
+      "versionId": "circle-measure:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "circle-measure:homework-1:v1",
+          "conceptKeys": [
+            "circle-measure"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-measure:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 두 배가 되면 원의 넓이는 몇 배가 되나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-measure:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "넓이에는 $r$이 두 번 들어 있어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-measure:homework-2:v1",
+          "conceptKeys": [
+            "circle-measure"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-measure:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $3$인 원의 넓이가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-measure:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3^2$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "sector:practice",
+      "courseKey": "plane-figures",
+      "name": "부채꼴 연습",
+      "versionId": "sector:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "sector:practice-1:v1",
+          "conceptKeys": [
+            "sector"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sector:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중심각이 $90°$인 부채꼴은 원 전체의 몇 분의 얼마인가요? 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 4,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sector:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\dfrac{90}{360}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sector:practice-2:v1",
+          "conceptKeys": [
+            "sector"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sector:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $6$, 중심각이 $60°$인 부채꼴의 호의 길이가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sector:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘레 $12\\pi$의 육분의 일이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sector:practice-3:v1",
+          "conceptKeys": [
+            "sector"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sector:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $6$, 중심각이 $60°$인 부채꼴의 넓이가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sector:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "넓이 $36\\pi$의 육분의 일이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "sector:check",
+      "courseKey": "plane-figures",
+      "name": "부채꼴 확인",
+      "versionId": "sector:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "sector:check-1:v1",
+          "conceptKeys": [
+            "sector"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sector:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $9$이고 호의 길이가 $6\\pi$인 부채꼴의 중심각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 120
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sector:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘레 $18\\pi$의 삼분의 일이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sector:check-2:v1",
+          "conceptKeys": [
+            "sector"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sector:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중심각이 두 배가 되면 호의 길이는 어떻게 되나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 배가 된다"
+              },
+              {
+                "id": "b",
+                "text": "그대로다"
+              },
+              {
+                "id": "c",
+                "text": "네 배가 된다"
+              },
+              {
+                "id": "d",
+                "text": "절반이 된다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 배가 된다"
+              },
+              {
+                "id": "b",
+                "text": "그대로다"
+              },
+              {
+                "id": "c",
+                "text": "네 배가 된다"
+              },
+              {
+                "id": "d",
+                "text": "절반이 된다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sector:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중심각에 정비례해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "sector:review",
+      "courseKey": "plane-figures",
+      "name": "부채꼴 복습",
+      "versionId": "sector:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "sector:homework-1:v1",
+          "conceptKeys": [
+            "sector"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sector:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $4$, 중심각이 $90°$인 부채꼴의 넓이가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sector:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "넓이 $16\\pi$의 사분의 일이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "sector:homework-2:v1",
+          "conceptKeys": [
+            "sector"
+          ],
+          "promptContent": [
+            {
+              "blockId": "sector:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "호의 길이가 $5\\pi$이고 반지름이 $4$인 부채꼴의 넓이가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "sector:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\dfrac{1}{2} \\times 호 \\times 반지름$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "plane-figures:drill",
+      "courseKey": "plane-figures",
+      "name": "평면도형 모아 풀기",
+      "versionId": "plane-figures:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "plane-figures:drill-1:v1",
+          "conceptKeys": [
+            "polygon-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "사각형의 내각의 합은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 360
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형 둘이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-2:v1",
+          "conceptKeys": [
+            "polygon-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "육각형의 내각의 합은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 720
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$180 \\times 4$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-3:v1",
+          "conceptKeys": [
+            "polygon-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "구각형의 내각의 합은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1260
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$180 \\times 7$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-4:v1",
+          "conceptKeys": [
+            "polygon-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정오각형의 한 외각의 크기는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 72
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$360 \\div 5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-5:v1",
+          "conceptKeys": [
+            "polygon-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정십각형의 한 외각의 크기는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 36
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$360 \\div 10$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-6:v1",
+          "conceptKeys": [
+            "polygon-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 외각이 $40°$인 정다각형은 몇 각형인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$360 \\div 40$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-7:v1",
+          "conceptKeys": [
+            "polygon-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정사각형의 한 내각의 크기는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 90
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$360 \\div 4$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-8:v1",
+          "conceptKeys": [
+            "circle-measure"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $5$인 원의 둘레가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2r$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-9:v1",
+          "conceptKeys": [
+            "circle-measure"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $5$인 원의 넓이가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$r^2$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-10:v1",
+          "conceptKeys": [
+            "circle-measure"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "지름이 $14$인 원의 둘레가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 14
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘레는 지름의 $\\pi$배예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-11:v1",
+          "conceptKeys": [
+            "circle-measure"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "넓이가 $64\\pi$인 원의 반지름을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$r^2 = 64$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-12:v1",
+          "conceptKeys": [
+            "circle-measure"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘레가 $16\\pi$인 원의 반지름을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2r = 16$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-13:v1",
+          "conceptKeys": [
+            "circle-measure"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원주율에 대한 설명으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "둘레를 지름으로 나눈 값"
+              },
+              {
+                "id": "b",
+                "text": "넓이를 반지름으로 나눈 값"
+              },
+              {
+                "id": "c",
+                "text": "지름을 반지름으로 나눈 값"
+              },
+              {
+                "id": "d",
+                "text": "원마다 다른 값"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "둘레를 지름으로 나눈 값"
+              },
+              {
+                "id": "b",
+                "text": "넓이를 반지름으로 나눈 값"
+              },
+              {
+                "id": "c",
+                "text": "지름을 반지름으로 나눈 값"
+              },
+              {
+                "id": "d",
+                "text": "원마다 다른 값"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어떤 원이든 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-14:v1",
+          "conceptKeys": [
+            "circle-measure"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 세 배가 되면 원의 넓이는 몇 배가 되나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$r$이 두 번 들어 있어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-15:v1",
+          "conceptKeys": [
+            "sector"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중심각이 $180°$인 부채꼴은 원 전체의 몇 분의 얼마인가요? 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\dfrac{180}{360}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-16:v1",
+          "conceptKeys": [
+            "sector"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $12$, 중심각이 $90°$인 부채꼴의 호의 길이가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘레 $24\\pi$의 사분의 일이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-17:v1",
+          "conceptKeys": [
+            "sector"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $10$, 중심각이 $36°$인 부채꼴의 넓이가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "넓이 $100\\pi$의 십분의 일이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-18:v1",
+          "conceptKeys": [
+            "sector"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $6$이고 호의 길이가 $4\\pi$인 부채꼴의 중심각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 120
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘레 $12\\pi$의 삼분의 일이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-19:v1",
+          "conceptKeys": [
+            "sector"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "호의 길이가 $3\\pi$이고 반지름이 $8$인 부채꼴의 넓이가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\dfrac{1}{2} \\times 호 \\times 반지름$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-figures:drill-20:v1",
+          "conceptKeys": [
+            "sector"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-figures:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 원에서 중심각에 정비례하지 않는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "현의 길이"
+              },
+              {
+                "id": "b",
+                "text": "호의 길이"
+              },
+              {
+                "id": "c",
+                "text": "부채꼴의 넓이"
+              },
+              {
+                "id": "d",
+                "text": "모두 정비례한다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "현의 길이"
+              },
+              {
+                "id": "b",
+                "text": "호의 길이"
+              },
+              {
+                "id": "c",
+                "text": "부채꼴의 넓이"
+              },
+              {
+                "id": "d",
+                "text": "모두 정비례한다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-figures:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "각이 두 배여도 현은 두 배가 안 돼요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}
