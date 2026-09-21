@@ -7,7 +7,7 @@ import { maxProblemsPerSet, problemSetRefs, storedLessonOf, validateLesson, vali
 import { gradeAnswer } from '@/core/grading';
 import { frozenProblemSet, lessonRecord, importContent, problemSetRecords, lessonRecords, publishedProblemRecords, definitionRecords, currentDefinitions } from './content-store';
 import { AppError } from './errors';
-import { choiceLimits, type AnswerSpec } from '@/shared/answer';
+import { choiceLimits, misreadingLimits, type AnswerSpec } from '@/shared/answer';
 import type { ContentBlock, LessonSection, ProblemSetRef } from '@/shared/api';
 import {
   lessonKeyPattern, mayEditEveryDraft, mayGrantRoles, mayPublish, newProblem, nextBlockId, nextProblemVersionId,
@@ -63,6 +63,7 @@ const problemEditSchema = z.object({
   ]),
   hints: blockList,
   solution: blockList,
+  misreadings: z.array(z.object({ answer: z.string().max(80), misconception: z.string().max(60) }).strict()).max(misreadingLimits.maxPerProblem).optional(),
 }).strict();
 
 /** Structural only. A draft is saved while it is still wrong; publishing validation is the gate. */
@@ -183,6 +184,9 @@ const draftProblem = (problem: StoredProblem): DraftProblem => ({
   gradingSpec: structuredClone(problem.gradingSpec) as AnswerSpec,
   hints: structuredClone(problem.hints),
   solution: structuredClone(problem.solution),
+  // Carried rather than edited: the editor has no screen for these yet, and dropping them on the
+  // way through would quietly erase what a question knows about its own wrong answers.
+  ...(problem.misreadings?.length ? { misreadings: structuredClone(problem.misreadings) } : {}),
 });
 
 /** What a problem set already is when a lesson draft is saved, so an activity can tell a change from a match. */
@@ -198,6 +202,7 @@ const storedProblem = (problem: DraftProblem): StoredProblem => ({
   gradingSpec: problem.gradingSpec,
   hints: problem.hints,
   solution: problem.solution,
+  ...(problem.misreadings?.length ? { misreadings: problem.misreadings } : {}),
 });
 
 /**
@@ -678,7 +683,7 @@ export class AuthoringService {
    */
   async tryAnswer(userId: string, draftId: string, problemVersionId: string, answer: string, assisted: boolean): Promise<AuthoringResponse> {
     const problem = await this.draftProblem(userId, draftId, problemVersionId);
-    return { workspace: await this.workspace(userId), tried: gradeAnswer(answer, problem.gradingSpec, assisted) };
+    return { workspace: await this.workspace(userId), tried: gradeAnswer(answer, problem.gradingSpec, assisted, problem.misreadings) };
   }
 
   async draftHint(userId: string, draftId: string, problemVersionId: string): Promise<AuthoringResponse> {

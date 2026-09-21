@@ -34,10 +34,16 @@ const mark = (value: unknown) => createHash('sha256').update(canonical(value)).d
  * costs a new question, a new set version and a new lesson version, and the catalogue would simply
  * never get solutions.
  *
- * It is pinned to an empty list rather than dropped so that every fingerprint already written down
- * still reads the same: no published version has a solution today, so nothing in the ledger moves.
+ * The expected wrong answers (`misreadings`) are left out for the same reason and by the same
+ * argument: they change nothing about what was asked, what the answer is, or whether an answer is
+ * marked right — they name what a wrong answer means, and only in the record.
+ *
+ * One is pinned to its empty form and the other is dropped, which is the same statement said two
+ * ways. They differ only so that every fingerprint already written down still reads the same: every
+ * seed spells out `solution: []` today, and none of them has a `misreadings` at all.
  */
-export const frozenProblem = <T extends object>(problem: T) => ({ ...problem, solution: [] });
+export const frozenProblem = <T extends object>({ misreadings: _unfrozen, ...problem }: T & { misreadings?: unknown }) =>
+  ({ ...problem, solution: [] });
 
 type Seed = {
   lessons: { public: { versionId: string } }[];

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { answerSpec, answerText, parseAnswer } from '@/shared/answer';
+import { answerSpec, answerText, matchMisreading, misreadingsIssue, parseAnswer } from '@/shared/answer';
+import { misconceptionKeys, misconceptions } from '@/shared/misconception';
 import { gradeAnswer } from '@/core/grading';
 
 describe('reading the answer an author wrote', () => {
@@ -46,5 +47,55 @@ describe('reading the answer an author wrote', () => {
   it('reads the same string the grader reads', () => {
     expect(parseAnswer('$\\frac{3}{4}$')).toMatchObject({ numerator: 3n, denominator: 4n, fraction: true, reduced: true });
     expect(parseAnswer('−3')).toMatchObject({ numerator: -3n, denominator: 1n });
+  });
+});
+
+describe('naming a question\u2019s expected wrong answers', () => {
+  const known = (key: string) => misconceptionKeys.includes(key);
+  const sum = { kind: 'rational' as const, numerator: 5, denominator: 6 };
+  const reduced = { kind: 'rational' as const, numerator: 2, denominator: 3, requiredForm: 'reduced_fraction' as const };
+  const pick = { kind: 'choice' as const, options: [{ id: 'a', text: '$\\frac{2}{5}$' }, { id: 'b', text: '$\\frac{5}{6}$' }], correct: 'b' };
+
+  it('matches a written answer by value rather than by how it was spelled', () => {
+    const entries = [{ answer: '2/5', misconception: 'add-denominators' }];
+    for (const written of ['2/5', '4/10', '0.4', ' 0.40 ', '\\frac{2}{5}']) {
+      expect(matchMisreading(written, sum, entries), written).toBe('add-denominators');
+    }
+    expect(matchMisreading('5/6', sum, entries)).toBeNull();
+  });
+
+  it('matches a picked answer by the name of the option, which is the only thing that names it', () => {
+    const entries = [{ answer: 'a', misconception: 'add-denominators' }];
+    expect(matchMisreading('a', pick, entries)).toBe('add-denominators');
+    expect(matchMisreading(' a ', pick, entries)).toBe('add-denominators');
+    expect(matchMisreading('b', pick, entries)).toBeNull();
+  });
+
+  it('refuses a name on an answer that would be marked right', () => {
+    // Same value, spelled differently: it would be marked correct, so naming it a mistake would
+    // tell a learner who got it right that they keep getting it wrong.
+    expect(misreadingsIssue(sum, [{ answer: '10/12', misconception: 'add-denominators' }], known)).toMatch(/맞는 답으로 채점될 값/);
+    expect(misreadingsIssue(sum, [{ answer: '0.8333', misconception: 'add-denominators' }], known)).toBeNull();
+    // A question that wants a reduced fraction marks `4/6` wrong, and that is exactly a mistake
+    // worth naming — so the rule is about how the answer would be marked, not about its value.
+    expect(misreadingsIssue(reduced, [{ answer: '4/6', misconception: 'stop-reducing-early' }], known)).toBeNull();
+    expect(misreadingsIssue({ ...reduced, requiredForm: undefined }, [{ answer: '4/6', misconception: 'stop-reducing-early' }], known)).toMatch(/맞는 답으로 채점될 값/);
+  });
+
+  it('refuses names that could not be counted or could not be read', () => {
+    expect(misreadingsIssue(sum, [{ answer: '2/5', misconception: 'not-a-real-key' }], known)).toMatch(/알려진 오개념 이름이 아니에요/);
+    expect(misreadingsIssue(sum, [{ answer: '2/5', misconception: 'add-denominators' }, { answer: '0.4', misconception: 'swap-parts' }], known)).toMatch(/같은 값에 뜻이 둘/);
+    expect(misreadingsIssue(sum, [{ answer: '사분의 삼', misconception: 'add-denominators' }], known)).toMatch(/답으로 읽을 수 없는/);
+    expect(misreadingsIssue(pick, [{ answer: 'z', misconception: 'add-denominators' }], known)).toMatch(/보기에 없는 이름/);
+    expect(misreadingsIssue(pick, [{ answer: 'b', misconception: 'add-denominators' }], known)).toMatch(/정답인 보기/);
+    expect(misreadingsIssue({ kind: 'integer', value: 12 }, [{ answer: '10.5', misconception: 'add-instead-of-scale' }], known)).toMatch(/정수여야/);
+  });
+
+  it('keeps the vocabulary a vocabulary: no repeated keys, and every one says what was done', () => {
+    expect(new Set(misconceptionKeys).size).toBe(misconceptionKeys.length);
+    for (const record of misconceptions) {
+      expect(record.label.trim().length, record.key).toBeGreaterThan(1);
+      expect(record.note.trim().endsWith('.') || record.note.trim().endsWith('요.'), record.key).toBe(true);
+    }
   });
 });

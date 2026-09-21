@@ -5,7 +5,8 @@ import type { LessonDocument, LessonSection, ContentBlock, GlossaryEntry, Proble
 import { frameLimits, isSceneColor, itemIdPattern, pathPattern, sceneLimits, stripLimits } from '@/shared/scene';
 import { tableIssue, tableLimits, type Table } from '@/shared/table';
 import { chartBuildIssue, chartBuildLimits, type ChartBuild } from '@/shared/chart-build';
-import { choiceIssue, choiceLimits, type AnswerOption, type AnswerSpec } from '@/shared/answer';
+import { choiceIssue, choiceLimits, misreadingLimits, misreadingsIssue, type AnswerOption, type AnswerSpec, type ExpectedMisreading } from '@/shared/answer';
+import { misconceptionKeys } from '@/shared/misconception';
 import { locateTerms, definitionRefId, type DefinitionLink, type DefinitionRef } from '@/shared/rich-text';
 
 /**
@@ -15,6 +16,11 @@ import { locateTerms, definitionRefId, type DefinitionLink, type DefinitionRef }
  * available — that is read off the solution itself when the question is sent.
  */
 export type StoredProblem = Omit<PublicProblem, 'solutionAvailable'> & {
+  /**
+   * Wrong answers this question was built to catch, and the name of the mistake behind each. Never
+   * sent to a learner: it decides what a wrong answer is recorded as, not what they are told.
+   */
+  misreadings?: ExpectedMisreading[];
   // What the answer is. A written answer is a number; a picked one is one of the options, and the
   // options are here too because `correct` names one of them.
   gradingSpec: AnswerSpec;
@@ -326,6 +332,9 @@ const problemShape = {
   // A question may have no solution: a placement question is one, and whether a solution is shown is
   // the policy of whatever issues the question, not a kind of question.
   solution: z.array(problemContentBlockSchema).max(100, 'At most 100 blocks per content array'),
+  // Optional because most questions have none, and a question written before this existed has none.
+  misreadings: z.array(z.object({ answer: z.string().min(1).max(80), misconception: id.max(60) }).strict())
+    .max(misreadingLimits.maxPerProblem).optional(),
 };
 function validateProblemFields(problem: StoredProblem, ctx: z.RefinementCtx) {
   if (problem.responseSpec.kind !== problem.gradingSpec.kind) {
@@ -334,6 +343,10 @@ function validateProblemFields(problem: StoredProblem, ctx: z.RefinementCtx) {
   const requiredForm = 'requiredForm' in problem.gradingSpec ? problem.gradingSpec.requiredForm : undefined;
   if (problem.responseSpec.requiredForm !== requiredForm) {
     ctx.addIssue({ code: 'custom', message: 'Response and grading form requirements must match' });
+  }
+  if (problem.misreadings?.length) {
+    const issue = misreadingsIssue(problem.gradingSpec, problem.misreadings, (key) => misconceptionKeys.includes(key));
+    if (issue) ctx.addIssue({ code: 'custom', message: `Invalid expected misreadings: ${issue}` });
   }
   if (problem.gradingSpec.kind === 'choice') {
     const issue = choiceIssue(problem.gradingSpec);

@@ -100,6 +100,19 @@ describe('what a finished round says back', () => {
     expect(screen.getByText('답을 쓰기 전에 부호를 한 번 더 읽어 보세요.')).toBeDefined();
   });
 
+  it('counts a named mistake in the same list, and never beside the guess it replaced', () => {
+    show([
+      missed('reduce', { misconception: 'add-denominators' }),
+      missed('common', { misconception: 'add-denominators' }),
+      missed('add', { misreading: 'sign' }),
+    ]);
+    const slips = [...window.document.querySelectorAll('.report-slips > div strong')].map((node) => node.textContent);
+    expect(slips).toEqual(['분모끼리 더하기2번', '부호를 놓친 답1번']);
+    // The advice is the vocabulary's own note, which says what the learner did rather than what
+    // they lack — the same standard the read-off kinds hold to.
+    expect(screen.getByText('분모가 조각의 크기라는 것을 지나치고 위아래를 따로 더해요.')).toBeDefined();
+  });
+
   it('says so plainly when nothing was shaky, and says nothing at all with nothing to report', () => {
     show([item({}), item({ conceptKeys: ['add'] })]);
     expect(screen.getByText('오늘은 막히는 데가 없었어요.')).toBeDefined();

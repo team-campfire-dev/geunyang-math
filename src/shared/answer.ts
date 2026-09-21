@@ -110,6 +110,78 @@ export function choiceIssue(spec: { options: AnswerOption[]; correct: string }):
 export const choiceLimits = { maxOptions: 6, maxText: 200 } as const;
 
 /**
+ * A wrong answer the author expects, and the name of the mistake behind it.
+ *
+ * For a picked answer `answer` is an option's name; for a written one it is the value itself, as a
+ * learner would type it. Which is the whole trick for written answers: the wrong doors are endless
+ * but the ones people actually walk through are few, and a wrong procedure lands on exactly one
+ * value. Naming a couple per question catches most of the traffic, and an unnamed wrong answer is
+ * treated exactly as it is today.
+ */
+export type ExpectedMisreading = { answer: string; misconception: string };
+export const misreadingLimits = { maxPerProblem: 8 } as const;
+
+/** Whether two written answers mean the same number — `2/8`, `1/4` and `0.25` are one answer. */
+function sameNumber(left: string, right: string): boolean {
+  const a = parseAnswer(left), b = parseAnswer(right);
+  return !!a && !!b && a.numerator * b.denominator === b.numerator * a.denominator;
+}
+
+/** The value an answer specification expects, written the way a learner would type it. */
+const expectedText = (spec: AnswerSpec): string | null =>
+  spec.kind === 'choice' ? spec.correct : spec.kind === 'integer' ? String(spec.value) : `${spec.numerator}/${spec.denominator}`;
+
+/**
+ * Why a question's expected wrong answers cannot be published, or null when they can.
+ *
+ * The rule that matters is the third one: a wrong answer that is actually right would mark a
+ * learner's correct answer as a mistake they keep making. The comparison is by value, so writing
+ * `0.5` against an answer of `1/2` is caught however it was spelled.
+ */
+export function misreadingsIssue(spec: AnswerSpec, entries: ExpectedMisreading[], known: (key: string) => boolean): string | null {
+  if (entries.length > misreadingLimits.maxPerProblem) return `한 문항에 예상 오답은 ${misreadingLimits.maxPerProblem}개까지 달 수 있어요.`;
+  const seen: string[] = [];
+  for (const entry of entries) {
+    const written = entry.answer.trim();
+    if (!written) return '예상 오답이 비어 있어요.';
+    if (!known(entry.misconception)) return `「${entry.misconception}」는 알려진 오개념 이름이 아니에요.`;
+    if (spec.kind === 'choice') {
+      if (!spec.options.some((option) => option.id === written)) return `보기에 없는 이름이에요: ${written}`;
+      if (written === spec.correct) return '정답인 보기에는 오답의 뜻을 달 수 없어요.';
+      if (seen.includes(written)) return `한 보기에 뜻이 둘 달렸어요: ${written}`;
+      seen.push(written);
+      continue;
+    }
+    const parsed = parseAnswer(written);
+    if (!parsed) return `답으로 읽을 수 없는 예상 오답이에요: ${written}`;
+    if (spec.kind === 'integer' && !writtenAsInteger(written)) return `이 문항은 정수로 답하므로 예상 오답도 정수여야 해요: ${written}`;
+    // What may not be named is an answer that would be **marked right**, not one that merely has
+    // the right value: a question that wants a reduced fraction marks `6/9` wrong, and 「약분을
+    // 도중에 멈추기」 is exactly what that answer means.
+    const form = 'requiredForm' in spec ? spec.requiredForm : undefined;
+    const wouldPass = sameNumber(written, expectedText(spec)!) && (form !== 'reduced_fraction' || (parsed.fraction && parsed.reduced));
+    if (wouldPass) return `맞는 답으로 채점될 값에는 오답의 뜻을 달 수 없어요: ${written}`;
+    if (seen.some((other) => sameNumber(other, written))) return `같은 값에 뜻이 둘 달렸어요: ${written}`;
+    seen.push(written);
+  }
+  return null;
+}
+
+/**
+ * Which expected mistake a written or picked answer is, or null when it is none of them. The author
+ * decides before any general rule does: a name they wrote is what the question was built to catch,
+ * while a shape read off the number is a guess that happens to be usually right.
+ */
+export function matchMisreading(answer: string, spec: AnswerSpec, entries: ExpectedMisreading[]): string | null {
+  const written = answer.trim();
+  for (const entry of entries) {
+    const expected = entry.answer.trim();
+    if (spec.kind === 'choice' ? expected === written : sameNumber(expected, written)) return entry.misconception;
+  }
+  return null;
+}
+
+/**
  * A written answer as TeX, or null when it is not a number yet.
  *
  * Only for showing back what somebody typed — `3/4` printed the way a book prints it, so they can

@@ -6,7 +6,14 @@ import type { Misreading } from './misreading';
  * `misreading` is the part a report can add up: the message is written for the one moment after an
  * answer, while the name behind it is the same name in every course and every set.
  */
-export type GradeResult = { status: 'correct' | 'incorrect' | 'invalid'; message: string; assisted: boolean; misreading?: Misreading };
+export type GradeResult = { status: 'correct' | 'incorrect' | 'invalid'; message: string; assisted: boolean;
+  misreading?: Misreading;
+  /**
+   * The name of the mistake this question was built to catch, when the answer is one the author
+   * named. It beats `misreading`, which is a shape read off the number and a good guess; this is
+   * what the question was actually designed to find.
+   */
+  misconception?: string };
 export type ContentBlock = {
   blockId: string;
   kind: string;

@@ -331,7 +331,8 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
       await expect(verifyContent(db)).rejects.toThrow(/Problem is not in the problem set version/);
     } finally {
       await db.publishedProblem.create({ data: { ...removed,
-        conceptKeys: removed.conceptKeys as never, responseSpec: removed.responseSpec as never, gradingSpec: removed.gradingSpec as never } });
+        conceptKeys: removed.conceptKeys as never, responseSpec: removed.responseSpec as never, gradingSpec: removed.gradingSpec as never,
+        misreadings: (removed.misreadings ?? undefined) as never } });
     }
     expect((await verifyContent(db)).indexedProblems).toBeGreaterThanOrEqual(rows.length);
   });

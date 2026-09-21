@@ -529,7 +529,7 @@ export class LearningService {
               }
               const target = await this.activity(tx, userId, action.context, action.contextId, action.problemVersionId);
               const hint = await tx.hintUse.findUnique({ where: { userId_contextKind_contextId_problemVersionId: { userId, contextKind: action.context, contextId: action.contextId, problemVersionId: action.problemVersionId } } });
-              const result = gradeAnswer(action.answer, target.problem.gradingSpec, Boolean(hint));
+              const result = gradeAnswer(action.answer, target.problem.gradingSpec, Boolean(hint), target.problem.misreadings);
               await tx.attempt.create({ data: { userId, scopeId: target.scopeId, enrollmentId: target.enrollmentId, submissionId: target.submissionId, assignmentItemId: target.assignmentItemId,
                 problemVersionId: action.problemVersionId, answer: action.answer, result: asJson(result), hintUsed: Boolean(hint), requestId: action.requestId } });
               return { result };

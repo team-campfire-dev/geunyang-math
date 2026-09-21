@@ -18,7 +18,8 @@ const hash = (value: unknown) => createHash('sha256').update(canonicalJson(value
 const problemRows = (ownerVersionId: string, problems: StoredProblem[]) =>
   problems.map((problem, order) => ({ ownerKind: 'problem_set', ownerVersionId, problemVersionId: problem.problemVersionId,
     order, conceptKeys: json(problem.conceptKeys), responseSpec: json(problem.responseSpec),
-    gradingSpec: json(problem.gradingSpec), hintAvailable: problem.hintAvailable }));
+    gradingSpec: json(problem.gradingSpec), hintAvailable: problem.hintAvailable,
+    misreadings: problem.misreadings?.length ? json(problem.misreadings) : Prisma.DbNull }));
 type BlockRow = { ownerKind: string; ownerVersionId: string; ownerId: string; slot: string; order: number;
   blockId: string; kind: string; typeVersion: number; required: boolean; payload: Prisma.InputJsonValue; fallback: string | null };
 /**
@@ -55,6 +56,11 @@ const problemSetRows = (record: StoredProblemSet) => record.problems.flatMap(pro
  */
 export const frozenProblemSet = (record: StoredProblemSet) =>
   ({ problemSetId: record.problemSetId, versionId: record.versionId, problems: record.problems.map(frozenProblem) });
+/** Replaces the expected wrong answers of one question of one published version, in place. */
+async function rewriteMisreadings(db: Db, versionId: string, problem: StoredProblem) {
+  await db.publishedProblem.updateMany({ where: { ownerKind: 'problem_set', ownerVersionId: versionId, problemVersionId: problem.problemVersionId },
+    data: { misreadings: problem.misreadings?.length ? json(problem.misreadings) : Prisma.DbNull } });
+}
 /** Replaces the worked solution of one question of one published version, in place. */
 async function rewriteSolution(db: Db, versionId: string, problem: StoredProblem) {
   await db.contentBlock.deleteMany({ where: { ownerKind: 'problem', ownerVersionId: versionId, ownerId: problem.problemVersionId, slot: 'solution' } });
@@ -103,7 +109,7 @@ export async function publishedProblemRecords(db: Db, problemVersionIds: string[
     problemOf(row, slot => blocksOf(row.ownerVersionId, 'problem', row.problemVersionId, slot))]));
 }
 
-type ProblemRow = { problemVersionId: string; conceptKeys: unknown; responseSpec: unknown; gradingSpec: unknown; hintAvailable: boolean };
+type ProblemRow = { problemVersionId: string; conceptKeys: unknown; responseSpec: unknown; gradingSpec: unknown; hintAvailable: boolean; misreadings?: unknown };
 /** A question read back: what the row says, with its blocks put back in the order they were in. */
 const problemOf = (row: ProblemRow, blocks: (slot: string) => ContentBlock[]): StoredProblem => ({
   problemVersionId: row.problemVersionId,
@@ -114,6 +120,8 @@ const problemOf = (row: ProblemRow, blocks: (slot: string) => ContentBlock[]): S
   gradingSpec: row.gradingSpec as StoredProblem['gradingSpec'],
   hints: blocks('hint'),
   solution: blocks('solution'),
+  // Absent rather than empty, so a question with none reads back exactly as it was published.
+  ...(Array.isArray(row.misreadings) && row.misreadings.length ? { misreadings: row.misreadings as StoredProblem['misreadings'] } : {}),
 });
 type BlockIndex = (versionId: string, ownerKind: string, ownerId: string, slot: string) => ContentBlock[];
 /** Every block these versions hold, in order, ready to be asked for by the thing that owns it. */
@@ -404,15 +412,17 @@ async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: bool
     for (const s of newSets) await db.problemSetVersion.create({ data: { id: s.versionId, problemSetId: s.problemSetId,
       contentHash: hash(frozenProblemSet(s)), publishedAt: publishedAt() } });
     for (const s of newSets) await indexProblemSetDocument(db, s);
-    // A published question's worked solution is not frozen, so one that has changed is rewritten
-    // where it stands. Every version of the set that holds the question is written, because a
-    // question is read from whichever of them is found first.
+    // A published question's worked solution and its expected wrong answers are not frozen, so one
+    // that has changed is rewritten where it stands. Every version of the set that holds the
+    // question is written, because a question is read from whichever of them is found first.
     for (const s of incoming.problemSets) {
       const old = oldSets.get(s.versionId);
       if (!old) continue;
       for (const problem of s.problems) {
         const before = old.problems.find(p => p.problemVersionId === problem.problemVersionId);
-        if (before && canonicalJson(before.solution) !== canonicalJson(problem.solution)) await rewriteSolution(db, s.versionId, problem);
+        if (!before) continue;
+        if (canonicalJson(before.solution) !== canonicalJson(problem.solution)) await rewriteSolution(db, s.versionId, problem);
+        if (canonicalJson(before.misreadings ?? []) !== canonicalJson(problem.misreadings ?? [])) await rewriteMisreadings(db, s.versionId, problem);
       }
     }
     for (const c of newLessons) await db.lessonVersion.create({ data: { id: c.public.versionId, lessonKey: c.public.lessonKey,

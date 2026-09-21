@@ -2170,7 +2170,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "reverse-ratio"
+            },
+            {
+              "answer": "d",
+              "misconception": "scale-one-part"
+            }
+          ]
         },
         {
           "problemVersionId": "ratios:drill-4:v1",
@@ -2732,7 +2742,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "percent-as-count"
+            }
+          ]
         },
         {
           "problemVersionId": "ratios:drill-17:v1",

@@ -1,7 +1,7 @@
 // Shared by the authoring API and the editor screen. Field descriptions live here so the editor can
 // offer a form for every published block kind without importing the server's validation schemas,
 // and so the server can prune the same optional fields before it validates what the editor sent.
-import type { AnswerSpec } from './answer';
+import type { AnswerSpec, ExpectedMisreading } from './answer';
 import type { LessonSection, ContentBlock, GradeResult, GlossaryEntry, ProblemSetRef, PublicProblem } from './api';
 
 /** A role on an account, not a property of one operator: a teacher system grants the same roles. */
@@ -54,6 +54,8 @@ export type DraftProblem = {
   gradingSpec: AnswerSpec;
   hints: ContentBlock[];
   solution: ContentBlock[];
+  /** Carried through unchanged: there is no screen for these yet, and losing them would be silent. */
+  misreadings?: ExpectedMisreading[];
 };
 /** What an editor may change. Published questions are immutable, so the server renames what changed. */
 export type DraftEdit = { meta: DraftMeta; sections: LessonSection[]; problems: DraftProblem[];

@@ -2,6 +2,7 @@
 
 import { conceptStateLabels, type ConceptState, type PublicConcept, type PublicLesson } from '@/shared/api';
 import { misreadingAdvice, misreadingLabels, type Misreading } from '@/shared/misreading';
+import { misconceptionLabel, misconceptionOf } from '@/shared/misconception';
 import { Icon } from './icons';
 
 /**
@@ -18,6 +19,8 @@ export type ReportItem = {
   firstCorrect: boolean;
   assisted: boolean;
   misreading?: Misreading;
+  /** The mistake this question was built to catch, when the answer was one the author named. */
+  misconception?: string;
 };
 
 /**
@@ -98,9 +101,22 @@ export function AnswerReport({ items, concepts, lessons, standings, onOpenLesson
   const next = gaps.find((row) => row.lessonKey);
   const offDay = !gaps.length && byConcept.some((row) => row.got < row.asked);
 
-  const slips = new Map<Misreading, number>();
-  for (const item of items) if (item.misreading) slips.set(item.misreading, (slips.get(item.misreading) ?? 0) + 1);
-  const bySlip = [...slips.entries()].sort((a, b) => b[1] - a[1]);
+  /**
+   * What kept going wrong, counted. Two sources sit in one list because to a learner they are one
+   * thing: a slip read off the number (「부호를 놓친 답」) and a step the question was built to catch
+   * (「이익을 판매가로 나누기」) are both 「내가 자꾸 하는 것」. The authored one is never both — the
+   * marker stops at the first name it finds — so nothing is counted twice.
+   */
+  const slips = new Map<string, { label: string; advice: string; count: number }>();
+  const note = (id: string, label: string, advice: string) => {
+    const seen = slips.get(id);
+    slips.set(id, { label, advice, count: (seen?.count ?? 0) + 1 });
+  };
+  for (const item of items) {
+    if (item.misconception) note(`m:${item.misconception}`, misconceptionLabel(item.misconception), misconceptionOf(item.misconception)?.note ?? '');
+    else if (item.misreading) note(`r:${item.misreading}`, misreadingLabels[item.misreading], misreadingAdvice[item.misreading]);
+  }
+  const bySlip = [...slips.entries()].sort((a, b) => b[1].count - a[1].count || a[0].localeCompare(b[0]));
 
   return <section className="answer-report" aria-label="이번 풀이에서 본 것">
     <div className="report-head">
@@ -125,7 +141,7 @@ export function AnswerReport({ items, concepts, lessons, standings, onOpenLesson
 
     {bySlip.length > 0 && <div className="report-slips">
       <h3>자꾸 되풀이된 것</h3>
-      {bySlip.map(([kind, count]) => <div key={kind}><strong>{misreadingLabels[kind]}<span>{count}번</span></strong><p>{misreadingAdvice[kind]}</p></div>)}
+      {bySlip.map(([id, slip]) => <div key={id}><strong>{slip.label}<span>{slip.count}번</span></strong><p>{slip.advice}</p></div>)}
     </div>}
 
     {next && <div className="report-next">

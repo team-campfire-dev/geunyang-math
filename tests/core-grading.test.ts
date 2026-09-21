@@ -121,6 +121,42 @@ describe('exact arithmetic grading', () => {
     expect(gradeAnswer('5', { kind: 'integer', value: -5 })).toMatchObject({ status: 'incorrect', assisted: false });
   });
 
+  it('says the mistake the question was built to catch, ahead of any shape it could guess', () => {
+    const named = [{ answer: '2/8', misconception: 'add-denominators' }];
+    const twoThirds = { kind: 'rational' as const, numerator: 2, denominator: 3 };
+    const told = gradeAnswer('2/8', twoThirds, false, named);
+    expect(told).toMatchObject({ status: 'incorrect', misconception: 'add-denominators' });
+    expect(told.message).toBe('분모가 조각의 크기라는 것을 지나치고 위아래를 따로 더해요.');
+    // Value, not spelling: the same wrong answer written as a decimal is the same mistake.
+    expect(gradeAnswer('0.25', twoThirds, false, named).misconception).toBe('add-denominators');
+    // A wrong answer nobody named falls back to exactly what it said before.
+    expect(gradeAnswer('7/9', twoThirds, false, named).misconception).toBeUndefined();
+    // The author beats the general rule, and the guess is not also recorded beside it.
+    const tenfold = gradeAnswer('3', { kind: 'integer', value: 30 }, false, [{ answer: '3', misconception: 'percent-place-value' }]);
+    expect(tenfold).toMatchObject({ misconception: 'percent-place-value' });
+    expect(tenfold.misreading).toBeUndefined();
+    expect(gradeAnswer('3', { kind: 'integer', value: 30 })).toMatchObject({ misreading: 'tenfold' });
+  });
+
+  it('names a picked answer too, and never names the right one', () => {
+    const spec = { kind: 'choice' as const, correct: 'b',
+      options: [{ id: 'a', text: '$\\frac{2}{5}$' }, { id: 'b', text: '$\\frac{5}{6}$' }, { id: 'c', text: '$\\frac{1}{5}$' }] };
+    const named = [{ answer: 'a', misconception: 'add-denominators' }];
+    expect(gradeAnswer('a', spec, false, named)).toMatchObject({ status: 'incorrect', misconception: 'add-denominators' });
+    // An option nobody named is still only wrong, and the right one is still right.
+    expect(gradeAnswer('c', spec, false, named).misconception).toBeUndefined();
+    expect(gradeAnswer('c', spec, false, named).message).toContain('보기를 하나씩');
+    expect(gradeAnswer('b', spec, false, named)).toMatchObject({ status: 'correct' });
+  });
+
+  it('ignores a name it does not know rather than showing the learner a key', () => {
+    const result = gradeAnswer('5', { kind: 'integer', value: 6 }, false, [{ answer: '5', misconception: 'no-such-thing' }]);
+    expect(result.misconception).toBeUndefined();
+    // Publication refuses an unknown key; a record written before one was renamed still marks.
+    expect(result.status).toBe('incorrect');
+    expect(result.message).toContain('셈이');
+  });
+
   it('can grade the canonical answer for every published sample question', () => {
     for (const record of seedLessons) for (const problem of record.problems) {
       expect(gradeAnswer(writtenAnswer(problem), problem.gradingSpec).status, problem.problemVersionId).toBe('correct');

@@ -220,6 +220,10 @@ model PublishedProblem {
   responseSpec     Json
   gradingSpec      Json
   hintAvailable    Boolean
+  /// Wrong answers this question was built to catch, each with the name of the mistake behind it.
+  /// Not frozen with the version — it changes nothing about what was asked, what the answer is, or
+  /// how the answer is marked, so it may be written onto a question that is already published.
+  misreadings      Json?
   @@id([ownerKind, ownerVersionId, problemVersionId])
   @@index([problemVersionId])
   @@index([ownerKind, ownerVersionId, order])

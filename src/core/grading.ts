@@ -1,7 +1,8 @@
 import 'server-only';
 import type { GradeResult } from '@/shared/api';
 import type { Misreading } from '@/shared/misreading';
-import { parseAnswer, writtenAsInteger } from '@/shared/answer';
+import { matchMisreading, parseAnswer, writtenAsInteger, type ExpectedMisreading } from '@/shared/answer';
+import { misconceptionOf } from '@/shared/misconception';
 import type { StoredProblem } from './content';
 
 type NumericSpec = Exclude<StoredProblem['gradingSpec'], { kind: 'choice' }>;
@@ -60,17 +61,33 @@ const misreadingMessages: Record<Misreading, string> = {
   unreduced: '값은 맞아요. 분모를 양수로 하고 더 이상 약분할 수 없는 분수로 써 주세요. 예: 1/2',
 };
 
+/**
+ * The wrong answer the author named, if this is one of them.
+ *
+ * It is asked before any shape is read off the number, because a name the author wrote is what the
+ * question was built to catch while a shape is a guess that happens to be usually right. The note
+ * becomes what the learner is told: it says which step went wrong, which is the same standard the
+ * general messages hold to — where to look, never what to write.
+ */
+function named(answer: string, spec: StoredProblem['gradingSpec'], expected: ExpectedMisreading[] | undefined, assisted: boolean): GradeResult | null {
+  const key = expected?.length ? matchMisreading(answer, spec, expected) : null;
+  const record = key ? misconceptionOf(key) : undefined;
+  if (!key || !record) return null;
+  return { status: 'incorrect', message: record.note, misconception: key, assisted };
+}
+
 /** Exact arithmetic only: no floating point equality, dynamic execution, or expressions. */
-export function gradeAnswer(answer: string, spec: StoredProblem['gradingSpec'], assisted = false): GradeResult {
+export function gradeAnswer(answer: string, spec: StoredProblem['gradingSpec'], assisted = false, expected?: ExpectedMisreading[]): GradeResult {
   // A picked answer is compared by name, never by what the name says: two options may read the same
   // and still be different options, and the text a learner saw is the published question's.
   if (spec.kind === 'choice') {
     const picked = spec.options.find((option) => option.id === answer.trim());
     if (!picked) return { status: 'invalid', message: '보기 중에서 하나를 골라 주세요.', assisted };
-    if (picked.id !== spec.correct) return { status: 'incorrect', message: '아직 답이 맞지 않아요. 보기를 하나씩 다시 견주어 보세요.', assisted };
+    if (picked.id !== spec.correct) return named(answer, spec, expected, assisted)
+      ?? { status: 'incorrect', message: '아직 답이 맞지 않아요. 보기를 하나씩 다시 견주어 보세요.', assisted };
     return { status: 'correct', message: assisted ? '맞았어요. 다음에는 힌트 없이도 한 번 골라 봐요.' : '맞았어요. 잘 골랐어요!', assisted };
   }
-  const expected = expectedValue(spec);
+  const value = expectedValue(spec);
   const parsed = parseAnswer(answer);
   if (!parsed) {
     return { status: 'invalid', message: '숫자 또는 1/2처럼 분수를 입력해 주세요. 분모에는 0을 쓸 수 없어요.', assisted };
@@ -78,11 +95,12 @@ export function gradeAnswer(answer: string, spec: StoredProblem['gradingSpec'], 
   if (spec.kind === 'integer' && !writtenAsInteger(answer)) {
     return { status: 'invalid', message: '이 문제는 정수로 답해 주세요. 예: 3', assisted };
   }
-  const equivalent = parsed.numerator * expected.denominator === expected.numerator * parsed.denominator;
+  const equivalent = parsed.numerator * value.denominator === value.numerator * parsed.denominator;
   // The catalogue is no longer only fractions, so what to reconsider is the question's to say.
   if (!equivalent) {
-    const read = misreadingOf({ numerator: parsed.numerator, denominator: parsed.denominator }, expected);
-    return { status: 'incorrect', assisted, ...(read ? { misreading: read, message: misreadingMessages[read] } : { message: '아직 답이 맞지 않아요. 풀이를 한 번 더 확인해 보세요.' }) };
+    const read = misreadingOf({ numerator: parsed.numerator, denominator: parsed.denominator }, value);
+    return named(answer, spec, expected, assisted)
+      ?? { status: 'incorrect', assisted, ...(read ? { misreading: read, message: misreadingMessages[read] } : { message: '아직 답이 맞지 않아요. 풀이를 한 번 더 확인해 보세요.' }) };
   }
   if (spec.kind === 'rational' && spec.requiredForm === 'reduced_fraction' && (!parsed.fraction || !parsed.reduced)) {
     return { status: 'incorrect', message: misreadingMessages.unreduced, misreading: 'unreduced', assisted };

@@ -1184,6 +1184,12 @@
                 "text": "똑같이 아홉 조각으로 나누었으니 분모는 $9$예요. 남은 것이 네 조각이니 분자는 $4$이고, 남은 양은 $\\frac{4}{9}$예요."
               }
             }
+          ],
+          "misreadings": [
+            {
+              "answer": "9/4",
+              "misconception": "swap-parts"
+            }
           ]
         }
       ]
@@ -1229,6 +1235,12 @@
               "payload": {
                 "text": "$1$ m를 다섯 도막으로 나누었으니 한 도막은 $\\frac{1}{5}$ m예요. 두 도막을 썼으니 $\\frac{2}{5}$예요."
               }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "5/2",
+              "misconception": "swap-parts"
             }
           ]
         },
@@ -1322,6 +1334,12 @@
               "payload": {
                 "text": "여덟 조각으로 나누었으니 분모는 $8$이고, 세 조각을 먹었으니 분자는 $3$이에요. 먹은 양은 $\\frac{3}{8}$이에요."
               }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "8/3",
+              "misconception": "swap-parts"
             }
           ]
         },
@@ -1425,6 +1443,12 @@
                 "text": "분모가 $2$에서 $8$로 네 배가 됐어요. 크기를 그대로 두려면 분자에도 같은 $4$를 곱해야 하니 $1\\times4=4$예요."
               }
             }
+          ],
+          "misreadings": [
+            {
+              "answer": "7",
+              "misconception": "add-instead-of-scale"
+            }
           ]
         },
         {
@@ -1520,6 +1544,12 @@
                 "text": "분자가 $3$에서 $12$로 네 배가 됐어요. 분모에도 $4$를 곱해 $5\\times4=20$이에요."
               }
             }
+          ],
+          "misreadings": [
+            {
+              "answer": "14",
+              "misconception": "add-instead-of-scale"
+            }
           ]
         }
       ]
@@ -1603,6 +1633,12 @@
                 "text": "분모가 $7$에서 $21$로 세 배가 됐으니 분자에도 $3$을 곱해 $2\\times3=6$이에요."
               }
             }
+          ],
+          "misreadings": [
+            {
+              "answer": "16",
+              "misconception": "add-instead-of-scale"
+            }
           ]
         }
       ]
@@ -1657,6 +1693,12 @@
               "payload": {
                 "text": "분모가 $3$에서 $12$로 네 배가 됐어요. 분자도 네 배로 해 $1\\times4=4$예요."
               }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "10",
+              "misconception": "add-instead-of-scale"
             }
           ]
         },
@@ -1762,6 +1804,12 @@
                 "text": "분모가 같다는 것은 조각의 크기가 같다는 뜻이라, 조각 수만 더하면 돼요. $2+3=5$이니 $\\frac{5}{7}$예요."
               }
             }
+          ],
+          "misreadings": [
+            {
+              "answer": "5/14",
+              "misconception": "add-denominators"
+            }
           ]
         },
         {
@@ -1858,6 +1906,12 @@
                 "text": "$\\frac{1}{2}=\\frac{3}{6}$이므로 $\\frac{3}{6}+\\frac{1}{6}=\\frac{4}{6}$이에요. $2$로 약분하면 $\\frac{2}{3}$이에요."
               }
             }
+          ],
+          "misreadings": [
+            {
+              "answer": "2/8",
+              "misconception": "add-denominators"
+            }
           ]
         }
       ]
@@ -1904,6 +1958,12 @@
                 "text": "분모가 같으니 $4+2=6$, 곧 $\\frac{6}{9}$예요. $3$으로 약분하면 $\\frac{2}{3}$이에요."
               }
             }
+          ],
+          "misreadings": [
+            {
+              "answer": "6/18",
+              "misconception": "add-denominators"
+            }
           ]
         },
         {
@@ -1942,6 +2002,12 @@
               "payload": {
                 "text": "$4$와 $6$이 처음 함께 만나는 배수는 $12$예요. $\\frac{3}{12}+\\frac{2}{12}=\\frac{5}{12}$예요."
               }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "2/10",
+              "misconception": "add-denominators"
             }
           ]
         }
@@ -1999,6 +2065,12 @@
                 "text": "조각의 크기가 같으니 조각 수만 더해요. $3+2=5$이니 $\\frac{5}{8}$이에요."
               }
             }
+          ],
+          "misreadings": [
+            {
+              "answer": "5/16",
+              "misconception": "add-denominators"
+            }
           ]
         },
         {
@@ -2047,6 +2119,12 @@
               "payload": {
                 "text": "분모를 $12$로 맞추면 $\\frac{4}{12}+\\frac{3}{12}=\\frac{7}{12}$예요."
               }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "2/7",
+              "misconception": "add-denominators"
             }
           ]
         }
@@ -2705,6 +2783,12 @@
                 "text": "여덟 조각으로 나누었으니 분모는 $8$, 세 조각을 먹었으니 분자는 $3$이에요. 먹은 양은 $\\frac{3}{8}$이에요."
               }
             }
+          ],
+          "misreadings": [
+            {
+              "answer": "8/3",
+              "misconception": "swap-parts"
+            }
           ]
         },
         {
@@ -2976,6 +3060,12 @@
                 "text": "분모가 $5$에서 $15$로 세 배가 됐으니 분자도 세 배로 해요. $2\\times3=6$이에요."
               }
             }
+          ],
+          "misreadings": [
+            {
+              "answer": "12",
+              "misconception": "add-instead-of-scale"
+            }
           ]
         },
         {
@@ -3059,6 +3149,12 @@
                 "text": "$\\frac{1}{3}$의 분자와 분모에 똑같이 $3$을 곱하면 $\\frac{3}{9}$이에요. 나머지는 약분해도 $\\frac{1}{3}$이 되지 않아요."
               }
             }
+          ],
+          "misreadings": [
+            {
+              "answer": "c",
+              "misconception": "scale-one-part"
+            }
           ]
         },
         {
@@ -3108,6 +3204,12 @@
               "payload": {
                 "text": "$12$와 $18$을 $6$으로 나누면 $\\frac{2}{3}$이고, $2$와 $3$은 함께 나누는 수가 $1$뿐이라 여기서 끝이에요."
               }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "6/9",
+              "misconception": "stop-reducing-early"
             }
           ]
         },
@@ -3289,6 +3391,12 @@
                 "text": "$4$의 배수는 $4,\\ 8,\\ 12$이고 $6$의 배수는 $6,\\ 12$예요. 처음 만나는 수가 $12$예요."
               }
             }
+          ],
+          "misreadings": [
+            {
+              "answer": "10",
+              "misconception": "common-denominator-as-sum"
+            }
           ]
         },
         {
@@ -3335,6 +3443,12 @@
               "payload": {
                 "text": "$3$과 $5$는 함께 나누는 수가 $1$뿐이라, 가장 작은 공통분모는 두 수를 곱한 $3\\times5=15$예요."
               }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "8",
+              "misconception": "common-denominator-as-sum"
             }
           ]
         },
@@ -3384,6 +3498,12 @@
                 "text": "분모가 같으니 분자만 더해요. $2+3=5$이니 $\\frac{5}{7}$예요."
               }
             }
+          ],
+          "misreadings": [
+            {
+              "answer": "5/14",
+              "misconception": "add-denominators"
+            }
           ]
         },
         {
@@ -3431,6 +3551,12 @@
               "payload": {
                 "text": "분모를 $6$으로 맞추면 $\\frac{3}{6}+\\frac{2}{6}=\\frac{5}{6}$이에요."
               }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "2/5",
+              "misconception": "add-denominators"
             }
           ]
         },
@@ -3480,6 +3606,12 @@
               "payload": {
                 "text": "분모를 $12$로 맞추면 $\\frac{3}{12}+\\frac{2}{12}=\\frac{5}{12}$예요."
               }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "2/10",
+              "misconception": "add-denominators"
             }
           ]
         },
@@ -3564,6 +3696,20 @@
                 "text": "분모끼리 더하는 것이 아니에요. 분모를 $6$으로 맞추면 $\\frac{3}{6}+\\frac{2}{6}=\\frac{5}{6}$이에요."
               }
             }
+          ],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "add-denominators"
+            },
+            {
+              "answer": "c",
+              "misconception": "add-denominators"
+            },
+            {
+              "answer": "d",
+              "misconception": "keep-numerators-on-common"
+            }
           ]
         },
         {
@@ -3613,6 +3759,16 @@
               "payload": {
                 "text": "분모가 같으니 $\\frac{3+1}{8}=\\frac{4}{8}$이에요. $4$로 약분하면 $\\frac{1}{2}$이에요."
               }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "4/16",
+              "misconception": "add-denominators"
+            },
+            {
+              "answer": "4/8",
+              "misconception": "stop-reducing-early"
             }
           ]
         },
@@ -3754,6 +3910,12 @@
               "payload": {
                 "text": "분자가 $3$에서 $9$로 세 배가 됐으니 분모도 세 배로 해요. $4\\times3=12$예요."
               }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "10",
+              "misconception": "add-instead-of-scale"
             }
           ]
         }

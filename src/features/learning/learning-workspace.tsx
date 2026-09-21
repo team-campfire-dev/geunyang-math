@@ -633,7 +633,7 @@ export function LearningWorkspace() {
         && item.result.status !== 'invalid');
       return { conceptKeys: problem.conceptKeys, correct: tries.at(-1)?.result.status === 'correct',
         firstCorrect: tries[0]?.result.status === 'correct', assisted: !!tries[0]?.result.assisted,
-        misreading: tries[0]?.result.misreading };
+        misreading: tries[0]?.result.misreading, misconception: tries[0]?.result.misconception };
     }).filter((item, index) => (currentEnrollment?.attempts ?? []).some((attempt) => attempt.problemVersionId === document.problems[index].problemVersionId));
     if (finishedLesson) return <div className="completion-panel"><span className="completion-mark"><Icon name="check" size={38} /></span><div className="eyebrow">ONE MORE STEP FORWARD</div><h1>오늘의 이해가 하나 더 쌓였어요.</h1><p>「{document.title}」 수업을 완료했어요.<br />{review ? '배운 내용을 다시 떠올릴 복습 과제가 있어요.' : '다음 수업을 살펴보거나, 오늘 배운 내용을 다시 펼쳐보세요.'}</p><div className="completion-actions"><button className="button primary" onClick={() => review ? openAssignment(review) : navigate('lessons')}>{review ? '복습 과제 확인' : '다음 수업 둘러보기'}<Icon name="arrow" size={18} /></button><button className="button secondary" onClick={() => navigate('home')}>내 학습으로</button></div>{lessonSets.length > 0 && <button className="text-button completion-sets" disabled={busy} onClick={() => openCourseSets(document.courseKey, document.lessonKey)}>이 수업의 문제집 {lessonSets.length}개 다시 풀기<Icon name="arrow" size={15} /></button>}<AnswerReport items={lessonReport} concepts={taughtConcepts} lessons={lessons} standings={state?.concepts} busy={busy} onOpenLesson={(key) => void openLesson(key)} /><div className="completion-bottom">잘 모르겠는 부분은 언제든 다시 펼쳐보세요.</div></div>;
     const section = document.sections[sectionIndex];
@@ -701,6 +701,7 @@ export function LearningWorkspace() {
       firstCorrect: item.firstResult?.status === 'correct',
       assisted: !!item.firstResult?.assisted,
       misreading: item.firstResult?.misreading,
+      misconception: item.firstResult?.misconception,
     }));
     // Where to go next when this was a set they chose: the one after it in the same course.
     const shelf = problemSets.filter((set) => set.courseKey === problemSets.find((entry) => entry.problemSetId === assignment.problemSetId)?.courseKey);
