@@ -1,6 +1,12 @@
 // Public HTTP DTOs. Never import server content or grading answers into this module.
 import type { ConceptScope, DefinitionRef } from './rich-text';
-export type GradeResult = { status: 'correct' | 'incorrect' | 'invalid'; message: string; assisted: boolean };
+import type { Misreading } from './misreading';
+/**
+ * What the marker decided, and — when it could read one — what kind of slip the answer looks like.
+ * `misreading` is the part a report can add up: the message is written for the one moment after an
+ * answer, while the name behind it is the same name in every course and every set.
+ */
+export type GradeResult = { status: 'correct' | 'incorrect' | 'invalid'; message: string; assisted: boolean; misreading?: Misreading };
 export type ContentBlock = {
   blockId: string;
   kind: string;
@@ -138,7 +144,12 @@ export type AssignmentView = {
   problemSetId: string;
   recommendedAt: string; opensAt: string | null; dueAt: string | null;
   policy: AssignmentPolicy; status: 'assigned' | 'submitted';
-  items: { id: string; problem: PublicProblem; attempt: AttemptView | null }[];
+  /**
+   * Each question, and how this learner got there rather than only where they arrived: `tries`
+   * counts the answers they sent and `firstResult` is the first one that was a real answer. A
+   * report about a finished set is about the working, so the last answer alone would not do.
+   */
+  items: { id: string; problem: PublicProblem; attempt: AttemptView | null; tries: number; firstResult: GradeResult | null }[];
   submissionId: string;
   reason?: string;
   glossary: GlossaryEntry[];

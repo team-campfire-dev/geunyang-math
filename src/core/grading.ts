@@ -1,5 +1,6 @@
 import 'server-only';
 import type { GradeResult } from '@/shared/api';
+import type { Misreading } from '@/shared/misreading';
 import { parseAnswer, writtenAsInteger } from '@/shared/answer';
 import type { StoredProblem } from './content';
 
@@ -33,29 +34,31 @@ const same = (a: Rational, b: Rational) => a.numerator * b.denominator === b.num
  * one after being nudged has already been recorded as having missed it. Nothing here is a hint, and
  * nothing here marks the attempt as assisted.
  */
-function misreading(written: Rational, expected: Rational): string | null {
+function misreadingOf(written: Rational, expected: Rational): Misreading | null {
   // Sign first: everything below would also match a number that is merely the wrong way round.
-  if (same(written, times(expected, -1n))) return '값의 크기는 맞아요. 부호를 다시 보세요.';
+  if (same(written, times(expected, -1n))) return 'sign';
   // An upside-down fraction, which is only worth saying when the answer is a fraction to begin with.
   // Zero has no reciprocal, and cross-multiplying against one would match every answer there is.
   if (expected.denominator !== 1n && expected.numerator !== 0n && written.numerator !== 0n
-    && same(written, { numerator: expected.denominator, denominator: expected.numerator })) {
-    return '분자와 분모가 서로 바뀐 것 같아요.';
-  }
-  if (same(written, times(expected, 100n)) || same(times(written, 100n), expected)) {
-    return '수는 맞는데 크기가 백 배 어긋나요. 비율로 답할지 백분율로 답할지 확인해 보세요.';
-  }
-  if (same(written, times(expected, 10n)) || same(times(written, 10n), expected)) {
-    return '수는 맞는데 크기가 열 배 어긋나요. 자릿값을 한 번 더 세어 보세요.';
-  }
+    && same(written, { numerator: expected.denominator, denominator: expected.numerator })) return 'reciprocal';
+  if (same(written, times(expected, 100n)) || same(times(written, 100n), expected)) return 'hundredfold';
+  if (same(written, times(expected, 10n)) || same(times(written, 10n), expected)) return 'tenfold';
   // One too many or one too few, which is what a miscount looks like and only reads as one when
   // both sides are whole numbers.
   if (written.denominator === 1n && expected.denominator === 1n
-    && (written.numerator - expected.numerator === 1n || expected.numerator - written.numerator === 1n)) {
-    return '셈이 아주 조금 어긋났어요. 하나를 더 세었는지, 덜 세었는지 확인해 보세요.';
-  }
+    && (written.numerator - expected.numerator === 1n || expected.numerator - written.numerator === 1n)) return 'off-by-one';
   return null;
 }
+
+/** What each kind says to the learner who just wrote it: where to look, never what to write. */
+const misreadingMessages: Record<Misreading, string> = {
+  sign: '값의 크기는 맞아요. 부호를 다시 보세요.',
+  reciprocal: '분자와 분모가 서로 바뀐 것 같아요.',
+  hundredfold: '수는 맞는데 크기가 백 배 어긋나요. 비율로 답할지 백분율로 답할지 확인해 보세요.',
+  tenfold: '수는 맞는데 크기가 열 배 어긋나요. 자릿값을 한 번 더 세어 보세요.',
+  'off-by-one': '셈이 아주 조금 어긋났어요. 하나를 더 세었는지, 덜 세었는지 확인해 보세요.',
+  unreduced: '값은 맞아요. 분모를 양수로 하고 더 이상 약분할 수 없는 분수로 써 주세요. 예: 1/2',
+};
 
 /** Exact arithmetic only: no floating point equality, dynamic execution, or expressions. */
 export function gradeAnswer(answer: string, spec: StoredProblem['gradingSpec'], assisted = false): GradeResult {
@@ -78,11 +81,11 @@ export function gradeAnswer(answer: string, spec: StoredProblem['gradingSpec'], 
   const equivalent = parsed.numerator * expected.denominator === expected.numerator * parsed.denominator;
   // The catalogue is no longer only fractions, so what to reconsider is the question's to say.
   if (!equivalent) {
-    const read = misreading({ numerator: parsed.numerator, denominator: parsed.denominator }, expected);
-    return { status: 'incorrect', message: read ?? '아직 답이 맞지 않아요. 풀이를 한 번 더 확인해 보세요.', assisted };
+    const read = misreadingOf({ numerator: parsed.numerator, denominator: parsed.denominator }, expected);
+    return { status: 'incorrect', assisted, ...(read ? { misreading: read, message: misreadingMessages[read] } : { message: '아직 답이 맞지 않아요. 풀이를 한 번 더 확인해 보세요.' }) };
   }
   if (spec.kind === 'rational' && spec.requiredForm === 'reduced_fraction' && (!parsed.fraction || !parsed.reduced)) {
-    return { status: 'incorrect', message: '값은 맞아요. 분모를 양수로 하고 더 이상 약분할 수 없는 분수로 써 주세요. 예: 1/2', assisted };
+    return { status: 'incorrect', message: misreadingMessages.unreduced, misreading: 'unreduced', assisted };
   }
   return { status: 'correct', message: assisted ? '맞았어요. 다음에는 힌트 없이도 한 번 풀어 봐요.' : '맞았어요. 잘 풀었어요!', assisted };
 }

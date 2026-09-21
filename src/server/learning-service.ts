@@ -300,8 +300,13 @@ export class LearningService {
           : matching[matching.length - 1];
         // A policy without hints hides them the way a question without hints does, and a policy
         // that never shows a worked solution does not offer one either.
+        // Every answer sent, oldest first, so a report can tell a first try from a correction.
+        const real = [...matching].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime() || (a.id < b.id ? -1 : 1))
+          .filter(a => (a.result as GradeResult).status !== 'invalid');
         return { id: item.id, problem: { ...publicProblem(p), hintAvailable: policy.hints && p.hintAvailable,
-          solutionAvailable: policy.solutions !== 'never' && p.solution.length > 0 }, attempt: visibleAttempt ? attemptView(visibleAttempt) : null };
+          solutionAvailable: policy.solutions !== 'never' && p.solution.length > 0 },
+          attempt: visibleAttempt ? attemptView(visibleAttempt) : null,
+          tries: real.length, firstResult: real.length ? real[0].result as GradeResult : null };
       });
       return { id: r.assignmentId, recipientId: r.id, title: r.assignment.title, lessonKey, problemSetId: r.assignment.problemSetId,
         recommendedAt: r.recommendedAt.toISOString(), opensAt: window.opensAt?.toISOString() ?? null, dueAt: window.dueAt?.toISOString() ?? null,

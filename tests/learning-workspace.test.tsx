@@ -42,7 +42,7 @@ const assignment = (overrides: Partial<AssignmentView> = {}): AssignmentView => 
   id: 'a1', recipientId: 'r1', title: '분수의 의미 복습', lessonKey, problemSetId: 'fraction-meaning:review',
   recommendedAt: '2026-09-19T00:00:00.000Z', opensAt: null, dueAt: null,
   policy: { kind: 'review', hints: true, results: 'per-item', solutions: 'never' }, status: 'assigned',
-  items: [{ id: 'i1', problem: { problemVersionId: problemId, conceptKeys: ['term.denominator'], promptContent: [text('p1', '분모는 얼마인가요?')], responseSpec: { kind: 'integer' }, hintAvailable: true, solutionAvailable: false }, attempt: null }],
+  items: [{ id: 'i1', problem: { problemVersionId: problemId, conceptKeys: ['term.denominator'], promptContent: [text('p1', '분모는 얼마인가요?')], responseSpec: { kind: 'integer' }, hintAvailable: true, solutionAvailable: false }, attempt: null, tries: 0, firstResult: null }],
   submissionId: 's1', glossary: [], ...overrides,
 });
 const learningState = (overrides: Partial<LearningState> = {}): LearningState => ({
@@ -288,7 +288,8 @@ describe('a set too long to hold on one screen', () => {
   const set = (attempts: (AttemptView | null)[]): AssignmentView => assignment({
     recipientId: 'r-set', title: '분수 모아 풀기', lessonKey: null, problemSetId: 'fractions:gathered',
     policy: { kind: 'practice', hints: true, results: 'per-item', solutions: 'never' },
-    items: attempts.map((attempt, index) => ({ id: `i${index + 1}`, problem: question(`q${index + 1}`, `${index + 1}번 문제예요.`), attempt })),
+    items: attempts.map((attempt, index) => ({ id: `i${index + 1}`, problem: question(`q${index + 1}`, `${index + 1}번 문제예요.`), attempt,
+      tries: attempt ? 1 : 0, firstResult: attempt?.result ?? null })),
   });
   const openSet = async (view: AssignmentView) => {
     server = serve({ state: learningState({ assignments: [view] }) });
@@ -329,6 +330,26 @@ describe('a set too long to hold on one screen', () => {
     await tick();
     expect(holding()).not.toBe('problem-2');
     expect(screen.getByText('아직 답이 맞지 않아요.')).toBeDefined();
+  });
+
+  it('reads the finished set back by concept, from the answers that were already sent', async () => {
+    const wrong = judged('q1', 'incorrect');
+    const view = set([wrong, judged('q2', 'correct'), judged('q3', 'correct')]);
+    // Every question here is about the same concept, and the first answer to the first one was
+    // wrong in a way the marker could name.
+    view.status = 'submitted';
+    view.items[0].firstResult = { ...wrong.result, misreading: 'sign' };
+    // A set that is done waits in 「다 푼 문제집」 rather than among the work still to do.
+    server = serve({ state: learningState({ assignments: [view] }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: '연습장' }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: '연습장' })[0]);
+    await until(() => expect(screen.getByText('다 푼 문제집')).toBeDefined());
+    fireEvent.click(screen.getAllByRole('button', { name: /분수 모아 풀기/ })[0]);
+    await until(() => expect(window.document.querySelector('.answer-report')).not.toBeNull());
+    expect(window.document.querySelector('.report-score')!.textContent).toBe('2 / 3');
+    expect(window.document.querySelector('.report-count')!.textContent).toBe('2 / 3');
+    expect(screen.getByText('부호를 놓침')).toBeDefined();
   });
 
   /** A pair of questions shares a screen, so the strip would only repeat what is already in view. */
@@ -381,7 +402,7 @@ describe('reading the worked solution', () => {
       problemSetId: 'fraction-meaning:practice', lessonKey: null, status,
       policy: { kind: 'practice', hints: true, results: 'per-item', solutions: 'after-submission' },
       items: [{ id: 'i1', problem: { problemVersionId: problemId, conceptKeys: ['term.denominator'], promptContent: [text('p1', '분모는 얼마인가요?')],
-        responseSpec: { kind: 'integer' }, hintAvailable: false, solutionAvailable: true }, attempt: answered }] });
+        responseSpec: { kind: 'integer' }, hintAvailable: false, solutionAvailable: true }, attempt: answered, tries: 1, firstResult: answered.result }] });
     const open = async (view: AssignmentView) => {
       server = serve({ state: learningState({ assignments: [view] }) });
       render(<LearningWorkspace />);
