@@ -1,0 +1,3265 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "probability",
+      "title": "경우의 수와 확률",
+      "summary": "일어날 수 있는 경우를 빠짐없이 세는 법을 익히고, 그 수로 확률을 구하고, 여사건과 곱셈으로 셈을 줄여요.",
+      "order": 280,
+      "track": "middle",
+      "stage": "middle-2",
+      "lessons": [
+        {
+          "key": "counting-cases",
+          "order": 1
+        },
+        {
+          "key": "probability-meaning",
+          "order": 2
+        },
+        {
+          "key": "probability-rules",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "counting-cases",
+      "label": "경우의 수",
+      "assessable": true
+    },
+    {
+      "key": "probability-meaning",
+      "label": "확률",
+      "assessable": true
+    },
+    {
+      "key": "probability-rules",
+      "label": "확률의 계산",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "counting-cases",
+        "versionId": "counting-cases:v1",
+        "title": "경우의 수: 더할 때와 곱할 때",
+        "summary": "「또는」이면 더하고 「그리고」면 곱하는 이유를 세어 보며 확인해요.",
+        "estimatedMinutes": 11,
+        "conceptKeys": [
+          "counting-cases"
+        ],
+        "prerequisiteConceptKeys": [],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "counting-cases:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "counting-cases:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "일어날 수 있는 일이 모두 몇 가지인지 센 것이 경우의 수예요. 세는 방법은 둘뿐인데, 문제의 말이 「또는」인지 「그리고」인지에 따라 갈려요.\n\n「또는」은 둘 중 하나만 일어나는 경우예요. 동전을 던지거나 주사위를 던지거나, 둘 중 하나만 한다면 $2 + 6 = 8$가지예요. 두 무리를 나란히 놓고 세면 되니 더하는 거예요.\n\n이것을 합의 법칙이라 해요. 단, 두 무리에 겹치는 것이 없어야 해요. 주사위에서 「$2$의 배수 또는 $3$의 배수」라면 $6$이 양쪽에 들어 있으니 그냥 더하면 두 번 세게 돼요.\n\n「그리고」는 둘 다 일어나는 경우예요. 동전도 던지고 주사위도 던진다면, 동전이 앞면일 때마다 주사위가 여섯 가지이고 뒷면일 때도 여섯 가지이니 $2 \\times 6 = 12$가지예요.\n\n이것이 곱의 법칙이에요. 줄과 칸으로 된 표를 떠올리면 왜 곱하는지가 보여요. 줄이 $2$개, 칸이 $6$개인 표의 칸 수가 $12$개인 것과 같으니까요.\n\n가짓수가 적을 때는 수형도를 그려도 좋아요. 첫 번째 것으로 가지를 치고, 각 가지마다 두 번째 것으로 또 가지를 치면 끝의 개수가 곧 경우의 수예요.\n\n동전을 세 번 던지면 $2 \\times 2 \\times 2 = 8$가지예요. 던질 때마다 두 배가 되는 거예요.\n\n문제를 읽을 때 「또는」과 「그리고」를 먼저 찾으세요. 그 한 낱말이 더할지 곱할지를 정해요.",
+                "definitions": [
+                  {
+                    "conceptKey": "counting-cases",
+                    "surface": "경우의 수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "counting-cases:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "동전과 주사위의 경우를 나란히 놓아 더하는 것과 줄과 칸으로 짝지어 곱하는 것을 견주는 그림",
+                "caption": "또는이면 나란히 놓고 세고, 그리고면 줄과 칸을 만들어요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 20,
+                    "text": "동전 하나와 주사위 하나",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "title"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 30,
+                    "y": 44,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "c1"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 60,
+                    "y": 44,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "c2"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 120,
+                    "y": 96,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "d1"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 150,
+                    "y": 96,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "d2"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 180,
+                    "y": 96,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "d3"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 210,
+                    "y": 96,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "d4"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 240,
+                    "y": 96,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "d5"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 270,
+                    "y": 96,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "d6"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 45,
+                    "y": 36,
+                    "text": "동전 $2$가지",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "cl"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 195,
+                    "y": 88,
+                    "text": "주사위 $6$가지",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "dl"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 104,
+                    "text": "$2 + 6 = 8$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "sum",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 60,
+                    "y": 128,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "g1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 90,
+                    "y": 128,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "g2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 120,
+                    "y": 128,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "g3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 150,
+                    "y": 128,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "g4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 180,
+                    "y": 128,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "g5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 210,
+                    "y": 128,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "g6",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 60,
+                    "y": 152,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "g7",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 90,
+                    "y": 152,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "g8",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 120,
+                    "y": 152,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "g9",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 150,
+                    "y": 152,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "g10",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 180,
+                    "y": 152,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "g11",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 210,
+                    "y": 152,
+                    "width": 26,
+                    "height": 18,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "g12",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 188,
+                    "text": "$2 \\times 6 = 12$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "prod",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "동전 하나는 $2$가지, 주사위 하나는 $6$가지예요.",
+                    "changes": [
+                      {
+                        "id": "sum",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "prod",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "title",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cl",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "dl",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "g1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g6",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g7",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g8",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g9",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g10",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g11",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g12",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "「동전 또는 주사위」는 둘 중 하나만 고르는 것이니 나란히 놓고 세면 돼요.",
+                    "changes": [
+                      {
+                        "id": "c1",
+                        "dy": 22
+                      },
+                      {
+                        "id": "c2",
+                        "dy": 22
+                      },
+                      {
+                        "id": "d1",
+                        "dx": -30,
+                        "dy": -30
+                      },
+                      {
+                        "id": "d2",
+                        "dx": -30,
+                        "dy": -30
+                      },
+                      {
+                        "id": "d3",
+                        "dx": -30,
+                        "dy": -30
+                      },
+                      {
+                        "id": "d4",
+                        "dx": -30,
+                        "dy": -30
+                      },
+                      {
+                        "id": "d5",
+                        "dx": -30,
+                        "dy": -30
+                      },
+                      {
+                        "id": "d6",
+                        "dx": -30,
+                        "dy": -30
+                      },
+                      {
+                        "id": "cl",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "dl",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "sum",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "prod",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g6",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g7",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g8",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g9",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g10",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g11",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "g12",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "「동전 그리고 주사위」는 짝을 짓는 것이라 줄과 칸이 생겨요. 훨씬 많아지죠.",
+                    "changes": [
+                      {
+                        "id": "c1",
+                        "hidden": true
+                      },
+                      {
+                        "id": "c2",
+                        "hidden": true
+                      },
+                      {
+                        "id": "d1",
+                        "hidden": true
+                      },
+                      {
+                        "id": "d2",
+                        "hidden": true
+                      },
+                      {
+                        "id": "d3",
+                        "hidden": true
+                      },
+                      {
+                        "id": "d4",
+                        "hidden": true
+                      },
+                      {
+                        "id": "d5",
+                        "hidden": true
+                      },
+                      {
+                        "id": "d6",
+                        "hidden": true
+                      },
+                      {
+                        "id": "cl",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "dl",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "sum",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "title",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "prod",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "g1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "g2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "g3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "g4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "g5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "g6",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "g7",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "g8",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "g9",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "g10",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "g11",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "g12",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "counting-cases:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "counting-cases:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "티셔츠 $3$종과 바지 $4$종으로 만들 수 있는 옷차림은 몇 가지일까요.\n\n티셔츠를 고르고 「그리고」 바지를 고르니 곱해요. $3 \\times 4 = 12$가지예요.\n\n티셔츠 하나마다 바지가 네 가지씩이니 $4 + 4 + 4$로 세어도 같아요.\n\n이번엔 「또는」이에요. 주사위 하나를 던져 $2$ 이하 또는 $5$ 이상이 나오는 경우를 세요.\n\n$2$ 이하는 $1, 2$로 두 가지, $5$ 이상은 $5, 6$으로 두 가지예요. 겹치는 것이 없으니 $2 + 2 = 4$가지예요.\n\n동전 세 개를 던지는 경우도 해 볼게요. 각 동전이 두 가지씩이고 셋을 모두 던지니 $2 \\times 2 \\times 2 = 8$가지예요.\n\n헷갈릴 때는 작은 경우를 직접 적어 보세요. 동전 두 개라면 앞앞, 앞뒤, 뒤앞, 뒤뒤로 네 가지이고 $2 \\times 2$와 맞아요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "counting-cases:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "counting-cases:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "counting-cases:practice",
+                "problemSetVersionId": "counting-cases:practice:v1",
+                "problemVersionIds": [
+                  "counting-cases:practice-1:v1",
+                  "counting-cases:practice-2:v1",
+                  "counting-cases:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "counting-cases:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "counting-cases:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "counting-cases:check",
+                "problemSetVersionId": "counting-cases:check:v1",
+                "problemVersionIds": [
+                  "counting-cases:check-1:v1",
+                  "counting-cases:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "counting-cases:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "counting-cases:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "「또는」이면 더하고 「그리고」면 곱해요.\n\n더할 때는 두 무리에 겹치는 것이 없는지 확인해야 해요.\n\n곱하는 이유는 줄과 칸으로 된 표의 칸 수를 세는 것과 같기 때문이에요.\n\n가짓수가 적으면 수형도를 그려 끝을 세어도 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "counting-cases:review",
+        "problemSetVersionId": "counting-cases:review:v1",
+        "problemVersionIds": [
+          "counting-cases:homework-1:v1",
+          "counting-cases:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "probability-meaning",
+        "versionId": "probability-meaning:v1",
+        "title": "확률의 뜻: 전체 중에서 얼마만큼",
+        "summary": "확률이 경우의 수의 비라는 것을 확인하고, 값이 0과 1 사이인 이유를 봐요.",
+        "estimatedMinutes": 11,
+        "conceptKeys": [
+          "probability-meaning"
+        ],
+        "prerequisiteConceptKeys": [
+          "counting-cases",
+          "fraction",
+          "ratio"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "probability-meaning:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "probability-meaning:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "어떤 일이 일어날 가능성을 하나의 수로 나타낸 것이 확률이에요.\n\n일어날 수 있는 모든 경우가 똑같이 일어날 만하다면, 확률은 「바라는 경우의 수 ÷ 모든 경우의 수」예요. 앞 수업에서 센 경우의 수를 그대로 쓰는 거예요.\n\n주사위 하나를 던져 $3$이 나올 확률은 모든 경우가 여섯 가지이고 바라는 경우가 한 가지이니 $\\dfrac{1}{6}$이에요.\n\n「똑같이 일어날 만하다」는 조건이 중요해요. 한쪽으로 기운 주사위라면 이렇게 셀 수 없어요.\n\n확률은 언제나 $0$ 이상 $1$ 이하예요. 바라는 경우가 전체보다 많을 수는 없으니까요.\n\n절대 일어나지 않는 일의 확률은 $0$이에요. 주사위에서 $7$이 나올 확률이 그래요. 반드시 일어나는 일의 확률은 $1$이고요. $6$ 이하가 나올 확률이 그래요.\n\n확률은 분수로도, 소수로도, 백분율로도 쓸 수 있어요. $\\dfrac{1}{2}$과 $0.5$와 $50\\%$는 같은 말이에요.\n\n분수로 적을 때는 약분해서 기약분수로 적는 것이 보통이에요. $\\dfrac{3}{6}$이라고 쓰기보다 $\\dfrac{1}{2}$이라고 적어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "probability-meaning",
+                    "surface": "확률",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "probability-meaning:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "주머니 속 공 다섯 개를 모두 꺼내 한 줄로 늘어놓고 그중 빨강 셋을 세는 그림",
+                "caption": "일어날 수 있는 경우 전부와 그중 바라는 경우를 세요",
+                "items": [
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        60,
+                        56
+                      ],
+                      [
+                        140,
+                        56
+                      ],
+                      [
+                        150,
+                        128
+                      ],
+                      [
+                        50,
+                        128
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "id": "bag"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 100,
+                    "y": 46,
+                    "text": "주머니",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "bagl"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 80,
+                    "cy": 84,
+                    "rx": 11,
+                    "ry": 11,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "r1"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 105,
+                    "cy": 84,
+                    "rx": 11,
+                    "ry": 11,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "r2"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 92,
+                    "cy": 106,
+                    "rx": 11,
+                    "ry": 11,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "r3"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 118,
+                    "cy": 106,
+                    "rx": 11,
+                    "ry": 11,
+                    "fill": "white",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "w1"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 70,
+                    "cy": 106,
+                    "rx": 11,
+                    "ry": 11,
+                    "fill": "white",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "w2"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 29,
+                    "y1": 152,
+                    "x2": 131,
+                    "y2": 152,
+                    "stroke": "orange",
+                    "strokeWidth": 1.6,
+                    "id": "tie",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 80,
+                    "y": 144,
+                    "text": "빨강 셋",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "tiel",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 252,
+                    "y": 170,
+                    "text": "$\\frac{3}{5}$",
+                    "size": 18,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "주머니에 빨간 공 셋과 흰 공 둘이 들어 있어요.",
+                    "changes": [
+                      {
+                        "id": "tie",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "tiel",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "bag",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "bagl",
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "하나를 꺼낸다면 일어날 수 있는 경우는 모두 다섯 가지예요.",
+                    "changes": [
+                      {
+                        "id": "r1",
+                        "dx": -40,
+                        "dy": 86,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "r2",
+                        "dx": -25,
+                        "dy": 86,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "r3",
+                        "dx": 28,
+                        "dy": 64,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "w1",
+                        "dx": 42,
+                        "dy": 64,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "w2",
+                        "dx": 130,
+                        "dy": 64,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "bag",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "bagl",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "tie",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "tiel",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "그중 빨강이 셋이니 빨간 공이 나올 확률은 다섯 중 셋이에요.",
+                    "changes": [
+                      {
+                        "id": "r1",
+                        "dx": -40,
+                        "dy": 86,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "r2",
+                        "dx": -25,
+                        "dy": 86,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "r3",
+                        "dx": 28,
+                        "dy": 64,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "w1",
+                        "dx": 42,
+                        "dy": 64,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "w2",
+                        "dx": 130,
+                        "dy": 64,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "bag",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "bagl",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "tie",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "tiel",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "probability-meaning:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "probability-meaning:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "빨간 공 $3$개와 흰 공 $2$개가 든 주머니에서 하나를 꺼낼 때 빨간 공일 확률을 구해 볼게요.\n\n공은 모두 $5$개이니 일어날 수 있는 경우는 다섯 가지예요.\n\n그중 빨간 공은 셋이니 확률은 $\\dfrac{3}{5}$이에요.\n\n주사위도 해 볼게요. 짝수가 나올 확률은 짝수가 $2, 4, 6$으로 세 가지이니 $\\dfrac{3}{6} = \\dfrac{1}{2}$이에요.\n\n동전 두 개를 던져 모두 앞면일 확률은 어떨까요. 모든 경우가 $2 \\times 2 = 4$가지이고 모두 앞면인 경우는 한 가지이니 $\\dfrac{1}{4}$예요.\n\n$1$부터 $10$까지의 수 카드에서 하나를 뽑을 때 소수가 나올 확률도 같은 방법이에요. 소수는 $2, 3, 5, 7$로 네 가지이니 $\\dfrac{4}{10} = \\dfrac{2}{5}$예요.\n\n분자를 셀 때는 빠뜨린 것이 없는지, 분모를 셀 때는 두 번 센 것이 없는지만 살피면 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "probability-meaning:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "probability-meaning:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "probability-meaning:practice",
+                "problemSetVersionId": "probability-meaning:practice:v1",
+                "problemVersionIds": [
+                  "probability-meaning:practice-1:v1",
+                  "probability-meaning:practice-2:v1",
+                  "probability-meaning:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "probability-meaning:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "probability-meaning:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "probability-meaning:check",
+                "problemSetVersionId": "probability-meaning:check:v1",
+                "problemVersionIds": [
+                  "probability-meaning:check-1:v1",
+                  "probability-meaning:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "probability-meaning:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "probability-meaning:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "확률은 바라는 경우의 수를 모든 경우의 수로 나눈 값이에요.\n\n모든 경우가 똑같이 일어날 만할 때에만 이렇게 셀 수 있어요.\n\n확률은 늘 $0$ 이상 $1$ 이하이고, 절대 일어나지 않으면 $0$, 반드시 일어나면 $1$이에요.\n\n분수로 적을 때는 기약분수로 줄여 적어요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "probability-meaning:review",
+        "problemSetVersionId": "probability-meaning:review:v1",
+        "problemVersionIds": [
+          "probability-meaning:homework-1:v1",
+          "probability-meaning:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "probability-rules",
+        "versionId": "probability-rules:v1",
+        "title": "확률의 계산: 여사건과 곱셈",
+        "summary": "일어나지 않을 확률과, 두 번 이어 일어날 확률을 구하는 방법을 익혀요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "probability-rules"
+        ],
+        "prerequisiteConceptKeys": [
+          "probability-meaning"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "probability-rules:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "probability-rules:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "확률을 하나하나 세지 않고도 구할 수 있는 길이 셋 있어요.\n\n첫째는 여사건이에요. 어떤 사건 $A$가 일어나지 않는 경우를 $A$의 여사건이라 해요. $A$가 일어나거나 일어나지 않거나 둘 중 하나이니 두 확률을 더하면 $1$이에요.\n\n그러니 일어나지 않을 확률은 $1$에서 일어날 확률을 뺀 값이에요. $A$의 확률이 $\\dfrac{3}{10}$이면 여사건의 확률은 $\\dfrac{7}{10}$이고요.\n\n「적어도 하나」를 묻는 문제에서 특히 힘을 발휘해요. 적어도 하나의 반대는 「하나도 없다」 하나뿐이라, 그 한 가지만 구하고 $1$에서 빼면 되거든요.\n\n둘째는 서로 겹치지 않는 두 사건의 합이에요. 주사위에서 $2$가 나오는 것과 $5$가 나오는 것은 함께 일어날 수 없으니, $2$ 또는 $5$가 나올 확률은 두 확률을 더한 $\\dfrac{2}{6} = \\dfrac{1}{3}$이에요.\n\n경우의 수에서 「또는」이면 더했던 것과 같은 이야기예요.\n\n셋째는 서로 영향을 주지 않는 두 사건이 함께 일어날 확률이에요. 이때는 곱해요. 동전을 두 번 던져 모두 앞면일 확률은 $\\dfrac{1}{2} \\times \\dfrac{1}{2} = \\dfrac{1}{4}$이에요.\n\n주사위를 두 번 던져 두 번 다 $6$이 나올 확률은 $\\dfrac{1}{6} \\times \\dfrac{1}{6} = \\dfrac{1}{36}$이고요. 앞에서 나온 결과가 뒤에 아무 영향을 주지 않으니 곱할 수 있는 거예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "probability-rules",
+                    "surface": "여사건",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "probability-rules:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "전체가 1인 막대에서 사건이 차지한 부분을 뺀 나머지를 떼어 내어 여사건의 확률을 재는 그림",
+                "caption": "여사건은 전체에서 사건을 뺀 나머지예요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 44,
+                    "text": "전체 $1$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "strip",
+                    "x": 40,
+                    "y": 56,
+                    "width": 240,
+                    "height": 34,
+                    "parts": 10,
+                    "filled": 3,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 76,
+                    "y": 106,
+                    "text": "사건 $A$는 $\\frac{3}{10}$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 112,
+                    "y": 56,
+                    "width": 168,
+                    "height": 34,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "cover",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 196,
+                    "y": 78,
+                    "text": "여사건",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "coverl",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 182,
+                    "text": "$1 - \\frac{3}{10} = \\frac{7}{10}$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "전체를 $1$로 보면 사건 $A$는 열 칸 중 세 칸만큼이에요.",
+                    "changes": [
+                      {
+                        "id": "cover",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "coverl",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "남은 부분이 $A$가 일어나지 않는 경우예요. 이것을 여사건이라 해요.",
+                    "changes": [
+                      {
+                        "id": "cover",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "coverl",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "떼어 내어 재면 전체에서 $A$를 뺀 만큼이에요.",
+                    "changes": [
+                      {
+                        "id": "cover",
+                        "dy": 70,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "coverl",
+                        "dy": 70,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "probability-rules:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "probability-rules:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "동전 두 개를 던져 적어도 하나가 앞면일 확률을 구해 볼게요.\n\n하나하나 세도 되지만 여사건이 빨라요. 「적어도 하나가 앞면」의 반대는 「하나도 앞면이 아니다」, 곧 둘 다 뒷면인 경우 하나뿐이에요.\n\n모든 경우가 네 가지이니 둘 다 뒷면일 확률은 $\\dfrac{1}{4}$이고, 구하려는 확률은 $1 - \\dfrac{1}{4} = \\dfrac{3}{4}$이에요.\n\n동전이 셋이면 더 유리해요. 모두 뒷면일 확률이 $\\dfrac{1}{8}$이니 적어도 하나가 앞면일 확률은 $\\dfrac{7}{8}$이에요. 일곱 가지를 세지 않아도 되죠.\n\n곱하는 경우도 해 볼게요. 주사위를 두 번 던져 두 번 다 $6$이 나올 확률이에요.\n\n첫 번째가 $6$일 확률이 $\\dfrac{1}{6}$, 두 번째도 $\\dfrac{1}{6}$이고 서로 영향을 주지 않으니 $\\dfrac{1}{6} \\times \\dfrac{1}{6} = \\dfrac{1}{36}$이에요.\n\n「적어도」가 보이면 여사건, 「두 번 다」가 보이면 곱하기를 먼저 떠올리면 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "probability-rules:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "probability-rules:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "probability-rules:practice",
+                "problemSetVersionId": "probability-rules:practice:v1",
+                "problemVersionIds": [
+                  "probability-rules:practice-1:v1",
+                  "probability-rules:practice-2:v1",
+                  "probability-rules:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "probability-rules:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "probability-rules:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "probability-rules:check",
+                "problemSetVersionId": "probability-rules:check:v1",
+                "problemVersionIds": [
+                  "probability-rules:check-1:v1",
+                  "probability-rules:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "probability-rules:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "probability-rules:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "여사건의 확률은 $1$에서 그 사건의 확률을 뺀 값이에요.\n\n「적어도 하나」를 물으면 여사건이 훨씬 쉬워요. 반대가 한 가지뿐이니까요.\n\n함께 일어날 수 없는 두 사건 중 하나가 일어날 확률은 더해서 구해요.\n\n서로 영향을 주지 않는 두 사건이 함께 일어날 확률은 곱해서 구해요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "probability-rules:review",
+        "problemSetVersionId": "probability-rules:review:v1",
+        "problemVersionIds": [
+          "probability-rules:homework-1:v1",
+          "probability-rules:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "counting-cases:practice",
+      "courseKey": "probability",
+      "name": "경우의 수 연습",
+      "versionId": "counting-cases:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "counting-cases:practice-1:v1",
+          "conceptKeys": [
+            "counting-cases"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting-cases:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "티셔츠 $3$종과 바지 $4$종으로 만들 수 있는 옷차림은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting-cases:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「그리고」예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting-cases:practice-2:v1",
+          "conceptKeys": [
+            "counting-cases"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting-cases:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 하나와 주사위 하나를 함께 던질 때 나올 수 있는 경우는 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting-cases:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 \\times 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting-cases:practice-3:v1",
+          "conceptKeys": [
+            "counting-cases"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting-cases:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던져 $2$ 이하 또는 $5$ 이상이 나오는 경우는 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting-cases:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "겹치는 것이 없어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "counting-cases:check",
+      "courseKey": "probability",
+      "name": "경우의 수 확인",
+      "versionId": "counting-cases:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "counting-cases:check-1:v1",
+          "conceptKeys": [
+            "counting-cases"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting-cases:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 세 개를 던질 때 나올 수 있는 경우는 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting-cases:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "던질 때마다 두 배예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting-cases:check-2:v1",
+          "conceptKeys": [
+            "counting-cases"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting-cases:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「또는」으로 이어지는 두 사건의 경우의 수는 어떻게 구하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "더한다"
+              },
+              {
+                "id": "b",
+                "text": "곱한다"
+              },
+              {
+                "id": "c",
+                "text": "뺀다"
+              },
+              {
+                "id": "d",
+                "text": "나눈다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "더한다"
+              },
+              {
+                "id": "b",
+                "text": "곱한다"
+              },
+              {
+                "id": "c",
+                "text": "뺀다"
+              },
+              {
+                "id": "d",
+                "text": "나눈다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting-cases:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "나란히 놓고 세요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "counting-cases:review",
+      "courseKey": "probability",
+      "name": "경우의 수 복습",
+      "versionId": "counting-cases:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "counting-cases:homework-1:v1",
+          "conceptKeys": [
+            "counting-cases"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting-cases:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 두 개를 던질 때 나올 수 있는 경우는 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 36
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting-cases:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6 \\times 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "counting-cases:homework-2:v1",
+          "conceptKeys": [
+            "counting-cases"
+          ],
+          "promptContent": [
+            {
+              "blockId": "counting-cases:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "모자 $2$종과 티셔츠 $5$종으로 만들 수 있는 차림은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "counting-cases:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「그리고」예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "probability-meaning:practice",
+      "courseKey": "probability",
+      "name": "확률의 뜻 연습",
+      "versionId": "probability-meaning:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "probability-meaning:practice-1:v1",
+          "conceptKeys": [
+            "probability-meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability-meaning:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던져 $3$이 나올 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 6,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability-meaning:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "여섯 중 하나예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability-meaning:practice-2:v1",
+          "conceptKeys": [
+            "probability-meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability-meaning:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빨간 공 $3$개와 흰 공 $2$개에서 하나를 꺼낼 때 빨간 공일 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 5,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability-meaning:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다섯 중 셋이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability-meaning:practice-3:v1",
+          "conceptKeys": [
+            "probability-meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability-meaning:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던져 짝수가 나올 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability-meaning:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2, 4, 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "probability-meaning:check",
+      "courseKey": "probability",
+      "name": "확률의 뜻 확인",
+      "versionId": "probability-meaning:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "probability-meaning:check-1:v1",
+          "conceptKeys": [
+            "probability-meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability-meaning:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던져 $7$이 나올 확률을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability-meaning:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "일어날 수 없어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability-meaning:check-2:v1",
+          "conceptKeys": [
+            "probability-meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability-meaning:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 두 개를 던져 모두 앞면일 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 4,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability-meaning:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "모든 경우가 네 가지예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "probability-meaning:review",
+      "courseKey": "probability",
+      "name": "확률의 뜻 복습",
+      "versionId": "probability-meaning:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "probability-meaning:homework-1:v1",
+          "conceptKeys": [
+            "probability-meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability-meaning:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "확률이 가질 수 있는 값의 범위로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$0$ 이상 $1$ 이하"
+              },
+              {
+                "id": "b",
+                "text": "$0$보다 큰 수"
+              },
+              {
+                "id": "c",
+                "text": "$1$ 이상"
+              },
+              {
+                "id": "d",
+                "text": "제한이 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$0$ 이상 $1$ 이하"
+              },
+              {
+                "id": "b",
+                "text": "$0$보다 큰 수"
+              },
+              {
+                "id": "c",
+                "text": "$1$ 이상"
+              },
+              {
+                "id": "d",
+                "text": "제한이 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability-meaning:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체보다 많을 수 없어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability-meaning:homework-2:v1",
+          "conceptKeys": [
+            "probability-meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability-meaning:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$부터 $10$까지의 수 카드에서 하나를 뽑을 때 소수가 나올 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 2,
+            "denominator": 5,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability-meaning:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2, 3, 5, 7$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "probability-rules:practice",
+      "courseKey": "probability",
+      "name": "확률의 계산 연습",
+      "versionId": "probability-rules:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "probability-rules:practice-1:v1",
+          "conceptKeys": [
+            "probability-rules"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability-rules:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어떤 사건이 일어날 확률이 $\\frac{3}{10}$일 때 일어나지 않을 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 7,
+            "denominator": 10,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability-rules:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$에서 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability-rules:practice-2:v1",
+          "conceptKeys": [
+            "probability-rules"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability-rules:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던져 $1$이 아닐 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 6,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability-rules:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1 - \\frac{1}{6}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability-rules:practice-3:v1",
+          "conceptKeys": [
+            "probability-rules"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability-rules:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 두 개를 던져 적어도 하나가 앞면일 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 4,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability-rules:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘 다 뒷면일 확률을 빼요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "probability-rules:check",
+      "courseKey": "probability",
+      "name": "확률의 계산 확인",
+      "versionId": "probability-rules:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "probability-rules:check-1:v1",
+          "conceptKeys": [
+            "probability-rules"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability-rules:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 세 개를 던져 적어도 하나가 앞면일 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 7,
+            "denominator": 8,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability-rules:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "모두 뒷면일 확률이 $\\frac{1}{8}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability-rules:check-2:v1",
+          "conceptKeys": [
+            "probability-rules"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability-rules:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위를 두 번 던져 두 번 다 $6$이 나올 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 36,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability-rules:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{6}$을 두 번 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "probability-rules:review",
+      "courseKey": "probability",
+      "name": "확률의 계산 복습",
+      "versionId": "probability-rules:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "probability-rules:homework-1:v1",
+          "conceptKeys": [
+            "probability-rules"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability-rules:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "확률이 $\\frac{2}{7}$인 사건의 여사건의 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 7,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability-rules:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$에서 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability-rules:homework-2:v1",
+          "conceptKeys": [
+            "probability-rules"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability-rules:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던져 $2$ 또는 $5$가 나올 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 3,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability-rules:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{2}{6}$을 줄여요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "probability:drill",
+      "courseKey": "probability",
+      "name": "경우의 수와 확률 모아 풀기",
+      "versionId": "probability:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "probability:drill-1:v1",
+          "conceptKeys": [
+            "counting-cases"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "티셔츠 $4$종과 바지 $5$종으로 만들 수 있는 옷차림은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「그리고」예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-2:v1",
+          "conceptKeys": [
+            "counting-cases"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 네 개를 던질 때 나올 수 있는 경우는 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 16
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "던질 때마다 두 배예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-3:v1",
+          "conceptKeys": [
+            "counting-cases"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던져 $3$ 이하 또는 $6$이 나오는 경우는 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "겹치는 것이 없어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-4:v1",
+          "conceptKeys": [
+            "counting-cases"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "모자 $3$종과 신발 $6$종으로 만들 수 있는 차림은 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 18
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3 \\times 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-5:v1",
+          "conceptKeys": [
+            "counting-cases"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 두 개를 던질 때 나올 수 있는 경우는 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 36
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6 \\times 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-6:v1",
+          "conceptKeys": [
+            "counting-cases"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 하나와 주사위 하나를 함께 던질 때 나올 수 있는 경우는 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 \\times 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-7:v1",
+          "conceptKeys": [
+            "counting-cases"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「그리고」로 이어지는 두 사건의 경우의 수는 어떻게 구하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "곱한다"
+              },
+              {
+                "id": "b",
+                "text": "더한다"
+              },
+              {
+                "id": "c",
+                "text": "뺀다"
+              },
+              {
+                "id": "d",
+                "text": "나눈다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "곱한다"
+              },
+              {
+                "id": "b",
+                "text": "더한다"
+              },
+              {
+                "id": "c",
+                "text": "뺀다"
+              },
+              {
+                "id": "d",
+                "text": "나눈다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "줄과 칸이 돼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-8:v1",
+          "conceptKeys": [
+            "probability-meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던져 $5$ 이상이 나올 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 3,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5, 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-9:v1",
+          "conceptKeys": [
+            "probability-meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빨간 공 $4$개와 흰 공 $6$개에서 하나를 꺼낼 때 흰 공일 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 5,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{6}{10}$을 줄여요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-10:v1",
+          "conceptKeys": [
+            "probability-meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 하나를 던져 앞면이 나올 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 가지 중 하나예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-11:v1",
+          "conceptKeys": [
+            "probability-meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$부터 $12$까지의 수 카드에서 하나를 뽑을 때 $4$의 배수일 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 4,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4, 8, 12$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-12:v1",
+          "conceptKeys": [
+            "probability-meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던져 $0$이 나올 확률을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "일어날 수 없어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-13:v1",
+          "conceptKeys": [
+            "probability-meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던져 $6$ 이하가 나올 확률을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반드시 일어나요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-14:v1",
+          "conceptKeys": [
+            "probability-meaning"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "확률이 가질 수 있는 값의 범위로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$0$ 이상 $1$ 이하"
+              },
+              {
+                "id": "b",
+                "text": "$0$보다 큰 수"
+              },
+              {
+                "id": "c",
+                "text": "$1$ 이상"
+              },
+              {
+                "id": "d",
+                "text": "제한이 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$0$ 이상 $1$ 이하"
+              },
+              {
+                "id": "b",
+                "text": "$0$보다 큰 수"
+              },
+              {
+                "id": "c",
+                "text": "$1$ 이상"
+              },
+              {
+                "id": "d",
+                "text": "제한이 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체보다 많을 수 없어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-15:v1",
+          "conceptKeys": [
+            "probability-rules"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "확률이 $\\frac{1}{4}$인 사건의 여사건의 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 4,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$에서 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-16:v1",
+          "conceptKeys": [
+            "probability-rules"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던져 $6$이 아닐 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 6,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1 - \\frac{1}{6}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-17:v1",
+          "conceptKeys": [
+            "probability-rules"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 두 개를 던져 적어도 하나가 뒷면일 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 4,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘 다 앞면일 확률을 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-18:v1",
+          "conceptKeys": [
+            "probability-rules"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위를 두 번 던져 두 번 다 홀수가 나올 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 4,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{2}$을 두 번 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-19:v1",
+          "conceptKeys": [
+            "probability-rules"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "확률이 $\\frac{3}{8}$인 사건의 여사건의 확률을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 8,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$에서 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "probability:drill-20:v1",
+          "conceptKeys": [
+            "probability-rules"
+          ],
+          "promptContent": [
+            {
+              "blockId": "probability:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「적어도 하나」를 묻는 문제에서 먼저 구하면 쉬운 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "여사건의 확률"
+              },
+              {
+                "id": "b",
+                "text": "모든 경우의 수"
+              },
+              {
+                "id": "c",
+                "text": "가장 큰 확률"
+              },
+              {
+                "id": "d",
+                "text": "평균"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "여사건의 확률"
+              },
+              {
+                "id": "b",
+                "text": "모든 경우의 수"
+              },
+              {
+                "id": "c",
+                "text": "가장 큰 확률"
+              },
+              {
+                "id": "d",
+                "text": "평균"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "probability:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반대가 한 가지뿐이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}

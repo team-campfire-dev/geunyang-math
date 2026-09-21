@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "pythagoras",
+      "label": "피타고라스 정리",
+      "assessable": true
+    },
+    {
+      "key": "pythagoras-converse",
+      "label": "피타고라스 정리의 역",
+      "assessable": true
+    },
+    {
+      "key": "plane-length",
+      "label": "평면에서 길이 구하기",
+      "assessable": true
+    },
+    {
+      "key": "solid-length",
+      "label": "입체에서 길이 구하기",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "pythagoras",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "피타고라스 정리",
+      "summary": "직각삼각형에서 제곱끼리 더해요.",
+      "blocks": [
+        {
+          "blockId": "global:pythagoras:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "직각삼각형에서 직각을 낀 두 변을 $a$, $b$라 하고 빗변을 $c$라 하면 $a^2 + b^2 = c^2$이에요. 길이끼리 더하는 것이 아니라 제곱끼리 더한다는 점이 중요해요. 세 변으로 정사각형을 그리면 작은 두 정사각형의 넓이의 합이 큰 정사각형의 넓이와 같다는 뜻이기도 해요. 빗변을 구할 때는 두 제곱을 더하고, 빗변이 아닌 변을 구할 때는 빗변의 제곱에서 빼요. $3, 4, 5$와 $5, 12, 13$, $8, 15, 17$, $7, 24, 25$가 자주 나와요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "직각삼각형의 남은 한 변을 구할 때"
+    },
+    {
+      "conceptKey": "pythagoras-converse",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "피타고라스 정리의 역",
+      "summary": "세 변만 보고 직각인지 가려내요.",
+      "blocks": [
+        {
+          "blockId": "global:pythagoras-converse:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "세 변이 $a^2 + b^2 = c^2$을 만족하면 그 삼각형은 직각삼각형이에요. 정리의 역도 성립하는 거예요. 그런 세 자연수를 피타고라스 수라 하고, 끈에 매듭을 열둘 묶어 $3 : 4 : 5$로 만들면 직각이 생기는 것도 이 때문이에요. 같지 않을 때는 가장 긴 변을 $c$로 두고 견주면 돼요. $c^2$이 $a^2 + b^2$보다 크면 둔각삼각형, 작으면 예각삼각형이에요. 가장 긴 변이 길어질수록 맞은편 각이 벌어진다고 생각하면 외우지 않아도 돼요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "삼각형의 모양을 가려낼 때"
+    },
+    {
+      "conceptKey": "plane-length",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "평면에서 길이 구하기",
+      "summary": "숨어 있는 직각삼각형을 찾아요.",
+      "blocks": [
+        {
+          "blockId": "global:plane-length:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "피타고라스 정리는 직각삼각형에서만 쓰므로, 문제를 푸는 일은 대개 직각삼각형을 찾아내는 일이에요. 직사각형은 대각선을 그으면 직각삼각형 둘로 갈라지고 대각선이 빗변이 돼요. 이등변삼각형은 꼭지각에서 수선을 내리면 밑변이 반으로 나뉘면서 직각삼각형이 생기고요. 좌표평면에서 두 점 사이의 거리는 가로로 간 거리와 세로로 간 거리를 두 변으로 하는 직각삼각형의 빗변이에요. 구하려는 길이를 빗변으로 삼는 삼각형을 그릴 수 있는지 먼저 살펴보세요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "평면도형에서 길이를 구할 때"
+    },
+    {
+      "conceptKey": "solid-length",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "입체에서 길이 구하기",
+      "summary": "두 번 쓰면 돼요.",
+      "blocks": [
+        {
+          "blockId": "global:solid-length:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "직육면체의 대각선은 한 번에 구할 수 없어 두 걸음으로 나눠요. 먼저 밑면의 대각선의 제곱이 $a^2 + b^2$이고, 그 대각선과 높이가 다시 직각삼각형을 이루므로 대각선의 제곱은 $a^2 + b^2 + c^2$이 돼요. 밑면의 대각선을 길이로 바꾸지 않고 제곱인 채로 들고 가면 셈이 가벼워요. 원뿔에서는 밑면의 반지름과 높이와 모선이 직각삼각형을 이루고 모선이 빗변이에요. 그래서 반지름과 모선을 알면 높이를, 높이를 알면 부피를 구할 수 있어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "입체도형에서 길이를 구할 때"
+    }
+  ]
+}

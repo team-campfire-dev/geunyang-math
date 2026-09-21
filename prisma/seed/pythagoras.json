@@ -1,0 +1,4444 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "pythagoras",
+      "title": "피타고라스 정리",
+      "summary": "직각삼각형에서 두 변을 알면 나머지 하나가 정해지는 이유를 넓이로 확인하고, 평면과 입체에서 숨은 직각삼각형을 찾아 길이를 구해요.",
+      "order": 270,
+      "track": "middle",
+      "stage": "middle-2",
+      "lessons": [
+        {
+          "key": "pythagoras",
+          "order": 1
+        },
+        {
+          "key": "pythagoras-converse",
+          "order": 2
+        },
+        {
+          "key": "plane-length",
+          "order": 3
+        },
+        {
+          "key": "solid-length",
+          "order": 4
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "pythagoras",
+      "label": "피타고라스 정리",
+      "assessable": true
+    },
+    {
+      "key": "pythagoras-converse",
+      "label": "피타고라스 정리의 역",
+      "assessable": true
+    },
+    {
+      "key": "plane-length",
+      "label": "평면에서 길이 구하기",
+      "assessable": true
+    },
+    {
+      "key": "solid-length",
+      "label": "입체에서 길이 구하기",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "pythagoras",
+        "versionId": "pythagoras:v1",
+        "title": "피타고라스 정리: 두 변을 알면 나머지 하나",
+        "summary": "직각삼각형에서 세 변의 제곱 사이에 있는 관계를 넓이로 확인하고 길이를 구해요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "pythagoras"
+        ],
+        "prerequisiteConceptKeys": [
+          "similar-triangles",
+          "special-quad",
+          "polygon-angles"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "pythagoras:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "pythagoras:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "직각삼각형에서는 두 변만 알면 나머지 한 변이 정해져요. 삼각형 모양이 하나로 굳어지니까요.\n\n그 관계가 피타고라스 정리예요. 직각을 낀 두 변을 $a$, $b$라 하고 빗변을 $c$라 하면 $a^2 + b^2 = c^2$이에요. 길이끼리 더하는 것이 아니라 제곱끼리 더한다는 것이 중요해요. $3 + 4$는 $5$가 아니지만 $3^2 + 4^2$은 $5^2$이거든요.\n\n왜 그런지는 넓이로 보면 보여요. 세 변마다 정사각형을 그리면 넓이가 각각 $a^2$, $b^2$, $c^2$이에요. $3$과 $4$인 경우라면 $9$칸과 $16$칸인데, 이 칸을 모두 옮기면 $25$칸짜리 정사각형이 빈틈없이 채워져요.\n\n구할 때는 무엇이 빗변인지부터 봐요. 빗변은 직각의 맞은편에 있는 가장 긴 변이에요.\n\n빗변을 구할 때는 더해요. $a^2 + b^2$을 구하고 제곱해서 그 값이 되는 수를 찾아요.\n\n빗변이 아닌 변을 구할 때는 빼요. $c^2 - a^2$을 구하는 거예요. 빼는 자리를 바꾸면 답이 달라지니, 가장 긴 변이 어느 것인지 먼저 확인하는 버릇을 들이면 좋아요.\n\n지금은 답이 딱 떨어지는 경우만 다뤄요. $3, 4, 5$나 $5, 12, 13$처럼요. 딱 떨어지지 않는 경우는 제곱근을 배우고 나면 어떤 수든 적을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "pythagoras",
+                    "surface": "피타고라스 정리",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "pythagoras:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "3과 4를 변으로 하는 두 정사각형의 칸이 모두 옮겨 가 5를 변으로 하는 정사각형을 채우는 그림",
+                "caption": "작은 두 정사각형의 넓이를 합하면 큰 정사각형의 넓이예요",
+                "items": [
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        20,
+                        176
+                      ],
+                      [
+                        59,
+                        176
+                      ],
+                      [
+                        20,
+                        124
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.6,
+                    "id": "tri"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 40,
+                    "y": 190,
+                    "text": "$3$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 10,
+                    "y": 152,
+                    "text": "$4$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 48,
+                    "y": 146,
+                    "text": "$5$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        230,
+                        26
+                      ],
+                      [
+                        295,
+                        26
+                      ],
+                      [
+                        295,
+                        91
+                      ],
+                      [
+                        230,
+                        91
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "none",
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "dash": true,
+                    "id": "frame",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 96,
+                    "y": 26,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "a1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 109,
+                    "y": 26,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "a2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 122,
+                    "y": 26,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "a3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 96,
+                    "y": 39,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "a4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 109,
+                    "y": 39,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "a5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 122,
+                    "y": 39,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "a6",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 96,
+                    "y": 52,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "a7",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 109,
+                    "y": 52,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "a8",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 122,
+                    "y": 52,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "a9",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 152,
+                    "y": 26,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 165,
+                    "y": 26,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 178,
+                    "y": 26,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 191,
+                    "y": 26,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 152,
+                    "y": 39,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 165,
+                    "y": 39,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b6",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 178,
+                    "y": 39,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b7",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 191,
+                    "y": 39,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b8",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 152,
+                    "y": 52,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b9",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 165,
+                    "y": 52,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b10",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 178,
+                    "y": 52,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b11",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 191,
+                    "y": 52,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b12",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 152,
+                    "y": 65,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b13",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 165,
+                    "y": 65,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b14",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 178,
+                    "y": 65,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b15",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 191,
+                    "y": 65,
+                    "width": 13,
+                    "height": 13,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b16",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 115,
+                    "y": 78,
+                    "text": "$3^2 = 9$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "la",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 178,
+                    "y": 91,
+                    "text": "$4^2 = 16$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "lb",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 262,
+                    "y": 104,
+                    "text": "$5^2 = 25$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "lc",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 152,
+                    "y": 134,
+                    "text": "$9 + 16 = 25$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "sum",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 152,
+                    "y": 160,
+                    "text": "$a^2 + b^2 = c^2$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "law",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "직각을 낀 두 변이 $3$과 $4$, 빗변이 $5$인 직각삼각형이에요.",
+                    "changes": [
+                      {
+                        "id": "frame",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "la",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lb",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lc",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "sum",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "a1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "a2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "a3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "a4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "a5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "a6",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "a7",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "a8",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "a9",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b6",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b7",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b8",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b9",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b10",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b11",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b12",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b13",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b14",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b15",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b16",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "세 변마다 정사각형을 그려 칸을 세어 봐요. $9$칸, $16$칸, $25$칸이에요.",
+                    "changes": [
+                      {
+                        "id": "frame",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "la",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lb",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lc",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sum",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "a1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a6",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a7",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a8",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a9",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b6",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b7",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b8",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b9",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b10",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b11",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b12",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b13",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b14",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b15",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b16",
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "작은 두 정사각형의 칸을 모두 옮기면 큰 정사각형이 꼭 채워져요.",
+                    "changes": [
+                      {
+                        "id": "frame",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "la",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lb",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lc",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sum",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a1",
+                        "dx": 134,
+                        "dy": 26,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a2",
+                        "dx": 134,
+                        "dy": 26,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a3",
+                        "dx": 134,
+                        "dy": 26,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a4",
+                        "dx": 134,
+                        "dy": 26,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a5",
+                        "dx": 134,
+                        "dy": 26,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a6",
+                        "dx": 134,
+                        "dy": 26,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a7",
+                        "dx": 134,
+                        "dy": 26,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a8",
+                        "dx": 134,
+                        "dy": 26,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a9",
+                        "dx": 134,
+                        "dy": 26,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b1",
+                        "dx": 78,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b2",
+                        "dx": 78,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b3",
+                        "dx": 78,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b4",
+                        "dx": 78,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b5",
+                        "dx": 130,
+                        "dy": -13,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b6",
+                        "dx": 65,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b7",
+                        "dx": 65,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b8",
+                        "dx": 65,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b9",
+                        "dx": 117,
+                        "dy": -13,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b10",
+                        "dx": 117,
+                        "dy": -13,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b11",
+                        "dx": 91,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b12",
+                        "dx": 91,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b13",
+                        "dx": 117,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b14",
+                        "dx": 117,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b15",
+                        "dx": 91,
+                        "dy": 13,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b16",
+                        "dx": 91,
+                        "dy": 13,
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "pythagoras:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "pythagoras:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "직각을 낀 두 변이 $6$과 $8$인 직각삼각형의 빗변을 구해 볼게요.\n\n빗변을 $c$라 하면 $6^2 + 8^2 = c^2$이에요. $36 + 64 = 100$이니 $c^2 = 100$이고요.\n\n제곱해서 $100$이 되는 양수는 $10$이니 빗변은 $10$이에요.\n\n이번엔 반대예요. 빗변이 $13$이고 한 변이 $5$일 때 나머지 한 변을 구해 볼게요.\n\n$5^2 + x^2 = 13^2$이니 $25 + x^2 = 169$이고, $x^2 = 144$, 곧 $x = 12$예요.\n\n여기서 $13^2 - 5^2$을 $(13-5)^2$으로 쓰면 안 돼요. $8^2 = 64$는 $144$가 아니니까요. 제곱을 먼저 하고 나서 빼야 해요.\n\n자주 나오는 세 수를 외워 두면 빠릅니다. $3, 4, 5$와 그 배수인 $6, 8, 10$, $9, 12, 15$, 그리고 $5, 12, 13$과 $8, 15, 17$, $7, 24, 25$예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "pythagoras:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "pythagoras:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "pythagoras:practice",
+                "problemSetVersionId": "pythagoras:practice:v1",
+                "problemVersionIds": [
+                  "pythagoras:practice-1:v1",
+                  "pythagoras:practice-2:v1",
+                  "pythagoras:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "pythagoras:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "pythagoras:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "pythagoras:check",
+                "problemSetVersionId": "pythagoras:check:v1",
+                "problemVersionIds": [
+                  "pythagoras:check-1:v1",
+                  "pythagoras:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "pythagoras:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "pythagoras:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "직각삼각형에서 $a^2 + b^2 = c^2$이고, $c$는 직각의 맞은편에 있는 가장 긴 변이에요.\n\n길이끼리가 아니라 제곱끼리 더한다는 것을 놓치지 마세요.\n\n빗변을 구하면 더하고, 다른 변을 구하면 제곱한 뒤에 빼요.\n\n세 변으로 그린 정사각형의 넓이를 옮겨 보면 왜 그런지가 보여요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "pythagoras:review",
+        "problemSetVersionId": "pythagoras:review:v1",
+        "problemVersionIds": [
+          "pythagoras:homework-1:v1",
+          "pythagoras:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "pythagoras-converse",
+        "versionId": "pythagoras-converse:v1",
+        "title": "정리의 역: 직각인지 아닌지 가려낸다",
+        "summary": "세 변의 길이만 보고 직각인지, 예각인지, 둔각인지 가려내요.",
+        "estimatedMinutes": 11,
+        "conceptKeys": [
+          "pythagoras-converse"
+        ],
+        "prerequisiteConceptKeys": [
+          "pythagoras"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "pythagoras-converse:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "pythagoras-converse:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "피타고라스 정리는 「직각이면 $a^2 + b^2 = c^2$」이라고 말해요. 거꾸로도 성립할까요?\n\n성립해요. 세 변이 $a^2 + b^2 = c^2$을 만족하면 그 삼각형은 직각삼각형이에요. 이것을 피타고라스 정리의 역이라 불러요. 그래서 자를 대지 않고 길이만으로 직각인지 확인할 수 있어요.\n\n옛날부터 쓰던 방법이 있어요. 끈에 매듭을 열두 개 같은 간격으로 묶고 $3 : 4 : 5$로 삼각형을 만들면 한 각이 정확히 직각이 돼요. 땅에 직각을 그릴 때 쓰던 방법이에요.\n\n$a^2 + b^2 = c^2$을 만족하는 세 자연수를 피타고라스 수라고 해요. $3, 4, 5$와 $5, 12, 13$, $8, 15, 17$, $7, 24, 25$가 자주 나와요. 이들의 배수도 모두 피타고라스 수고요.\n\n같지 않을 때는 어떻게 될까요. 가장 긴 변을 $c$라 할 때 세 가지로 갈려요.\n\n$c^2$이 $a^2 + b^2$보다 작으면 $c$의 맞은편 각이 직각보다 작아 예각삼각형이에요.\n\n$c^2$이 더 크면 그 각이 직각보다 커서 둔각삼각형이고요. 가장 긴 변이 더 길어질수록 맞은편 각이 벌어진다고 생각하면 외우지 않아도 돼요.\n\n세 변이 $3$, $4$, $6$이면 $36 > 25$이니 둔각삼각형이에요. $4$, $5$, $6$이면 $36 < 41$이니 예각삼각형이고요.",
+                "definitions": [
+                  {
+                    "conceptKey": "pythagoras-converse",
+                    "surface": "피타고라스 수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "pythagoras-converse:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "세 변이 3, 4, 6인 삼각형에서 제곱의 합과 가장 긴 변의 제곱을 막대로 견주는 그림",
+                "caption": "두 제곱의 합과 가장 긴 변의 제곱 중 어느 쪽이 큰지가 각을 정해요",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "x": 40,
+                    "y": 50,
+                    "width": 100,
+                    "height": 14,
+                    "fill": "green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "bara",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 40,
+                    "y": 72,
+                    "width": 144,
+                    "height": 14,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "barb",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 196,
+                    "y": 61,
+                    "text": "$3^2 + 4^2 = 25$",
+                    "size": 11,
+                    "anchor": "start",
+                    "fill": "muted",
+                    "id": "laba",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 196,
+                    "y": 83,
+                    "text": "$6^2 = 36$",
+                    "size": 11,
+                    "anchor": "start",
+                    "fill": "muted",
+                    "id": "labb",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 140,
+                    "y1": 44,
+                    "x2": 140,
+                    "y2": 96,
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "mark",
+                    "opacity": 0,
+                    "dash": true
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        40,
+                        168
+                      ],
+                      [
+                        148,
+                        168
+                      ],
+                      [
+                        104.5,
+                        136
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.6,
+                    "id": "tri"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 70,
+                    "y": 148,
+                    "text": "$4$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 128,
+                    "y": 148,
+                    "text": "$3$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 94,
+                    "y": 182,
+                    "text": "$6$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 236,
+                    "y": 150,
+                    "text": "둔각삼각형",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "verdict",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 236,
+                    "y": 172,
+                    "text": "같으면 직각, 크면 둔각",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "rule",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "세 변이 $3$, $4$, $6$인 삼각형이에요. 직각삼각형일까요?",
+                    "changes": [
+                      {
+                        "id": "bara",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "barb",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "laba",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "labb",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "mark",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "verdict",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rule",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "가장 긴 변의 제곱과 나머지 두 변의 제곱의 합을 막대로 견주어 봐요.",
+                    "changes": [
+                      {
+                        "id": "bara",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "barb",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "laba",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "labb",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "mark",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "verdict",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rule",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$36$이 $25$보다 크네요. 가장 긴 변의 맞은편 각이 직각보다 큰 둔각삼각형이에요.",
+                    "changes": [
+                      {
+                        "id": "bara",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "barb",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "laba",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "labb",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "mark",
+                        "dx": 44,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "verdict",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "rule",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "pythagoras-converse:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "pythagoras-converse:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $6$, $8$, $10$인 삼각형이 어떤 삼각형인지 가려 볼게요.\n\n가장 긴 변은 $10$이에요. $6^2 + 8^2 = 36 + 64 = 100$이고 $10^2 = 100$이니 같아요.\n\n그러니 직각삼각형이에요.\n\n세 변이 $3$, $4$, $6$이면 어떨까요. 가장 긴 변은 $6$이고 $3^2 + 4^2 = 25$, $6^2 = 36$이에요.\n\n$36$이 더 크니 둔각삼각형이에요.\n\n세 변이 $4$, $5$, $6$이면 $4^2 + 5^2 = 41$이고 $6^2 = 36$이에요. 이번에는 제곱의 합이 더 크니 예각삼각형이고요.\n\n순서는 늘 같아요. 가장 긴 변을 찾고, 그 제곱과 나머지 두 제곱의 합을 견주면 끝이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "pythagoras-converse:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "pythagoras-converse:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "pythagoras-converse:practice",
+                "problemSetVersionId": "pythagoras-converse:practice:v1",
+                "problemVersionIds": [
+                  "pythagoras-converse:practice-1:v1",
+                  "pythagoras-converse:practice-2:v1",
+                  "pythagoras-converse:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "pythagoras-converse:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "pythagoras-converse:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "pythagoras-converse:check",
+                "problemSetVersionId": "pythagoras-converse:check:v1",
+                "problemVersionIds": [
+                  "pythagoras-converse:check-1:v1",
+                  "pythagoras-converse:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "pythagoras-converse:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "pythagoras-converse:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$a^2 + b^2 = c^2$을 만족하면 그 삼각형은 직각삼각형이에요. 정리의 역도 성립해요.\n\n그런 세 자연수를 피타고라스 수라 하고, $3, 4, 5$와 $5, 12, 13$이 대표예요.\n\n가장 긴 변의 제곱이 더 크면 둔각, 더 작으면 예각이에요.\n\n가장 긴 변이 길어질수록 맞은편 각이 벌어진다고 생각하면 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "pythagoras-converse:review",
+        "problemSetVersionId": "pythagoras-converse:review:v1",
+        "problemVersionIds": [
+          "pythagoras-converse:homework-1:v1",
+          "pythagoras-converse:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "plane-length",
+        "versionId": "plane-length:v1",
+        "title": "평면에서 길이 구하기: 직각삼각형을 찾아낸다",
+        "summary": "직사각형의 대각선, 이등변삼각형의 높이, 두 점 사이의 거리를 피타고라스 정리로 구해요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "plane-length"
+        ],
+        "prerequisiteConceptKeys": [
+          "pythagoras",
+          "coordinate-plane",
+          "special-quad"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "plane-length:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "plane-length:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "피타고라스 정리는 직각삼각형에서만 쓸 수 있어요. 그러니 문제를 푸는 일은 대개 숨어 있는 직각삼각형을 찾아내는 일이에요.\n\n직사각형의 대각선이 그 예예요. 대각선을 그으면 직사각형이 직각삼각형 둘로 갈라지고, 대각선은 그 삼각형의 빗변이 돼요. 가로 $8$, 세로 $6$이면 대각선은 $10$이에요.\n\n이등변삼각형의 높이도 마찬가지예요. 꼭지각에서 밑변에 수선을 내리면 밑변이 반으로 나뉘면서 직각삼각형이 생겨요. 밑변이 $16$이고 두 변이 $10$이면 반으로 나뉜 $8$과 빗변 $10$으로 높이가 $6$이 나와요.\n\n좌표평면에서 두 점 사이의 거리도 같은 방법이에요. 두 점을 잇는 선분을 빗변으로 삼고, 가로로 간 거리와 세로로 간 거리를 두 변으로 하는 직각삼각형을 그리면 돼요.\n\n$(1, 2)$와 $(7, 10)$이라면 가로로 $6$, 세로로 $8$만큼 갔으니 거리는 $10$이에요.\n\n가로 거리는 $x$끼리 빼고 세로 거리는 $y$끼리 빼요. 빼는 순서는 상관없어요. 제곱하면 부호가 사라지니까요.\n\n요령은 하나예요. 구하려는 길이를 빗변으로 삼는 직각삼각형을 그릴 수 있는지 먼저 살펴보세요. 수선을 하나 내리면 생기는 경우가 많아요.\n\n정사각형의 대각선이나 정삼각형의 높이처럼 딱 떨어지지 않는 경우는 제곱근을 배우고 나서 다뤄요.",
+                "definitions": [
+                  {
+                    "conceptKey": "plane-length",
+                    "surface": "두 점 사이의 거리",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "plane-length:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "직사각형을 대각선으로 갈라 직각삼각형 하나를 옆으로 떼어 내어 대각선의 길이를 구하는 그림",
+                "caption": "대각선을 그으면 직각삼각형이 생겨요",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "x": 36,
+                    "y": 52,
+                    "width": 112,
+                    "height": 84,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "box"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 36,
+                    "y1": 136,
+                    "x2": 148,
+                    "y2": 52,
+                    "stroke": "orange",
+                    "strokeWidth": 2,
+                    "id": "diag"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 92,
+                    "y": 150,
+                    "text": "$8$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 24,
+                    "y": 96,
+                    "text": "$6$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        36,
+                        136
+                      ],
+                      [
+                        148,
+                        136
+                      ],
+                      [
+                        148,
+                        52
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.6,
+                    "id": "half",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 242,
+                    "y": 150,
+                    "text": "$8$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "l8",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 308,
+                    "y": 96,
+                    "text": "$6$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "l6",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 228,
+                    "y": 88,
+                    "text": "$10$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "l10",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 178,
+                    "text": "$6^2 + 8^2 = 100$이니 대각선은 $10$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "가로 $8$, 세로 $6$인 직사각형이에요. 대각선의 길이는 얼마일까요?",
+                    "changes": [
+                      {
+                        "id": "half",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "l8",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "l6",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "l10",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "대각선이 직사각형을 직각삼각형 둘로 가릅니다. 아래쪽 하나를 골라 볼게요.",
+                    "changes": [
+                      {
+                        "id": "half",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "l8",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "l6",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "l10",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "떼어 내어 보면 직각을 낀 두 변이 $6$과 $8$인 직각삼각형이에요.",
+                    "changes": [
+                      {
+                        "id": "half",
+                        "dx": 150,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "l8",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "l6",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "l10",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "plane-length:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "plane-length:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "밑변이 $16$이고 나머지 두 변이 각각 $10$인 이등변삼각형의 높이를 구해 볼게요.\n\n꼭지각에서 밑변에 수선을 내리면 밑변이 $8$과 $8$로 나뉘어요. 이등변삼각형의 성질이에요.\n\n이제 직각을 낀 한 변이 $8$이고 빗변이 $10$인 직각삼각형이 생겼어요.\n\n$8^2 + h^2 = 10^2$이니 $64 + h^2 = 100$, 곧 $h^2 = 36$이고 높이는 $6$이에요.\n\n좌표평면도 해 볼게요. $(1, 2)$와 $(7, 10)$ 사이의 거리를 구해요.\n\n가로로 간 거리는 $7 - 1 = 6$, 세로로 간 거리는 $10 - 2 = 8$이에요. $6^2 + 8^2 = 100$이니 거리는 $10$이에요.\n\n$(-2, 1)$과 $(3, 13)$이라면 가로로 $5$, 세로로 $12$이니 거리는 $13$이에요. 음수가 섞여도 빼서 나온 값을 제곱하니 걱정할 것이 없어요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "plane-length:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "plane-length:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "plane-length:practice",
+                "problemSetVersionId": "plane-length:practice:v1",
+                "problemVersionIds": [
+                  "plane-length:practice-1:v1",
+                  "plane-length:practice-2:v1",
+                  "plane-length:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "plane-length:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "plane-length:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "plane-length:check",
+                "problemSetVersionId": "plane-length:check:v1",
+                "problemVersionIds": [
+                  "plane-length:check-1:v1",
+                  "plane-length:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "plane-length:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "plane-length:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "구하려는 길이를 빗변으로 삼는 직각삼각형을 찾는 것이 먼저예요.\n\n직사각형은 대각선으로, 이등변삼각형은 꼭지각에서 내린 수선으로 직각삼각형이 생겨요.\n\n좌표평면에서는 가로로 간 거리와 세로로 간 거리가 두 변이에요.\n\n수선을 하나 내려 보는 것이 가장 자주 쓰는 수예요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "plane-length:review",
+        "problemSetVersionId": "plane-length:review:v1",
+        "problemVersionIds": [
+          "plane-length:homework-1:v1",
+          "plane-length:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "solid-length",
+        "versionId": "solid-length:v1",
+        "title": "입체에서 길이 구하기: 두 번 쓰면 된다",
+        "summary": "직육면체의 대각선과 원뿔의 높이를 피타고라스 정리를 두 번 써서 구해요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "solid-length"
+        ],
+        "prerequisiteConceptKeys": [
+          "plane-length",
+          "volume",
+          "surface-area"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "solid-length:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "solid-length:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "입체에서도 쓰는 방법은 같아요. 다만 한 번으로는 안 되고 두 번 써야 하는 경우가 많아요.\n\n직육면체의 대각선이 대표예요. 마주 보는 두 꼭짓점을 잇는 선분인데, 이 선분이 빗변인 직각삼각형을 한 번에 그릴 수가 없어요.\n\n그래서 두 걸음으로 나눠요. 먼저 밑면의 대각선을 구해요. 밑면이 가로 $a$, 세로 $b$인 직사각형이니 밑면의 대각선의 제곱은 $a^2 + b^2$이에요.\n\n다음으로 그 대각선과 높이를 두 변으로 하는 직각삼각형을 세워요. 높이는 밑면과 수직이니 정말로 직각이에요. 그러니 직육면체의 대각선의 제곱은 $a^2 + b^2 + c^2$이 돼요.\n\n가로 $2$, 세로 $3$, 높이 $6$이면 $4 + 9 + 36 = 49$이니 대각선은 $7$이에요.\n\n원뿔에서도 써요. 원뿔은 밑면의 반지름과 높이와 모선이 직각삼각형을 이뤄요. 모선이 빗변이고요. 반지름이 $6$이고 모선이 $10$이면 높이는 $8$이에요.\n\n높이를 알면 부피를 구할 수 있고, 모선을 알면 옆면인 부채꼴의 반지름을 알 수 있어요. 그래서 원뿔 문제는 대개 이 직각삼각형에서 시작해요.\n\n정리하면, 입체에서는 어느 평면 위에 직각삼각형이 있는지를 먼저 정하고, 필요하면 그 결과를 들고 다음 평면으로 넘어가면 돼요.",
+                "definitions": [
+                  {
+                    "conceptKey": "solid-length",
+                    "surface": "직육면체의 대각선",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "solid-length:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "직육면체에서 밑면의 대각선을 먼저 구하고 그것과 높이로 다시 직각삼각형을 세워 대각선을 구하는 그림",
+                "caption": "밑면에서 한 번, 세워서 또 한 번 쓰면 돼요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 36,
+                    "y1": 141,
+                    "x2": 64,
+                    "y2": 117,
+                    "stroke": "muted",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 64,
+                    "y1": 117,
+                    "x2": 148,
+                    "y2": 117,
+                    "stroke": "muted",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 64,
+                    "y1": 117,
+                    "x2": 64,
+                    "y2": 54,
+                    "stroke": "muted",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 36,
+                    "y": 78,
+                    "width": 84,
+                    "height": 63,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "front"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        36,
+                        78
+                      ],
+                      [
+                        64,
+                        54
+                      ],
+                      [
+                        148,
+                        54
+                      ],
+                      [
+                        120,
+                        78
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        120,
+                        78
+                      ],
+                      [
+                        148,
+                        54
+                      ],
+                      [
+                        148,
+                        117
+                      ],
+                      [
+                        120,
+                        141
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 36,
+                    "y1": 141,
+                    "x2": 148,
+                    "y2": 117,
+                    "stroke": "green",
+                    "strokeWidth": 1.8,
+                    "id": "d1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 36,
+                    "y1": 141,
+                    "x2": 148,
+                    "y2": 54,
+                    "stroke": "orange",
+                    "strokeWidth": 2,
+                    "id": "d2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 78,
+                    "y": 155,
+                    "text": "$2$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 140,
+                    "y": 136,
+                    "text": "$3$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 26,
+                    "y": 110,
+                    "text": "$6$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 92,
+                    "y": 122,
+                    "text": "$13$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "ld1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        256,
+                        141
+                      ],
+                      [
+                        308,
+                        141
+                      ],
+                      [
+                        308,
+                        54
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.4,
+                    "id": "step",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 282,
+                    "y": 154,
+                    "text": "밑면 대각선",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "sl1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 316,
+                    "y": 100,
+                    "text": "$6$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "sl2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 272,
+                    "y": 92,
+                    "text": "$7$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "sl3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 188,
+                    "text": "$2^2 + 3^2 + 6^2 = 49$이니 대각선은 $7$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "가로 $2$, 세로 $3$, 높이 $6$인 직육면체예요. 마주 보는 두 꼭짓점 사이는 얼마일까요?",
+                    "changes": [
+                      {
+                        "id": "d1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "d2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "ld1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "step",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "sl1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "sl2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "sl3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "먼저 밑면의 대각선이에요. $2^2 + 3^2 = 13$이에요.",
+                    "changes": [
+                      {
+                        "id": "d1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ld1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "d2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "step",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "sl1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "sl2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "sl3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "그 대각선과 높이로 직각삼각형을 하나 더 세워요. $13 + 6^2 = 49$이니 대각선은 $7$이에요.",
+                    "changes": [
+                      {
+                        "id": "d1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ld1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "d2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "step",
+                        "dx": -60,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sl1",
+                        "dx": -60,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sl2",
+                        "dx": -60,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sl3",
+                        "dx": -60,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "solid-length:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "solid-length:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "가로 $2$, 세로 $3$, 높이 $6$인 직육면체의 대각선을 구해 볼게요.\n\n먼저 밑면의 대각선이에요. 밑면은 가로 $2$, 세로 $3$인 직사각형이니 대각선의 제곱은 $2^2 + 3^2 = 13$이에요. 이 값은 제곱인 채로 들고 가면 편해요.\n\n이제 그 대각선과 높이 $6$으로 직각삼각형을 세워요. 구하려는 대각선을 $d$라 하면 $13 + 6^2 = d^2$이니 $d^2 = 49$, 곧 $d = 7$이에요.\n\n밑면의 대각선을 굳이 길이로 바꾸지 않은 것이 요령이에요. 제곱인 채로 더하면 되니까요.\n\n원뿔도 해 볼게요. 밑면의 반지름이 $6$이고 모선이 $10$인 원뿔의 높이를 구해요.\n\n반지름과 높이와 모선이 직각삼각형을 이루고 모선이 빗변이니 $6^2 + h^2 = 10^2$이에요. $h^2 = 64$이니 높이는 $8$이고요.\n\n높이를 알았으니 부피도 구할 수 있어요. $\\dfrac{1}{3} \\times \\pi \\times 6^2 \\times 8 = 96\\pi$예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "solid-length:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "solid-length:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "solid-length:practice",
+                "problemSetVersionId": "solid-length:practice:v1",
+                "problemVersionIds": [
+                  "solid-length:practice-1:v1",
+                  "solid-length:practice-2:v1",
+                  "solid-length:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "solid-length:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "solid-length:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "solid-length:check",
+                "problemSetVersionId": "solid-length:check:v1",
+                "problemVersionIds": [
+                  "solid-length:check-1:v1",
+                  "solid-length:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "solid-length:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "solid-length:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "직육면체의 대각선은 피타고라스 정리를 두 번 써서 구해요.\n\n밑면의 대각선을 제곱인 채로 구하고, 거기에 높이의 제곱을 더하면 돼요.\n\n그래서 대각선의 제곱이 $a^2 + b^2 + c^2$이에요.\n\n원뿔에서는 반지름과 높이와 모선이 직각삼각형을 이루고, 모선이 빗변이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "solid-length:review",
+        "problemSetVersionId": "solid-length:review:v1",
+        "problemVersionIds": [
+          "solid-length:homework-1:v1",
+          "solid-length:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "pythagoras:practice",
+      "courseKey": "pythagoras",
+      "name": "피타고라스 정리 연습",
+      "versionId": "pythagoras:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "pythagoras:practice-1:v1",
+          "conceptKeys": [
+            "pythagoras"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각을 낀 두 변이 $3$과 $4$인 직각삼각형의 빗변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$9 + 16$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:practice-2:v1",
+          "conceptKeys": [
+            "pythagoras"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각을 낀 두 변이 $6$과 $8$인 직각삼각형의 빗변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$36 + 64$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:practice-3:v1",
+          "conceptKeys": [
+            "pythagoras"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빗변이 $13$이고 한 변이 $5$인 직각삼각형의 나머지 한 변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$169 - 25$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "pythagoras:check",
+      "courseKey": "pythagoras",
+      "name": "피타고라스 정리 확인",
+      "versionId": "pythagoras:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "pythagoras:check-1:v1",
+          "conceptKeys": [
+            "pythagoras"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각을 낀 두 변이 $9$와 $12$인 직각삼각형의 빗변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3, 4, 5$의 세 배예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:check-2:v1",
+          "conceptKeys": [
+            "pythagoras"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빗변이 $17$이고 한 변이 $8$인 직각삼각형의 나머지 한 변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$289 - 64$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "pythagoras:review",
+      "courseKey": "pythagoras",
+      "name": "피타고라스 정리 복습",
+      "versionId": "pythagoras:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "pythagoras:homework-1:v1",
+          "conceptKeys": [
+            "pythagoras"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각을 낀 두 변이 $5$와 $12$인 직각삼각형의 빗변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 13
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$25 + 144$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:homework-2:v1",
+          "conceptKeys": [
+            "pythagoras"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빗변이 $25$이고 한 변이 $7$인 직각삼각형의 나머지 한 변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 24
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$625 - 49$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "pythagoras-converse:practice",
+      "courseKey": "pythagoras",
+      "name": "정리의 역 연습",
+      "versionId": "pythagoras-converse:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "pythagoras-converse:practice-1:v1",
+          "conceptKeys": [
+            "pythagoras-converse"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras-converse:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $3$, $4$, $6$인 삼각형에서 가장 긴 변의 제곱을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 36
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras-converse:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 긴 변은 $6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras-converse:practice-2:v1",
+          "conceptKeys": [
+            "pythagoras-converse"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras-converse:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $6$, $8$, $10$인 삼각형은 어떤 삼각형인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "직각삼각형"
+              },
+              {
+                "id": "b",
+                "text": "예각삼각형"
+              },
+              {
+                "id": "c",
+                "text": "둔각삼각형"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "직각삼각형"
+              },
+              {
+                "id": "b",
+                "text": "예각삼각형"
+              },
+              {
+                "id": "c",
+                "text": "둔각삼각형"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras-converse:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$36 + 64$와 $100$을 견줘요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras-converse:practice-3:v1",
+          "conceptKeys": [
+            "pythagoras-converse"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras-converse:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $4$, $5$, $6$인 삼각형은 어떤 삼각형인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "예각삼각형"
+              },
+              {
+                "id": "b",
+                "text": "직각삼각형"
+              },
+              {
+                "id": "c",
+                "text": "둔각삼각형"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "예각삼각형"
+              },
+              {
+                "id": "b",
+                "text": "직각삼각형"
+              },
+              {
+                "id": "c",
+                "text": "둔각삼각형"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras-converse:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$41$과 $36$을 견줘요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "pythagoras-converse:check",
+      "courseKey": "pythagoras",
+      "name": "정리의 역 확인",
+      "versionId": "pythagoras-converse:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "pythagoras-converse:check-1:v1",
+          "conceptKeys": [
+            "pythagoras-converse"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras-converse:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $3$, $4$, $6$인 삼각형은 어떤 삼각형인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "둔각삼각형"
+              },
+              {
+                "id": "b",
+                "text": "직각삼각형"
+              },
+              {
+                "id": "c",
+                "text": "예각삼각형"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "둔각삼각형"
+              },
+              {
+                "id": "b",
+                "text": "직각삼각형"
+              },
+              {
+                "id": "c",
+                "text": "예각삼각형"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras-converse:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$25$보다 $36$이 커요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras-converse:check-2:v1",
+          "conceptKeys": [
+            "pythagoras-converse"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras-converse:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$9$, $12$, $x$가 직각삼각형의 세 변이고 $x$가 빗변일 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras-converse:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$81 + 144$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "pythagoras-converse:review",
+      "courseKey": "pythagoras",
+      "name": "정리의 역 복습",
+      "versionId": "pythagoras-converse:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "pythagoras-converse:homework-1:v1",
+          "conceptKeys": [
+            "pythagoras-converse"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras-converse:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $7$, $24$, $25$인 삼각형은 어떤 삼각형인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "직각삼각형"
+              },
+              {
+                "id": "b",
+                "text": "예각삼각형"
+              },
+              {
+                "id": "c",
+                "text": "둔각삼각형"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "직각삼각형"
+              },
+              {
+                "id": "b",
+                "text": "예각삼각형"
+              },
+              {
+                "id": "c",
+                "text": "둔각삼각형"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras-converse:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "피타고라스 수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras-converse:homework-2:v1",
+          "conceptKeys": [
+            "pythagoras-converse"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras-converse:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $8$, $15$, $17$인 삼각형에서 가장 긴 변의 제곱을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 289
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras-converse:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$17 \\times 17$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "plane-length:practice",
+      "courseKey": "pythagoras",
+      "name": "평면에서 길이 연습",
+      "versionId": "plane-length:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "plane-length:practice-1:v1",
+          "conceptKeys": [
+            "plane-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-length:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로가 $8$, 세로가 $6$인 직사각형의 대각선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-length:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "대각선이 빗변이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-length:practice-2:v1",
+          "conceptKeys": [
+            "plane-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-length:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로가 $12$, 세로가 $5$인 직사각형의 대각선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 13
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-length:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$144 + 25$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-length:practice-3:v1",
+          "conceptKeys": [
+            "plane-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-length:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(0, 0)$과 $(3, 4)$ 사이의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-length:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $3$, 세로 $4$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "plane-length:check",
+      "courseKey": "pythagoras",
+      "name": "평면에서 길이 확인",
+      "versionId": "plane-length:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "plane-length:check-1:v1",
+          "conceptKeys": [
+            "plane-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-length:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(1, 2)$와 $(7, 10)$ 사이의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-length:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $6$, 세로 $8$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-length:check-2:v1",
+          "conceptKeys": [
+            "plane-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-length:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑변이 $16$이고 나머지 두 변이 각각 $10$인 이등변삼각형의 높이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-length:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑변이 $8$씩 나뉘어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "plane-length:review",
+      "courseKey": "pythagoras",
+      "name": "평면에서 길이 복습",
+      "versionId": "plane-length:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "plane-length:homework-1:v1",
+          "conceptKeys": [
+            "plane-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-length:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 변이 $15$이고 대각선이 $17$인 직사각형의 다른 한 변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-length:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$289 - 225$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "plane-length:homework-2:v1",
+          "conceptKeys": [
+            "plane-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "plane-length:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(-2, 1)$과 $(3, 13)$ 사이의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 13
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "plane-length:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $5$, 세로 $12$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "solid-length:practice",
+      "courseKey": "pythagoras",
+      "name": "입체에서 길이 연습",
+      "versionId": "solid-length:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "solid-length:practice-1:v1",
+          "conceptKeys": [
+            "solid-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-length:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $2$, 세로 $3$, 높이 $6$인 직육면체의 대각선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-length:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4 + 9 + 36$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-length:practice-2:v1",
+          "conceptKeys": [
+            "solid-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-length:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $1$, 세로 $2$, 높이 $2$인 직육면체의 대각선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-length:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1 + 4 + 4$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-length:practice-3:v1",
+          "conceptKeys": [
+            "solid-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-length:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면의 반지름이 $6$이고 모선이 $10$인 원뿔의 높이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-length:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "모선이 빗변이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "solid-length:check",
+      "courseKey": "pythagoras",
+      "name": "입체에서 길이 확인",
+      "versionId": "solid-length:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "solid-length:check-1:v1",
+          "conceptKeys": [
+            "solid-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-length:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $4$, 세로 $4$, 높이 $7$인 직육면체의 대각선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-length:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$16 + 16 + 49$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-length:check-2:v1",
+          "conceptKeys": [
+            "solid-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-length:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면의 반지름이 $5$이고 모선이 $13$인 원뿔의 높이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-length:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$169 - 25$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "solid-length:review",
+      "courseKey": "pythagoras",
+      "name": "입체에서 길이 복습",
+      "versionId": "solid-length:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "solid-length:homework-1:v1",
+          "conceptKeys": [
+            "solid-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-length:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 모서리가 $6$인 정육면체에서 밑면의 대각선의 제곱을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 72
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-length:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$36 + 36$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-length:homework-2:v1",
+          "conceptKeys": [
+            "solid-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-length:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $3$, 세로 $4$, 높이 $12$인 직육면체의 대각선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 13
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-length:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$9 + 16 + 144$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "pythagoras:drill",
+      "courseKey": "pythagoras",
+      "name": "피타고라스 정리 모아 풀기",
+      "versionId": "pythagoras:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "pythagoras:drill-1:v1",
+          "conceptKeys": [
+            "pythagoras"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각을 낀 두 변이 $8$과 $15$인 직각삼각형의 빗변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 17
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$64 + 225$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-2:v1",
+          "conceptKeys": [
+            "pythagoras"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각을 낀 두 변이 $7$과 $24$인 직각삼각형의 빗변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$49 + 576$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-3:v1",
+          "conceptKeys": [
+            "pythagoras"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빗변이 $10$이고 한 변이 $6$인 직각삼각형의 나머지 한 변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$100 - 36$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-4:v1",
+          "conceptKeys": [
+            "pythagoras"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빗변이 $15$이고 한 변이 $9$인 직각삼각형의 나머지 한 변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$225 - 81$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-5:v1",
+          "conceptKeys": [
+            "pythagoras"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "피타고라스 정리가 성립하는 삼각형은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "직각삼각형"
+              },
+              {
+                "id": "b",
+                "text": "모든 삼각형"
+              },
+              {
+                "id": "c",
+                "text": "이등변삼각형"
+              },
+              {
+                "id": "d",
+                "text": "예각삼각형"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "직각삼각형"
+              },
+              {
+                "id": "b",
+                "text": "모든 삼각형"
+              },
+              {
+                "id": "c",
+                "text": "이등변삼각형"
+              },
+              {
+                "id": "d",
+                "text": "예각삼각형"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각이 있어야 해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-6:v1",
+          "conceptKeys": [
+            "pythagoras-converse"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $5$, $12$, $13$인 삼각형은 어떤 삼각형인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "직각삼각형"
+              },
+              {
+                "id": "b",
+                "text": "예각삼각형"
+              },
+              {
+                "id": "c",
+                "text": "둔각삼각형"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "직각삼각형"
+              },
+              {
+                "id": "b",
+                "text": "예각삼각형"
+              },
+              {
+                "id": "c",
+                "text": "둔각삼각형"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$25 + 144 = 169$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-7:v1",
+          "conceptKeys": [
+            "pythagoras-converse"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $2$, $3$, $4$인 삼각형은 어떤 삼각형인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "둔각삼각형"
+              },
+              {
+                "id": "b",
+                "text": "직각삼각형"
+              },
+              {
+                "id": "c",
+                "text": "예각삼각형"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "둔각삼각형"
+              },
+              {
+                "id": "b",
+                "text": "직각삼각형"
+              },
+              {
+                "id": "c",
+                "text": "예각삼각형"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$13$보다 $16$이 커요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-8:v1",
+          "conceptKeys": [
+            "pythagoras-converse"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $6$, $7$, $8$인 삼각형은 어떤 삼각형인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "예각삼각형"
+              },
+              {
+                "id": "b",
+                "text": "직각삼각형"
+              },
+              {
+                "id": "c",
+                "text": "둔각삼각형"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "예각삼각형"
+              },
+              {
+                "id": "b",
+                "text": "직각삼각형"
+              },
+              {
+                "id": "c",
+                "text": "둔각삼각형"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$85$보다 $64$가 작아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-9:v1",
+          "conceptKeys": [
+            "pythagoras-converse"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$12$, $16$, $x$가 직각삼각형의 세 변이고 $x$가 빗변일 때 $x$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3, 4, 5$의 네 배예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-10:v1",
+          "conceptKeys": [
+            "pythagoras-converse"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $9$, $40$, $41$인 삼각형에서 가장 긴 변의 제곱을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1681
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$41 \\times 41$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-11:v1",
+          "conceptKeys": [
+            "plane-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로가 $9$, 세로가 $12$인 직사각형의 대각선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$81 + 144$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-12:v1",
+          "conceptKeys": [
+            "plane-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(0, 0)$과 $(6, 8)$ 사이의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $6$, 세로 $8$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-13:v1",
+          "conceptKeys": [
+            "plane-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(2, 3)$과 $(14, 8)$ 사이의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 13
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $12$, 세로 $5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-14:v1",
+          "conceptKeys": [
+            "plane-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "대각선이 $25$이고 한 변이 $7$인 직사각형의 다른 한 변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 24
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$625 - 49$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-15:v1",
+          "conceptKeys": [
+            "plane-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑변이 $12$이고 나머지 두 변이 각각 $10$인 이등변삼각형의 높이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑변이 $6$씩 나뉘어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-16:v1",
+          "conceptKeys": [
+            "solid-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $2$, 세로 $3$, 높이 $6$인 직육면체의 대각선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "제곱을 셋 다 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-17:v1",
+          "conceptKeys": [
+            "solid-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $4$, 세로 $4$, 높이 $7$인 직육면체의 대각선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$16 + 16 + 49$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-18:v1",
+          "conceptKeys": [
+            "solid-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면의 반지름이 $9$이고 모선이 $15$인 원뿔의 높이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$225 - 81$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-19:v1",
+          "conceptKeys": [
+            "solid-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $1$, 세로 $4$, 높이 $8$인 직육면체의 대각선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1 + 16 + 64$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "pythagoras:drill-20:v1",
+          "conceptKeys": [
+            "solid-length"
+          ],
+          "promptContent": [
+            {
+              "blockId": "pythagoras:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직육면체의 대각선을 구할 때 피타고라스 정리를 몇 번 쓰나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 번"
+              },
+              {
+                "id": "b",
+                "text": "한 번"
+              },
+              {
+                "id": "c",
+                "text": "세 번"
+              },
+              {
+                "id": "d",
+                "text": "쓸 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 번"
+              },
+              {
+                "id": "b",
+                "text": "한 번"
+              },
+              {
+                "id": "c",
+                "text": "세 번"
+              },
+              {
+                "id": "d",
+                "text": "쓸 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "pythagoras:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면에서 한 번, 세워서 한 번이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}
