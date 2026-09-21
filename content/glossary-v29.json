@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "frequency-table",
+      "label": "도수분포표",
+      "assessable": true
+    },
+    {
+      "key": "histogram",
+      "label": "히스토그램",
+      "assessable": true
+    },
+    {
+      "key": "relative-frequency",
+      "label": "상대도수",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "frequency-table",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "도수분포표",
+      "summary": "구간으로 묶어 개수를 센 표예요.",
+      "blocks": [
+        {
+          "blockId": "global:frequency-table:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "흩어진 자료를 구간으로 나누고 각 구간에 몇 개가 들었는지 센 표예요. 구간 하나가 계급, 구간의 폭이 계급의 크기, 든 개수가 도수고요. 묶으면 몰려 있는 자리가 보이지만 개별 값은 사라져요. $60$점대에 셋이라는 것은 알아도 그것이 $61$인지 $69$인지는 표에 없어요. 줄기와 잎 그림은 묶어 보면서도 원래 값을 남겨 둬요. 계급을 대표하는 값이 필요하면 한가운데 값인 계급값을 써요. 도수의 합은 반드시 전체 개수와 같아요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "자료가 어디에 몰렸는지 볼 때"
+    },
+    {
+      "conceptKey": "histogram",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "히스토그램",
+      "summary": "도수를 막대 높이로 세운 그림이에요.",
+      "blocks": [
+        {
+          "blockId": "global:histogram:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "가로축에 계급을, 세로축에 도수를 두고 계급마다 막대를 세워요. 계급이 끊기지 않고 이어지는 구간이라 막대가 서로 붙어 있어요. 종류를 세는 막대그래프와 다른 점이에요. 막대 전체의 넓이는 「계급의 크기 × 전체 도수」이고, 막대 끝의 한가운데를 이으면 도수분포다각형이 돼요. 다각형은 겹쳐 그릴 수 있어 두 집단을 견주기 좋아요. 다만 크기가 다른 집단은 높이만으로 견줄 수 없어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "자료의 모양을 한눈에 볼 때"
+    },
+    {
+      "conceptKey": "relative-frequency",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "상대도수",
+      "summary": "전체에서 차지하는 몫이에요.",
+      "blocks": [
+        {
+          "blockId": "global:relative-frequency:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "도수를 전체 도수로 나눈 값이에요. $30$명 중 $8$명은 $0.27$, $20$명 중 $6$명은 $0.30$이니 작은 쪽이 오히려 높아요. 크기가 다른 집단을 같은 자 위에 올려놓는 것이 상대도수의 쓸모예요. 늘 $0$과 $1$ 사이이고 모두 더하면 반드시 $1$이에요. 아니면 어딘가 틀린 거고요. $100$을 곱하면 백분율이 되고, 상대도수와 전체 도수를 알면 도수를 되찾을 수 있어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "크기가 다른 집단을 견줄 때"
+    }
+  ]
+}

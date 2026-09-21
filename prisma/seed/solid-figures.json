@@ -1,0 +1,2899 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "solid-figures",
+      "title": "입체도형",
+      "summary": "입체를 만들어지는 방식으로 가르고, 펼쳐서 겉넓이를 구하고, 쌓아서 부피를 구해요.",
+      "order": 170,
+      "track": "middle",
+      "stage": "middle-1",
+      "lessons": [
+        {
+          "key": "polyhedron",
+          "order": 1
+        },
+        {
+          "key": "surface-area",
+          "order": 2
+        },
+        {
+          "key": "volume",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "polyhedron",
+      "label": "다면체와 회전체",
+      "assessable": true
+    },
+    {
+      "key": "surface-area",
+      "label": "겉넓이",
+      "assessable": true
+    },
+    {
+      "key": "volume",
+      "label": "부피",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "polyhedron",
+        "versionId": "polyhedron:v1",
+        "title": "다면체와 회전체: 면으로 둘러싸인 것과 돌려서 만든 것",
+        "summary": "입체도형을 두 갈래로 가르고, 이름이 무엇을 말하는지 읽어요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "polyhedron"
+        ],
+        "prerequisiteConceptKeys": [
+          "polygon-angles",
+          "circle-measure"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "polyhedron:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "polyhedron:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "입체도형은 만들어지는 방식으로 두 갈래로 가를 수 있어요.\n\n다각형인 면으로만 둘러싸인 것을 다면체라고 해요. 상자, 주사위, 피라미드가 그렇죠. 면의 개수로 이름을 붙여요. 면이 넷이면 사면체, 여섯이면 육면체예요.\n\n다면체 중에서도 두 밑면이 나란하고 옆면이 모두 직사각형인 것을 각기둥, 밑면이 하나이고 한 점에서 모이는 것을 각뿔이라 해요. 밑면의 모양이 이름 앞에 붙어요. 밑면이 삼각형인 기둥은 삼각기둥이에요.\n\n모든 면이 합동인 정다각형이고 각 꼭짓점에 모인 면의 수도 같은 다면체를 정다면체라고 해요. 놀랍게도 다섯 가지뿐이에요. 정사면체, 정육면체, 정팔면체, 정십이면체, 정이십면체.\n\n다른 갈래는 회전체예요. 평면도형을 직선 하나를 축으로 삼아 한 바퀴 돌려 만든 입체예요.\n\n직사각형을 돌리면 원기둥, 직각삼각형을 돌리면 원뿔, 반원을 돌리면 구가 돼요. 회전체를 축을 품은 평면으로 자르면 자른 면이 늘 좌우 대칭이에요. 돌려서 만들었으니 당연한 일이죠.\n\n축에 수직으로 자르면 자른 면은 언제나 원이에요. 한 바퀴 돌아 나온 자리니까요.",
+                "definitions": [
+                  {
+                    "conceptKey": "polyhedron",
+                    "surface": "다면체",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "polyhedron:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "직사각형이 축을 끼고 돌아 원기둥의 모양을 만드는 그림",
+                "caption": "평면도형을 축 둘레로 돌리면 입체가 돼요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 160,
+                    "y1": 30,
+                    "x2": 160,
+                    "y2": 186,
+                    "stroke": "line",
+                    "strokeWidth": 1.4,
+                    "dash": true
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 22,
+                    "text": "축",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 160,
+                    "y": 60,
+                    "width": 52,
+                    "height": 96,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "sheet"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160,
+                    "cy": 60,
+                    "rx": 52,
+                    "ry": 14,
+                    "fill": "none",
+                    "stroke": "orange",
+                    "strokeWidth": 1.6,
+                    "id": "top",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160,
+                    "cy": 156,
+                    "rx": 52,
+                    "ry": 14,
+                    "fill": "none",
+                    "stroke": "orange",
+                    "strokeWidth": 1.6,
+                    "id": "bottom",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 108,
+                    "y1": 60,
+                    "x2": 108,
+                    "y2": 156,
+                    "stroke": "orange",
+                    "strokeWidth": 1.6,
+                    "id": "left",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 244,
+                    "y": 96,
+                    "text": "원기둥",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "name",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 80,
+                    "y": 96,
+                    "text": "직사각형",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "src"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "축 옆에 직사각형을 하나 세워 두었어요.",
+                    "changes": [
+                      {
+                        "id": "top",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "bottom",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "left",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "name",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "축을 끼고 한 바퀴 돌려 봐요. 지나간 자리가 면이 돼요.",
+                    "changes": [
+                      {
+                        "id": "sheet",
+                        "dx": -52
+                      },
+                      {
+                        "id": "src",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "top",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "bottom",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "left",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "name",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "돌아 나온 입체가 원기둥이에요. 이렇게 만든 도형을 회전체라고 해요.",
+                    "changes": [
+                      {
+                        "id": "sheet",
+                        "dx": -52
+                      },
+                      {
+                        "id": "src",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "top",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "bottom",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "left",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "name",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "polyhedron:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "polyhedron:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "오각기둥의 면, 모서리, 꼭짓점의 개수를 세어 볼게요.\n\n면은 위아래 밑면 둘에 옆면 다섯, 모두 일곱이에요. 그래서 칠면체이기도 해요.\n\n꼭짓점은 밑면마다 다섯씩이니 열 개예요.\n\n모서리는 밑면마다 다섯씩 열, 위아래를 잇는 기둥이 다섯, 모두 열다섯이에요.\n\n세어 보면 규칙이 보여요. $n$각기둥은 면이 $n+2$, 꼭짓점이 $2n$, 모서리가 $3n$이에요.\n\n각뿔은 어떨까요. 오각뿔이면 면이 밑면 하나에 옆면 다섯으로 여섯, 꼭짓점이 여섯, 모서리가 열이에요. $n$각뿔은 면이 $n+1$, 꼭짓점이 $n+1$, 모서리가 $2n$이고요.\n\n어느 쪽이든 「면 + 꼭짓점 − 모서리 = 2」가 성립해요. 오각기둥은 $7 + 10 - 15 = 2$, 오각뿔은 $6 + 6 - 10 = 2$. 모든 다면체에서 그렇답니다.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "polyhedron:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "polyhedron:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "polyhedron:practice",
+                "problemSetVersionId": "polyhedron:practice:v1",
+                "problemVersionIds": [
+                  "polyhedron:practice-1:v1",
+                  "polyhedron:practice-2:v1",
+                  "polyhedron:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "polyhedron:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "polyhedron:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "polyhedron:check",
+                "problemSetVersionId": "polyhedron:check:v1",
+                "problemVersionIds": [
+                  "polyhedron:check-1:v1",
+                  "polyhedron:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "polyhedron:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "polyhedron:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "다각형인 면으로만 둘러싸인 입체가 다면체이고, 면의 개수로 이름을 붙여요.\n\n두 밑면이 나란하면 각기둥, 한 점에서 모이면 각뿔이에요. 정다면체는 다섯 가지뿐이고요.\n\n평면도형을 축 둘레로 돌려 만든 것이 회전체예요. 직사각형은 원기둥, 직각삼각형은 원뿔, 반원은 구가 돼요.\n\n회전체를 축에 수직으로 자르면 자른 면은 언제나 원이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "polyhedron:review",
+        "problemSetVersionId": "polyhedron:review:v1",
+        "problemVersionIds": [
+          "polyhedron:homework-1:v1",
+          "polyhedron:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "surface-area",
+        "versionId": "surface-area:v1",
+        "title": "겉넓이: 펼쳐서 모두 더한다",
+        "summary": "입체의 겉면을 평면으로 펼쳐, 아는 넓이의 합으로 바꿔요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "surface-area"
+        ],
+        "prerequisiteConceptKeys": [
+          "polyhedron",
+          "circle-measure",
+          "sector"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "surface-area:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "surface-area:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "입체의 겉면 넓이를 모두 더한 것을 겉넓이라고 해요. 구하는 법은 하나뿐이에요. 펼쳐서 더하는 거예요.\n\n입체를 잘라 평면에 펼친 그림을 전개도라고 해요. 전개도만 그리면 아는 도형의 넓이 문제로 바뀌어요.\n\n상자를 볼게요. 여섯 면이 나오고 마주 보는 면끼리 같으니 세 종류 넓이를 구해 두 배씩 하면 돼요.\n\n각기둥은 더 단순해요. 옆면을 펼치면 하나의 큰 직사각형이 되거든요. 가로는 밑면의 둘레, 세로는 높이예요. 그래서 겉넓이는 밑넓이 두 개와 「밑면 둘레 × 높이」의 합이에요.\n\n원기둥도 똑같아요. 옆면을 펼치면 직사각형이고 가로가 밑면의 둘레, 곧 $2\\pi r$이에요. 겉넓이는 $2 \\times \\pi r^2 + 2\\pi r h$예요.\n\n원뿔의 옆면은 펼치면 부채꼴이 돼요. 부채꼴의 호가 밑면의 둘레와 같아야 하니 거기서 중심각이 정해지고요. 앞 수업의 부채꼴이 여기서 쓰여요.\n\n구는 펼칠 수 없어요. 아무리 잘라도 평면에 딱 펴지지 않거든요. 그래서 겉넓이 $4\\pi r^2$은 결과만 받아 둬요. 반지름이 같은 원 넷의 넓이와 같다는 뜻이라고 기억하면 외우기 쉬워요.",
+                "definitions": [
+                  {
+                    "conceptKey": "surface-area",
+                    "surface": "겉넓이",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "polyhedron",
+                    "surface": "전개도",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "surface-area:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "상자의 면들이 펼쳐져 평면에 늘어서는 그림",
+                "caption": "펼쳐서 넓이를 모두 더하면 겉넓이예요",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "x": 124,
+                    "y": 68,
+                    "width": 52,
+                    "height": 52,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "front"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 124,
+                    "y": 16,
+                    "width": 52,
+                    "height": 52,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "top"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 124,
+                    "y": 120,
+                    "width": 52,
+                    "height": 52,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "bottom"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 72,
+                    "y": 68,
+                    "width": 52,
+                    "height": 52,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "left"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 176,
+                    "y": 68,
+                    "width": 52,
+                    "height": 52,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "right"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 228,
+                    "y": 68,
+                    "width": 52,
+                    "height": 52,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "back"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 150,
+                    "y": 98,
+                    "text": "앞",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "f1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 150,
+                    "y": 46,
+                    "text": "위",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "f2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 150,
+                    "y": 150,
+                    "text": "아래",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "f3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 98,
+                    "y": 98,
+                    "text": "왼",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "f4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 202,
+                    "y": 98,
+                    "text": "오",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "f5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 254,
+                    "y": 98,
+                    "text": "뒤",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "f6",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 190,
+                    "text": "여섯 면의 넓이를 모두 더해요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "note",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "상자를 앞에서 보면 한 면만 보여요.",
+                    "changes": [
+                      {
+                        "id": "top",
+                        "hidden": true
+                      },
+                      {
+                        "id": "bottom",
+                        "hidden": true
+                      },
+                      {
+                        "id": "left",
+                        "hidden": true
+                      },
+                      {
+                        "id": "right",
+                        "hidden": true
+                      },
+                      {
+                        "id": "back",
+                        "hidden": true
+                      },
+                      {
+                        "id": "f2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "f3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "f4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "f5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "f6",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "칼집을 내어 펼치면 나머지 면이 드러나요.",
+                    "changes": [
+                      {
+                        "id": "back",
+                        "hidden": true
+                      },
+                      {
+                        "id": "f6",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "f2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "f3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "f4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "f5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "여섯 면이 모두 펼쳐졌어요. 넓이를 다 더한 것이 겉넓이예요.",
+                    "changes": [
+                      {
+                        "id": "f2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "f3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "f4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "f5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "f6",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "surface-area:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "surface-area:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "가로 $3$, 세로 $4$, 높이 $5$인 직육면체의 겉넓이를 구해 볼게요.\n\n마주 보는 면끼리 같으니 세 종류만 구하면 돼요.\n\n$3 \\times 4 = 12$인 면이 둘, $4 \\times 5 = 20$인 면이 둘, $3 \\times 5 = 15$인 면이 둘이에요.\n\n$2 \\times (12 + 20 + 15) = 2 \\times 47 = 94$예요.\n\n이번에는 밑면의 반지름이 $3$, 높이가 $7$인 원기둥이에요.\n\n밑면 둘은 $\\pi \\times 9 = 9\\pi$씩이니 $18\\pi$예요.\n\n옆면은 펼치면 가로가 밑면의 둘레 $6\\pi$, 세로가 높이 $7$인 직사각형이니 $42\\pi$고요.\n\n겉넓이는 $18\\pi + 42\\pi = 60\\pi$예요. 옆면을 펼쳐 직사각형으로 보는 것이 핵심이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "surface-area:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "surface-area:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "surface-area:practice",
+                "problemSetVersionId": "surface-area:practice:v1",
+                "problemVersionIds": [
+                  "surface-area:practice-1:v1",
+                  "surface-area:practice-2:v1",
+                  "surface-area:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "surface-area:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "surface-area:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "surface-area:check",
+                "problemSetVersionId": "surface-area:check:v1",
+                "problemVersionIds": [
+                  "surface-area:check-1:v1",
+                  "surface-area:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "surface-area:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "surface-area:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "겉넓이는 겉면의 넓이를 모두 더한 것이고, 전개도를 그리면 아는 도형의 합으로 바뀌어요.\n\n기둥의 옆면을 펼치면 직사각형이에요. 가로가 밑면의 둘레, 세로가 높이고요.\n\n원뿔의 옆면은 부채꼴이 되고, 그 호가 밑면의 둘레와 같아요.\n\n구만은 펼칠 수 없어서 $4\\pi r^2$을 결과로 받아 둬요. 원 넷의 넓이와 같아요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "surface-area:review",
+        "problemSetVersionId": "surface-area:review:v1",
+        "problemVersionIds": [
+          "surface-area:homework-1:v1",
+          "surface-area:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "volume",
+        "versionId": "volume:v1",
+        "title": "부피: 밑넓이 곱하기 높이",
+        "summary": "기둥의 부피가 왜 밑넓이 곱하기 높이인지 보고, 뿔과 구까지 넓혀요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "volume"
+        ],
+        "prerequisiteConceptKeys": [
+          "surface-area",
+          "polyhedron",
+          "circle-measure"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "volume:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "volume:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "밑면과 똑같은 모양의 얇은 판을 위로 쌓아 올린다고 생각해 보세요. 쌓을수록 높아지고, 부피도 그만큼 늘어요.\n\n그래서 기둥의 부피는 밑넓이 곱하기 높이예요. 각기둥이든 원기둥이든 같아요.\n\n직육면체로 확인하면 익숙한 식이 나와요. 밑넓이가 가로 곱하기 세로이니 부피는 가로 × 세로 × 높이죠.\n\n원기둥이면 밑넓이가 $\\pi r^2$이니 부피는 $\\pi r^2 h$예요.\n\n뿔은 어떨까요. 밑면과 높이가 같은 기둥에 물을 채우고 뿔로 퍼내 보면 딱 세 번에 비워져요. 그래서 뿔의 부피는 기둥의 $\\dfrac{1}{3}$이에요. 원뿔이면 $\\dfrac{1}{3}\\pi r^2 h$고요.\n\n구의 부피는 $\\dfrac{4}{3}\\pi r^3$이에요. 구를 꼭 맞게 담는 원기둥의 부피가 $2\\pi r^3$이니 그 $\\dfrac{2}{3}$가 되는 셈이에요.\n\n길이가 두 배가 되면 겉넓이는 네 배, 부피는 여덟 배가 돼요. 겉넓이에는 길이가 두 번, 부피에는 세 번 들어 있으니까요. 큰 빵이 작은 빵보다 훨씬 배부른 이유이기도 해요.",
+                "definitions": [
+                  {
+                    "conceptKey": "volume",
+                    "surface": "부피",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "volume:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "밑면과 같은 층이 위로 쌓여 기둥이 되는 그림",
+                "caption": "같은 밑면이 높이만큼 쌓인 것이 기둥의 부피예요",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "x": 96,
+                    "y": 148,
+                    "width": 128,
+                    "height": 24,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "l1"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 96,
+                    "y": 124,
+                    "width": 128,
+                    "height": 24,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "l2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 96,
+                    "y": 100,
+                    "width": 128,
+                    "height": 24,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "l3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 96,
+                    "y": 76,
+                    "width": 128,
+                    "height": 24,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "l4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 96,
+                    "y": 52,
+                    "width": 128,
+                    "height": 24,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "l5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 164,
+                    "text": "밑넓이",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "base"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 252,
+                    "y": 100,
+                    "text": "높이",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "h",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 34,
+                    "text": "밑넓이 $\\times$ 높이",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "law",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "밑면을 얇은 판으로 한 장 깔았어요.",
+                    "changes": [
+                      {
+                        "id": "l2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "l3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "l4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "l5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "h",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "같은 판을 위로 쌓아 올려요.",
+                    "changes": [
+                      {
+                        "id": "l2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "l3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "l4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "l5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "h",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "높이만큼 쌓으면 기둥이 돼요. 그래서 부피는 밑넓이 곱하기 높이예요.",
+                    "changes": [
+                      {
+                        "id": "l2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "l3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "l4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "l5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "h",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "volume:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "volume:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "밑면의 반지름이 $3$, 높이가 $10$인 원기둥의 부피를 구해 볼게요.\n\n밑넓이는 $\\pi \\times 3^2 = 9\\pi$예요.\n\n높이를 곱하면 $9\\pi \\times 10 = 90\\pi$예요.\n\n같은 밑면과 높이를 가진 원뿔이라면 그 $\\dfrac{1}{3}$이니 $30\\pi$예요.\n\n반지름이 $3$인 구는 $\\dfrac{4}{3}\\pi \\times 27 = 36\\pi$고요.\n\n세 값을 견줘 보면 재미있어요. 반지름 $3$, 높이 $6$인 원기둥($54\\pi$)에 꼭 맞게 든 구($36\\pi$)와 원뿔($18\\pi$)의 부피는 $3 : 2 : 1$이에요. 아르키메데스가 자기 묘비에 새기게 했다는 관계예요.\n\n부피를 구할 때는 단위를 조심하세요. 길이가 cm이면 부피는 cm³이고, $1$m³는 $1000000$cm³예요. 길이가 백 배이니 부피는 백만 배거든요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "volume:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "volume:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "volume:practice",
+                "problemSetVersionId": "volume:practice:v1",
+                "problemVersionIds": [
+                  "volume:practice-1:v1",
+                  "volume:practice-2:v1",
+                  "volume:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "volume:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "volume:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "volume:check",
+                "problemSetVersionId": "volume:check:v1",
+                "problemVersionIds": [
+                  "volume:check-1:v1",
+                  "volume:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "volume:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "volume:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "기둥의 부피는 밑넓이 곱하기 높이예요. 같은 판을 높이만큼 쌓은 것이니까요.\n\n뿔은 같은 밑면과 높이를 가진 기둥의 $\\dfrac{1}{3}$이에요.\n\n구는 $\\dfrac{4}{3}\\pi r^3$이고, 꼭 맞는 원기둥의 $\\dfrac{2}{3}$예요.\n\n길이가 두 배면 겉넓이는 네 배, 부피는 여덟 배예요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "volume:review",
+        "problemSetVersionId": "volume:review:v1",
+        "problemVersionIds": [
+          "volume:homework-1:v1",
+          "volume:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "polyhedron:practice",
+      "courseKey": "solid-figures",
+      "name": "다면체와 회전체 연습",
+      "versionId": "polyhedron:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "polyhedron:practice-1:v1",
+          "conceptKeys": [
+            "polyhedron"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polyhedron:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "오각기둥의 면은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polyhedron:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면 둘에 옆면 다섯이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polyhedron:practice-2:v1",
+          "conceptKeys": [
+            "polyhedron"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polyhedron:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "오각기둥의 꼭짓점은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polyhedron:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면마다 다섯씩이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polyhedron:practice-3:v1",
+          "conceptKeys": [
+            "polyhedron"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polyhedron:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직사각형을 한 변을 축으로 돌리면 어떤 입체가 되나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원기둥"
+              },
+              {
+                "id": "b",
+                "text": "원뿔"
+              },
+              {
+                "id": "c",
+                "text": "구"
+              },
+              {
+                "id": "d",
+                "text": "각기둥"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원기둥"
+              },
+              {
+                "id": "b",
+                "text": "원뿔"
+              },
+              {
+                "id": "c",
+                "text": "구"
+              },
+              {
+                "id": "d",
+                "text": "각기둥"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polyhedron:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "지나간 자리를 떠올려 보세요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "polyhedron:check",
+      "courseKey": "solid-figures",
+      "name": "다면체와 회전체 확인",
+      "versionId": "polyhedron:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "polyhedron:check-1:v1",
+          "conceptKeys": [
+            "polyhedron"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polyhedron:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "오각기둥의 모서리는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polyhedron:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3n$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polyhedron:check-2:v1",
+          "conceptKeys": [
+            "polyhedron"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polyhedron:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정다면체는 모두 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polyhedron:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정사면체·정육면체·정팔면체·정십이면체·정이십면체예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "polyhedron:review",
+      "courseKey": "solid-figures",
+      "name": "다면체와 회전체 복습",
+      "versionId": "polyhedron:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "polyhedron:homework-1:v1",
+          "conceptKeys": [
+            "polyhedron"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polyhedron:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "육각뿔의 면은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polyhedron:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면 하나에 옆면 여섯이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "polyhedron:homework-2:v1",
+          "conceptKeys": [
+            "polyhedron"
+          ],
+          "promptContent": [
+            {
+              "blockId": "polyhedron:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "회전체를 축에 수직으로 자른 면의 모양은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원"
+              },
+              {
+                "id": "b",
+                "text": "직사각형"
+              },
+              {
+                "id": "c",
+                "text": "삼각형"
+              },
+              {
+                "id": "d",
+                "text": "자를 때마다 다르다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원"
+              },
+              {
+                "id": "b",
+                "text": "직사각형"
+              },
+              {
+                "id": "c",
+                "text": "삼각형"
+              },
+              {
+                "id": "d",
+                "text": "자를 때마다 다르다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "polyhedron:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 바퀴 돌아 나온 자리예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "surface-area:practice",
+      "courseKey": "solid-figures",
+      "name": "겉넓이 연습",
+      "versionId": "surface-area:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "surface-area:practice-1:v1",
+          "conceptKeys": [
+            "surface-area"
+          ],
+          "promptContent": [
+            {
+              "blockId": "surface-area:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 모서리가 $4$인 정육면체의 겉넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 96
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "surface-area:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$16$인 면이 여섯이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "surface-area:practice-2:v1",
+          "conceptKeys": [
+            "surface-area"
+          ],
+          "promptContent": [
+            {
+              "blockId": "surface-area:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $3$, 세로 $4$, 높이 $5$인 직육면체의 겉넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 94
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "surface-area:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 \\times (12 + 20 + 15)$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "surface-area:practice-3:v1",
+          "conceptKeys": [
+            "surface-area"
+          ],
+          "promptContent": [
+            {
+              "blockId": "surface-area:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면의 반지름이 $3$, 높이가 $7$인 원기둥의 옆넓이가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 42
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "surface-area:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $6\\pi$, 세로 $7$인 직사각형이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "surface-area:check",
+      "courseKey": "solid-figures",
+      "name": "겉넓이 확인",
+      "versionId": "surface-area:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "surface-area:check-1:v1",
+          "conceptKeys": [
+            "surface-area"
+          ],
+          "promptContent": [
+            {
+              "blockId": "surface-area:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면의 반지름이 $3$, 높이가 $7$인 원기둥의 겉넓이가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "surface-area:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면 둘 $18\\pi$에 옆면 $42\\pi$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "surface-area:check-2:v1",
+          "conceptKeys": [
+            "surface-area"
+          ],
+          "promptContent": [
+            {
+              "blockId": "surface-area:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $5$인 구의 겉넓이가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 100
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "surface-area:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4r^2$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "surface-area:review",
+      "courseKey": "solid-figures",
+      "name": "겉넓이 복습",
+      "versionId": "surface-area:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "surface-area:homework-1:v1",
+          "conceptKeys": [
+            "surface-area"
+          ],
+          "promptContent": [
+            {
+              "blockId": "surface-area:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면이 한 변 $4$인 정사각형이고 높이가 $6$인 사각기둥의 옆넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 96
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "surface-area:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면 둘레 $16$에 높이 $6$을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "surface-area:homework-2:v1",
+          "conceptKeys": [
+            "surface-area"
+          ],
+          "promptContent": [
+            {
+              "blockId": "surface-area:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원뿔의 옆면을 펼치면 어떤 도형이 되나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "부채꼴"
+              },
+              {
+                "id": "b",
+                "text": "직사각형"
+              },
+              {
+                "id": "c",
+                "text": "삼각형"
+              },
+              {
+                "id": "d",
+                "text": "원"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "부채꼴"
+              },
+              {
+                "id": "b",
+                "text": "직사각형"
+              },
+              {
+                "id": "c",
+                "text": "삼각형"
+              },
+              {
+                "id": "d",
+                "text": "원"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "surface-area:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "호가 밑면의 둘레와 같아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "volume:practice",
+      "courseKey": "solid-figures",
+      "name": "부피 연습",
+      "versionId": "volume:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "volume:practice-1:v1",
+          "conceptKeys": [
+            "volume"
+          ],
+          "promptContent": [
+            {
+              "blockId": "volume:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $3$, 세로 $4$, 높이 $5$인 직육면체의 부피를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "volume:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑넓이 $12$에 높이 $5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "volume:practice-2:v1",
+          "conceptKeys": [
+            "volume"
+          ],
+          "promptContent": [
+            {
+              "blockId": "volume:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면의 반지름이 $3$, 높이가 $10$인 원기둥의 부피가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 90
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "volume:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑넓이 $9\\pi$에 높이 $10$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "volume:practice-3:v1",
+          "conceptKeys": [
+            "volume"
+          ],
+          "promptContent": [
+            {
+              "blockId": "volume:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면의 반지름이 $3$, 높이가 $10$인 원뿔의 부피가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "volume:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기둥의 $\\dfrac{1}{3}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "volume:check",
+      "courseKey": "solid-figures",
+      "name": "부피 확인",
+      "versionId": "volume:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "volume:check-1:v1",
+          "conceptKeys": [
+            "volume"
+          ],
+          "promptContent": [
+            {
+              "blockId": "volume:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $3$인 구의 부피가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 36
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "volume:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\dfrac{4}{3} \\times 27$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "volume:check-2:v1",
+          "conceptKeys": [
+            "volume"
+          ],
+          "promptContent": [
+            {
+              "blockId": "volume:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "길이가 두 배가 되면 부피는 몇 배가 되나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "volume:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "길이가 세 번 들어 있어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "volume:review",
+      "courseKey": "solid-figures",
+      "name": "부피 복습",
+      "versionId": "volume:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "volume:homework-1:v1",
+          "conceptKeys": [
+            "volume"
+          ],
+          "promptContent": [
+            {
+              "blockId": "volume:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 모서리가 $5$인 정육면체의 부피를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 125
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "volume:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5^3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "volume:homework-2:v1",
+          "conceptKeys": [
+            "volume"
+          ],
+          "promptContent": [
+            {
+              "blockId": "volume:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑넓이가 $20$이고 높이가 $6$인 각뿔의 부피를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 40
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "volume:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기둥이라면 $120$이고 그 $\\dfrac{1}{3}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "solid-figures:drill",
+      "courseKey": "solid-figures",
+      "name": "입체도형 모아 풀기",
+      "versionId": "solid-figures:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "solid-figures:drill-1:v1",
+          "conceptKeys": [
+            "polyhedron"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각기둥의 면은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면 둘에 옆면 셋이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-2:v1",
+          "conceptKeys": [
+            "polyhedron"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "사각뿔의 꼭짓점은 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면 넷에 꼭대기 하나예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-3:v1",
+          "conceptKeys": [
+            "polyhedron"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "육각기둥의 모서리는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 18
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3n$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-4:v1",
+          "conceptKeys": [
+            "polyhedron"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정다면체는 모두 몇 가지인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다섯 가지뿐이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-5:v1",
+          "conceptKeys": [
+            "polyhedron"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반원을 지름을 축으로 돌리면 어떤 입체가 되나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "구"
+              },
+              {
+                "id": "b",
+                "text": "원기둥"
+              },
+              {
+                "id": "c",
+                "text": "원뿔"
+              },
+              {
+                "id": "d",
+                "text": "각뿔"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "구"
+              },
+              {
+                "id": "b",
+                "text": "원기둥"
+              },
+              {
+                "id": "c",
+                "text": "원뿔"
+              },
+              {
+                "id": "d",
+                "text": "각뿔"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "지나간 자리를 떠올려 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-6:v1",
+          "conceptKeys": [
+            "polyhedron"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각삼각형을 한 변을 축으로 돌리면 어떤 입체가 되나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원뿔"
+              },
+              {
+                "id": "b",
+                "text": "원기둥"
+              },
+              {
+                "id": "c",
+                "text": "구"
+              },
+              {
+                "id": "d",
+                "text": "각기둥"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "원뿔"
+              },
+              {
+                "id": "b",
+                "text": "원기둥"
+              },
+              {
+                "id": "c",
+                "text": "구"
+              },
+              {
+                "id": "d",
+                "text": "각기둥"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 점으로 모여요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-7:v1",
+          "conceptKeys": [
+            "polyhedron"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "오각뿔의 모서리는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2n$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-8:v1",
+          "conceptKeys": [
+            "surface-area"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 모서리가 $3$인 정육면체의 겉넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 54
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$9$인 면이 여섯이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-9:v1",
+          "conceptKeys": [
+            "surface-area"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $2$, 세로 $3$, 높이 $4$인 직육면체의 겉넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 52
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 \\times (6 + 12 + 8)$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-10:v1",
+          "conceptKeys": [
+            "surface-area"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면의 반지름이 $2$, 높이가 $5$인 원기둥의 옆넓이가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘레 $4\\pi$에 높이 $5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-11:v1",
+          "conceptKeys": [
+            "surface-area"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $3$인 구의 겉넓이가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 36
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4r^2$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-12:v1",
+          "conceptKeys": [
+            "surface-area"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기둥의 옆면을 펼치면 어떤 도형이 되나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "직사각형"
+              },
+              {
+                "id": "b",
+                "text": "부채꼴"
+              },
+              {
+                "id": "c",
+                "text": "삼각형"
+              },
+              {
+                "id": "d",
+                "text": "원"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "직사각형"
+              },
+              {
+                "id": "b",
+                "text": "부채꼴"
+              },
+              {
+                "id": "c",
+                "text": "삼각형"
+              },
+              {
+                "id": "d",
+                "text": "원"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로가 밑면의 둘레예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-13:v1",
+          "conceptKeys": [
+            "surface-area"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면이 한 변 $5$인 정사각형이고 높이가 $4$인 사각기둥의 옆넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 80
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘레 $20$에 높이 $4$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-14:v1",
+          "conceptKeys": [
+            "volume"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $2$, 세로 $3$, 높이 $4$인 직육면체의 부피를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 24
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2 \\times 3 \\times 4$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-15:v1",
+          "conceptKeys": [
+            "volume"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 모서리가 $4$인 정육면체의 부피를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 64
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4^3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-16:v1",
+          "conceptKeys": [
+            "volume"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면의 반지름이 $2$, 높이가 $9$인 원기둥의 부피가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 36
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑넓이 $4\\pi$에 높이 $9$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-17:v1",
+          "conceptKeys": [
+            "volume"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑넓이가 $30$이고 높이가 $8$인 각기둥의 부피를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 240
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑넓이 곱하기 높이예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-18:v1",
+          "conceptKeys": [
+            "volume"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑넓이가 $30$이고 높이가 $8$인 각뿔의 부피를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 80
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기둥의 $\\dfrac{1}{3}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-19:v1",
+          "conceptKeys": [
+            "volume"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $6$인 구의 부피가 $a\\pi$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 288
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\dfrac{4}{3} \\times 216$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "solid-figures:drill-20:v1",
+          "conceptKeys": [
+            "volume"
+          ],
+          "promptContent": [
+            {
+              "blockId": "solid-figures:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "길이가 세 배가 되면 부피는 몇 배가 되나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 27
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "solid-figures:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "길이가 세 번 들어 있어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}

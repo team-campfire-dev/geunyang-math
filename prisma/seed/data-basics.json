@@ -1,0 +1,3376 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "data-basics",
+      "title": "자료의 정리",
+      "summary": "흩어진 자료를 구간으로 묶고, 그림으로 세우고, 크기가 다른 집단끼리도 견줄 수 있게 만들어요.",
+      "order": 180,
+      "track": "middle",
+      "stage": "middle-1",
+      "lessons": [
+        {
+          "key": "frequency-table",
+          "order": 1
+        },
+        {
+          "key": "histogram",
+          "order": 2
+        },
+        {
+          "key": "relative-frequency",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "frequency-table",
+      "label": "도수분포표",
+      "assessable": true
+    },
+    {
+      "key": "histogram",
+      "label": "히스토그램",
+      "assessable": true
+    },
+    {
+      "key": "relative-frequency",
+      "label": "상대도수",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "frequency-table",
+        "versionId": "frequency-table:v1",
+        "title": "도수분포표: 구간으로 묶어 세기",
+        "summary": "흩어진 자료를 구간으로 묶어, 어디에 몰려 있는지 보이게 만들어요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "frequency-table"
+        ],
+        "prerequisiteConceptKeys": [
+          "ratio",
+          "decimal"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "frequency-table:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "frequency-table:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "점수 서른 개를 그냥 늘어놓으면 무엇을 알 수 있을까요. 가장 높은 점수와 낮은 점수 정도예요. 어디에 몰려 있는지는 보이지 않아요.\n\n그래서 구간으로 묶어요. $50$점대, $60$점대처럼 나누고 각 구간에 몇 개가 들었는지 세는 거예요. 이렇게 만든 표를 도수분포표라 하고, 각 구간에 든 자료의 개수를 도수라고 해요.\n\n구간 하나를 계급, 구간의 폭을 계급의 크기라고 불러요.\n\n계급을 몇 개로 나눌지는 정해진 답이 없지만 보통 다섯에서 열다섯 사이로 해요. 너무 적으면 뭉뚱그려져 안 보이고, 너무 많으면 흩어져 역시 안 보이거든요.\n\n묶으면 얻는 것과 잃는 것이 함께 있어요. 몰려 있는 자리는 보이게 되지만, 개별 값은 사라져요. $60$점대에 셋이라는 것은 알아도 그것이 $61$인지 $69$인지는 표에 없어요.\n\n그 중간쯤을 원할 때 쓰는 것이 줄기와 잎 그림이에요. 십의 자리를 줄기로, 일의 자리를 잎으로 적으면 묶어 보면서도 원래 값을 잃지 않아요. 자료가 적을 때 좋아요.\n\n값을 대표로 하나 골라야 할 때는 계급의 한가운데 값을 써요. 이것을 계급값이라고 해요. $60$점 이상 $70$점 미만이면 계급값은 $65$예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "frequency-table",
+                    "surface": "도수분포표",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "frequency-table:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "흩어져 있던 점들이 구간별 칸으로 모여 개수가 세어지는 그림",
+                "caption": "구간으로 묶으면 흩어진 자료가 읽히기 시작해요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 40,
+                    "y1": 150,
+                    "x2": 288,
+                    "y2": 150,
+                    "stroke": "ink",
+                    "strokeWidth": 1.3
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 104,
+                    "y1": 144,
+                    "x2": 104,
+                    "y2": 156,
+                    "stroke": "line",
+                    "strokeWidth": 1.1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 168,
+                    "y1": 144,
+                    "x2": 168,
+                    "y2": 156,
+                    "stroke": "line",
+                    "strokeWidth": 1.1
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 232,
+                    "y1": 144,
+                    "x2": 232,
+                    "y2": 156,
+                    "stroke": "line",
+                    "strokeWidth": 1.1
+                  },
+                  {
+                    "kind": "text",
+                    "x": 72,
+                    "y": 166,
+                    "text": "$50$대",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 136,
+                    "y": 166,
+                    "text": "$60$대",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 200,
+                    "y": 166,
+                    "text": "$70$대",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 260,
+                    "y": 166,
+                    "text": "$80$대",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 84,
+                    "cy": 52,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "id": "d1"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 196,
+                    "cy": 44,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "id": "d2"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 140,
+                    "cy": 70,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "id": "d3"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 248,
+                    "cy": 60,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "id": "d4"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 120,
+                    "cy": 40,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "id": "d5"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 210,
+                    "cy": 74,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "green",
+                    "id": "d6"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 22,
+                    "text": "점수 여섯 개가 흩어져 있어요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 72,
+                    "y": 128,
+                    "text": "$1$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "c1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 136,
+                    "y": 128,
+                    "text": "$2$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "c2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 200,
+                    "y": 128,
+                    "text": "$2$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "c3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 260,
+                    "y": 128,
+                    "text": "$1$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "c4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 190,
+                    "text": "구간마다 몇 개인지가 도수예요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "note",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "점수를 그냥 늘어놓으면 무엇이 많은지 보이지 않아요.",
+                    "changes": [
+                      {
+                        "id": "c1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "구간을 정해 그 안으로 모아요.",
+                    "changes": [
+                      {
+                        "id": "d1",
+                        "dx": -12,
+                        "dy": 86
+                      },
+                      {
+                        "id": "d5",
+                        "dx": 16,
+                        "dy": 98
+                      },
+                      {
+                        "id": "d3",
+                        "dx": -4,
+                        "dy": 68
+                      },
+                      {
+                        "id": "d2",
+                        "dx": 4,
+                        "dy": 94
+                      },
+                      {
+                        "id": "d6",
+                        "dx": -10,
+                        "dy": 64
+                      },
+                      {
+                        "id": "d4",
+                        "dx": 12,
+                        "dy": 78
+                      },
+                      {
+                        "id": "c1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "구간마다 몇 개인지를 세면 표가 돼요. 그 개수를 도수라고 해요.",
+                    "changes": [
+                      {
+                        "id": "d1",
+                        "dx": -12,
+                        "dy": 86
+                      },
+                      {
+                        "id": "d5",
+                        "dx": 16,
+                        "dy": 98
+                      },
+                      {
+                        "id": "d3",
+                        "dx": -4,
+                        "dy": 68
+                      },
+                      {
+                        "id": "d2",
+                        "dx": 4,
+                        "dy": 94
+                      },
+                      {
+                        "id": "d6",
+                        "dx": -10,
+                        "dy": 64
+                      },
+                      {
+                        "id": "d4",
+                        "dx": 12,
+                        "dy": 78
+                      },
+                      {
+                        "id": "c1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "frequency-table:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "frequency-table:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "학생 $20$명의 점수를 $10$점 간격으로 묶었더니 이렇게 나왔어요.\n\n$50$점대 $2$명, $60$점대 $5$명, $70$점대 $8$명, $80$점대 $4$명, $90$점대 $1$명이에요.\n\n도수를 모두 더하면 $2 + 5 + 8 + 4 + 1 = 20$으로 전체와 같아야 해요. 다르면 어딘가 빠뜨린 거예요.\n\n가장 많은 계급은 $70$점대예요. 여덟 명이 거기 몰려 있어요.\n\n$70$점 미만인 학생은 몇 명일까요. $2 + 5 = 7$명이에요.\n\n$80$점 이상인 학생은요. $4 + 1 = 5$명이고, 전체의 $\\dfrac{5}{20} = \\dfrac{1}{4}$, 곧 $25\\%$예요.\n\n계급값으로 평균을 어림할 수도 있어요. 각 계급값에 도수를 곱해 더하고 전체 수로 나누면 되는데, 원래 값을 잃었으니 진짜 평균과 조금 다를 수 있어요. 어림이라는 것을 잊지 마세요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "frequency-table:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "frequency-table:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "frequency-table:practice",
+                "problemSetVersionId": "frequency-table:practice:v1",
+                "problemVersionIds": [
+                  "frequency-table:practice-1:v1",
+                  "frequency-table:practice-2:v1",
+                  "frequency-table:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "frequency-table:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "frequency-table:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "frequency-table:check",
+                "problemSetVersionId": "frequency-table:check:v1",
+                "problemVersionIds": [
+                  "frequency-table:check-1:v1",
+                  "frequency-table:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "frequency-table:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "frequency-table:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "흩어진 자료를 구간으로 묶어 개수를 센 표가 도수분포표예요. 구간이 계급, 개수가 도수고요.\n\n묶으면 몰려 있는 자리가 보이지만 개별 값은 사라져요. 얻는 것과 잃는 것이 함께 있어요.\n\n줄기와 잎 그림은 묶어 보면서도 원래 값을 남겨 둬요. 자료가 적을 때 좋아요.\n\n도수의 합은 반드시 전체 개수와 같아요. 확인하는 습관을 들이세요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "frequency-table:review",
+        "problemSetVersionId": "frequency-table:review:v1",
+        "problemVersionIds": [
+          "frequency-table:homework-1:v1",
+          "frequency-table:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "histogram",
+        "versionId": "histogram:v1",
+        "title": "히스토그램: 표를 그림으로 세우기",
+        "summary": "표의 숫자를 막대 높이로 세워, 한눈에 견줄 수 있게 만들어요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "histogram"
+        ],
+        "prerequisiteConceptKeys": [
+          "frequency-table",
+          "coordinate-plane"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "histogram:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "histogram:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "도수분포표는 정확하지만 한눈에 들어오지는 않아요. 숫자를 하나씩 읽어야 하니까요.\n\n그래서 그림으로 세워요. 가로축에 계급을, 세로축에 도수를 두고 계급마다 도수만큼 막대를 세운 것이 히스토그램이에요.\n\n막대그래프와 닮았지만 다른 점이 있어요. 히스토그램의 막대는 서로 붙어 있어요. 계급이 끊기지 않고 이어지는 구간이기 때문이에요. 막대그래프는 종류를 세는 것이라 떨어뜨려 그려요.\n\n막대의 넓이에도 뜻이 있어요. 계급의 크기가 모두 같으면 막대의 넓이는 도수에 정비례해요. 그래서 막대 전체의 넓이는 「계급의 크기 × 전체 도수」예요.\n\n막대 끝의 한가운데를 차례로 이으면 도수분포다각형이 돼요. 양 끝에는 도수가 $0$인 계급이 있다고 보고 축까지 내려 닫아요.\n\n다각형으로 그리면 두 집단을 겹쳐 그려 견주기 좋아요. 막대는 겹치면 가려지지만 선은 겹쳐도 둘 다 보이거든요.\n\n모양에서 읽을 것이 많아요. 가운데가 높으면 평균 근처에 몰린 것이고, 한쪽으로 치우쳤으면 그쪽에 쏠린 것이고, 봉우리가 둘이면 성격이 다른 두 무리가 섞였을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "histogram",
+                    "surface": "히스토그램",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "histogram:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "표의 도수가 막대 높이로 서고 막대 끝을 이으면 선이 되는 그림",
+                "caption": "높이로 세우면 한눈에 견줄 수 있어요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 40,
+                    "y1": 160,
+                    "x2": 288,
+                    "y2": 160,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 56,
+                    "y1": 30,
+                    "x2": 56,
+                    "y2": 160,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 64,
+                    "y": 136,
+                    "width": 44,
+                    "height": 24,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 108,
+                    "y": 100,
+                    "width": 44,
+                    "height": 60,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 152,
+                    "y": 64,
+                    "width": 44,
+                    "height": 96,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 196,
+                    "y": 112,
+                    "width": 44,
+                    "height": 48,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 240,
+                    "y": 148,
+                    "width": 44,
+                    "height": 12,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b5",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        64,
+                        160
+                      ],
+                      [
+                        86,
+                        136
+                      ],
+                      [
+                        130,
+                        100
+                      ],
+                      [
+                        174,
+                        64
+                      ],
+                      [
+                        218,
+                        112
+                      ],
+                      [
+                        262,
+                        148
+                      ],
+                      [
+                        284,
+                        160
+                      ]
+                    ],
+                    "closed": false,
+                    "fill": "none",
+                    "stroke": "orange",
+                    "strokeWidth": 2,
+                    "id": "line",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 22,
+                    "text": "도수를 높이로 세워요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 174,
+                    "y": 52,
+                    "text": "가장 높은 곳",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "peak",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "가로에 계급을, 세로에 도수를 둬요.",
+                    "changes": [
+                      {
+                        "id": "b1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b5",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "line",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "peak",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "계급마다 도수만큼 막대를 세워요. 이것이 히스토그램이에요.",
+                    "changes": [
+                      {
+                        "id": "b1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "line",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "peak",
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "막대 끝의 한가운데를 이으면 도수분포다각형이 돼요. 모양을 견주기 좋아요.",
+                    "changes": [
+                      {
+                        "id": "b1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b5",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "line",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "peak",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "histogram:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "histogram:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "도수가 $2, 5, 8, 4, 1$인 표를 히스토그램으로 그렸다고 해 볼게요.\n\n막대 다섯 개가 붙어 서고, 높이는 차례로 $2, 5, 8, 4, 1$이에요.\n\n가장 높은 막대는 세 번째, 도수 $8$인 계급이에요. 자료가 거기 몰려 있다는 뜻이고요.\n\n계급의 크기가 $10$이라면 막대 전체의 넓이는 $10 \\times 20 = 200$이에요. 전체 도수에 계급의 크기를 곱한 값이죠.\n\n이제 두 반을 견줘 볼게요. 한 반은 가운데가 높고 다른 반은 오른쪽이 높다면, 두 반의 평균이 비슷해도 성적이 퍼진 모양은 아주 다른 거예요.\n\n막대로는 겹쳐 그리기 어려우니 도수분포다각형으로 바꿔 겹쳐 그려요. 두 선의 봉우리 자리를 견주면 한눈에 보여요.\n\n다만 사람 수가 다른 두 반은 이대로 견줄 수 없어요. $30$명 반의 「$8$명」과 $20$명 반의 「$6$명」 중 어느 쪽이 많은지는 높이만으로 알 수 없거든요. 다음 수업이 그 이야기예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "histogram:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "histogram:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "histogram:practice",
+                "problemSetVersionId": "histogram:practice:v1",
+                "problemVersionIds": [
+                  "histogram:practice-1:v1",
+                  "histogram:practice-2:v1",
+                  "histogram:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "histogram:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "histogram:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "histogram:check",
+                "problemSetVersionId": "histogram:check:v1",
+                "problemVersionIds": [
+                  "histogram:check-1:v1",
+                  "histogram:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "histogram:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "histogram:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "계급을 가로로, 도수를 세로로 두고 막대를 세운 것이 히스토그램이에요.\n\n계급이 이어지는 구간이라 막대가 서로 붙어 있어요. 막대그래프와 다른 점이에요.\n\n막대 끝을 이으면 도수분포다각형이 되고, 두 집단을 겹쳐 견주기 좋아요.\n\n모양에서 몰린 자리와 치우침을 읽어요. 다만 크기가 다른 두 집단은 높이만으로 견줄 수 없어요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "histogram:review",
+        "problemSetVersionId": "histogram:review:v1",
+        "problemVersionIds": [
+          "histogram:homework-1:v1",
+          "histogram:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "relative-frequency",
+        "versionId": "relative-frequency:v1",
+        "title": "상대도수: 크기가 다른 집단을 견주기",
+        "summary": "개수만으로는 견줄 수 없는 두 집단을, 전체로 나누어 같은 자 위에 올려요.",
+        "estimatedMinutes": 10,
+        "conceptKeys": [
+          "relative-frequency"
+        ],
+        "prerequisiteConceptKeys": [
+          "histogram",
+          "frequency-table",
+          "rate"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "relative-frequency:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "relative-frequency:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$30$명인 반에서 $8$명, $20$명인 반에서 $6$명이 $90$점을 넘었어요. 어느 반이 더 잘했을까요.\n\n개수만 보면 $8$명이 많아 보여요. 그런데 사람 수가 다르잖아요. 그대로 견주면 큰 반이 늘 유리해요.\n\n그래서 각각을 전체로 나눠요. $8 \\div 30 = 0.27$, $6 \\div 20 = 0.30$이에요. 작은 반 쪽이 오히려 높아요.\n\n이렇게 도수를 전체 도수로 나눈 값을 상대도수라고 해요. 전체에서 차지하는 몫이에요.\n\n상대도수는 늘 $0$과 $1$ 사이이고, 모두 더하면 반드시 $1$이에요. 전체를 나눠 가진 것이니까요. 더했을 때 $1$이 아니면 어딘가 틀린 거예요.\n\n백분율로 바꾸면 $100$을 곱하면 돼요. $0.27$은 $27\\%$죠. 비와 비율에서 하던 일과 같아요.\n\n상대도수의 쓸모는 하나로 정리돼요. 크기가 다른 집단을 같은 자 위에 올려놓는 것.\n\n거꾸로도 쓸 수 있어요. 상대도수와 전체 도수를 알면 도수가 나와요. 전체 $40$명에서 상대도수가 $0.15$이면 $40 \\times 0.15 = 6$명이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "relative-frequency",
+                    "surface": "상대도수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "relative-frequency:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "사람 수가 다른 두 반의 막대를 같은 길이의 띠로 바꿔 견주는 그림",
+                "caption": "전체로 나누면 크기가 달라도 견줄 수 있어요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 84,
+                    "y": 30,
+                    "text": "$30$명 반",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 236,
+                    "y": 30,
+                    "text": "$20$명 반",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 40,
+                    "y": 46,
+                    "width": 88,
+                    "height": 22,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "a1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 84,
+                    "y": 62,
+                    "text": "$8$명",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "at"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 192,
+                    "y": 46,
+                    "width": 88,
+                    "height": 22,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "b1"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 236,
+                    "y": 62,
+                    "text": "$6$명",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "bt"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 92,
+                    "text": "어느 쪽이 많을까요?",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "ask"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 46,
+                    "y1": 126,
+                    "x2": 178,
+                    "y2": 126,
+                    "stroke": "line",
+                    "strokeWidth": 20,
+                    "id": "base1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 46,
+                    "y1": 126,
+                    "x2": 82,
+                    "y2": 126,
+                    "stroke": "fill",
+                    "strokeWidth": 20,
+                    "id": "fill1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 196,
+                    "y": 130,
+                    "text": "$0.27$",
+                    "size": 11,
+                    "anchor": "start",
+                    "fill": "green",
+                    "id": "r1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 46,
+                    "y1": 156,
+                    "x2": 178,
+                    "y2": 156,
+                    "stroke": "line",
+                    "strokeWidth": 20,
+                    "id": "base2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 46,
+                    "y1": 156,
+                    "x2": 86,
+                    "y2": 156,
+                    "stroke": "orange",
+                    "strokeWidth": 20,
+                    "id": "fill2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 196,
+                    "y": 160,
+                    "text": "$0.30$",
+                    "size": 11,
+                    "anchor": "start",
+                    "fill": "orange",
+                    "id": "r2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 186,
+                    "text": "전체로 나누면 견줄 수 있어요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "note",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "한 반은 $8$명, 다른 반은 $6$명이에요. 어느 쪽이 많은 걸까요?",
+                    "changes": [
+                      {
+                        "id": "base1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "fill1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "r1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "base2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "fill2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "r2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "사람 수가 다르니 개수만으로는 말할 수 없어요. 각각 전체로 나눠요.",
+                    "changes": [
+                      {
+                        "id": "ask",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "base1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "fill1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "r1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "base2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "fill2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "r2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$8 \\div 30 = 0.27$, $6 \\div 20 = 0.30$. 작은 반 쪽이 오히려 많아요.",
+                    "changes": [
+                      {
+                        "id": "ask",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "base1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "fill1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "r1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "base2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "fill2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "r2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "relative-frequency:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "relative-frequency:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$40$명인 반의 점수를 묶었더니 $70$점대가 $14$명이었어요. 상대도수를 구해 볼게요.\n\n$14 \\div 40 = 0.35$예요. 백분율로는 $35\\%$고요.\n\n다른 계급도 구해 상대도수를 모두 더하면 $1$이 되어야 해요. 확인하는 습관을 들이면 실수를 잡을 수 있어요.\n\n이번에는 거꾸로예요. 전체가 $200$명이고 어떤 계급의 상대도수가 $0.12$라면 그 계급의 도수는 몇일까요.\n\n$200 \\times 0.12 = 24$명이에요.\n\n두 집단을 견주는 예도 볼게요. A반 $25$명 중 $10$명, B반 $40$명 중 $14$명이 안경을 썼어요.\n\n$10 \\div 25 = 0.4$, $14 \\div 40 = 0.35$. 사람 수는 B반이 많지만 비율은 A반이 높아요. 「몇 명인가」와 「얼마나 흔한가」는 다른 물음이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "relative-frequency:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "relative-frequency:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "relative-frequency:practice",
+                "problemSetVersionId": "relative-frequency:practice:v1",
+                "problemVersionIds": [
+                  "relative-frequency:practice-1:v1",
+                  "relative-frequency:practice-2:v1",
+                  "relative-frequency:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "relative-frequency:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "relative-frequency:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "relative-frequency:check",
+                "problemSetVersionId": "relative-frequency:check:v1",
+                "problemVersionIds": [
+                  "relative-frequency:check-1:v1",
+                  "relative-frequency:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "relative-frequency:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "relative-frequency:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "도수를 전체 도수로 나눈 값이 상대도수예요. 전체에서 차지하는 몫이고요.\n\n늘 $0$과 $1$ 사이이고 모두 더하면 $1$이에요. 아니면 어딘가 틀린 거예요.\n\n크기가 다른 두 집단을 같은 자 위에 올려놓는 것이 상대도수의 쓸모예요.\n\n상대도수와 전체 도수를 알면 도수를 되찾을 수 있어요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "relative-frequency:review",
+        "problemSetVersionId": "relative-frequency:review:v1",
+        "problemVersionIds": [
+          "relative-frequency:homework-1:v1",
+          "relative-frequency:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "frequency-table:practice",
+      "courseKey": "data-basics",
+      "name": "도수분포표 연습",
+      "versionId": "frequency-table:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "frequency-table:practice-1:v1",
+          "conceptKeys": [
+            "frequency-table"
+          ],
+          "promptContent": [
+            {
+              "blockId": "frequency-table:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "도수가 $2, 5, 8, 4, 1$일 때 전체 자료는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "frequency-table:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "모두 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "frequency-table:practice-2:v1",
+          "conceptKeys": [
+            "frequency-table"
+          ],
+          "promptContent": [
+            {
+              "blockId": "frequency-table:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$60$점 이상 $70$점 미만인 계급의 계급값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 65
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "frequency-table:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한가운데 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "frequency-table:practice-3:v1",
+          "conceptKeys": [
+            "frequency-table"
+          ],
+          "promptContent": [
+            {
+              "blockId": "frequency-table:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$50$점대 $2$명, $60$점대 $5$명일 때 $70$점 미만인 학생은 몇 명인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "frequency-table:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘을 더해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "frequency-table:check",
+      "courseKey": "data-basics",
+      "name": "도수분포표 확인",
+      "versionId": "frequency-table:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "frequency-table:check-1:v1",
+          "conceptKeys": [
+            "frequency-table"
+          ],
+          "promptContent": [
+            {
+              "blockId": "frequency-table:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "도수가 $2, 5, 8, 4, 1$일 때 가장 많은 계급의 도수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "frequency-table:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 큰 수를 찾아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "frequency-table:check-2:v1",
+          "conceptKeys": [
+            "frequency-table"
+          ],
+          "promptContent": [
+            {
+              "blockId": "frequency-table:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "도수분포표로 묶었을 때 사라지는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "개별 자료의 값"
+              },
+              {
+                "id": "b",
+                "text": "자료의 개수"
+              },
+              {
+                "id": "c",
+                "text": "계급의 크기"
+              },
+              {
+                "id": "d",
+                "text": "가장 많은 계급"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "개별 자료의 값"
+              },
+              {
+                "id": "b",
+                "text": "자료의 개수"
+              },
+              {
+                "id": "c",
+                "text": "계급의 크기"
+              },
+              {
+                "id": "d",
+                "text": "가장 많은 계급"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "frequency-table:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$60$점대 셋이 $61$인지 $69$인지는 알 수 없어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "frequency-table:review",
+      "courseKey": "data-basics",
+      "name": "도수분포표 복습",
+      "versionId": "frequency-table:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "frequency-table:homework-1:v1",
+          "conceptKeys": [
+            "frequency-table"
+          ],
+          "promptContent": [
+            {
+              "blockId": "frequency-table:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 $20$명 중 $80$점 이상이 $5$명일 때 그 비율은 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "frequency-table:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\dfrac{5}{20}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "frequency-table:homework-2:v1",
+          "conceptKeys": [
+            "frequency-table"
+          ],
+          "promptContent": [
+            {
+              "blockId": "frequency-table:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$80$점 이상 $90$점 미만인 계급의 계급값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 85
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "frequency-table:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한가운데 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "histogram:practice",
+      "courseKey": "data-basics",
+      "name": "히스토그램 연습",
+      "versionId": "histogram:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "histogram:practice-1:v1",
+          "conceptKeys": [
+            "histogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "histogram:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "도수가 $2, 5, 8, 4, 1$일 때 가장 높은 막대의 높이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "histogram:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 큰 도수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "histogram:practice-2:v1",
+          "conceptKeys": [
+            "histogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "histogram:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "히스토그램의 막대가 서로 붙어 있는 이유로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "계급이 이어지는 구간이기 때문"
+              },
+              {
+                "id": "b",
+                "text": "보기 좋기 때문"
+              },
+              {
+                "id": "c",
+                "text": "도수가 크기 때문"
+              },
+              {
+                "id": "d",
+                "text": "넓이를 재기 위해서"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "계급이 이어지는 구간이기 때문"
+              },
+              {
+                "id": "b",
+                "text": "보기 좋기 때문"
+              },
+              {
+                "id": "c",
+                "text": "도수가 크기 때문"
+              },
+              {
+                "id": "d",
+                "text": "넓이를 재기 위해서"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "histogram:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "막대그래프는 종류를 세는 것이라 떨어뜨려요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "histogram:practice-3:v1",
+          "conceptKeys": [
+            "histogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "histogram:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "계급의 크기가 $10$이고 전체 도수가 $20$일 때 막대 전체의 넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 200
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "histogram:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "계급의 크기에 전체 도수를 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "histogram:check",
+      "courseKey": "data-basics",
+      "name": "히스토그램 확인",
+      "versionId": "histogram:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "histogram:check-1:v1",
+          "conceptKeys": [
+            "histogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "histogram:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "막대 끝의 한가운데를 이어 만든 그래프를 무엇이라 하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "도수분포다각형"
+              },
+              {
+                "id": "b",
+                "text": "막대그래프"
+              },
+              {
+                "id": "c",
+                "text": "원그래프"
+              },
+              {
+                "id": "d",
+                "text": "꺾은선그래프"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "도수분포다각형"
+              },
+              {
+                "id": "b",
+                "text": "막대그래프"
+              },
+              {
+                "id": "c",
+                "text": "원그래프"
+              },
+              {
+                "id": "d",
+                "text": "꺾은선그래프"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "histogram:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 집단을 겹쳐 견주기 좋아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "histogram:check-2:v1",
+          "conceptKeys": [
+            "histogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "histogram:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "계급의 크기가 $5$이고 전체 도수가 $30$일 때 막대 전체의 넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 150
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "histogram:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5 \\times 30$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "histogram:review",
+      "courseKey": "data-basics",
+      "name": "히스토그램 복습",
+      "versionId": "histogram:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "histogram:homework-1:v1",
+          "conceptKeys": [
+            "histogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "histogram:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "봉우리가 둘인 히스토그램에서 짐작할 수 있는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "성격이 다른 두 무리가 섞였을 수 있다"
+              },
+              {
+                "id": "b",
+                "text": "자료가 적다"
+              },
+              {
+                "id": "c",
+                "text": "계급이 너무 크다"
+              },
+              {
+                "id": "d",
+                "text": "평균이 높다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "성격이 다른 두 무리가 섞였을 수 있다"
+              },
+              {
+                "id": "b",
+                "text": "자료가 적다"
+              },
+              {
+                "id": "c",
+                "text": "계급이 너무 크다"
+              },
+              {
+                "id": "d",
+                "text": "평균이 높다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "histogram:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "몰린 자리가 둘이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "histogram:homework-2:v1",
+          "conceptKeys": [
+            "histogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "histogram:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "사람 수가 다른 두 반을 히스토그램의 높이만으로 견줄 수 있나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "없다"
+              },
+              {
+                "id": "b",
+                "text": "있다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "없다"
+              },
+              {
+                "id": "b",
+                "text": "있다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "histogram:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$30$명의 $8$명과 $20$명의 $6$명을 견줘 보세요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "relative-frequency:practice",
+      "courseKey": "data-basics",
+      "name": "상대도수 연습",
+      "versionId": "relative-frequency:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "relative-frequency:practice-1:v1",
+          "conceptKeys": [
+            "relative-frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "relative-frequency:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 $40$명 중 어떤 계급의 도수가 $14$일 때 상대도수를 백분율로 나타내면 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 35
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "relative-frequency:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$14 \\div 40$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "relative-frequency:practice-2:v1",
+          "conceptKeys": [
+            "relative-frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "relative-frequency:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체가 $200$명이고 상대도수가 $0.12$인 계급의 도수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 24
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "relative-frequency:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$200 \\times 0.12$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "relative-frequency:practice-3:v1",
+          "conceptKeys": [
+            "relative-frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "relative-frequency:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "상대도수를 모두 더하면 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "relative-frequency:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체를 나눠 가진 것이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "relative-frequency:check",
+      "courseKey": "data-basics",
+      "name": "상대도수 확인",
+      "versionId": "relative-frequency:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "relative-frequency:check-1:v1",
+          "conceptKeys": [
+            "relative-frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "relative-frequency:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$25$명 중 $10$명의 상대도수를 백분율로 나타내면 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 40
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "relative-frequency:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10 \\div 25$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "relative-frequency:check-2:v1",
+          "conceptKeys": [
+            "relative-frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "relative-frequency:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$30$명 중 $8$명과 $20$명 중 $6$명 중 비율이 더 높은 쪽은 어디인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$20$명 중 $6$명"
+              },
+              {
+                "id": "b",
+                "text": "$30$명 중 $8$명"
+              },
+              {
+                "id": "c",
+                "text": "같다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$20$명 중 $6$명"
+              },
+              {
+                "id": "b",
+                "text": "$30$명 중 $8$명"
+              },
+              {
+                "id": "c",
+                "text": "같다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "relative-frequency:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$0.27$과 $0.30$을 견줘요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "relative-frequency:review",
+      "courseKey": "data-basics",
+      "name": "상대도수 복습",
+      "versionId": "relative-frequency:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "relative-frequency:homework-1:v1",
+          "conceptKeys": [
+            "relative-frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "relative-frequency:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 $50$명 중 상대도수가 $0.2$인 계급의 도수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "relative-frequency:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$50 \\times 0.2$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "relative-frequency:homework-2:v1",
+          "conceptKeys": [
+            "relative-frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "relative-frequency:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "크기가 다른 두 집단을 견줄 때 쓰는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "상대도수"
+              },
+              {
+                "id": "b",
+                "text": "도수"
+              },
+              {
+                "id": "c",
+                "text": "계급의 크기"
+              },
+              {
+                "id": "d",
+                "text": "계급값"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "상대도수"
+              },
+              {
+                "id": "b",
+                "text": "도수"
+              },
+              {
+                "id": "c",
+                "text": "계급의 크기"
+              },
+              {
+                "id": "d",
+                "text": "계급값"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "relative-frequency:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 자 위에 올려놓아야 해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "data-basics:drill",
+      "courseKey": "data-basics",
+      "name": "자료의 정리 모아 풀기",
+      "versionId": "data-basics:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "data-basics:drill-1:v1",
+          "conceptKeys": [
+            "frequency-table"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "도수가 $3, 6, 9, 2$일 때 전체 자료는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "모두 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-2:v1",
+          "conceptKeys": [
+            "frequency-table"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$70$점 이상 $80$점 미만인 계급의 계급값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 75
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한가운데 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-3:v1",
+          "conceptKeys": [
+            "frequency-table"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$40$점 이상 $50$점 미만인 계급의 계급값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 45
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한가운데 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-4:v1",
+          "conceptKeys": [
+            "frequency-table"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "도수가 $3, 6, 9, 2$일 때 가장 많은 계급의 도수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 큰 수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-5:v1",
+          "conceptKeys": [
+            "frequency-table"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "구간 하나를 무엇이라 하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "계급"
+              },
+              {
+                "id": "b",
+                "text": "도수"
+              },
+              {
+                "id": "c",
+                "text": "상대도수"
+              },
+              {
+                "id": "d",
+                "text": "계급값"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "계급"
+              },
+              {
+                "id": "b",
+                "text": "도수"
+              },
+              {
+                "id": "c",
+                "text": "상대도수"
+              },
+              {
+                "id": "d",
+                "text": "계급값"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "구간의 폭은 계급의 크기예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-6:v1",
+          "conceptKeys": [
+            "frequency-table"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "도수분포표에서 알 수 없는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "개별 자료의 값"
+              },
+              {
+                "id": "b",
+                "text": "전체 개수"
+              },
+              {
+                "id": "c",
+                "text": "가장 많은 계급"
+              },
+              {
+                "id": "d",
+                "text": "각 계급의 도수"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "개별 자료의 값"
+              },
+              {
+                "id": "b",
+                "text": "전체 개수"
+              },
+              {
+                "id": "c",
+                "text": "가장 많은 계급"
+              },
+              {
+                "id": "d",
+                "text": "각 계급의 도수"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "묶으면서 잃은 것이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-7:v1",
+          "conceptKeys": [
+            "frequency-table"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "도수가 $3, 6, 9, 2$일 때 앞의 두 계급에 든 자료는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3 + 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-8:v1",
+          "conceptKeys": [
+            "histogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "도수가 $4, 7, 11, 3$일 때 가장 높은 막대의 높이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 11
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 큰 도수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-9:v1",
+          "conceptKeys": [
+            "histogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "계급의 크기가 $5$이고 전체 도수가 $24$일 때 막대 전체의 넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 120
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5 \\times 24$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-10:v1",
+          "conceptKeys": [
+            "histogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "계급의 크기가 $10$이고 전체 도수가 $35$일 때 막대 전체의 넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 350
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10 \\times 35$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-11:v1",
+          "conceptKeys": [
+            "histogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "히스토그램과 막대그래프의 다른 점으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "히스토그램의 막대는 서로 붙어 있다"
+              },
+              {
+                "id": "b",
+                "text": "히스토그램은 세로로 그린다"
+              },
+              {
+                "id": "c",
+                "text": "막대그래프는 넓이를 잰다"
+              },
+              {
+                "id": "d",
+                "text": "차이가 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "히스토그램의 막대는 서로 붙어 있다"
+              },
+              {
+                "id": "b",
+                "text": "히스토그램은 세로로 그린다"
+              },
+              {
+                "id": "c",
+                "text": "막대그래프는 넓이를 잰다"
+              },
+              {
+                "id": "d",
+                "text": "차이가 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "계급이 이어지는 구간이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-12:v1",
+          "conceptKeys": [
+            "histogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "막대 끝의 한가운데를 이어 만든 그래프의 이름은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "도수분포다각형"
+              },
+              {
+                "id": "b",
+                "text": "원그래프"
+              },
+              {
+                "id": "c",
+                "text": "막대그래프"
+              },
+              {
+                "id": "d",
+                "text": "산점도"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "도수분포다각형"
+              },
+              {
+                "id": "b",
+                "text": "원그래프"
+              },
+              {
+                "id": "c",
+                "text": "막대그래프"
+              },
+              {
+                "id": "d",
+                "text": "산점도"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "겹쳐 그려 견주기 좋아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-13:v1",
+          "conceptKeys": [
+            "histogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "히스토그램에서 가운데가 높은 모양이 뜻하는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "가운데 근처에 몰려 있다"
+              },
+              {
+                "id": "b",
+                "text": "자료가 적다"
+              },
+              {
+                "id": "c",
+                "text": "두 무리가 섞였다"
+              },
+              {
+                "id": "d",
+                "text": "한쪽으로 치우쳤다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "가운데 근처에 몰려 있다"
+              },
+              {
+                "id": "b",
+                "text": "자료가 적다"
+              },
+              {
+                "id": "c",
+                "text": "두 무리가 섞였다"
+              },
+              {
+                "id": "d",
+                "text": "한쪽으로 치우쳤다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "봉우리가 있는 자리를 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-14:v1",
+          "conceptKeys": [
+            "relative-frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 $50$명 중 도수가 $20$인 계급의 상대도수를 백분율로 나타내면 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 40
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$20 \\div 50$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-15:v1",
+          "conceptKeys": [
+            "relative-frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 $80$명이고 상대도수가 $0.25$인 계급의 도수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$80 \\times 0.25$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-16:v1",
+          "conceptKeys": [
+            "relative-frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "상대도수를 모두 더한 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체를 나눠 가진 몫이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-17:v1",
+          "conceptKeys": [
+            "relative-frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$25$명 중 $5$명의 상대도수를 백분율로 나타내면 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5 \\div 25$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-18:v1",
+          "conceptKeys": [
+            "relative-frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 $120$명이고 상대도수가 $0.15$인 계급의 도수를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 18
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$120 \\times 0.15$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-19:v1",
+          "conceptKeys": [
+            "relative-frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "크기가 다른 두 집단을 견줄 때 쓰는 값은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "상대도수"
+              },
+              {
+                "id": "b",
+                "text": "도수"
+              },
+              {
+                "id": "c",
+                "text": "계급값"
+              },
+              {
+                "id": "d",
+                "text": "계급의 크기"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "상대도수"
+              },
+              {
+                "id": "b",
+                "text": "도수"
+              },
+              {
+                "id": "c",
+                "text": "계급값"
+              },
+              {
+                "id": "d",
+                "text": "계급의 크기"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 자 위에 올려놓아야 해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "data-basics:drill-20:v1",
+          "conceptKeys": [
+            "relative-frequency"
+          ],
+          "promptContent": [
+            {
+              "blockId": "data-basics:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "상대도수가 가질 수 있는 값의 범위로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$0$ 이상 $1$ 이하"
+              },
+              {
+                "id": "b",
+                "text": "$0$ 이상 $100$ 이하"
+              },
+              {
+                "id": "c",
+                "text": "제한이 없다"
+              },
+              {
+                "id": "d",
+                "text": "$1$ 이상"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$0$ 이상 $1$ 이하"
+              },
+              {
+                "id": "b",
+                "text": "$0$ 이상 $100$ 이하"
+              },
+              {
+                "id": "c",
+                "text": "제한이 없다"
+              },
+              {
+                "id": "d",
+                "text": "$1$ 이상"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "data-basics:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체에서 차지하는 몫이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}
