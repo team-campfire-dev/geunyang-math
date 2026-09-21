@@ -346,10 +346,12 @@ model Assignment {
   title                String @db.VarChar(191)
   issuerType           String @default("system") @db.VarChar(20)
   sourceLessonVersionId String? @db.VarChar(191)
-  // The questions come from one frozen problem set version; an item only picks and orders them.
-  problemSetId         String @db.VarChar(191)
-  problemSetVersionId  String @db.VarChar(191)
-  problemSetVersion    ProblemSetVersion @relation(fields: [problemSetVersionId], references: [id])
+  /// The questions usually come from one frozen problem set version, and an item only picks and
+  /// orders them. A set gathered for one learner — every question in the catalogue built to catch
+  /// one mistake — comes from several, so it names none and these are null.
+  problemSetId         String? @db.VarChar(191)
+  problemSetVersionId  String? @db.VarChar(191)
+  problemSetVersion    ProblemSetVersion? @relation(fields: [problemSetVersionId], references: [id])
   // How it is taken (kind, hints, results, solutions) and when it opens and is due. The reasons
   // behind a system-issued review stay in policySnapshot.
   policy               Json

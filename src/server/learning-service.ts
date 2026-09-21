@@ -12,7 +12,8 @@ import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
 import { blockDefinitionRefs, getActivityProblemIds, definitionReferences, toPublicLesson, type LessonMetadata, type LessonRecord, type StoredProblem } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
-import { defaultCourseTrack, isSchoolTrack, type ActionResponse, type AssignmentView, type AttemptView, type CourseStage, type CourseTrack, type GradeResult, type LearningState, type PublicCatalog, type PublicLesson, type PublicProblem, type PublicProblemSet, type DiagnosticAnswer, type Recommendation } from '@/shared/api';
+import { misconceptionOf } from '@/shared/misconception';
+import { defaultCourseTrack, isSchoolTrack, type ActionResponse, type AssignmentView, type AttemptView, type CourseStage, type CourseTrack, type GradeResult, type LearningState, type PublicCatalog, type PublicLesson, type PublicProblem, type PublicProblemSet, type DiagnosticAnswer, type Recommendation, type StandingMisconception } from '@/shared/api';
 import { AppError } from './errors';
 
 /**
@@ -47,11 +48,19 @@ export const actionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('assignment.submit'), recipientId: id, requestId: z.string().min(8).max(100) }).strict(),
   z.object({ action: z.literal('problemSet.start'), problemSetId: id }).strict(),
   z.object({ action: z.literal('solution.open'), context, contextId: id, problemVersionId: id }).strict(),
+  z.object({ action: z.literal('practice.gather'), misconception: id.max(60) }).strict(),
 ]);
 type Tx = Prisma.TransactionClient;
 const asJson = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 const notFound = () => new AppError(404, 'not_found', '학습 기록을 찾을 수 없어요.');
 const conflict = (message: string) => new AppError(409, 'conflict', message);
+/**
+ * How many different questions have to show one mistake before it is called a habit. Two, which is
+ * the bar readiness already uses in the other direction: one answer is never evidence either way.
+ */
+const standingMisconception = 2;
+/** How long a set gathered for one learner is. Short enough to finish in one sitting. */
+const gatheredQuestions = 6;
 function publicProblem(p: StoredProblem): PublicProblem {
   return { problemVersionId: p.problemVersionId, conceptKeys: p.conceptKeys, promptContent: p.promptContent, responseSpec: p.responseSpec,
     hintAvailable: p.hintAvailable, solutionAvailable: p.solution.length > 0 };
@@ -319,6 +328,21 @@ export class LearningService {
       if (correct.length >= 2) concept.state = 'independent';
       if (correct.some(e => e.delayed) && correct.some(e => !e.delayed)) concept.state = 'retained';
     }
+    /**
+     * The mistakes this learner keeps making, counted over different questions.
+     *
+     * `evidence` already holds one entry per question, taken from the first real answer to it, so
+     * counting `misconception` over it is counting **questions** and not answers — somebody who
+     * tried the same question four times has shown one thing once. Two is the bar, the same bar
+     * readiness uses: one wrong answer is a slip, and the same step wrong in two questions is a
+     * habit. A name the vocabulary no longer knows is dropped rather than shown as a key.
+     */
+    const slips = new Map<string, number>();
+    for (const item of evidence) if (item.result.misconception) slips.set(item.result.misconception, (slips.get(item.result.misconception) ?? 0) + 1);
+    const misconceptions: StandingMisconception[] = [...slips.entries()]
+      .filter(([, problems]) => problems >= standingMisconception)
+      .flatMap(([key, problems]) => { const record = misconceptionOf(key); return record ? [{ ...record, problems }] : []; })
+      .sort((a, b) => b.problems - a.problems || a.label.localeCompare(b.label));
     const diagnosticBank = diagnostic?.document as unknown as StoredProblem[] | undefined;
     const diagnosticAnswers = (diagnostic?.answers ?? []) as unknown as DiagnosticAnswer[];
     const completedDiagnostic = diagnostic?.status === 'completed';
@@ -329,7 +353,7 @@ export class LearningService {
       assignments, readiness, dailyMinutes: user.dailyMinutes, targetCourseKey: user.targetCourseKey, now: new Date(), preferredLessonKey: user.preferredLessonKey });
     return {
       user: { id: user.id, displayName: user.displayName, targetCourseKey: user.targetCourseKey, dailyMinutes: user.dailyMinutes },
-      lessons, assignments, recommendations, concepts, plan,
+      lessons, assignments, recommendations, concepts, misconceptions, plan,
       diagnosticOffering: offering ? { version: offering.versionId, title: offering.title, description: offering.description,
         scope: placementScope(conceptGraph(lessons), await this.placementTargets(db, lessons, user.targetCourseKey)).length,
         estimatedMinutes: offering.estimatedMinutes } : null,
@@ -557,6 +581,7 @@ export class LearningService {
               await tx.assignmentRecipient.update({ where: { id: recipient.id }, data: { status: 'submitted' } }); return {};
             }
             case 'problemSet.start': return { recipientId: await this.startProblemSet(tx, userId, scope.id, action.problemSetId) };
+            case 'practice.gather': return { recipientId: await this.gatherPractice(tx, userId, scope.id, action.misconception) };
           }
           })();
           const nextState = await this.state(userId, tx);
@@ -606,6 +631,66 @@ export class LearningService {
       policy: practicePolicy, schedule: {}, issuedAt: now,
       policySnapshot: { version: 1, audience: 'self-study', chosenBy: 'learner' },
       items: { create: problems.map((problem, position) => ({ problemVersionId: problem.problemVersionId, position })) },
+      recipients: { create: { learnerUserId: userId, recommendedAt: now, submissions: { create: { submissionIndex: 1 } } } },
+    }, select: { recipients: { select: { id: true } } } });
+    return recipient.recipients[0].id;
+  }
+
+  /**
+   * The questions built to catch one mistake, gathered into a set of this learner's own.
+   *
+   * Chosen, not written. A question that names this misconception was made to catch it by whoever
+   * wrote it, and it is already published, already marked, already validated — so a set for one
+   * learner costs nothing but the choosing. Which is also why this comes before anything that
+   * writes a lesson: it is the same idea with none of the risk.
+   *
+   * Three rules about what goes in. A question from a placement bank never does, for the same
+   * reason it is off the practice shelf — rehearsing it spends the one thing it is for. A question
+   * this learner has already answered right, first time and unaided, does not either; they have
+   * shown that one. And it is short, because a set that is not finished says nothing.
+   */
+  async gatherPractice(tx: Tx, userId: string, scopeId: string, misconception: string) {
+    const record = misconceptionOf(misconception);
+    if (!record) throw notFound();
+    const open = await tx.assignmentRecipient.findFirst({
+      where: { learnerUserId: userId, status: 'assigned',
+        assignment: { ownerScopeId: scopeId, issuerType: 'self', problemSetVersionId: null,
+          policySnapshot: { path: '$.misconception', equals: misconception } } },
+      orderBy: { recommendedAt: 'desc' },
+    });
+    if (open) return open.id;
+    // Few rows carry any names at all, so they are read whole and matched here rather than by
+    // asking MySQL to look inside the JSON.
+    const [named, asked, mine] = await Promise.all([
+      tx.publishedProblem.findMany({ where: { ownerKind: 'problem_set', misreadings: { not: Prisma.DbNull } },
+        orderBy: [{ ownerVersionId: 'asc' }, { order: 'asc' }], select: { ownerVersionId: true, problemVersionId: true, misreadings: true } }),
+      tx.diagnosticVersion.findMany({ select: { problemSetVersionId: true } }),
+      tx.attempt.findMany({ where: { userId }, orderBy: [{ createdAt: 'asc' }, { id: 'asc' }], select: { problemVersionId: true, result: true } }),
+    ]);
+    const banks = new Set(asked.map(row => row.problemSetVersionId));
+    // The first real answer to each question, which is the one the record counts.
+    const answered = new Map<string, GradeResult>();
+    for (const attempt of mine) {
+      const result = attempt.result as GradeResult;
+      if (result.status !== 'invalid' && !answered.has(attempt.problemVersionId)) answered.set(attempt.problemVersionId, result);
+    }
+    const settled = (id: string) => { const was = answered.get(id); return was?.status === 'correct' && !was.assisted; };
+    const chosen: string[] = [];
+    for (const row of named) {
+      if (banks.has(row.ownerVersionId) || chosen.includes(row.problemVersionId) || settled(row.problemVersionId)) continue;
+      if (!(row.misreadings as { misconception?: unknown }[] | null)?.some(entry => entry.misconception === misconception)) continue;
+      chosen.push(row.problemVersionId);
+    }
+    // Where they went wrong before comes first: it is the question that showed the habit.
+    const order = (id: string) => (answered.get(id) ? 0 : 1);
+    const items = chosen.sort((a, b) => order(a) - order(b)).slice(0, gatheredQuestions);
+    if (!items.length) throw conflict('이 착각을 다루는 문항이 아직 없어요.');
+    const now = new Date();
+    const recipient = await tx.assignment.create({ data: {
+      ownerScopeId: scopeId, title: `「${record.label}」 모아 풀기`, issuerType: 'self',
+      policy: practicePolicy, schedule: {}, issuedAt: now,
+      policySnapshot: { version: 1, audience: 'self-study', chosenBy: 'learner', misconception },
+      items: { create: items.map((problemVersionId, position) => ({ problemVersionId, position })) },
       recipients: { create: { learnerUserId: userId, recommendedAt: now, submissions: { create: { submissionIndex: 1 } } } },
     }, select: { recipients: { select: { id: true } } } });
     return recipient.recipients[0].id;
