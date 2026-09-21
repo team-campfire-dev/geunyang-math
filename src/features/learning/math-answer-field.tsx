@@ -48,7 +48,9 @@ export function MathAnswerField({ value, onChange, disabled, label, placeholder,
    */
   const hold = (event: { preventDefault: () => void }) => event.preventDefault();
   return <div className="math-answer">
-    <label>{label}<input ref={field} aria-label={label} type="text" maxLength={100}
+    {/* The question asks for the answer and the box stands right under it, so the caption is kept
+        for readers who meet the box without seeing where it stands. */}
+    <label><span className="sr-only">{label}</span><input ref={field} aria-label={label} type="text" maxLength={100}
       // While the pad is up this box wants no keyboard of the phone's own.
       inputMode={usingPad ? 'none' : 'text'}
       placeholder={placeholder} value={value} disabled={disabled} autoComplete="off" spellCheck={false}

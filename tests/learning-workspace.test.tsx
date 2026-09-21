@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, screen } from './render';
 import { LearningWorkspace } from '@/features/learning/learning-workspace';
-import type { AssignmentView, ContentBlock, LearningAction, LearningState, LessonDocument, PublicLesson, PublicProblemSet } from '@/shared/api';
+import type { AssignmentView, AttemptView, ContentBlock, LearningAction, LearningState, LessonDocument, PublicLesson, PublicProblemSet } from '@/shared/api';
 
 const lessonKey = 'fraction-meaning';
 const problemId = 'fraction-meaning:practice:p1:v2';
@@ -194,6 +194,32 @@ describe('a step this version cannot draw', () => {
   });
 });
 
+describe('a question the step cannot take yet', () => {
+  const answerBox = () => screen.getAllByLabelText('나의 답')[0] as HTMLInputElement;
+
+  it('says which step is holding it, and goes back to that step', async () => {
+    server = serve({ state: enrolled() });
+    await openLesson();
+    fireEvent.click(screen.getByRole('button', { name: /직접 해보기/ }));
+    await tick();
+    // A grey box with nothing said about it reads as a fault in the screen rather than an order.
+    expect(answerBox().hasAttribute('disabled')).toBe(true);
+    expect(screen.getAllByText(/앞 단계를 끝내면 이 문제를 풀 수 있어요/).length).toBeGreaterThan(0);
+    fireEvent.click(screen.getAllByRole('button', { name: /1단계로 돌아가기/ })[0]);
+    await tick();
+    expect(stepCount()).toBe('1 / 2');
+  });
+
+  it('tells a finished lesson apart from a step waiting its turn', async () => {
+    server = serve({ state: enrolled(['fraction-meaning:explanation:v2', 'fraction-meaning:practice:v2'], 'completed') });
+    await openLesson();
+    fireEvent.click(screen.getByRole('button', { name: /직접 해보기/ }));
+    await tick();
+    expect(screen.getAllByText('학습을 마친 수업이에요. 저장한 풀이는 그대로 볼 수 있어요.').length).toBeGreaterThan(0);
+    expect(screen.queryByText(/앞 단계를 끝내면/)).toBeNull();
+  });
+});
+
 describe('finishing an assignment', () => {
   const saved = () => assignment({ items: [{ ...assignment().items[0], attempt: { id: 't1', problemVersionId: problemId, answer: '4', result: { status: 'correct', message: '정답이에요.', assisted: false }, hintUsed: false } }] });
   const submitButton = () => screen.getByRole('button', { name: /과제 제출하기/ });
@@ -243,6 +269,65 @@ describe('finishing an assignment', () => {
     const [first, second] = server.of('assignment.submit') as { requestId: string }[];
     expect(second.requestId).toBe(first.requestId);
     expect(screen.getByText(/과제를 제출했어요/)).toBeDefined();
+  });
+});
+
+describe('a set too long to hold on one screen', () => {
+  const question = (id: string, prompt: string) => ({ problemVersionId: id, conceptKeys: ['term.denominator'],
+    promptContent: [text(`prompt-${id}`, prompt)], responseSpec: { kind: 'integer' as const }, hintAvailable: false });
+  const judged = (problemVersionId: string, status: 'correct' | 'incorrect'): AttemptView => ({ id: `t-${problemVersionId}`,
+    problemVersionId, answer: '4', result: { status, message: status === 'correct' ? '맞았어요.' : '아직 답이 맞지 않아요.', assisted: false }, hintUsed: false });
+  const set = (attempts: (AttemptView | null)[]): AssignmentView => assignment({
+    recipientId: 'r-set', title: '분수 모아 풀기', lessonKey: null, problemSetId: 'fractions:gathered',
+    policy: { kind: 'practice', hints: true, results: 'per-item', solutions: 'never' },
+    items: attempts.map((attempt, index) => ({ id: `i${index + 1}`, problem: question(`q${index + 1}`, `${index + 1}번 문제예요.`), attempt })),
+  });
+  const openSet = async (view: AssignmentView) => {
+    server = serve({ state: learningState({ assignments: [view] }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: /분수 모아 풀기/ }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: /분수 모아 풀기/ })[0]);
+    await until(() => expect(screen.getByText('문제 01')).toBeDefined());
+  };
+  const holding = () => window.document.activeElement?.closest('section')?.id ?? null;
+  const box = (index: number) => screen.getAllByLabelText('나의 답')[index];
+
+  it('carries the count and the way back to what is left', async () => {
+    await openSet(set([judged('q1', 'correct'), null, null]));
+    expect(document_text('.solve-progress .solve-count')).toBe('1 / 3 저장');
+    fireEvent.click(screen.getAllByRole('button', { name: /남은 문제로/ })[0]);
+    await tick();
+    // The strip knows which question is still waiting, so nobody has to read past the answered ones.
+    expect(holding()).toBe('problem-2');
+  });
+
+  it('moves on by itself when the answer was right', async () => {
+    await openSet(set([null, null, judged('q3', 'correct')]));
+    server.state.after = (action) => action.action === 'attempt.submit'
+      ? learningState({ assignments: [set([judged('q1', 'correct'), null, judged('q3', 'correct')])] }) : server.state.learning;
+    fireEvent.change(box(0), { target: { value: '4' } });
+    fireEvent.click(screen.getAllByRole('button', { name: '답안 저장' })[0]);
+    await tick();
+    // The third is already answered, so moving on means the second and not merely the next one.
+    expect(holding()).toBe('problem-2');
+  });
+
+  it('stays where the answer was wrong', async () => {
+    await openSet(set([null, null, null]));
+    server.state.after = (action) => action.action === 'attempt.submit'
+      ? learningState({ assignments: [set([judged('q1', 'incorrect'), null, null])] }) : server.state.learning;
+    fireEvent.change(box(0), { target: { value: '4' } });
+    fireEvent.click(screen.getAllByRole('button', { name: '답안 저장' })[0]);
+    await tick();
+    expect(holding()).not.toBe('problem-2');
+    expect(screen.getByText('아직 답이 맞지 않아요.')).toBeDefined();
+  });
+
+  /** A pair of questions shares a screen, so the strip would only repeat what is already in view. */
+  it('leaves a short set alone', async () => {
+    await openSet(set([null, null]));
+    expect(window.document.querySelector('.solve-progress')).toBeNull();
+    expect(screen.getByText('문제 02')).toBeDefined();
   });
 });
 
