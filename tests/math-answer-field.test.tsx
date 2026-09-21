@@ -36,7 +36,6 @@ describe('writing a number', () => {
   it('offers the keys a phone keyboard hides, and only while the box is in use', () => {
     render(<Field />);
     fireEvent.focus(box());
-    const pad = screen.getByRole('group', { name: '숫자 키패드' });
     for (const name of ['1', '음수 부호', '소수점', '분수 선', '한 글자 지우기']) {
       expect(screen.getByRole('button', { name }), name).toBeDefined();
     }
@@ -47,8 +46,36 @@ describe('writing a number', () => {
     expect(box().value).toBe('-3/4');
     fireEvent.click(screen.getByRole('button', { name: '한 글자 지우기' }));
     expect(box().value).toBe('-3/');
-    fireEvent.click(screen.getByRole('button', { name: '키패드 닫기' }));
-    expect(pad.isConnected).toBe(false);
+    // Leaving the box puts the pad away, so a page of questions is not a page of keypads.
+    fireEvent.blur(box());
+    expect(screen.queryByRole('group', { name: '숫자 키패드' })).toBeNull();
+  });
+
+  it('keeps the focus in the box while anything under it is pressed', () => {
+    render(<Field />);
+    fireEvent.focus(box());
+    // A control that took the focus would count as leaving the box: the pad would come down
+    // between the press and the release, and the press would never arrive. That is how the
+    // switch to the system keyboard stopped working the first time.
+    for (const name of ['7', '한 글자 지우기', '키보드로 쓸게요']) {
+      expect(fireEvent.mouseDown(screen.getByRole('button', { name })), `${name}가 포커스를 가져간다`).toBe(false);
+    }
+  });
+
+  it('asks for no phone keyboard of its own while the pad is up, and gives it back on request', () => {
+    render(<Field />);
+    // Two keyboards at once is the thing to avoid: while the pad is up the box wants no other.
+    expect(box().getAttribute('inputmode')).toBe('none');
+    fireEvent.focus(box());
+    fireEvent.click(screen.getByRole('button', { name: '키보드로 쓸게요' }));
+    expect(screen.queryByRole('group', { name: '숫자 키패드' })).toBeNull();
+    expect(box().getAttribute('inputmode')).toBe('text');
+    // And it stays away until asked back, rather than returning the next time the box is touched.
+    fireEvent.focus(box());
+    expect(screen.queryByRole('group', { name: '숫자 키패드' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: '숫자 키패드 쓰기' }));
+    expect(box().getAttribute('inputmode')).toBe('none');
+    expect(screen.getByRole('group', { name: '숫자 키패드' })).toBeDefined();
   });
 
   it('does not offer a fraction bar where only a whole number is accepted', () => {
