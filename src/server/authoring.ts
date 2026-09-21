@@ -3,7 +3,7 @@ import { unfinishedIssues } from '@/shared/authoring-checks';
 import { z } from 'zod';
 import type { PrismaClient } from '@prisma/client';
 import { canonicalJson, ContentError } from '@/core/content-bundle';
-import { problemSetRefs, storedLessonOf, validateLesson, validateProblemSet, type StoredLesson, type StoredProblem, type StoredProblemSet } from '@/core/content';
+import { maxProblemsPerSet, problemSetRefs, storedLessonOf, validateLesson, validateProblemSet, type StoredLesson, type StoredProblem, type StoredProblemSet } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
 import { frozenProblemSet, lessonRecord, importContent, problemSetRecords, lessonRecords, publishedProblemRecords, definitionRecords, currentDefinitions } from './content-store';
 import { AppError } from './errors';
@@ -85,7 +85,7 @@ const editSchema = z.object({
   reviewProblemIds: z.array(id).max(50).optional(),
   // An answer says what a question expects; the response format and whether a hint exists follow
   // from it and from the hints, so the editor never sends either and the two cannot disagree.
-  problems: z.array(problemEditSchema).max(200),
+  problems: z.array(problemEditSchema).max(maxProblemsPerSet),
 }).strict();
 
 export const authoringActionSchema = z.discriminatedUnion('action', [
@@ -120,7 +120,7 @@ export const authoringActionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('diagnostic.save'), draftId: id, edit: z.object({
     versionId: id.regex(/^[a-zA-Z0-9:._-]+$/), title: z.string().max(191), description: z.string().max(2000),
     estimatedMinutes: z.number().int().min(0).max(240),
-    problemVersionIds: z.array(id).max(200), problems: z.array(problemEditSchema).max(200),
+    problemVersionIds: z.array(id).max(maxProblemsPerSet), problems: z.array(problemEditSchema).max(maxProblemsPerSet),
   }).strict() }).strict(),
   z.object({ action: z.literal('diagnostic.publish'), draftId: id }).strict(),
   z.object({ action: z.literal('diagnostic.delete'), draftId: id }).strict(),
