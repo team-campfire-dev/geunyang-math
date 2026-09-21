@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "representative-value",
+      "label": "대푯값",
+      "assessable": true
+    },
+    {
+      "key": "variance",
+      "label": "산포도",
+      "assessable": true
+    },
+    {
+      "key": "scatter-plot",
+      "label": "산점도와 상관관계",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "representative-value",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "대푯값",
+      "summary": "자료를 하나의 수로 대신 말해요.",
+      "blocks": [
+        {
+          "blockId": "global:representative-value:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "평균은 모두 더해 개수로 나눈 값이고, 높은 데를 덜어 낮은 데를 메워 고르게 폈을 때의 높이예요. 모든 값을 반영하지만 아주 크거나 작은 값 하나에 크게 끌려가요. 중앙값은 크기 순의 한가운데 값이고, 자료가 짝수 개면 가운데 두 값의 평균이에요. 극단적인 값에 끌려가지 않아요. 최빈값은 가장 자주 나온 값이라 수로 더할 수 없는 자료에도 쓸 수 있고, 여럿일 수도 없을 수도 있어요. 고르게 퍼져 있으면 평균, 치우쳐 있으면 중앙값, 수가 아니면 최빈값을 골라요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "자료 전체를 한 수로 말할 때"
+    },
+    {
+      "conceptKey": "variance",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "산포도",
+      "summary": "얼마나 흩어져 있는지를 재요.",
+      "blocks": [
+        {
+          "blockId": "global:variance:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "평균이 같아도 자료가 같지는 않아서, 흩어진 정도를 재는 값이 따로 필요해요. 편차는 각 값에서 평균을 뺀 값인데, 모두 더하면 언제나 $0$이라 그대로는 쓸 수 없어요. 그래서 편차를 제곱해 평균을 낸 값을 쓰고, 이것이 분산이에요. 분산은 단위가 제곱이 되므로 제곱근을 취해 단위를 되돌린 값을 함께 쓰는데 이것이 표준편차고요. 값이 클수록 넓게 퍼져 있고 $0$이면 모든 값이 평균과 같아요. 순서는 평균 → 편차 → 제곱의 평균 → 제곱근이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "자료가 고른지 견줄 때"
+    },
+    {
+      "conceptKey": "scatter-plot",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "산점도와 상관관계",
+      "summary": "두 양이 함께 움직이는지 봐요.",
+      "blocks": [
+        {
+          "blockId": "global:scatter-plot:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "한 대상에 대해 잰 두 값을 좌표로 삼아 점 하나로 찍고 모두 모은 그림이 산점도예요. 점 하나하나가 아니라 전체가 어느 쪽으로 몰리는지를 봐요. 오른쪽 위로 올라가는 띠면 양의 상관관계, 오른쪽 아래로 내려가면 음의 상관관계, 어느 쪽으로도 기울지 않으면 상관관계가 없어요. 띠가 좁을수록 관계가 뚜렷하고요. 다만 관계가 있다는 것과 하나가 원인이라는 것은 다른 말이에요. 둘 다 다른 이유를 따라 함께 움직였을 수 있으니까요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "두 양의 관계를 읽을 때"
+    }
+  ]
+}

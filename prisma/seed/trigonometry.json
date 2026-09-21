@@ -1,0 +1,2880 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "trigonometry",
+      "title": "삼각비",
+      "summary": "직각삼각형에서 각 하나가 변의 비를 정한다는 것을 닮음으로 확인하고, 특별한 각의 값을 그려서 얻고, 잴 수 없는 길이와 넓이를 구해요.",
+      "order": 350,
+      "track": "middle",
+      "stage": "middle-3",
+      "lessons": [
+        {
+          "key": "trig-ratio",
+          "order": 1
+        },
+        {
+          "key": "special-angles",
+          "order": 2
+        },
+        {
+          "key": "trig-use",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "trig-ratio",
+      "label": "삼각비",
+      "assessable": true
+    },
+    {
+      "key": "special-angles",
+      "label": "특별한 각의 삼각비",
+      "assessable": true
+    },
+    {
+      "key": "trig-use",
+      "label": "삼각비의 활용",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "trig-ratio",
+        "versionId": "trig-ratio:v1",
+        "title": "삼각비의 뜻: 각이 변의 비를 정한다",
+        "summary": "직각삼각형에서 각 하나가 세 변의 비를 정한다는 것을 닮음으로 확인해요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "trig-ratio"
+        ],
+        "prerequisiteConceptKeys": [
+          "similar-triangles",
+          "pythagoras"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "trig-ratio:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "trig-ratio:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "직각삼각형에서 직각이 아닌 한 각의 크기를 정하면, 세 각이 모두 정해져요. 직각과 그 각을 알면 나머지 하나는 빼기로 나오니까요.\n\n세 각이 같은 직각삼각형들은 모두 닮음이에요. 그러니 크기가 어떻든 변의 비는 같아요. 각 하나가 변의 비를 정하는 거예요.\n\n이 비에 이름을 붙인 것이 삼각비예요. 각 $A$를 기준으로 세 가지를 정해요.\n\n사인은 맞변을 빗변으로 나눈 값이고 $\\sin A$로 적어요. 여기서 맞변이란 각 $A$의 맞은편 변이에요.\n\n코사인은 밑변을 빗변으로 나눈 값이고 $\\cos A$로 적어요. 밑변은 각 $A$를 낀 변 중 빗변이 아닌 쪽이고요.\n\n탄젠트는 맞변을 밑변으로 나눈 값이고 $\\tan A$로 적어요. $\\dfrac{\\sin A}{\\cos A}$와 같은데, 빗변이 위아래에서 약분되기 때문이에요.\n\n세 변이 $3$, $4$, $5$인 직각삼각형에서 $3$의 맞은편 각을 $A$라 하면 $\\sin A = \\dfrac{3}{5}$, $\\cos A = \\dfrac{4}{5}$, $\\tan A = \\dfrac{3}{4}$예요.\n\n헷갈릴 때는 기준이 되는 각을 먼저 찍고, 그 각에서 보아 맞은편이 어디이고 붙어 있는 쪽이 어디인지 짚어 보세요. 각이 바뀌면 맞변과 밑변도 바뀌어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "trig-ratio",
+                    "surface": "삼각비",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "trig-ratio:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "각이 같은 작은 직각삼각형을 큰 직각삼각형의 귀퉁이에 포개어 빗변이 겹치는 것을 보이는 그림",
+                "caption": "각이 같으면 크기가 달라도 변의 비가 같아요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 20,
+                    "text": "각이 같으면 변의 비도 같다",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        52,
+                        170
+                      ],
+                      [
+                        228,
+                        170
+                      ],
+                      [
+                        228,
+                        38
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "id": "big"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 140,
+                    "y": 184,
+                    "text": "$4$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 244,
+                    "y": 104,
+                    "text": "$3$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 182,
+                    "y": 70,
+                    "text": "$5$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 66,
+                    "y": 162,
+                    "text": "$A$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        30,
+                        96
+                      ],
+                      [
+                        118,
+                        96
+                      ],
+                      [
+                        118,
+                        30
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "id": "small",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 196,
+                    "y": 150,
+                    "text": "$\\sin A = \\frac{3}{5}$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "직각삼각형에서 각 $A$를 정하면 세 변의 비가 따라 정해져요.",
+                    "changes": [
+                      {
+                        "id": "small",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "각 $A$가 같고 크기만 작은 직각삼각형을 하나 가져왔어요.",
+                    "changes": [
+                      {
+                        "id": "small",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "귀퉁이에 맞춰 포개면 빗변이 딱 겹쳐요. 닮음이니 변의 비가 같고, 그 비가 삼각비예요.",
+                    "changes": [
+                      {
+                        "id": "small",
+                        "dx": 22,
+                        "dy": 74,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "trig-ratio:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "trig-ratio:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $3$, $4$, $5$인 직각삼각형이 있어요. 직각을 낀 두 변이 $3$과 $4$고, $3$의 맞은편 각을 $A$라 할게요.\n\n$\\sin A$는 맞변을 빗변으로 나눈 값이니 $\\dfrac{3}{5}$이에요.\n\n$\\cos A$는 밑변을 빗변으로 나눈 값이니 $\\dfrac{4}{5}$이고요.\n\n$\\tan A$는 맞변을 밑변으로 나눈 값이니 $\\dfrac{3}{4}$예요.\n\n하나를 알면 나머지도 구할 수 있어요. $\\sin A = \\dfrac{5}{13}$이라면 빗변이 $13$, 맞변이 $5$인 직각삼각형을 그리면 돼요.\n\n남은 변은 피타고라스 정리로 구해요. $13^2 - 5^2 = 144$이니 밑변은 $12$고, $\\cos A = \\dfrac{12}{13}$, $\\tan A = \\dfrac{5}{12}$예요.\n\n삼각비는 길이가 아니라 비라서, 삼각형을 두 배로 키워도 값이 그대로예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "trig-ratio:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "trig-ratio:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "trig-ratio:practice",
+                "problemSetVersionId": "trig-ratio:practice:v1",
+                "problemVersionIds": [
+                  "trig-ratio:practice-1:v1",
+                  "trig-ratio:practice-2:v1",
+                  "trig-ratio:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "trig-ratio:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "trig-ratio:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "trig-ratio:check",
+                "problemSetVersionId": "trig-ratio:check:v1",
+                "problemVersionIds": [
+                  "trig-ratio:check-1:v1",
+                  "trig-ratio:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "trig-ratio:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "trig-ratio:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "직각삼각형에서 각 하나가 정해지면 세 변의 비가 따라 정해져요. 닮음이기 때문이에요.\n\n$\\sin A$는 맞변÷빗변, $\\cos A$는 밑변÷빗변, $\\tan A$는 맞변÷밑변이에요.\n\n$\\tan A$는 $\\dfrac{\\sin A}{\\cos A}$와 같아요.\n\n기준이 되는 각을 먼저 찍고 맞변과 밑변을 짚는 것이 순서예요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "trig-ratio:review",
+        "problemSetVersionId": "trig-ratio:review:v1",
+        "problemVersionIds": [
+          "trig-ratio:homework-1:v1",
+          "trig-ratio:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "special-angles",
+        "versionId": "special-angles:v1",
+        "title": "특별한 각의 삼각비: 외우지 않고 그려서",
+        "summary": "30도, 45도, 60도의 삼각비를 정삼각형과 정사각형에서 끌어내고, 0도와 90도까지 봐요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "special-angles"
+        ],
+        "prerequisiteConceptKeys": [
+          "trig-ratio",
+          "square-root",
+          "isosceles"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "special-angles:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "special-angles:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "삼각비의 값은 대개 자로 재야 알 수 있어요. 그런데 특별한 각 셋만은 그리기만 하면 값이 나와요.\n\n한 변이 $2$인 정삼각형을 반으로 갈라 보세요. 꼭지각 $60°$가 반으로 나뉘어 $30°$가 되고, 밑변도 반으로 나뉘어 $1$이 돼요. 남은 변은 피타고라스 정리로 $\\sqrt{3}$이고요.\n\n그러니 $\\sin 30° = \\dfrac{1}{2}$, $\\cos 30° = \\dfrac{\\sqrt{3}}{2}$, $\\tan 30° = \\dfrac{1}{\\sqrt{3}}$이에요. 같은 삼각형을 $60°$ 쪽에서 보면 $\\sin 60° = \\dfrac{\\sqrt{3}}{2}$, $\\cos 60° = \\dfrac{1}{2}$예요.\n\n$\\sin 30°$와 $\\cos 60°$가 같은 것이 우연이 아니에요. 두 각을 더하면 $90°$라 한쪽의 맞변이 다른 쪽의 밑변이거든요.\n\n한 변이 $1$인 정사각형을 대각선으로 갈라도 마찬가지예요. 직각이 반으로 나뉘어 $45°$가 되고 대각선은 $\\sqrt{2}$예요. 그래서 $\\sin 45° = \\cos 45° = \\dfrac{1}{\\sqrt{2}}$이고 $\\tan 45° = 1$이에요.\n\n$0°$와 $90°$는 그릴 수 없지만 각을 점점 줄이거나 키워 보면 값이 보여요. 각이 $0°$에 가까워지면 맞변이 사라지니 $\\sin 0° = 0$, 밑변이 빗변과 같아지니 $\\cos 0° = 1$이에요.\n\n반대로 $90°$에 가까워지면 $\\sin 90° = 1$, $\\cos 90° = 0$이고요. $\\tan 90°$는 나눌 밑변이 $0$이 되어 정할 수 없어요.\n\n각이 커질수록 사인은 커지고 코사인은 작아져요. 값을 잊었을 때 어느 쪽인지 가늠하는 데 도움이 돼요.",
+                "definitions": [
+                  {
+                    "conceptKey": "special-angles",
+                    "surface": "특별한 각",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "special-angles:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "정삼각형을 반으로 가르고 정사각형을 대각선으로 갈라 30도와 60도, 45도를 얻는 그림",
+                "caption": "특별한 각은 정삼각형과 정사각형을 가르면 나와요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 20,
+                    "text": "정삼각형과 정사각형에서",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        30,
+                        152
+                      ],
+                      [
+                        118,
+                        152
+                      ],
+                      [
+                        74,
+                        76
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "id": "tri"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 74,
+                    "y1": 76,
+                    "x2": 74,
+                    "y2": 152,
+                    "stroke": "green",
+                    "strokeWidth": 1.2,
+                    "id": "cut1",
+                    "opacity": 0,
+                    "dash": true
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        74,
+                        76
+                      ],
+                      [
+                        118,
+                        152
+                      ],
+                      [
+                        74,
+                        152
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "id": "half1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 68,
+                    "y": 96,
+                    "text": "$30°$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "a30",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 44,
+                    "y": 144,
+                    "text": "$60°$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "a60",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 190,
+                    "y": 76,
+                    "width": 88,
+                    "height": 88,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "sq"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 190,
+                    "y1": 164,
+                    "x2": 278,
+                    "y2": 76,
+                    "stroke": "green",
+                    "strokeWidth": 1.2,
+                    "id": "cut2",
+                    "opacity": 0,
+                    "dash": true
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        190,
+                        76
+                      ],
+                      [
+                        278,
+                        76
+                      ],
+                      [
+                        278,
+                        164
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "id": "half2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 204,
+                    "y": 94,
+                    "text": "$45°$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "b45",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 256,
+                    "y": 154,
+                    "text": "$45°$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "c45",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 188,
+                    "text": "$30°$, $45°$, $60°$는 여기서 나와요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "정삼각형과 정사각형이에요. 특별한 각은 이 둘에서 나와요.",
+                    "changes": [
+                      {
+                        "id": "cut1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "half1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "a30",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "a60",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "cut2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "half2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b45",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c45",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "정삼각형을 반으로 가르면 꼭지각이 반으로 나뉘어 $30°$와 $60°$가 생겨요.",
+                    "changes": [
+                      {
+                        "id": "cut1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "half1",
+                        "dx": 26,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a30",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a60",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cut2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "half2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b45",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "c45",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "정사각형을 대각선으로 가르면 직각이 반으로 나뉘어 $45°$ 둘이 생겨요.",
+                    "changes": [
+                      {
+                        "id": "cut1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "half1",
+                        "dx": 26,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a30",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "a60",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cut2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "half2",
+                        "dx": 14,
+                        "dy": -14,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b45",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "c45",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "special-angles:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "special-angles:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$2\\sin 30° + \\tan 45°$의 값을 구해 볼게요.\n\n$\\sin 30° = \\dfrac{1}{2}$이니 $2\\sin 30° = 1$이에요.\n\n$\\tan 45° = 1$이니 더하면 $2$예요.\n\n$4\\cos 60°$도 해 볼게요. $\\cos 60° = \\dfrac{1}{2}$이니 $4 \\times \\dfrac{1}{2} = 2$예요.\n\n값이 기억나지 않으면 삼각형을 그려 보세요. 한 변이 $2$인 정삼각형을 반으로 가르면 $1$, $\\sqrt{3}$, $2$가 나오고, 한 변이 $1$인 정사각형을 가르면 $1$, $1$, $\\sqrt{2}$가 나와요.\n\n$30°$의 사인이 $\\dfrac{1}{2}$인지 $\\dfrac{\\sqrt{3}}{2}$인지 헷갈릴 때는 「작은 각이면 맞변도 짧다」를 떠올리면 돼요. $30°$는 작은 각이니 사인도 작은 쪽인 $\\dfrac{1}{2}$이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "special-angles:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "special-angles:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "special-angles:practice",
+                "problemSetVersionId": "special-angles:practice:v1",
+                "problemVersionIds": [
+                  "special-angles:practice-1:v1",
+                  "special-angles:practice-2:v1",
+                  "special-angles:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "special-angles:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "special-angles:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "special-angles:check",
+                "problemSetVersionId": "special-angles:check:v1",
+                "problemVersionIds": [
+                  "special-angles:check-1:v1",
+                  "special-angles:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "special-angles:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "special-angles:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "정삼각형을 반으로 가르면 $30°$와 $60°$가, 정사각형을 대각선으로 가르면 $45°$가 나와요.\n\n$\\sin 30° = \\cos 60° = \\dfrac{1}{2}$이고 $\\tan 45° = 1$이에요.\n\n$\\sin 0° = 0$, $\\cos 0° = 1$, $\\sin 90° = 1$, $\\cos 90° = 0$이에요.\n\n각이 커질수록 사인은 커지고 코사인은 작아져요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "special-angles:review",
+        "problemSetVersionId": "special-angles:review:v1",
+        "problemVersionIds": [
+          "special-angles:homework-1:v1",
+          "special-angles:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "trig-use",
+        "versionId": "trig-use:v1",
+        "title": "삼각비의 활용: 잴 수 없는 길이를 구한다",
+        "summary": "각과 한 변으로 높이를 구하고, 두 변과 낀 각으로 삼각형의 넓이를 구해요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "trig-use"
+        ],
+        "prerequisiteConceptKeys": [
+          "special-angles",
+          "plane-length"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "trig-use:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "trig-use:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "삼각비가 쓸모 있는 까닭은 직접 갈 수 없는 곳의 길이를 구할 수 있기 때문이에요. 나무 꼭대기까지 자를 댈 수는 없지만, 떨어진 자리에서 올려다본 각과 거리는 잴 수 있으니까요.\n\n직각삼각형에서 한 변과 한 각을 알면 나머지 변이 나와요. 빗변을 알면 맞변은 빗변에 $\\sin A$를 곱한 값이고, 밑변은 빗변에 $\\cos A$를 곱한 값이에요.\n\n밑변을 알면 맞변은 밑변에 $\\tan A$를 곱한 값이고요. 무엇을 알고 무엇을 구하는지에 따라 셋 중 하나를 고르면 돼요.\n\n빗변이 $10$이고 한 예각이 $30°$라면 그 각의 맞은편 변은 $10 \\times \\dfrac{1}{2} = 5$예요. 밑변이 $12$이고 밑각이 $45°$라면 높이는 $12 \\times 1 = 12$고요.\n\n삼각형의 넓이에도 써요. 넓이는 밑변 곱하기 높이의 절반인데, 높이를 직접 재지 못할 때가 많거든요.\n\n두 변의 길이와 그 사이 각을 알면 높이가 나와요. 두 변을 $a$, $b$라 하고 낀 각을 $C$라 하면 높이는 $b \\sin C$이고, 넓이는 $\\dfrac{1}{2}ab\\sin C$예요.\n\n두 변이 $6$과 $8$이고 낀 각이 $30°$라면 높이는 $6 \\times \\dfrac{1}{2} = 3$이고 넓이는 $\\dfrac{1}{2} \\times 8 \\times 3 = 12$예요.\n\n왜 절반인지는 같은 삼각형을 하나 더 돌려 붙여 보면 알 수 있어요. 평행사변형이 되거든요.",
+                "definitions": [
+                  {
+                    "conceptKey": "trig-use",
+                    "surface": "삼각형의 넓이",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "trig-use:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "삼각형을 하나 더 돌려 붙여 평행사변형을 만들고 그 절반으로 넓이를 구하는 그림",
+                "caption": "각이 높이를 정해 주고, 돌려 붙이면 넓이가 보여요",
+                "items": [
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 26,
+                    "text": "두 변과 낀 각으로 넓이를",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        40,
+                        150
+                      ],
+                      [
+                        168,
+                        150
+                      ],
+                      [
+                        123.1,
+                        102
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "id": "tri"
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        40,
+                        150
+                      ],
+                      [
+                        168,
+                        150
+                      ],
+                      [
+                        123.1,
+                        102
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "id": "twin",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 123.1,
+                    "y1": 102,
+                    "x2": 123.1,
+                    "y2": 150,
+                    "stroke": "green",
+                    "strokeWidth": 1.4,
+                    "id": "h",
+                    "opacity": 0,
+                    "dash": true
+                  },
+                  {
+                    "kind": "text",
+                    "x": 104,
+                    "y": 164,
+                    "text": "$8$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 74,
+                    "y": 118,
+                    "text": "$6$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 62,
+                    "y": 143,
+                    "text": "$30°$",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 133,
+                    "y": 128,
+                    "text": "$3$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "hl",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 186,
+                    "text": "$\\frac{1}{2} \\times 8 \\times 3 = 12$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "say",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "두 변이 $6$과 $8$이고 그 사이 각이 $30°$인 삼각형이에요. 넓이는 얼마일까요?",
+                    "changes": [
+                      {
+                        "id": "twin",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "h",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "hl",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "높이는 $6\\sin 30° = 3$이에요. 각이 높이를 정해 주는 거예요.",
+                    "changes": [
+                      {
+                        "id": "twin",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "h",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "hl",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "같은 삼각형을 하나 돌려 붙이면 평행사변형이 돼요. 넓이는 그 절반이고요.",
+                    "changes": [
+                      {
+                        "id": "h",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "hl",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "say",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "twin",
+                        "rotate": 180,
+                        "dx": 83.1,
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "trig-use:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "trig-use:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "빗변이 $10$이고 한 예각이 $30°$인 직각삼각형에서 그 각의 맞은편 변을 구해 볼게요.\n\n맞변은 빗변 곱하기 사인이니 $10 \\times \\sin 30° = 10 \\times \\dfrac{1}{2} = 5$예요.\n\n빗변의 절반이네요. $30°$일 때는 늘 그래요.\n\n이번엔 넓이예요. 두 변이 $10$과 $12$이고 낀 각이 $30°$인 삼각형의 넓이를 구해요.\n\n$\\dfrac{1}{2} \\times 10 \\times 12 \\times \\sin 30° = \\dfrac{1}{2} \\times 120 \\times \\dfrac{1}{2} = 30$이에요.\n\n밑변이 $12$이고 밑각이 $45°$인 직각삼각형의 높이도 해 볼게요. $12 \\times \\tan 45° = 12 \\times 1 = 12$예요. 밑변과 높이가 같으니 이등변직각삼각형이에요.\n\n무엇을 아는지부터 적어 두면 어느 삼각비를 쓸지 헷갈리지 않아요. 빗변이 있으면 사인이나 코사인, 없으면 탄젠트예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "trig-use:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "trig-use:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "trig-use:practice",
+                "problemSetVersionId": "trig-use:practice:v1",
+                "problemVersionIds": [
+                  "trig-use:practice-1:v1",
+                  "trig-use:practice-2:v1",
+                  "trig-use:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "trig-use:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "trig-use:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "trig-use:check",
+                "problemSetVersionId": "trig-use:check:v1",
+                "problemVersionIds": [
+                  "trig-use:check-1:v1",
+                  "trig-use:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "trig-use:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "trig-use:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "빗변을 알면 맞변은 빗변 곱하기 사인, 밑변은 빗변 곱하기 코사인이에요.\n\n밑변을 알면 맞변은 밑변 곱하기 탄젠트고요.\n\n두 변과 낀 각을 알면 넓이는 $\\dfrac{1}{2}ab\\sin C$예요.\n\n같은 삼각형을 돌려 붙여 평행사변형을 만들면 왜 절반인지 보여요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "trig-use:review",
+        "problemSetVersionId": "trig-use:review:v1",
+        "problemVersionIds": [
+          "trig-use:homework-1:v1",
+          "trig-use:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "trig-ratio:practice",
+      "courseKey": "trigonometry",
+      "name": "삼각비의 뜻 연습",
+      "versionId": "trig-ratio:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "trig-ratio:practice-1:v1",
+          "conceptKeys": [
+            "trig-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trig-ratio:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각삼각형에서 $\\angle B = 90°$이고 $\\overline{BC} = 3$, $\\overline{AB} = 4$, $\\overline{AC} = 5$일 때 $\\sin A$를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 5,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trig-ratio:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "맞변을 빗변으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trig-ratio:practice-2:v1",
+          "conceptKeys": [
+            "trig-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trig-ratio:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 삼각형에서 $\\cos A$를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 4,
+            "denominator": 5,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trig-ratio:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑변을 빗변으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trig-ratio:practice-3:v1",
+          "conceptKeys": [
+            "trig-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trig-ratio:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 삼각형에서 $\\tan A$를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 4,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trig-ratio:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "맞변을 밑변으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "trig-ratio:check",
+      "courseKey": "trigonometry",
+      "name": "삼각비의 뜻 확인",
+      "versionId": "trig-ratio:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "trig-ratio:check-1:v1",
+          "conceptKeys": [
+            "trig-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trig-ratio:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sin A = \\frac{5}{13}$인 직각삼각형에서 $\\cos A$를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 12,
+            "denominator": 13,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trig-ratio:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑변은 $169 - 25$로 구해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trig-ratio:check-2:v1",
+          "conceptKeys": [
+            "trig-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trig-ratio:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각비의 값을 정하는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "각의 크기"
+              },
+              {
+                "id": "b",
+                "text": "삼각형의 크기"
+              },
+              {
+                "id": "c",
+                "text": "빗변의 길이"
+              },
+              {
+                "id": "d",
+                "text": "넓이"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "각의 크기"
+              },
+              {
+                "id": "b",
+                "text": "삼각형의 크기"
+              },
+              {
+                "id": "c",
+                "text": "빗변의 길이"
+              },
+              {
+                "id": "d",
+                "text": "넓이"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trig-ratio:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음이라 크기와는 상관없어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "trig-ratio:review",
+      "courseKey": "trigonometry",
+      "name": "삼각비의 뜻 복습",
+      "versionId": "trig-ratio:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "trig-ratio:homework-1:v1",
+          "conceptKeys": [
+            "trig-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trig-ratio:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $6$, $8$, $10$인 직각삼각형에서 가장 작은 각을 $A$라 할 때 $\\sin A$를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 5,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trig-ratio:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 짧은 변이 맞변이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trig-ratio:homework-2:v1",
+          "conceptKeys": [
+            "trig-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trig-ratio:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\tan A = 1$일 때 $\\angle A$는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 45
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trig-ratio:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "맞변과 밑변이 같아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "special-angles:practice",
+      "courseKey": "trigonometry",
+      "name": "특별한 각 연습",
+      "versionId": "special-angles:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "special-angles:practice-1:v1",
+          "conceptKeys": [
+            "special-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "special-angles:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sin 30°$의 값을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "special-angles:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정삼각형을 반으로 갈라요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "special-angles:practice-2:v1",
+          "conceptKeys": [
+            "special-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "special-angles:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\tan 45°$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "special-angles:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "맞변과 밑변이 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "special-angles:practice-3:v1",
+          "conceptKeys": [
+            "special-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "special-angles:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sin 30°$와 값이 같은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\cos 60°$"
+              },
+              {
+                "id": "b",
+                "text": "$\\cos 30°$"
+              },
+              {
+                "id": "c",
+                "text": "$\\tan 60°$"
+              },
+              {
+                "id": "d",
+                "text": "$\\sin 60°$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$\\cos 60°$"
+              },
+              {
+                "id": "b",
+                "text": "$\\cos 30°$"
+              },
+              {
+                "id": "c",
+                "text": "$\\tan 60°$"
+              },
+              {
+                "id": "d",
+                "text": "$\\sin 60°$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "special-angles:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 각을 더하면 $90°$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "special-angles:check",
+      "courseKey": "trigonometry",
+      "name": "특별한 각 확인",
+      "versionId": "special-angles:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "special-angles:check-1:v1",
+          "conceptKeys": [
+            "special-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "special-angles:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sin 90°$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "special-angles:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "맞변이 빗변과 같아져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "special-angles:check-2:v1",
+          "conceptKeys": [
+            "special-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "special-angles:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2\\sin 30° + \\tan 45°$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "special-angles:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1 + 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "special-angles:review",
+      "courseKey": "trigonometry",
+      "name": "특별한 각 복습",
+      "versionId": "special-angles:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "special-angles:homework-1:v1",
+          "conceptKeys": [
+            "special-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "special-angles:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sin 0°$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "special-angles:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "맞변이 사라져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "special-angles:homework-2:v1",
+          "conceptKeys": [
+            "special-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "special-angles:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$4\\cos 60°$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "special-angles:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\cos 60° = \\frac{1}{2}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "trig-use:practice",
+      "courseKey": "trigonometry",
+      "name": "삼각비의 활용 연습",
+      "versionId": "trig-use:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "trig-use:practice-1:v1",
+          "conceptKeys": [
+            "trig-use"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trig-use:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빗변이 $10$이고 한 예각이 $30°$인 직각삼각형에서 그 각의 맞은편 변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trig-use:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빗변 곱하기 사인이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trig-use:practice-2:v1",
+          "conceptKeys": [
+            "trig-use"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trig-use:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑변이 $12$이고 밑각이 $45°$인 직각삼각형의 높이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trig-use:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\tan 45° = 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trig-use:practice-3:v1",
+          "conceptKeys": [
+            "trig-use"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trig-use:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 변이 $6$과 $8$이고 그 사이 각이 $30°$인 삼각형의 넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trig-use:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{2}ab\\sin C$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "trig-use:check",
+      "courseKey": "trigonometry",
+      "name": "삼각비의 활용 확인",
+      "versionId": "trig-use:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "trig-use:check-1:v1",
+          "conceptKeys": [
+            "trig-use"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trig-use:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빗변이 $8$이고 한 예각이 $30°$인 직각삼각형에서 그 각의 맞은편 변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trig-use:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빗변의 절반이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trig-use:check-2:v1",
+          "conceptKeys": [
+            "trig-use"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trig-use:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 변이 $10$과 $12$이고 그 사이 각이 $30°$인 삼각형의 넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trig-use:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{2} \\times 120 \\times \\frac{1}{2}$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "trig-use:review",
+      "courseKey": "trigonometry",
+      "name": "삼각비의 활용 복습",
+      "versionId": "trig-use:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "trig-use:homework-1:v1",
+          "conceptKeys": [
+            "trig-use"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trig-use:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 변이 $4$와 $9$이고 그 사이 각이 $30°$인 삼각형의 넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trig-use:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{2} \\times 36 \\times \\frac{1}{2}$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trig-use:homework-2:v1",
+          "conceptKeys": [
+            "trig-use"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trig-use:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑변이 $7$이고 밑각이 $45°$인 직각삼각형의 높이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trig-use:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\tan 45° = 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "trigonometry:drill",
+      "courseKey": "trigonometry",
+      "name": "삼각비 모아 풀기",
+      "versionId": "trigonometry:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "trigonometry:drill-1:v1",
+          "conceptKeys": [
+            "trig-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $3$, $4$, $5$인 직각삼각형에서 $3$의 맞은편 각을 $A$라 할 때 $\\sin A$를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 5,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "맞변÷빗변이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-2:v1",
+          "conceptKeys": [
+            "trig-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 삼각형에서 $\\cos A$를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 4,
+            "denominator": 5,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑변÷빗변이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-3:v1",
+          "conceptKeys": [
+            "trig-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 삼각형에서 $\\tan A$를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 3,
+            "denominator": 4,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "맞변÷밑변이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-4:v1",
+          "conceptKeys": [
+            "trig-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $5$, $12$, $13$인 직각삼각형에서 가장 작은 각을 $A$라 할 때 $\\sin A$를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 13,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 짧은 변이 맞변이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-5:v1",
+          "conceptKeys": [
+            "trig-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sin A = \\frac{3}{5}$인 직각삼각형에서 $\\cos A$를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 4,
+            "denominator": 5,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑변은 $25 - 9$로 구해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-6:v1",
+          "conceptKeys": [
+            "trig-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\tan A = 1$일 때 $\\angle A$는 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 45
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "맞변과 밑변이 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-7:v1",
+          "conceptKeys": [
+            "trig-ratio"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각비의 값을 정하는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "각의 크기"
+              },
+              {
+                "id": "b",
+                "text": "삼각형의 크기"
+              },
+              {
+                "id": "c",
+                "text": "넓이"
+              },
+              {
+                "id": "d",
+                "text": "둘레"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "각의 크기"
+              },
+              {
+                "id": "b",
+                "text": "삼각형의 크기"
+              },
+              {
+                "id": "c",
+                "text": "넓이"
+              },
+              {
+                "id": "d",
+                "text": "둘레"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음이라 크기와는 상관없어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-8:v1",
+          "conceptKeys": [
+            "special-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sin 30°$의 값을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정삼각형을 반으로 갈라요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-9:v1",
+          "conceptKeys": [
+            "special-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\cos 60°$의 값을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sin 30°$과 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-10:v1",
+          "conceptKeys": [
+            "special-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\tan 45°$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "맞변과 밑변이 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-11:v1",
+          "conceptKeys": [
+            "special-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sin 90°$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "맞변이 빗변과 같아져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-12:v1",
+          "conceptKeys": [
+            "special-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\cos 90°$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑변이 사라져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-13:v1",
+          "conceptKeys": [
+            "special-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sin 0°$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "맞변이 사라져요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-14:v1",
+          "conceptKeys": [
+            "special-angles"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2\\sin 30° + 2\\cos 60°$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1 + 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-15:v1",
+          "conceptKeys": [
+            "trig-use"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빗변이 $10$이고 한 예각이 $30°$인 직각삼각형에서 그 각의 맞은편 변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빗변의 절반이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-16:v1",
+          "conceptKeys": [
+            "trig-use"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빗변이 $14$이고 한 예각이 $30°$인 직각삼각형에서 그 각의 맞은편 변의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "빗변의 절반이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-17:v1",
+          "conceptKeys": [
+            "trig-use"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑변이 $9$이고 밑각이 $45°$인 직각삼각형의 높이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\tan 45° = 1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-18:v1",
+          "conceptKeys": [
+            "trig-use"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 변이 $6$과 $8$이고 그 사이 각이 $30°$인 삼각형의 넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{2}ab\\sin C$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-19:v1",
+          "conceptKeys": [
+            "trig-use"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 변이 $5$와 $8$이고 그 사이 각이 $30°$인 삼각형의 넓이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\frac{1}{2} \\times 40 \\times \\frac{1}{2}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "trigonometry:drill-20:v1",
+          "conceptKeys": [
+            "trig-use"
+          ],
+          "promptContent": [
+            {
+              "blockId": "trigonometry:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 변과 그 사이 각으로 삼각형의 넓이를 구할 때 쓰는 삼각비는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "사인"
+              },
+              {
+                "id": "b",
+                "text": "코사인"
+              },
+              {
+                "id": "c",
+                "text": "탄젠트"
+              },
+              {
+                "id": "d",
+                "text": "쓸 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "사인"
+              },
+              {
+                "id": "b",
+                "text": "코사인"
+              },
+              {
+                "id": "c",
+                "text": "탄젠트"
+              },
+              {
+                "id": "d",
+                "text": "쓸 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "trigonometry:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "높이가 $b\\sin C$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}
