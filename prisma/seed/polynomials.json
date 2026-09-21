@@ -49,7 +49,7 @@
     {
       "public": {
         "lessonKey": "exponent-law",
-        "versionId": "exponent-law:v1",
+        "versionId": "exponent-law:v2",
         "title": "지수법칙: 풀어 써 보면 보인다",
         "summary": "같은 문자를 거듭 곱한 식을 곱하고 나눌 때 지수가 어떻게 되는지 직접 풀어 확인해요.",
         "estimatedMinutes": 10,
@@ -65,12 +65,12 @@
       },
       "sections": [
         {
-          "sectionId": "exponent-law:explanation:v1",
+          "sectionId": "exponent-law:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "exponent-law:explanation:text:v1",
+              "blockId": "exponent-law:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -86,7 +86,7 @@
               }
             },
             {
-              "blockId": "exponent-law:explanation:drawing:v1",
+              "blockId": "exponent-law:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -348,12 +348,12 @@
           ]
         },
         {
-          "sectionId": "exponent-law:example:v1",
+          "sectionId": "exponent-law:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "exponent-law:example:text:v1",
+              "blockId": "exponent-law:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -371,12 +371,12 @@
           ]
         },
         {
-          "sectionId": "exponent-law:practice:v1",
+          "sectionId": "exponent-law:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "exponent-law:practice:problems:v1",
+              "blockId": "exponent-law:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -393,12 +393,12 @@
           ]
         },
         {
-          "sectionId": "exponent-law:check:v1",
+          "sectionId": "exponent-law:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "exponent-law:check:problems:v1",
+              "blockId": "exponent-law:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -414,12 +414,12 @@
           ]
         },
         {
-          "sectionId": "exponent-law:summary:v1",
+          "sectionId": "exponent-law:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "exponent-law:summary:text:v1",
+              "blockId": "exponent-law:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -449,7 +449,7 @@
     {
       "public": {
         "lessonKey": "monomial-arithmetic",
-        "versionId": "monomial-arithmetic:v1",
+        "versionId": "monomial-arithmetic:v2",
         "title": "단항식의 곱셈과 나눗셈: 갈라서 계산하기",
         "summary": "곱으로만 이어진 식을 수 부분과 문자 부분으로 갈라 계산하고 다시 붙여요.",
         "estimatedMinutes": 10,
@@ -464,12 +464,12 @@
       },
       "sections": [
         {
-          "sectionId": "monomial-arithmetic:explanation:v1",
+          "sectionId": "monomial-arithmetic:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "monomial-arithmetic:explanation:text:v1",
+              "blockId": "monomial-arithmetic:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -485,7 +485,7 @@
               }
             },
             {
-              "blockId": "monomial-arithmetic:explanation:drawing:v1",
+              "blockId": "monomial-arithmetic:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -626,12 +626,12 @@
           ]
         },
         {
-          "sectionId": "monomial-arithmetic:example:v1",
+          "sectionId": "monomial-arithmetic:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "monomial-arithmetic:example:text:v1",
+              "blockId": "monomial-arithmetic:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -649,12 +649,12 @@
           ]
         },
         {
-          "sectionId": "monomial-arithmetic:practice:v1",
+          "sectionId": "monomial-arithmetic:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "monomial-arithmetic:practice:problems:v1",
+              "blockId": "monomial-arithmetic:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -671,12 +671,12 @@
           ]
         },
         {
-          "sectionId": "monomial-arithmetic:check:v1",
+          "sectionId": "monomial-arithmetic:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "monomial-arithmetic:check:problems:v1",
+              "blockId": "monomial-arithmetic:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -692,12 +692,12 @@
           ]
         },
         {
-          "sectionId": "monomial-arithmetic:summary:v1",
+          "sectionId": "monomial-arithmetic:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "monomial-arithmetic:summary:text:v1",
+              "blockId": "monomial-arithmetic:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -727,7 +727,7 @@
     {
       "public": {
         "lessonKey": "polynomial-arithmetic",
-        "versionId": "polynomial-arithmetic:v1",
+        "versionId": "polynomial-arithmetic:v2",
         "title": "다항식의 덧셈과 뺄셈: 빼기 괄호를 조심하기",
         "summary": "항이 여럿인 식을 더하고 빼며, 빼기 괄호가 안쪽 부호를 모두 바꾼다는 것을 익혀요.",
         "estimatedMinutes": 10,
@@ -744,12 +744,12 @@
       },
       "sections": [
         {
-          "sectionId": "polynomial-arithmetic:explanation:v1",
+          "sectionId": "polynomial-arithmetic:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-arithmetic:explanation:text:v1",
+              "blockId": "polynomial-arithmetic:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -770,7 +770,7 @@
               }
             },
             {
-              "blockId": "polynomial-arithmetic:explanation:drawing:v1",
+              "blockId": "polynomial-arithmetic:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1028,12 +1028,12 @@
           ]
         },
         {
-          "sectionId": "polynomial-arithmetic:example:v1",
+          "sectionId": "polynomial-arithmetic:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-arithmetic:example:text:v1",
+              "blockId": "polynomial-arithmetic:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1051,12 +1051,12 @@
           ]
         },
         {
-          "sectionId": "polynomial-arithmetic:practice:v1",
+          "sectionId": "polynomial-arithmetic:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-arithmetic:practice:problems:v1",
+              "blockId": "polynomial-arithmetic:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1073,12 +1073,12 @@
           ]
         },
         {
-          "sectionId": "polynomial-arithmetic:check:v1",
+          "sectionId": "polynomial-arithmetic:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-arithmetic:check:problems:v1",
+              "blockId": "polynomial-arithmetic:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1094,12 +1094,12 @@
           ]
         },
         {
-          "sectionId": "polynomial-arithmetic:summary:v1",
+          "sectionId": "polynomial-arithmetic:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-arithmetic:summary:text:v1",
+              "blockId": "polynomial-arithmetic:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,

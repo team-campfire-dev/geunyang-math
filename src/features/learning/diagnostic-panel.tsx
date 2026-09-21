@@ -3,6 +3,7 @@ import { useState, type FormEvent } from 'react';
 import type { ActionResponse, DiagnosticOffering, DiagnosticView, LearningAction, PublicLesson, ConceptReadiness } from '@/shared/api';
 import { ContentBlocks } from './content-blocks';
 import { ReadinessList } from './readiness-list';
+import { MathAnswerField } from './math-answer-field';
 
 export function DiagnosticPanel({ diagnostic, offering, dispatch, busy, onBack, nextLesson, readiness, onOpenLesson, targetTitle = null, onChooseTarget }: {
   nextLesson?: PublicLesson; readiness: ConceptReadiness[]; onOpenLesson: (key: string) => void;
@@ -39,7 +40,10 @@ export function DiagnosticPanel({ diagnostic, offering, dispatch, busy, onBack, 
           <progress aria-label="시작점 확인 진행" value={diagnostic.settled} max={diagnostic.scope} />
           <ContentBlocks blocks={diagnostic.currentProblem.promptContent} />
           <form className="answer-form" onSubmit={(event: FormEvent) => { event.preventDefault(); if (answer.trim()) void save(answer.trim()); }}>
-            <label>나의 답<input aria-label="진단 답안" value={answer} maxLength={128} onChange={event => setAnswer(event.target.value)} disabled={busy} autoComplete="off" placeholder={diagnostic.currentProblem.responseSpec.kind === 'integer' ? '정수를 입력해 주세요' : '예: 3/4'} /></label>
+            <MathAnswerField label="나의 답" value={answer} disabled={busy}
+              integerOnly={diagnostic.currentProblem.responseSpec.kind === 'integer'}
+              placeholder={diagnostic.currentProblem.responseSpec.kind === 'integer' ? '정수를 입력해 주세요' : '예: 3/4'}
+              onChange={setAnswer} />
             <button className="button primary" disabled={busy || !answer.trim()}>{busy ? '저장 중…' : '저장하고 다음으로'}</button>
           </form>
           {error && <p className="field-error" role="alert">{error}</p>}
