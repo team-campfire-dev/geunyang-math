@@ -179,12 +179,12 @@ export function validateReferences(bundle: ContentBundle) {
   }
   const concepts = new Map(bundle.concepts.map(s => [s.key, s]));
   const problems = new Map<string, string>();
-  const assertConcept = (key: string) => { if (!concepts.has(key)) throw new ContentError(`Missing concept: `); };
+  const assertConcept = (key: string) => { if (!concepts.has(key)) throw new ContentError(`Missing concept: ${key}`); };
   // Readiness travels on concepts a question can assess, so what a lesson teaches and presumes, and
   // what a question claims, must be assessable; a definition may explain any concept.
   const assertAssessable = (key: string) => {
     assertConcept(key);
-    if (!concepts.get(key)!.assessable) throw new ContentError(`Concept is not assessable: `);
+    if (!concepts.get(key)!.assessable) throw new ContentError(`Concept is not assessable: ${key}`);
   };
   for (const c of bundle.lessons) {
     [...c.public.conceptKeys, ...c.public.prerequisiteConceptKeys].forEach(assertAssessable);

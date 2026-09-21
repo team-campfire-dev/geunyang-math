@@ -26,8 +26,13 @@
   ],
   "concepts": [
     {
-      "key": "table-reading",
-      "label": "표 읽기",
+      "key": "chart-reading",
+      "label": "도표 읽기",
+      "assessable": true
+    },
+    {
+      "key": "chart-types",
+      "label": "도표의 종류",
       "assessable": true
     },
     {
@@ -36,8 +41,28 @@
       "assessable": true
     },
     {
+      "key": "numeracy-scope",
+      "label": "수리능력의 네 영역",
+      "assessable": true
+    },
+    {
+      "key": "percentage",
+      "label": "백분율",
+      "assessable": true
+    },
+    {
+      "key": "proportion",
+      "label": "비중",
+      "assessable": true
+    },
+    {
       "key": "table-inference",
       "label": "표가 말하는 것",
+      "assessable": true
+    },
+    {
+      "key": "table-reading",
+      "label": "표 읽기",
       "assessable": true
     }
   ],
