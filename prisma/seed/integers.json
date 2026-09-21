@@ -407,7 +407,7 @@
     {
       "public": {
         "lessonKey": "absolute-value",
-        "versionId": "absolute-value:v1",
+        "versionId": "absolute-value:v2",
         "title": "크기 비교와 절댓값: 자리와 거리",
         "summary": "수직선의 자리로 크기를 견주고, 0에서 떨어진 거리를 절댓값으로 나타내요.",
         "estimatedMinutes": 10,
@@ -422,12 +422,12 @@
       },
       "sections": [
         {
-          "sectionId": "absolute-value:explanation:v1",
+          "sectionId": "absolute-value:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "absolute-value:explanation:text:v1",
+              "blockId": "absolute-value:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -450,12 +450,12 @@
           ]
         },
         {
-          "sectionId": "absolute-value:example:v1",
+          "sectionId": "absolute-value:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "absolute-value:example:text:v1",
+              "blockId": "absolute-value:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -471,7 +471,7 @@
               }
             },
             {
-              "blockId": "absolute-value:example:drawing:v1",
+              "blockId": "absolute-value:example:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -596,7 +596,7 @@
                   {
                     "kind": "text",
                     "x": 160,
-                    "y": 178,
+                    "y": 92,
                     "text": "왼쪽일수록 작은 수",
                     "size": 12,
                     "anchor": "middle",
@@ -648,12 +648,12 @@
           ]
         },
         {
-          "sectionId": "absolute-value:practice:v1",
+          "sectionId": "absolute-value:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "absolute-value:practice:problems:v1",
+              "blockId": "absolute-value:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -670,12 +670,12 @@
           ]
         },
         {
-          "sectionId": "absolute-value:check:v1",
+          "sectionId": "absolute-value:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "absolute-value:check:problems:v1",
+              "blockId": "absolute-value:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -691,12 +691,12 @@
           ]
         },
         {
-          "sectionId": "absolute-value:summary:v1",
+          "sectionId": "absolute-value:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "absolute-value:summary:text:v1",
+              "blockId": "absolute-value:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,

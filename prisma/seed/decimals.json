@@ -567,7 +567,7 @@
     {
       "public": {
         "lessonKey": "decimal-addition",
-        "versionId": "decimal-addition:v1",
+        "versionId": "decimal-addition:v2",
         "title": "소수의 덧셈과 뺄셈: 자리를 맞춰 더하기",
         "summary": "소수점을 맞춰 같은 자릿값끼리 더하고 빼는 법을 익혀요.",
         "estimatedMinutes": 10,
@@ -583,12 +583,12 @@
       },
       "sections": [
         {
-          "sectionId": "decimal-addition:explanation:v1",
+          "sectionId": "decimal-addition:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "decimal-addition:explanation:text:v1",
+              "blockId": "decimal-addition:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -614,130 +614,339 @@
               }
             },
             {
-              "blockId": "decimal-addition:explanation:drawing:v1",
+              "blockId": "decimal-addition:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "width": 320,
-                "height": 200,
-                "alt": "소수점을 세로로 맞춰 두 수를 더하는 세로셈을 한 줄씩 채워 가는 그림",
-                "caption": "먼저 자리를 맞추고, 그 다음 같은 자리끼리 더한다",
+                "alt": "세로셈의 각 자리를 칸으로 맞추고, 빈 백분의 일 자리에 0을 붙여 더하는 그림",
+                "caption": "소수점이 한 줄에 서면 같은 자리끼리 마주 봐요",
                 "items": [
                   {
-                    "kind": "text",
-                    "id": "first",
-                    "x": 200,
-                    "y": 60,
-                    "text": "$0.3 \\; 0$",
-                    "size": 17,
-                    "anchor": "end",
-                    "fill": "ink"
-                  },
-                  {
-                    "kind": "text",
-                    "id": "second",
-                    "x": 200,
-                    "y": 92,
-                    "text": "$+\\; 0.4 \\; 5$",
-                    "size": 17,
-                    "anchor": "end",
-                    "fill": "ink"
-                  },
-                  {
                     "kind": "line",
-                    "id": "rule",
-                    "x1": 95,
-                    "y1": 106,
-                    "x2": 205,
-                    "y2": 106,
-                    "stroke": "ink",
-                    "strokeWidth": 1
-                  },
-                  {
-                    "kind": "text",
-                    "id": "total",
-                    "x": 200,
-                    "y": 134,
-                    "text": "$0.7 \\; 5$",
-                    "size": 17,
-                    "anchor": "end",
-                    "fill": "green",
-                    "weight": "bold"
-                  },
-                  {
-                    "kind": "line",
-                    "id": "point",
-                    "x1": 168,
-                    "y1": 45,
-                    "x2": 168,
-                    "y2": 145,
+                    "x1": 146,
+                    "y1": 44,
+                    "x2": 146,
+                    "y2": 156,
                     "stroke": "orange",
                     "strokeWidth": 1,
-                    "dash": true
+                    "id": "point",
+                    "dash": true,
+                    "opacity": 0.45
                   },
                   {
                     "kind": "text",
-                    "x": 168,
-                    "y": 172,
-                    "text": "소수점을 맞춘 자리",
-                    "size": 12,
+                    "x": 128,
+                    "y": 62,
+                    "text": "0",
+                    "size": 17,
                     "anchor": "middle",
                     "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 146,
+                    "y": 62,
+                    "text": ".",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 164,
+                    "y": 62,
+                    "text": "3",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 212,
+                    "y": 62,
+                    "text": "0",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "pad",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 104,
+                    "y": 98,
+                    "text": "+",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 128,
+                    "y": 98,
+                    "text": "0",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "b1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 146,
+                    "y": 98,
+                    "text": ".",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "b2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 164,
+                    "y": 98,
+                    "text": "4",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "b3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 188,
+                    "y": 98,
+                    "text": "5",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "b4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 104,
+                    "y1": 116,
+                    "x2": 202,
+                    "y2": 116,
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "id": "rule",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 128,
+                    "y": 140,
+                    "text": "0",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "weight": "bold",
+                    "id": "s1",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 146,
+                    "y": 140,
+                    "text": ".",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "weight": "bold",
+                    "id": "s2",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 164,
+                    "y": 140,
+                    "text": "7",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "weight": "bold",
+                    "id": "s3",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 188,
+                    "y": 140,
+                    "text": "5",
+                    "size": 17,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "weight": "bold",
+                    "id": "s4",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 146,
+                    "y": 178,
+                    "text": "소수점을 맞춘 자리",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange"
                   }
                 ],
                 "frames": [
                   {
-                    "caption": "$0.3$을 $0.30$으로 써서 자리를 맞춰요.",
+                    "caption": "$0.3$을 세로로 썼어요. 백분의 일 자리가 비어 있네요.",
                     "changes": [
                       {
-                        "id": "second",
-                        "hidden": true
+                        "id": "pad",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b4",
+                        "opacity": 0
                       },
                       {
                         "id": "rule",
-                        "hidden": true
+                        "opacity": 0
                       },
                       {
-                        "id": "total",
-                        "hidden": true
+                        "id": "s1",
+                        "opacity": 0
                       },
                       {
-                        "id": "point",
-                        "opacity": 0.35
+                        "id": "s2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s4",
+                        "opacity": 0
                       }
                     ]
                   },
                   {
-                    "caption": "더할 수를 소수점에 맞춰 아래에 써요.",
+                    "caption": "오른쪽 끝에 $0$을 붙여 자리를 채워요. $0.3$과 $0.30$은 같은 수예요.",
                     "changes": [
                       {
-                        "id": "total",
-                        "hidden": true
+                        "id": "pad",
+                        "dx": -24,
+                        "opacity": 1
                       },
                       {
-                        "id": "point",
+                        "id": "b1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "b4",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rule",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s2",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "s4",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "더할 수를 소수점에 맞춰 아래에 쓰고, 같은 자리끼리 더하면 $0.75$예요.",
+                    "changes": [
+                      {
+                        "id": "pad",
+                        "dx": -24,
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "b4",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "rule",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "s4",
                         "opacity": 1
                       }
                     ]
-                  },
-                  {
-                    "caption": "같은 자리끼리 더하면 $0.75$예요.",
-                    "changes": []
                   }
                 ],
-                "frameMs": 1100
+                "frameMs": 1500,
+                "width": 320,
+                "height": 200
               }
             }
           ]
         },
         {
-          "sectionId": "decimal-addition:example:v1",
+          "sectionId": "decimal-addition:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "decimal-addition:example:text:v1",
+              "blockId": "decimal-addition:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -760,12 +969,12 @@
           ]
         },
         {
-          "sectionId": "decimal-addition:practice:v1",
+          "sectionId": "decimal-addition:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "decimal-addition:practice:problems:v1",
+              "blockId": "decimal-addition:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -782,12 +991,12 @@
           ]
         },
         {
-          "sectionId": "decimal-addition:check:v1",
+          "sectionId": "decimal-addition:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "decimal-addition:check:problems:v1",
+              "blockId": "decimal-addition:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -803,12 +1012,12 @@
           ]
         },
         {
-          "sectionId": "decimal-addition:summary:v1",
+          "sectionId": "decimal-addition:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "decimal-addition:summary:text:v1",
+              "blockId": "decimal-addition:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,

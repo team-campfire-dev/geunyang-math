@@ -219,6 +219,7 @@
 .scene-zone { fill: #f3f6ea; stroke: #bfcdac; stroke-width: 1; stroke-dasharray: 5 4; }
 .scene-zone.open { stroke: var(--green); fill: #eaf0e1; }
 .scene-zone.filled { stroke: #86a364; stroke-dasharray: none; fill: transparent; }
+.scene-zone-label { font-size: 9.5px; fill: #92a17b; }
 .scene-task { padding: 22px; background: #f3f6ea; border: 1px solid #e6edd9; border-radius: 8px; }
 .scene-task .builder-prompt { margin-bottom: 16px; }
 .scene-task .scene-figure { padding: 0; background: none; border: 0; }

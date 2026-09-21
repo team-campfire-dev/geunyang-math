@@ -210,6 +210,11 @@ export function SceneTaskFigure({ width, height, items, zones, task, alt, captio
           return <g key={zone.id}>
             <rect x={zone.x} y={zone.y} width={zone.width} height={zone.height} rx={3}
               className={`scene-zone${filled ? ' filled' : ''}${held ? ' open' : ''}`} />
+            {/* The seat says its own name on the page, not only to a screen reader. It was in
+                `aria-label` alone, so 「분수 · 소수 · 백분율」 reached a sighted learner as three
+                identical empty boxes and the only way to place anything was to guess by position. */}
+            <text x={zone.x + zone.width / 2} y={zone.y + zone.height + 12} textAnchor="middle"
+              className="scene-zone-label" aria-hidden="true">{zone.label}</text>
             {/* The zone is a control in its own right, so a tap or the keyboard can choose it. */}
             <rect x={zone.x} y={zone.y} width={zone.width} height={zone.height} fill="transparent"
               role="button" tabIndex={0} aria-label={`${zone.label}${filled ? ', 채움' : ', 비어 있음'}`}

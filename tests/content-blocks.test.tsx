@@ -189,6 +189,15 @@ describe('a drawing the learner arranges', () => {
     expect(screen.getByRole('button', { name: '조각, 놓음' })).toBeDefined();
   });
 
+  it('writes each seat\'s name on the page, not only into the label a screen reader hears', () => {
+    // 「분수 · 소수 · 백분율」 shipped as three identical dashed boxes: the name was in `aria-label`
+    // and nowhere on screen, so a sighted learner could only place the pieces by guessing.
+    const { container } = render(<SceneTaskFigure width={320} height={200} items={items} zones={zones}
+      task={{ prompt: '조각을 빈 자리에 놓아 보세요.' }} alt="조각을 옮기는 그림" />);
+    const drawn = [...container.querySelectorAll('.scene-zone-label')].map((node) => node.textContent);
+    expect(drawn).toEqual(['빈 자리']);
+  });
+
   it('puts everything back where it started', () => {
     render(<SceneTaskFigure width={320} height={200} items={items} zones={zones}
       task={{ prompt: '조각을 빈 자리에 놓아 보세요.' }} alt="조각을 옮기는 그림" />);
