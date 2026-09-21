@@ -203,6 +203,24 @@ export type AuthoringWorkspace = {
 };
 /** A key is what every name in a lesson is built from, so it stays to the letters a name may hold. */
 export const lessonKeyPattern = /^[a-z0-9][a-z0-9-]{1,63}$/;
+/**
+ * A wrong answer learners really wrote, and how often.
+ *
+ * The point of it is that an author does not have to imagine what people get wrong. The options of
+ * a picked question are the author's guesses at that; for a written answer nobody has to guess at
+ * all, because every attempt is recorded. This is that log, added up by value — `2/8`, `1/4` and
+ * `0.25` are one row — with nothing about who: a count and a number of people, and that is all.
+ */
+export type WrongAnswer = {
+  /** How the answer reads, in the spelling most learners used for it. */
+  answer: string;
+  /** For a picked answer, the text of the option, so the author is not reading `b`. */
+  text?: string;
+  count: number;
+  /** How many different people wrote it. Two people is a pattern; one person twice is a moment. */
+  learners: number;
+};
+
 export type AuthoringAction =
   | { action: 'course.save'; key: string; title: string; summary: string; creating: boolean }
   | { action: 'course.reorder'; courseKey: string; lessonKeys: string[] }
@@ -234,7 +252,9 @@ export type AuthoringAction =
    * learning API uses, which is why it is judged on the server rather than in the editor.
    */
   | { action: 'draft.tryAnswer'; draftId: string; problemVersionId: string; answer: string; assisted: boolean }
-  | { action: 'draft.openHint'; draftId: string; problemVersionId: string };
+  | { action: 'draft.openHint'; draftId: string; problemVersionId: string }
+  /** What learners have written for this question and got wrong, so wrong answers can be named. */
+  | { action: 'problem.wrongAnswers'; problemVersionId: string };
 export type AuthoringResponse = {
   workspace: AuthoringWorkspace; draft?: DraftDetail; publishedVersionId?: string;
   matches?: AccountRole[]; definitions?: DefinitionSummary[];
@@ -246,6 +266,8 @@ export type AuthoringResponse = {
   diagnostic?: DiagnosticDraft;
   /** What the grader said about an answer tried in the editor, and the hint a question carries. */
   tried?: GradeResult; hint?: ContentBlock[];
+  /** The wrong answers learners have actually written for one question, commonest first. */
+  wrongAnswers?: WrongAnswer[];
   /** The definition a save wrote, so the screen can say so. */
   savedDefinition?: { conceptKey: string };
 };

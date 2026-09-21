@@ -7,15 +7,15 @@ import { maxProblemsPerSet, problemSetRefs, storedLessonOf, validateLesson, vali
 import { gradeAnswer } from '@/core/grading';
 import { frozenProblemSet, lessonRecord, importContent, problemSetRecords, lessonRecords, publishedProblemRecords, definitionRecords, currentDefinitions } from './content-store';
 import { AppError } from './errors';
-import { choiceLimits, misreadingLimits, type AnswerSpec } from '@/shared/answer';
-import type { ContentBlock, LessonSection, ProblemSetRef } from '@/shared/api';
+import { choiceLimits, misreadingLimits, parseAnswer, type AnswerSpec } from '@/shared/answer';
+import type { ContentBlock, GradeResult, LessonSection, ProblemSetRef } from '@/shared/api';
 import {
   lessonKeyPattern, mayEditEveryDraft, mayGrantRoles, mayPublish, newProblem, nextBlockId, nextProblemVersionId,
   nextSectionId, problemSetIdPattern, pruneBlock, pruneProblems, pruneSections, suggestDiagnosticVersionId,
   renameProblem, renamedProblemVersionId, renameProblemReferences, responseSpecOf, scopeDefinitionLinks, suggestVersionId,
   type AccountRole, type AuthoringResponse, type AuthoringRole, type AuthoringWorkspace, type DraftDetail, type DraftIssue,
   type DraftEdit, type DraftProblem, type DraftSummary, type EditableConceptScope, type DefinitionChoice, type DefinitionEdit, type DefinitionSummary,
-  type DiagnosticDraft, type DiagnosticEdit,
+  type DiagnosticDraft, type DiagnosticEdit, type WrongAnswer,
 } from '@/shared/authoring';
 
 const id = z.string().min(1).max(191);
@@ -131,6 +131,7 @@ export const authoringActionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('draft.tryAnswer'), draftId: id, problemVersionId: id,
     answer: z.string().trim().min(1).max(100), assisted: z.boolean() }).strict(),
   z.object({ action: z.literal('draft.openHint'), draftId: id, problemVersionId: id }).strict(),
+  z.object({ action: z.literal('problem.wrongAnswers'), problemVersionId: id }).strict(),
 ]);
 
 /**
@@ -684,6 +685,45 @@ export class AuthoringService {
   async tryAnswer(userId: string, draftId: string, problemVersionId: string, answer: string, assisted: boolean): Promise<AuthoringResponse> {
     const problem = await this.draftProblem(userId, draftId, problemVersionId);
     return { workspace: await this.workspace(userId), tried: gradeAnswer(answer, problem.gradingSpec, assisted, problem.misreadings) };
+  }
+
+  /**
+   * The wrong answers learners have really written for one question.
+   *
+   * This is the half of naming a wrong answer that nobody should have to guess at. An author
+   * inventing distractors is guessing; the log is not. Answers are added up **by value**, so a
+   * question answered `2/8`, `1/4` and `0.25` shows one row of three, and the spelling shown is
+   * the one most people used.
+   *
+   * Nothing about who: a count and a number of people. A count of one from one person is a moment
+   * and not a pattern, which is why both numbers are here rather than only the larger one.
+   */
+  async wrongAnswers(userId: string, problemVersionId: string): Promise<AuthoringResponse> {
+    // Reading what learners wrote is content work, so it takes the same role writing a question does.
+    await this.require(userId);
+    const rows = await this.db.attempt.findMany({ where: { problemVersionId }, select: { answer: true, userId: true, result: true } });
+    const problem = (await publishedProblemRecords(this.db, [problemVersionId])).get(problemVersionId);
+    const groups = new Map<string, { answer: string; spellings: Map<string, number>; learners: Set<string>; count: number }>();
+    for (const row of rows) {
+      // A typo is not a wrong answer, and a right answer is not one either.
+      if ((row.result as GradeResult).status !== 'incorrect') continue;
+      const written = row.answer.trim();
+      const parsed = parseAnswer(written);
+      // By value where there is one, so three spellings of the same mistake are one row.
+      const key = parsed ? `${parsed.numerator}/${parsed.denominator}` : written;
+      const group = groups.get(key) ?? { answer: written, spellings: new Map(), learners: new Set(), count: 0 };
+      group.count += 1;
+      group.learners.add(row.userId);
+      group.spellings.set(written, (group.spellings.get(written) ?? 0) + 1);
+      groups.set(key, group);
+    }
+    const options = problem?.gradingSpec.kind === 'choice' ? problem.gradingSpec.options : [];
+    const wrongAnswers: WrongAnswer[] = [...groups.values()].map((group) => {
+      const answer = [...group.spellings.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0][0];
+      const option = options.find((item) => item.id === answer);
+      return { answer, count: group.count, learners: group.learners.size, ...(option ? { text: option.text } : {}) };
+    }).sort((a, b) => b.count - a.count || b.learners - a.learners || a.answer.localeCompare(b.answer)).slice(0, 12);
+    return { workspace: await this.workspace(userId), wrongAnswers };
   }
 
   async draftHint(userId: string, draftId: string, problemVersionId: string): Promise<AuthoringResponse> {
@@ -1255,6 +1295,7 @@ export class AuthoringService {
       case 'editor.expertMode': return this.setExpertMode(userId, action.on);
       case 'draft.tryAnswer': return this.tryAnswer(userId, action.draftId, action.problemVersionId, action.answer, action.assisted);
       case 'draft.openHint': return this.draftHint(userId, action.draftId, action.problemVersionId);
+      case 'problem.wrongAnswers': return this.wrongAnswers(userId, action.problemVersionId);
     }
   }
 }

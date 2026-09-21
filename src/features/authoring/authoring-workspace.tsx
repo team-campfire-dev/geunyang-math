@@ -20,6 +20,7 @@ import { AddBlock, BlockCard } from './block-editor';
 import { LessonSheet, type Picked } from './lesson-sheet';
 import { PlacementPanel } from './placement-panel';
 import { ProblemPanel, ProblemSetEditor, ProblemSetPanel, ConceptPicker } from './problem-editor';
+import { WrongAnswers } from './wrong-answers';
 import { DefinitionPanel } from './definition-editor';
 import { LessonSettings } from './lesson-settings';
 import { invalidAnswers, unfinishedIssues, type AnswerInput } from '@/shared/authoring-checks';
@@ -503,6 +504,16 @@ export function AuthoringWorkspace() {
       return response.hint ?? [];
     },
   });
+  /**
+   * What learners have written for one question and got wrong. Read straight from the log rather
+   * than from the draft, so it answers about the published question a learner actually met.
+   */
+  // A plain function rather than a memo: this sits below the screen's early returns, where a hook
+  // would be a hook that sometimes runs.
+  const askWrongAnswers = async (problemVersionId: string) => {
+    const response = await authoringApi.act({ action: 'problem.wrongAnswers', problemVersionId }, session?.user?.id ?? '');
+    return response.wrongAnswers ?? [];
+  };
   /** What the server holds is what gets answered, so anything unsaved goes first. */
   const enterTry = async () => {
     if (invalid.length) { setError('정답 입력을 고친 뒤 해볼 수 있어요.'); return; }
@@ -527,6 +538,7 @@ export function AuthoringWorkspace() {
 
   return <Shell role={workspace.role} expert={expert} busy={busy} onExpert={onExpert}>
     <RemovalNotice.Provider value={notifyRemoval}>
+    <WrongAnswers.Provider value={askWrongAnswers}>
     <div className="editor-bar">
       <button type="button" className="back-button" onClick={() => void leave()}><Icon name="back" size={16} />{courseTitle}</button>
       <div className="editor-bar-side">
@@ -734,6 +746,7 @@ export function AuthoringWorkspace() {
         <Icon name="back" size={13} />되돌리기</button>
       <button type="button" className="icon-button" aria-label="알림 닫기" onClick={() => setRemoved(null)}><Icon name="close" size={13} /></button>
     </div>}
+    </WrongAnswers.Provider>
     </RemovalNotice.Provider>
   </Shell>;
 }

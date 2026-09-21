@@ -475,3 +475,11 @@
 .table-editor-add .text-button { font-size: 12px; gap: 4px; }
 .table-editor-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--muted); }
 
+
+/* Naming a question's wrong answers, beside the log of the ones learners really wrote. */
+.editor-misreading { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 0; border-top: 1px solid var(--editor-rule); }
+.editor-misreading:first-of-type { border-top: 0; }
+.editor-misreading-answer { flex: 1; min-width: 120px; display: flex; flex-direction: column; gap: 3px; font-size: 13px; }
+.editor-misreading-answer small { color: var(--editor-label); font-size: 12px; }
+.editor-misreading select { max-width: 220px; }
+.editor-misreading-actions { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-top: 8px; }

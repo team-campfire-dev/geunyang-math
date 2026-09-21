@@ -57,6 +57,41 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
       items: [{ kind: 'strip', x: 20, y: 80, width: 280, height: 40, parts: 4, filled: 3 }] },
   });
 
+  it('adds up the wrong answers learners really wrote, by value and with nobody named', async () => {
+    const author = await account('author');
+    const record = (await lessonRecord(db, `${lessonKey}:v3`)) ?? (await lessonRecord(db, `${lessonKey}:v1`))!;
+    const problemVersionId = record.problems[0].problemVersionId;
+    const write = async (answer: string, status: 'incorrect' | 'correct' | 'invalid') => {
+      const learner = await account();
+      const scope = await db.learningScope.findFirstOrThrow({ where: { ownerUserId: learner.id } });
+      await db.attempt.create({ data: { userId: learner.id, scopeId: scope.id, problemVersionId, answer,
+        result: { status, message: '', assisted: false }, requestId: randomUUID() } });
+      return learner;
+    };
+    // The same mistake in three spellings, from three people.
+    await write('2/8', 'incorrect');
+    await write('0.25', 'incorrect');
+    await write('1/4', 'incorrect');
+    // One person writing the same thing twice is one person, not two.
+    const twice = await write('9', 'incorrect');
+    const scope = await db.learningScope.findFirstOrThrow({ where: { ownerUserId: twice.id } });
+    await db.attempt.create({ data: { userId: twice.id, scopeId: scope.id, problemVersionId, answer: '9',
+      result: { status: 'incorrect', message: '', assisted: false }, requestId: randomUUID() } });
+    // A right answer is not a wrong answer, and a typo is not an answer at all.
+    await write('8', 'correct');
+    await write('사분의 삼', 'invalid');
+
+    const { wrongAnswers } = await service.act(author.id, { action: 'problem.wrongAnswers', problemVersionId });
+    expect(wrongAnswers).toBeDefined();
+    expect(wrongAnswers!.map((row) => [row.count, row.learners])).toEqual([[3, 3], [2, 1]]);
+    // The spelling shown is one people actually used, and the three spellings are one row.
+    expect(['2/8', '0.25', '1/4']).toContain(wrongAnswers![0].answer);
+    expect(wrongAnswers![1].answer).toBe('9');
+    expect(JSON.stringify(wrongAnswers)).not.toContain(twice.id);
+    // Reading what learners wrote is content work: a learner asking gets nothing.
+    await expect(service.act((await account()).id, { action: 'problem.wrongAnswers', problemVersionId })).rejects.toMatchObject({ status: 403 });
+  });
+
   it('reads a published version without creating drafts and still requires an author role', async () => {
     const author = await account('author'); const learner = await account();
     const before = await db.contentDraft.count();
