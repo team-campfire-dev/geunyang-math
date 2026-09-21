@@ -189,6 +189,20 @@ describe('a drawing the learner arranges', () => {
     expect(screen.getByRole('button', { name: '조각, 놓음' })).toBeDefined();
   });
 
+  it('draws a piece the learner moves on top of whatever it lands on', () => {
+    // 분수 막대 is written after the 조각 in the same drawing, so a piece dropped into the bar was
+    // painted under it and disappeared. Movable shapes are painted last, whatever order they sit in.
+    const board: SceneItem[] = [
+      { kind: 'rect', id: 'piece', label: '조각', draggable: true, x: 10, y: 120, width: 40, height: 40 },
+      { kind: 'rect', id: 'bar', x: 190, y: 10, width: 80, height: 80 },
+    ];
+    const { container } = render(<SceneTaskFigure width={320} height={200} items={board} zones={zones}
+      task={{ prompt: '조각을 빈 자리에 놓아 보세요.' }} alt="조각을 옮기는 그림" />);
+    const drawn = [...container.querySelectorAll('svg rect')].map((node) => node.getAttribute('width'));
+    // The board's 80 comes before the piece's 40; the zone and the hit target are drawn around them.
+    expect(drawn.indexOf('80')).toBeLessThan(drawn.indexOf('40'));
+  });
+
   it('writes each seat\'s name on the page, not only into the label a screen reader hears', () => {
     // 「분수 · 소수 · 백분율」 shipped as three identical dashed boxes: the name was in `aria-label`
     // and nowhere on screen, so a sighted learner could only place the pieces by guessing.
