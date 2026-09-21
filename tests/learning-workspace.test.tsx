@@ -50,7 +50,7 @@ const learningState = (overrides: Partial<LearningState> = {}): LearningState =>
   lessons: catalogue, enrollments: [], assignments: [], recommendations: [],
   diagnostic: null, diagnosticOffering: null,
   plan: { version: '1', readiness: [], review: null, sessionMinutes: 10, preferredLessonKey: null },
-  recommendationHistory: [], concepts: [], ...overrides,
+  recommendationHistory: [], concepts: [], misconceptions: [], ...overrides,
 });
 const enrolled = (completedSectionIds: string[] = [], status: 'active' | 'completed' = 'active') =>
   learningState({ enrollments: [{ id: 'e1', lessonKey, lessonVersionId: 'fraction-meaning:v2', completedSectionIds, status, attempts: [] }] });
@@ -357,6 +357,52 @@ describe('a set too long to hold on one screen', () => {
     await openSet(set([null, null]));
     expect(window.document.querySelector('.solve-progress')).toBeNull();
     expect(screen.getByText('문제 02')).toBeDefined();
+  });
+});
+
+describe('a mistake the record keeps showing', () => {
+  const standing = { key: 'add-denominators', label: '분모끼리 더하기', problems: 3,
+    note: '분모가 조각의 크기라는 것을 지나치고 위아래를 따로 더해요.' };
+  const openHistory = async () => {
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: '학습 기록' }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: '학습 기록' })[0]);
+  };
+
+  it('says nothing at all until there is something standing', async () => {
+    serve({ state: learningState() });
+    await openHistory();
+    await until(() => expect(screen.getByText('추천이 바뀐 기록')).toBeDefined());
+    expect(screen.queryByText('자꾸 되풀이되는 것')).toBeNull();
+  });
+
+  it('names it, says how many questions showed it, and gathers those questions on request', async () => {
+    const server = serve({ state: learningState({ misconceptions: [standing] }) });
+    await openHistory();
+    await until(() => expect(screen.getByText('자꾸 되풀이되는 것')).toBeDefined());
+    expect(screen.getByText('분모끼리 더하기')).toBeDefined();
+    expect(screen.getByText('3문항')).toBeDefined();
+    // The note says what the learner did, which is what a set gathered for it would practise.
+    expect(screen.getByText(standing.note)).toBeDefined();
+    fireEvent.click(screen.getByRole('button', { name: /이것만 모아 풀기/ }));
+    await until(() => expect(server.of('practice.gather')).toHaveLength(1));
+    expect(server.of('practice.gather')[0]).toEqual({ action: 'practice.gather', misconception: 'add-denominators' });
+  });
+
+  it('does not offer a next set to work gathered from no course', async () => {
+    const own: AssignmentView = assignment({ recipientId: 'r-own', title: '「분모끼리 더하기」 모아 풀기',
+      problemSetId: null, lessonKey: null, status: 'submitted',
+      policy: { kind: 'practice', hints: true, results: 'per-item', solutions: 'after-submission' } });
+    serve({ state: learningState({ assignments: [own] }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: '연습장' }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: '연습장' })[0]);
+    await until(() => expect(screen.getByText('다 푼 문제집')).toBeDefined());
+    fireEvent.click(screen.getAllByRole('button', { name: /모아 풀기/ })[0]);
+    await until(() => expect(screen.getByRole('heading', { level: 1, name: '「분모끼리 더하기」 모아 풀기' })).toBeDefined());
+    // It came from no course, so 「이 과정의 문제집을 모두 풀었어요」 would be about nothing.
+    expect(screen.queryByText(/이 과정의 문제집을 모두 풀었어요/)).toBeNull();
+    expect(screen.getByText('이만큼 해 뒀어요.')).toBeDefined();
   });
 });
 

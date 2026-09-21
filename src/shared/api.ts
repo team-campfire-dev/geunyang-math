@@ -146,9 +146,12 @@ export type AssignmentSchedule = {
 };
 export type AssignmentView = {
   id: string; recipientId: string; title: string; lessonKey: string | null;
-  // The set the questions were taken from, so a screen can say which one this is without matching
-  // on its title. Two courses may name a set the same thing; only the id is the set.
-  problemSetId: string;
+  /**
+   * The set the questions were taken from, so a screen can say which one this is without matching
+   * on its title. Two courses may name a set the same thing; only the id is the set. Null for work
+   * gathered across the catalogue for one learner, which came from no single set.
+   */
+  problemSetId: string | null;
   recommendedAt: string; opensAt: string | null; dueAt: string | null;
   policy: AssignmentPolicy; status: 'assigned' | 'submitted';
   /**
@@ -198,6 +201,14 @@ export type PersonalPlan = {
   preferredLessonKey: string | null;
 };
 export type RecommendationHistoryView = { id: string; createdAt: string; trigger: string; recommendations: Recommendation[] };
+/**
+ * A mistake this learner keeps making, across everything they have answered.
+ *
+ * Standing, not passing: it is counted over **different questions**, each by its first answer, and
+ * only appears once two of them have shown it. One wrong answer is a slip; the same step wrong in
+ * two questions is a habit, and a habit is something that can be practised away.
+ */
+export type StandingMisconception = { key: string; label: string; note: string; problems: number };
 export type LearningState = {
   user: { id: string; displayName: string; targetCourseKey: string | null; dailyMinutes: number };
   lessons: PublicLesson[];
@@ -209,6 +220,7 @@ export type LearningState = {
   plan: PersonalPlan;
   recommendationHistory: RecommendationHistoryView[];
   concepts: { key: string; label: string; state: ConceptState }[];
+  misconceptions: StandingMisconception[];
 };
 export type LearningAction =
   | { action: 'recommendation.choose'; lessonKey: string | null }
@@ -222,5 +234,7 @@ export type LearningAction =
   | { action: 'lesson.complete'; enrollmentId: string }
   | { action: 'assignment.submit'; recipientId: string; requestId: string }
   | { action: 'problemSet.start'; problemSetId: string }
-  | { action: 'solution.open'; context: 'lesson' | 'assignment'; contextId: string; problemVersionId: string };
+  | { action: 'solution.open'; context: 'lesson' | 'assignment'; contextId: string; problemVersionId: string }
+  /** Gathers the questions built to catch one mistake into a set of this learner's own. */
+  | { action: 'practice.gather'; misconception: string };
 export type ActionResponse = { state: LearningState; result?: GradeResult; hint?: ContentBlock[]; solution?: ContentBlock[]; enrollmentId?: string; recipientId?: string };

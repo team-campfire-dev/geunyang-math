@@ -194,6 +194,58 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     expect(await db.hintUse.count({ where: { userId: learner.userId } })).toBe(1);
   });
 
+  it('gathers the questions built to catch one mistake, and leaves out what this learner has shown', async () => {
+    const learner = await newLearner();
+    const tagged = record.problems.slice(0, 3).map((problem) => problem.problemVersionId);
+    // Three questions named the same mistake. The published version carries it, which is allowed
+    // because expected wrong answers are not frozen with it.
+    for (const problemVersionId of tagged) {
+      await db.publishedProblem.updateMany({ where: { problemVersionId },
+        data: { misreadings: [{ answer: '99999', misconception: 'move-without-sign' }] } });
+    }
+    // One of them this learner already answered right, first time and unaided: shown, so left out.
+    const scope = await db.learningScope.findFirstOrThrow({ where: { ownerUserId: learner.userId } });
+    await db.attempt.create({ data: { userId: learner.userId, scopeId: scope.id, problemVersionId: tagged[0],
+      answer: '1', result: { status: 'correct', message: '', assisted: false }, requestId: requestId() } });
+    try {
+    const opened = await service.act(learner.userId, { action: 'practice.gather', misconception: 'move-without-sign' });
+    const view = (await service.state(learner.userId)).assignments.find((item) => item.recipientId === opened.recipientId)!;
+    expect(view.items.map((item) => item.problem.problemVersionId).sort()).toEqual(tagged.slice(1).sort());
+    // It came from no one set, and says so rather than naming one it did not come from.
+    expect(view.problemSetId).toBeNull();
+    expect(view.title).toContain('이항하면서 부호 그대로 두기');
+    expect(view.policy.kind).toBe('practice');
+    // Asking again while it is open is 「이어서」, not a second copy.
+    expect((await service.act(learner.userId, { action: 'practice.gather', misconception: 'move-without-sign' })).recipientId).toBe(opened.recipientId);
+    // A name nothing in the catalogue carries has nothing to gather, and says so.
+    await expect(service.act(learner.userId, { action: 'practice.gather', misconception: 'count-endpoints' })).rejects.toMatchObject({ status: 409 });
+    await expect(service.act(learner.userId, { action: 'practice.gather', misconception: 'not-a-real-key' })).rejects.toMatchObject({ status: 404 });
+    } finally {
+      // The fixture lesson is shared with every other test here, so it goes back as it was.
+      for (const problemVersionId of tagged) {
+        await db.publishedProblem.updateMany({ where: { problemVersionId }, data: { misreadings: Prisma.DbNull } });
+      }
+    }
+  });
+
+  it('calls a mistake standing only once two different questions have shown it', async () => {
+    const learner = await newLearner();
+    const { enrollmentId } = await openPractice(learner.userId);
+    const slip = (problemVersionId: string) => db.attempt.create({ data: { userId: learner.userId, scopeId: learner.scopeId,
+      problemVersionId, answer: '0', enrollmentId, requestId: requestId(),
+      result: { status: 'incorrect', message: '', assisted: false, misconception: 'add-denominators' } } });
+    const standing = async () => (await service.state(learner.userId)).misconceptions;
+
+    await slip(record.problems[0].problemVersionId);
+    // One question is a slip, however many times it was answered that way.
+    await slip(record.problems[0].problemVersionId);
+    expect(await standing()).toEqual([]);
+
+    await slip(record.problems[1].problemVersionId);
+    expect(await standing()).toEqual([{ key: 'add-denominators', label: '분모끼리 더하기',
+      note: '분모가 조각의 크기라는 것을 지나치고 위아래를 따로 더해요.', problems: 2 }]);
+  });
+
   it('hands out a worked solution only once the work is done, and records nothing for it', async () => {
     const learner = await newLearner();
     const { enrollmentId, problem } = await openPractice(learner.userId);
