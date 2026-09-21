@@ -1,0 +1,4585 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "ncs-data",
+      "title": "자료해석",
+      "summary": "표에서 값을 찾고, 증감률을 구하고, 표가 말하지 않은 것을 가려내요. 시험에서 문항이 가장 많은 자리예요.",
+      "order": 14,
+      "track": "ncs",
+      "lessons": [
+        {
+          "key": "ncs-data-reading",
+          "order": 1
+        },
+        {
+          "key": "ncs-data-change",
+          "order": 2
+        },
+        {
+          "key": "ncs-data-compare",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "table-reading",
+      "label": "표 읽기",
+      "assessable": true
+    },
+    {
+      "key": "growth-rate",
+      "label": "증감률",
+      "assessable": true
+    },
+    {
+      "key": "table-inference",
+      "label": "표가 말하는 것",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "ncs-data-reading",
+        "versionId": "ncs-data-reading:v1",
+        "title": "표에서 값 찾기: 제목·단위·합계",
+        "summary": "표를 읽는 차례를 익히고, 줄과 열을 따라가며 합계와 비중을 구해요.",
+        "estimatedMinutes": 20,
+        "conceptKeys": [
+          "table-reading"
+        ],
+        "prerequisiteConceptKeys": [
+          "numeracy-scope",
+          "chart-types",
+          "proportion"
+        ],
+        "sectionCount": 7
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-data-reading:order:v1",
+          "role": "explanation",
+          "title": "표를 읽는 차례",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-reading:order:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "길잡이 과정에서 도표분석이 시험 문항이 가장 많은 자리라는 것과, 대부분 계산이 아니라 읽기에서 틀린다는 것을 봤어요. 여기서부터는 표를 실제로 읽어요.\n\n표를 만나면 네 가지를 차례로 봅니다.\n\n첫째, 제목이에요. 무엇에 대한 표인지가 여기 있어요. 「지점별 분기 매출」과 「지점별 분기 이익」은 전혀 다른 표인데 숫자만 보면 구별되지 않아요.\n\n둘째, 단위예요. $3{,}200$이 만 원인지 억 원인지, 명인지 천 명인지에 따라 답이 백 배 달라져요. 단위는 보통 표 위나 아래에 작게 붙어 있어요.\n\n셋째, 줄과 열이 각각 무엇인지예요. 줄이 지점이고 열이 분기인지, 그 반대인지를 먼저 정해야 어느 방향으로 읽을지가 정해져요.\n\n넷째, 합계가 있는지예요. 합계 줄이 있으면 비중 문제가 훨씬 빨라지고, 없으면 직접 더해야 해요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-reading:sheet:v1",
+          "role": "explanation",
+          "title": "표 하나를 함께 읽기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-reading:sheet:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "아래 표를 위의 네 가지로 읽어 볼게요. 제목은 지점별 분기 매출, 단위는 만 원, 줄은 지점이고 열은 분기, 합계는 없어요.\n\n그러니 「$3$분기 전체」를 물으면 $3$분기 열을 따라 내려가며 더해야 해요. $3{,}600 + 2{,}700 + 2{,}200 + 2{,}500 = 11{,}000$만 원이에요.\n\n「A지점의 세 분기 합계」를 물으면 이번에는 A지점 줄을 따라 건너가며 더해요. $3{,}200 + 3{,}400 + 3{,}600 = 10{,}200$만 원이에요.\n\n같은 표를 두 방향으로 읽는 것이 자료해석의 기본 동작이에요. 어느 방향인지는 문제가 「전체」라고 했는지 「그 지점」이라고 했는지가 정해 줘요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "table:branch-sales",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "지점별 분기 매출",
+                "note": "단위: 만 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "지점",
+                    "align": "start"
+                  },
+                  {
+                    "label": "1분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "2분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "3분기",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "A지점",
+                      "3,200",
+                      "3,400",
+                      "3,600"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "B지점",
+                      "2,800",
+                      "2,750",
+                      "2,700"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "C지점",
+                      "1,500",
+                      "1,800",
+                      "2,200"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "D지점",
+                      "2,500",
+                      "2,450",
+                      "2,500"
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-reading:share:v1",
+          "role": "explanation",
+          "title": "비중은 전체를 먼저",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-reading:share:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "비중을 물으면 전체를 먼저 구해요. 표에 합계가 없으면 그것부터 더하는 것이 첫 걸음이에요.\n\nA지점의 $3$분기 매출 $3{,}600$만 원이 전체에서 차지하는 비중은 $\\frac{3{,}600}{11{,}000} = 0.327\\ldots$, 약 $33\\%$예요.\n\n시험에서 비중 문항은 대개 「약 몇 $\\%$인가」로 묻고 보기가 $5$$\\%$쯤 떨어져 있어요. 그래서 끝까지 나누지 않고 어림해도 답이 골라져요. $3{,}600$은 $11{,}000$의 $\\frac{1}{3}$에 가깝다는 것만 보면 돼요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "ncs-data-reading:share:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "네 지점의 매출 막대에서 한 지점만 남기고 전체와 견주는 그림",
+                "caption": "비중은 한 칸을 전체로 나눈 값이에요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "id": "base",
+                    "x1": 24,
+                    "y1": 138,
+                    "x2": 300,
+                    "y2": 138,
+                    "stroke": "line",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "bar-a",
+                    "x": 38,
+                    "y": 74,
+                    "width": 40,
+                    "height": 64,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "bar-b",
+                    "x": 102,
+                    "y": 90,
+                    "width": 40,
+                    "height": 48,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "bar-c",
+                    "x": 166,
+                    "y": 99,
+                    "width": 40,
+                    "height": 39,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "bar-d",
+                    "x": 230,
+                    "y": 94,
+                    "width": 40,
+                    "height": 44,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-a",
+                    "x": 58,
+                    "y": 154,
+                    "text": "A",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-b",
+                    "x": 122,
+                    "y": 154,
+                    "text": "B",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-c",
+                    "x": 186,
+                    "y": 154,
+                    "text": "C",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "name-d",
+                    "x": 250,
+                    "y": 154,
+                    "text": "D",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "total",
+                    "x": 160,
+                    "y": 40,
+                    "text": "3분기 합계 11,000만 원",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "answer",
+                    "x": 160,
+                    "y": 184,
+                    "text": "$3{,}600 \\div 11{,}000 \\approx 33\\%$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "표의 한 줄은 막대 하나예요.",
+                    "changes": [
+                      {
+                        "id": "total",
+                        "hidden": true
+                      },
+                      {
+                        "id": "answer",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "비중을 물으면 먼저 전체를 구해요.",
+                    "changes": [
+                      {
+                        "id": "answer",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "A지점 3,600은 전체 11,000의 약 33%예요.",
+                    "changes": [
+                      {
+                        "id": "bar-b",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "bar-c",
+                        "opacity": 0.3
+                      },
+                      {
+                        "id": "bar-d",
+                        "opacity": 0.3
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1400
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-reading:example:v1",
+          "role": "worked_example",
+          "title": "표 하나로 세 가지 묻기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-reading:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "같은 표에 이런 물음들이 붙어요.\n\n「$2$분기 전체 매출은?」 — $2$분기 열을 더해 $3{,}400 + 2{,}750 + 1{,}800 + 2{,}450 = 10{,}400$만 원이에요.\n\n「세 분기 동안 매출이 계속 늘어난 지점은?」 — 줄마다 세 값을 견줘요. A는 $3{,}200 \\rightarrow 3{,}400 \\rightarrow 3{,}600$으로 늘고, C는 $1{,}500 \\rightarrow 1{,}800 \\rightarrow 2{,}200$으로 늘어요. B는 줄고 D는 오르내려요. 답은 A와 C예요.\n\n「$3$분기에 C지점이 차지하는 비중은?」 — $\\frac{2{,}200}{11{,}000} = 0.2$, $20\\%$예요.\n\n세 물음 모두 새로운 계산이 아니라 표를 어느 방향으로 읽느냐의 문제였어요. 표를 읽는 차례가 몸에 붙으면 남는 것은 덧셈과 나눗셈뿐이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-reading:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-reading:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-data-reading:practice",
+                "problemSetVersionId": "ncs-data-reading:practice:v1",
+                "problemVersionIds": [
+                  "ncs-data-reading:practice-1:v1",
+                  "ncs-data-reading:practice-2:v1",
+                  "ncs-data-reading:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-reading:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-reading:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-data-reading:check",
+                "problemSetVersionId": "ncs-data-reading:check:v1",
+                "problemVersionIds": [
+                  "ncs-data-reading:check-1:v1",
+                  "ncs-data-reading:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-reading:summary:v1",
+          "role": "summary",
+          "title": "배운 것 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-reading:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "표는 제목 → 단위 → 줄과 열 → 합계의 차례로 읽어요. 「전체」를 물으면 열을 따라 내려가고, 「그 항목」을 물으면 줄을 따라 건너가요.\n\n비중은 전체를 먼저 구하는 것에서 시작하고, 보기가 넉넉히 떨어져 있으면 끝까지 나누지 않고 어림해도 돼요. 표에 없는 것은 읽어 낼 수 없다는 것도 함께 기억하세요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-data-reading:review",
+        "problemSetVersionId": "ncs-data-reading:review:v1",
+        "problemVersionIds": [
+          "ncs-data-reading:homework-1:v1",
+          "ncs-data-reading:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "ncs-data-change",
+        "versionId": "ncs-data-change:v1",
+        "title": "증감과 증감률: 얼마나 늘었나",
+        "summary": "늘어난 양과 늘어난 비율을 구분하고, 기준을 잡아 증감률을 구해요.",
+        "estimatedMinutes": 20,
+        "conceptKeys": [
+          "growth-rate"
+        ],
+        "prerequisiteConceptKeys": [
+          "table-reading",
+          "chart-reading",
+          "percentage"
+        ],
+        "sectionCount": 6
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-data-change:two:v1",
+          "role": "explanation",
+          "title": "늘어난 양과 늘어난 비율",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-change:two:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "표가 두 시점을 보여 주면 시험은 거의 언제나 「얼마나 늘었나」를 묻습니다. 그런데 이 물음에는 답이 둘이에요.\n\n증감량은 나중 값에서 처음 값을 뺀 것이에요. 단위가 그대로 남아요 — 몇 명, 몇만 원.\n\n증감률은 그 증감량을 처음 값으로 나눈 것이에요. $\\text{증감률} = \\frac{\\text{나중} - \\text{처음}}{\\text{처음}} \\times 100$이고 단위는 $\\%$예요.\n\n이 둘은 자주 어긋나요. 매출이 $1{,}500$에서 $2{,}200$으로 는 지점은 $700$ 늘었고 비율로는 $47\\%$예요. $3{,}200$에서 $3{,}600$으로 는 지점은 $400$ 늘었고 비율로는 $13\\%$예요. 늘어난 양은 앞이 크고 비율도 앞이 큰 경우지만, 규모가 크게 다르면 「많이 늘었다」의 답이 둘 사이에서 갈려요. 문제가 「증가량」이라 했는지 「증가율」이라 했는지를 먼저 보세요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-change:base:v1",
+          "role": "explanation",
+          "title": "기준은 언제나 이전 값",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-change:base:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "증감률에서 가장 많이 틀리는 곳은 나누는 수예요. **나중 값이 아니라 처음 값으로 나눕니다.**\n\n$40{,}000$명이 $50{,}000$명이 되었으면 늘어난 $10{,}000$을 $40{,}000$으로 나눠 $25\\%$예요. $50{,}000$으로 나눈 $20\\%$는 틀린 답인데, 시험은 그 $20\\%$를 보기에 꼭 넣어 둬요.\n\n여러 해에 걸친 증가율도 더할 수 없어요. $2022 \\rightarrow 2023$이 $25\\%$, $2023 \\rightarrow 2024$가 $30\\%$라고 해서 두 해 동안 $55\\%$가 아니에요. $40{,}000$이 $65{,}000$이 되었으니 $\\frac{25{,}000}{40{,}000} = 62.5\\%$예요. 기준이 해마다 달라지기 때문이에요.\n\n그리고 %와 %p가 있어요. 점유율이 $8\\%$에서 $10\\%$가 되면 $2$%p 오른 것이고, 비율로는 $\\frac{2}{8} = 25\\%$ 오른 것이에요. 같은 사실을 두 수로 말할 수 있으니, 문장이 어느 쪽을 묻는지 읽어야 해요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "ncs-data-change:growth:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "작은 막대와 큰 막대를 견주어 늘어난 양과 늘어난 비율을 나누어 보는 그림",
+                "caption": "늘어난 양이 같아도 늘어난 비율은 다를 수 있어요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "id": "base",
+                    "x1": 24,
+                    "y1": 150,
+                    "x2": 300,
+                    "y2": 150,
+                    "stroke": "line",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "was",
+                    "x": 46,
+                    "y": 110,
+                    "width": 46,
+                    "height": 40,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "now",
+                    "x": 110,
+                    "y": 60,
+                    "width": 46,
+                    "height": 90,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "was-name",
+                    "x": 69,
+                    "y": 166,
+                    "text": "C지점",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "now-name",
+                    "x": 133,
+                    "y": 166,
+                    "text": "A지점",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "was-num",
+                    "x": 69,
+                    "y": 102,
+                    "text": "1,500 → 2,200",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "now-num",
+                    "x": 133,
+                    "y": 52,
+                    "text": "3,200 → 3,600",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "amount",
+                    "x": 236,
+                    "y": 92,
+                    "text": "늘어난 양",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "amount-v",
+                    "x": 236,
+                    "y": 110,
+                    "text": "700 < 400?",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "rate",
+                    "x": 236,
+                    "y": 134,
+                    "text": "$47\\% > 13\\%$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "두 지점 모두 매출이 늘었어요.",
+                    "changes": [
+                      {
+                        "id": "amount",
+                        "hidden": true
+                      },
+                      {
+                        "id": "amount-v",
+                        "hidden": true
+                      },
+                      {
+                        "id": "rate",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "늘어난 양은 C가 700, A가 400이에요.",
+                    "changes": [
+                      {
+                        "id": "rate",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "늘어난 비율로 보면 C는 47%, A는 13%예요. 기준이 다르니까요.",
+                    "changes": [
+                      {
+                        "id": "amount",
+                        "opacity": 0.4
+                      },
+                      {
+                        "id": "amount-v",
+                        "opacity": 0.4
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1500
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-change:example:v1",
+          "role": "worked_example",
+          "title": "증가율이 가장 큰 곳 찾기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-change:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "「$1$분기 대비 $3$분기 증가율이 가장 큰 지점은?」 같은 물음은 네 줄을 모두 계산해야 할 것처럼 보이지만 그렇지 않아요.\n\n먼저 늘지 않은 줄을 버려요. B는 $2{,}800 \\rightarrow 2{,}700$으로 줄었고 D는 $2{,}500 \\rightarrow 2{,}500$으로 그대로예요. 남은 것은 A와 C뿐이에요.\n\nA는 $3{,}200$에서 $400$ 늘었어요. $400$은 $3{,}200$의 $\\frac{1}{8}$이니 $12.5\\%$예요.\n\nC는 $1{,}500$에서 $700$ 늘었어요. $700$은 $1{,}500$의 절반에 가까우니 $47\\%$쯤이에요.\n\n정확한 값을 구하지 않고도 C가 답이에요. 자료해석에서 시간을 버는 방법은 빠르게 계산하는 것이 아니라 계산하지 않아도 되는 줄을 먼저 버리는 것이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-change:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-change:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-data-change:practice",
+                "problemSetVersionId": "ncs-data-change:practice:v1",
+                "problemVersionIds": [
+                  "ncs-data-change:practice-1:v1",
+                  "ncs-data-change:practice-2:v1",
+                  "ncs-data-change:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-change:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-change:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-data-change:check",
+                "problemSetVersionId": "ncs-data-change:check:v1",
+                "problemVersionIds": [
+                  "ncs-data-change:check-1:v1",
+                  "ncs-data-change:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-change:summary:v1",
+          "role": "summary",
+          "title": "배운 것 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-change:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "증감량은 빼서 구하고 증감률은 그것을 처음 값으로 나눠 구해요. 나누는 수는 언제나 이전 값이에요.\n\n해마다의 증가율은 더할 수 없고, %와 %p는 다른 말이에요. 여러 줄을 견줄 때는 줄거나 그대로인 줄을 먼저 버리면 계산이 절반으로 줄어요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-data-change:review",
+        "problemSetVersionId": "ncs-data-change:review:v1",
+        "problemVersionIds": [
+          "ncs-data-change:homework-1:v1",
+          "ncs-data-change:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "ncs-data-compare",
+        "versionId": "ncs-data-compare:v1",
+        "title": "두 표를 견주고, 말하지 않은 것을 가려내기",
+        "summary": "두 값을 이어 표에 없는 값을 구하고, 표가 말하지 않은 것을 가려내요.",
+        "estimatedMinutes": 20,
+        "conceptKeys": [
+          "table-inference"
+        ],
+        "prerequisiteConceptKeys": [
+          "growth-rate",
+          "table-reading",
+          "proportion"
+        ],
+        "sectionCount": 6
+      },
+      "sections": [
+        {
+          "sectionId": "ncs-data-compare:join:v1",
+          "role": "explanation",
+          "title": "두 값을 이으면 셋째 값이 나와요",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-compare:join:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "표가 두 가지를 함께 보여 주면 그 둘을 이어 표에 없는 값을 구할 수 있어요. 자료해석에서 가장 자주 나오는 이음은 부분과 비율이에요.\n\n$\\text{부분} = \\text{전체} \\times \\text{비율}$이니 거꾸로 $\\text{전체} = \\frac{\\text{부분}}{\\text{비율}}$이에요. A사의 매출이 $80$억 원이고 점유율이 $10\\%$라면 시장 전체는 $80 \\div 0.1 = 800$억 원이에요.\n\n이 이음이 강력한 이유는 표가 「시장 규모」라는 열을 아예 갖고 있지 않아도 답이 나오기 때문이에요. 시험은 그래서 두 열을 주고 셋째를 묻습니다.\n\n여기서 흥미로운 일이 벌어져요. $2024$년은 매출 $92$억, 점유율 $12\\%$니 시장은 $92 \\div 0.12 = 766.6\\ldots$억 원이에요. **A사는 컸는데 시장은 줄었어요.** 점유율이 오른 이유의 절반이 그것이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "ncs-data-compare:market:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "회사 매출 막대를 점유율로 나누어 시장 전체 크기를 세우는 그림",
+                "caption": "두 값이 만나면 표에 없던 셋째 값이 나와요",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "id": "market",
+                    "x": 40,
+                    "y": 56,
+                    "width": 240,
+                    "height": 34,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "mine",
+                    "x": 40,
+                    "y": 104,
+                    "width": 24,
+                    "height": 34,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "market-name",
+                    "x": 160,
+                    "y": 46,
+                    "text": "시장 전체 = ?",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "mine-name",
+                    "x": 130,
+                    "y": 126,
+                    "text": "A사 매출 80억 · 점유율 10%",
+                    "size": 11,
+                    "anchor": "start",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "answer",
+                    "x": 160,
+                    "y": 168,
+                    "text": "$80 \\div 0.1 = 800$억 원",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "표에는 A사의 매출과 점유율만 있어요.",
+                    "changes": [
+                      {
+                        "id": "market",
+                        "opacity": 0.25
+                      },
+                      {
+                        "id": "market-name",
+                        "hidden": true
+                      },
+                      {
+                        "id": "answer",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "점유율은 이 매출이 전체의 몇 분의 몇인지를 말해 줘요.",
+                    "changes": [
+                      {
+                        "id": "answer",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "매출을 점유율로 나누면 시장 전체가 나와요.",
+                    "changes": []
+                  }
+                ],
+                "frameMs": 1500
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-compare:silent:v1",
+          "role": "explanation",
+          "title": "표가 말하지 않은 것",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-compare:silent:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "길잡이 과정에서 도표 분석의 유의점 다섯 가지를 봤어요. 그중 실제 문항으로 가장 많이 나오는 것이 「도표로 알 수 있는 것과 없는 것을 구별하라」예요.\n\n아래 표를 봅시다. 여기서 **알 수 있는 것**은 지점별 분기 매출, 분기별 합계, 지점별 증감, 비중이에요. 표에 있는 수와 그 수들로 계산되는 것 전부예요.\n\n**알 수 없는 것**은 훨씬 많아요. $4$분기 매출은 열이 없으니 모르고, 이익은 매출과 다른 값이라 모르고, 지점의 크기나 직원 수도 모르고, 왜 그렇게 되었는지도 모릅니다.\n\n그래서 「B지점은 영업을 잘하지 못했다」는 이 표로 말할 수 없어요. 매출이 줄었다는 것만 알 수 있어요. 지점이 작아졌을 수도, 상권이 바뀌었을 수도, 목표가 달랐을 수도 있으니까요.\n\n시험에서 「알 수 없다」가 답인 보기는 함정처럼 보이지만 함정이 아니에요. 표에 없는 것을 읽어 내지 않는 것이 이 영역의 능력 그 자체예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "table:branch-sales",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "지점별 분기 매출",
+                "note": "단위: 만 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "지점",
+                    "align": "start"
+                  },
+                  {
+                    "label": "1분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "2분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "3분기",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "A지점",
+                      "3,200",
+                      "3,400",
+                      "3,600"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "B지점",
+                      "2,800",
+                      "2,750",
+                      "2,700"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "C지점",
+                      "1,500",
+                      "1,800",
+                      "2,200"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "D지점",
+                      "2,500",
+                      "2,450",
+                      "2,500"
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-compare:example:v1",
+          "role": "worked_example",
+          "title": "총량과 비율을 섞지 않기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-compare:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "「A사의 점유율이 $10\\%$에서 $12\\%$로 올랐다. 그러므로 A사의 매출도 늘었다.」 이 문장은 맞을까요?\n\n이 표에서는 맞아요. 매출이 $80$억에서 $92$억으로 늘었다고 적혀 있으니까요.\n\n하지만 점유율만 주어졌다면 말할 수 없어요. 시장이 절반으로 줄었다면 점유율이 올라도 매출은 줄 수 있어요. 실제로 이 표의 시장은 $800$억에서 $767$억으로 줄었고, 그런데도 매출은 늘었어요. 셋 중 둘을 알아야 나머지 하나를 말할 수 있어요.\n\n반대 방향도 마찬가지예요. 「매출이 늘었으니 점유율도 올랐다」도 말할 수 없어요. 시장이 더 빨리 컸다면 점유율은 내려가요.\n\n정리하면 이래요. **비율의 변화는 총량의 변화를 말해 주지 않고, 총량의 변화도 비율의 변화를 말해 주지 않아요.** 둘을 잇는 것은 언제나 전체예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-compare:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-compare:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-data-compare:practice",
+                "problemSetVersionId": "ncs-data-compare:practice:v1",
+                "problemVersionIds": [
+                  "ncs-data-compare:practice-1:v1",
+                  "ncs-data-compare:practice-2:v1",
+                  "ncs-data-compare:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-compare:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-compare:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "ncs-data-compare:check",
+                "problemSetVersionId": "ncs-data-compare:check:v1",
+                "problemVersionIds": [
+                  "ncs-data-compare:check-1:v1",
+                  "ncs-data-compare:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-compare:summary:v1",
+          "role": "summary",
+          "title": "배운 것 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-compare:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "부분과 비율을 이으면 전체가 나와요. $\\text{전체} = \\frac{\\text{부분}}{\\text{비율}}$이고, 표에 그 열이 없어도 구할 수 있어요.\n\n비율의 변화는 총량의 변화를 말해 주지 않고 그 반대도 마찬가지예요. 표에 없는 것을 읽어 내지 않는 것이 이 영역의 능력이에요 — 「알 수 없다」가 답일 때가 자주 있어요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "ncs-data-compare:review",
+        "problemSetVersionId": "ncs-data-compare:review:v1",
+        "problemVersionIds": [
+          "ncs-data-compare:homework-1:v1",
+          "ncs-data-compare:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "ncs-data-reading:practice",
+      "courseKey": "ncs-data",
+      "name": "표 읽기 연습",
+      "versionId": "ncs-data-reading:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-data-reading:practice-1:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-reading:practice-1:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "지점별 분기 매출",
+                "note": "단위: 만 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "지점",
+                    "align": "start"
+                  },
+                  {
+                    "label": "1분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "2분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "3분기",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "A지점",
+                      "3,200",
+                      "3,400",
+                      "3,600"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "B지점",
+                      "2,800",
+                      "2,750",
+                      "2,700"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "C지점",
+                      "1,500",
+                      "1,800",
+                      "2,200"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "D지점",
+                      "2,500",
+                      "2,450",
+                      "2,500"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-reading:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "네 지점의 $3$분기 매출을 모두 더하면 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 11000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-reading:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$분기 열만 따라 내려가며 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data-reading:practice-2:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-reading:practice-2:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "지점별 분기 매출",
+                "note": "단위: 만 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "지점",
+                    "align": "start"
+                  },
+                  {
+                    "label": "1분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "2분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "3분기",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "A지점",
+                      "3,200",
+                      "3,400",
+                      "3,600"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "B지점",
+                      "2,800",
+                      "2,750",
+                      "2,700"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "C지점",
+                      "1,500",
+                      "1,800",
+                      "2,200"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "D지점",
+                      "2,500",
+                      "2,450",
+                      "2,500"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-reading:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$분기에 매출이 가장 적은 지점의 매출은 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1800
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-reading:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$분기 열에서 가장 작은 값을 찾아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data-reading:practice-3:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-reading:practice-3:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "지점별 분기 매출",
+                "note": "단위: 만 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "지점",
+                    "align": "start"
+                  },
+                  {
+                    "label": "1분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "2분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "3분기",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "A지점",
+                      "3,200",
+                      "3,400",
+                      "3,600"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "B지점",
+                      "2,800",
+                      "2,750",
+                      "2,700"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "C지점",
+                      "1,500",
+                      "1,800",
+                      "2,200"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "D지점",
+                      "2,500",
+                      "2,450",
+                      "2,500"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-reading:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "A지점의 $1$분기부터 $3$분기까지의 매출 합계는 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10200
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-reading:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이번에는 열이 아니라 A지점 줄을 따라 건너가며 더해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-data-reading:check",
+      "courseKey": "ncs-data",
+      "name": "표 읽기 확인",
+      "versionId": "ncs-data-reading:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-data-reading:check-1:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-reading:check-1:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "지점별 분기 매출",
+                "note": "단위: 만 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "지점",
+                    "align": "start"
+                  },
+                  {
+                    "label": "1분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "2분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "3분기",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "A지점",
+                      "3,200",
+                      "3,400",
+                      "3,600"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "B지점",
+                      "2,800",
+                      "2,750",
+                      "2,700"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "C지점",
+                      "1,500",
+                      "1,800",
+                      "2,200"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "D지점",
+                      "2,500",
+                      "2,450",
+                      "2,500"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-reading:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$분기 전체 매출에서 B지점이 차지하는 비중은 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 28
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-reading:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$분기 합계는 $10{,}000$만 원이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data-reading:check-2:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-reading:check-2:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "지점별 분기 매출",
+                "note": "단위: 만 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "지점",
+                    "align": "start"
+                  },
+                  {
+                    "label": "1분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "2분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "3분기",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "A지점",
+                      "3,200",
+                      "3,400",
+                      "3,600"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "B지점",
+                      "2,800",
+                      "2,750",
+                      "2,700"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "C지점",
+                      "1,500",
+                      "1,800",
+                      "2,200"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "D지점",
+                      "2,500",
+                      "2,450",
+                      "2,500"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-reading:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이 표에서 읽어 낼 수 없는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "각 지점의 $4$분기 매출"
+              },
+              {
+                "id": "b",
+                "text": "$2$분기 전체 매출"
+              },
+              {
+                "id": "c",
+                "text": "C지점의 $3$분기 매출"
+              },
+              {
+                "id": "d",
+                "text": "$1$분기에 매출이 가장 큰 지점"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "각 지점의 $4$분기 매출"
+              },
+              {
+                "id": "b",
+                "text": "$2$분기 전체 매출"
+              },
+              {
+                "id": "c",
+                "text": "C지점의 $3$분기 매출"
+              },
+              {
+                "id": "d",
+                "text": "$1$분기에 매출이 가장 큰 지점"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-reading:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "표에 있는 열이 무엇인지 다시 보세요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-data-reading:review",
+      "courseKey": "ncs-data",
+      "name": "표 읽기 복습",
+      "versionId": "ncs-data-reading:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-data-reading:homework-1:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-reading:homework-1:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "지점별 분기 매출",
+                "note": "단위: 만 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "지점",
+                    "align": "start"
+                  },
+                  {
+                    "label": "1분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "2분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "3분기",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "A지점",
+                      "3,200",
+                      "3,400",
+                      "3,600"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "B지점",
+                      "2,800",
+                      "2,750",
+                      "2,700"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "C지점",
+                      "1,500",
+                      "1,800",
+                      "2,200"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "D지점",
+                      "2,500",
+                      "2,450",
+                      "2,500"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-reading:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$분기 전체 매출은 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10400
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-reading:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2$분기 열을 따라 내려가며 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data-reading:homework-2:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-reading:homework-2:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "지점별 분기 매출",
+                "note": "단위: 만 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "지점",
+                    "align": "start"
+                  },
+                  {
+                    "label": "1분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "2분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "3분기",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "A지점",
+                      "3,200",
+                      "3,400",
+                      "3,600"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "B지점",
+                      "2,800",
+                      "2,750",
+                      "2,700"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "C지점",
+                      "1,500",
+                      "1,800",
+                      "2,200"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "D지점",
+                      "2,500",
+                      "2,450",
+                      "2,500"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-reading:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$분기에 매출이 가장 큰 지점의 매출은 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3600
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-reading:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3$분기 열에서 가장 큰 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-data-change:practice",
+      "courseKey": "ncs-data",
+      "name": "증감률 연습",
+      "versionId": "ncs-data-change:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-data-change:practice-1:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-change:practice-1:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "연도별 방문객 수",
+                "note": "단위: 명",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "연도",
+                    "align": "start"
+                  },
+                  {
+                    "label": "방문객",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "2022년",
+                      "40,000"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2023년",
+                      "50,000"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2024년",
+                      "65,000"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-change:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2022$년 대비 $2023$년 방문객의 증가율은 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-change:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "늘어난 $10{,}000$명을 이전 값 $40{,}000$명으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data-change:practice-2:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-change:practice-2:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "연도별 방문객 수",
+                "note": "단위: 명",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "연도",
+                    "align": "start"
+                  },
+                  {
+                    "label": "방문객",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "2022년",
+                      "40,000"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2023년",
+                      "50,000"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2024년",
+                      "65,000"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-change:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2023$년 대비 $2024$년 방문객의 증가율은 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-change:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기준은 $2023$년의 $50{,}000$명이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data-change:practice-3:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-change:practice-3:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "연도별 방문객 수",
+                "note": "단위: 명",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "연도",
+                    "align": "start"
+                  },
+                  {
+                    "label": "방문객",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "2022년",
+                      "40,000"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2023년",
+                      "50,000"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2024년",
+                      "65,000"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-change:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2022$년 대비 $2024$년 방문객의 증가율은 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 125,
+            "denominator": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-change:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$25\\%$와 $30\\%$를 더하면 안 돼요. $2022$년을 기준으로 다시 계산해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-data-change:check",
+      "courseKey": "ncs-data",
+      "name": "증감률 확인",
+      "versionId": "ncs-data-change:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-data-change:check-1:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-change:check-1:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "지점별 분기 매출",
+                "note": "단위: 만 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "지점",
+                    "align": "start"
+                  },
+                  {
+                    "label": "1분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "2분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "3분기",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "A지점",
+                      "3,200",
+                      "3,400",
+                      "3,600"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "B지점",
+                      "2,800",
+                      "2,750",
+                      "2,700"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "C지점",
+                      "1,500",
+                      "1,800",
+                      "2,200"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "D지점",
+                      "2,500",
+                      "2,450",
+                      "2,500"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-change:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$분기 대비 $3$분기의 매출 증가율이 가장 큰 지점은 어디인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "C지점"
+              },
+              {
+                "id": "b",
+                "text": "A지점"
+              },
+              {
+                "id": "c",
+                "text": "B지점"
+              },
+              {
+                "id": "d",
+                "text": "D지점"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "C지점"
+              },
+              {
+                "id": "b",
+                "text": "A지점"
+              },
+              {
+                "id": "c",
+                "text": "B지점"
+              },
+              {
+                "id": "d",
+                "text": "D지점"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-change:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "늘어난 양이 아니라 늘어난 비율이에요. 각 지점의 늘어난 양을 그 지점의 $1$분기로 나눠 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data-change:check-2:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-change:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어느 회사의 시장점유율이 $8\\%$에서 $10\\%$로 올랐어요. 바르게 말한 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2$%p 올랐고, 비율로는 $25\\%$ 올랐다"
+              },
+              {
+                "id": "b",
+                "text": "$2\\%$ 올랐다"
+              },
+              {
+                "id": "c",
+                "text": "$25$%p 올랐다"
+              },
+              {
+                "id": "d",
+                "text": "$20\\%$ 올랐다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2$%p 올랐고, 비율로는 $25\\%$ 올랐다"
+              },
+              {
+                "id": "b",
+                "text": "$2\\%$ 올랐다"
+              },
+              {
+                "id": "c",
+                "text": "$25$%p 올랐다"
+              },
+              {
+                "id": "d",
+                "text": "$20\\%$ 올랐다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-change:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "%와 %p는 다른 말이에요. 비율로 따질 때의 기준은 이전 값 $8\\%$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-data-change:review",
+      "courseKey": "ncs-data",
+      "name": "증감률 복습",
+      "versionId": "ncs-data-change:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-data-change:homework-1:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-change:homework-1:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "지점별 분기 매출",
+                "note": "단위: 만 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "지점",
+                    "align": "start"
+                  },
+                  {
+                    "label": "1분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "2분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "3분기",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "A지점",
+                      "3,200",
+                      "3,400",
+                      "3,600"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "B지점",
+                      "2,800",
+                      "2,750",
+                      "2,700"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "C지점",
+                      "1,500",
+                      "1,800",
+                      "2,200"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "D지점",
+                      "2,500",
+                      "2,450",
+                      "2,500"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-change:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "A지점의 $1$분기 대비 $3$분기 매출 증가율은 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 25,
+            "denominator": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-change:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "늘어난 $400$만 원을 $3{,}200$만 원으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data-change:homework-2:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-change:homework-2:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "연도별 방문객 수",
+                "note": "단위: 명",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "연도",
+                    "align": "start"
+                  },
+                  {
+                    "label": "방문객",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "2022년",
+                      "40,000"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2023년",
+                      "50,000"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2024년",
+                      "65,000"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-change:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2023$년 방문객은 $2022$년보다 몇 명 늘었나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-change:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "증가량은 나중 값에서 처음 값을 뺀 것이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-data-compare:practice",
+      "courseKey": "ncs-data",
+      "name": "표 견주기 연습",
+      "versionId": "ncs-data-compare:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-data-compare:practice-1:v1",
+          "conceptKeys": [
+            "table-inference"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-compare:practice-1:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "A사의 매출과 시장점유율",
+                "note": "매출 단위: 억 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "연도",
+                    "align": "start"
+                  },
+                  {
+                    "label": "매출",
+                    "align": "end"
+                  },
+                  {
+                    "label": "점유율",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "2023년",
+                      "80",
+                      "10%"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2024년",
+                      "92",
+                      "12%"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-compare:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2023$년 시장 전체 규모는 몇억 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 800
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-compare:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "A사 매출을 점유율로 나눠요. $80 \\div 0.1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data-compare:practice-2:v1",
+          "conceptKeys": [
+            "table-inference"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-compare:practice-2:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "A사의 매출과 시장점유율",
+                "note": "매출 단위: 억 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "연도",
+                    "align": "start"
+                  },
+                  {
+                    "label": "매출",
+                    "align": "end"
+                  },
+                  {
+                    "label": "점유율",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "2023년",
+                      "80",
+                      "10%"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2024년",
+                      "92",
+                      "12%"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-compare:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2023$년 대비 $2024$년 A사 매출의 증가율은 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-compare:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "늘어난 $12$억 원을 $80$억 원으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data-compare:practice-3:v1",
+          "conceptKeys": [
+            "table-inference"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-compare:practice-3:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "A사의 매출과 시장점유율",
+                "note": "매출 단위: 억 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "연도",
+                    "align": "start"
+                  },
+                  {
+                    "label": "매출",
+                    "align": "end"
+                  },
+                  {
+                    "label": "점유율",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "2023년",
+                      "80",
+                      "10%"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2024년",
+                      "92",
+                      "12%"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-compare:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이 표에서 알 수 있는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "A사의 점유율이 $2$%p 올랐다"
+              },
+              {
+                "id": "b",
+                "text": "A사의 이익이 늘었다"
+              },
+              {
+                "id": "c",
+                "text": "경쟁사의 매출이 줄었다"
+              },
+              {
+                "id": "d",
+                "text": "A사의 직원 수가 늘었다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "A사의 점유율이 $2$%p 올랐다"
+              },
+              {
+                "id": "b",
+                "text": "A사의 이익이 늘었다"
+              },
+              {
+                "id": "c",
+                "text": "경쟁사의 매출이 줄었다"
+              },
+              {
+                "id": "d",
+                "text": "A사의 직원 수가 늘었다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-compare:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "표에 있는 열은 매출과 점유율뿐이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-data-compare:check",
+      "courseKey": "ncs-data",
+      "name": "표 견주기 확인",
+      "versionId": "ncs-data-compare:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-data-compare:check-1:v1",
+          "conceptKeys": [
+            "table-inference"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-compare:check-1:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "A사의 매출과 시장점유율",
+                "note": "매출 단위: 억 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "연도",
+                    "align": "start"
+                  },
+                  {
+                    "label": "매출",
+                    "align": "end"
+                  },
+                  {
+                    "label": "점유율",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "2023년",
+                      "80",
+                      "10%"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2024년",
+                      "92",
+                      "12%"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-compare:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2024$년 시장 전체 규모는 $2023$년과 견주어 어떻게 되었나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "줄었다"
+              },
+              {
+                "id": "b",
+                "text": "늘었다"
+              },
+              {
+                "id": "c",
+                "text": "그대로다"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "줄었다"
+              },
+              {
+                "id": "b",
+                "text": "늘었다"
+              },
+              {
+                "id": "c",
+                "text": "그대로다"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-compare:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 해의 시장 전체를 각각 구해 견줘요. $92 \\div 0.12$는 $800$보다 클까요, 작을까요?"
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data-compare:check-2:v1",
+          "conceptKeys": [
+            "table-inference"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-compare:check-2:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "지점별 분기 매출",
+                "note": "단위: 만 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "지점",
+                    "align": "start"
+                  },
+                  {
+                    "label": "1분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "2분기",
+                    "align": "end"
+                  },
+                  {
+                    "label": "3분기",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "A지점",
+                      "3,200",
+                      "3,400",
+                      "3,600"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "B지점",
+                      "2,800",
+                      "2,750",
+                      "2,700"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "C지점",
+                      "1,500",
+                      "1,800",
+                      "2,200"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "D지점",
+                      "2,500",
+                      "2,450",
+                      "2,500"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-compare:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「B지점은 영업을 잘하지 못했다」고 이 표만으로 말할 수 있나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "말할 수 없다. 매출이 줄었다는 것만 알 수 있다"
+              },
+              {
+                "id": "b",
+                "text": "말할 수 있다. 매출이 줄었으니까"
+              },
+              {
+                "id": "c",
+                "text": "말할 수 있다. 매출이 가장 적으니까"
+              },
+              {
+                "id": "d",
+                "text": "말할 수 있다. 다른 지점은 늘었으니까"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "말할 수 없다. 매출이 줄었다는 것만 알 수 있다"
+              },
+              {
+                "id": "b",
+                "text": "말할 수 있다. 매출이 줄었으니까"
+              },
+              {
+                "id": "c",
+                "text": "말할 수 있다. 매출이 가장 적으니까"
+              },
+              {
+                "id": "d",
+                "text": "말할 수 있다. 다른 지점은 늘었으니까"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-compare:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "표에 없는 것 — 지점의 규모, 목표, 시장 사정 — 은 표가 말해 주지 않아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-data-compare:review",
+      "courseKey": "ncs-data",
+      "name": "표 견주기 복습",
+      "versionId": "ncs-data-compare:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-data-compare:homework-1:v1",
+          "conceptKeys": [
+            "table-inference"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-compare:homework-1:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "A사의 매출과 시장점유율",
+                "note": "매출 단위: 억 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "연도",
+                    "align": "start"
+                  },
+                  {
+                    "label": "매출",
+                    "align": "end"
+                  },
+                  {
+                    "label": "점유율",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "2023년",
+                      "80",
+                      "10%"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2024년",
+                      "92",
+                      "12%"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-compare:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2024$년 시장 전체 규모를 억 원 단위의 정수로 어림하면 얼마인가요? 소수점 아래는 버려 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 766
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-compare:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$92 \\div 0.12 = 766.6\\ldots$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data-compare:homework-2:v1",
+          "conceptKeys": [
+            "table-inference"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data-compare:homework-2:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "연도별 방문객 수",
+                "note": "단위: 명",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "연도",
+                    "align": "start"
+                  },
+                  {
+                    "label": "방문객",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "2022년",
+                      "40,000"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2023년",
+                      "50,000"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2024년",
+                      "65,000"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data-compare:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이 표만으로 알 수 없는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "방문객이 가장 많이 늘어난 달"
+              },
+              {
+                "id": "b",
+                "text": "$2024$년 방문객 수"
+              },
+              {
+                "id": "c",
+                "text": "$2022$년 대비 $2024$년 증가량"
+              },
+              {
+                "id": "d",
+                "text": "해마다 방문객이 늘었는지"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "방문객이 가장 많이 늘어난 달"
+              },
+              {
+                "id": "b",
+                "text": "$2024$년 방문객 수"
+              },
+              {
+                "id": "c",
+                "text": "$2022$년 대비 $2024$년 증가량"
+              },
+              {
+                "id": "d",
+                "text": "해마다 방문객이 늘었는지"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data-compare:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "표의 줄이 연도인지 달인지 보세요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-data:drill",
+      "courseKey": "ncs-data",
+      "name": "NCS 자료해석 모아 풀기",
+      "versionId": "ncs-data:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "ncs-data:drill-1:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-1:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "부서별 인원과 이번 달 처리 건수",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "부서",
+                    "align": "start"
+                  },
+                  {
+                    "label": "인원",
+                    "align": "end"
+                  },
+                  {
+                    "label": "처리 건수",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "기획",
+                      "8",
+                      "240"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "영업",
+                      "12",
+                      "480"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "지원",
+                      "5",
+                      "125"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 부서의 인원은 모두 몇 명인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "인원 열을 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-2:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-2:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "부서별 인원과 이번 달 처리 건수",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "부서",
+                    "align": "start"
+                  },
+                  {
+                    "label": "인원",
+                    "align": "end"
+                  },
+                  {
+                    "label": "처리 건수",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "기획",
+                      "8",
+                      "240"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "영업",
+                      "12",
+                      "480"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "지원",
+                      "5",
+                      "125"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 부서의 처리 건수는 모두 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 845
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "처리 건수 열을 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-3:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-3:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "부서별 인원과 이번 달 처리 건수",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "부서",
+                    "align": "start"
+                  },
+                  {
+                    "label": "인원",
+                    "align": "end"
+                  },
+                  {
+                    "label": "처리 건수",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "기획",
+                      "8",
+                      "240"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "영업",
+                      "12",
+                      "480"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "지원",
+                      "5",
+                      "125"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "영업부의 처리 건수는 전체의 몇 $\\%$인가요? 소수점 아래를 버린 정수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 56
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 $845$건 가운데 $480$건이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-4:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-4:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "부서별 인원과 이번 달 처리 건수",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "부서",
+                    "align": "start"
+                  },
+                  {
+                    "label": "인원",
+                    "align": "end"
+                  },
+                  {
+                    "label": "처리 건수",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "기획",
+                      "8",
+                      "240"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "영업",
+                      "12",
+                      "480"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "지원",
+                      "5",
+                      "125"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "인원 한 명당 처리 건수가 가장 많은 부서는 어디인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "영업"
+              },
+              {
+                "id": "b",
+                "text": "기획"
+              },
+              {
+                "id": "c",
+                "text": "지원"
+              },
+              {
+                "id": "d",
+                "text": "모두 같다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "영업"
+              },
+              {
+                "id": "b",
+                "text": "기획"
+              },
+              {
+                "id": "c",
+                "text": "지원"
+              },
+              {
+                "id": "d",
+                "text": "모두 같다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부서마다 처리 건수를 인원으로 나눠 봐요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-5:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-5:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "부서별 인원과 이번 달 처리 건수",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "부서",
+                    "align": "start"
+                  },
+                  {
+                    "label": "인원",
+                    "align": "end"
+                  },
+                  {
+                    "label": "처리 건수",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "기획",
+                      "8",
+                      "240"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "영업",
+                      "12",
+                      "480"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "지원",
+                      "5",
+                      "125"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "지원부의 인원 한 명당 처리 건수는 몇 건인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$125 \\div 5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-6:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-6:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "부서별 인원과 이번 달 처리 건수",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "부서",
+                    "align": "start"
+                  },
+                  {
+                    "label": "인원",
+                    "align": "end"
+                  },
+                  {
+                    "label": "처리 건수",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "기획",
+                      "8",
+                      "240"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "영업",
+                      "12",
+                      "480"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "지원",
+                      "5",
+                      "125"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이 표로 알 수 없는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "부서별 인건비"
+              },
+              {
+                "id": "b",
+                "text": "부서별 인원"
+              },
+              {
+                "id": "c",
+                "text": "전체 처리 건수"
+              },
+              {
+                "id": "d",
+                "text": "기획부의 처리 건수"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "부서별 인건비"
+              },
+              {
+                "id": "b",
+                "text": "부서별 인원"
+              },
+              {
+                "id": "c",
+                "text": "전체 처리 건수"
+              },
+              {
+                "id": "d",
+                "text": "기획부의 처리 건수"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "표의 열이 무엇인지 보세요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-7:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-7:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "연도별 전력 사용량",
+                "note": "단위: MWh",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "연도",
+                    "align": "start"
+                  },
+                  {
+                    "label": "사용량",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "2022년",
+                      "1,200"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2023년",
+                      "1,320"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2024년",
+                      "1,188"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2022$년 대비 $2023$년 전력 사용량의 증가율은 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "늘어난 $120$을 $1{,}200$으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-8:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-8:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "연도별 전력 사용량",
+                "note": "단위: MWh",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "연도",
+                    "align": "start"
+                  },
+                  {
+                    "label": "사용량",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "2022년",
+                      "1,200"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2023년",
+                      "1,320"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2024년",
+                      "1,188"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2023$년 대비 $2024$년 전력 사용량의 증감률은 몇 $\\%$인가요? 줄어든 폭을 양수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$132$이 줄었고 기준은 $1{,}320$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-9:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-9:v1:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "연도별 전력 사용량",
+                "note": "단위: MWh",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "연도",
+                    "align": "start"
+                  },
+                  {
+                    "label": "사용량",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "2022년",
+                      "1,200"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2023년",
+                      "1,320"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2024년",
+                      "1,188"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2024$년 사용량은 $2022$년과 견주면 어떤가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2022$년보다 적다"
+              },
+              {
+                "id": "b",
+                "text": "$2022$년과 같다"
+              },
+              {
+                "id": "c",
+                "text": "$2022$년보다 많다"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$2022$년보다 적다"
+              },
+              {
+                "id": "b",
+                "text": "$2022$년과 같다"
+              },
+              {
+                "id": "c",
+                "text": "$2022$년보다 많다"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10\\%$ 올랐다가 $10\\%$ 내리면 제자리가 아니에요. 기준이 달라졌으니까요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-10:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "매출이 $250$만 원에서 $300$만 원이 되었어요. 증가율은 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "늘어난 $50$을 이전 값 $250$으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-11:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "회원 수가 $400$명에서 $360$명이 되었어요. 몇 $\\%$ 줄었나요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "줄어든 $40$명을 $400$명으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-12:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점유율이 $15\\%$에서 $18\\%$로 올랐어요. 바르게 말한 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3$%p 올랐다"
+              },
+              {
+                "id": "b",
+                "text": "$3\\%$ 올랐다"
+              },
+              {
+                "id": "c",
+                "text": "$18$%p 올랐다"
+              },
+              {
+                "id": "d",
+                "text": "$120$%p 올랐다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$3$%p 올랐다"
+              },
+              {
+                "id": "b",
+                "text": "$3\\%$ 올랐다"
+              },
+              {
+                "id": "c",
+                "text": "$18$%p 올랐다"
+              },
+              {
+                "id": "d",
+                "text": "$120$%p 올랐다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "퍼센트끼리의 차이는 %p로 말해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-13:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가격을 두 해 연속 $10\\%$씩 올렸어요. 처음과 견주면 모두 몇 $\\%$ 오른 것인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 21
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$100 \\rightarrow 110 \\rightarrow 121$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-14:v1",
+          "conceptKeys": [
+            "table-inference"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어느 회사의 매출이 $60$억 원이고 시장점유율이 $20\\%$예요. 시장 전체 규모는 몇억 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 300
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "매출을 점유율로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-15:v1",
+          "conceptKeys": [
+            "table-inference"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시장 전체가 $500$억 원이고 A사의 점유율이 $14\\%$예요. A사의 매출은 몇억 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 70
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체에 비율을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-16:v1",
+          "conceptKeys": [
+            "table-inference"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「점유율이 올랐으니 매출도 늘었다」고 말할 수 있나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "말할 수 없다. 시장 전체가 줄었을 수 있다"
+              },
+              {
+                "id": "b",
+                "text": "말할 수 있다"
+              },
+              {
+                "id": "c",
+                "text": "말할 수 있다. 점유율과 매출은 같은 말이다"
+              },
+              {
+                "id": "d",
+                "text": "시장이 커진 경우에만 말할 수 있다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "말할 수 없다. 시장 전체가 줄었을 수 있다"
+              },
+              {
+                "id": "b",
+                "text": "말할 수 있다"
+              },
+              {
+                "id": "c",
+                "text": "말할 수 있다. 점유율과 매출은 같은 말이다"
+              },
+              {
+                "id": "d",
+                "text": "시장이 커진 경우에만 말할 수 있다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비율의 변화는 총량의 변화를 말해 주지 않아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-17:v1",
+          "conceptKeys": [
+            "table-inference"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "매출 표만 주어졌을 때 알 수 없는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "이익"
+              },
+              {
+                "id": "b",
+                "text": "매출 증가율"
+              },
+              {
+                "id": "c",
+                "text": "매출 합계"
+              },
+              {
+                "id": "d",
+                "text": "가장 큰 매출"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "이익"
+              },
+              {
+                "id": "b",
+                "text": "매출 증가율"
+              },
+              {
+                "id": "c",
+                "text": "매출 합계"
+              },
+              {
+                "id": "d",
+                "text": "가장 큰 매출"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "매출과 이익은 다른 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-18:v1",
+          "conceptKeys": [
+            "table-inference"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "A사 매출이 $92$억 원, 점유율이 $12\\%$일 때 시장 규모를 억 원 단위 정수로 어림하면 얼마인가요? 소수점 아래는 버려 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 766
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$92 \\div 0.12$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-19:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 $845$건 가운데 기획부가 $240$건이에요. 기획부의 비중은 몇 $\\%$인가요? 소수점 아래를 버린 정수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 28
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$240 \\div 845$를 백분율로 바꿔요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill-20:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "표를 읽을 때 숫자보다 먼저 봐야 하는 것으로 알맞게 묶은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "제목과 단위"
+              },
+              {
+                "id": "b",
+                "text": "합계와 평균"
+              },
+              {
+                "id": "c",
+                "text": "가장 큰 값"
+              },
+              {
+                "id": "d",
+                "text": "줄 수와 열 수"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "제목과 단위"
+              },
+              {
+                "id": "b",
+                "text": "합계와 평균"
+              },
+              {
+                "id": "c",
+                "text": "가장 큰 값"
+              },
+              {
+                "id": "d",
+                "text": "줄 수와 열 수"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3{,}200$이 만 원인지 억 원인지를 모르면 답이 백 배 달라져요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}
