@@ -1,0 +1,2810 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "rational-functions",
+      "title": "함수와 그래프",
+      "summary": "함수를 이어 붙이고 되돌리고, 분모에 문자가 든 함수와 근호 안에 문자가 든 함수의 그래프를 읽어요.",
+      "order": 25,
+      "track": "high",
+      "stage": "high-1",
+      "lessons": [
+        {
+          "key": "composite-inverse",
+          "order": 1
+        },
+        {
+          "key": "rational-function",
+          "order": 2
+        },
+        {
+          "key": "irrational-function",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "composite-function",
+      "label": "합성함수",
+      "assessable": true
+    },
+    {
+      "key": "inverse-function",
+      "label": "역함수",
+      "assessable": true
+    },
+    {
+      "key": "rational-function",
+      "label": "유리함수",
+      "assessable": true
+    },
+    {
+      "key": "asymptote",
+      "label": "점근선",
+      "assessable": true
+    },
+    {
+      "key": "irrational-function",
+      "label": "무리함수",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "composite-inverse",
+        "versionId": "composite-inverse:v1",
+        "title": "합성함수와 역함수: 이어 붙이기와 되돌리기",
+        "summary": "함수를 차례로 지나게 이어 붙이고, 지나온 길을 거꾸로 되짚어요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "composite-function",
+          "inverse-function"
+        ],
+        "prerequisiteConceptKeys": [
+          "function",
+          "function-value",
+          "linear-function"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "composite-inverse:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "composite-inverse:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "함수를 상자로 보면 편해요. 수를 넣으면 다른 수가 나오는 상자죠.\n\n상자를 둘 이어 붙일 수 있어요. $f$에서 나온 값을 그대로 $g$에 넣는 거예요. 이렇게 이어 붙인 것을 합성함수라 하고 $g(f(x))$로 적어요.\n\n$f(x) = 2x$, $g(x) = x + 3$일 때 $g(f(1))$을 구해 볼게요. 먼저 $f(1) = 2$이고, 그 $2$를 $g$에 넣으면 $2 + 3 = 5$예요.\n\n순서가 중요해요. $f(g(1))$은 다릅니다. $g(1) = 4$이고 $f(4) = 8$이니까요. 안쪽부터 바깥쪽으로 읽는다는 것만 지키면 돼요.\n\n이번에는 되돌아가 볼게요. $f$가 두 배로 만들었다면, 되돌리려면 반으로 나누면 돼요. 이렇게 왔던 길을 거꾸로 가는 함수를 역함수라 하고 $f^{-1}$로 적어요.\n\n$f(x) = 2x$의 역함수는 $f^{-1}(x) = \\dfrac{x}{2}$예요. $f$에 $3$을 넣어 $6$이 나왔다면, 역함수에 $6$을 넣으면 $3$이 돌아와요.\n\n구하는 방법은 기계적이에요. $y = 2x$에서 $x$에 대해 풀고($x = \\dfrac{y}{2}$), $x$와 $y$를 바꿔 쓰면 돼요. $x$와 $y$를 바꾸니 그래프는 직선 $y = x$에 대해 뒤집힌 모양이 돼요.\n\n모든 함수에 역함수가 있지는 않아요. 서로 다른 두 값이 같은 값으로 가면 되돌아갈 데를 정할 수 없거든요.",
+                "definitions": [
+                  {
+                    "conceptKey": "composite-function",
+                    "surface": "합성함수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "inverse-function",
+                    "surface": "역함수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "composite-inverse:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "수가 상자 두 개를 차례로 지나고, 되돌아올 때는 거꾸로 지나는 그림",
+                "caption": "되돌아오려면 거꾸로 지나야 해요",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "x": 88,
+                    "y": 62,
+                    "width": 66,
+                    "height": 44,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 8,
+                    "id": "bf"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 121,
+                    "y": 89,
+                    "text": "$f$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "bft"
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 180,
+                    "y": 62,
+                    "width": 66,
+                    "height": 44,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 8,
+                    "id": "bg"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 213,
+                    "y": 89,
+                    "text": "$g$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "bgt"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 60,
+                    "y1": 84,
+                    "x2": 84,
+                    "y2": 84,
+                    "stroke": "line",
+                    "strokeWidth": 1.4,
+                    "arrow": "end"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 158,
+                    "y1": 84,
+                    "x2": 176,
+                    "y2": 84,
+                    "stroke": "line",
+                    "strokeWidth": 1.4,
+                    "arrow": "end"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 250,
+                    "y1": 84,
+                    "x2": 274,
+                    "y2": 84,
+                    "stroke": "line",
+                    "strokeWidth": 1.4,
+                    "arrow": "end"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 44,
+                    "y": 88,
+                    "text": "$1$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "id": "inv"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 167,
+                    "y": 60,
+                    "text": "$2$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "mid",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 286,
+                    "y": 88,
+                    "text": "$5$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "outv",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 121,
+                    "y": 40,
+                    "text": "두 배",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 213,
+                    "y": 40,
+                    "text": "$+3$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 140,
+                    "text": "$g(f(1)) = 5$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "law",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 170,
+                    "text": "되돌리려면 $-3$ 먼저, 그다음 반으로",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "back",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$1$을 첫 상자에 넣어요. 두 배가 되는 상자예요.",
+                    "changes": [
+                      {
+                        "id": "mid",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "outv",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "back",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "나온 값이 그대로 다음 상자로 들어가요. $3$을 더하는 상자예요.",
+                    "changes": [
+                      {
+                        "id": "mid",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "outv",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "back",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "두 상자를 이어 붙인 것이 합성함수예요. 거꾸로 돌아오려면 뺀 뒤 반으로 나눠요 — 그것이 역함수고요.",
+                    "changes": [
+                      {
+                        "id": "mid",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "outv",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "back",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "composite-inverse:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "composite-inverse:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = 3x - 1$의 역함수를 구해 볼게요.\n\n$y = 3x - 1$로 두고 $x$에 대해 풀어요. $3x = y + 1$이니 $x = \\dfrac{y+1}{3}$이에요.\n\n이제 $x$와 $y$를 바꿔 써요. $y = \\dfrac{x+1}{3}$, 곧 $f^{-1}(x) = \\dfrac{x+1}{3}$이에요.\n\n확인해 볼까요. $f(2) = 5$이니 $f^{-1}(5)$가 $2$여야 해요. $\\dfrac{5+1}{3} = 2$. 맞아요.\n\n역함수를 구하지 않고 답만 구할 수도 있어요. $f^{-1}(5)$는 「$f$에 무엇을 넣으면 $5$가 나오는가」를 묻는 것이니, $3x - 1 = 5$를 풀어 $x = 2$를 얻으면 돼요.\n\n합성도 해 볼게요. $f(f^{-1}(5))$는 무엇일까요. 갔다가 되돌아왔으니 $5$ 그대로예요. $f$와 $f^{-1}$을 이어 붙이면 아무 일도 일어나지 않는 함수가 돼요. 그것이 역함수의 뜻이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "composite-inverse:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "composite-inverse:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "composite-inverse:practice",
+                "problemSetVersionId": "composite-inverse:practice:v1",
+                "problemVersionIds": [
+                  "composite-inverse:practice-1:v1",
+                  "composite-inverse:practice-2:v1",
+                  "composite-inverse:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "composite-inverse:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "composite-inverse:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "composite-inverse:check",
+                "problemSetVersionId": "composite-inverse:check:v1",
+                "problemVersionIds": [
+                  "composite-inverse:check-1:v1",
+                  "composite-inverse:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "composite-inverse:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "composite-inverse:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$g(f(x))$는 상자 둘을 이어 붙인 것이고, 안쪽부터 읽어요. 순서를 바꾸면 결과가 달라져요.\n\n역함수는 왔던 길을 거꾸로 가는 함수예요. $x$에 대해 풀고 $x$와 $y$를 바꿔 쓰면 구해져요.\n\n$x$와 $y$를 바꾸니 그래프는 $y = x$에 대해 뒤집혀요.\n\n$f^{-1}(a)$는 「$f$에 무엇을 넣으면 $a$가 나오는가」로 바꿔 생각하면 빨라요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "composite-inverse:review",
+        "problemSetVersionId": "composite-inverse:review:v1",
+        "problemVersionIds": [
+          "composite-inverse:homework-1:v1",
+          "composite-inverse:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "rational-function",
+        "versionId": "rational-function:v1",
+        "title": "유리함수: 닿지 않는 선을 따라가는 곡선",
+        "summary": "분모에 문자가 있는 함수를 만나고, 그래프가 다가가기만 하는 두 선을 찾아요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "rational-function",
+          "asymptote"
+        ],
+        "prerequisiteConceptKeys": [
+          "linear-function",
+          "composite-function",
+          "quadratic-function"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "rational-function:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "rational-function:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{1}{x}$처럼 분모에 문자가 있는 함수를 유리함수라고 해요.\n\n먼저 눈에 띄는 것이 있어요. $x$가 $0$이면 분모가 $0$이라 값이 없어요. 어떤 수도 $0$으로는 나눌 수 없으니까요. 그래서 이 함수는 $x = 0$에서 정의되지 않아요.\n\n$x$를 키워 볼게요. $x=1$이면 $y=1$, $x=10$이면 $y=0.1$, $x=100$이면 $y=0.01$이에요. $y$가 점점 $0$에 가까워지지만 결코 $0$이 되지는 않아요. 분자가 $1$이라 아무리 나눠도 $0$은 안 되거든요.\n\n이렇게 그래프가 한없이 가까워지지만 닿지는 않는 선을 점근선이라고 해요. $y = \\dfrac{1}{x}$의 점근선은 가로축과 세로축, 둘이에요.\n\n이 곡선도 옮길 수 있어요. 포물선을 옮길 때와 똑같아요. $y = \\dfrac{1}{x-2} + 3$은 오른쪽으로 $2$, 위로 $3$만큼 옮긴 것이고, 점근선도 함께 옮겨 가 $x = 2$와 $y = 3$이 돼요.\n\n점근선을 찾는 법은 간단해요. 세로 점근선은 분모를 $0$으로 만드는 $x$이고, 가로 점근선은 뒤에 더한 상수예요.\n\n$y = \\dfrac{2}{x+1} - 4$라면 분모가 $0$이 되는 $x = -1$이 세로 점근선, $y = -4$가 가로 점근선이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "rational-function",
+                    "surface": "유리함수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "asymptote",
+                    "surface": "점근선",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "rational-function:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "곡선 위의 점이 오른쪽으로 갈수록 가로선에 붙지만 닿지는 않는 그림",
+                "caption": "가까워지기만 하고 닿지는 않는 선이 점근선이에요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 30,
+                    "y1": 140,
+                    "x2": 292,
+                    "y2": 140,
+                    "stroke": "line",
+                    "strokeWidth": 1.6,
+                    "dash": true
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 96,
+                    "y1": 26,
+                    "x2": 96,
+                    "y2": 186,
+                    "stroke": "line",
+                    "strokeWidth": 1.6,
+                    "dash": true
+                  },
+                  {
+                    "kind": "path",
+                    "d": "M108 40 Q150 132 288 134",
+                    "fill": "none",
+                    "stroke": "green",
+                    "strokeWidth": 2.2
+                  },
+                  {
+                    "kind": "path",
+                    "d": "M34 186 Q72 178 86 196",
+                    "fill": "none",
+                    "stroke": "green",
+                    "strokeWidth": 2.2
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 126,
+                    "cy": 74,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "orange",
+                    "id": "pt"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 258,
+                    "y": 158,
+                    "text": "가까워지지만 닿지 않아요",
+                    "size": 11,
+                    "anchor": "end",
+                    "fill": "muted",
+                    "id": "note",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 20,
+                    "text": "$y = \\dfrac{1}{x}$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 112,
+                    "y": 158,
+                    "text": "$0$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$x$가 커질수록 $y$는 작아져요.",
+                    "changes": [
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "점이 오른쪽으로 갈수록 가로선에 바싹 붙어요.",
+                    "changes": [
+                      {
+                        "id": "pt",
+                        "dx": 76,
+                        "dy": 50
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "아무리 가도 닿지는 않아요. 이런 선을 점근선이라고 해요.",
+                    "changes": [
+                      {
+                        "id": "pt",
+                        "dx": 150,
+                        "dy": 60
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "rational-function:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "rational-function:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{1}{x-2} + 3$의 그래프를 말로 그려 볼게요.\n\n먼저 정의되지 않는 곳을 찾아요. 분모 $x - 2$가 $0$이 되는 $x = 2$예요.\n\n그 자리가 세로 점근선이에요. 그래프가 $x = 2$에 한없이 다가가되 닿지 않아요.\n\n가로 점근선은 뒤에 더한 $3$이에요. $x$를 아무리 키워도 앞의 분수가 $0$에 가까워질 뿐이니 $y$는 $3$에 가까워져요.\n\n$y = \\dfrac{1}{x}$을 오른쪽으로 $2$, 위로 $3$만큼 옮긴 그래프라고 말해도 같은 뜻이에요.\n\n값을 하나 넣어 확인해요. $x = 3$이면 $y = \\dfrac{1}{1} + 3 = 4$예요. 점근선 $y=3$보다 위에 있네요.\n\n$x = 1$이면 $y = \\dfrac{1}{-1} + 3 = 2$로 점근선 아래예요. 점근선을 사이에 두고 두 갈래로 나뉜 곡선이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "rational-function:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "rational-function:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "rational-function:practice",
+                "problemSetVersionId": "rational-function:practice:v1",
+                "problemVersionIds": [
+                  "rational-function:practice-1:v1",
+                  "rational-function:practice-2:v1",
+                  "rational-function:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "rational-function:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "rational-function:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "rational-function:check",
+                "problemSetVersionId": "rational-function:check:v1",
+                "problemVersionIds": [
+                  "rational-function:check-1:v1",
+                  "rational-function:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "rational-function:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "rational-function:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "분모에 문자가 있으면 유리함수예요. 분모를 $0$으로 만드는 $x$에서는 값이 없어요.\n\n그래프가 한없이 다가가되 닿지 않는 선이 점근선이에요.\n\n세로 점근선은 분모를 $0$으로 만드는 $x$, 가로 점근선은 뒤에 더한 상수예요.\n\n옮기는 방법은 포물선과 같아요. 괄호 안이 좌우, 뒤에 더한 것이 위아래예요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "rational-function:review",
+        "problemSetVersionId": "rational-function:review:v1",
+        "problemVersionIds": [
+          "rational-function:homework-1:v1",
+          "rational-function:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "irrational-function",
+        "versionId": "irrational-function:v1",
+        "title": "무리함수: 근호 안이 음수가 되면 안 된다",
+        "summary": "근호 안에 문자가 든 함수를 만나고, 그릴 수 있는 범위부터 가려요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "irrational-function"
+        ],
+        "prerequisiteConceptKeys": [
+          "square-root",
+          "rational-function",
+          "irrational-number"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "irrational-function:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "irrational-function:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$y = \\sqrt{x}$처럼 근호 안에 문자가 든 함수를 무리함수라고 해요.\n\n가장 먼저 할 일은 그릴 수 있는 범위를 가리는 거예요. 근호 안은 음수가 될 수 없어요. 제곱해서 음수가 되는 실수가 없다고 앞에서 배웠죠.\n\n그래서 $y = \\sqrt{x}$는 $x \\ge 0$에서만 그려져요. $x$에 넣을 수 있는 값을 모은 것을 정의역이라고 해요.\n\n$y = \\sqrt{x-3}$이라면 근호 안이 $0$ 이상이어야 하니 $x - 3 \\ge 0$, 곧 $x \\ge 3$이에요. 부등식을 하나 푸는 일이에요.\n\n$y = \\sqrt{5-x}$처럼 문자 앞에 부호가 붙으면 방향이 뒤집혀요. $5 - x \\ge 0$에서 $x \\le 5$예요.\n\n그래프의 모양도 봐요. $x$가 $0, 1, 4, 9$일 때 $y$는 $0, 1, 2, 3$이에요. $x$는 네 배, 아홉 배로 뛰는데 $y$는 두 배, 세 배만 커져요. 그래서 처음에는 가파르다가 점점 완만해지는 곡선이 돼요.\n\n이차함수와 견주면 재미있어요. $y = x^2$의 $x \\ge 0$ 부분과 $y = \\sqrt{x}$는 서로 역함수예요. 제곱하는 일과 제곱근을 구하는 일이 서로 되돌리는 일이니까요. 그래서 두 그래프는 $y = x$에 대해 뒤집힌 모양이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "irrational-function",
+                    "surface": "무리함수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "irrational-function:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "근호 안이 음수가 되는 쪽이 지워지고 남은 쪽에서만 곡선이 자라는 그림",
+                "caption": "근호 안이 0보다 작아지면 그릴 수 없어요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 24,
+                    "y1": 148,
+                    "x2": 296,
+                    "y2": 148,
+                    "stroke": "ink",
+                    "strokeWidth": 1.4
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 96,
+                    "y1": 30,
+                    "x2": 96,
+                    "y2": 186,
+                    "stroke": "line",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "rect",
+                    "x": 24,
+                    "y": 128,
+                    "width": 72,
+                    "height": 40,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "radius": 4,
+                    "id": "ban",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 60,
+                    "y": 172,
+                    "text": "그릴 수 없는 쪽",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "id": "banlab",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "path",
+                    "d": "M96 148 Q168 100 288 58",
+                    "fill": "none",
+                    "stroke": "green",
+                    "strokeWidth": 2.2,
+                    "id": "curve",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 96,
+                    "cy": 148,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "orange",
+                    "id": "start",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 22,
+                    "text": "$y = \\sqrt{x}$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 112,
+                    "y": 166,
+                    "text": "$0$",
+                    "size": 10,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 240,
+                    "y": 96,
+                    "text": "천천히 올라가요",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "note",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "$y = \\sqrt{x}$를 그려 볼게요. 먼저 그릴 수 있는 곳부터 가려요.",
+                    "changes": [
+                      {
+                        "id": "ban",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "banlab",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "curve",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "start",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$x$가 음수이면 근호 안이 음수예요. 제곱해서 음수가 되는 실수가 없으니 그릴 수 없어요.",
+                    "changes": [
+                      {
+                        "id": "ban",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "banlab",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "curve",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "start",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$0$부터 오른쪽으로만 그려져요. 처음에는 가파르다가 점점 완만해져요.",
+                    "changes": [
+                      {
+                        "id": "ban",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "banlab",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "curve",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "start",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "note",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "irrational-function:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "irrational-function:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$y = \\sqrt{x - 3}$의 정의역을 구하고 값을 몇 개 구해 볼게요.\n\n근호 안이 $0$ 이상이어야 하니 $x - 3 \\ge 0$, 곧 $x \\ge 3$이에요.\n\n$x = 3$이면 $y = 0$이에요. 여기가 그래프가 시작하는 점이고요.\n\n$x = 4$이면 $y = 1$, $x = 7$이면 $y = 2$, $x = 12$이면 $y = 3$이에요.\n\n$y$가 $1$씩 커지는 동안 $x$는 $1$, $3$, $5$씩 늘었어요. 오른쪽으로 갈수록 완만해지는 것이 숫자로도 보여요.\n\n$y = \\sqrt{x}$를 오른쪽으로 $3$만큼 옮긴 그래프라고 말해도 같아요. 옮기는 방법은 지금까지와 똑같아요.\n\n$y = \\sqrt{5 - x}$는 어떨까요. $5 - x \\ge 0$에서 $x \\le 5$이니 왼쪽으로 뻗는 그래프예요. $x$ 앞의 부호가 방향을 뒤집는다는 것만 조심하면 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "irrational-function:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "irrational-function:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "irrational-function:practice",
+                "problemSetVersionId": "irrational-function:practice:v1",
+                "problemVersionIds": [
+                  "irrational-function:practice-1:v1",
+                  "irrational-function:practice-2:v1",
+                  "irrational-function:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "irrational-function:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "irrational-function:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "irrational-function:check",
+                "problemSetVersionId": "irrational-function:check:v1",
+                "problemVersionIds": [
+                  "irrational-function:check-1:v1",
+                  "irrational-function:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "irrational-function:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "irrational-function:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "근호 안에 문자가 들면 무리함수예요. 근호 안이 $0$ 이상인 곳에서만 그려져요.\n\n정의역은 「근호 안 $\\ge 0$」이라는 부등식을 풀어 구해요. 문자 앞의 부호가 음수이면 방향이 뒤집혀요.\n\n그래프는 시작점에서 가파르게 올랐다가 점점 완만해져요.\n\n$y = x^2$의 오른쪽 반과 $y = \\sqrt{x}$는 서로 역함수라, $y = x$에 대해 뒤집힌 모양이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "irrational-function:review",
+        "problemSetVersionId": "irrational-function:review:v1",
+        "problemVersionIds": [
+          "irrational-function:homework-1:v1",
+          "irrational-function:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "composite-inverse:practice",
+      "courseKey": "rational-functions",
+      "name": "합성함수와 역함수 연습",
+      "versionId": "composite-inverse:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "composite-inverse:practice-1:v1",
+          "conceptKeys": [
+            "composite-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "composite-inverse:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = 2x$, $g(x) = x + 3$일 때 $g(f(1))$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "composite-inverse:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "안쪽부터 계산해요. $f(1) = 2$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "composite-inverse:practice-2:v1",
+          "conceptKeys": [
+            "composite-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "composite-inverse:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = 2x$, $g(x) = x + 3$일 때 $f(g(1))$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "composite-inverse:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$g(1) = 4$이고 그것을 $f$에 넣어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "composite-inverse:practice-3:v1",
+          "conceptKeys": [
+            "inverse-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "composite-inverse:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = 2x$일 때 $f^{-1}(4)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "composite-inverse:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f$에 무엇을 넣으면 $4$가 나오나요?"
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "composite-inverse:check",
+      "courseKey": "rational-functions",
+      "name": "합성함수와 역함수 확인",
+      "versionId": "composite-inverse:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "composite-inverse:check-1:v1",
+          "conceptKeys": [
+            "inverse-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "composite-inverse:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x + 5$일 때 $f^{-1}(7)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "composite-inverse:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + 5 = 7$을 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "composite-inverse:check-2:v1",
+          "conceptKeys": [
+            "inverse-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "composite-inverse:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "역함수의 그래프는 원래 함수의 그래프와 어떤 관계인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "직선 $y = x$에 대해 뒤집힌 모양"
+              },
+              {
+                "id": "b",
+                "text": "가로축에 대해 뒤집힌 모양"
+              },
+              {
+                "id": "c",
+                "text": "세로축에 대해 뒤집힌 모양"
+              },
+              {
+                "id": "d",
+                "text": "같은 모양"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "직선 $y = x$에 대해 뒤집힌 모양"
+              },
+              {
+                "id": "b",
+                "text": "가로축에 대해 뒤집힌 모양"
+              },
+              {
+                "id": "c",
+                "text": "세로축에 대해 뒤집힌 모양"
+              },
+              {
+                "id": "d",
+                "text": "같은 모양"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "composite-inverse:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$와 $y$를 바꿔 썼어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "composite-inverse:review",
+      "courseKey": "rational-functions",
+      "name": "합성함수와 역함수 복습",
+      "versionId": "composite-inverse:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "composite-inverse:homework-1:v1",
+          "conceptKeys": [
+            "inverse-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "composite-inverse:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = 3x - 1$일 때 $f^{-1}(5)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "composite-inverse:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$3x - 1 = 5$를 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "composite-inverse:homework-2:v1",
+          "conceptKeys": [
+            "composite-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "composite-inverse:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$g(f(x))$를 계산하는 순서로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$f$를 먼저, 그다음 $g$"
+              },
+              {
+                "id": "b",
+                "text": "$g$를 먼저, 그다음 $f$"
+              },
+              {
+                "id": "c",
+                "text": "둘을 곱한다"
+              },
+              {
+                "id": "d",
+                "text": "순서는 상관없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$f$를 먼저, 그다음 $g$"
+              },
+              {
+                "id": "b",
+                "text": "$g$를 먼저, 그다음 $f$"
+              },
+              {
+                "id": "c",
+                "text": "둘을 곱한다"
+              },
+              {
+                "id": "d",
+                "text": "순서는 상관없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "composite-inverse:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "안쪽부터 바깥쪽으로 읽어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "rational-function:practice",
+      "courseKey": "rational-functions",
+      "name": "유리함수 연습",
+      "versionId": "rational-function:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "rational-function:practice-1:v1",
+          "conceptKeys": [
+            "rational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-function:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{1}{x}$에서 $x = 4$일 때 $y$의 값을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 4,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-function:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분자가 $1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-function:practice-2:v1",
+          "conceptKeys": [
+            "asymptote"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-function:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{1}{x-2} + 3$의 세로 점근선은 $x = a$입니다. $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-function:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모를 $0$으로 만드는 $x$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-function:practice-3:v1",
+          "conceptKeys": [
+            "asymptote"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-function:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{1}{x-2} + 3$의 가로 점근선은 $y = b$입니다. $b$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-function:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "뒤에 더한 상수예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "rational-function:check",
+      "courseKey": "rational-functions",
+      "name": "유리함수 확인",
+      "versionId": "rational-function:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "rational-function:check-1:v1",
+          "conceptKeys": [
+            "asymptote"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-function:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{2}{x+1} - 4$의 가로 점근선은 $y = b$입니다. $b$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-function:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "뒤에 더한 상수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-function:check-2:v1",
+          "conceptKeys": [
+            "rational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-function:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{1}{x-5}$에서 값이 정의되지 않는 $x$를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-function:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모가 $0$이 되는 자리예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "rational-function:review",
+      "courseKey": "rational-functions",
+      "name": "유리함수 복습",
+      "versionId": "rational-function:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "rational-function:homework-1:v1",
+          "conceptKeys": [
+            "asymptote"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-function:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{3}{x-7} + 1$의 세로 점근선은 $x = a$입니다. $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-function:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모를 $0$으로 만드는 $x$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-function:homework-2:v1",
+          "conceptKeys": [
+            "rational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-function:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{1}{x}$의 그래프에 대한 설명으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 축에 한없이 다가가되 닿지 않는다"
+              },
+              {
+                "id": "b",
+                "text": "두 축과 한 번씩 만난다"
+              },
+              {
+                "id": "c",
+                "text": "직선이다"
+              },
+              {
+                "id": "d",
+                "text": "원점을 지난다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "두 축에 한없이 다가가되 닿지 않는다"
+              },
+              {
+                "id": "b",
+                "text": "두 축과 한 번씩 만난다"
+              },
+              {
+                "id": "c",
+                "text": "직선이다"
+              },
+              {
+                "id": "d",
+                "text": "원점을 지난다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-function:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$를 키우면 $y$가 $0$에 가까워지기만 해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "irrational-function:practice",
+      "courseKey": "rational-functions",
+      "name": "무리함수 연습",
+      "versionId": "irrational-function:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "irrational-function:practice-1:v1",
+          "conceptKeys": [
+            "irrational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "irrational-function:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\sqrt{x}$에서 $x = 9$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "irrational-function:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "제곱해서 $9$가 되는 양수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "irrational-function:practice-2:v1",
+          "conceptKeys": [
+            "irrational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "irrational-function:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\sqrt{x-3}$의 정의역이 $x \\ge a$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "irrational-function:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "근호 안이 $0$ 이상이어야 해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "irrational-function:practice-3:v1",
+          "conceptKeys": [
+            "irrational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "irrational-function:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\sqrt{2x}$에서 $x = 8$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "irrational-function:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "근호 안은 $16$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "irrational-function:check",
+      "courseKey": "rational-functions",
+      "name": "무리함수 확인",
+      "versionId": "irrational-function:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "irrational-function:check-1:v1",
+          "conceptKeys": [
+            "irrational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "irrational-function:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\sqrt{x+4}$에서 $x = 0$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "irrational-function:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "근호 안은 $4$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "irrational-function:check-2:v1",
+          "conceptKeys": [
+            "irrational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "irrational-function:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\sqrt{5-x}$의 정의역이 $x \\le a$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "irrational-function:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5 - x \\ge 0$을 풀어요. 부호에 주의하세요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "irrational-function:review",
+      "courseKey": "rational-functions",
+      "name": "무리함수 복습",
+      "versionId": "irrational-function:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "irrational-function:homework-1:v1",
+          "conceptKeys": [
+            "irrational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "irrational-function:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\sqrt{x} + 2$에서 $x = 16$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "irrational-function:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{16} = 4$이고 $2$를 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "irrational-function:homework-2:v1",
+          "conceptKeys": [
+            "irrational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "irrational-function:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "무리함수의 정의역을 구할 때 세우는 조건은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "근호 안이 $0$ 이상"
+              },
+              {
+                "id": "b",
+                "text": "분모가 $0$이 아님"
+              },
+              {
+                "id": "c",
+                "text": "판별식이 음수"
+              },
+              {
+                "id": "d",
+                "text": "조건 없음"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "근호 안이 $0$ 이상"
+              },
+              {
+                "id": "b",
+                "text": "분모가 $0$이 아님"
+              },
+              {
+                "id": "c",
+                "text": "판별식이 음수"
+              },
+              {
+                "id": "d",
+                "text": "조건 없음"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "irrational-function:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "제곱해서 음수가 되는 실수는 없어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "rational-functions:drill",
+      "courseKey": "rational-functions",
+      "name": "함수와 그래프 모아 풀기",
+      "versionId": "rational-functions:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "rational-functions:drill-1:v1",
+          "conceptKeys": [
+            "composite-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x + 1$, $g(x) = 2x$일 때 $g(f(3))$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(3) = 4$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-2:v1",
+          "conceptKeys": [
+            "composite-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x + 1$, $g(x) = 2x$일 때 $f(g(3))$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$g(3) = 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-3:v1",
+          "conceptKeys": [
+            "composite-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x^2$, $g(x) = x - 1$일 때 $f(g(4))$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$g(4) = 3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-4:v1",
+          "conceptKeys": [
+            "composite-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = 3x$일 때 $f(f(2))$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 18
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(2) = 6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-5:v1",
+          "conceptKeys": [
+            "inverse-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = x + 7$일 때 $f^{-1}(10)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x + 7 = 10$을 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-6:v1",
+          "conceptKeys": [
+            "inverse-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = 5x$일 때 $f^{-1}(20)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$5x = 20$을 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-7:v1",
+          "conceptKeys": [
+            "inverse-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$f(x) = 2x + 1$일 때 $f^{-1}(9)$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$2x + 1 = 9$를 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-8:v1",
+          "conceptKeys": [
+            "inverse-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "역함수가 없을 수 있는 이유로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "서로 다른 두 값이 같은 값으로 가면 되돌아갈 데를 정할 수 없다"
+              },
+              {
+                "id": "b",
+                "text": "기울기가 음수이면 안 된다"
+              },
+              {
+                "id": "c",
+                "text": "상수항이 있으면 안 된다"
+              },
+              {
+                "id": "d",
+                "text": "언제나 있다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "서로 다른 두 값이 같은 값으로 가면 되돌아갈 데를 정할 수 없다"
+              },
+              {
+                "id": "b",
+                "text": "기울기가 음수이면 안 된다"
+              },
+              {
+                "id": "c",
+                "text": "상수항이 있으면 안 된다"
+              },
+              {
+                "id": "d",
+                "text": "언제나 있다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "되돌아갈 자리가 하나로 정해져야 해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-9:v1",
+          "conceptKeys": [
+            "rational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{1}{x}$에서 $x = 5$일 때 $y$의 값을 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 5,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분자가 $1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-10:v1",
+          "conceptKeys": [
+            "rational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{1}{x-4}$에서 값이 정의되지 않는 $x$를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모가 $0$이 되는 자리예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-11:v1",
+          "conceptKeys": [
+            "rational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{6}{x}$에서 $x = 3$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$6 \\div 3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-12:v1",
+          "conceptKeys": [
+            "rational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{1}{x+2}$에서 값이 정의되지 않는 $x$를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모 $x+2$가 $0$이 되는 자리예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-13:v1",
+          "conceptKeys": [
+            "asymptote"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{1}{x-6} + 2$의 세로 점근선은 $x = a$입니다. $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모를 $0$으로 만드는 $x$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-14:v1",
+          "conceptKeys": [
+            "asymptote"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{1}{x-6} + 2$의 가로 점근선은 $y = b$입니다. $b$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "뒤에 더한 상수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-15:v1",
+          "conceptKeys": [
+            "asymptote"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\dfrac{4}{x+3} - 5$의 가로 점근선은 $y = b$입니다. $b$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "뒤에 더한 상수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-16:v1",
+          "conceptKeys": [
+            "asymptote"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점근선이란 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "그래프가 한없이 다가가되 닿지 않는 선"
+              },
+              {
+                "id": "b",
+                "text": "그래프가 한 번 만나는 선"
+              },
+              {
+                "id": "c",
+                "text": "그래프의 꼭짓점을 지나는 선"
+              },
+              {
+                "id": "d",
+                "text": "그래프를 반으로 나누는 선"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "그래프가 한없이 다가가되 닿지 않는 선"
+              },
+              {
+                "id": "b",
+                "text": "그래프가 한 번 만나는 선"
+              },
+              {
+                "id": "c",
+                "text": "그래프의 꼭짓점을 지나는 선"
+              },
+              {
+                "id": "d",
+                "text": "그래프를 반으로 나누는 선"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가까워지기만 해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-17:v1",
+          "conceptKeys": [
+            "irrational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\sqrt{x}$에서 $x = 25$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "제곱해서 $25$가 되는 양수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-18:v1",
+          "conceptKeys": [
+            "irrational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\sqrt{x-7}$의 정의역이 $x \\ge a$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "근호 안이 $0$ 이상이어야 해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-19:v1",
+          "conceptKeys": [
+            "irrational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\sqrt{3x}$에서 $x = 12$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "근호 안은 $36$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "rational-functions:drill-20:v1",
+          "conceptKeys": [
+            "irrational-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "rational-functions:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\sqrt{8-x}$의 정의역이 $x \\le a$일 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "rational-functions:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$8 - x \\ge 0$을 풀어요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}

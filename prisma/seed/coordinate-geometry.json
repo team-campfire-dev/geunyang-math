@@ -1,0 +1,2737 @@
+{
+  "schemaVersion": 1,
+  "courses": [
+    {
+      "key": "coordinate-geometry",
+      "title": "도형의 방정식",
+      "summary": "도형을 좌표평면에 올려놓고 자 없이 계산으로 다뤄요. 거리를 재고, 직선을 식으로 적고, 원을 식으로 적어요.",
+      "order": 24,
+      "track": "high",
+      "stage": "high-1",
+      "lessons": [
+        {
+          "key": "distance-midpoint",
+          "order": 1
+        },
+        {
+          "key": "line-equation",
+          "order": 2
+        },
+        {
+          "key": "circle-equation",
+          "order": 3
+        }
+      ],
+      "diagnostics": []
+    }
+  ],
+  "concepts": [
+    {
+      "key": "distance-formula",
+      "label": "두 점 사이의 거리",
+      "assessable": true
+    },
+    {
+      "key": "line-equation",
+      "label": "직선의 방정식",
+      "assessable": true
+    },
+    {
+      "key": "parallel-perpendicular",
+      "label": "평행과 수직",
+      "assessable": true
+    },
+    {
+      "key": "circle-equation",
+      "label": "원의 방정식",
+      "assessable": true
+    }
+  ],
+  "lessons": [
+    {
+      "public": {
+        "lessonKey": "distance-midpoint",
+        "versionId": "distance-midpoint:v1",
+        "title": "두 점 사이의 거리와 중점: 좌표를 빼서 잰다",
+        "summary": "도형을 좌표평면에 올려놓고, 자 없이 계산만으로 거리와 한가운데를 구해요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "distance-formula"
+        ],
+        "prerequisiteConceptKeys": [
+          "square-root",
+          "radical-arithmetic",
+          "linear-function"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "distance-midpoint:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "distance-midpoint:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "도형을 좌표평면 위에 올려놓으면, 그림으로 따지던 것을 계산으로 따질 수 있어요. 자를 대지 않고도 길이를 재는 거예요.\n\n두 점 $A(1,1)$과 $B(5,4)$ 사이의 거리를 구해 볼게요. 두 점을 잇는 선분을 빗변으로 하는 직각삼각형을 그리면 돼요.\n\n가로로 얼마나 떨어졌나요. $5 - 1 = 4$예요. 세로로는 $4 - 1 = 3$이고요. 좌표를 빼기만 하면 나와요.\n\n이제 피타고라스 정리예요. 빗변의 제곱은 $4^2 + 3^2 = 25$이니 거리는 $\\sqrt{25} = 5$예요.\n\n식으로 적으면 두 점 사이의 거리는 $\\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$예요. 외우기보다 직각삼각형을 떠올리는 편이 든든해요.\n\n빼는 순서는 걱정하지 않아도 돼요. 어차피 제곱하니 부호가 사라지거든요.\n\n한가운데 점은 더 쉬워요. 가로도 반, 세로도 반이니 좌표를 각각 더해서 $2$로 나눠요. $A(1,1)$과 $B(5,4)$의 중점은 $\\left(\\dfrac{1+5}{2}, \\dfrac{1+4}{2}\\right) = (3, 2.5)$예요. 평균을 구하는 일과 같아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "distance-formula",
+                    "surface": "두 점 사이의 거리",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "distance-midpoint:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "두 점 사이에 가로와 세로 변이 그어지고 빗변의 길이를 재는 그림",
+                "caption": "가로와 세로를 재면 빗변은 피타고라스가 알려 줘요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 40,
+                    "y1": 160,
+                    "x2": 288,
+                    "y2": 160,
+                    "stroke": "line",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 64,
+                    "y1": 32,
+                    "x2": 64,
+                    "y2": 184,
+                    "stroke": "line",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 96,
+                    "cy": 136,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "ink",
+                    "id": "pa"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 224,
+                    "cy": 56,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "ink",
+                    "id": "pb"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 84,
+                    "y": 152,
+                    "text": "$A$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 240,
+                    "y": 48,
+                    "text": "$B$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 96,
+                    "y1": 136,
+                    "x2": 224,
+                    "y2": 136,
+                    "stroke": "green",
+                    "strokeWidth": 2,
+                    "id": "base",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 224,
+                    "y1": 136,
+                    "x2": 224,
+                    "y2": 56,
+                    "stroke": "green",
+                    "strokeWidth": 2,
+                    "id": "side",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 96,
+                    "y1": 136,
+                    "x2": 224,
+                    "y2": 56,
+                    "stroke": "orange",
+                    "strokeWidth": 2.4,
+                    "id": "hyp",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 154,
+                    "text": "가로 $4$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "bl",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 252,
+                    "y": 98,
+                    "text": "세로 $3$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "sl",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 140,
+                    "y": 86,
+                    "text": "$5$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "hl",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 22,
+                    "text": "$A(1,1)$, $B(5,4)$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "좌표평면 위에 두 점이 있어요. 사이의 거리를 재려고 해요.",
+                    "changes": [
+                      {
+                        "id": "base",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "side",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "hyp",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "bl",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "sl",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "hl",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "가로로 얼마, 세로로 얼마 떨어졌는지는 좌표를 빼면 바로 나와요.",
+                    "changes": [
+                      {
+                        "id": "base",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "side",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "bl",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sl",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "hyp",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "hl",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "직각삼각형이 생겼어요. 빗변이 곧 두 점 사이의 거리예요.",
+                    "changes": [
+                      {
+                        "id": "base",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "side",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "bl",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sl",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "hyp",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "hl",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "distance-midpoint:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "distance-midpoint:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$A(-2, 3)$과 $B(4, -5)$ 사이의 거리를 구해 볼게요.\n\n가로 차이는 $4 - (-2) = 6$이에요. 음수를 빼니 부호에 주의하세요.\n\n세로 차이는 $-5 - 3 = -8$이에요. 음수가 나왔지만 제곱하면 사라지니 그대로 둬요.\n\n거리는 $\\sqrt{6^2 + (-8)^2} = \\sqrt{36 + 64} = \\sqrt{100} = 10$이에요.\n\n중점도 구해 볼게요. $\\left(\\dfrac{-2+4}{2}, \\dfrac{3+(-5)}{2}\\right) = (1, -1)$이에요.\n\n확인해 보면 중점에서 $A$까지의 거리와 $B$까지의 거리가 각각 $5$로 같아요. 한가운데가 맞네요.\n\n좌표평면에 올리면 「그림을 그려 재는 일」이 「수를 빼고 제곱하는 일」이 돼요. 이것이 도형을 좌표로 다루는 이유예요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "distance-midpoint:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "distance-midpoint:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "distance-midpoint:practice",
+                "problemSetVersionId": "distance-midpoint:practice:v1",
+                "problemVersionIds": [
+                  "distance-midpoint:practice-1:v1",
+                  "distance-midpoint:practice-2:v1",
+                  "distance-midpoint:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "distance-midpoint:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "distance-midpoint:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "distance-midpoint:check",
+                "problemSetVersionId": "distance-midpoint:check:v1",
+                "problemVersionIds": [
+                  "distance-midpoint:check-1:v1",
+                  "distance-midpoint:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "distance-midpoint:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "distance-midpoint:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 점 사이의 거리는 가로 차이와 세로 차이를 두 변으로 하는 직각삼각형의 빗변이에요.\n\n$\\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$이고, 제곱하니 빼는 순서는 상관없어요.\n\n중점은 각 좌표의 평균이에요. 가로도 반, 세로도 반이니까요.\n\n다음 수업에서는 점 대신 직선을 식으로 적어요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "distance-midpoint:review",
+        "problemSetVersionId": "distance-midpoint:review:v1",
+        "problemVersionIds": [
+          "distance-midpoint:homework-1:v1",
+          "distance-midpoint:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "line-equation",
+        "versionId": "line-equation:v1",
+        "title": "직선의 방정식: 점 하나와 기울기 하나",
+        "summary": "직선을 식으로 적는 법을 익히고, 두 직선이 평행한지 수직인지 기울기로 가려요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "line-equation",
+          "parallel-perpendicular"
+        ],
+        "prerequisiteConceptKeys": [
+          "slope",
+          "intercept",
+          "linear-function"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "line-equation:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "line-equation:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "일차함수에서 직선의 기울기와 절편을 읽었어요. 이제 거꾸로, 조건에서 직선의 식을 세워 볼게요.\n\n직선 하나를 정하는 데 필요한 것은 두 가지예요. 어디를 지나는지와 얼마나 기울었는지. 점 하나와 기울기 하나면 직선이 하나로 정해져요.\n\n기울기가 $m$이고 점 $(x_1, y_1)$을 지나는 직선의 방정식은 $y - y_1 = m(x - x_1)$이에요. 이 식이 왜 맞는지는 기울기의 뜻으로 보면 돼요. 세로 변화를 가로 변화로 나눈 것이 $m$이니까요.\n\n두 점이 주어졌다면 기울기부터 구해요. 세로 차이를 가로 차이로 나누면 되죠. 그다음은 위와 같아요.\n\n두 직선의 관계도 기울기가 말해 줘요. 기울기가 같으면 평행해요. 아무리 가도 만나지 않아요.\n\n수직일 조건은 조금 뜻밖이에요. 두 기울기를 곱해 $-1$이 되면 직각으로 만나요. 기울기가 $2$인 직선에 수직인 직선의 기울기는 $-\\dfrac{1}{2}$예요.\n\n부호가 반대이고 뒤집힌 수라고 기억하면 편해요. 가파르게 올라가는 직선에 수직인 직선은 완만하게 내려가요.",
+                "definitions": [
+                  {
+                    "conceptKey": "line-equation",
+                    "surface": "직선의 방정식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "parallel-perpendicular",
+                    "surface": "평행",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "line-equation:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "한 점을 지나는 직선이 기울기에 따라 돌고, 평행한 직선과 수직인 직선이 나타나는 그림",
+                "caption": "점 하나와 기울기 하나면 직선이 정해져요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 30,
+                    "y1": 120,
+                    "x2": 290,
+                    "y2": 120,
+                    "stroke": "line",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 120,
+                    "y1": 26,
+                    "x2": 120,
+                    "y2": 190,
+                    "stroke": "line",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160,
+                    "cy": 96,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "ink",
+                    "id": "pt"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 176,
+                    "y": 88,
+                    "text": "$(2,1)$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 80,
+                    "y1": 152,
+                    "x2": 240,
+                    "y2": 40,
+                    "stroke": "green",
+                    "strokeWidth": 2.2,
+                    "id": "main"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 60,
+                    "y1": 176,
+                    "x2": 220,
+                    "y2": 64,
+                    "stroke": "line",
+                    "strokeWidth": 1.8,
+                    "id": "para",
+                    "opacity": 0,
+                    "dash": true
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 112,
+                    "y1": 48,
+                    "x2": 208,
+                    "y2": 144,
+                    "stroke": "orange",
+                    "strokeWidth": 2,
+                    "id": "perp",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 252,
+                    "y": 44,
+                    "text": "기울기 $m$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "green",
+                    "id": "lm"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 246,
+                    "y": 160,
+                    "text": "기울기 $-\\dfrac{1}{m}$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "lp",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 20,
+                    "text": "점 하나와 기울기 하나",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "한 점을 지나는 직선이에요. 기울기를 정하면 직선이 하나로 정해져요.",
+                    "changes": [
+                      {
+                        "id": "para",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "perp",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lp",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "같은 기울기로 다른 점을 지나면 평행해요. 만나지 않아요.",
+                    "changes": [
+                      {
+                        "id": "para",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "perp",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "lp",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "기울기를 곱해 $-1$이 되게 하면 직각으로 만나요.",
+                    "changes": [
+                      {
+                        "id": "para",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "perp",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lp",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "line-equation:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "line-equation:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(1, 2)$와 $(3, 8)$을 지나는 직선의 식을 구해 볼게요.\n\n기울기부터요. 세로 차이는 $8 - 2 = 6$, 가로 차이는 $3 - 1 = 2$이니 기울기는 $3$이에요.\n\n이제 점 하나를 골라 넣어요. $(1,2)$로 하면 $y - 2 = 3(x - 1)$이에요.\n\n풀어 쓰면 $y = 3x - 1$이에요. 다른 점 $(3,8)$을 넣어 보면 $9 - 1 = 8$로 맞아요.\n\n이번에는 이 직선에 수직이고 점 $(0, 4)$를 지나는 직선이에요.\n\n수직이려면 기울기의 곱이 $-1$이어야 하니 $3 \\times m = -1$에서 $m = -\\dfrac{1}{3}$이에요.\n\n$(0,4)$를 지나니 $y = -\\dfrac{1}{3}x + 4$예요. $y$절편이 $4$인 것은 점의 $x$좌표가 $0$이라 바로 읽혀요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "line-equation:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "line-equation:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "line-equation:practice",
+                "problemSetVersionId": "line-equation:practice:v1",
+                "problemVersionIds": [
+                  "line-equation:practice-1:v1",
+                  "line-equation:practice-2:v1",
+                  "line-equation:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "line-equation:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "line-equation:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "line-equation:check",
+                "problemSetVersionId": "line-equation:check:v1",
+                "problemVersionIds": [
+                  "line-equation:check-1:v1",
+                  "line-equation:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "line-equation:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "line-equation:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "점 하나와 기울기 하나면 직선이 정해져요. $y - y_1 = m(x - x_1)$이에요.\n\n두 점이 주어지면 기울기부터 구하고, 그다음은 같아요.\n\n기울기가 같으면 평행, 곱해서 $-1$이면 수직이에요.\n\n다음 수업에서는 직선 대신 원을 식으로 적어요. 거리가 그 열쇠예요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "line-equation:review",
+        "problemSetVersionId": "line-equation:review:v1",
+        "problemVersionIds": [
+          "line-equation:homework-1:v1",
+          "line-equation:homework-2:v1"
+        ]
+      }
+    },
+    {
+      "public": {
+        "lessonKey": "circle-equation",
+        "versionId": "circle-equation:v1",
+        "title": "원의 방정식: 중심에서 거리가 같은 점",
+        "summary": "거리를 재는 식을 그대로 원의 식으로 삼고, 풀어 쓴 식에서 중심과 반지름을 되찾아요.",
+        "estimatedMinutes": 12,
+        "conceptKeys": [
+          "circle-equation"
+        ],
+        "prerequisiteConceptKeys": [
+          "distance-formula",
+          "completing-square",
+          "quadratic-max-min"
+        ],
+        "sectionCount": 5
+      },
+      "sections": [
+        {
+          "sectionId": "circle-equation:explanation:v1",
+          "role": "explanation",
+          "title": "개념 만나기",
+          "contentBlocks": [
+            {
+              "blockId": "circle-equation:explanation:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "원은 「한 점에서 거리가 같은 점을 모두 모은 것」이에요. 거리를 재는 법을 앞 수업에서 배웠으니, 원의 식도 거기서 바로 나와요.\n\n중심이 $(a, b)$이고 반지름이 $r$인 원 위의 점 $(x, y)$는 중심까지의 거리가 늘 $r$이에요. $\\sqrt{(x-a)^2 + (y-b)^2} = r$이죠.\n\n양변을 제곱하면 근호가 사라져요. $(x-a)^2 + (y-b)^2 = r^2$. 이것이 원의 방정식이에요.\n\n식에서 바로 읽을 수 있어요. 괄호 안을 $0$으로 만드는 값이 중심이고, 오른쪽은 반지름의 제곱이에요. $(x-2)^2 + (y+1)^2 = 16$이면 중심은 $(2, -1)$, 반지름은 $4$예요. 부호를 뒤집어 읽는 것은 포물선의 꼭짓점과 같아요.\n\n그런데 풀어 쓴 꼴로 주어지기도 해요. $x^2 + y^2 - 4x + 2y + 1 = 0$ 같은 식이요. 이대로는 중심이 보이지 않아요.\n\n이차함수에서 하던 일을 그대로 해요. $x$끼리, $y$끼리 모아 완전제곱식을 만들어요. $x^2 - 4x$에는 $4$를, $y^2 + 2y$에는 $1$을 더하고 그만큼 빼요.\n\n$(x-2)^2 + (y+1)^2 = 4$가 되니 중심 $(2,-1)$, 반지름 $2$예요. 완전제곱식 만들기가 방정식에서, 이차함수에서, 이제 원에서 세 번째로 쓰였어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "circle-equation",
+                    "surface": "원의 방정식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "circle-equation:explanation:drawing:v1",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 200,
+                "alt": "중심에서 같은 거리에 있는 점이 돌면서 원을 그리는 그림",
+                "caption": "중심에서 거리가 같은 점을 모두 모으면 원이에요",
+                "items": [
+                  {
+                    "kind": "line",
+                    "x1": 30,
+                    "y1": 116,
+                    "x2": 290,
+                    "y2": 116,
+                    "stroke": "line",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 96,
+                    "y1": 26,
+                    "x2": 96,
+                    "y2": 190,
+                    "stroke": "line",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160,
+                    "cy": 106,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "ink",
+                    "id": "center"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 128,
+                    "text": "중심",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160,
+                    "cy": 106,
+                    "rx": 58,
+                    "ry": 58,
+                    "fill": "none",
+                    "stroke": "green",
+                    "strokeWidth": 2,
+                    "id": "ring",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160,
+                    "y1": 106,
+                    "x2": 218,
+                    "y2": 106,
+                    "stroke": "orange",
+                    "strokeWidth": 2,
+                    "id": "spoke"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 218,
+                    "cy": 106,
+                    "rx": 5,
+                    "ry": 5,
+                    "fill": "orange",
+                    "id": "edge"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 192,
+                    "y": 96,
+                    "text": "$r$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "rl"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 178,
+                    "text": "$(x-a)^2 + (y-b)^2 = r^2$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "id": "law",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 20,
+                    "text": "중심에서 거리가 늘 같은 점",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "중심에서 거리가 $r$인 점을 하나 찍었어요.",
+                    "changes": [
+                      {
+                        "id": "ring",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "같은 거리를 지키며 돌면 자리가 계속 바뀌어요.",
+                    "changes": [
+                      {
+                        "id": "edge",
+                        "dx": -58,
+                        "dy": -58
+                      },
+                      {
+                        "id": "spoke",
+                        "dx": -29,
+                        "dy": -29
+                      },
+                      {
+                        "id": "rl",
+                        "dx": -40,
+                        "dy": -20
+                      },
+                      {
+                        "id": "ring",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 0
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "그렇게 모인 점 전체가 원이에요. 거리를 재는 식이 곧 원의 식이 돼요.",
+                    "changes": [
+                      {
+                        "id": "edge",
+                        "dx": -116
+                      },
+                      {
+                        "id": "spoke",
+                        "dx": -58
+                      },
+                      {
+                        "id": "rl",
+                        "dx": -80
+                      },
+                      {
+                        "id": "ring",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "law",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1700
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "circle-equation:example:v1",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "circle-equation:example:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "중심이 $(1, -2)$이고 반지름이 $5$인 원의 식을 적어 볼게요.\n\n$(x - 1)^2 + (y - (-2))^2 = 5^2$이니 $(x-1)^2 + (y+2)^2 = 25$예요.\n\n중심의 좌표가 음수이면 괄호 안이 덧셈이 된다는 것만 조심하면 돼요.\n\n이번에는 반대예요. $x^2 + y^2 + 6x - 8y = 0$의 중심과 반지름을 구해 볼게요.\n\n$x$끼리 모아요. $x^2 + 6x$에 $9$를 더해 $(x+3)^2$을 만들고, 더한 만큼 오른쪽에도 더해요.\n\n$y$끼리도요. $y^2 - 8y$에 $16$을 더해 $(y-4)^2$을 만들고, 오른쪽에도 더해요.\n\n$(x+3)^2 + (y-4)^2 = 0 + 9 + 16 = 25$예요. 중심은 $(-3, 4)$, 반지름은 $5$예요.\n\n원점을 지나는지 확인해 볼까요. $x = 0$, $y = 0$을 처음 식에 넣으면 $0$이 맞으니 원점을 지나요. 중심에서 원점까지의 거리가 $\\sqrt{9 + 16} = 5$, 곧 반지름과 같으니 당연한 일이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "circle-equation:practice:v1",
+          "role": "practice",
+          "title": "직접 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "circle-equation:practice:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "circle-equation:practice",
+                "problemSetVersionId": "circle-equation:practice:v1",
+                "problemVersionIds": [
+                  "circle-equation:practice-1:v1",
+                  "circle-equation:practice-2:v1",
+                  "circle-equation:practice-3:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "circle-equation:check:v1",
+          "role": "check",
+          "title": "혼자 확인하기",
+          "contentBlocks": [
+            {
+              "blockId": "circle-equation:check:problems:v1",
+              "kind": "core.problem_set",
+              "typeVersion": 2,
+              "required": true,
+              "payload": {
+                "problemSetId": "circle-equation:check",
+                "problemSetVersionId": "circle-equation:check:v1",
+                "problemVersionIds": [
+                  "circle-equation:check-1:v1",
+                  "circle-equation:check-2:v1"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "circle-equation:summary:v1",
+          "role": "summary",
+          "title": "배운 개념 돌아보기",
+          "contentBlocks": [
+            {
+              "blockId": "circle-equation:summary:text:v1",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "원은 중심에서 거리가 같은 점을 모은 것이고, 그래서 거리를 재는 식이 곧 원의 식이에요.\n\n$(x-a)^2 + (y-b)^2 = r^2$에서 중심 $(a,b)$와 반지름 $r$을 바로 읽어요. 괄호 안의 부호는 뒤집어 읽어요.\n\n풀어 쓴 식은 $x$끼리, $y$끼리 모아 완전제곱식을 만들어 되돌려요.\n\n여기까지가 도형을 좌표로 다루는 첫걸음이에요. 자를 대지 않고 계산만으로 거리와 자리를 말할 수 있게 됐어요.",
+                "definitions": []
+              }
+            }
+          ]
+        }
+      ],
+      "review": {
+        "problemSetId": "circle-equation:review",
+        "problemSetVersionId": "circle-equation:review:v1",
+        "problemVersionIds": [
+          "circle-equation:homework-1:v1",
+          "circle-equation:homework-2:v1"
+        ]
+      }
+    }
+  ],
+  "problemSets": [
+    {
+      "problemSetId": "distance-midpoint:practice",
+      "courseKey": "coordinate-geometry",
+      "name": "거리와 중점 연습",
+      "versionId": "distance-midpoint:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "distance-midpoint:practice-1:v1",
+          "conceptKeys": [
+            "distance-formula"
+          ],
+          "promptContent": [
+            {
+              "blockId": "distance-midpoint:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(1,1)$과 $(5,4)$ 사이의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "distance-midpoint:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $4$, 세로 $3$인 직각삼각형이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "distance-midpoint:practice-2:v1",
+          "conceptKeys": [
+            "distance-formula"
+          ],
+          "promptContent": [
+            {
+              "blockId": "distance-midpoint:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(0,0)$과 $(6,8)$ 사이의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "distance-midpoint:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{36+64}$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "distance-midpoint:practice-3:v1",
+          "conceptKeys": [
+            "distance-formula"
+          ],
+          "promptContent": [
+            {
+              "blockId": "distance-midpoint:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(2,4)$와 $(6,10)$의 중점의 $x$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "distance-midpoint:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 $x$좌표의 평균이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "distance-midpoint:check",
+      "courseKey": "coordinate-geometry",
+      "name": "거리와 중점 확인",
+      "versionId": "distance-midpoint:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "distance-midpoint:check-1:v1",
+          "conceptKeys": [
+            "distance-formula"
+          ],
+          "promptContent": [
+            {
+              "blockId": "distance-midpoint:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(0,0)$과 $(5,12)$ 사이의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 13
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "distance-midpoint:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{25+144}$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "distance-midpoint:check-2:v1",
+          "conceptKeys": [
+            "distance-formula"
+          ],
+          "promptContent": [
+            {
+              "blockId": "distance-midpoint:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(-3,2)$와 $(5,8)$의 중점의 $x$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "distance-midpoint:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\dfrac{-3+5}{2}$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "distance-midpoint:review",
+      "courseKey": "coordinate-geometry",
+      "name": "거리와 중점 복습",
+      "versionId": "distance-midpoint:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "distance-midpoint:homework-1:v1",
+          "conceptKeys": [
+            "distance-formula"
+          ],
+          "promptContent": [
+            {
+              "blockId": "distance-midpoint:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(-2,3)$과 $(4,-5)$ 사이의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "distance-midpoint:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $6$, 세로 $-8$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "distance-midpoint:homework-2:v1",
+          "conceptKeys": [
+            "distance-formula"
+          ],
+          "promptContent": [
+            {
+              "blockId": "distance-midpoint:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(1,3)$과 $(7,9)$의 중점의 $y$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "distance-midpoint:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 $y$좌표의 평균이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "line-equation:practice",
+      "courseKey": "coordinate-geometry",
+      "name": "직선의 방정식 연습",
+      "versionId": "line-equation:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "line-equation:practice-1:v1",
+          "conceptKeys": [
+            "line-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "line-equation:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기울기가 $2$이고 점 $(0,3)$을 지나는 직선의 $y$절편을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "line-equation:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x = 0$일 때의 $y$값이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "line-equation:practice-2:v1",
+          "conceptKeys": [
+            "line-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "line-equation:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(1,2)$와 $(3,8)$을 지나는 직선의 기울기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "line-equation:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세로 차이를 가로 차이로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "line-equation:practice-3:v1",
+          "conceptKeys": [
+            "parallel-perpendicular"
+          ],
+          "promptContent": [
+            {
+              "blockId": "line-equation:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 2x + 1$과 평행한 직선의 기울기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "line-equation:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행하면 기울기가 같아요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "line-equation:check",
+      "courseKey": "coordinate-geometry",
+      "name": "직선의 방정식 확인",
+      "versionId": "line-equation:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "line-equation:check-1:v1",
+          "conceptKeys": [
+            "parallel-perpendicular"
+          ],
+          "promptContent": [
+            {
+              "blockId": "line-equation:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 2x + 1$과 수직인 직선의 기울기를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": -1,
+            "denominator": 2,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "line-equation:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "곱해서 $-1$이 되는 수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "line-equation:check-2:v1",
+          "conceptKeys": [
+            "line-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "line-equation:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기울기가 $3$이고 점 $(2,1)$을 지나는 직선의 $y$절편을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "line-equation:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y - 1 = 3(x - 2)$를 풀어 써요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "line-equation:review",
+      "courseKey": "coordinate-geometry",
+      "name": "직선의 방정식 복습",
+      "versionId": "line-equation:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "line-equation:homework-1:v1",
+          "conceptKeys": [
+            "line-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "line-equation:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(0,5)$와 $(5,0)$을 지나는 직선의 기울기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "line-equation:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세로로 $-5$, 가로로 $5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "line-equation:homework-2:v1",
+          "conceptKeys": [
+            "parallel-perpendicular"
+          ],
+          "promptContent": [
+            {
+              "blockId": "line-equation:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 직선이 수직일 조건은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "기울기의 곱이 $-1$"
+              },
+              {
+                "id": "b",
+                "text": "기울기가 같다"
+              },
+              {
+                "id": "c",
+                "text": "기울기의 합이 $0$"
+              },
+              {
+                "id": "d",
+                "text": "절편이 같다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "기울기의 곱이 $-1$"
+              },
+              {
+                "id": "b",
+                "text": "기울기가 같다"
+              },
+              {
+                "id": "c",
+                "text": "기울기의 합이 $0$"
+              },
+              {
+                "id": "d",
+                "text": "절편이 같다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "line-equation:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부호가 반대이고 뒤집힌 수예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "circle-equation:practice",
+      "courseKey": "coordinate-geometry",
+      "name": "원의 방정식 연습",
+      "versionId": "circle-equation:practice:v1",
+      "problems": [
+        {
+          "problemVersionId": "circle-equation:practice-1:v1",
+          "conceptKeys": [
+            "circle-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-equation:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중심이 원점이고 반지름이 $3$인 원의 식이 $x^2 + y^2 = k$일 때 $k$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 9
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-equation:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "오른쪽은 반지름의 제곱이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-equation:practice-2:v1",
+          "conceptKeys": [
+            "circle-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-equation:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x-2)^2 + (y+1)^2 = 16$인 원의 반지름을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-equation:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$16$은 어떤 수의 제곱인가요?"
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-equation:practice-3:v1",
+          "conceptKeys": [
+            "circle-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-equation:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x-2)^2 + (y+1)^2 = 16$인 원의 중심의 $x$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-equation:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호 안을 $0$으로 만드는 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "circle-equation:check",
+      "courseKey": "coordinate-geometry",
+      "name": "원의 방정식 확인",
+      "versionId": "circle-equation:check:v1",
+      "problems": [
+        {
+          "problemVersionId": "circle-equation:check-1:v1",
+          "conceptKeys": [
+            "circle-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-equation:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + y^2 - 4x + 2y + 1 = 0$인 원의 반지름을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-equation:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x$끼리, $y$끼리 모아 완전제곱식을 만들어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-equation:check-2:v1",
+          "conceptKeys": [
+            "circle-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-equation:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + y^2 - 4x + 2y + 1 = 0$인 원의 중심의 $y$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-equation:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(y+1)^2$이 되니 $y = -1$이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "circle-equation:review",
+      "courseKey": "coordinate-geometry",
+      "name": "원의 방정식 복습",
+      "versionId": "circle-equation:review:v1",
+      "problems": [
+        {
+          "problemVersionId": "circle-equation:homework-1:v1",
+          "conceptKeys": [
+            "circle-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-equation:homework-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중심이 $(1,-2)$이고 반지름이 $5$인 원의 식이 $(x-1)^2 + (y+2)^2 = k$일 때 $k$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-equation:homework-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름의 제곱이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-equation:homework-2:v1",
+          "conceptKeys": [
+            "circle-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-equation:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + y^2 + 6x - 8y = 0$인 원의 반지름을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-equation:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$9$와 $16$을 양변에 더해요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "coordinate-geometry:drill",
+      "courseKey": "coordinate-geometry",
+      "name": "도형의 방정식 모아 풀기",
+      "versionId": "coordinate-geometry:drill:v1",
+      "problems": [
+        {
+          "problemVersionId": "coordinate-geometry:drill-1:v1",
+          "conceptKeys": [
+            "distance-formula"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(0,0)$과 $(3,4)$ 사이의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{9+16}$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-2:v1",
+          "conceptKeys": [
+            "distance-formula"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(1,2)$와 $(7,10)$ 사이의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $6$, 세로 $8$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-3:v1",
+          "conceptKeys": [
+            "distance-formula"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(2,5)$와 $(2,11)$ 사이의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 차이가 $0$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-4:v1",
+          "conceptKeys": [
+            "distance-formula"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(0,4)$와 $(8,10)$의 중점의 $x$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 $x$좌표의 평균이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-5:v1",
+          "conceptKeys": [
+            "distance-formula"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(-4,1)$과 $(6,7)$의 중점의 $y$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 $y$좌표의 평균이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-6:v1",
+          "conceptKeys": [
+            "distance-formula"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(-1,-1)$과 $(2,3)$ 사이의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로 $3$, 세로 $4$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-7:v1",
+          "conceptKeys": [
+            "distance-formula"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 사이의 거리를 구할 때 쓰는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "피타고라스 정리"
+              },
+              {
+                "id": "b",
+                "text": "근의 공식"
+              },
+              {
+                "id": "c",
+                "text": "판별식"
+              },
+              {
+                "id": "d",
+                "text": "인수정리"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "피타고라스 정리"
+              },
+              {
+                "id": "b",
+                "text": "근의 공식"
+              },
+              {
+                "id": "c",
+                "text": "판별식"
+              },
+              {
+                "id": "d",
+                "text": "인수정리"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로와 세로를 두 변으로 하는 직각삼각형이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-8:v1",
+          "conceptKeys": [
+            "line-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(0,1)$과 $(2,7)$을 지나는 직선의 기울기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세로 $6$을 가로 $2$로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-9:v1",
+          "conceptKeys": [
+            "line-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기울기가 $4$이고 점 $(1,2)$를 지나는 직선의 $y$절편을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y - 2 = 4(x-1)$을 풀어 써요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-10:v1",
+          "conceptKeys": [
+            "line-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(2,3)$과 $(6,3)$을 지나는 직선의 기울기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세로 차이가 $0$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-11:v1",
+          "conceptKeys": [
+            "line-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기울기가 $-2$이고 점 $(3,0)$을 지나는 직선의 $y$절편을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = -2(x-3)$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-12:v1",
+          "conceptKeys": [
+            "parallel-perpendicular"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 5x - 2$와 평행한 직선의 기울기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행하면 기울기가 같아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-13:v1",
+          "conceptKeys": [
+            "parallel-perpendicular"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = -3x + 1$과 수직인 직선의 기울기를 기약분수로 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 3,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "곱해서 $-1$이 되는 수예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-14:v1",
+          "conceptKeys": [
+            "parallel-perpendicular"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기울기가 $\\dfrac{1}{4}$인 직선에 수직인 직선의 기울기를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "뒤집고 부호를 바꿔요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-15:v1",
+          "conceptKeys": [
+            "parallel-perpendicular"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 직선이 평행할 조건은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "기울기가 같다"
+              },
+              {
+                "id": "b",
+                "text": "기울기의 곱이 $-1$"
+              },
+              {
+                "id": "c",
+                "text": "절편이 같다"
+              },
+              {
+                "id": "d",
+                "text": "기울기의 합이 $0$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "기울기가 같다"
+              },
+              {
+                "id": "b",
+                "text": "기울기의 곱이 $-1$"
+              },
+              {
+                "id": "c",
+                "text": "절편이 같다"
+              },
+              {
+                "id": "d",
+                "text": "기울기의 합이 $0$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "아무리 가도 만나지 않아요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-16:v1",
+          "conceptKeys": [
+            "circle-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중심이 원점이고 반지름이 $7$인 원의 식이 $x^2 + y^2 = k$일 때 $k$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 49
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름의 제곱이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-17:v1",
+          "conceptKeys": [
+            "circle-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x-5)^2 + (y-3)^2 = 36$인 원의 반지름을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$36$은 $6$의 제곱이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-18:v1",
+          "conceptKeys": [
+            "circle-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x+4)^2 + (y-1)^2 = 9$인 원의 중심의 $x$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x+4$는 $x-(-4)$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-19:v1",
+          "conceptKeys": [
+            "circle-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + y^2 - 6x = 0$인 원의 반지름을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x-3)^2 + y^2 = 9$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "coordinate-geometry:drill-20:v1",
+          "conceptKeys": [
+            "circle-equation"
+          ],
+          "promptContent": [
+            {
+              "blockId": "coordinate-geometry:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + y^2 + 2x - 4y - 4 = 0$인 원의 반지름을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "coordinate-geometry:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x+1)^2 + (y-2)^2 = 9$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    }
+  ],
+  "diagnostics": [],
+  "definitions": []
+}
