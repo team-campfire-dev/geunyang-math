@@ -68,13 +68,19 @@ function serve(options: { signedIn?: boolean; state?: LearningState; lesson?: Le
     // What the public catalogue offers. A course without a track is one an older server sent.
     courses: options.courses ?? [{ key: 'fractions', title: '분수', summary: '분수를 처음부터' }, { key: 'decimals', title: '소수', summary: '소수를 처음부터' }] as PublicCourse[],
     catalogue: options.catalogue ?? catalogue,
+    developmentLogin: false,
     deletes: 0,
     after: undefined as ((action: LearningAction) => LearningState) | undefined,
   };
   const reply = (body: unknown, status = 200) => ({ ok: status < 400, status, json: async () => body }) as Response;
   globalThis.fetch = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
-    if (url.endsWith('/api/v1/session')) return reply({ user: state.signedIn ? { id: 'u1', displayName: '학습자' } : null, developmentLogin: false, googleLogin: true });
+    if (url.endsWith('/api/v1/session')) return reply({ user: state.signedIn ? { id: state.learning.user.id, displayName: state.learning.user.displayName } : null, developmentLogin: state.developmentLogin, googleLogin: true });
+    // The development login this deployment offers: it makes a learner and signs them in.
+    if (url.endsWith('/api/v1/dev-session')) {
+      state.signedIn = true;
+      return reply({ user: { id: state.learning.user.id, displayName: state.learning.user.displayName }, developmentLogin: true, googleLogin: false });
+    }
     if (url.includes('/api/v1/learning?catalog=1')) return reply({ courses: state.courses, lessons: state.catalogue, concepts: [{ key: 'term.denominator', label: '분모' }], problemSets: shelf });
     if (url.includes('/api/v1/learning?lessonKey=')) return reply(state.lesson);
     if (url.endsWith('/api/v1/account') && init?.method === 'DELETE') {
@@ -122,7 +128,9 @@ const document_text = (selector: string) => window.document.querySelector(select
 const statusPill = () => window.document.querySelector('.lesson-header .pill')!.textContent;
 
 let server: ReturnType<typeof serve>;
-beforeEach(() => { vi.useFakeTimers(); window.history.replaceState({}, '', '/'); server = serve(); });
+// The first-step dialog remembers in this browser that it has been offered, so a test that does
+// not clear that would only ever see it once, and which test that was would depend on the order.
+beforeEach(() => { vi.useFakeTimers(); window.history.replaceState({}, '', '/'); window.localStorage.clear(); server = serve(); });
 afterEach(() => { vi.useRealTimers(); });
 
 describe('a lesson opened without starting it', () => {
@@ -883,5 +891,162 @@ describe('where the learner is standing', () => {
     // learner went: leaving a five-step lesson should be one press of back, not five.
     expect(at()).toBe('?lesson=fraction-meaning&step=2');
     expect(window.history.length).toBe(entries);
+  });
+});
+
+/**
+ * The first thing a learner is asked, and until now the thing nobody was asked at all.
+ *
+ * 「배우려는 과정」 decides what a placement has to settle and which way a recommendation leans, and
+ * it sat behind a button in the sidebar that a new learner has no reason to press. Left empty it
+ * makes everyone the same person, and everyone was handed the first lesson of the catalogue.
+ */
+describe('the first step a new learner is asked for', () => {
+  const school: PublicCourse[] = [
+    { key: 'fractions', title: '분수', summary: '분수를 처음부터', track: 'basics' },
+    { key: 'integers', title: '정수와 유리수', summary: '음수를 읽어요', track: 'middle', stage: 'middle-1' },
+    { key: 'expressions', title: '문자와 식', summary: '식을 세워요', track: 'middle', stage: 'middle-1' },
+    { key: 'systems', title: '연립방정식', summary: '두 식을 함께', track: 'middle', stage: 'middle-2' },
+  ];
+  const dialog = () => window.document.querySelector('.first-step');
+
+  it('asks where somebody is coming from before it asks for a course', async () => {
+    server = serve({ courses: school });
+    render(<LearningWorkspace />);
+    await until(() => expect(dialog()).toBeTruthy());
+    expect(screen.getByRole('heading', { level: 2, name: '학습자님, 반가워요.' })).toBeDefined();
+    // Years and lines, not a list of every course there is: 「중1」 is a question somebody can answer.
+    const grounds = [...dialog()!.querySelectorAll('.first-step-choice strong')].map((node) => node.textContent);
+    expect(grounds).toEqual(['기초 과정', '중학교 과정 중1', '중학교 과정 중2', '잘 모르겠어요']);
+    expect(grounds, '고르는 자리에 과정을 통째로 늘어놓는다').not.toContain('연립방정식');
+  });
+
+  it('carries the three answers into one profile update', async () => {
+    server = serve({ courses: school });
+    render(<LearningWorkspace />);
+    await until(() => expect(dialog()).toBeTruthy());
+    fireEvent.click(screen.getByRole('button', { name: /중학교 과정 중1/ }));
+    // Only the courses of that year are offered, which is four fewer decisions than the catalogue.
+    await until(() => expect(screen.getByRole('button', { name: /문자와 식/ })).toBeDefined());
+    expect(screen.queryByRole('button', { name: /연립방정식/ })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: /문자와 식/ }));
+    await until(() => expect(screen.getByRole('button', { name: '20분' })).toBeDefined());
+    fireEvent.click(screen.getByRole('button', { name: '20분' }));
+    fireEvent.click(screen.getByRole('button', { name: /이렇게 시작할게요/ }));
+    await until(() => expect(server.of('profile.update')).toHaveLength(1));
+    expect(server.of('profile.update')[0]).toEqual({ action: 'profile.update', targetCourseKey: 'expressions', dailyMinutes: 20 });
+  });
+
+  it('lets somebody who cannot name a year skip straight past the courses', async () => {
+    server = serve({ courses: school });
+    render(<LearningWorkspace />);
+    await until(() => expect(dialog()).toBeTruthy());
+    fireEvent.click(screen.getByRole('button', { name: /잘 모르겠어요/ }));
+    // Nothing to pick between when you could not say where you are; the placement is what settles it.
+    await until(() => expect(screen.getByRole('button', { name: /이렇게 시작할게요/ })).toBeDefined());
+    expect(screen.getByText(/시작점 확인으로 자리부터 찾아봐요/)).toBeDefined();
+    fireEvent.click(screen.getByRole('button', { name: /이렇게 시작할게요/ }));
+    await until(() => expect(server.of('profile.update')).toHaveLength(1));
+    expect(server.of('profile.update')[0]).toEqual({ action: 'profile.update', targetCourseKey: null, dailyMinutes: 10 });
+  });
+
+  it('does not ask somebody who has already said something', async () => {
+    server = serve({ state: learningState({ user: { id: 'u1', displayName: '학습자', targetCourseKey: 'fractions', dailyMinutes: 10 } }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByRole('heading', { level: 1, name: /학습자님/ })).toBeDefined());
+    await tick(5);
+    expect(dialog()).toBeNull();
+  });
+
+  it('does not ask somebody who has already opened a lesson', async () => {
+    server = serve({ state: enrolled() });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByRole('heading', { level: 1, name: /학습자님/ })).toBeDefined());
+    await tick(5);
+    expect(dialog()).toBeNull();
+  });
+
+  it('asks again when the account in this tab turns out to be somebody else', async () => {
+    render(<LearningWorkspace />);
+    await until(() => expect(dialog()).toBeTruthy());
+    fireEvent.click(screen.getByRole('button', { name: '나중에 고를게요' }));
+    await tick();
+    // Coming back to a tab that was signed in as somebody else — the screen re-reads the session
+    // and finds a different account. A second learner at the same desk is a second learner, not
+    // the first one coming back, and «asked once» is counted per account rather than per tab.
+    server.state.learning = learningState({ user: { id: 'u2', displayName: '다른 학습자', targetCourseKey: null, dailyMinutes: 10 } });
+    await act(async () => { window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true })); });
+    await until(() => expect(dialog()).toBeTruthy());
+    expect(screen.getByRole('heading', { level: 2, name: '다른 학습자님, 반가워요.' })).toBeDefined();
+  });
+
+  it('asks once, and counts the asking rather than the answering', async () => {
+    render(<LearningWorkspace />);
+    await until(() => expect(dialog()).toBeTruthy());
+    fireEvent.click(screen.getByRole('button', { name: '나중에 고를게요' }));
+    await tick();
+    expect(dialog()).toBeNull();
+    // Coming back tomorrow having chosen nothing is not a reason to be asked again.
+    cleanup();
+    server = serve();
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByRole('heading', { level: 1, name: /학습자님/ })).toBeDefined());
+    await tick(5);
+    expect(dialog()).toBeNull();
+  });
+});
+
+/**
+ * What the home screen offers, which is one thing.
+ *
+ * It used to offer a recommended lesson, a placement, the whole catalogue, a review, a problem set
+ * and two ways to overrule the recommendation, all at once and all at the same weight.
+ */
+describe('the one thing the home screen offers', () => {
+  const hero = () => window.document.querySelector('.page-home .hero-copy');
+  const heroAction = () => hero()!.querySelector('.hero-button')!.textContent;
+
+  it('sends a learner with no record at all to find their starting point', async () => {
+    server = serve({ state: learningState({ diagnosticOffering: { version: 'v3', title: '시작점 확인', description: '지금 어디쯤인지 봐요', scope: 20, estimatedMinutes: 5 } }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(hero()).toBeTruthy());
+    expect(hero()!.textContent).toContain('어디서 시작하면 편할까요?');
+    expect(heroAction()).toContain('시작점 확인하기');
+  });
+
+  it('puts a review that is due above the lesson that would come next', async () => {
+    const second = { ...assignment(), id: 'r2', recipientId: 'r2', title: '소수의 의미 복습', submissionId: 's2' };
+    server = serve({ state: learningState({
+      assignments: [assignment(), second],
+      plan: { version: '1', readiness: [], sessionMinutes: 10, preferredLessonKey: null,
+        review: { recipientId: 'r1', reason: '권장 복습 시점이 되었어요.' } },
+      recommendations: [{ lessonKey, reason: '여기부터요.', kind: 'start', suggestedMinutes: 10 }],
+    }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(hero()).toBeTruthy());
+    expect(hero()!.textContent).toContain('분수의 의미 복습');
+    expect(heroAction()).toContain('복습부터 시작하기');
+    // And the shelf below moves on to the next one rather than offering the same work twice.
+    const rows = [...window.document.querySelectorAll('.page-home .assignment-row .assignment-info strong')].map((node) => node.textContent);
+    expect(rows).toEqual(['소수의 의미 복습']);
+  });
+
+  it('offers the recommended lesson once there is a record to recommend from', async () => {
+    server = serve({ state: { ...enrolled(), recommendations: [{ lessonKey, reason: '이어가 보세요.', kind: 'continue', suggestedMinutes: 10 }] } });
+    render(<LearningWorkspace />);
+    await until(() => expect(hero()).toBeTruthy());
+    expect(hero()!.textContent).toContain('이어가 보세요.');
+    expect(heroAction()).toContain('이어서 학습하기');
+  });
+
+  it('folds the reasoning away instead of standing it beside the offer', async () => {
+    server = serve({ state: { ...enrolled(), diagnosticOffering: { version: 'v3', title: '시작점 확인', description: '지금 어디쯤인지 봐요', scope: 20, estimatedMinutes: 5 } } });
+    render(<LearningWorkspace />);
+    await until(() => expect(hero()).toBeTruthy());
+    const reasoning = window.document.querySelector('.personalization-details')!;
+    expect(reasoning.hasAttribute('open'), '추천의 근거가 제안과 나란히 펼쳐져 있다').toBe(false);
+    // Folded, not removed: everything that used to compete with the offer is still reachable.
+    expect(reasoning.textContent).toContain('다른 수업 직접 고르기');
+    expect(reasoning.textContent).toContain('시작점 확인하기');
   });
 });

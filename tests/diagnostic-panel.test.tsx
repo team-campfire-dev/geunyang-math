@@ -41,7 +41,11 @@ describe('the placement screen', () => {
     // A bank of 39 promises nothing: the placement picks its questions and stops when it can.
     panel({ diagnostic: null });
     expect(screen.getByText(/개념 13개/)).toBeTruthy();
-    expect(screen.queryByText(/문제/)?.textContent).not.toMatch(/최대 \d+문제/);
+    // Nowhere on the invitation may a number of questions be promised — the bank's size is not the
+    // run's length, and the run's length is not known until the answers decide it.
+    const invitation = document.querySelector('.placement-intro')!.textContent ?? '';
+    expect(invitation).not.toMatch(/최대 \d+문제/);
+    expect(invitation, '문항 수를 약속한다').not.toMatch(/\d+\s*(문제|문항)(을|를)?\s*(풀|물)/);
     expect(screen.getByText(/한 문제를 풀면 그 위나 아래의 개념까지 함께 정해지기/)).toBeTruthy();
   });
 
@@ -78,6 +82,30 @@ describe('the placement screen', () => {
     panel({ diagnostic: run({ status: 'completed' }), readiness: [{ key: 'a', label: '가', readiness: 'unknown', source: 'none' }] });
     expect(document.querySelectorAll('.readiness-list')).toHaveLength(1);
     expect(screen.getByText('아직 확인하지 않은 개념 1개')).toBeTruthy();
+  });
+
+  /**
+   * The bank asks by picking as well as by writing — sixty-five of the questions in the published
+   * bank do — and this screen drew a number pad for every one of them. 「이 일은 수리능력의 어느
+   * 영역인가요?」 arrived with no options and a box for a number, which is not a hard question but an
+   * unanswerable one.
+   */
+  it('draws the options of a question that is answered by picking one', () => {
+    const picked: PublicProblem = { ...problem, problemVersionId: 'q9',
+      responseSpec: { kind: 'choice', options: [{ id: 'a', text: '도표분석능력' }, { id: 'b', text: '기초연산능력' }] } } as unknown as PublicProblem;
+    const dispatch = vi.fn(async () => ({}) as never);
+    panel({ dispatch, diagnostic: run({ currentProblem: picked }) });
+    // The box to write in is what the options replace, not something they stand beside.
+    expect(screen.queryByLabelText('나의 답')).toBeNull();
+    fireEvent.click(screen.getByRole('radio', { name: '기초연산능력' }));
+    fireEvent.click(screen.getByRole('button', { name: '저장하고 다음으로' }));
+    // The option's id is the answer; what it reads is only what the learner reads.
+    expect(dispatch).toHaveBeenCalledWith({ action: 'diagnostic.answer', diagnosticId: 'run', problemVersionId: 'q9', answer: 'b' });
+  });
+
+  it('offers a way to stop that is said in words, not only an arrow at the top', () => {
+    panel();
+    expect(screen.getByRole('button', { name: /나중에 이어서 하기/ })).toBeTruthy();
   });
 
   it('sends the answer for the question it is showing, whichever one that is', () => {

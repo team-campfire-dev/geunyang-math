@@ -7,6 +7,7 @@ import { ApiError, learningApi, supportsWebAuthentication, type Session } from '
 import { placeSearch, readPlace, sameWork, type Page, type Place } from './app-url';
 import { assertLearningResponseAccount, clearAuthReturn, GOOGLE_LOGIN_PATH, isNativeBrowser, LearningResponseError, parseAuthError, readAuthReturn, saveAuthReturn, type AuthReturn } from './auth-client';
 import { DiagnosticPanel } from './diagnostic-panel';
+import { FirstStep } from './first-step';
 import { ReadinessList } from './readiness-list';
 import { GoogleLoginButton } from './google-login-button';
 import { ServiceFooter } from './service-footer';
@@ -319,7 +320,7 @@ export function LearningWorkspace() {
   const [sectionIndex, setSectionIndex] = useState(0);
   const [selectedAssignment, setSelectedAssignment] = useState<string | null>(null);
   const [finishedLesson, setFinishedLesson] = useState(false);
-  const [modal, setModal] = useState<'login' | 'profile' | null>(null);
+  const [modal, setModal] = useState<'login' | 'profile' | 'welcome' | null>(null);
   const [displayName, setDisplayName] = useState('');
   const [target, setTarget] = useState<string>('');
   const [minutes, setMinutes] = useState(10);
@@ -336,6 +337,8 @@ export function LearningWorkspace() {
   const moved = useRef(false);
   /** Whether the profile dialog is asking about deletion rather than about what to learn. */
   const [erasing, setErasing] = useState(false);
+  /** Whether this account has already been asked what it came for. See the effect that sets it. */
+  const welcomeOffered = useRef(false);
   const [notice, setNotice] = useState('');
   const submissionRequests = useRef(new Map<string, string>());
   const modalRef = useRef<HTMLDivElement>(null);
@@ -378,6 +381,8 @@ export function LearningWorkspace() {
 
   function clearPersonalState() {
     authenticatedUserId.current = null;
+    // Whoever arrives next is somebody else, and has not been asked anything yet.
+    welcomeOffered.current = false;
     setState(null);
     setSession((previous) => previous ? { ...previous, user: null } : null);
     setSelectedAssignment(null); setDirtyProblems([]); setOpenShelves([]); submissionRequests.current.clear();
@@ -552,6 +557,30 @@ export function LearningWorkspace() {
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, []);
+  /**
+   * Asking a learner who has just arrived what they came for.
+   *
+   * 「배우려는 과정」 is the strongest thing this service knows about somebody, and it used to be
+   * asked for only by a button in the sidebar that a new learner has no reason to press. Empty, it
+   * makes everyone the same person — the placement covers the whole school line and the
+   * recommendation falls back to the catalogue's own order — so whatever they came for, they were
+   * handed 분수 1강 and left to work out that anything else was possible.
+   *
+   * It is offered once, and 「once」 is counted from the offer rather than from an answer: somebody
+   * who closed it has answered by closing it, and being asked again every morning is nagging. The
+   * sidebar still opens the same settings whenever they do want to say.
+   */
+  useEffect(() => {
+    if (welcomeOffered.current || !state || !landed || loading || busy || modal || page !== 'home') return;
+    // Anybody who has told us anything at all — a course, a lesson, a placement — is not new here.
+    if (state.user.targetCourseKey || state.enrollments.length || state.diagnostic) return;
+    const key = `gm.first-step.${state.user.id}`;
+    try { if (window.localStorage.getItem(key)) return; window.localStorage.setItem(key, 'asked'); }
+    catch { /* Browser storage may be restricted; then it is offered again on the next visit. */ }
+    welcomeOffered.current = true;
+    setModal('welcome');
+  }, [state, landed, loading, busy, modal, page]);
+
   const lessons = state?.lessons ?? catalog;
   // Catalogue copy names the concepts the published lessons teach, so new subjects need no edit here.
   const conceptLabels = taughtConcepts.map((concept) => concept.label);
@@ -723,6 +752,16 @@ export function LearningWorkspace() {
     if (!state) { setModal('login'); return; }
     setTarget(state.user.targetCourseKey ?? ''); setMinutes(state.user.dailyMinutes); setModal('profile');
   }
+  /** The first-step dialog's answer, which is the same profile the sidebar edits, asked differently. */
+  async function saveFirstStep(choice: { targetCourseKey: string | null; dailyMinutes: number }) {
+    try {
+      await dispatch({ action: 'profile.update', targetCourseKey: choice.targetCourseKey, dailyMinutes: choice.dailyMinutes });
+      setModal(null);
+      setNotice(choice.targetCourseKey
+        ? '배우려는 과정을 반영했어요. 시작점 확인은 거기까지 가는 데 필요한 것만 물어요.'
+        : '하루 학습 시간을 반영했어요. 배우려는 과정은 언제든 왼쪽 아래에서 고를 수 있어요.');
+    } catch { /* Shown in dialog and page. */ }
+  }
   async function saveProfile(event: FormEvent) {
     event.preventDefault();
     try { await dispatch({ action: 'profile.update', targetCourseKey: target || null, dailyMinutes: minutes }); setModal(null); setNotice('배우려는 과정과 시간을 반영했어요. 다음 추천과 새 복습 과제에 적용하며, 이미 받은 과제는 그대로 유지해요.'); } catch { /* Shown in dialog and page. */ }
@@ -746,13 +785,61 @@ export function LearningWorkspace() {
       : <span className="assignment-icon"><Icon name={item.status === 'submitted' ? 'check' : 'pencil'} size={23} /></span>}<span className="assignment-info"><strong>{item.title}</strong><small>{assignmentKindLabel[item.policy.kind]} · {item.items.length}문제 · {assignmentTiming(item)}</small>{item.lessonKey && <small>{lessons.find((lesson) => lesson.lessonKey === item.lessonKey)?.title}</small>}</span><span className={`assignment-status ${item.status}`}>{item.status === 'submitted' ? '제출 완료' : savedCount ? `${savedCount}/${item.items.length} 저장` : '풀어보기'}</span><Icon name="chevron" size={18} /></button>;
   }
 
+  /**
+   * The one thing to do now.
+   *
+   * The home screen used to lay eight invitations side by side — a recommended lesson, a placement,
+   * a lesson to pick instead, a way back to automatic recommendations, the reasoning behind them,
+   * a review, a problem set, the whole catalogue — all at the same weight. To somebody with no
+   * record yet they read as eight equally good ideas, which is the same as no idea at all.
+   *
+   * So the screen picks. The order is the order the rules themselves use: work that was issued and
+   * is due, then finishing what was started, then finding out where somebody is, then the lesson
+   * the recommendation landed on. Everything else is still here, further down or folded away —
+   * choosing for somebody is not the same as deciding for them.
+   */
+  function nextStep() {
+    if (!state) return { eyebrow: '기초부터 다시, 내 속도로', title: '작은 조각에서\n시작하는 큰 이해', reason: heroIntro,
+      caption: '나의 속도로 배우는 수학', art: recommended?.lessonKey, action: '첫 수업 둘러보기',
+      note: `약 ${recommended?.estimatedMinutes ?? 15}분 · 부담 없이 한 수업`, onAct: () => setModal('login') };
+    const due = state.plan.review;
+    const review = due ? state.assignments.find((item) => item.recipientId === due.recipientId) : undefined;
+    if (due && review) return { eyebrow: '오늘 먼저 할 것', title: review.title, reason: due.reason,
+      caption: '한 번 더 떠올리기', art: setArtKey(review.problemSetId, review.lessonKey), action: '복습부터 시작하기',
+      note: `${review.items.length}문제 · 늦게 풀어도 괜찮아요`, onAct: () => openAssignment(review) };
+    if (state.diagnostic?.status === 'active') return { eyebrow: '하던 것 이어서', title: '시작점 확인을 이어가요',
+      reason: `개념 ${state.diagnostic.scope}개 중 ${state.diagnostic.settled}개의 자리를 찾았어요. 남은 것만 마저 물어볼게요.`,
+      caption: '지금 어디쯤인지', art: recommended?.lessonKey, action: '이어서 확인하기',
+      note: '언제든 그만두고 나중에 이어서 할 수 있어요', onAct: () => navigate('diagnostic') };
+    // Nobody who has opened a lesson is asked this: their own work says more than a placement would.
+    if (!state.diagnostic && !state.enrollments.length && state.diagnosticOffering) {
+      const wanted = courses.find((course) => course.key === state.user.targetCourseKey)?.title;
+      return { eyebrow: '첫 걸음', title: '어디서 시작하면 편할까요?',
+        reason: wanted ? `${wanted}까지 가는 데 필요한 것만 확인해요. 앞의 답에 따라 다음 문제가 달라져서 대개 몇 문제면 끝나요.`
+          : '몇 문제만 풀어 보면 지금 어디쯤인지 알 수 있어요. 앞의 답에 따라 다음 문제가 달라져서 오래 걸리지 않아요.',
+        caption: '지금 어디쯤인지', art: recommended?.lessonKey, action: '시작점 확인하기',
+        note: '모르는 문제는 건너뛰어도 괜찮아요 · 나중에 이어서 할 수 있어요', onAct: () => navigate('diagnostic') };
+    }
+    if (recommended) {
+      const enrollment = state.enrollments.find((entry) => entry.lessonKey === recommended.lessonKey);
+      return { eyebrow: '오늘의 추천 수업', title: recommended.title, reason: state.recommendations[0]?.reason ?? heroIntro,
+        caption: courseTitle(recommended), art: recommended.lessonKey,
+        action: !enrollment ? '오늘의 학습 시작' : state.recommendations[0]?.kind === 'revisit' ? '설명 다시 펼치기' : '이어서 학습하기',
+        note: `오늘은 ${state.recommendations[0]?.suggestedMinutes ?? state.user.dailyMinutes}분씩 · 수업 전체 ${recommended.estimatedMinutes}분`,
+        onAct: () => void openLesson(recommended.lessonKey) };
+    }
+    return { eyebrow: '오늘의 한 걸음', title: '수업을 둘러볼까요?', reason: '아직 추천할 수업을 고르지 못했어요. 목록에서 직접 골라 시작해도 괜찮아요.',
+      caption: '나의 속도로 배우는 수학', art: undefined, action: '수업 둘러보기', note: '고른 수업은 다음 추천에 반영돼요',
+      onAct: () => navigate('lessons') };
+  }
+
   function renderHome() {
     // The lessons nearest to where this person is, with the one the hero already offers left out.
     const nearby = nearbyLessons({
       lessons, enrollments: state?.enrollments ?? [], readiness: state?.plan.readiness ?? [],
       exclude: recommended?.lessonKey ?? null,
     });
-    // The review callout below already offers one, so the shelf moves on to the next.
+    // The review the hero may already be offering is left out here, so it is not offered twice.
     const nextAssignments = nearbyAssignments({
       assignments: pendingAssignments, now: new Date(), exclude: state?.plan.review?.recipientId ?? null,
     });
@@ -760,17 +847,23 @@ export function LearningWorkspace() {
     const shelfTitle = state?.enrollments.some((entry) => entry.lessonKey === nearby[0]?.lessonKey && entry.status === 'active')
       ? '이어서 배울 수업'
       : state?.enrollments.length ? '다음에 배울 수업' : '차근차근, 기본부터';
+    const step = nextStep();
     return <>
       <div className="page-heading"><h1>{state ? `${state.user.displayName}님, 오늘도 한 걸음.` : '그냥, 다시 시작하는 수학.'}</h1><p>완벽하게 알지 못해도 괜찮아요. 작은 이해가 쌓이면 수학이 편해져요.</p></div>
-      <section className="daily-hero"><div className="hero-copy"><span className="hero-eyebrow"><span />{state ? '오늘의 추천 수업' : '기초부터 다시, 내 속도로'}</span><h2>{recommended?.title ?? '작은 조각에서\n시작하는 큰 이해'}</h2><p>{state?.recommendations[0]?.reason ?? heroIntro}</p><button className="button hero-button" onClick={() => recommended ? void openLesson(recommended.lessonKey) : setModal('login')} disabled={loading}>{state && recommended && state.enrollments.some((entry) => entry.lessonKey === recommended.lessonKey) ? state.recommendations[0]?.kind === 'revisit' ? '설명 다시 펼치기' : '이어서 학습하기' : state ? '오늘의 학습 시작' : '첫 수업 둘러보기'}<Icon name="arrow" size={18} /></button><span className="hero-duration"><Icon name="clock" size={13} />{state ? `오늘은 ${state.recommendations[0]?.suggestedMinutes ?? state.user.dailyMinutes}분씩 · 수업 전체 ${recommended?.estimatedMinutes ?? 15}분` : `약 ${recommended?.estimatedMinutes ?? 15}분 · 부담 없이 한 수업`}</span></div><div className="hero-art"><div className="hero-paper"><span className="paper-caption">{recommended ? courseTitle(recommended) : '나의 속도로 배우는 수학'}</span><LessonArt lessonKey={recommended?.lessonKey} large /><div className="paper-equation"><span>오늘은 하나만 이해해도 충분해요.</span></div></div><span className="hero-doodle">÷</span><span className="hero-dot" /></div></section>
-      {state && <section className="personalization-card" aria-label="나에게 맞는 학습">
-        <div className="section-heading"><div><h2>{state.diagnostic?.status === 'completed' ? '풀이에 맞춰 다음 걸음을 골랐어요.' : state.diagnostic ? '시작점 확인을 이어가요.' : '나에게 맞는 시작점을 찾아요.'}</h2></div>
-          <button className="button secondary" disabled={busy} onClick={() => navigate('diagnostic')}>{state.diagnostic?.status === 'completed' ? '진단 결과' : state.diagnostic ? `개념 ${state.diagnostic.settled}/${state.diagnostic.scope} · 이어서 확인` : state.diagnosticOffering ? '시작점 확인하기' : '시작점 확인 안내'}</button></div>
-        <p className="muted">진단 없이 바로 시작해도 괜찮아요. 실제 풀이와 제출한 복습을 반영해 추천이 달라져요.</p>
-        <div className="recommendation-choice"><button className="text-button" disabled={busy} onClick={() => navigate('lessons')}>다른 수업 직접 고르기 →</button>{state.plan.preferredLessonKey && <button className="text-button" disabled={busy} onClick={() => { void dispatch({ action: 'recommendation.choose', lessonKey: null }).catch(() => {}); }}>자동 추천으로 돌아가기</button>}</div>
-        <details className="readiness-details"><summary>개념별 추천 근거 보기</summary><ReadinessList readiness={state.plan.readiness} explainSource /></details>
-        {state.plan.review && <div className="review-callout"><p>{state.plan.review.reason}</p><button className="button primary" disabled={busy} onClick={() => { const review = state.assignments.find(a => a.recipientId === state.plan.review?.recipientId); if (review) openAssignment(review); }}>복습부터 시작하기</button></div>}
-      </section>}
+      <section className="daily-hero"><div className="hero-copy"><span className="hero-eyebrow"><span />{step.eyebrow}</span><h2>{step.title}</h2><p>{step.reason}</p><button className="button hero-button" onClick={step.onAct} disabled={loading || busy}>{step.action}<Icon name="arrow" size={18} /></button><span className="hero-duration"><Icon name="clock" size={13} />{step.note}</span></div><div className="hero-art"><div className="hero-paper"><span className="paper-caption">{step.caption}</span><LessonArt lessonKey={step.art} large /><div className="paper-equation"><span>오늘은 하나만 이해해도 충분해요.</span></div></div><span className="hero-doodle">÷</span><span className="hero-dot" /></div></section>
+      {/* The reasoning, and the ways to overrule it. Folded because it answers a question — 「왜 이걸
+          추천했지?」 — that a learner only asks after the screen has already offered something. */}
+      {state && <details className="personalization-details"><summary>이 추천은 이렇게 정했어요</summary>
+        <div className="personalization-body">
+          <p className="muted">시작점 확인 없이 바로 시작해도 괜찮아요. 실제 풀이와 제출한 복습을 반영해 추천이 달라져요.</p>
+          <div className="recommendation-choice">
+            <button className="button secondary" disabled={busy} onClick={() => navigate('diagnostic')}>{state.diagnostic?.status === 'completed' ? '진단 결과 보기' : state.diagnostic ? `개념 ${state.diagnostic.settled}/${state.diagnostic.scope} · 이어서 확인` : state.diagnosticOffering ? '시작점 확인하기' : '시작점 확인 안내'}</button>
+            <button className="text-button" disabled={busy} onClick={() => navigate('lessons')}>다른 수업 직접 고르기 →</button>
+            {state.plan.preferredLessonKey && <button className="text-button" disabled={busy} onClick={() => { void dispatch({ action: 'recommendation.choose', lessonKey: null }).catch(() => {}); }}>자동 추천으로 돌아가기</button>}
+          </div>
+          <ReadinessList readiness={state.plan.readiness} explainSource />
+        </div>
+      </details>}
       <div className="learning-overview"><div><span className="overview-icon"><Icon name="book" size={20} /></span><span><small>나의 학습</small><strong>{completedCount}<em>개 수업 완료</em></strong></span></div><div><span className="overview-icon"><Icon name="pencil" size={20} /></span><span><small>한 번 더 생각하기</small><strong>{pendingAssignments.length}<em>개 과제 남음</em></strong></span></div><button onClick={openProfile}><span className="overview-icon orange"><Icon name="clock" size={20} /></span><span><small>꾸준함을 위한 작은 약속</small><strong>하루 {state?.user.dailyMinutes ?? 10}<em>분씩 학습</em></strong></span><Icon name="chevron" size={16} /></button></div>
       <section className="dashboard-section"><div className="section-heading"><div><h2>{shelfTitle}</h2></div><button className="text-button" onClick={() => navigate('lessons')}>전체 수업<Icon name="arrow" size={16} /></button></div><div className="class-grid">{nearby.map((item) => <LessonCard key={item.lessonKey} item={item} index={courseIndex(item)} courseTitle={courseTitle(item)} enrollment={state?.enrollments.find((entry) => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />)}</div>{!loading && !lessons.length && <div className="empty-inline">{error ? '수업을 불러오지 못했어요. 상단에서 다시 시도해 주세요.' : '첫 번째 수업을 준비하고 있어요.'}</div>}</section>
       <section className="dashboard-section"><div className="section-heading"><div><h2>배운 것을 내 것으로</h2></div><button className="text-button" onClick={() => navigate('practice')}>연습장<Icon name="arrow" size={16} /></button></div>{nextAssignments.length ? <div className="assignment-list">{nextAssignments.map(assignmentRow)}</div> : <div className="gentle-empty"><span className="empty-drawing"><Icon name="pencil" size={28} /></span><div><h3>오늘의 이해가 내일도 남도록</h3><p>복습이 있는 수업을 마치면 여기에 과제가 모여요. 설명 없이 문제만 풀고 싶다면 문제집을 골라도 좋아요.</p></div>{problemSets.length ? <button className="text-button" disabled={busy} onClick={() => openCourseSets(courses[0]?.key ?? '')}>문제집 골라 풀기<Icon name="arrow" size={15} /></button> : <span className="small-note">한 번 더, 천천히.</span>}</div>}</section>
@@ -998,7 +1091,7 @@ export function LearningWorkspace() {
     </div>}{submitted && <AnswerReport items={report} concepts={taughtConcepts} lessons={lessons} standings={state?.concepts} busy={busy} onOpenLesson={(key) => void openLesson(key)} />}<div className="assignment-problems">{assignment.items.map((item, index) => <section key={item.id} id={`problem-${index + 1}`}><ProblemCard label={`문제 ${String(index + 1).padStart(2, '0')}`} problem={{ ...item.problem, hintAvailable: item.problem.hintAvailable && assignment.policy.hints }} attempt={item.attempt} actions={assignmentActions(item.problem.problemVersionId)} ready={!!assignment.recipientId} submitLabel="답안 저장" solutionReady={submitted} glossary={{ entries: assignment.glossary, reviewConceptKeys, onOpenLesson: (key) => void openLesson(key) }} busy={busy} disabled={submitted} onReady={() => setModal('login')} readyNote="수업을 시작하면 풀이와 진도가 저장돼요." onDraftChange={(id, dirty) => setDirtyProblems((previous) => dirty ? previous.includes(id) ? previous : [...previous, id] : previous.filter((item) => item !== id))} /></section>)}</div>{!submitted && <div className="assignment-submit"><div><strong>{own ? '이 문제집을 마무리해 볼까요?' : '연습을 마무리해 볼까요?'}</strong><p>{dirtyProblems.length ? `아직 저장하지 않은 답안이 ${dirtyProblems.length}개 있어요. 먼저 답안을 저장해 주세요.` : own ? '모든 문제의 답안을 저장하면 마무리할 수 있어요.' : '모든 문제의 답안을 저장하면 제출할 수 있어요.'}</p>{remaining >= 0 && <button className="text-button" onClick={() => setProblemToShow(remaining)}>남은 문제로<Icon name="arrow" size={15} /></button>}</div><button className="button primary" disabled={busy || unsupported || dirtyProblems.length > 0 || answered !== assignment.items.length || !assignment.items.length} onClick={() => void submitAssignment()}>{busy ? (own ? '저장 중…' : '제출 중…') : own ? '다 풀었어요' : '과제 제출하기'}<Icon name="check" size={18} /></button></div>}{submitted && own && <div className="assignment-submit"><div><strong>{next ? '한 문제집 더 풀어 볼까요?' : gathered ? '이만큼 해 뒀어요.' : '이 과정의 문제집을 모두 풀었어요.'}</strong><p>{next ? `다음은 「${next.name}」이에요. ${next.questionCount}문제예요.` : gathered ? '같은 것이 또 나오면 학습 기록에 다시 모아 둘게요. 오늘은 여기까지도 좋아요.' : '다른 과정의 문제집을 골라 이어가도 좋아요.'}</p></div><button className="button primary" disabled={busy} onClick={() => next ? void startProblemSet(next.problemSetId) : navigate(gathered ? 'history' : 'practice')}>{next ? '이어서 풀기' : gathered ? '학습 기록 보기' : '문제집 고르기'}<Icon name="arrow" size={18} /></button></div>}</>;
   }
 
-  return <div className="app-shell"><a href="#main-content" className="skip-link">본문으로 이동</a><aside className="sidebar"><button className="brand-button" aria-label="그냥수학 홈" onClick={() => navigate('home')}><Brand /></button><div className="sidebar-caption">그냥, 나의 속도로.</div><nav aria-label="주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'nav-item active' : 'nav-item'} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={19} /><span>{item.label}</span>{item.page === 'practice' && pendingAssignments.length > 0 && <span className="nav-badge">{pendingAssignments.length}</span>}</button>)}</nav><div className="sidebar-bottom"><button className="learning-goal" onClick={openProfile}><span className="goal-overline"><Icon name="spark" size={14} />배우려는 과정</span><strong>{courses.find((course) => course.key === state?.user.targetCourseKey)?.title ?? '아직 고르지 않음'}</strong><span>하루 {state?.user.dailyMinutes ?? 10}분, 꾸준히<Icon name="chevron" size={14} /></span><div className="goal-line"><i /><i /><i /><i /><i /><i /><i /></div></button><div className="sidebar-signature">수학을 이해하는 즐거움<span>그냥수학 © 2026</span></div></div></aside><div className="workspace"><header className="topbar"><div className="mobile-brand"><button className="brand-button" onClick={() => navigate('home')} aria-label="홈으로"><Brand /></button></div><div className="breadcrumb"><span>나의 학습 공간</span><Icon name="chevron" size={13} /><strong>{navItems.find((item) => item.page === activeNav)?.label}</strong></div><div className="account-controls">{session?.developmentLogin && <span className="dev-label">개발 미리보기</span>}{state ? <><button className="account-button" onClick={openProfile}><span className="avatar">{state.user.displayName.slice(0, 1)}</span><span>{state.user.displayName}</span></button><button className="icon-button logout" onClick={() => void logout()} disabled={busy || loading} aria-label="로그아웃" title="로그아웃"><Icon name="logout" size={17} /></button></> : <button className="login-link" onClick={() => setModal('login')} disabled={loading}>내 학습 시작<Icon name="arrow" size={15} /></button>}</div></header><nav className="mobile-nav" aria-label="모바일 주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'active' : ''} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={18} />{item.label}</button>)}</nav><main id="main-content" className={`main-content page-${page}`} tabIndex={-1}>{authError && <div className="auth-error-banner" role="alert"><Icon name="lightbulb" size={18} /><span>{authError}</span><button className="text-button" disabled={loading || busy} onClick={() => setModal('login')}>로그인 다시 하기</button><button className="icon-button" aria-label="로그인 안내 닫기" onClick={() => setAuthError('')}><Icon name="close" size={16} /></button></div>}{error && <div className="error-banner" role="alert"><span>{error}</span><button className="text-button" disabled={busy || loading} onClick={() => void refresh()}>다시 불러오기</button><button className="icon-button" aria-label="오류 알림 닫기" onClick={() => setError('')}><Icon name="close" size={16} /></button></div>}{notice && <div className="notice-banner" role="status"><Icon name="check" size={18} /><span>{notice}</span><button className="icon-button" aria-label="알림 닫기" onClick={() => setNotice('')}><Icon name="close" size={16} /></button></div>}{loading ? <div className="loading-panel" role="status"><span className="loader" />나의 학습 공간을 준비하고 있어요…</div> : page === 'home' ? renderHome() : page === 'lessons' ? renderLessons() : page === 'practice' ? renderPractice() : page === 'history' ? renderHistory() : page === 'lesson' ? renderLesson() : page === 'diagnostic' ? state ? <DiagnosticPanel key={`${state.user.id}:${state.diagnostic?.currentProblem?.problemVersionId ?? state.diagnostic?.status ?? 'new'}`} diagnostic={state.diagnostic} offering={state.diagnosticOffering} nextLesson={recommended} readiness={state.plan.readiness} onOpenLesson={(key) => void openLesson(key)} dispatch={dispatch} busy={busy} onBack={() => navigate('home')} targetTitle={courses.find((course) => course.key === state.user.targetCourseKey)?.title ?? null} onChooseTarget={openProfile} /> : null : renderAssignment()}</main><ServiceFooter /></div>{modal && <div className="modal-backdrop" onClick={(event) => { if (event.target === event.currentTarget && !busy) setModal(null); }}><div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" ref={modalRef}><button className="icon-button modal-close" aria-label="닫기" disabled={busy} onClick={() => setModal(null)}><Icon name="close" /></button>{modal === 'login' ? <>
+  return <div className="app-shell"><a href="#main-content" className="skip-link">본문으로 이동</a><aside className="sidebar"><button className="brand-button" aria-label="그냥수학 홈" onClick={() => navigate('home')}><Brand /></button><div className="sidebar-caption">그냥, 나의 속도로.</div><nav aria-label="주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'nav-item active' : 'nav-item'} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={19} /><span>{item.label}</span>{item.page === 'practice' && pendingAssignments.length > 0 && <span className="nav-badge">{pendingAssignments.length}</span>}</button>)}</nav><div className="sidebar-bottom"><button className="learning-goal" onClick={openProfile}><span className="goal-overline"><Icon name="spark" size={14} />배우려는 과정</span><strong>{courses.find((course) => course.key === state?.user.targetCourseKey)?.title ?? '아직 고르지 않음'}</strong><span>하루 {state?.user.dailyMinutes ?? 10}분, 꾸준히<Icon name="chevron" size={14} /></span><div className="goal-line"><i /><i /><i /><i /><i /><i /><i /></div></button><div className="sidebar-signature">수학을 이해하는 즐거움<span>그냥수학 © 2026</span></div></div></aside><div className="workspace"><header className="topbar"><div className="mobile-brand"><button className="brand-button" onClick={() => navigate('home')} aria-label="홈으로"><Brand /></button></div><div className="breadcrumb"><span>나의 학습 공간</span><Icon name="chevron" size={13} /><strong>{navItems.find((item) => item.page === activeNav)?.label}</strong></div><div className="account-controls">{session?.developmentLogin && <span className="dev-label">개발 미리보기</span>}{state ? <><button className="account-button" onClick={openProfile}><span className="avatar">{state.user.displayName.slice(0, 1)}</span><span>{state.user.displayName}</span></button><button className="icon-button logout" onClick={() => void logout()} disabled={busy || loading} aria-label="로그아웃" title="로그아웃"><Icon name="logout" size={17} /></button></> : <button className="login-link" onClick={() => setModal('login')} disabled={loading}>내 학습 시작<Icon name="arrow" size={15} /></button>}</div></header><nav className="mobile-nav" aria-label="모바일 주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'active' : ''} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={18} />{item.label}</button>)}</nav><main id="main-content" className={`main-content page-${page}`} tabIndex={-1}>{authError && <div className="auth-error-banner" role="alert"><Icon name="lightbulb" size={18} /><span>{authError}</span><button className="text-button" disabled={loading || busy} onClick={() => setModal('login')}>로그인 다시 하기</button><button className="icon-button" aria-label="로그인 안내 닫기" onClick={() => setAuthError('')}><Icon name="close" size={16} /></button></div>}{error && <div className="error-banner" role="alert"><span>{error}</span><button className="text-button" disabled={busy || loading} onClick={() => void refresh()}>다시 불러오기</button><button className="icon-button" aria-label="오류 알림 닫기" onClick={() => setError('')}><Icon name="close" size={16} /></button></div>}{notice && <div className="notice-banner" role="status"><Icon name="check" size={18} /><span>{notice}</span><button className="icon-button" aria-label="알림 닫기" onClick={() => setNotice('')}><Icon name="close" size={16} /></button></div>}{loading ? <div className="loading-panel" role="status"><span className="loader" />나의 학습 공간을 준비하고 있어요…</div> : page === 'home' ? renderHome() : page === 'lessons' ? renderLessons() : page === 'practice' ? renderPractice() : page === 'history' ? renderHistory() : page === 'lesson' ? renderLesson() : page === 'diagnostic' ? state ? <DiagnosticPanel key={`${state.user.id}:${state.diagnostic?.currentProblem?.problemVersionId ?? state.diagnostic?.status ?? 'new'}`} diagnostic={state.diagnostic} offering={state.diagnosticOffering} nextLesson={recommended} readiness={state.plan.readiness} onOpenLesson={(key) => void openLesson(key)} dispatch={dispatch} busy={busy} onBack={() => navigate('home')} targetTitle={courses.find((course) => course.key === state.user.targetCourseKey)?.title ?? null} onChooseTarget={openProfile} /> : null : renderAssignment()}</main><ServiceFooter /></div>{modal && <div className="modal-backdrop" onClick={(event) => { if (event.target === event.currentTarget && !busy) setModal(null); }}><div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" ref={modalRef}><button className="icon-button modal-close" aria-label="닫기" disabled={busy} onClick={() => setModal(null)}><Icon name="close" /></button>{modal === 'welcome' && state ? <FirstStep courses={courses} displayName={state.user.displayName} busy={busy} error={error} onSave={(choice) => void saveFirstStep(choice)} onLater={() => setModal(null)} /> : modal === 'login' ? <>
         <span className="modal-symbol"><Icon name="book" size={27} /></span>
         
         <h2 id="modal-title">나의 속도로 시작해 볼까요?</h2>

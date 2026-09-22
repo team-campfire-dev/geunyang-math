@@ -3,6 +3,7 @@
 import { useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { leafGlossary } from '@/shared/definition-exploration';
 import type { AttemptView, ContentBlock, PublicProblem } from '@/shared/api';
+import { AnswerChoices } from './answer-choices';
 import { ContentBlocks, RichText, unsupportedRequiredBlocks, type GlossaryContext } from './content-blocks';
 import { Icon } from './icons';
 import { MathAnswerField } from './math-answer-field';
@@ -98,16 +99,9 @@ export function ProblemCard({ problem, attempt, actions, busy, disabled, ready =
     {problem.responseSpec.requiredForm && <p className="input-help answer-form-note">답안 형식: {problem.responseSpec.requiredForm === 'simplest' || problem.responseSpec.requiredForm === 'simplest_fraction' || problem.responseSpec.requiredForm === 'reduced_fraction' ? '기약분수' : problem.responseSpec.requiredForm}</p>}
     <form onSubmit={submit} className={options ? 'answer-form is-choice' : 'answer-form'}>
       {options
-        // The option's name is the answer; its text is only what the learner reads. Two options may
-        // read alike and still be different answers, so nothing is compared by what it says.
-        ? <fieldset className="answer-choices" disabled={busy || disabled || unsupported || !ready}>
-            <legend>답 고르기</legend>
-            {options.map((option) => <label key={option.id} className={answer === option.id ? 'answer-choice is-picked' : 'answer-choice'}>
-              <input type="radio" name={`answer-${problem.problemVersionId}`} value={option.id} checked={answer === option.id}
-                onChange={() => { setAnswer(option.id); onDraftChange?.(problem.problemVersionId, option.id !== (attempt?.answer ?? '')); }} />
-              <span><RichText text={option.text} /></span>
-            </label>)}
-          </fieldset>
+        ? <AnswerChoices name={`answer-${problem.problemVersionId}`} options={options} value={answer}
+            disabled={busy || disabled || unsupported || !ready}
+            onPick={(id) => { setAnswer(id); onDraftChange?.(problem.problemVersionId, id !== (attempt?.answer ?? '')); }} />
         : <MathAnswerField label="나의 답" value={answer} disabled={busy || disabled || unsupported || !ready}
             integerOnly={problem.responseSpec.kind === 'integer'}
             placeholder={problem.responseSpec.kind === 'rational' ? '예: 3/4 또는 0.75' : '정수를 입력해 주세요'}
