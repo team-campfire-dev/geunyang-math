@@ -1454,7 +1454,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "quotient-remainder-swapped"
+            }
+          ]
         }
       ]
     },
@@ -1773,7 +1779,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "remainder-sign-flipped"
+            }
+          ]
         }
       ]
     },
@@ -1891,7 +1903,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "remainder-sign-flipped"
+            }
+          ]
         },
         {
           "problemVersionId": "factor-theorem:practice-3:v1",
@@ -2393,7 +2411,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "divide-until-zero"
+            }
+          ]
         },
         {
           "problemVersionId": "polynomial-theorems:drill-6:v1",
@@ -2651,7 +2675,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "remainder-sign-flipped"
+            }
+          ]
         },
         {
           "problemVersionId": "polynomial-theorems:drill-12:v1",
@@ -2835,7 +2865,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "remainder-sign-flipped"
+            }
+          ]
         },
         {
           "problemVersionId": "polynomial-theorems:drill-16:v1",

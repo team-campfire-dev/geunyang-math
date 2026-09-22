@@ -1212,7 +1212,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "vague-collection-as-set"
+            },
+            {
+              "answer": "c",
+              "misconception": "vague-collection-as-set"
+            },
+            {
+              "answer": "d",
+              "misconception": "vague-collection-as-set"
+            }
+          ]
         },
         {
           "problemVersionId": "set-basics:practice-2:v1",
@@ -1891,7 +1905,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "one-square-root"
+            }
+          ]
         },
         {
           "problemVersionId": "proposition:practice-3:v1",
@@ -1964,7 +1984,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "contrapositive-confused"
+            },
+            {
+              "answer": "c",
+              "misconception": "contrapositive-confused"
+            }
+          ]
         }
       ]
     },
@@ -2045,7 +2075,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "converse-always-true"
+            },
+            {
+              "answer": "c",
+              "misconception": "converse-always-true"
+            }
+          ]
         },
         {
           "problemVersionId": "proposition:check-2:v1",
@@ -2118,7 +2158,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "d",
+              "misconception": "false-is-not-proposition"
+            }
+          ]
         }
       ]
     },
@@ -2199,7 +2245,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "contrapositive-confused"
+            },
+            {
+              "answer": "c",
+              "misconception": "contrapositive-confused"
+            }
+          ]
         },
         {
           "problemVersionId": "proposition:homework-2:v1",
@@ -2272,7 +2328,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "example-not-counterexample"
+            }
+          ]
         }
       ]
     },
@@ -2464,7 +2526,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "vague-collection-as-set"
+            },
+            {
+              "answer": "c",
+              "misconception": "vague-collection-as-set"
+            },
+            {
+              "answer": "d",
+              "misconception": "vague-collection-as-set"
+            }
+          ]
         },
         {
           "problemVersionId": "sets-logic:drill-5:v1",
@@ -2927,7 +3003,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "c",
+              "misconception": "false-is-not-proposition"
+            }
+          ]
         },
         {
           "problemVersionId": "sets-logic:drill-16:v1",
@@ -2984,7 +3066,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "one-square-root"
+            }
+          ]
         },
         {
           "problemVersionId": "sets-logic:drill-17:v1",
@@ -3057,7 +3145,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "example-not-counterexample"
+            }
+          ]
         },
         {
           "problemVersionId": "sets-logic:drill-18:v1",
@@ -3130,7 +3224,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "contrapositive-confused"
+            },
+            {
+              "answer": "c",
+              "misconception": "contrapositive-confused"
+            }
+          ]
         },
         {
           "problemVersionId": "sets-logic:drill-19:v1",
@@ -3203,7 +3307,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "converse-always-true"
+            },
+            {
+              "answer": "c",
+              "misconception": "converse-always-true"
+            }
+          ]
         },
         {
           "problemVersionId": "sets-logic:drill-20:v1",
@@ -3276,7 +3390,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "contrapositive-confused"
+            },
+            {
+              "answer": "c",
+              "misconception": "contrapositive-confused"
+            }
+          ]
         }
       ]
     }

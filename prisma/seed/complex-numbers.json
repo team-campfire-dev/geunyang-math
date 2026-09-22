@@ -1495,7 +1495,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "conjugate-flips-real"
+            },
+            {
+              "answer": "c",
+              "misconception": "conjugate-flips-real"
+            }
+          ]
         }
       ]
     },
@@ -1899,7 +1909,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "sum-sign-in-quadratic"
+            },
+            {
+              "answer": "c",
+              "misconception": "sum-product-swapped"
+            }
+          ]
         }
       ]
     },
@@ -2062,7 +2082,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "i-power-cycle"
+            },
+            {
+              "answer": "c",
+              "misconception": "i-power-cycle"
+            }
+          ]
         },
         {
           "problemVersionId": "complex-numbers:drill-2:v1",
@@ -2614,7 +2644,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "conjugate-flips-real"
+            },
+            {
+              "answer": "c",
+              "misconception": "conjugate-flips-real"
+            }
+          ]
         },
         {
           "problemVersionId": "complex-numbers:drill-14:v1",
@@ -2872,7 +2912,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "sum-sign-in-quadratic"
+            },
+            {
+              "answer": "c",
+              "misconception": "sum-product-swapped"
+            }
+          ]
         },
         {
           "problemVersionId": "complex-numbers:drill-20:v1",

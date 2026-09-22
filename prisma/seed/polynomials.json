@@ -2246,7 +2246,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "multiply-exponents-on-product"
+            },
+            {
+              "answer": "b",
+              "misconception": "add-terms-as-powers"
+            },
+            {
+              "answer": "d",
+              "misconception": "add-exponents-on-power"
+            }
+          ]
         },
         {
           "problemVersionId": "polynomials:drill-7:v1",
@@ -2799,7 +2813,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "a",
+              "misconception": "sign-on-distribute"
+            }
+          ]
         },
         {
           "problemVersionId": "polynomials:drill-20:v1",
