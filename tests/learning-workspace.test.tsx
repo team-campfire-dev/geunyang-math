@@ -321,6 +321,22 @@ describe('a set too long to hold on one screen', () => {
     expect(holding()).toBe('problem-2');
   });
 
+  it('saves on the first press, with the pad still up', async () => {
+    await openSet(set([null, null, null]));
+    server.state.after = (action) => action.action === 'attempt.submit'
+      ? learningState({ assignments: [set([judged('q1', 'correct'), null, null])] }) : server.state.learning;
+    fireEvent.change(box(0), { target: { value: '4' } });
+    fireEvent.focus(box(0));
+    // The button stands under the box, and pressing it is what puts the pad away: if the press took
+    // the focus, everything below the box would jump up between press and release and the answer
+    // would never be sent. So it holds the focus and the first press is the one that counts.
+    const save = box(0).closest('form')!.querySelector('button[type=submit]') as HTMLButtonElement;
+    expect(fireEvent.mouseDown(save), '저장 버튼이 포커스를 가져간다').toBe(false);
+    fireEvent.click(save);
+    await tick();
+    expect(screen.getByText('맞았어요.')).toBeDefined();
+  });
+
   it('stays where the answer was wrong', async () => {
     await openSet(set([null, null, null]));
     server.state.after = (action) => action.action === 'attempt.submit'
