@@ -777,7 +777,7 @@ function RolePanel({ accounts, matches, busy, onSearch, onGrant, onRevoke }: {
     ? '배포 설정으로 지정된 관리자예요. 여기서는 거둘 수 없어요.'
     : `${new Date(account.grantedAt!).toLocaleDateString('ko-KR')}부터`);
   return <section className="dashboard-section">
-    <div className="section-heading"><div><span className="eyebrow">ROLES</span><h2>편집 권한</h2></div></div>
+    <div className="section-heading"><div><h2>편집 권한</h2></div></div>
     <fieldset className="editor-panel">
       <legend>권한을 가진 계정</legend>
       <p className="editor-note">관리자는 모든 초안을 보고 발행까지 하고, 작성자는 자기 초안만 고쳐요. 역할은 바로 반영되고 앱을 다시 띄울 필요가 없어요.</p>
@@ -840,7 +840,7 @@ function Shell({ role, expert = false, busy, onExpert, children }: {
 }) {
   return <ExpertMode.Provider value={expert}><main className="authoring-page">
     <header className="authoring-head">
-      <div><span className="eyebrow">CONTENT STUDIO</span><h1>콘텐츠 편집</h1></div>
+      <div><h1>콘텐츠 편집</h1></div>
       <div className="authoring-head-side">
         {role && <span className="pill">{role === 'admin' ? '관리자 · 발행 가능' : '작성자 · 발행은 관리자가'}</span>}
         <a className="text-button" href="/">학습 화면으로<Icon name="arrow" size={14} /></a>

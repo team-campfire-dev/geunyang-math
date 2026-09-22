@@ -48,7 +48,7 @@ describe('a drawing given as data', () => {
     expect(isSceneColor('#8daa69')).toBe(true);
     expect(isSceneColor('url(https://example.test/x.png)')).toBe(false);
     expect(isSceneColor('red; background: url(x)')).toBe(false);
-    expect(cssColor('green')).toBe('var(--green)');
+    expect(cssColor('green')).toMatch(/^var\(--[a-z0-9-]+\)$/);
     expect(cssColor('#abc')).toBe('#abc');
     // An unknown colour draws nothing rather than being passed through to the document.
     expect(cssColor('javascript:alert(1)')).toBe('none');

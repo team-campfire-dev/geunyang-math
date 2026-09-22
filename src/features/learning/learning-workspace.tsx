@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import Link from 'next/link';
 import { conceptStateLabels, courseStageLabels, courseTrackLabels, courseTracks, defaultCourseTrack, stagesOf, type ActionResponse, type AssignmentView, type AttemptView, type CourseTrack, type LessonDocument, type ContentBlock, type EnrollmentView, type LearningAction, type LearningState, type PublicLesson, type PublicProblem, type PublicProblemSet, type PublicConcept, type PublicCourse } from '@/shared/api';
 import { ApiError, learningApi, supportsWebAuthentication, type Session } from './api-client';
@@ -32,11 +32,11 @@ const onATrack = (course: PublicCourse): PublicCourse =>
  * the catalogue is ordered along and the one a learner is carried down; the other is somewhere a
  * learner arrives on purpose, so it says what it is for rather than where it comes in the order.
  */
-const trackIntros: Record<CourseTrack, { eyebrow: string; note: string }> = {
-  basics: { eyebrow: 'WHERE IT ALL RESTS', note: '학년과 상관없이 여기서 시작해요. 위의 모든 과정이 이 셋을 바탕으로 삼아요.' },
-  middle: { eyebrow: 'ONE THING AFTER ANOTHER', note: '학교에서 배우는 차례 그대로예요. 앞 학년이 뒤 학년의 바탕이 돼요.' },
-  high: { eyebrow: 'BUILDING ON IT', note: '중학교 과정 위에 서요. 중학교에서 다룬 것을 한 번 더 넓히고 깊게 봐요.' },
-  ncs: { eyebrow: 'FOR THE TEST AHEAD', note: '취업 시험의 수리영역이에요. 학교 과정과 따로 있으니 필요한 것만 골라 풀어도 괜찮아요.' },
+const trackIntros: Record<CourseTrack, { note: string }> = {
+  basics: { note: '학년과 상관없이 여기서 시작해요. 위의 모든 과정이 이 셋을 바탕으로 삼아요.' },
+  middle: { note: '학교에서 배우는 차례 그대로예요. 앞 학년이 뒤 학년의 바탕이 돼요.' },
+  high: { note: '중학교 과정 위에 서요. 중학교에서 다룬 것을 한 번 더 넓히고 깊게 봐요.' },
+  ncs: { note: '취업 시험의 수리영역이에요. 학교 과정과 따로 있으니 필요한 것만 골라 풀어도 괜찮아요.' },
 };
 /** The courses of one line, in the order the catalogue gives them, cut into the years they belong to. */
 const byStage = (courses: PublicCourse[], track: CourseTrack) => {
@@ -86,9 +86,51 @@ function showProblem(index: number) {
   card.querySelector<HTMLInputElement>('input:not([disabled])')?.focus({ preventScroll: true });
 }
 
+/**
+ * The mark: a cat with a paw resting at its chin and a set square leaning across its face — ink and
+ * paper, with the clay spent on the one thing that says what this is for. It is kept here as paths
+ * rather than an <img> so it inherits nothing and costs no second request, and because the same
+ * drawing has to exist in src/app/icon.svg for the browser tab; tests/app-icons.test.ts holds them
+ * equal.
+ *
+ * Only the left whiskers are drawn: the right pair would run straight into the ruler. The ruler is
+ * filled rather than outlined, which is what lets one drawing serve every size down to the favicon.
+ * Its apex stops where the ears start rather than at their tips, and its lower-left corner sits on
+ * the middle of the face — both read off the 0.88 the head is drawn at.
+ */
 function Brand() {
-  return <span className="brand"><span className="brand-mark" aria-hidden="true"><i /><i /><i /><i /></span><span>geunyang<span className="brand-sub">math</span></span></span>;
+  return <span className="brand"><span className="brand-mark" aria-hidden="true">
+    <svg viewBox="0 0 600 600" fill="none">
+      <path d="M468 0H132C59.0984 0 0 59.0984 0 132V468C0 540.902 59.0984 600 132 600H468C540.902 600 600 540.902 600 468V132C600 59.0984 540.902 0 468 0Z" fill="#FAF6EE" />
+      <g transform="translate(302 290) scale(0.88) translate(-300 -305)" stroke="#141414" strokeLinecap="round" strokeLinejoin="round">
+        <g strokeWidth="27">
+          <path d="M300 210.327C327.942 166.625 356 151 390.561 135.222C415 161.5 427 183 435 229.5" />
+          <path d="M300.091 210.327C272.149 166.625 242 148.5 209.53 135.222C184.5 164 176 181 166.5 231.5" />
+          <path d="M435.5 230.5C484.5 260.5 492.5 296 496 354C496 440 412 474 300 474C188 474 103 440 103 354C103 294.5 116 265.5 164.5 232.5" />
+        </g>
+        <g strokeWidth="19">
+          <path d="M329.731 317.503C338.131 330.673 357.97 333.206 369.409 322.569" />
+          <path d="M229.591 322.571C241.031 333.207 260.87 330.672 269.269 317.502" />
+        </g>
+      </g>
+      <g transform="translate(302 290) scale(0.88) translate(-300 -305)" stroke="#D2674A" strokeWidth="19" strokeLinecap="round">
+        <path d="M145.318 339.595C107.841 336.058 87.6592 339.69 58.687 350.231" />
+        <path d="M144.687 371.701C113.203 371.226 97.036 376.437 74.5848 389.179" />
+      </g>
+      <g fill="#FAF6EE" stroke="#141414" strokeWidth="26" strokeLinejoin="round" strokeLinecap="round">
+        <ellipse cx="226" cy="420" rx="58" ry="38" transform="rotate(-14 226 420)" />
+      </g>
+      <g fill="#D2674A" stroke="#D2674A" strokeWidth="26" strokeLinejoin="round" fillRule="evenodd">
+        <path d="M507 207V430H302ZM460 293V378H382Z" />
+      </g>
+    </svg>
+  </span><span className="brand-word">그냥<span>수학</span></span></span>;
 }
+
+
+
+
+
 
 /**
  * The drawing a lesson wears, and the one the problem sets of that lesson wear with it.
@@ -97,12 +139,130 @@ function Brand() {
  * set is the work of the lesson just read — three sets under one lesson heading are siblings, not
  * three unrelated things. `small` is the same mark at the size of a list row.
  */
+/**
+ * The drawings a lesson card wears, and the topic each one belongs to.
+ *
+ * The mark is read off the lesson's key rather than hashed from it, so a lesson about 분수 is drawn
+ * as a bar cut into parts and one about 좌표 as a pair of axes. That is the whole reason the drawing
+ * is there: a shelf of cards should be scannable by what the lessons are about, and a mark that
+ * means nothing is just a coloured rectangle taking up the top half of a card.
+ *
+ * There are twenty-eight of them because seven could not tell the catalogue apart — a shelf of
+ * 도형 and a shelf of 확률 came out wearing the same balance. Everything is stroked in currentColor
+ * on a plate of squared paper, which is the surface this work is actually done on.
+ */
+/* Each drawing is nudged so its ink sits in the middle of the 120x80 box. They were drawn by hand
+ * at whatever coordinates read well while drawing them, which left several — 지수, 정수, 소수 — hanging
+ * low enough that the card showed a band of empty paper above them. The numbers are measured, not
+ * guessed: every mark is rendered alone and its ink extent read off the pixels, strokes and round
+ * caps included. Move a path and the offset beside it stops being right, so re-measure rather than
+ * adjusting it by eye. */
+const LESSON_MARKS: Record<string, ReactNode> = {
+  // 분수·유리수
+  fraction: <g transform="translate(0 -1.8)"><rect x="16" y="30" width="88" height="24" rx="2" /><path d="M38 30.5V53.5M60 29.5V54M82 30.5V53.5" /><path d="M18 52 34 32M22 53 36 38M26 53.5 36 45M42 52 57 32M46 53 58 39" strokeWidth="1.4" /></g>,
+  // 소수
+  decimal: <g transform="translate(0 -7.8)"><rect x="16" y="32" width="88" height="20" rx="2" /><path d="M24.8 32v20M33.6 32v20M42.4 32v20M51.2 32v20M60 32v20M68.8 32v20M77.6 32v20M86.4 32v20M95.2 32v20" strokeWidth="1.2" /><path d="M16 32h35.2v20H16z" fill="currentColor" stroke="none" opacity=".85" /><path d="M16 62h35.2M16 60v4M51.2 60v4" strokeWidth="1.3" /></g>,
+  // 비와 비율
+  ratio: <g transform="translate(2 -4)"><rect x="16" y="22" width="48" height="18" rx="2" fill="currentColor" stroke="none" opacity=".85" /><rect x="16" y="48" width="84" height="18" rx="2" /><path d="M16 14v-2M64 14v-2M16 13h48" strokeWidth="1.3" /><path d="M16 74v2M100 74v2M16 75h84" strokeWidth="1.3" /></g>,
+  // 백분율
+  percent: <g transform="translate(0 -1)"><rect x="30" y="20" width="60" height="42" rx="2" /><path d="M45 20v42M60 20v42M75 20v42M30 34h60M30 48h60" strokeWidth="1.3" /><path d="M30 20h30v28H30z" fill="currentColor" stroke="none" opacity=".85" /></g>,
+  // 약수·인수분해
+  factor: <g transform="translate(5 -2.8)"><path d="M60 18v10M60 28 38 44M60 28 82 44M38 52 28 66M38 52 48 66" /><circle cx="60" cy="16" r="5" fill="currentColor" stroke="none" /><circle cx="38" cy="48" r="4.5" /><circle cx="82" cy="48" r="4.5" fill="currentColor" stroke="none" /><circle cx="28" cy="70" r="4.5" fill="currentColor" stroke="none" /><circle cx="48" cy="70" r="4.5" fill="currentColor" stroke="none" /></g>,
+  // 정수·유리수
+  negative: <g transform="translate(0 -9.6)"><path d="M12 42h96" /><path d="M36 36v12M60 30v18M84 36v12" /><circle cx="36" cy="42" r="5.5" fill="currentColor" stroke="none" /><path d="M24 62h14" strokeWidth="2.6" /><path d="M82 62h14M89 55v14" strokeWidth="2.6" /></g>,
+  // 제곱근·무리수
+  root: <g transform="translate(-3 -2)"><path d="M22 44 32 44 44 66 60 18 104 18" /><path d="M60 30h44" strokeWidth="1.4" strokeDasharray="4 4" /></g>,
+  // 지수·다항식
+  power: <g transform="translate(2 -7.8)"><rect x="30" y="16" width="56" height="56" rx="2" /><path d="M58 16v56M30 44h56" strokeWidth="1.3" /><rect x="30" y="16" width="28" height="28" fill="currentColor" stroke="none" opacity=".85" /><path d="M30 78h56M30 76v4M86 76v4" strokeWidth="1.3" /></g>,
+  // 문자와 식
+  variable: <g transform="translate(0 -7.8)"><rect x="16" y="30" width="26" height="24" rx="3" /><path d="M52 42h14M59 35v14" strokeWidth="2" /><rect x="74" y="30" width="30" height="24" rx="3" fill="currentColor" stroke="none" opacity=".85" /><path d="M16 66h88" strokeWidth="1.3" strokeDasharray="3 5" /></g>,
+  // 방정식
+  equation: <g transform="translate(0 1)"><path d="M60 20v38M40 58h40" /><path d="M22 34h76" /><path d="M22 34 12 52h20ZM98 34 88 52h20Z" /></g>,
+  // 부등식
+  inequality: <g transform="translate(1 -1)"><path d="M60 22v36M40 58h40" /><path d="M20 26 100 42" /><path d="M20 26 8 42h22ZM100 42 90 60h20Z" /></g>,
+  // 좌표평면
+  axes: <g transform="translate(-2 1)"><path d="M26 12v54h72" /><path d="M40 66v-4M58 66v-4M76 66v-4M26 54h4M26 38h4M26 22h4" strokeWidth="1.3" /><circle cx="58" cy="38" r="5" fill="currentColor" stroke="none" /></g>,
+  // 일차함수
+  line: <g transform="translate(-2 1)"><path d="M26 12v54h72" /><path d="M34 60 98 20" /><circle cx="58" cy="45" r="4" fill="currentColor" stroke="none" /></g>,
+  // 기울기·변화율
+  slope: <g transform="translate(0 -2)"><path d="M20 64 100 20" /><path d="M48 46v18h32" strokeWidth="1.5" strokeDasharray="4 4" /><path d="M52 58h6M76 58v6" strokeWidth="1.4" /></g>,
+  // 이차함수
+  parabola: <g transform="translate(-2 1)"><path d="M26 12v54h72" /><path d="M36 18C44 62 76 62 92 18" fill="none" /><circle cx="64" cy="57" r="4" fill="currentColor" stroke="none" /></g>,
+  // 각·평행
+  angle: <g transform="translate(-3 -4)"><path d="M22 64 104 64M22 64 92 24" /><path d="M52 64a30 30 0 0 0-2-12" strokeWidth="1.5" /></g>,
+  // 다각형
+  polygon: <g transform="translate(0 -3)"><path d="M60 14 102 44 86 72H34L18 44Z" /><path d="M60 14 60 72M18 44h84" strokeWidth="1.2" strokeDasharray="4 4" /></g>,
+  // 삼각형
+  triangle: <g transform="translate(-2 -3)"><path d="M28 66 28 20 96 66Z" /><path d="M28 56h10v10" strokeWidth="1.4" /></g>,
+  // 닮음
+  similar: <g transform="translate(-1 -2)"><path d="M18 66 18 38 52 66Z" /><path d="M62 66 62 18 104 66Z" /></g>,
+  // 원
+  circle: <g transform="translate(0 -2)"><circle cx="60" cy="42" r="30" /><path d="M60 42 88 30"  /><circle cx="60" cy="42" r="3.5" fill="currentColor" stroke="none" /></g>,
+  // 입체도형
+  solid: <g transform="translate(2 0)"><path d="M28 30h44v32H28Z" /><path d="M28 30 44 18h44l-16 12M72 62l16-12V18" /><path d="M44 18v32h44" strokeWidth="1.3" strokeDasharray="3 4" /></g>,
+  // 겉넓이·부피
+  volume: <g transform="translate(-8.8 -1)"><path d="M30 26v30c0 6 14 10 30 10s30-4 30-10V26" /><ellipse cx="60" cy="26" rx="30" ry="10" /><path d="M104 22v40M100 22h8M100 62h8" strokeWidth="1.4" /></g>,
+  // 통계·자료
+  histogram: <g transform="translate(-2 -3.5)"><path d="M26 62V38M40 62V30M54 62V46M68 62V24M82 62V42M96 62V34" strokeWidth="6" strokeLinecap="butt" opacity=".9" /><path d="M18 62h88" strokeWidth="2" /></g>,
+  // 산포도·상관
+  scatter: <g transform="translate(-4 1)"><path d="M22 12v54h84" /><path d="M30 60 100 24" strokeWidth="1.4" strokeDasharray="5 4" /><g fill="currentColor" stroke="none"><circle cx="38" cy="58" r="3.4" /><circle cx="50" cy="48" r="3.4" /><circle cx="58" cy="52" r="3.4" /><circle cx="70" cy="38" r="3.4" /><circle cx="80" cy="34" r="3.4" /><circle cx="92" cy="24" r="3.4" /></g></g>,
+  // 확률
+  probability: <g transform="translate(-1 -4)"><rect x="16" y="24" width="40" height="40" rx="6" /><g fill="currentColor" stroke="none"><circle cx="27" cy="35" r="3.6" /><circle cx="36" cy="44" r="3.6" /><circle cx="45" cy="53" r="3.6" /></g><rect x="66" y="24" width="40" height="40" rx="6" /><g fill="currentColor" stroke="none"><circle cx="77" cy="35" r="3.6" /><circle cx="95" cy="35" r="3.6" /><circle cx="77" cy="53" r="3.6" /><circle cx="95" cy="53" r="3.6" /></g></g>,
+  // 경우의 수
+  tree: <g transform="translate(9.4 -2)"><path d="M24 42h14M38 42 58 24M38 42 58 60M58 24 78 16M58 24 78 32M58 60 78 52M58 60 78 68" /><circle cx="20" cy="42" r="4.5" fill="currentColor" stroke="none" /><g fill="currentColor" stroke="none"><circle cx="82" cy="16" r="3.6" /><circle cx="82" cy="32" r="3.6" /><circle cx="82" cy="52" r="3.6" /><circle cx="82" cy="68" r="3.6" /></g></g>,
+  // 집합·명제
+  set: <g transform="translate(0 -2)"><circle cx="46" cy="42" r="26" /><circle cx="74" cy="42" r="26" /><path d="M60 20a26 26 0 0 0 0 44 26 26 0 0 0 0-44" fill="currentColor" stroke="none" opacity=".8" /></g>,
+  // 삼각비
+  // 갈래를 알 수 없을 때 — 풀어 둔 문제지 한 묶음
+  general: <g transform="translate(2 -1)"><rect x="22" y="22" width="60" height="46" rx="3" /><rect x="34" y="14" width="60" height="46" rx="3" fill="#fffdf8" /><path d="M46 28h36M46 40h36M46 52h20" strokeWidth="1.6" /></g>,
+  trig: <g transform="translate(0 -3)"><path d="M20 66 100 66 100 20Z" /><path d="M52 66a32 32 0 0 0 0-18" strokeWidth="1.6" /><path d="M100 54H88v12" strokeWidth="1.3" /><path d="M100 20 100 66" strokeWidth="4.2" /></g>,
+};
+
+// Which stems wear which drawing. tests/lesson-marks.test.ts checks this against the catalogue, so
+// a course added with an unfamiliar key is caught here rather than silently drawing the fallback.
+const MARK_BY_STEM: Record<string, keyof typeof LESSON_MARKS> = Object.fromEntries(([
+  ['fraction', 'fraction rational repeating'],
+  ['decimal', 'decimal'],
+  ['ratio', 'ratio direct inverse'],
+  ['percent', 'percentage'],
+  ['factor', 'prime gcd common factor factorization remainder composite multiplication'],
+  ['negative', 'negative absolute signed'],
+  ['root', 'square irrational radical imaginary complex'],
+  ['power', 'exponent monomial polynomial'],
+  ['variable', 'variable expression substitution elimination'],
+  ['equation', 'equation equality linear two simultaneous root'],
+  ['inequality', 'inequality'],
+  ['axes', 'coordinate distance plane'],
+  ['line', 'function line'],
+  ['slope', 'slope'],
+  ['parabola', 'parabola quadratic completing'],
+  ['angle', 'angle parallel construction'],
+  ['polygon', 'polygon parallelogram special'],
+  ['triangle', 'triangle isosceles pythagoras'],
+  ['similar', 'similar centroid'],
+  ['circle', 'circle sector inscribed'],
+  ['solid', 'polyhedron solid'],
+  ['volume', 'surface volume'],
+  ['histogram', 'frequency histogram relative representative ncs'],
+  ['scatter', 'variance scatter'],
+  ['probability', 'probability'],
+  ['tree', 'counting permutation combination'],
+  ['set', 'set proposition always'],
+  ['trig', 'trig'],
+] as const).flatMap(([mark, stems]) => stems.split(' ').map((stem) => [stem, mark])));
+
 function LessonArt({ lessonKey = '', large = false, small = false }: { lessonKey?: string; large?: boolean; small?: boolean }) {
-  const tone = [...lessonKey].reduce((sum, letter) => sum + letter.codePointAt(0)!, 0) % 3;
-  return <div className={`class-art art-${tone}${large ? ' large' : ''}${small ? ' small' : ''}`} aria-hidden="true">
-    <div className="course-art-shapes"><i /><i /><i /><i /></div>
+  const mark = MARK_BY_STEM[lessonKey.split('-')[0]] ?? 'general';
+  // Only the tilt is left to chance — enough that a row of cards does not look stamped, little
+  // enough that nothing reads as crooked.
+  const tilt = [...lessonKey].reduce((hash, letter) => (hash * 31 + letter.codePointAt(0)!) % 100003, 7);
+  return <div className={`class-art art-${tilt % 3}${large ? ' large' : ''}${small ? ' small' : ''}`} aria-hidden="true">
+    <svg className="lesson-mark" viewBox="0 0 120 80" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" style={{ transform: `rotate(${(tilt % 5) - 2}deg)` }}>
+      {LESSON_MARKS[mark]}
+    </svg>
   </div>;
 }
+
 
 function LessonCard({ item, index, courseTitle, enrollment, onOpen }: { item: PublicLesson; index: number; courseTitle: string; enrollment?: EnrollmentView; onOpen: () => void }) {
   const completed = enrollment?.status === 'completed';
@@ -502,10 +662,10 @@ export function LearningWorkspace() {
       ? '이어서 배울 수업'
       : state?.enrollments.length ? '다음에 배울 수업' : '차근차근, 기본부터';
     return <>
-      <div className="page-heading"><div className="eyebrow">A LITTLE MATH, EVERY DAY</div><h1>{state ? `${state.user.displayName}님, 오늘도 한 걸음.` : '그냥, 다시 시작하는 수학.'}</h1><p>완벽하게 알지 못해도 괜찮아요. 작은 이해가 쌓이면 수학이 편해져요.</p></div>
-      <section className="daily-hero"><div className="hero-copy"><span className="hero-eyebrow"><span />{state ? '오늘의 추천 수업' : '기초부터 다시, 내 속도로'}</span><h2>{recommended?.title ?? '작은 조각에서\n시작하는 큰 이해'}</h2><p>{state?.recommendations[0]?.reason ?? heroIntro}</p><button className="button hero-button" onClick={() => recommended ? void openLesson(recommended.lessonKey) : setModal('login')} disabled={loading}>{state && recommended && state.enrollments.some((entry) => entry.lessonKey === recommended.lessonKey) ? state.recommendations[0]?.kind === 'revisit' ? '설명 다시 펼치기' : '이어서 학습하기' : state ? '오늘의 학습 시작' : '첫 수업 둘러보기'}<Icon name="arrow" size={18} /></button><span className="hero-duration"><Icon name="clock" size={13} />{state ? `오늘은 ${state.recommendations[0]?.suggestedMinutes ?? state.user.dailyMinutes}분씩 · 수업 전체 ${recommended?.estimatedMinutes ?? 15}분` : `약 ${recommended?.estimatedMinutes ?? 15}분 · 부담 없이 한 수업`}</span></div><div className="hero-art"><div className="hero-paper"><span className="paper-caption">{recommended ? courseTitle(recommended) : '나의 속도로 배우는 수학'}</span><LessonArt lessonKey={recommended?.lessonKey} large /><div className="paper-equation"><span>오늘은 하나만 이해해도 충분해요.</span></div></div><span className="hero-doodle">+</span><span className="hero-dot" /></div></section>
+      <div className="page-heading"><h1>{state ? `${state.user.displayName}님, 오늘도 한 걸음.` : '그냥, 다시 시작하는 수학.'}</h1><p>완벽하게 알지 못해도 괜찮아요. 작은 이해가 쌓이면 수학이 편해져요.</p></div>
+      <section className="daily-hero"><div className="hero-copy"><span className="hero-eyebrow"><span />{state ? '오늘의 추천 수업' : '기초부터 다시, 내 속도로'}</span><h2>{recommended?.title ?? '작은 조각에서\n시작하는 큰 이해'}</h2><p>{state?.recommendations[0]?.reason ?? heroIntro}</p><button className="button hero-button" onClick={() => recommended ? void openLesson(recommended.lessonKey) : setModal('login')} disabled={loading}>{state && recommended && state.enrollments.some((entry) => entry.lessonKey === recommended.lessonKey) ? state.recommendations[0]?.kind === 'revisit' ? '설명 다시 펼치기' : '이어서 학습하기' : state ? '오늘의 학습 시작' : '첫 수업 둘러보기'}<Icon name="arrow" size={18} /></button><span className="hero-duration"><Icon name="clock" size={13} />{state ? `오늘은 ${state.recommendations[0]?.suggestedMinutes ?? state.user.dailyMinutes}분씩 · 수업 전체 ${recommended?.estimatedMinutes ?? 15}분` : `약 ${recommended?.estimatedMinutes ?? 15}분 · 부담 없이 한 수업`}</span></div><div className="hero-art"><div className="hero-paper"><span className="paper-caption">{recommended ? courseTitle(recommended) : '나의 속도로 배우는 수학'}</span><LessonArt lessonKey={recommended?.lessonKey} large /><div className="paper-equation"><span>오늘은 하나만 이해해도 충분해요.</span></div></div><span className="hero-doodle">÷</span><span className="hero-dot" /></div></section>
       {state && <section className="personalization-card" aria-label="나에게 맞는 학습">
-        <div className="section-heading"><div><span className="eyebrow">YOUR STARTING POINT</span><h2>{state.diagnostic?.status === 'completed' ? '풀이에 맞춰 다음 걸음을 골랐어요.' : state.diagnostic ? '시작점 확인을 이어가요.' : '나에게 맞는 시작점을 찾아요.'}</h2></div>
+        <div className="section-heading"><div><h2>{state.diagnostic?.status === 'completed' ? '풀이에 맞춰 다음 걸음을 골랐어요.' : state.diagnostic ? '시작점 확인을 이어가요.' : '나에게 맞는 시작점을 찾아요.'}</h2></div>
           <button className="button secondary" disabled={busy} onClick={() => navigate('diagnostic')}>{state.diagnostic?.status === 'completed' ? '진단 결과' : state.diagnostic ? `개념 ${state.diagnostic.settled}/${state.diagnostic.scope} · 이어서 확인` : state.diagnosticOffering ? '시작점 확인하기' : '시작점 확인 안내'}</button></div>
         <p className="muted">진단 없이 바로 시작해도 괜찮아요. 실제 풀이와 제출한 복습을 반영해 추천이 달라져요.</p>
         <div className="recommendation-choice"><button className="text-button" disabled={busy} onClick={() => navigate('lessons')}>다른 수업 직접 고르기 →</button>{state.plan.preferredLessonKey && <button className="text-button" disabled={busy} onClick={() => { void dispatch({ action: 'recommendation.choose', lessonKey: null }).catch(() => {}); }}>자동 추천으로 돌아가기</button>}</div>
@@ -513,9 +673,9 @@ export function LearningWorkspace() {
         {state.plan.review && <div className="review-callout"><p>{state.plan.review.reason}</p><button className="button primary" disabled={busy} onClick={() => { const review = state.assignments.find(a => a.recipientId === state.plan.review?.recipientId); if (review) openAssignment(review); }}>복습부터 시작하기</button></div>}
       </section>}
       <div className="learning-overview"><div><span className="overview-icon"><Icon name="book" size={20} /></span><span><small>나의 학습</small><strong>{completedCount}<em>개 수업 완료</em></strong></span></div><div><span className="overview-icon"><Icon name="pencil" size={20} /></span><span><small>한 번 더 생각하기</small><strong>{pendingAssignments.length}<em>개 과제 남음</em></strong></span></div><button onClick={openProfile}><span className="overview-icon orange"><Icon name="clock" size={20} /></span><span><small>꾸준함을 위한 작은 약속</small><strong>하루 {state?.user.dailyMinutes ?? 10}<em>분씩 학습</em></strong></span><Icon name="chevron" size={16} /></button></div>
-      <section className="dashboard-section"><div className="section-heading"><div><span className="eyebrow">BUILD YOUR FOUNDATION</span><h2>{shelfTitle}</h2></div><button className="text-button" onClick={() => navigate('lessons')}>전체 수업<Icon name="arrow" size={16} /></button></div><div className="class-grid">{nearby.map((item) => <LessonCard key={item.lessonKey} item={item} index={courseIndex(item)} courseTitle={courseTitle(item)} enrollment={state?.enrollments.find((entry) => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />)}</div>{!loading && !lessons.length && <div className="empty-inline">{error ? '수업을 불러오지 못했어요. 상단에서 다시 시도해 주세요.' : '첫 번째 수업을 준비하고 있어요.'}</div>}</section>
-      <section className="dashboard-section"><div className="section-heading"><div><span className="eyebrow">MAKE IT YOURS</span><h2>배운 것을 내 것으로</h2></div><button className="text-button" onClick={() => navigate('practice')}>연습장<Icon name="arrow" size={16} /></button></div>{nextAssignments.length ? <div className="assignment-list">{nextAssignments.map(assignmentRow)}</div> : <div className="gentle-empty"><span className="empty-drawing"><Icon name="pencil" size={28} /></span><div><h3>오늘의 이해가 내일도 남도록</h3><p>복습이 있는 수업을 마치면 여기에 과제가 모여요. 설명 없이 문제만 풀고 싶다면 문제집을 골라도 좋아요.</p></div>{problemSets.length ? <button className="text-button" disabled={busy} onClick={() => openCourseSets(courses[0]?.key ?? '')}>문제집 골라 풀기<Icon name="arrow" size={15} /></button> : <span className="small-note">한 번 더, 천천히.</span>}</div>}</section>
-      <div className="page-footnote"><span>∴</span> 조금씩 이해하는 즐거움. <b>geunyang math</b></div>
+      <section className="dashboard-section"><div className="section-heading"><div><h2>{shelfTitle}</h2></div><button className="text-button" onClick={() => navigate('lessons')}>전체 수업<Icon name="arrow" size={16} /></button></div><div className="class-grid">{nearby.map((item) => <LessonCard key={item.lessonKey} item={item} index={courseIndex(item)} courseTitle={courseTitle(item)} enrollment={state?.enrollments.find((entry) => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />)}</div>{!loading && !lessons.length && <div className="empty-inline">{error ? '수업을 불러오지 못했어요. 상단에서 다시 시도해 주세요.' : '첫 번째 수업을 준비하고 있어요.'}</div>}</section>
+      <section className="dashboard-section"><div className="section-heading"><div><h2>배운 것을 내 것으로</h2></div><button className="text-button" onClick={() => navigate('practice')}>연습장<Icon name="arrow" size={16} /></button></div>{nextAssignments.length ? <div className="assignment-list">{nextAssignments.map(assignmentRow)}</div> : <div className="gentle-empty"><span className="empty-drawing"><Icon name="pencil" size={28} /></span><div><h3>오늘의 이해가 내일도 남도록</h3><p>복습이 있는 수업을 마치면 여기에 과제가 모여요. 설명 없이 문제만 풀고 싶다면 문제집을 골라도 좋아요.</p></div>{problemSets.length ? <button className="text-button" disabled={busy} onClick={() => openCourseSets(courses[0]?.key ?? '')}>문제집 골라 풀기<Icon name="arrow" size={15} /></button> : <span className="small-note">한 번 더, 천천히.</span>}</div>}</section>
+      <div className="page-footnote"><span>∴</span> 조금씩 이해하는 즐거움. <b>그냥수학</b></div>
     </>;
   }
 
@@ -543,7 +703,7 @@ export function LearningWorkspace() {
           </div>)}
         </div>)}
       </div>}
-      {lines.map((track) => <div className="course-track" key={track}>{split && <div className="track-heading"><span className="eyebrow">{trackIntros[track].eyebrow}</span><h2>{courseTrackLabels[track]}</h2><p>{trackIntros[track].note}</p></div>}
+      {lines.map((track) => <div className="course-track" key={track}>{split && <div className="track-heading"><h2>{courseTrackLabels[track]}</h2><p>{trackIntros[track].note}</p></div>}
       {byStage(shown, track).flatMap((year) => [
         ...(year.stage ? [<h3 className="stage-heading" key={`${track}:${year.stage}`}>{courseStageLabels[year.stage]}</h3>] : []),
         ...year.courses.map((course) => {
@@ -557,7 +717,7 @@ export function LearningWorkspace() {
             {/* The door to this course's problem sets, drawn as a card because it stands among cards —
                 a line of text between them reads as a footnote rather than as a thing to open. */}
             {sets.length > 0 && <div className="class-option"><button className="class-card set-card" disabled={busy} onClick={() => openCourseSets(course.key)}>
-              <LessonArt lessonKey={`${course.key}:sets`} />
+              <LessonArt lessonKey={held[0]?.lessonKey ?? course.key} />
               <div className="class-card-content"><div className="class-card-meta"><span>{course.title} · 문제집</span></div>
                 <h3>문제집 {sets.length}개 풀기</h3><p>설명 없이 문제만 풀고 싶을 때. 수업에서 쓰는 문제집을 그대로 골라 풀 수 있어요.</p>
                 <div className="class-card-footer"><span><Icon name="pencil" size={14} />문제 {sets.reduce((sum, set) => sum + set.questionCount, 0)}개</span><Icon name="arrow" size={18} /></div>
@@ -619,13 +779,13 @@ export function LearningWorkspace() {
     const chosen = pendingAssignments.filter((item) => item.policy.kind === 'practice');
     const done = submitted.filter((item) => item.policy.kind !== 'practice');
     const solved = submitted.filter((item) => item.policy.kind === 'practice');
-    return <><div className="page-heading"><div className="eyebrow">A LITTLE PRACTICE GOES A LONG WAY</div><h1>이해를 오래 남기는 연습장.</h1><p>어제 배운 내용을 오늘 다시 떠올려보세요. 문제집을 직접 골라 풀 수도 있어요.</p></div><div className="section-heading"><h2>나에게 배정된 과제 <span className="count-label">{issued.length}</span></h2></div>{issued.length ? <div className="assignment-list">{issued.map(assignmentRow)}</div> : <EmptyState title={state ? '남아 있는 과제가 없어요' : '나의 연습을 시작해 볼까요?'} text={state ? '복습이 있는 수업을 마치면 과제가 배정돼요. 아래에서 문제집을 직접 골라 풀어도 좋아요.' : '학습 공간을 시작하면 수업과 연결된 과제를 풀고 기록할 수 있어요.'} actionLabel={state ? '문제집 고르기' : '내 학습 시작하기'} onAction={() => state ? openCourseSets(courses[0]?.key ?? '') : setModal('login')} />}{chosen.length > 0 && <section className="dashboard-section"><div className="section-heading"><h2>풀던 문제집 <span className="count-label">{chosen.length}</span></h2></div><div className="assignment-list">{chosen.map(assignmentRow)}</div></section>}<section className="dashboard-section"><div className="section-heading"><div><h2>문제집 골라 풀기</h2></div></div><p className="muted small">설명 없이 문제만 풀고 싶을 때. 수업에서 쓰는 문제집을 그대로 골라 풀 수 있고, 푼 기록은 수업에서 푼 것과 똑같이 남아요.</p>{renderShelf()}</section>{done.length > 0 && <section className="dashboard-section"><div className="section-heading"><h2>제출한 과제 <span className="count-label">{done.length}</span></h2></div><div className="assignment-list">{done.map(assignmentRow)}</div></section>}{solved.length > 0 && <section className="dashboard-section"><div className="section-heading"><h2>다 푼 문제집 <span className="count-label">{solved.length}</span></h2></div><div className="assignment-list">{solved.map(assignmentRow)}</div></section>}</>;
+    return <><div className="page-heading"><h1>이해를 오래 남기는 연습장.</h1><p>어제 배운 내용을 오늘 다시 떠올려보세요. 문제집을 직접 골라 풀 수도 있어요.</p></div><div className="section-heading"><h2>나에게 배정된 과제 <span className="count-label">{issued.length}</span></h2></div>{issued.length ? <div className="assignment-list">{issued.map(assignmentRow)}</div> : <EmptyState title={state ? '남아 있는 과제가 없어요' : '나의 연습을 시작해 볼까요?'} text={state ? '복습이 있는 수업을 마치면 과제가 배정돼요. 아래에서 문제집을 직접 골라 풀어도 좋아요.' : '학습 공간을 시작하면 수업과 연결된 과제를 풀고 기록할 수 있어요.'} actionLabel={state ? '문제집 고르기' : '내 학습 시작하기'} onAction={() => state ? openCourseSets(courses[0]?.key ?? '') : setModal('login')} />}{chosen.length > 0 && <section className="dashboard-section"><div className="section-heading"><h2>풀던 문제집 <span className="count-label">{chosen.length}</span></h2></div><div className="assignment-list">{chosen.map(assignmentRow)}</div></section>}<section className="dashboard-section"><div className="section-heading"><div><h2>문제집 골라 풀기</h2></div></div><p className="muted small">설명 없이 문제만 풀고 싶을 때. 수업에서 쓰는 문제집을 그대로 골라 풀 수 있고, 푼 기록은 수업에서 푼 것과 똑같이 남아요.</p>{renderShelf()}</section>{done.length > 0 && <section className="dashboard-section"><div className="section-heading"><h2>제출한 과제 <span className="count-label">{done.length}</span></h2></div><div className="assignment-list">{done.map(assignmentRow)}</div></section>}{solved.length > 0 && <section className="dashboard-section"><div className="section-heading"><h2>다 푼 문제집 <span className="count-label">{solved.length}</span></h2></div><div className="assignment-list">{solved.map(assignmentRow)}</div></section>}</>;
   }
 
   function renderHistory() {
     // The same four states the report shows beside each concept, called by the same names.
     const labels = conceptStateLabels;
-    return <><div className="page-heading"><div className="eyebrow">EVERY SMALL STEP COUNTS</div><h1>조금씩 쌓이는 나의 이해.</h1><p>빠르기보다, 어제보다 조금 더 이해하는 것. 여기까지 온 걸음을 확인해요.</p></div>{!state ? <EmptyState title="첫 걸음을 기록해 보세요" text="내 학습을 시작하면 수업 진도와 개념별 학습 기록이 여기에 모여요." actionLabel="내 학습 시작하기" onAction={() => setModal('login')} /> : <><div className="history-stats"><div><small>완료한 수업</small><strong>{completedCount}<span>개</span></strong></div><div><small>제출한 과제</small><strong>{state.assignments.filter((item) => item.status === 'submitted' && item.policy.kind !== 'practice').length}<span>개</span></strong></div><div><small>다 푼 문제집</small><strong>{state.assignments.filter((item) => item.status === 'submitted' && item.policy.kind === 'practice').length}<span>개</span></strong></div><div><small>풀어본 문제</small><strong>{state.enrollments.reduce((sum, item) => sum + new Set(item.attempts.map((attempt) => attempt.problemVersionId)).size, 0) + state.assignments.reduce((sum, item) => sum + item.items.filter((entry) => entry.attempt).length, 0)}<span>개</span></strong></div></div><section className="dashboard-section"><div className="section-heading"><h2>개념별 학습 상태</h2><span className="muted small">힌트 사용과 이후 복습까지 반영한 상태예요</span></div><p className="muted small">「스스로 해결」은 힌트 없이 푼 기록, 「꾸준히 기억」은 이후 복습에서도 확인한 기록이에요. 아직 확인 전이라고 해서 모른다는 뜻은 아니에요.</p><div className="concept-list">{state.concepts.map((concept) => <div key={concept.key}><span className={`concept-dot ${concept.state}`} /><strong>{concept.label}</strong><span className={`concept-state ${concept.state}`}>{labels[concept.state]}</span></div>)}</div></section>{state.misconceptions.length > 0 && <section className="dashboard-section"><div className="section-heading"><div><h2>자꾸 되풀이되는 것</h2></div><span className="muted small">서로 다른 문항에서 두 번 이상 나온 것만 모아요</span></div>
+    return <><div className="page-heading"><h1>조금씩 쌓이는 나의 이해.</h1><p>빠르기보다, 어제보다 조금 더 이해하는 것. 여기까지 온 걸음을 확인해요.</p></div>{!state ? <EmptyState title="첫 걸음을 기록해 보세요" text="내 학습을 시작하면 수업 진도와 개념별 학습 기록이 여기에 모여요." actionLabel="내 학습 시작하기" onAction={() => setModal('login')} /> : <><div className="history-stats"><div><small>완료한 수업</small><strong>{completedCount}<span>개</span></strong></div><div><small>제출한 과제</small><strong>{state.assignments.filter((item) => item.status === 'submitted' && item.policy.kind !== 'practice').length}<span>개</span></strong></div><div><small>다 푼 문제집</small><strong>{state.assignments.filter((item) => item.status === 'submitted' && item.policy.kind === 'practice').length}<span>개</span></strong></div><div><small>풀어본 문제</small><strong>{state.enrollments.reduce((sum, item) => sum + new Set(item.attempts.map((attempt) => attempt.problemVersionId)).size, 0) + state.assignments.reduce((sum, item) => sum + item.items.filter((entry) => entry.attempt).length, 0)}<span>개</span></strong></div></div><section className="dashboard-section"><div className="section-heading"><h2>개념별 학습 상태</h2><span className="muted small">힌트 사용과 이후 복습까지 반영한 상태예요</span></div><p className="muted small">「스스로 해결」은 힌트 없이 푼 기록, 「꾸준히 기억」은 이후 복습에서도 확인한 기록이에요. 아직 확인 전이라고 해서 모른다는 뜻은 아니에요.</p><div className="concept-list">{state.concepts.map((concept) => <div key={concept.key}><span className={`concept-dot ${concept.state}`} /><strong>{concept.label}</strong><span className={`concept-state ${concept.state}`}>{labels[concept.state]}</span></div>)}</div></section>{state.misconceptions.length > 0 && <section className="dashboard-section"><div className="section-heading"><div><h2>자꾸 되풀이되는 것</h2></div><span className="muted small">서로 다른 문항에서 두 번 이상 나온 것만 모아요</span></div>
       <p className="muted small">답한 것에서 읽은 거예요. 한 번은 손이 미끄러진 것일 수 있어서, 두 문항에서 같은 것이 나왔을 때만 여기에 둡니다.</p>
       <div className="standing-slips">{state.misconceptions.map((slip) => <article key={slip.key}>
         <div><strong>{slip.label}<span>{slip.problems}문항</span></strong><p>{slip.note}</p></div>
@@ -654,7 +814,7 @@ export function LearningWorkspace() {
         firstCorrect: tries[0]?.result.status === 'correct', assisted: !!tries[0]?.result.assisted,
         misreading: tries[0]?.result.misreading, misconception: tries[0]?.result.misconception };
     }).filter((item, index) => (currentEnrollment?.attempts ?? []).some((attempt) => attempt.problemVersionId === document.problems[index].problemVersionId));
-    if (finishedLesson) return <div className="completion-panel"><span className="completion-mark"><Icon name="check" size={38} /></span><div className="eyebrow">ONE MORE STEP FORWARD</div><h1>오늘의 이해가 하나 더 쌓였어요.</h1><p>「{document.title}」 수업을 완료했어요.<br />{review ? '배운 내용을 다시 떠올릴 복습 과제가 있어요.' : '다음 수업을 살펴보거나, 오늘 배운 내용을 다시 펼쳐보세요.'}</p><div className="completion-actions"><button className="button primary" onClick={() => review ? openAssignment(review) : navigate('lessons')}>{review ? '복습 과제 확인' : '다음 수업 둘러보기'}<Icon name="arrow" size={18} /></button><button className="button secondary" onClick={() => navigate('home')}>내 학습으로</button></div>{lessonSets.length > 0 && <button className="text-button completion-sets" disabled={busy} onClick={() => openCourseSets(document.courseKey, document.lessonKey)}>이 수업의 문제집 {lessonSets.length}개 다시 풀기<Icon name="arrow" size={15} /></button>}<AnswerReport items={lessonReport} concepts={taughtConcepts} lessons={lessons} standings={state?.concepts} busy={busy} onOpenLesson={(key) => void openLesson(key)} /><div className="completion-bottom">잘 모르겠는 부분은 언제든 다시 펼쳐보세요.</div></div>;
+    if (finishedLesson) return <div className="completion-panel"><span className="completion-mark"><Icon name="check" size={38} /></span><h1>오늘의 이해가 하나 더 쌓였어요.</h1><p>「{document.title}」 수업을 완료했어요.<br />{review ? '배운 내용을 다시 떠올릴 복습 과제가 있어요.' : '다음 수업을 살펴보거나, 오늘 배운 내용을 다시 펼쳐보세요.'}</p><div className="completion-actions"><button className="button primary" onClick={() => review ? openAssignment(review) : navigate('lessons')}>{review ? '복습 과제 확인' : '다음 수업 둘러보기'}<Icon name="arrow" size={18} /></button><button className="button secondary" onClick={() => navigate('home')}>내 학습으로</button></div>{lessonSets.length > 0 && <button className="text-button completion-sets" disabled={busy} onClick={() => openCourseSets(document.courseKey, document.lessonKey)}>이 수업의 문제집 {lessonSets.length}개 다시 풀기<Icon name="arrow" size={15} /></button>}<AnswerReport items={lessonReport} concepts={taughtConcepts} lessons={lessons} standings={state?.concepts} busy={busy} onOpenLesson={(key) => void openLesson(key)} /><div className="completion-bottom">잘 모르겠는 부분은 언제든 다시 펼쳐보세요.</div></div>;
     const section = document.sections[sectionIndex];
     if (!section) return <EmptyState title="수업 내용을 준비하고 있어요" text="아직 공개된 학습 단계가 없어요." />;
     const unsupported = unsupportedRequiredBlocks(section.contentBlocks, document.problems) || document.problems.some((problem) => unsupportedRequiredBlocks(problem.promptContent));
@@ -731,7 +891,7 @@ export function LearningWorkspace() {
       ? problemSets.filter((set) => set.courseKey === problemSets.find((entry) => entry.problemSetId === assignment.problemSetId)?.courseKey) : [];
     const next = shelf.length ? shelf[shelf.findIndex((set) => set.problemSetId === assignment.problemSetId) + 1] ?? null : null;
     const gathered = own && !assignment.problemSetId;
-    return <><button className="back-button" onClick={() => navigate('practice')}><Icon name="back" size={17} />연습장으로</button><div className="page-heading"><div className="eyebrow">{own ? 'PICK A SET AND SOLVE' : 'MAKE WHAT YOU LEARNED YOURS'}</div><h1>{assignment.title}</h1><p>{assignmentTiming(assignment)} · {assignment.items.length}문제 · {assignmentKindLabel[assignment.policy.kind]}{assignment.policy.hints ? '' : ' · 힌트 없이'}</p></div><div className={`assignment-instruction ${submitted ? 'is-submitted' : ''}`}><Icon name={submitted ? 'check' : 'pencil'} size={23} /><div><strong>{submitted ? own ? '이 문제집을 다 풀었어요.' : '과제 제출을 완료했어요.' : own ? '문제마다 답안을 저장하고, 다 풀면 마무리해 주세요.' : '문제마다 답안을 저장하고, 마지막에 제출해 주세요.'}</strong><p>{submitted ? '저장한 답안과 풀이 결과를 아래에서 다시 확인할 수 있어요.' : assignment.policy.hints ? '막히면 힌트를 확인하고 다시 생각해 보세요. 저장한 답안은 마무리 전까지 바꿀 수 있어요.' : '이 과제는 힌트 없이 풀어요. 저장한 답안은 제출 전까지 바꿀 수 있어요.'}</p></div>{submitted && <span>{own ? '풀이 완료' : '제출 완료'}</span>}</div>{assignment.reason && <p className="session-guidance">{assignment.reason}</p>}{!submitted && assignment.items.length > 2 && <div className="solve-progress">{/* Two questions fit on a screen together; a set that does not needs to carry its count and its way out along with it. */}
+    return <><button className="back-button" onClick={() => navigate('practice')}><Icon name="back" size={17} />연습장으로</button><div className="page-heading"><h1>{assignment.title}</h1><p>{assignmentTiming(assignment)} · {assignment.items.length}문제 · {assignmentKindLabel[assignment.policy.kind]}{assignment.policy.hints ? '' : ' · 힌트 없이'}</p></div><div className={`assignment-instruction ${submitted ? 'is-submitted' : ''}`}><Icon name={submitted ? 'check' : 'pencil'} size={23} /><div><strong>{submitted ? own ? '이 문제집을 다 풀었어요.' : '과제 제출을 완료했어요.' : own ? '문제마다 답안을 저장하고, 다 풀면 마무리해 주세요.' : '문제마다 답안을 저장하고, 마지막에 제출해 주세요.'}</strong><p>{submitted ? '저장한 답안과 풀이 결과를 아래에서 다시 확인할 수 있어요.' : assignment.policy.hints ? '막히면 힌트를 확인하고 다시 생각해 보세요. 저장한 답안은 마무리 전까지 바꿀 수 있어요.' : '이 과제는 힌트 없이 풀어요. 저장한 답안은 제출 전까지 바꿀 수 있어요.'}</p></div>{submitted && <span>{own ? '풀이 완료' : '제출 완료'}</span>}</div>{assignment.reason && <p className="session-guidance">{assignment.reason}</p>}{!submitted && assignment.items.length > 2 && <div className="solve-progress">{/* Two questions fit on a screen together; a set that does not needs to carry its count and its way out along with it. */}
       <span className="solve-count"><strong>{answered} / {assignment.items.length}</strong> 저장<span className="solve-meter" aria-hidden="true"><i style={{ width: `${Math.round(answered / assignment.items.length * 100)}%` }} /></span></span>
       {remaining >= 0
         ? <button className="text-button" onClick={() => setProblemToShow(remaining)}>남은 문제로<Icon name="arrow" size={15} /></button>
@@ -739,9 +899,9 @@ export function LearningWorkspace() {
     </div>}{submitted && <AnswerReport items={report} concepts={taughtConcepts} lessons={lessons} standings={state?.concepts} busy={busy} onOpenLesson={(key) => void openLesson(key)} />}<div className="assignment-problems">{assignment.items.map((item, index) => <section key={item.id} id={`problem-${index + 1}`}><ProblemCard label={`문제 ${String(index + 1).padStart(2, '0')}`} problem={{ ...item.problem, hintAvailable: item.problem.hintAvailable && assignment.policy.hints }} attempt={item.attempt} actions={assignmentActions(item.problem.problemVersionId)} ready={!!assignment.recipientId} submitLabel="답안 저장" solutionReady={submitted} glossary={{ entries: assignment.glossary, reviewConceptKeys, onOpenLesson: (key) => void openLesson(key) }} busy={busy} disabled={submitted} onReady={() => setModal('login')} readyNote="수업을 시작하면 풀이와 진도가 저장돼요." onDraftChange={(id, dirty) => setDirtyProblems((previous) => dirty ? previous.includes(id) ? previous : [...previous, id] : previous.filter((item) => item !== id))} /></section>)}</div>{!submitted && <div className="assignment-submit"><div><strong>{own ? '이 문제집을 마무리해 볼까요?' : '연습을 마무리해 볼까요?'}</strong><p>{dirtyProblems.length ? `아직 저장하지 않은 답안이 ${dirtyProblems.length}개 있어요. 먼저 답안을 저장해 주세요.` : own ? '모든 문제의 답안을 저장하면 마무리할 수 있어요.' : '모든 문제의 답안을 저장하면 제출할 수 있어요.'}</p>{remaining >= 0 && <button className="text-button" onClick={() => setProblemToShow(remaining)}>남은 문제로<Icon name="arrow" size={15} /></button>}</div><button className="button primary" disabled={busy || unsupported || dirtyProblems.length > 0 || answered !== assignment.items.length || !assignment.items.length} onClick={() => void submitAssignment()}>{busy ? (own ? '저장 중…' : '제출 중…') : own ? '다 풀었어요' : '과제 제출하기'}<Icon name="check" size={18} /></button></div>}{submitted && own && <div className="assignment-submit"><div><strong>{next ? '한 문제집 더 풀어 볼까요?' : gathered ? '이만큼 해 뒀어요.' : '이 과정의 문제집을 모두 풀었어요.'}</strong><p>{next ? `다음은 「${next.name}」이에요. ${next.questionCount}문제예요.` : gathered ? '같은 것이 또 나오면 학습 기록에 다시 모아 둘게요. 오늘은 여기까지도 좋아요.' : '다른 과정의 문제집을 골라 이어가도 좋아요.'}</p></div><button className="button primary" disabled={busy} onClick={() => next ? void startProblemSet(next.problemSetId) : navigate(gathered ? 'history' : 'practice')}>{next ? '이어서 풀기' : gathered ? '학습 기록 보기' : '문제집 고르기'}<Icon name="arrow" size={18} /></button></div>}</>;
   }
 
-  return <div className="app-shell"><a href="#main-content" className="skip-link">본문으로 이동</a><aside className="sidebar"><button className="brand-button" aria-label="geunyang math 홈" onClick={() => navigate('home')}><Brand /></button><div className="sidebar-caption">그냥, 나의 속도로.</div><nav aria-label="주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'nav-item active' : 'nav-item'} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={19} /><span>{item.label}</span>{item.page === 'practice' && pendingAssignments.length > 0 && <span className="nav-badge">{pendingAssignments.length}</span>}</button>)}</nav><div className="sidebar-bottom"><button className="learning-goal" onClick={openProfile}><span className="goal-overline"><Icon name="spark" size={14} />배우려는 과정</span><strong>{courses.find((course) => course.key === state?.user.targetCourseKey)?.title ?? '아직 고르지 않음'}</strong><span>하루 {state?.user.dailyMinutes ?? 10}분, 꾸준히<Icon name="chevron" size={14} /></span><div className="goal-line"><i /><i /><i /><i /><i /><i /><i /></div></button><div className="sidebar-signature">수학을 이해하는 즐거움<span>geunyang math © 2026</span></div></div></aside><div className="workspace"><header className="topbar"><div className="mobile-brand"><button className="brand-button" onClick={() => navigate('home')} aria-label="홈으로"><Brand /></button></div><div className="breadcrumb"><span>나의 학습 공간</span><Icon name="chevron" size={13} /><strong>{navItems.find((item) => item.page === activeNav)?.label}</strong></div><div className="account-controls">{session?.developmentLogin && <span className="dev-label">개발 미리보기</span>}{state ? <><button className="account-button" onClick={openProfile}><span className="avatar">{state.user.displayName.slice(0, 1)}</span><span>{state.user.displayName}</span></button><button className="icon-button logout" onClick={() => void logout()} disabled={busy || loading} aria-label="로그아웃" title="로그아웃"><Icon name="logout" size={17} /></button></> : <button className="login-link" onClick={() => setModal('login')} disabled={loading}>내 학습 시작<Icon name="arrow" size={15} /></button>}</div></header><nav className="mobile-nav" aria-label="모바일 주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'active' : ''} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={18} />{item.label}</button>)}</nav><main id="main-content" className={`main-content page-${page}`} tabIndex={-1}>{authError && <div className="auth-error-banner" role="alert"><Icon name="lightbulb" size={18} /><span>{authError}</span><button className="text-button" disabled={loading || busy} onClick={() => setModal('login')}>로그인 다시 하기</button><button className="icon-button" aria-label="로그인 안내 닫기" onClick={() => setAuthError('')}><Icon name="close" size={16} /></button></div>}{error && <div className="error-banner" role="alert"><span>{error}</span><button className="text-button" disabled={busy || loading} onClick={() => void refresh()}>다시 불러오기</button><button className="icon-button" aria-label="오류 알림 닫기" onClick={() => setError('')}><Icon name="close" size={16} /></button></div>}{notice && <div className="notice-banner" role="status"><Icon name="check" size={18} /><span>{notice}</span><button className="icon-button" aria-label="알림 닫기" onClick={() => setNotice('')}><Icon name="close" size={16} /></button></div>}{loading ? <div className="loading-panel" role="status"><span className="loader" />나의 학습 공간을 준비하고 있어요…</div> : page === 'home' ? renderHome() : page === 'lessons' ? renderLessons() : page === 'practice' ? renderPractice() : page === 'history' ? renderHistory() : page === 'lesson' ? renderLesson() : page === 'diagnostic' ? state ? <DiagnosticPanel key={`${state.user.id}:${state.diagnostic?.currentProblem?.problemVersionId ?? state.diagnostic?.status ?? 'new'}`} diagnostic={state.diagnostic} offering={state.diagnosticOffering} nextLesson={recommended} readiness={state.plan.readiness} onOpenLesson={(key) => void openLesson(key)} dispatch={dispatch} busy={busy} onBack={() => navigate('home')} targetTitle={courses.find((course) => course.key === state.user.targetCourseKey)?.title ?? null} onChooseTarget={openProfile} /> : null : renderAssignment()}</main><ServiceFooter /></div>{modal && <div className="modal-backdrop" onClick={(event) => { if (event.target === event.currentTarget && !busy) setModal(null); }}><div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" ref={modalRef}><button className="icon-button modal-close" aria-label="닫기" disabled={busy} onClick={() => setModal(null)}><Icon name="close" /></button>{modal === 'login' ? <>
+  return <div className="app-shell"><a href="#main-content" className="skip-link">본문으로 이동</a><aside className="sidebar"><button className="brand-button" aria-label="그냥수학 홈" onClick={() => navigate('home')}><Brand /></button><div className="sidebar-caption">그냥, 나의 속도로.</div><nav aria-label="주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'nav-item active' : 'nav-item'} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={19} /><span>{item.label}</span>{item.page === 'practice' && pendingAssignments.length > 0 && <span className="nav-badge">{pendingAssignments.length}</span>}</button>)}</nav><div className="sidebar-bottom"><button className="learning-goal" onClick={openProfile}><span className="goal-overline"><Icon name="spark" size={14} />배우려는 과정</span><strong>{courses.find((course) => course.key === state?.user.targetCourseKey)?.title ?? '아직 고르지 않음'}</strong><span>하루 {state?.user.dailyMinutes ?? 10}분, 꾸준히<Icon name="chevron" size={14} /></span><div className="goal-line"><i /><i /><i /><i /><i /><i /><i /></div></button><div className="sidebar-signature">수학을 이해하는 즐거움<span>그냥수학 © 2026</span></div></div></aside><div className="workspace"><header className="topbar"><div className="mobile-brand"><button className="brand-button" onClick={() => navigate('home')} aria-label="홈으로"><Brand /></button></div><div className="breadcrumb"><span>나의 학습 공간</span><Icon name="chevron" size={13} /><strong>{navItems.find((item) => item.page === activeNav)?.label}</strong></div><div className="account-controls">{session?.developmentLogin && <span className="dev-label">개발 미리보기</span>}{state ? <><button className="account-button" onClick={openProfile}><span className="avatar">{state.user.displayName.slice(0, 1)}</span><span>{state.user.displayName}</span></button><button className="icon-button logout" onClick={() => void logout()} disabled={busy || loading} aria-label="로그아웃" title="로그아웃"><Icon name="logout" size={17} /></button></> : <button className="login-link" onClick={() => setModal('login')} disabled={loading}>내 학습 시작<Icon name="arrow" size={15} /></button>}</div></header><nav className="mobile-nav" aria-label="모바일 주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'active' : ''} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={18} />{item.label}</button>)}</nav><main id="main-content" className={`main-content page-${page}`} tabIndex={-1}>{authError && <div className="auth-error-banner" role="alert"><Icon name="lightbulb" size={18} /><span>{authError}</span><button className="text-button" disabled={loading || busy} onClick={() => setModal('login')}>로그인 다시 하기</button><button className="icon-button" aria-label="로그인 안내 닫기" onClick={() => setAuthError('')}><Icon name="close" size={16} /></button></div>}{error && <div className="error-banner" role="alert"><span>{error}</span><button className="text-button" disabled={busy || loading} onClick={() => void refresh()}>다시 불러오기</button><button className="icon-button" aria-label="오류 알림 닫기" onClick={() => setError('')}><Icon name="close" size={16} /></button></div>}{notice && <div className="notice-banner" role="status"><Icon name="check" size={18} /><span>{notice}</span><button className="icon-button" aria-label="알림 닫기" onClick={() => setNotice('')}><Icon name="close" size={16} /></button></div>}{loading ? <div className="loading-panel" role="status"><span className="loader" />나의 학습 공간을 준비하고 있어요…</div> : page === 'home' ? renderHome() : page === 'lessons' ? renderLessons() : page === 'practice' ? renderPractice() : page === 'history' ? renderHistory() : page === 'lesson' ? renderLesson() : page === 'diagnostic' ? state ? <DiagnosticPanel key={`${state.user.id}:${state.diagnostic?.currentProblem?.problemVersionId ?? state.diagnostic?.status ?? 'new'}`} diagnostic={state.diagnostic} offering={state.diagnosticOffering} nextLesson={recommended} readiness={state.plan.readiness} onOpenLesson={(key) => void openLesson(key)} dispatch={dispatch} busy={busy} onBack={() => navigate('home')} targetTitle={courses.find((course) => course.key === state.user.targetCourseKey)?.title ?? null} onChooseTarget={openProfile} /> : null : renderAssignment()}</main><ServiceFooter /></div>{modal && <div className="modal-backdrop" onClick={(event) => { if (event.target === event.currentTarget && !busy) setModal(null); }}><div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" ref={modalRef}><button className="icon-button modal-close" aria-label="닫기" disabled={busy} onClick={() => setModal(null)}><Icon name="close" /></button>{modal === 'login' ? <>
         <span className="modal-symbol"><Icon name="book" size={27} /></span>
-        <div className="eyebrow">YOUR OWN LITTLE LEARNING SPACE</div>
+        
         <h2 id="modal-title">나의 속도로 시작해 볼까요?</h2>
         <p>{!webAuthentication
           ? '앱에서의 계정 연결은 준비 중이에요. 지금은 웹브라우저에서 Google 로그인으로 학습을 이어갈 수 있어요.'
@@ -764,7 +924,7 @@ export function LearningWorkspace() {
         </form>}
         <p className="login-privacy-note">계정과 학습 기록을 사용하는 방법은 <Link href="/privacy/" target="_blank" rel="noopener noreferrer">개인정보 안내<span className="sr-only"> (새 창)</span></Link>에서 확인할 수 있어요.</p>
         <button className="text-button login-browse" disabled={busy || googleStarting} onClick={() => { setModal(null); navigate('lessons'); }}>수업 먼저 둘러보기<Icon name="arrow" size={16} /></button>
-      </> : <><span className="modal-symbol"><Icon name="spark" size={27} /></span><div className="eyebrow">SMALL STEPS, YOUR PACE</div><h2 id="modal-title">무엇을 배우러 오셨나요?</h2><p>배우려는 과정을 고르면 시작점 확인이 거기까지 가는 데 필요한 것만 묻고, 추천도 그쪽을 향해요. 나중에 언제든 바꿀 수 있어요.</p><form onSubmit={saveProfile}><label className="form-label">배우려는 과정<select value={target} onChange={(event) => setTarget(event.target.value)} disabled={busy}><option value="">아직 고르지 않을래요</option>{courseTracks.filter((track) => courses.some((course) => course.track === track)).flatMap((track) => byStage(courses, track).map((year) => <optgroup key={`${track}:${year.stage ?? ''}`} label={year.stage ? `${courseTrackLabels[track]} · ${courseStageLabels[year.stage]}` : courseTrackLabels[track]}>{year.courses.map((course) => <option key={course.key} value={course.key}>{course.title}</option>)}</optgroup>))}</select></label><label className="form-label">하루에 얼마나 함께할까요?<select value={minutes} onChange={(event) => setMinutes(Number(event.target.value))} disabled={busy}>{[5, 10, 20].map((value) => <option key={value} value={value}>{value}분</option>)}</select></label>{error && <p role="alert" className="field-error">{error}</p>}<button className="button primary full-width" type="submit" disabled={busy}>{busy ? '저장 중…' : '이렇게 시작할게요'}<Icon name="check" size={17} /></button></form><button className="text-button profile-logout" disabled={busy || loading} onClick={() => void logout()}><Icon name="logout" size={16} />이 기기에서 로그아웃</button>{erasing ? <div className="account-erase asking" role="group" aria-label="계정 삭제 확인"><strong>계정과 학습 기록을 모두 지울까요?</strong><p>수업 진도와 풀이, 힌트 기록, 복습 과제와 제출, 시작점 확인, 추천 이력, 배우려는 과정 설정이 함께 사라져요. <b>되돌릴 수 없고 복구해 드릴 방법도 없어요.</b></p><p className="muted small">같은 Google 계정으로 다시 로그인하면 아무 기록도 없는 새 학습 공간으로 시작해요.</p><div className="account-erase-actions"><button className="button danger" disabled={busy} onClick={() => void eraseAccount()}>{busy ? '지우는 중…' : '네, 지울게요'}</button><button className="text-button" disabled={busy} onClick={() => setErasing(false)}>그만두기</button></div></div> : <button className="text-button account-erase-open" disabled={busy || loading} onClick={() => { setError(''); setErasing(true); }}><Icon name="close" size={15} />계정과 학습 기록 지우기</button>}</>}</div></div>}</div>;
+      </> : <><span className="modal-symbol"><Icon name="spark" size={27} /></span><h2 id="modal-title">무엇을 배우러 오셨나요?</h2><p>배우려는 과정을 고르면 시작점 확인이 거기까지 가는 데 필요한 것만 묻고, 추천도 그쪽을 향해요. 나중에 언제든 바꿀 수 있어요.</p><form onSubmit={saveProfile}><label className="form-label">배우려는 과정<select value={target} onChange={(event) => setTarget(event.target.value)} disabled={busy}><option value="">아직 고르지 않을래요</option>{courseTracks.filter((track) => courses.some((course) => course.track === track)).flatMap((track) => byStage(courses, track).map((year) => <optgroup key={`${track}:${year.stage ?? ''}`} label={year.stage ? `${courseTrackLabels[track]} · ${courseStageLabels[year.stage]}` : courseTrackLabels[track]}>{year.courses.map((course) => <option key={course.key} value={course.key}>{course.title}</option>)}</optgroup>))}</select></label><label className="form-label">하루에 얼마나 함께할까요?<select value={minutes} onChange={(event) => setMinutes(Number(event.target.value))} disabled={busy}>{[5, 10, 20].map((value) => <option key={value} value={value}>{value}분</option>)}</select></label>{error && <p role="alert" className="field-error">{error}</p>}<button className="button primary full-width" type="submit" disabled={busy}>{busy ? '저장 중…' : '이렇게 시작할게요'}<Icon name="check" size={17} /></button></form><button className="text-button profile-logout" disabled={busy || loading} onClick={() => void logout()}><Icon name="logout" size={16} />이 기기에서 로그아웃</button>{erasing ? <div className="account-erase asking" role="group" aria-label="계정 삭제 확인"><strong>계정과 학습 기록을 모두 지울까요?</strong><p>수업 진도와 풀이, 힌트 기록, 복습 과제와 제출, 시작점 확인, 추천 이력, 배우려는 과정 설정이 함께 사라져요. <b>되돌릴 수 없고 복구해 드릴 방법도 없어요.</b></p><p className="muted small">같은 Google 계정으로 다시 로그인하면 아무 기록도 없는 새 학습 공간으로 시작해요.</p><div className="account-erase-actions"><button className="button danger" disabled={busy} onClick={() => void eraseAccount()}>{busy ? '지우는 중…' : '네, 지울게요'}</button><button className="text-button" disabled={busy} onClick={() => setErasing(false)}>그만두기</button></div></div> : <button className="text-button account-erase-open" disabled={busy || loading} onClick={() => { setError(''); setErasing(true); }}><Icon name="close" size={15} />계정과 학습 기록 지우기</button>}</>}</div></div>}</div>;
 }
 
 function EmptyState({ title, text, actionLabel, onAction }: { title: string; text: string; actionLabel?: string; onAction?: () => void }) {

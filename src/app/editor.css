@@ -13,20 +13,20 @@
      two measured degrees. Each colour clears 4.5:1 on every surface this screen puts it on, which
      the old one-off greens did not — the faintest of them read at 2.3:1. */
   --editor-ink: var(--ink);
-  --editor-label: #4f6148;
+  --editor-label: var(--ink-2);
   --editor-help: #616f58;
-  --editor-active-bg: #e7eedf;
-  --editor-active-text: #40613a;
+  --editor-active-bg: var(--accent-soft);
+  --editor-active-text: var(--ink);
   --editor-warn: #8a5a30;
   --editor-warn-bg: #fff4e7;
   --editor-warn-line: #e1b897;
   /* A field's edge carries 3:1 against both the field and the paper, so where to type is visible
      rather than inferred. Rules and dividers are decoration and stay quiet. */
-  --editor-field-line: #84936b;
+  --editor-field-line: var(--muted);
   --editor-field-bg: #fffefb;
-  --editor-rule: #e2e7d8;
-  --editor-panel-line: #e8ecdf;
-  --editor-sunken: #fbfcf6;
+  --editor-rule: var(--line);
+  --editor-panel-line: var(--line);
+  --editor-sunken: var(--paper);
   --editor-value-size: 15px;
   --editor-label-size: 13px;
   --editor-help-size: 12px;
@@ -45,9 +45,12 @@
 .authoring-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;
   margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); }
 .authoring-foot small { font-size: var(--editor-help-size); color: var(--editor-help); }
-.expert-toggle input { width: 18px; height: 18px; accent-color: var(--green); }
+.expert-toggle input { width: 18px; height: 18px; accent-color: var(--accent); }
 .expert-toggle span { white-space: nowrap; }
-.authoring-page .eyebrow { font-size: var(--editor-help-size); }
+.authoring-page /* The learner app writes its small labels by hand — they are asides, spoken to a reader. The
+ * editor's labels count things ("3개 수업 · 0개 작성 중"); they are readings off a work surface, so
+ * they keep the reading face and the size everything else in a form uses. */
+.eyebrow { font-family: var(--font); font-weight: 600; font-size: var(--editor-help-size); }
 .authoring-page .icon-button { min-width: var(--editor-control); min-height: var(--editor-control); font-size: 14px; }
 .authoring-page .text-button { font-size: 12px; }
 
@@ -59,13 +62,13 @@
 .editor-mode { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 8px; background: var(--editor-sunken); }
 .editor-mode button { padding: 6px 13px; border-radius: 6px; font-size: 12px; color: var(--editor-help); }
 .editor-mode button.active { background: var(--white); color: var(--editor-active-text); font-weight: 600; box-shadow: 0 1px 2px #6f825518; }
-.editor-trying-note { margin: 0 0 16px; padding: 11px 14px; border: 1px dashed #cdd8bd; border-radius: 8px;
+.editor-trying-note { margin: 0 0 16px; padding: 11px 14px; border: 1px dashed #e0d9c9; border-radius: 8px;
   background: var(--editor-sunken); }
 
 /* What was just removed, and the way back to it. Undo is a keystroke; this is the same move for a
    hand that never learned the keystroke, and it says which one of them the click undoes. */
 .editor-toast { position: sticky; bottom: 16px; z-index: 5; display: flex; align-items: center; gap: 14px;
-  margin-top: 18px; padding: 12px 16px; border: 1px solid #cdd8bd; border-radius: 9px; background: var(--white);
+  margin-top: 18px; padding: 12px 16px; border: 1px solid #e0d9c9; border-radius: 9px; background: var(--white);
   box-shadow: 0 6px 16px #6f825522; font-size: 13px; line-height: 1.7; color: var(--editor-label); }
 .editor-toast > span { flex: 1; min-width: 0; }
 .editor-toast .text-button { flex-shrink: 0; font-size: 13px; }
@@ -94,8 +97,8 @@
 .editor-sheet .sheet-header { margin-bottom: 18px; }
 .sheet-inline { display: block; width: calc(100% + 16px); margin: 0 -8px; padding: 2px 8px; border: 0; border-radius: 7px;
   background: transparent; color: inherit; font: inherit; letter-spacing: inherit; resize: none; overflow: hidden; }
-.sheet-inline::placeholder { color: #9fae88; }
-.sheet-inline:hover, .sheet-inline:focus { background: #f2f6ea; }
+.sheet-inline::placeholder { color: #968d7b; }
+.sheet-inline:hover, .sheet-inline:focus { background: #f4f0e4; }
 .sheet-class-title { font-size: 29px; font-weight: 600; letter-spacing: -1px; line-height: 1.6; margin: 9px -8px 0; }
 .sheet-section-title { font-size: 24px; font-weight: 500; letter-spacing: -.7px; line-height: 1.5; margin: 12px -8px 30px;
   word-break: keep-all; }
@@ -103,8 +106,8 @@
 /* Every block wears a frame so it can be picked. The frame is drawn outside the block rather than
    around it, so choosing one never moves the lesson by a pixel. */
 .sheet-block { position: relative; border-radius: 8px; }
-.sheet-block:hover { outline: 1px solid #d3ddc2; outline-offset: 8px; }
-.sheet-block.chosen { outline: 2px solid var(--green); outline-offset: 8px; }
+.sheet-block:hover { outline: 1px solid #e0d9c9; outline-offset: 8px; }
+.sheet-block.chosen { outline: 2px solid var(--accent); outline-offset: 8px; }
 /* A paragraph being written already shows it: the text box has its own ground and its own ring. */
 .sheet-block.chosen.writing { outline: none; }
 /* A block a rule refused says so where it sits, so the list at the foot is a way back to it and
@@ -128,7 +131,7 @@
 /* A paragraph being written is the paragraph: same face, same size, same leading as the drawn one. */
 .sheet-writing { position: relative; }
 .sheet-paragraph { display: block; width: calc(100% + 16px); margin: 0 -8px; padding: 0 8px; border: 0; border-radius: 7px;
-  background: #f2f6ea; color: #68775d; font-family: inherit; font-size: 14px; line-height: 2.1; letter-spacing: inherit;
+  background: #f4f0e4; color: #6b6358; font-family: inherit; font-size: 14px; line-height: 2.1; letter-spacing: inherit;
   resize: none; overflow: hidden; overflow-wrap: anywhere; word-break: keep-all; }
 .sheet-add { margin-top: 30px; padding-top: 20px; border-top: 1px dashed var(--editor-rule); }
 .sheet-add .editor-add { border: 0; background: none; padding: 0; }
@@ -146,7 +149,7 @@
 .editor-field { display: flex; flex-direction: column; gap: 7px; margin-top: 16px; min-width: 0; }
 .editor-label { font-size: var(--editor-label-size); font-weight: 500; color: var(--editor-label);
   display: inline-flex; align-items: center; gap: 6px; }
-.editor-label em { font-style: normal; font-size: var(--editor-help-size); color: var(--editor-help); border: 1px solid #d3dbc6;
+.editor-label em { font-style: normal; font-size: var(--editor-help-size); color: var(--editor-help); border: 1px solid #e0d9c9;
   border-radius: 3px; padding: 1px 5px; }
 .editor-field input, .editor-field textarea, .editor-field select { width: 100%; min-height: 42px; padding: 10px 12px;
   border: 1px solid var(--editor-field-line); border-radius: 6px; background: var(--editor-field-bg);
@@ -155,13 +158,13 @@
 .authoring-page .editor-field small, .authoring-page .editor-note { font-size: var(--editor-help-size);
   line-height: 1.8; color: var(--editor-help); word-break: keep-all; }
 .editor-check { flex-direction: row; align-items: center; gap: 9px; }
-.editor-check input { width: 18px; height: 18px; min-height: 0; flex: 0 0 18px; accent-color: var(--green); }
+.editor-check input { width: 18px; height: 18px; min-height: 0; flex: 0 0 18px; accent-color: var(--accent); }
 .editor-check.inline { margin: 0; }
 
 /* Term links as the words they sit on, which is how they were made: typed into the text above. */
 .editor-links { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--editor-rule); }
 .editor-link-list { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
-.editor-link { display: inline-flex; align-items: center; gap: 4px; padding: 5px 6px 5px 11px; border: 1px solid #cdd8bd;
+.editor-link { display: inline-flex; align-items: center; gap: 4px; padding: 5px 6px 5px 11px; border: 1px solid #e0d9c9;
   border-radius: 999px; background: var(--editor-sunken); font-size: var(--editor-label-size); color: var(--editor-label); }
 .authoring-page .editor-link .icon-button { min-width: 24px; min-height: 24px; border-radius: 999px; }
 
@@ -187,11 +190,11 @@
   max-height: 260px; overflow-y: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--white);
   box-shadow: 0 8px 22px rgba(60, 72, 50, .12); }
 .term-mentions button { display: block; width: 100%; padding: 9px 11px; border-radius: 6px; text-align: left; }
-.term-mentions button:hover, .term-mentions button.active { background: #eef3e6; }
+.term-mentions button:hover, .term-mentions button.active { background: #f4f0e4; }
 .term-mentions strong { display: block; font-size: 14px; font-weight: 600; color: var(--editor-label); }
 .term-mentions small { display: block; font-size: 12px; color: var(--editor-help); margin-top: 3px; word-break: break-all; }
 .term-mentions-empty { margin-top: 6px; }
-.term-writing code { font-size: 12px; padding: 1px 5px; border: 1px solid #d3dbc6; border-radius: 3px; background: #f6f8f1; }
+.term-writing code { font-size: 12px; padding: 1px 5px; border: 1px solid #e0d9c9; border-radius: 3px; background: #f9f5ec; }
 
 /* An activity owns its questions, so a question is written where the activity is: nested, folded
    away until it is opened, and using the same block cards as the lesson text around it. */
@@ -218,7 +221,7 @@
 .editor-answer .editor-field { flex: 1 1 230px; margin-top: 0; }
 .editor-answer .editor-check { margin-bottom: 11px; }
 .authoring-page .editor-warn { color: var(--editor-warn); }
-.editor-add { border: 1px dashed #c6d2b3; border-radius: 10px; padding: 16px 18px; background: #fafbf5; }
+.editor-add { border: 1px dashed #e0d9c9; border-radius: 10px; padding: 16px 18px; background: #fcf9f1; }
 .editor-add-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .authoring-page .button { font-size: 13px; min-height: 40px; padding: 9px 14px; }
 .authoring-page .button.primary { font-size: 14px; }
@@ -229,7 +232,7 @@
   border: 1px solid var(--line); border-radius: 8px; background: var(--editor-sunken); }
 .role-who { flex: 1 1 180px; min-width: 0; }
 .role-who strong { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--editor-label); }
-.role-who em { font-style: normal; font-size: var(--editor-help-size); color: var(--editor-help); border: 1px solid #d3dbc6;
+.role-who em { font-style: normal; font-size: var(--editor-help-size); color: var(--editor-help); border: 1px solid #e0d9c9;
   border-radius: 3px; padding: 1px 6px; }
 .role-who small { display: block; font-size: var(--editor-help-size); color: var(--editor-help); margin-top: 4px; }
 .role-row select { width: auto; min-height: var(--editor-control); padding: 8px 11px; border: 1px solid var(--editor-field-line);
@@ -246,7 +249,7 @@
 .studio-issues small { color: #8a7b5f; }
 
 .editor-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 22px; }
-.editor-confirm { margin-top: 18px; padding: 20px 22px; border: 1px solid #cdd8bd; border-radius: 10px; background: #f1f5e9; }
+.editor-confirm { margin-top: 18px; padding: 20px 22px; border: 1px solid #e0d9c9; border-radius: 10px; background: #f4f0e4; }
 .editor-confirm strong { font-size: 15px; color: var(--editor-active-text); }
 .editor-confirm p { font-size: var(--editor-label-size); line-height: 1.9; color: var(--editor-label); margin-top: 9px; word-break: keep-all; }
 .editor-confirm .editor-actions { margin-top: 14px; }
@@ -272,7 +275,7 @@
 .scene-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
 .scene-tools .editor-label { width: 100%; }
 .authoring-page .scene-tools .button { font-size: 12px; min-height: var(--editor-control); padding: 6px 11px; }
-.scene-canvas { margin-top: 12px; border: 1px solid #cdd8bd; border-radius: 8px; background: var(--white); overflow: hidden; }
+.scene-canvas { margin-top: 12px; border: 1px solid #e0d9c9; border-radius: 8px; background: var(--white); overflow: hidden; }
 .scene-canvas > svg { display: block; width: 100%; height: auto; margin: 0 auto; touch-action: none; }
 .scene-size { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin-top: 12px; }
 .scene-size .editor-field { margin-top: 0; width: 108px; }
@@ -285,7 +288,7 @@
 .scene-panel textarea { font-family: ui-monospace, monospace; font-size: 13px; }
 .scene-swatches { display: flex; flex-wrap: wrap; gap: 6px; }
 .scene-swatch { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--editor-field-line); background: var(--white); }
-.scene-swatch.active { outline: 2px solid var(--green); outline-offset: 2px; }
+.scene-swatch.active { outline: 2px solid var(--accent); outline-offset: 2px; }
 /* Nothing to fill with, drawn as the absence it is rather than as another colour. */
 .scene-swatch.empty { background-image:
   linear-gradient(to top right, transparent calc(50% - 1px), #a8764f 50%, transparent calc(50% + 1px)); }
@@ -295,7 +298,7 @@
 .scene-frame-list > button:not(.text-button) { min-width: var(--editor-control); min-height: var(--editor-control);
   padding: 0 11px; border: 1px solid var(--editor-field-line); border-radius: 6px; background: var(--white);
   font-size: var(--editor-label-size); color: var(--editor-label); }
-.scene-frame-list > button.active { background: var(--editor-active-bg); border-color: #9cb08c; color: var(--editor-active-text); font-weight: 600; }
+.scene-frame-list > button.active { background: var(--editor-active-bg); border-color: var(--accent); color: var(--editor-active-text); font-weight: 600; }
 .scene-frames .scene-size { margin-top: 10px; }
 
 @media (max-width: 1180px) {
@@ -332,13 +335,13 @@
 /* Course preparation stays separate from the lesson's paper and editing tools. */
 .studio-nav { display: flex; gap: 8px; border-bottom: 1px solid var(--line); margin: 0 0 30px; overflow-x: auto; }
 .studio-nav button { padding: 12px 18px; color: var(--editor-help); white-space: nowrap; border-bottom: 2px solid transparent; }
-.studio-nav button.active { color: var(--deep-green); border-bottom-color: var(--green); font-weight: 600; }
+.studio-nav button.active { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
 .studio-heading { align-items: flex-start; }
 .studio-heading h2 { font-size: 27px; margin: 8px 0; }
 .studio-heading .editor-note { max-width: 720px; margin-bottom: 0; }
 .studio-courses { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 20px; }
 .studio-course { text-align: left; padding: 26px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); }
-.studio-course:hover { border-color: var(--green); background: #f7faef; }
+.studio-course:hover { border-color: var(--accent); background: #f9f5ec; }
 .studio-course h3 { margin: 15px 0 9px; font-size: 22px; }
 .studio-course p { color: var(--editor-help); font-size: 14px; line-height: 1.8; min-height: 50px; margin-bottom: 20px; }
 .studio-form { max-width: 840px; margin-bottom: 26px; }
@@ -408,14 +411,14 @@
 .editor-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
 .editor-chips > .editor-note { margin: 0; }
 .editor-chip { display: inline-flex; align-items: center; gap: 2px; padding: 6px 4px 6px 11px; font-size: 13px;
-  border: 1px solid var(--green); border-radius: 999px; background: var(--editor-active-bg); color: var(--editor-active-text);
+  border: 1px solid var(--accent); border-radius: 999px; background: var(--editor-active-bg); color: var(--editor-active-text);
   overflow-wrap: anywhere; min-width: 0; }
 .authoring-page .editor-chip .icon-button { min-width: 26px; min-height: 26px; border-radius: 999px; color: inherit; }
 .editor-concept-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
 .editor-chip-add { display: inline-flex; align-items: center; gap: 5px; padding: 8px 12px 8px 9px; font-size: 13px;
   border: 1px solid var(--line); border-radius: 999px; background: var(--white); color: var(--editor-label);
   overflow-wrap: anywhere; min-width: 0; min-height: var(--editor-control); }
-.editor-chip-add:hover { border-color: var(--green); background: var(--editor-active-bg); color: var(--editor-active-text); }
+.editor-chip-add:hover { border-color: var(--accent); background: var(--editor-active-bg); color: var(--editor-active-text); }
 .editor-answer { display: block; }
 .editor-answer .editor-field + .editor-field { margin-top: 16px; }
 /* Settings a question rarely changes, and the solution the learning screen does not show yet: kept
@@ -432,7 +435,7 @@
 .concept-card { padding: 18px; border: 1px solid var(--line); border-radius: 9px; text-align: left; background: var(--white); }
 .concept-card strong, .concept-card span { display: block; }
 .concept-card span { margin-top: 8px; font-size: 12px; color: var(--editor-help); }
-.concept-card.active { border-color: var(--green); background: var(--editor-active-bg); }
+.concept-card.active { border-color: var(--accent); background: var(--editor-active-bg); }
 .concept-library .editor-panel { max-width: 680px; }
 .sheet-empty { padding: 24px 14px; border: 1px dashed var(--editor-field-line); border-radius: 8px; font-size: 14px; color: var(--editor-help); }
 .sheet-edit-link { display: inline-flex; margin-top: 12px; padding: 8px 0; }
@@ -453,25 +456,25 @@
 .editor-choices li{display:flex;align-items:center;gap:9px}
 .editor-choices li input[type=text],.editor-choices li input:not([type]){flex:1;min-width:0}
 .editor-choice-correct{display:flex;align-items:center}
-.editor-choice-correct input{accent-color:var(--green);width:17px;height:17px}
+.editor-choice-correct input{accent-color:var(--accent);width:17px;height:17px}
 .editor-choice-actions{display:flex;gap:14px;margin-top:9px}
 
 /* The table block's editor: the cells sit where the learner will read them, so an author types
    into the shape rather than into a form that describes it. */
 .table-editor { margin-top: 16px; display: flex; flex-direction: column; gap: 11px; }
 .table-editor .inline-check { flex-direction: row; align-items: center; gap: 8px; font-size: 13px; margin-top: 0; }
-.table-editor .inline-check input { width: 16px; height: 16px; accent-color: var(--green); }
+.table-editor .inline-check input { width: 16px; height: 16px; accent-color: var(--accent); }
 .table-editor-grid { overflow-x: auto; overscroll-behavior-x: contain; border: 1px solid var(--line); border-radius: 8px; background: var(--white); }
 .table-editor-grid table { border-collapse: collapse; width: 100%; }
 .table-editor-grid th, .table-editor-grid td { border: 1px solid var(--line); padding: 7px; vertical-align: top; }
-.table-editor-grid thead th { background: #f2f4ea; min-width: 132px; }
+.table-editor-grid thead th { background: #f4f0e4; min-width: 132px; }
 .table-editor-grid input { width: 100%; min-width: 108px; border: 1px solid transparent; border-radius: 5px; padding: 6px 7px; background: transparent; font-size: 13px; color: var(--ink); }
 .table-editor-grid input:hover { border-color: var(--line); }
-.table-editor-grid input:focus { border-color: var(--green); background: var(--white); outline: none; }
+.table-editor-grid input:focus { border-color: var(--accent); background: var(--white); outline: none; }
 .table-editor-grid input.is-end { text-align: right; font-variant-numeric: tabular-nums; }
 .table-editor-column-tools { display: flex; align-items: center; gap: 4px; margin-top: 5px; }
 .table-editor-column-tools select { flex: 1; min-width: 0; font-size: 12px; padding: 4px 6px; border: 1px solid var(--line); border-radius: 5px; background: var(--white); color: var(--muted); }
-.table-editor-add { width: 1%; white-space: nowrap; background: #fbfcf6; }
+.table-editor-add { width: 1%; white-space: nowrap; background: #fcf9f1; }
 .table-editor-add .text-button { font-size: 12px; gap: 4px; }
 .table-editor-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--muted); }
 

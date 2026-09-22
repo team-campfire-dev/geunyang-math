@@ -13,13 +13,25 @@ export const sceneLimits = {
   minStroke: 0.25, maxStroke: 20, minFontSize: 4, maxFontSize: 96,
 } as const;
 
-/** Palette names keep a drawing in the app's own colours, in both themes. A hex value is allowed
- *  for the cases a name cannot express; both are validated, neither is free-form markup. */
+/** Palette names keep a drawing in the app's own colours. A hex value is allowed for the cases a
+ *  name cannot express; both are validated, neither is free-form markup.
+ *
+ *  The keys are written into published content and cannot be renamed without rewriting every
+ *  bundle, so four of them still read as colours the palette no longer has — green, deep-green,
+ *  light-green, orange. What they point at has moved. They had pointed at --green, --deep-green,
+ *  --light-green and --orange, which were removed when the palette became paper and ink; an
+ *  undefined var() in a fill computes to black and in a stroke to none, so 108 of 127 lessons were
+ *  drawing black text and invisible lines. Read them by the job they do, not by their names:
+ *  green is a second object beside the ink one, orange is the thing being pointed at.
+ *
+ *  Those two are the reason a drawing gets a colour the rest of the app does not have. Seventy
+ *  figures use both at once, and a figure showing a line that stays and a line that turns needs
+ *  them to be plainly different — two warm darks are one line drawn twice. */
 export const scenePalette = {
   ink: 'var(--ink)', muted: 'var(--muted)', line: 'var(--line)', paper: 'var(--paper)', white: 'var(--white)',
-  green: 'var(--green)', 'deep-green': 'var(--deep-green)', 'light-green': 'var(--light-green)', orange: 'var(--orange)',
-  // The strip's own greens, so a scene can match a fraction figure beside it.
-  fill: '#8daa69', 'fill-soft': '#e5ecd7', sand: '#f0e3cd', sky: '#d4e0e6', none: 'none',
+  green: 'var(--accent-2)', 'deep-green': 'var(--ink)', 'light-green': 'var(--accent-soft)', orange: 'var(--accent)',
+  // The strip's own fill, so a scene can match a fraction figure beside it.
+  fill: 'var(--accent)', 'fill-soft': 'var(--accent-soft)', sand: '#f0e3cd', sky: '#d4e0e6', none: 'none',
 } as const;
 export type SceneColor = keyof typeof scenePalette;
 export const sceneColors = Object.keys(scenePalette) as SceneColor[];
@@ -27,8 +39,8 @@ export const sceneColors = Object.keys(scenePalette) as SceneColor[];
  *  renderer; an author picks from swatches and never reads `fill-soft`. */
 export const sceneColorLabels: Record<SceneColor, string> = {
   ink: '먹색', muted: '회색', line: '연한 선', paper: '종이색', white: '흰색',
-  green: '초록', 'deep-green': '진한 초록', 'light-green': '연한 초록', orange: '주황',
-  fill: '강조색', 'fill-soft': '연한 강조색', sand: '모래', sky: '하늘', none: '없음',
+  green: '파란 선', 'deep-green': '진한 먹색', 'light-green': '연한 강조 바탕', orange: '강조색',
+  fill: '강조색(채움)', 'fill-soft': '연한 강조 바탕', sand: '모래', sky: '하늘', none: '없음',
 };
 const hex = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
 export const isSceneColor = (value: unknown): value is string =>
