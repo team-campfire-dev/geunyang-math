@@ -4,7 +4,8 @@ import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ContentError } from '../src/core/content-bundle';
 import { getDatabase } from '../src/server/db';
-import { exportContent, importContent, publishBundle, verifyContent } from '../src/server/content-store';
+import { exportContent, importContent, publishBundle, retiredVersions, retireVersions, verifyContent } from '../src/server/content-store';
+import { parseContentBundle } from '../src/core/content-bundle';
 import { z } from 'zod';
 
 export async function runContentCommand(args: string[]) {
@@ -12,10 +13,11 @@ export async function runContentCommand(args: string[]) {
   const dryRun = flags.at(-1) === '--dry-run';
   const publishFlags = dryRun ? flags.slice(0, -1) : flags;
   const valid = command === 'verify' ? flags.length === 0
+    : command === 'retire' ? flags.length === 0 || (flags.length === 1 && flags[0] === '--apply')
     : command === 'export' ? flags.length === 2 && flags[0] === '--out' && !!flags[1]
     : command === 'publish' ? publishFlags.length === 0 || (publishFlags.length === 2 && publishFlags[0] === '--dir' && !!publishFlags[1])
     : command === 'import' && flags[0] === '--file' && !!flags[1] && (flags.length === 2 || (flags.length === 3 && dryRun));
-  if (!valid) throw new ContentError('Usage: content:verify | content:export -- --out <new-file.json> | content:import -- --file <bundle.json> [--dry-run] | content:publish [-- --dir <directory>] [--dry-run]');
+  if (!valid) throw new ContentError('Usage: content:verify | content:retire [-- --apply] | content:export -- --out <new-file.json> | content:import -- --file <bundle.json> [--dry-run] | content:publish [-- --dir <directory>] [--dry-run]');
   let input: unknown;
   if (command === 'import') {
     if (statSync(flags[1]).size > 5 * 1024 * 1024) throw new ContentError('Import is limited to 5 MiB. Split larger bundles.');
@@ -38,6 +40,29 @@ export async function runContentCommand(args: string[]) {
     }
     else if (command === 'import') console.log(JSON.stringify(await importContent(db, input, dryRun)));
     else if (command === 'verify') console.log(JSON.stringify(await verifyContent(db)));
+    else if (command === 'retire') {
+      /**
+       * Versions the seeds no longer ship. Listing is the default and `--apply` is the exception,
+       * because this is the one content command that removes rather than adds: a version bump
+       * leaves the old version behind, and it is unreachable rather than wrong.
+       *
+       * What stays behind on purpose is `prisma/published-versions.json`. It is the memory that an
+       * id was published, and forgetting it would let the same id come back later holding different
+       * content — which is the thing the ledger exists to refuse.
+       */
+      const seeds = readdirSync('prisma/seed').filter(name => name.endsWith('.json')).sort()
+        .map(name => parseContentBundle(JSON.parse(readFileSync(join('prisma/seed', name), 'utf8'))));
+      const keepLessons = seeds.flatMap(bundle => bundle.lessons.map(lesson => lesson.public.versionId));
+      const keepSets = seeds.flatMap(bundle => bundle.problemSets.map(set => set.versionId));
+      if (!keepLessons.length || !keepSets.length) throw new ContentError('Seeds look empty; refusing to treat the whole catalogue as retired.');
+      const retired = await retiredVersions(db, keepLessons, keepSets);
+      const held = retired.filter(item => item.heldBy.length);
+      const free = retired.filter(item => !item.heldBy.length);
+      const apply = flags[0] === '--apply';
+      console.log(JSON.stringify({ retired: retired.length, removable: free.length, kept: held.length,
+        versions: free.map(item => item.versionId), stillReferenced: held.map(item => `${item.versionId} (${item.heldBy.join(', ')})`),
+        ...(apply ? await retireVersions(db, free) : { dryRun: true }) }));
+    }
     else {
       const bundle = await db.$transaction(tx => exportContent(tx), { isolationLevel: 'RepeatableRead', timeout: 30_000 });
       // Exports include private answer keys. Never overwrite a file or print its content.

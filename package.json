@@ -20,6 +20,7 @@
     "content:export": "node --conditions=react-server --import tsx scripts/content.ts export",
     "content:publish": "node --conditions=react-server --import tsx scripts/content.ts publish",
     "content:verify": "node --conditions=react-server --import tsx scripts/content.ts verify",
+    "content:retire": "node --conditions=react-server --import tsx scripts/content.ts retire",
     "content:lock": "node --import tsx scripts/content-lock.ts",
     "pilot:report": "node --conditions=react-server --import tsx scripts/pilot.ts"
   },

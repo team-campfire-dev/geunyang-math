@@ -5,7 +5,7 @@ import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { createDatabase } from '@/server/db';
 import { LearningService } from '@/server/learning-service';
 import { canonicalJson, parseContentBundle, validateReferences } from '@/core/content-bundle';
-import { blockOf, lessonRecord, currentDiagnostic, currentDefinitions, diagnosticDefinitions, exportContent, importContent, indexLessonDocument, publishBundle, publishedProblemRecords, verifyContent } from '@/server/content-store';
+import { blockOf, lessonRecord, currentDiagnostic, currentDefinitions, diagnosticDefinitions, exportContent, importContent, indexLessonDocument, publishBundle, publishedProblemRecords, retiredVersions, retireVersions, verifyContent } from '@/server/content-store';
 import initial from './fixtures/fractions-v1.json';
 import { diagnosticProblems, seedLessons, setsOf } from './fixtures/content';
 import { storedLessonOf } from '@/core/content';
@@ -258,6 +258,49 @@ describe.skipIf(!url)('DB content publishing and learner snapshot preservation',
     hinted.problemSets[0].problems[0].hints = [{ ...solution[0], blockId: `${target.problemVersionId}:hint:b1` }];
     await expect(importContent(db, hinted)).rejects.toThrow(/immutable/);
   });
+  it('retires the versions the seeds no longer ship, and refuses the ones a record names', async () => {
+    const first = newLesson();
+    const older = { ...empty(), ...publish(first) };
+    await importContent(db, older);
+    const second = structuredClone(first);
+    second.public.versionId += '-next';
+    second.public.title = 'Second edition';
+    const newer = { ...empty(), ...publish(second) };
+    await importContent(db, newer);
+    const keepLessons = newer.lessons.map((lesson) => lesson.public.versionId);
+    const keepSets = newer.problemSets.map((set) => set.versionId);
+    const mine = (list: Awaited<ReturnType<typeof retiredVersions>>) =>
+      list.filter((item) => item.versionId.startsWith(first.public.lessonKey));
+
+    // Nobody has opened the older version, so it is unreachable content and may go.
+    let retired = mine(await retiredVersions(db, keepLessons, keepSets));
+    expect(retired.map((item) => item.versionId)).toContain(first.public.versionId);
+    expect(retired.every((item) => !item.heldBy.length)).toBe(true);
+
+    // A learner who started it makes it a record somebody's answer names, and it stays.
+    const user = await learner();
+    await service.act(user.id, { action: 'enrollment.start', lessonKey: first.public.lessonKey });
+    await db.enrollment.updateMany({ where: { userId: user.id }, data: { lessonVersionId: first.public.versionId } });
+    retired = mine(await retiredVersions(db, keepLessons, keepSets));
+    const held = retired.find((item) => item.versionId === first.public.versionId)!;
+    expect(held.heldBy).toEqual(['수강 1']);
+    // Refused outright rather than skipped: a list that came back partly retired reads as a lie.
+    await expect(retireVersions(db, retired)).rejects.toThrow(/Still referenced/);
+    expect(await db.lessonVersion.count({ where: { id: first.public.versionId } })).toBe(1);
+
+    // Let go of it and the same list retires cleanly, taking its sections and blocks with it.
+    await db.enrollment.deleteMany({ where: { userId: user.id } });
+    retired = mine(await retiredVersions(db, keepLessons, keepSets));
+    const removed = await retireVersions(db, retired);
+    expect(removed.lessons).toBe(1);
+    expect(removed.sections).toBeGreaterThan(0);
+    expect(await db.lessonVersion.count({ where: { id: first.public.versionId } })).toBe(0);
+    expect(await db.contentBlock.count({ where: { ownerVersionId: first.public.versionId } })).toBe(0);
+    // The one that is still shipped is untouched, and the catalogue still reads back whole.
+    expect(await db.lessonVersion.count({ where: { id: second.public.versionId } })).toBe(1);
+    await expect(verifyContent(db)).resolves.toBeTruthy();
+  }, 30_000);
+
   it('selects the last newly published version while pinning existing enrollment and homework', async () => {
     const first = newLesson(); await importContent(db, { ...empty(), ...publish(first) });
     const user = await learner(), scope = await db.learningScope.findUniqueOrThrow({ where: { ownerUserId: user.id } });

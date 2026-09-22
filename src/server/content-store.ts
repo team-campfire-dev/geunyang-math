@@ -353,6 +353,73 @@ export async function verifyContent(db: Db) {
     definitions: bundle.definitions.length };
 }
 
+/**
+ * The published versions the repository no longer ships, and what still points at each.
+ *
+ * A version bump writes a new version and takes the old one out of the seed file, but `db:seed`
+ * only ever adds — so the old one stays in the database, unreachable from the catalogue and
+ * uncountable by anything that reads the seeds. `content:verify` says 175 lessons where the
+ * catalogue teaches 127, and the editor lists versions nobody can open.
+ *
+ * What is **not** in this list is the point of it. A version a learner started, a set an assignment
+ * was cut from, a question somebody answered: each of those is a record that names the version and
+ * means the content it had, so the version stays. Retiring is only ever for what nothing names.
+ */
+export type RetiredVersion = { versionId: string; kind: 'lesson' | 'problem_set'; heldBy: string[] };
+
+export async function retiredVersions(db: Db, keepLessons: string[], keepSets: string[]): Promise<RetiredVersion[]> {
+  const [lessons, sets] = await Promise.all([
+    db.lessonVersion.findMany({ where: { id: { notIn: keepLessons } }, select: { id: true }, orderBy: { id: 'asc' } }),
+    db.problemSetVersion.findMany({ where: { id: { notIn: keepSets } }, select: { id: true }, orderBy: { id: 'asc' } }),
+  ]);
+  const setIds = sets.map(row => row.id);
+  const [enrolments, assignments, problems] = await Promise.all([
+    db.enrollment.groupBy({ by: ['lessonVersionId'], _count: true }),
+    db.assignment.groupBy({ by: ['problemSetVersionId'], _count: true }),
+    db.publishedProblem.findMany({ where: { ownerVersionId: { in: setIds } }, select: { ownerVersionId: true, problemVersionId: true } }),
+  ]);
+  const enrolled = new Map(enrolments.map(row => [row.lessonVersionId, row._count]));
+  const assigned = new Map(assignments.flatMap(row => row.problemSetVersionId ? [[row.problemSetVersionId, row._count] as const] : []));
+  // A question may belong to a version that stays as well; only an answer to one held **only** here
+  // would dangle, so the check is on the question's own name rather than on this version.
+  const alsoCurrent = new Set((await db.publishedProblem.findMany({ where: { ownerVersionId: { notIn: setIds } },
+    select: { problemVersionId: true }, distinct: ['problemVersionId'] })).map(row => row.problemVersionId));
+  const onlyHere = problems.filter(row => !alsoCurrent.has(row.problemVersionId));
+  const answered = new Set((await db.attempt.findMany({ where: { problemVersionId: { in: onlyHere.map(item => item.problemVersionId) } },
+    select: { problemVersionId: true }, distinct: ['problemVersionId'] })).map(row => row.problemVersionId));
+  const answersPerSet = new Map<string, number>();
+  for (const row of onlyHere) {
+    if (answered.has(row.problemVersionId)) answersPerSet.set(row.ownerVersionId, (answersPerSet.get(row.ownerVersionId) ?? 0) + 1);
+  }
+  const held = (counts: [string, number][]) => counts.flatMap(([what, count]) => count ? [`${what} ${count}`] : []);
+  return [
+    ...lessons.map(row => ({ versionId: row.id, kind: 'lesson' as const, heldBy: held([['수강', enrolled.get(row.id) ?? 0]]) })),
+    ...sets.map(row => ({ versionId: row.id, kind: 'problem_set' as const,
+      heldBy: held([['과제', assigned.get(row.id) ?? 0], ['답한 문항', answersPerSet.get(row.id) ?? 0]]) })),
+  ];
+}
+
+/**
+ * Removes the versions nothing points at, and the rows they own. One transaction, and it refuses
+ * outright rather than skipping: a list that came back partly retired is a list nobody can read.
+ */
+export async function retireVersions(db: Db, retired: RetiredVersion[]) {
+  const held = retired.filter(item => item.heldBy.length);
+  if (held.length) throw new ContentError(`Still referenced: ${held.map(item => `${item.versionId} (${item.heldBy.join(', ')})`).join('; ')}`);
+  const lessons = retired.filter(item => item.kind === 'lesson').map(item => item.versionId);
+  const sets = retired.filter(item => item.kind === 'problem_set').map(item => item.versionId);
+  const versions = [...lessons, ...sets];
+  if (!versions.length) return { lessons: 0, problemSets: 0, sections: 0, problems: 0, blocks: 0 };
+  return db.$transaction(async tx => {
+    const blocks = (await tx.contentBlock.deleteMany({ where: { ownerVersionId: { in: versions } } })).count;
+    const sections = (await tx.lessonSection.deleteMany({ where: { lessonVersionId: { in: lessons } } })).count;
+    const problems = (await tx.publishedProblem.deleteMany({ where: { ownerVersionId: { in: sets } } })).count;
+    const removedSets = (await tx.problemSetVersion.deleteMany({ where: { id: { in: sets } } })).count;
+    const removedLessons = (await tx.lessonVersion.deleteMany({ where: { id: { in: lessons } } })).count;
+    return { lessons: removedLessons, problemSets: removedSets, sections, problems, blocks };
+  }, { timeout: 60_000 });
+}
+
 type Ledger = { name: string; checksum: string };
 async function importInTransaction(db: Db, incoming: ContentBundle, dryRun: boolean, ledger?: Ledger) {
   const existing = await exportContent(db);
