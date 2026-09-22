@@ -1218,7 +1218,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "inverse-as-axis-reflection"
+            },
+            {
+              "answer": "c",
+              "misconception": "inverse-as-axis-reflection"
+            }
+          ]
         }
       ]
     },
@@ -1336,7 +1346,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "composition-order-flipped"
+            }
+          ]
         }
       ]
     },
@@ -1658,7 +1674,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "asymptote-as-crossing"
+            },
+            {
+              "answer": "d",
+              "misconception": "asymptote-as-crossing"
+            }
+          ]
         }
       ]
     },
@@ -1977,7 +2003,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "domain-condition-swapped"
+            }
+          ]
         }
       ]
     },
@@ -2652,7 +2684,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "asymptote-as-crossing"
+            }
+          ]
         },
         {
           "problemVersionId": "rational-functions:drill-17:v1",

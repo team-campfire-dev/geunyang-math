@@ -196,29 +196,29 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
 
   it('gathers the questions built to catch one mistake, and leaves out what this learner has shown', async () => {
     const learner = await newLearner();
-    // `sign-on-distribute` and `count-endpoints` are names the seeds do not use, so this test owns
+    // `solute-over-solute` and `count-endpoints` are names the seeds do not use, so this test owns
     // the whole pool for them. If a course ever tags one, pick another unused key here.
     const tagged = record.problems.slice(0, 3).map((problem) => problem.problemVersionId);
     // Three questions named the same mistake. The published version carries it, which is allowed
     // because expected wrong answers are not frozen with it.
     for (const problemVersionId of tagged) {
       await db.publishedProblem.updateMany({ where: { problemVersionId },
-        data: { misreadings: [{ answer: '99999', misconception: 'sign-on-distribute' }] } });
+        data: { misreadings: [{ answer: '99999', misconception: 'solute-over-solute' }] } });
     }
     // One of them this learner already answered right, first time and unaided: shown, so left out.
     const scope = await db.learningScope.findFirstOrThrow({ where: { ownerUserId: learner.userId } });
     await db.attempt.create({ data: { userId: learner.userId, scopeId: scope.id, problemVersionId: tagged[0],
       answer: '1', result: { status: 'correct', message: '', assisted: false }, requestId: requestId() } });
     try {
-    const opened = await service.act(learner.userId, { action: 'practice.gather', misconception: 'sign-on-distribute' });
+    const opened = await service.act(learner.userId, { action: 'practice.gather', misconception: 'solute-over-solute' });
     const view = (await service.state(learner.userId)).assignments.find((item) => item.recipientId === opened.recipientId)!;
     expect(view.items.map((item) => item.problem.problemVersionId).sort()).toEqual(tagged.slice(1).sort());
     // It came from no one set, and says so rather than naming one it did not come from.
     expect(view.problemSetId).toBeNull();
-    expect(view.title).toContain('괄호 앞의 부호를 뒤에 안 나눠 주기');
+    expect(view.title).toContain('농도의 분모를 용질로 잡기');
     expect(view.policy.kind).toBe('practice');
     // Asking again while it is open is 「이어서」, not a second copy.
-    expect((await service.act(learner.userId, { action: 'practice.gather', misconception: 'sign-on-distribute' })).recipientId).toBe(opened.recipientId);
+    expect((await service.act(learner.userId, { action: 'practice.gather', misconception: 'solute-over-solute' })).recipientId).toBe(opened.recipientId);
     // A name nothing in the catalogue carries has nothing to gather, and says so.
     await expect(service.act(learner.userId, { action: 'practice.gather', misconception: 'count-endpoints' })).rejects.toMatchObject({ status: 409 });
     await expect(service.act(learner.userId, { action: 'practice.gather', misconception: 'not-a-real-key' })).rejects.toMatchObject({ status: 404 });
@@ -286,6 +286,44 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     await db.assignment.update({ where: { id: recipient.assignmentId }, data: { policy: { kind: 'exam', hints: false, results: 'after-submission', solutions: 'never' } } });
     expect((await service.state(learner.userId)).assignments[0].items[0].problem.solutionAvailable).toBe(false);
     await expect(service.act(learner.userId, ask)).rejects.toMatchObject({ status: 409 });
+  });
+
+  it('marks an exam as it goes and says nothing until it is handed in', async () => {
+    const learner = await newLearner();
+    const recipient = await standaloneAssignment(learner);
+    await db.assignment.update({ where: { id: recipient.assignmentId },
+      data: { policy: { kind: 'exam', hints: false, results: 'after-submission', solutions: 'after-submission' } } });
+    const problemVersionId = recipient.assignment.items[0].problemVersionId;
+    const problem = record.problems.find((item) => item.problemVersionId === problemVersionId)!;
+
+    // A right answer is marked right and the learner is told only that it was saved.
+    const sent = await service.act(learner.userId, { action: 'attempt.submit', context: 'assignment', contextId: recipient.id,
+      problemVersionId, answer: writtenAnswer(problem), requestId: requestId() });
+    expect(sent.result).toMatchObject({ status: 'withheld' });
+    expect(sent.result!.message).not.toContain('맞았어요');
+    // The record keeps what the marker actually decided, so nothing is lost.
+    const stored = await db.attempt.findFirstOrThrow({ where: { userId: learner.userId, problemVersionId } });
+    expect(stored.result).toMatchObject({ status: 'correct' });
+    // And the screen is told the same nothing, on the item and on its first answer alike.
+    let view = (await service.state(learner.userId)).assignments.find((item) => item.recipientId === recipient.id)!;
+    expect(view.items[0].attempt!.result.status).toBe('withheld');
+    expect(view.items[0].firstResult!.status).toBe('withheld');
+    expect(JSON.stringify(view)).not.toContain('misconception');
+
+    // An answer that cannot be read is still said out loud: a typo is about the writing.
+    const typo = await service.act(learner.userId, { action: 'attempt.submit', context: 'assignment', contextId: recipient.id,
+      problemVersionId, answer: '사분의 삼', requestId: requestId() });
+    expect(typo.result).toMatchObject({ status: 'invalid' });
+
+    // Handed in, everything it knew is said.
+    for (const item of recipient.assignment.items) {
+      await service.act(learner.userId, { action: 'attempt.submit', context: 'assignment', contextId: recipient.id,
+        problemVersionId: item.problemVersionId, answer: writtenAnswer(record.problems.find((p) => p.problemVersionId === item.problemVersionId)!), requestId: requestId() });
+    }
+    await service.act(learner.userId, { action: 'assignment.submit', recipientId: recipient.id, requestId: requestId() });
+    view = (await service.state(learner.userId)).assignments.find((item) => item.recipientId === recipient.id)!;
+    expect(view.items[0].attempt!.result.status).toBe('correct');
+    expect(view.items[0].firstResult!.status).toBe('correct');
   });
 
   it('keeps hints back when the assignment policy says so, and shows a recipient their own due date over the rule', async () => {

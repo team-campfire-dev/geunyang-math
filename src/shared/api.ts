@@ -6,7 +6,13 @@ import type { Misreading } from './misreading';
  * `misreading` is the part a report can add up: the message is written for the one moment after an
  * answer, while the name behind it is the same name in every course and every set.
  */
-export type GradeResult = { status: 'correct' | 'incorrect' | 'invalid'; message: string; assisted: boolean;
+/**
+ * `withheld` is an answer that was marked and not told about: the work it belongs to shows results
+ * only after it is handed in. The marking happened and is recorded — it is the **saying** that
+ * waits. `invalid` is never withheld, because「숫자로 써 주세요」is about the writing rather than
+ * the answer, and somebody who cannot fix a typo cannot sit the thing at all.
+ */
+export type GradeResult = { status: 'correct' | 'incorrect' | 'invalid' | 'withheld'; message: string; assisted: boolean;
   misreading?: Misreading;
   /**
    * The name of the mistake this question was built to catch, when the answer is one the author

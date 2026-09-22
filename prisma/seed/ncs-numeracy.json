@@ -3182,7 +3182,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "recheck-by-repeating"
+            }
+          ]
         }
       ]
     },
@@ -3539,7 +3545,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "always-the-mean"
+            }
+          ]
         }
       ]
     },
@@ -3739,7 +3751,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "spread-as-value"
+            },
+            {
+              "answer": "c",
+              "misconception": "spread-as-value"
+            },
+            {
+              "answer": "d",
+              "misconception": "spread-as-value"
+            }
+          ]
         }
       ]
     },
@@ -4011,7 +4037,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "combine-percents-additively"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-chart-basics:check-2:v1",
@@ -4084,7 +4116,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "reads-beyond-the-table"
+            },
+            {
+              "answer": "c",
+              "misconception": "reads-beyond-the-table"
+            },
+            {
+              "answer": "d",
+              "misconception": "reads-beyond-the-table"
+            }
+          ]
         }
       ]
     },
@@ -5186,7 +5232,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "recheck-by-repeating"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-numeracy:drill-10:v1",
@@ -5370,7 +5422,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "always-the-mean"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-numeracy:drill-14:v1",
@@ -5699,7 +5757,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "combine-percents-additively"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-numeracy:drill-19:v1",
@@ -6081,7 +6145,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "baseline-not-zero"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-chart-draw:check-2:v1",
@@ -6684,7 +6754,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "recheck-by-repeating"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-numeracy:drill-10:v1",
@@ -6868,7 +6944,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "always-the-mean"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-numeracy:drill-15:v1",
@@ -7124,7 +7206,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "combine-percents-additively"
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-numeracy:drill-19:v1",

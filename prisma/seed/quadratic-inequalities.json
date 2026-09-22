@@ -1147,7 +1147,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "inequality-region-flipped"
+            },
+            {
+              "answer": "c",
+              "misconception": "inequality-region-flipped"
+            },
+            {
+              "answer": "d",
+              "misconception": "inequality-region-flipped"
+            }
+          ]
         },
         {
           "problemVersionId": "quadratic-inequality:practice-3:v1",
@@ -1384,7 +1398,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "inequality-region-flipped"
+            }
+          ]
         }
       ]
     },
@@ -1539,7 +1559,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "c",
+              "misconception": "one-condition-only"
+            }
+          ]
         }
       ]
     },
@@ -1739,7 +1765,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "intersection-as-between"
+            },
+            {
+              "answer": "c",
+              "misconception": "or-and-swapped"
+            }
+          ]
         }
       ]
     },
@@ -1996,7 +2032,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "discriminant-sign-confused"
+            },
+            {
+              "answer": "c",
+              "misconception": "discriminant-sign-confused"
+            }
+          ]
         }
       ]
     },
@@ -2196,7 +2242,21 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "inequality-region-flipped"
+            },
+            {
+              "answer": "c",
+              "misconception": "inequality-region-flipped"
+            },
+            {
+              "answer": "d",
+              "misconception": "inequality-region-flipped"
+            }
+          ]
         },
         {
           "problemVersionId": "quadratic-inequalities:drill-3:v1",
@@ -2343,7 +2403,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "inequality-region-flipped"
+            }
+          ]
         },
         {
           "problemVersionId": "quadratic-inequalities:drill-6:v1",
@@ -2564,7 +2630,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "c",
+              "misconception": "one-condition-only"
+            }
+          ]
         },
         {
           "problemVersionId": "quadratic-inequalities:drill-11:v1",
@@ -2637,7 +2709,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "intersection-as-between"
+            },
+            {
+              "answer": "c",
+              "misconception": "or-and-swapped"
+            }
+          ]
         },
         {
           "problemVersionId": "quadratic-inequalities:drill-12:v1",
@@ -3026,7 +3108,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "c",
+              "misconception": "discriminant-sign-confused"
+            }
+          ]
         }
       ]
     }

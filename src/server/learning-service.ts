@@ -69,6 +69,20 @@ function attemptView(a: Attempt): AttemptView {
   return { id: a.id, problemVersionId: a.problemVersionId, answer: a.answer, result: a.result as GradeResult, hintUsed: a.hintUsed };
 }
 /**
+ * What an answer is allowed to say back, given how the work it belongs to shows results.
+ *
+ * `results: 'after-submission'` is the exam's promise: the answers are marked as they arrive and
+ * the learner is told nothing until they hand the thing in. Everything that would say how it went
+ * goes — the verdict, the sentence, the kind of slip read off the number, and above all the name
+ * of the mistake the question was built to catch, which is the loudest hint on the screen.
+ *
+ * What stays is that the answer was saved and whether it could be read at all: a learner who
+ * cannot be told their answer is not a number cannot fix it, and a typo says nothing about
+ * whether they were right.
+ */
+const shown = (result: GradeResult, hold: boolean): GradeResult => (!hold || result.status === 'invalid' ? result
+  : { status: 'withheld', message: '답안을 저장했어요. 채점 결과는 제출한 뒤에 볼 수 있어요.', assisted: result.assisted });
+/**
  * Assessable concepts in the order the catalogue teaches them: the first lesson that teaches a
  * concept places it, and concepts no published lesson teaches follow by name. Concepts have no order
  * of their own — the course's order of lessons is the only order there is.
@@ -312,10 +326,12 @@ export class LearningService {
         // Every answer sent, oldest first, so a report can tell a first try from a correction.
         const real = [...matching].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime() || (a.id < b.id ? -1 : 1))
           .filter(a => (a.result as GradeResult).status !== 'invalid');
+        // An exam marks as it goes and says nothing until it is handed in.
+        const hold = policy.results === 'after-submission' && submission.status !== 'submitted';
         return { id: item.id, problem: { ...publicProblem(p), hintAvailable: policy.hints && p.hintAvailable,
           solutionAvailable: policy.solutions !== 'never' && p.solution.length > 0 },
-          attempt: visibleAttempt ? attemptView(visibleAttempt) : null,
-          tries: real.length, firstResult: real.length ? real[0].result as GradeResult : null };
+          attempt: visibleAttempt ? { ...attemptView(visibleAttempt), result: shown(visibleAttempt.result as GradeResult, hold) } : null,
+          tries: real.length, firstResult: real.length ? shown(real[0].result as GradeResult, hold) : null };
       });
       return { id: r.assignmentId, recipientId: r.id, title: r.assignment.title, lessonKey, problemSetId: r.assignment.problemSetId,
         recommendedAt: r.recommendedAt.toISOString(), opensAt: window.opensAt?.toISOString() ?? null, dueAt: window.dueAt?.toISOString() ?? null,
@@ -387,7 +403,8 @@ export class LearningService {
       const index = record.sections.indexOf(section);
       if (record.sections.slice(0, index).some(s => !(enrollment.completedSectionIds as string[]).includes(s.sectionId))) throw conflict('앞의 학습 단계부터 이어가 주세요.');
       if ((enrollment.completedSectionIds as string[]).includes(section.sectionId)) throw conflict('완료한 단계의 시도는 바꿀 수 없어요.');
-      return { problem: record.problems.find(p => p.problemVersionId === problemId)!, scopeId: enrollment.scopeId, enrollmentId: enrollment.id, submissionId: undefined, assignmentItemId: undefined, hints: true };
+      // A lesson is not an exam: it tells the learner how it went as they go, always.
+      return { problem: record.problems.find(p => p.problemVersionId === problemId)!, scopeId: enrollment.scopeId, enrollmentId: enrollment.id, submissionId: undefined, assignmentItemId: undefined, hints: true, hold: false };
     }
     const recipient = await tx.assignmentRecipient.findFirst({ where: { id: contextId, learnerUserId: userId, assignment: { learningScope: { ownerUserId: userId, kind: 'personal' } } }, include: { assignment: { include: { items: true } }, submissions: { orderBy: { submissionIndex: 'desc' } } } });
     if (!recipient) throw notFound();
@@ -397,8 +414,9 @@ export class LearningService {
     if (!item) throw notFound();
     const problem = (await publishedProblemRecords(tx, [item.problemVersionId])).get(item.problemVersionId);
     if (!problem) throw notFound();
+    const policy = parseAssignmentPolicy(recipient.assignment.policy);
     return { problem, scopeId: recipient.assignment.ownerScopeId, enrollmentId: undefined, submissionId: submission.id, assignmentItemId: item.id,
-      hints: parseAssignmentPolicy(recipient.assignment.policy).hints };
+      hints: policy.hints, hold: policy.results === 'after-submission' };
   }
 
   /**
@@ -490,7 +508,10 @@ export class LearningService {
               const problem = bank.find(p => p.problemVersionId === asked.problemVersionId)!;
               const result = action.answer === null ? null : gradeAnswer(action.answer, problem.gradingSpec, false);
               if (result?.status === 'invalid') return { result };
-              const next: DiagnosticAnswer[] = [...answers, { problemVersionId: problem.problemVersionId, answer: action.answer, status: result?.status ?? 'skipped' }];
+              // A placement marks in the open and withholds nothing, so the only statuses it ever
+              // writes are the two it asked about and the one for a question passed over.
+              const settled = result?.status === 'correct' ? 'correct' as const : result ? 'incorrect' as const : 'skipped' as const;
+              const next: DiagnosticAnswer[] = [...answers, { problemVersionId: problem.problemVersionId, answer: action.answer, status: settled }];
               // A placement ends when the descent has nothing left it can ask, not at a fixed length.
               const after = placement(graph, held.scope, bank, next);
               const completed = !after.next;
@@ -549,14 +570,17 @@ export class LearningService {
                 const previousContextId = previous.enrollmentId ?? previous.submission?.recipientId;
                 const previousKind = previous.enrollmentId ? 'lesson' : 'assignment';
                 if (previousContextId !== action.contextId || previousKind !== action.context || previous.answer !== action.answer || previous.problemVersionId !== action.problemVersionId) throw conflict('동일 요청 ID로 다른 답안을 보낼 수 없어요.');
-                return { result: previous.result as GradeResult };
+                // A repeated send is the same send, so it may say exactly what the first one did.
+                const repeated = await this.activity(tx, userId, action.context, action.contextId, action.problemVersionId);
+                return { result: shown(previous.result as GradeResult, repeated.hold) };
               }
               const target = await this.activity(tx, userId, action.context, action.contextId, action.problemVersionId);
               const hint = await tx.hintUse.findUnique({ where: { userId_contextKind_contextId_problemVersionId: { userId, contextKind: action.context, contextId: action.contextId, problemVersionId: action.problemVersionId } } });
               const result = gradeAnswer(action.answer, target.problem.gradingSpec, Boolean(hint), target.problem.misreadings);
               await tx.attempt.create({ data: { userId, scopeId: target.scopeId, enrollmentId: target.enrollmentId, submissionId: target.submissionId, assignmentItemId: target.assignmentItemId,
                 problemVersionId: action.problemVersionId, answer: action.answer, result: asJson(result), hintUsed: Boolean(hint), requestId: action.requestId } });
-              return { result };
+              // The record keeps what the marker decided; what comes back is what this work may say.
+              return { result: shown(result, target.hold) };
             }
             case 'lesson.complete': {
               const { enrollment, record } = await this.ownedEnrollment(tx, userId, action.enrollmentId);
