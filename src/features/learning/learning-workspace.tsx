@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'rea
 import Link from 'next/link';
 import { conceptStateLabels, courseStageLabels, courseTrackLabels, courseTracks, defaultCourseTrack, stagesOf, type ActionResponse, type AssignmentView, type AttemptView, type CourseTrack, type LessonDocument, type ContentBlock, type EnrollmentView, type LearningAction, type LearningState, type PublicLesson, type PublicProblem, type PublicProblemSet, type PublicConcept, type PublicCourse } from '@/shared/api';
 import { ApiError, learningApi, supportsWebAuthentication, type Session } from './api-client';
+import { placeSearch, readPlace, sameWork, type Page, type Place } from './app-url';
 import { assertLearningResponseAccount, clearAuthReturn, GOOGLE_LOGIN_PATH, isNativeBrowser, LearningResponseError, parseAuthError, readAuthReturn, saveAuthReturn, type AuthReturn } from './auth-client';
 import { DiagnosticPanel } from './diagnostic-panel';
 import { ReadinessList } from './readiness-list';
@@ -17,7 +18,6 @@ import { ProblemCard, type ProblemActions } from './problem-card';
 import { AnswerReport, type ReportItem } from './answer-report';
 import { Icon, type IconName } from './icons';
 
-type Page = 'home' | 'lessons' | 'practice' | 'history' | 'lesson' | 'assignment' | 'diagnostic';
 type Dispatch = (action: LearningAction) => Promise<ActionResponse>;
 const roleLabels = { explanation: '개념 이해', worked_example: '함께 풀기', practice: '직접 연습', check: '확인 퀴즈', summary: '마무리' };
 /**
@@ -326,6 +326,14 @@ export function LearningWorkspace() {
   const [dirtyProblems, setDirtyProblems] = useState<string[]>([]);
   /** The question to put in front of the learner once the screen has been redrawn, by its number. */
   const [problemToShow, setProblemToShow] = useState<number | null>(null);
+  /**
+   * Whether the first load has read the address yet. Until it has, the screen says 「내 학습」 while
+   * the address may say a lesson — writing then would throw away the link that was followed.
+   */
+  const [landed, setLanded] = useState(false);
+  const wrote = useRef<string | null>(null);
+  /** Whether the learner went somewhere themselves while the first load was still running. */
+  const moved = useRef(false);
   /** Whether the profile dialog is asking about deletion rather than about what to learn. */
   const [erasing, setErasing] = useState(false);
   const [notice, setNotice] = useState('');
@@ -415,9 +423,22 @@ export function LearningWorkspace() {
           pending.returnTo = null;
         }
       }
-      if (restoreAfterLogin && !hasAuthDestination) {
-        const linked = new URLSearchParams(window.location.search).get('lesson');
-        if (linked && publicCatalog.lessons.some(lesson => lesson.lessonKey === linked)) await openLesson(linked, nextState);
+      // Nothing is restored over somebody: a learner who pressed something while this was loading
+      // is where they meant to be, and an address is only ever how they arrived.
+      if (restoreAfterLogin && !hasAuthDestination && !moved.current) {
+        // What the address asks for, once there is a catalogue to match it against. A lesson has to
+        // be one that exists and a run one of this learner's own; anything else is a link that has
+        // gone stale, and the screen it names stands in for it rather than an error.
+        const asked = readPlace(window.location.search);
+        if (asked.page === 'lesson' && asked.lessonKey) {
+          if (publicCatalog.lessons.some((lesson) => lesson.lessonKey === asked.lessonKey)) await openLesson(asked.lessonKey, nextState, asked.step);
+          else setPage('lessons');
+        } else if (asked.page === 'assignment') {
+          if (nextState?.assignments.some((entry) => entry.recipientId === asked.recipientId)) { setDirtyProblems([]); setSelectedAssignment(asked.recipientId ?? null); setPage('assignment'); }
+          else setPage('practice');
+        } else if (asked.page !== 'home') setPage(asked.page);
+        // 「내 학습」 is where the screen already is, so a bare address restores nothing — and a
+        // learner who pressed something while this was still loading stays where they pressed.
       }
       if (restoreAfterLogin && pending?.message) { setAuthError(pending.message); setModal('login'); }
     } catch (reason) {
@@ -425,7 +446,18 @@ export function LearningWorkspace() {
       if (reason instanceof LearningResponseError && reason.kind === 'stale') return;
       if ((reason instanceof ApiError && reason.status === 401) || reason instanceof LearningResponseError) clearPersonalState();
       setError(messageOf(reason));
-    } finally { if (generation === loadGeneration.current) setLoading(false); }
+    } finally {
+      // A load that has been overtaken says nothing about anything, least of all about where the
+      // learner is: handing the address to the screen here would let it write 「내 학습」 over the
+      // link the newer load has not read yet. React mounts twice in development, which is exactly
+      // that pair of loads.
+      if (generation === loadGeneration.current) {
+        setLoading(false);
+        // Whatever came of it, the address is now the screen's to keep — including when the load
+        // failed, so that moving around afterwards still leaves a trail to walk back through.
+        if (restoreAfterLogin) setLanded(true);
+      }
+    }
   }
 
   useEffect(() => {
@@ -464,7 +496,62 @@ export function LearningWorkspace() {
   }
 
   const reviewConceptKeys = state?.plan.readiness.filter((item) => item.readiness === 'needs-practice').map((item) => item.key) ?? [];
-  function navigate(next: Page) { setPage(next); setNotice(''); setError(''); window.scrollTo({ top: 0, behavior: 'instant' }); }
+  function navigate(next: Page) { moved.current = true; setPage(next); setNotice(''); setError(''); window.scrollTo({ top: 0, behavior: 'instant' }); }
+  /**
+   * Where the screen stands, as an address can tell it. A lesson or a set still being fetched is
+   * nowhere yet — it has no key to write — so the address is left as it was until it arrives, and
+   * a lesson that fails to open leaves the last good address behind rather than a broken one.
+   */
+  function standing(): Place | null {
+    if (page === 'lesson') return document ? { page: 'lesson', lessonKey: document.lessonKey, step: sectionIndex + 1 } : null;
+    if (page === 'assignment') return selectedAssignment ? { page: 'assignment', recipientId: selectedAssignment } : null;
+    return { page };
+  }
+  /**
+   * The address follows the screen rather than driving it: every way in already sets the screen,
+   * and there are many of them, so one place writes what they all arrived at. Going somewhere adds
+   * an entry to walk back through; moving within the same work replaces it (see `sameWork`).
+   */
+  useEffect(() => {
+    if (!landed) return;
+    const here = standing();
+    if (!here) return;
+    const written = placeSearch(here);
+    if (written === window.location.search) { wrote.current = written; return; }
+    try {
+      const url = `${window.location.pathname}${written}${window.location.hash}`;
+      if (wrote.current !== null && sameWork(readPlace(wrote.current), here)) window.history.replaceState(window.history.state, '', url);
+      else window.history.pushState(null, '', url);
+    } catch { /* A browser that refuses history keeps the screen; only the address stops following. */ }
+    wrote.current = written;
+  });
+  /**
+   * Walking back to where the address now points, without writing anything: the browser has
+   * already moved, and the screen is catching up. What it names is checked before it is opened —
+   * a lesson against the catalogue, a run against the learner's own.
+   */
+  async function land(place: Place) {
+    setNotice(''); setError('');
+    if (place.page === 'lesson' && place.lessonKey) {
+      if (place.lessonKey === document?.lessonKey) { setPage('lesson'); setFinishedLesson(false); setSectionIndex(Math.max(0, (place.step ?? 1) - 1)); return; }
+      if (lessons.some((lesson) => lesson.lessonKey === place.lessonKey)) { await openLesson(place.lessonKey, state, place.step); return; }
+      navigate('lessons'); return;
+    }
+    if (place.page === 'assignment') {
+      if (state?.assignments.some((entry) => entry.recipientId === place.recipientId)) {
+        setDirtyProblems([]); setSelectedAssignment(place.recipientId ?? null); navigate('assignment'); return;
+      }
+      navigate('practice'); return;
+    }
+    navigate(place.page);
+  }
+  const landing = useRef(land);
+  useEffect(() => { landing.current = land; });
+  useEffect(() => {
+    const onPop = () => { void landing.current(readPlace(window.location.search)); };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
   const lessons = state?.lessons ?? catalog;
   // Catalogue copy names the concepts the published lessons teach, so new subjects need no edit here.
   const conceptLabels = taughtConcepts.map((concept) => concept.label);
@@ -500,7 +587,12 @@ export function LearningWorkspace() {
     } finally { busyRef.current = false; setBusy(false); }
   };
 
-  async function openLesson(key: string, learningState = state) {
+  /**
+   * Opens a lesson. Where to start reading is the lesson's own answer — the first step not yet
+   * finished — unless an address asked for a step, which is a learner coming back to where they
+   * were rather than opening the lesson afresh.
+   */
+  async function openLesson(key: string, learningState = state, step?: number) {
     const requestId = ++lessonRequest.current;
     navigate('lesson'); setLessonLoading(true); setDocument(null); setFinishedLesson(false);
     try {
@@ -509,6 +601,7 @@ export function LearningWorkspace() {
       setDocument(nextDocument);
       const enrollment = learningState?.enrollments.find((entry) => entry.lessonKey === key);
       const firstIncomplete = nextDocument.sections.findIndex((section) => !enrollment?.completedSectionIds.includes(section.sectionId));
+      if (step) { setSectionIndex(Math.min(Math.max(0, step - 1), nextDocument.sections.length - 1)); return; }
       setSectionIndex(enrollment?.status === 'completed' ? 0 : Math.max(0, firstIncomplete));
     } catch (reason) { if (requestId === lessonRequest.current) setError(messageOf(reason)); }
     finally { if (requestId === lessonRequest.current) setLessonLoading(false); }
