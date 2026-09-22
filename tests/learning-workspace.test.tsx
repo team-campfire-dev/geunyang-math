@@ -406,6 +406,29 @@ describe('a mistake the record keeps showing', () => {
   });
 });
 
+describe('work that shows results only after it is handed in', () => {
+  const held: AttemptView = { id: 't1', problemVersionId: problemId, answer: '3', hintUsed: false,
+    result: { status: 'withheld', message: '답안을 저장했어요. 채점 결과는 제출한 뒤에 볼 수 있어요.', assisted: false } };
+  const exam = (): AssignmentView => assignment({ recipientId: 'r-exam', title: '단원 평가',
+    policy: { kind: 'exam', hints: false, results: 'after-submission', solutions: 'after-submission' },
+    items: [{ id: 'i1', problem: { problemVersionId: problemId, conceptKeys: ['term.denominator'],
+      promptContent: [text('p1', '분모는 얼마인가요?')], responseSpec: { kind: 'integer' }, hintAvailable: false, solutionAvailable: true },
+      attempt: held, tries: 1, firstResult: held.result }] });
+
+  it('says the answer was saved and nothing about whether it was right', async () => {
+    serve({ state: learningState({ assignments: [exam()] }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: /단원 평가/ }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: /단원 평가/ })[0]);
+    await until(() => expect(screen.getByText(/채점 결과는 제출한 뒤에/)).toBeDefined());
+    expect(window.document.querySelector('.answer-feedback')!.className).toContain('withheld');
+    // It still counts as answered, so the learner can hand the whole thing in.
+    expect(screen.getByRole('button', { name: /과제 제출하기/ }).hasAttribute('disabled')).toBe(false);
+    // No worked solution either: that door opens on submission, not on answering.
+    expect(screen.queryByRole('button', { name: '풀이 보기' })).toBeNull();
+  });
+});
+
 describe('reading the worked solution', () => {
   /** A lesson whose one question carries a solution, opened on the step that asks it. */
   const withSolution = (attempt: AttemptView | null) => {

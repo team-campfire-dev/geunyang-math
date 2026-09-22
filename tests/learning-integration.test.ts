@@ -288,6 +288,44 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     await expect(service.act(learner.userId, ask)).rejects.toMatchObject({ status: 409 });
   });
 
+  it('marks an exam as it goes and says nothing until it is handed in', async () => {
+    const learner = await newLearner();
+    const recipient = await standaloneAssignment(learner);
+    await db.assignment.update({ where: { id: recipient.assignmentId },
+      data: { policy: { kind: 'exam', hints: false, results: 'after-submission', solutions: 'after-submission' } } });
+    const problemVersionId = recipient.assignment.items[0].problemVersionId;
+    const problem = record.problems.find((item) => item.problemVersionId === problemVersionId)!;
+
+    // A right answer is marked right and the learner is told only that it was saved.
+    const sent = await service.act(learner.userId, { action: 'attempt.submit', context: 'assignment', contextId: recipient.id,
+      problemVersionId, answer: writtenAnswer(problem), requestId: requestId() });
+    expect(sent.result).toMatchObject({ status: 'withheld' });
+    expect(sent.result!.message).not.toContain('맞았어요');
+    // The record keeps what the marker actually decided, so nothing is lost.
+    const stored = await db.attempt.findFirstOrThrow({ where: { userId: learner.userId, problemVersionId } });
+    expect(stored.result).toMatchObject({ status: 'correct' });
+    // And the screen is told the same nothing, on the item and on its first answer alike.
+    let view = (await service.state(learner.userId)).assignments.find((item) => item.recipientId === recipient.id)!;
+    expect(view.items[0].attempt!.result.status).toBe('withheld');
+    expect(view.items[0].firstResult!.status).toBe('withheld');
+    expect(JSON.stringify(view)).not.toContain('misconception');
+
+    // An answer that cannot be read is still said out loud: a typo is about the writing.
+    const typo = await service.act(learner.userId, { action: 'attempt.submit', context: 'assignment', contextId: recipient.id,
+      problemVersionId, answer: '사분의 삼', requestId: requestId() });
+    expect(typo.result).toMatchObject({ status: 'invalid' });
+
+    // Handed in, everything it knew is said.
+    for (const item of recipient.assignment.items) {
+      await service.act(learner.userId, { action: 'attempt.submit', context: 'assignment', contextId: recipient.id,
+        problemVersionId: item.problemVersionId, answer: writtenAnswer(record.problems.find((p) => p.problemVersionId === item.problemVersionId)!), requestId: requestId() });
+    }
+    await service.act(learner.userId, { action: 'assignment.submit', recipientId: recipient.id, requestId: requestId() });
+    view = (await service.state(learner.userId)).assignments.find((item) => item.recipientId === recipient.id)!;
+    expect(view.items[0].attempt!.result.status).toBe('correct');
+    expect(view.items[0].firstResult!.status).toBe('correct');
+  });
+
   it('keeps hints back when the assignment policy says so, and shows a recipient their own due date over the rule', async () => {
     const learner = await newLearner();
     const recipient = await standaloneAssignment(learner);

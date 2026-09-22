@@ -699,6 +699,9 @@ export function LearningWorkspace() {
      * Nothing before the answered question moves, so going back to fix one is not a trip forward.
      */
     function carryOn(problemVersionId: string, saved: LearningState) {
+      // Work that shows results only after it is handed in says nothing here either: moving the
+      // learner on after a right answer would tell them the answer was right.
+
       const view = saved.assignments.find((entry) => entry.recipientId === recipient);
       const at = view?.items.findIndex((item) => item.problem.problemVersionId === problemVersionId) ?? -1;
       if (!view || at < 0 || view.items[at].attempt?.result.status !== 'correct') return;
