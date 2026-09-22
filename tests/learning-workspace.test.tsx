@@ -321,6 +321,22 @@ describe('a set too long to hold on one screen', () => {
     expect(holding()).toBe('problem-2');
   });
 
+  it('saves on the first press, with the pad still up', async () => {
+    await openSet(set([null, null, null]));
+    server.state.after = (action) => action.action === 'attempt.submit'
+      ? learningState({ assignments: [set([judged('q1', 'correct'), null, null])] }) : server.state.learning;
+    fireEvent.change(box(0), { target: { value: '4' } });
+    fireEvent.focus(box(0));
+    // The button stands under the box, and pressing it is what puts the pad away: if the press took
+    // the focus, everything below the box would jump up between press and release and the answer
+    // would never be sent. So it holds the focus and the first press is the one that counts.
+    const save = box(0).closest('form')!.querySelector('button[type=submit]') as HTMLButtonElement;
+    expect(fireEvent.mouseDown(save), '저장 버튼이 포커스를 가져간다').toBe(false);
+    fireEvent.click(save);
+    await tick();
+    expect(screen.getByText('맞았어요.')).toBeDefined();
+  });
+
   it('stays where the answer was wrong', async () => {
     await openSet(set([null, null, null]));
     server.state.after = (action) => action.action === 'attempt.submit'
@@ -782,5 +798,90 @@ describe('picking a problem set to solve', () => {
     await until(() => expect(screen.getByRole('heading', { level: 1, name: '분수의 의미 연습' })).toBeDefined());
     expect(screen.getByText(/다 풀었어요/)).toBeDefined();
     expect(screen.queryByText('과제 제출하기')).toBeNull();
+  });
+});
+
+/**
+ * The address bar, which the screen had never written to. Everything here is one route, so a place
+ * is a query — and until now a reload in the middle of a set came back at 「내 학습」, the back
+ * button left the app rather than the question, and there was no link to send anybody.
+ */
+describe('where the learner is standing', () => {
+  const at = () => window.location.search;
+  const openPractice = async () => {
+    await until(() => expect(screen.getAllByRole('button', { name: '연습장' }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: '연습장' })[0]);
+    await until(() => expect(screen.getByText('문제집 골라 풀기')).toBeDefined());
+  };
+
+  it('follows the learner around, so a reload has somewhere to come back to', async () => {
+    render(<LearningWorkspace />);
+    await openPractice();
+    expect(at()).toBe('?page=practice');
+    fireEvent.click(screen.getAllByRole('button', { name: '학습 기록' })[0]);
+    await tick();
+    expect(at()).toBe('?page=history');
+    // 내 학습 is where the bare address lands, so standing there is written as nothing at all.
+    fireEvent.click(screen.getAllByRole('button', { name: '내 학습' })[0]);
+    await tick();
+    expect(at()).toBe('');
+  });
+
+  it('opens what the address names, at the step it names', async () => {
+    window.history.replaceState({}, '', '/?lesson=fraction-meaning&step=2');
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByRole('heading', { level: 1, name: '분수의 의미' })).toBeDefined());
+    expect(stepCount()).toBe('2 / 2');
+  });
+
+  it('sends a link that has gone stale to the list rather than to an error', async () => {
+    window.history.replaceState({}, '', '/?lesson=no-such-lesson');
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByRole('heading', { level: 1, name: '배우고 싶은 코스부터.' })).toBeDefined());
+    // The key came out of the address bar, so it is matched against the catalogue before anything
+    // is fetched, and the screen it named stands in for it.
+    expect(server.sent).toHaveLength(0);
+    expect(at()).toBe('?page=lessons');
+  });
+
+  it('holds a run of a set by the run, and only the learner’s own', async () => {
+    const own = assignment({ recipientId: 'r-own', title: '분수의 의미 연습', lessonKey: null,
+      policy: { kind: 'practice', hints: true, results: 'per-item', solutions: 'never' } });
+    window.history.replaceState({}, '', '/?set=r-own');
+    server = serve({ state: learningState({ assignments: [own] }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByRole('heading', { level: 1, name: '분수의 의미 연습' })).toBeDefined());
+    cleanup();
+    // Somebody else's run is not theirs to open by writing its name in the address bar.
+    window.history.replaceState({}, '', '/?set=r-somebody-else');
+    server = serve({ state: learningState({ assignments: [own] }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByText('문제집 골라 풀기')).toBeDefined());
+    expect(screen.queryByRole('heading', { level: 1, name: '분수의 의미 연습' })).toBeNull();
+  });
+
+  it('walks back a screen instead of out of the app', async () => {
+    render(<LearningWorkspace />);
+    await openPractice();
+    fireEvent.click(screen.getAllByRole('button', { name: '학습 기록' })[0]);
+    await tick();
+    expect(at()).toBe('?page=history');
+    // What the browser's back button does: it has already moved, and the screen catches up.
+    window.history.replaceState({}, '', '/?page=practice');
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    await until(() => expect(screen.getByText('문제집 골라 풀기')).toBeDefined());
+    expect(at()).toBe('?page=practice');
+  });
+
+  it('counts a lesson as one place to walk back through, not one per step', async () => {
+    await openLesson();
+    expect(at()).toBe('?lesson=fraction-meaning');
+    const entries = window.history.length;
+    fireEvent.click(screen.getByRole('button', { name: /다음 단계/ }));
+    await tick();
+    // The step is in the address so a reload comes back to it, but reading on is not somewhere the
+    // learner went: leaving a five-step lesson should be one press of back, not five.
+    expect(at()).toBe('?lesson=fraction-meaning&step=2');
+    expect(window.history.length).toBe(entries);
   });
 });

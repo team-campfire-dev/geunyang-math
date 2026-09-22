@@ -10,9 +10,10 @@ import { answerLatex } from '@/shared/answer';
  * keyboard hides the page to offer either — so the page offers them itself, and shows back what it
  * understood before anything is saved.
  */
-function Field({ integerOnly = false }: { integerOnly?: boolean }) {
+function Field({ integerOnly = false, onSend }: { integerOnly?: boolean; onSend?: () => void }) {
   const [value, setValue] = useState('');
-  return <MathAnswerField label="나의 답" placeholder="예: 3/4" value={value} onChange={setValue} integerOnly={integerOnly} />;
+  return <MathAnswerField label="나의 답" placeholder="예: 3/4" value={value} onChange={setValue} integerOnly={integerOnly}
+    onSend={onSend} sendLabel="답안 저장" sendDisabled={!value.trim()} />;
 }
 const box = () => screen.getByLabelText('나의 답') as HTMLInputElement;
 
@@ -60,6 +61,27 @@ describe('writing a number', () => {
     for (const name of ['7', '한 글자 지우기', '키보드로 쓸게요']) {
       expect(fireEvent.mouseDown(screen.getByRole('button', { name })), `${name}가 포커스를 가져간다`).toBe(false);
     }
+  });
+
+  it('sends from the pad, where a keyboard keeps its return key', () => {
+    const sent = vi.fn();
+    render(<Field onSend={sent} />);
+    fireEvent.focus(box());
+    // Nothing to send yet, so the key is there and refuses rather than sending an empty answer.
+    expect((screen.getByRole('button', { name: '답안 저장' }) as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.click(screen.getByRole('button', { name: '3' }));
+    // The send key is under the box like every other key, so it must not take the focus either.
+    expect(fireEvent.mouseDown(screen.getByRole('button', { name: '답안 저장' })), '보내는 키가 포커스를 가져간다').toBe(false);
+    fireEvent.click(screen.getByRole('button', { name: '답안 저장' }));
+    expect(sent).toHaveBeenCalledTimes(1);
+    // And it puts the pad away, because what the marker says back stands under the box.
+    expect(screen.queryByRole('group', { name: '숫자 키패드' })).toBeNull();
+  });
+
+  it('keeps to the keys where nothing is waiting to be sent', () => {
+    render(<Field />);
+    fireEvent.focus(box());
+    expect(screen.queryByRole('button', { name: '답안 저장' })).toBeNull();
   });
 
   it('asks for no phone keyboard of its own while the pad is up, and gives it back on request', () => {

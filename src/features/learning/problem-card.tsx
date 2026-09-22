@@ -55,8 +55,14 @@ export function ProblemCard({ problem, attempt, actions, busy, disabled, ready =
   const unsupported = unsupportedRequiredBlocks(problem.promptContent);
   const options = problem.responseSpec.kind === 'choice' ? problem.responseSpec.options ?? [] : null;
   const changed = answer.trim() !== attempt?.answer;
-  async function submit(event: FormEvent) {
-    event.preventDefault();
+  /**
+   * Nothing the learner presses under the box may take the focus away from it. Pressing is what
+   * puts the keypad away, and a pad that comes down between the press and the release drags every
+   * control below the box up past the finger — so the press lands on nothing and the answer is not
+   * sent. The pad guards its own keys; these are the ones standing outside it.
+   */
+  const hold = (event: { preventDefault: () => void }) => event.preventDefault();
+  async function send() {
     if (!ready) { onReady?.(); return; }
     if (!answer.trim() || busy || disabled || unsupported) return;
     setLocalError('');
@@ -68,6 +74,7 @@ export function ProblemCard({ problem, attempt, actions, busy, disabled, ready =
       onDraftChange?.(problem.problemVersionId, false);
     } catch (error) { setLocalError(messageOf(error)); }
   }
+  function submit(event: FormEvent) { event.preventDefault(); void send(); }
   /**
    * The worked solution, which is read rather than earned: it is the same thing a teacher hands out
    * once the work is in, so nothing about asking for it is recorded and it costs the learner
@@ -104,17 +111,18 @@ export function ProblemCard({ problem, attempt, actions, busy, disabled, ready =
         : <MathAnswerField label="나의 답" value={answer} disabled={busy || disabled || unsupported || !ready}
             integerOnly={problem.responseSpec.kind === 'integer'}
             placeholder={problem.responseSpec.kind === 'rational' ? '예: 3/4 또는 0.75' : '정수를 입력해 주세요'}
+            onSend={() => void send()} sendLabel={busy ? '저장 중…' : submitLabel} sendDisabled={busy || !answer.trim()}
             onChange={(next) => { setAnswer(next); onDraftChange?.(problem.problemVersionId, next.trim() !== (attempt?.answer ?? '')); }} />}
-      <button className="button primary" disabled={busy || disabled || unsupported || !ready || !answer.trim()} type="submit">{busy ? '저장 중…' : submitLabel}</button>
+      <button className="button primary" onPointerDown={hold} onMouseDown={hold} disabled={busy || disabled || unsupported || !ready || !answer.trim()} type="submit">{busy ? '저장 중…' : submitLabel}</button>
     </form>
     {disabled && ready && disabledNote && <p className="input-help">{disabledNote}</p>}
     {/* The marker's word is prose, and a named mistake says things like 「$-x^2$」 in it, so it is
         read the way the question above it is read rather than printed as characters. */}
     {attempt && <div className={`answer-feedback ${changed ? 'draft-feedback' : attempt.result.status}`} role="status"><Icon name={attempt.result.status === 'correct' && !changed ? 'check' : 'pencil'} size={18} /><span>{changed ? recordsLearning ? '답안을 수정했어요. 다시 저장하면 학습 기록에 반영돼요.' : '답안을 수정했어요. 다시 확인해 보세요.' : <RichText text={attempt.result.message} />}{!changed && attempt.result.assisted && <small>{recordsLearning ? '도움받은 풀이로 기록했어요.' : '힌트를 사용한 풀이예요. 학습 기록에는 남지 않아요.'}</small>}</span></div>}
     {localError && <p className="field-error" role="alert">{localError}</p>}
-    {problem.hintAvailable && <div className="hint-area"><button className="text-button hint-button" disabled={busy || disabled || unsupported} onClick={openHint}><Icon name="lightbulb" size={16} />{hint ? '힌트 다시 보기' : '조금만 도움받기'}</button>{hint && <div className="hint-content"><ContentBlocks blocks={hint} glossary={glossary} /></div>}</div>}
+    {problem.hintAvailable && <div className="hint-area"><button className="text-button hint-button" onPointerDown={hold} onMouseDown={hold} disabled={busy || disabled || unsupported} onClick={openHint}><Icon name="lightbulb" size={16} />{hint ? '힌트 다시 보기' : '조금만 도움받기'}</button>{hint && <div className="hint-content"><ContentBlocks blocks={hint} glossary={glossary} /></div>}</div>}
     {solvable && <div className="solution-area">
-      <button className="text-button solution-button" disabled={busy} onClick={openSolution}><Icon name="book" size={16} />{solution && showSolution ? '풀이 접기' : '풀이 보기'}</button>
+      <button className="text-button solution-button" onPointerDown={hold} onMouseDown={hold} disabled={busy} onClick={openSolution}><Icon name="book" size={16} />{solution && showSolution ? '풀이 접기' : '풀이 보기'}</button>
       {solution && showSolution && <div className="solution-content"><ContentBlocks blocks={solution} glossary={glossary} /></div>}
     </div>}
     {!ready && readyNote && <p className="input-help">{readyNote}</p>}
