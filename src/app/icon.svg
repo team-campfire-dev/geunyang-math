@@ -1,17 +1,40 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="geunyang math">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600" role="img" aria-label="그냥수학">
   <!--
-    The sidebar's brand mark, drawn as a file so a browser tab can show it. The shape is the one
-    `.brand-mark` builds in globals.css: four tiles in a 2×2 grid, each rounded on its outer corner
-    and tight on the three that face the middle, the whole thing tilted six degrees. Its own colours,
-    not the theme's tokens — an icon is served as a file and never sees the page's stylesheet.
+    The brand mark, drawn as a file so a browser tab can show it. It is the same drawing the `Brand`
+    component makes in learning-workspace.tsx, path for path; tests/app-icons.test.ts holds them
+    equal, because nothing else links a file Next serves on its own to a component in the bundle.
 
-    No plate behind it. A tab strip is light or dark depending on the reader's system, and the three
-    pale tiles carry the shape on either. Change this and change `.brand-mark` with it.
+    One drawing serves every size. An outlined set square closed into a blob below about thirty
+    pixels; filled solid it survives to sixteen, where the clay wedge is the thing that identifies
+    this.
+
+    Two measurements set the ruler. Its apex stops at 207, the height where the ears start rising off
+    the skull rather than at their tips, and its lower-left corner sits at 302, which is the middle
+    of the face — the head is drawn at 0.88 around (302, 290), so both numbers fall out of that.
+    Everything is then placed so the whole drawing is centred in the plate.
+
+    Colours are written out because an icon never sees the stylesheet. Paper, ink, clay.
   -->
-  <g transform="rotate(-6 16 16)">
-    <path fill="#35624d" d="M13.61 2.8H13.61A1.29 1.29 0 0 1 14.9 4.09V13.61A1.29 1.29 0 0 1 13.61 14.9H4.79A1.29 1.29 0 0 1 3.5 13.61V12.91A10.11 10.11 0 0 1 13.61 2.8Z"/>
-    <path fill="#93a887" d="M18.39 2.8H18.39A10.11 10.11 0 0 1 28.5 12.91V13.61A1.29 1.29 0 0 1 27.21 14.9H18.39A1.29 1.29 0 0 1 17.1 13.61V4.09A1.29 1.29 0 0 1 18.39 2.8Z"/>
-    <path fill="#75916a" d="M4.79 17.1H13.61A1.29 1.29 0 0 1 14.9 18.39V27.91A1.29 1.29 0 0 1 13.61 29.2H13.61A10.11 10.11 0 0 1 3.5 19.09V18.39A1.29 1.29 0 0 1 4.79 17.1Z"/>
-    <path fill="#d0936a" d="M18.39 17.1H27.21A1.29 1.29 0 0 1 28.5 18.39V19.09A10.11 10.11 0 0 1 18.39 29.2H18.39A1.29 1.29 0 0 1 17.1 27.91V18.39A1.29 1.29 0 0 1 18.39 17.1Z"/>
+  <path d="M468 0H132C59.0984 0 0 59.0984 0 132V468C0 540.902 59.0984 600 132 600H468C540.902 600 600 540.902 600 468V132C600 59.0984 540.902 0 468 0Z" fill="#FAF6EE"/>
+  <g transform="translate(302 290) scale(0.88) translate(-300 -305)" fill="none" stroke="#141414" stroke-linecap="round" stroke-linejoin="round">
+    <g stroke-width="27">
+      <path d="M300 210.327C327.942 166.625 356 151 390.561 135.222C415 161.5 427 183 435 229.5"/>
+      <path d="M300.091 210.327C272.149 166.625 242 148.5 209.53 135.222C184.5 164 176 181 166.5 231.5"/>
+      <path d="M435.5 230.5C484.5 260.5 492.5 296 496 354C496 440 412 474 300 474C188 474 103 440 103 354C103 294.5 116 265.5 164.5 232.5"/>
+    </g>
+    <g stroke-width="19">
+      <path d="M329.731 317.503C338.131 330.673 357.97 333.206 369.409 322.569"/>
+      <path d="M229.591 322.571C241.031 333.207 260.87 330.672 269.269 317.502"/>
+    </g>
+  </g>
+  <g transform="translate(302 290) scale(0.88) translate(-300 -305)" fill="none" stroke="#D2674A" stroke-width="19" stroke-linecap="round">
+    <path d="M145.318 339.595C107.841 336.058 87.6592 339.69 58.687 350.231"/>
+    <path d="M144.687 371.701C113.203 371.226 97.036 376.437 74.5848 389.179"/>
+  </g>
+  <g fill="#FAF6EE" stroke="#141414" stroke-width="26" stroke-linejoin="round" stroke-linecap="round">
+    <ellipse cx="226" cy="420" rx="58" ry="38" transform="rotate(-14 226 420)"/>
+  </g>
+  <g fill="#D2674A" stroke="#D2674A" stroke-width="26" stroke-linejoin="round" fill-rule="evenodd">
+    <path d="M507 207V430H302ZM460 293V378H382Z"/>
   </g>
 </svg>

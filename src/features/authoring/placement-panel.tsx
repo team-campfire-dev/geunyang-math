@@ -30,7 +30,7 @@ export function PlacementPanel({
   const [open, setOpen] = useState<string | null>(null);
   if (!draft || !edit) {
     return <section className="studio-panel">
-      <div className="page-heading"><div className="eyebrow">STARTING POINT</div><h1>시작점 확인</h1>
+      <div className="page-heading"><h1>시작점 확인</h1>
         <p>학습자가 처음 만나는 문항이에요. 어떤 수업에도 들어 있지 않아서, 여기에서만 고칠 수 있어요.</p></div>
       <div className="studio-cards">
         {diagnostics.map((item) => <article key={item.diagnosticKey} className="studio-card">

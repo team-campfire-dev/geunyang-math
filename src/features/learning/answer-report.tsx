@@ -121,7 +121,7 @@ export function AnswerReport({ items, concepts, lessons, standings, onOpenLesson
 
   return <section className="answer-report" aria-label="이번 풀이에서 본 것">
     <div className="report-head">
-      <div><span className="eyebrow">WHAT THIS ROUND SHOWED</span>
+      <div>
         <h2>{gaps.length ? gaps.length === 1 ? '한 군데만 더 보고 가면 돼요.' : '여기 몇 군데만 더 보고 가요.'
           : offDay ? '그동안 풀던 곳에서 오늘만 삐끗했어요.' : '오늘은 막히는 데가 없었어요.'}</h2></div>
       <span className="report-score"><strong>{got}</strong> / {items.length}</span>

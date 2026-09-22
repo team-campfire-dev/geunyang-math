@@ -320,11 +320,11 @@ export function SceneShapes({ items, frame, animated = false, offsetOf }:
           // something to say.
           return <g key={index} transform={style.transform} opacity={item.opacity}>
             <rect x={item.x} y={item.y} width={item.width} height={item.height} rx={item.height * 0.08}
-              fill="#fcfdf7" stroke="#c9d7b5" strokeWidth={Math.max(item.height * 0.016, 0.3)} />
+              fill="var(--white)" stroke="var(--line-strong)" strokeWidth={Math.max(item.height * 0.016, 0.3)} />
             {Array.from({ length: item.parts }, (_, cellIndex) => <rect key={cellIndex}
               x={inner.x + cellIndex * (cell + gap)} y={inner.y} width={Math.max(cell, 0)} height={Math.max(inner.height, 0)} rx={radius}
-              fill={cellIndex < item.filled ? cssColor(item.fill, '#8daa69') : '#e5ecd7'}
-              stroke={cellIndex < item.filled ? 'none' : cssColor(item.stroke, '#dce5c9')}
+              fill={cellIndex < item.filled ? cssColor(item.fill, 'var(--accent)') : 'var(--accent-soft)'}
+              stroke={cellIndex < item.filled ? 'none' : cssColor(item.stroke, 'var(--line-strong)')}
               strokeWidth={item.strokeWidth ?? 0.5} />)}
           </g>;
         }

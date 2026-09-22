@@ -133,7 +133,7 @@ export function SceneEditor({ payload, onChange, arrangingRefusal }: {
         onPointerMove={track} onPointerUp={() => setDrag(null)} onPointerCancel={() => setDrag(null)}
         onPointerDown={(event) => { if (event.target === surface.current) setSelected(null); }}>
         <defs><pattern id={gridId} width="20" height="20" patternUnits="userSpaceOnUse">
-          <path d="M20 0 L0 0 0 20" fill="none" stroke="#dfe4d5" strokeWidth="0.5" /></pattern></defs>
+          <path d="M20 0 L0 0 0 20" fill="none" stroke="var(--line-strong)" strokeWidth="0.5" /></pattern></defs>
         <rect width={scene.width} height={scene.height} fill={`url(#${gridId})`} />
         <SceneShapes items={scene.items} frame={frame} />
         {/* A transparent hit area per shape: thin lines and hollow shapes stay easy to grab. It follows

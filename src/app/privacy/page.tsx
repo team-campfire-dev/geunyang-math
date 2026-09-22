@@ -3,15 +3,15 @@ import Link from 'next/link';
 import { ServiceFooter } from '@/features/learning/service-footer';
 
 export const metadata: Metadata = {
-  title: '개인정보 안내 · geunyang math',
-  description: 'geunyang math에서 사용하는 계정 정보와 학습 기록, 로그인 쿠키, 데이터 보관 및 삭제 요청 방법을 안내합니다.',
+  title: '개인정보 안내 · 그냥수학',
+  description: '그냥수학에서 사용하는 계정 정보와 학습 기록, 로그인 쿠키, 데이터 보관 및 삭제 요청 방법을 안내합니다.',
 };
 
 export default function PrivacyPage() {
   return <div className="privacy-page">
-    <header className="privacy-header"><Link href="/" aria-label="geunyang math 홈">geunyang <span>math</span></Link><Link href="/">학습 공간으로 돌아가기 <span aria-hidden="true">↗</span></Link></header>
+    <header className="privacy-header"><Link href="/" aria-label="그냥수학 홈"><span className="brand-word">그냥<span>수학</span></span></Link><Link href="/">학습 공간으로 돌아가기 <span aria-hidden="true">↗</span></Link></header>
     <main id="main-content" className="privacy-content">
-      <div className="privacy-heading"><div className="eyebrow">YOUR LEARNING, YOUR INFORMATION</div><h1>개인정보 안내</h1><p>나의 배움을 이어가기 위해 어떤 정보를 사용하는지,<br className="privacy-desktop-break" /> 보관한 정보를 어떻게 삭제할 수 있는지 알려드려요.</p><span className="privacy-date">안내 기준일 · 2026년 9월 14일</span></div>
+      <div className="privacy-heading"><h1>개인정보 안내</h1><p>나의 배움을 이어가기 위해 어떤 정보를 사용하는지,<br className="privacy-desktop-break" /> 보관한 정보를 어떻게 삭제할 수 있는지 알려드려요.</p><span className="privacy-date">안내 기준일 · 2026년 9월 14일</span></div>
       <article className="privacy-sheet">
         <section><span className="privacy-number">01</span><h2>계정 연결과 학습 기록</h2>
           <p>Google 로그인으로 같은 학습 공간을 다시 찾을 수 있도록 Google 계정의 고유 식별자(<code>sub</code>)와 표시 이름을 데이터베이스에 저장합니다. 로그인할 때 Google이 제공한 이메일 확인 상태(<code>email_verified</code>)를 검증합니다.</p>
