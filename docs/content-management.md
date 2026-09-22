@@ -1,6 +1,6 @@
 # DB 콘텐츠 관리
 
-2026-09-18 · 코드 기준: [문항 은행이 카탈로그가 가르치는 것을 모두 묻는다 #78](https://github.com/team-campfire-dev/geunyang-math/pull/78). 릴리스별 검증은 [배포 기록](deployment.md#릴리스별-검증-기록)을 따른다.
+2026-09-18 작성 · 갱신: 2026-09-22 · 코드 기준: `0062330` (#129). 저장 구조와 명령은 그대로이고 콘텐츠 수량만 자랐다 — 지금 수량은 [구현 현황](implementation-status.md)이 기준이다. 릴리스별 검증은 [배포 기록](deployment.md#릴리스별-검증-기록)을 따른다.
 
 기본 콘텐츠와 이후 발행한 콘텐츠의 운영 원본은 MySQL이다. 수업·진단 문항·개념 이름을 TypeScript/JSON 파일에서 불러오는 런타임 경로는 없다.
 
@@ -53,7 +53,7 @@ rich text는 `$...$`, `$$...$$`, `\(...\)` 안에 LaTeX를 담고, 도형 캡션
 
 `20260914030000_database_content` migration이 기본 3개 수업(문항 15개), 진단 1개(문항 6개), 개념 3개를 한 번 등록한다. 수업 판본이 이미 있으면 내용, 해시, 발행 시각을 그대로 둔다. 이 migration은 당시 형식대로 판본을 JSON 문서로 심고, 뒤따르는 [저장 구조 migration](deployment.md#저장-구조-migration)이 그것을 행으로 옮긴 뒤 문서 칸을 지운다 — 새 DB에서도 `db:migrate` 한 번에 그 순서가 그대로 돈다. 기존 진단 실행과 과제 snapshot을 변경하지 않는다. 테이블 및 UTF-8 SQL 문자열 비교에 기존과 동일한 `utf8mb4_unicode_ci`를 명시한다.
 
-배포는 `db:migrate → db:seed → content:publish → content:verify` 순서다. **`db:seed`는 플랫폼의 기본 콘텐츠를 심는 진짜 씨앗이다**(2026-09-17부터). `prisma/seed/fractions.json`의 분수 코스·수업 3개·진단 1개·개념 7개와 공통 사전 v3의 추가 개념 3개·뜻풀이 10개를 같은 `importContent` 경로로 설치한다. 이미 있는 판본은 변경하지 않고, 뜻풀이는 없는 항목만 설치한다. 검토한 기존 사전 변경은 `content:publish`가 적용한다. 판형이 바뀐 migration이 콘텐츠 표를 비운 뒤에는 이 명령이 콘텐츠를 다시 채운다. 이 파일에는 정답이 들어 있다 — 처음 콘텐츠를 심은 hex migration이 그랬듯, 플랫폼 기본 콘텐츠는 저장소가 원본이다. 테스트 fixture도 같은 파일을 읽는다. migration SQL 안의 초기 데이터는 역사적 이전 자료이며 운영 콘텐츠를 수정하는 곳이 아니다.
+배포는 `db:migrate → db:seed → content:publish → content:verify` 순서다. **`db:seed`는 플랫폼의 기본 콘텐츠를 심는 진짜 씨앗이다**(2026-09-17부터). `prisma/seed/`의 **코스마다 한 파일**(지금 서른아홉 개, 이름 순으로 전부)과 `content/glossary-v*.json`의 공통 사전을 같은 `importContent` 경로로 설치한다. 이미 있는 판본은 변경하지 않고, 뜻풀이는 없는 항목만 설치한다. 검토한 기존 사전 변경은 `content:publish`가 적용한다. 판형이 바뀐 migration이 콘텐츠 표를 비운 뒤에는 이 명령이 콘텐츠를 다시 채운다. 이 파일에는 정답이 들어 있다 — 처음 콘텐츠를 심은 hex migration이 그랬듯, 플랫폼 기본 콘텐츠는 저장소가 원본이다. 테스트 fixture도 같은 파일을 읽는다. migration SQL 안의 초기 데이터는 역사적 이전 자료이며 운영 콘텐츠를 수정하는 곳이 아니다.
 
 ## 저장소 번들의 발행
 
