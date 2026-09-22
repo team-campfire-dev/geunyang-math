@@ -15,6 +15,7 @@
     "db:migrate": "prisma migrate deploy",
     "db:seed": "node --conditions=react-server --import tsx prisma/seed.ts",
     "build:mobile": "node scripts/build-mobile.mjs",
+    "brand:images": "python3 scripts/build-brand-images.py",
     "verify": "npm run typecheck && npm test && npm run build && npm run build:mobile",
     "content:import": "node --conditions=react-server --import tsx scripts/content.ts import",
     "content:export": "node --conditions=react-server --import tsx scripts/content.ts export",
