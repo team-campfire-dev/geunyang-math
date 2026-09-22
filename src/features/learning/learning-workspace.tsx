@@ -87,45 +87,51 @@ function showProblem(index: number) {
 }
 
 /**
- * The mark: a cat with a paw resting at its chin and a set square leaning across its face — ink and
- * paper, with the clay spent on the one thing that says what this is for. It is kept here as paths
- * rather than an <img> so it inherits nothing and costs no second request, and because the same
- * drawing has to exist in src/app/icon.svg for the browser tab; tests/app-icons.test.ts holds them
- * equal.
+ * The mark: a cat with its eyes closed, a paw resting where its chin would be, and a set square
+ * leaning across the right of its face. It is kept here as paths rather than an <img> so it
+ * inherits nothing and costs no second request, and because the same drawing has to exist in
+ * src/app/icon.svg for the browser tab; tests/app-icons.test.ts holds them equal.
  *
- * Only the left whiskers are drawn: the right pair would run straight into the ruler. The ruler is
- * filled rather than outlined, which is what lets one drawing serve every size down to the favicon.
- * Its apex stops where the ears start rather than at their tips, and its lower-left corner sits on
- * the middle of the face — both read off the 0.88 the head is drawn at.
+ * The paths are not ours. They come straight out of ~/Documents/그냥스타일/download.svg — the
+ * commissioned mark, as vector — with the wordmark below it dropped and the rest set on the plate
+ * by the single transform below. Earlier passes read landmarks off a raster of the same drawing and
+ * joined them up, and got the ears and the paw wrong twice. A few points are not a shape; ask for
+ * the vector instead.
  */
 function Brand() {
   return <span className="brand"><span className="brand-mark" aria-hidden="true">
     <svg viewBox="0 0 600 600" fill="none">
       <path d="M468 0H132C59.0984 0 0 59.0984 0 132V468C0 540.902 59.0984 600 132 600H468C540.902 600 600 540.902 600 468V132C600 59.0984 540.902 0 468 0Z" fill="#FAF6EE" />
-      <g transform="translate(302 290) scale(0.88) translate(-300 -305)" stroke="#141414" strokeLinecap="round" strokeLinejoin="round">
-        <g strokeWidth="27">
-          <path d="M300 210.327C327.942 166.625 356 151 390.561 135.222C415 161.5 427 183 435 229.5" />
-          <path d="M300.091 210.327C272.149 166.625 242 148.5 209.53 135.222C184.5 164 176 181 166.5 231.5" />
-          <path d="M435.5 230.5C484.5 260.5 492.5 296 496 354C496 440 412 474 300 474C188 474 103 440 103 354C103 294.5 116 265.5 164.5 232.5" />
+      <g transform="translate(-125.6 -72.9) scale(1.9)" strokeLinecap="round" strokeLinejoin="round">
+        {/* 얼굴. 한 획으로 왼뺨을 올라 두 귀를 넘고, 자에 닿기 전 허공에서 끝난다 */}
+        <g stroke="#141414" strokeWidth="13">
+          <path d="M143 251 C127 240 120 223 121 203 C122 180 132 162 152 150 C155 130 164 114 173 104 C192 112 208 125 221 142 C234 125 252 113 271 104 C282 117 289 132 292 150 C298 153 304 158 309 164" />
         </g>
-        <g strokeWidth="19">
-          <path d="M329.731 317.503C338.131 330.673 357.97 333.206 369.409 322.569" />
-          <path d="M229.591 322.571C241.031 333.207 260.87 330.672 269.269 317.502" />
+        {/* 감은 눈 */}
+        <g stroke="#141414" strokeWidth="11">
+          <path d="M182 201 C188 209 201 209 207 200" />
+          <path d="M237 200 C243 209 256 209 262 201" />
         </g>
-      </g>
-      <g transform="translate(302 290) scale(0.88) translate(-300 -305)" stroke="#D2674A" strokeWidth="19" strokeLinecap="round">
-        <path d="M145.318 339.595C107.841 336.058 87.6592 339.69 58.687 350.231" />
-        <path d="M144.687 371.701C113.203 371.226 97.036 376.437 74.5848 389.179" />
-      </g>
-      <g fill="#FAF6EE" stroke="#141414" strokeWidth="26" strokeLinejoin="round" strokeLinecap="round">
-        <ellipse cx="226" cy="420" rx="58" ry="38" transform="rotate(-14 226 420)" />
-      </g>
-      <g fill="#D2674A" stroke="#D2674A" strokeWidth="26" strokeLinejoin="round" fillRule="evenodd">
-        <path d="M507 207V430H302ZM460 293V378H382Z" />
+        {/* 수염 */}
+        <g stroke="#D2674A" strokeWidth="10">
+          <path d="M103 207 C117 201 131 199 146 201" />
+          <path d="M110 232 C121 223 132 219 146 219" />
+        </g>
+        {/* 앞발. 턱이 있을 자리에 놓인다 */}
+        <g stroke="#141414" strokeWidth="12">
+          <path d="M124 288 H177 C193 291 205 281 200 267 C195 253 178 246 160 250 C142 253 131 267 130 282" />
+        </g>
+        {/* 삼각자. 가운데가 비어 보여야 해서 한 길 안의 두 고리로 그린다 */}
+        <g fill="#D2674A">
+          <path fillRule="evenodd" d="M338 150 C342 146 350 149 350 155 V287 C350 292 347 295 342 295 H213 C206 295 203 288 208 283 Z M324 194 L248 273 H324 Z" />
+          <path d="M305 234 C307 231 311 233 311 237 V257 C311 259 310 260 308 260 H287 C284 260 283 257 285 255 Z" />
+        </g>
       </g>
     </svg>
   </span><span className="brand-word">그냥<span>수학</span></span></span>;
 }
+
+
 
 
 

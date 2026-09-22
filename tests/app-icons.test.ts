@@ -23,23 +23,30 @@ const paths = (source: string) => [...source.matchAll(/ d="([^"]+)"/g)].map((mat
 
 describe('the app icon', () => {
   it('draws exactly what the sidebar draws', () => {
+    // 판 하나에, 시안에서 그대로 옮겨 온 여덟 획.
     expect(paths(brand), '사이드바 브랜드 마크의 획').toHaveLength(9);
     expect(paths(svg), 'icon.svg의 획이 사이드바와 다르다').toEqual(paths(brand));
   });
 
-  it('places the ruler where the sidebar places it', () => {
-    // The face is scaled and shifted to make room for the ruler; the two have to agree on that too,
-    // or the icon shows the same strokes in a different arrangement.
-    const frame = /translate\(302 290\) scale\(0\.88\) translate\(-300 -305\)/g;
-    expect(svg.match(frame), 'icon.svg의 얼굴 배치').toHaveLength(2);
-    expect(brand.match(frame), '사이드바의 얼굴 배치').toHaveLength(2);
+  it('sets the drawing on the plate the way the sidebar does', () => {
+    // 시안은 제 좌표계로 그려져 있고, 이 한 줄이 그것을 판 가운데로 옮긴다. 양쪽이 같아야 같은 자리에 선다.
+    const frame = /translate\(-125\.6 -72\.9\) scale\(1\.9\)/g;
+    expect(svg.match(frame), 'icon.svg의 배치').toHaveLength(1);
+    expect(brand.match(frame), '사이드바의 배치').toHaveLength(1);
   });
 
-  it('draws the paw the sidebar draws', () => {
-    // The paw is an <ellipse>, not a path, so it would slip past the stroke comparison above.
-    const paw = /<ellipse cx="226" cy="420" rx="58" ry="38" transform="rotate\(-14 226 420\)"/;
-    expect(svg, 'icon.svg의 발').toMatch(paw);
-    expect(brand, '사이드바의 발').toMatch(paw);
+  it('leaves the middle of the set square open', () => {
+    // 자의 속은 한 길 안의 둘째 고리다. even-odd가 아니면 메워져 통짜 삼각형이 된다.
+    expect(brand, '사이드바의 삼각자').toMatch(/fillRule="evenodd"/);
+    expect(svg, 'icon.svg의 삼각자').toMatch(/fill-rule="evenodd"/);
+  });
+
+  it('keeps the strokes at the weights the reference drew them', () => {
+    // 굵기는 시안 좌표계의 값 그대로다. 한쪽만 손대면 같은 그림이 다른 무게로 나온다.
+    const widths = (source: string, attribute: string) =>
+      [...source.matchAll(new RegExp(`${attribute}="(\\d+)"`, 'g'))].map((match) => match[1]);
+    expect(widths(svg, 'stroke-width'), 'icon.svg의 획 굵기').toEqual(['13', '11', '10', '12']);
+    expect(widths(brand, 'strokeWidth'), '사이드바의 획 굵기').toEqual(widths(svg, 'stroke-width'));
   });
 
   it('paints nothing outside the palette', () => {
@@ -50,6 +57,17 @@ describe('the app icon', () => {
   it('has a favicon for browsers that will not read the svg one', () => {
     expect(icons).toContain('favicon.ico');
     expect(icons).toContain('icon.svg');
+  });
+
+  it('is made from the svg rather than by hand', () => {
+    // 아이콘·홈 화면 아이콘·공유 카드는 전부 icon.svg에서 뽑아 낸 그림 파일이다. 손으로 만들어 넣으면
+    // 마크가 바뀐 뒤에도 옛 그림이 남고, 무엇으로 만들었는지 아무도 모르게 된다.
+    const script = readFileSync('scripts/build-brand-images.py', 'utf8');
+    for (const name of icons) {
+      if (name === 'icon.svg' || name.endsWith('.txt')) continue;
+      expect(script, `${name}을 만드는 자리가 scripts/build-brand-images.py에 없다`).toContain(name);
+    }
+    expect(readFileSync('package.json', 'utf8'), 'brand:images 스크립트').toContain('build-brand-images.py');
   });
 
   it('is carried into the phone bundle', () => {
