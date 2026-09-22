@@ -21,13 +21,23 @@ export type PlacementState = { scope: string[]; placed: Placement; source: Place
  * doing it took all of them. Wrong does not say which one went wrong, and the honest reading of that
  * is that none of them can be counted on yet — so all of them are marked as needing practice. That
  * errs towards offering a lesson someone did not need, rather than towards skipping one they did.
+ *
+ * It is handed the questions that ask about the concept rather than the whole bank, and reads the
+ * answers in place rather than a copy of them, because `placement` asks this of every open concept
+ * after every answer — on the published bank that is a hundred and sixty concepts, a hundred and
+ * fifty times over.
  */
-function verdict(bank: PlacementProblem[], answers: PlacementAnswer[], key: string): Outcome | null {
-  const about = new Set(bank.filter((problem) => problem.conceptKeys.includes(key)).map((problem) => problem.problemVersionId));
-  const given = answers.filter((answer) => about.has(answer.problemVersionId));
-  if (given.some((answer) => answer.status === 'incorrect')) return 'needs-practice';
-  if (given.some((answer) => answer.status === 'skipped')) return 'unknown';
-  return given.length >= requiredCorrect ? 'ready' : null;
+function verdict(asked: Set<string>, answers: PlacementAnswer[], read: number): Outcome | null {
+  let given = 0;
+  let skipped = false;
+  for (let i = 0; i < read; i += 1) {
+    if (!asked.has(answers[i].problemVersionId)) continue;
+    if (answers[i].status === 'incorrect') return 'needs-practice';
+    if (answers[i].status === 'skipped') skipped = true;
+    given += 1;
+  }
+  if (skipped) return 'unknown';
+  return given >= requiredCorrect ? 'ready' : null;
 }
 
 /**
@@ -52,13 +62,27 @@ export function placement(
   let source: PlacementSource = {};
   const used = new Set<string>();
   let read = 0;
-  const unused = (key: string) => bank.filter((problem) => problem.conceptKeys.includes(key) && !used.has(problem.problemVersionId));
+  // Which questions ask about a concept never changes during a run, so the bank is read once here
+  // instead of once per concept per answer. Bank order is kept: a concept's first unused question is
+  // the one the descent puts next.
+  const asking = new Map<string, PlacementProblem[]>();
+  const askedAbout = new Map<string, Set<string>>();
+  for (const problem of bank) {
+    for (const key of problem.conceptKeys) {
+      let list = asking.get(key);
+      if (!list) { list = []; asking.set(key, list); askedAbout.set(key, new Set()); }
+      list.push(problem);
+      askedAbout.get(key)!.add(problem.problemVersionId);
+    }
+  }
+  const nothing = new Set<string>();
+  const unused = (key: string) => (asking.get(key) ?? []).find((problem) => !used.has(problem.problemVersionId)) ?? null;
   const settleWhatIsDecided = () => {
     for (let again = true; again;) {
       again = false;
       for (const key of scope) {
         if (key in placed) continue;
-        const outcome = verdict(bank, answers.slice(0, read), key);
+        const outcome = verdict(askedAbout.get(key) ?? nothing, answers, read);
         if (!outcome) continue;
         ({ placed, source } = settleConcept(graph, scope, placed, source, key, outcome));
         again = true;
@@ -67,10 +91,10 @@ export function placement(
   };
   for (;;) {
     settleWhatIsDecided();
-    const askable = scope.filter((key) => !(key in placed) && unused(key).length > 0);
+    const askable = scope.filter((key) => !(key in placed) && unused(key) !== null);
     const concept = nextConcept(graph, scope, placed, { among: askable });
     if (!concept) break;
-    const problem = unused(concept)[0];
+    const problem = unused(concept)!;
     const answer = answers[read];
     if (!answer) return { state: { scope, placed, source }, next: problem, consumed: read };
     if (answer.problemVersionId !== problem.problemVersionId) {
@@ -83,7 +107,7 @@ export function placement(
   // Asked, and the bank ran out before the answers added up to anything. Not wrong, just not known.
   for (const key of scope) {
     if (key in placed) continue;
-    const about = new Set(bank.filter((problem) => problem.conceptKeys.includes(key)).map((problem) => problem.problemVersionId));
+    const about = askedAbout.get(key) ?? nothing;
     if (answers.slice(0, read).some((answer) => about.has(answer.problemVersionId))) {
       ({ placed, source } = settleConcept(graph, scope, placed, source, key, 'unknown'));
     }

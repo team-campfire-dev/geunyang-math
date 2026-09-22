@@ -137,20 +137,27 @@ export function nextConcept(
   // What a question is worth is measured against everything still open, but only a concept there is
   // something to ask about can be the question. Settling the rest by inference is the point.
   const remaining = new Set(open);
-  const candidates = options.among ? open.filter((key) => options.among!.includes(key)) : open;
+  const among = options.among ? new Set(options.among) : null;
+  const candidates = among ? open.filter((key) => among.has(key)) : open;
   if (!candidates.length) return null;
   const settles = (key: string) => {
     const above = [...graph.ancestors(key)].filter((other) => remaining.has(other)).length + 1;
     const below = [...graph.dependents(key)].filter((other) => remaining.has(other)).length + 1;
     return { even: Math.min(above, below), total: above + below };
   };
-  return candidates.reduce((best, key) => {
-    const a = settles(key);
-    const b = settles(best);
-    if (a.even !== b.even) return a.even > b.even ? key : best;
-    if (a.total !== b.total) return a.total > b.total ? key : best;
-    return key < best ? key : best;
-  });
+  // Each candidate is weighed once. Weighing the incumbent again at every comparison walked the
+  // graph a second time for every concept still open, and this is asked after every answer.
+  let best = candidates[0];
+  let bestWeight = settles(best);
+  for (let i = 1; i < candidates.length; i += 1) {
+    const key = candidates[i];
+    const weight = settles(key);
+    const better = weight.even !== bestWeight.even ? weight.even > bestWeight.even
+      : weight.total !== bestWeight.total ? weight.total > bestWeight.total
+      : key < best;
+    if (better) { best = key; bestWeight = weight; }
+  }
+  return best;
 }
 
 /**
