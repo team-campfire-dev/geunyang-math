@@ -88,7 +88,7 @@
     {
       "public": {
         "lessonKey": "ncs-data-reading",
-        "versionId": "ncs-data-reading:v2",
+        "versionId": "ncs-data-reading:v3",
         "title": "표에서 값 찾기: 제목·단위·합계",
         "summary": "표를 읽는 차례를 익히고, 줄과 열을 따라가며 합계와 비중을 구해요.",
         "estimatedMinutes": 20,
@@ -104,17 +104,17 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-data-reading:order:v2",
+          "sectionId": "ncs-data-reading:order:v3",
           "role": "explanation",
           "title": "표를 읽는 차례",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-reading:order:text:v2",
+              "blockId": "ncs-data-reading:order:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "표를 만나면 네 가지를 차례로 봅니다. 이 차례가 표 읽기의 전부예요.\n\n첫째, 제목이에요. 무엇에 대한 표인지가 여기 있어요. 「지점별 분기 매출」과 「지점별 분기 이익」은 전혀 다른 표인데 숫자만 보면 구별되지 않아요.\n\n둘째, 단위예요. $3{,}200$이 만 원인지 억 원인지, 명인지 천 명인지에 따라 답이 백 배 달라져요. 단위는 보통 표 위나 아래에 작게 붙어 있어요.\n\n셋째, 줄과 열이 각각 무엇인지예요. 줄이 지점이고 열이 분기인지, 그 반대인지를 먼저 정해요. 그래야 어느 방향으로 읽을지가 정해져요.\n\n넷째, 합계가 있는지예요. 합계 줄이 있으면 비중 문제가 훨씬 빨라지고, 없으면 직접 더해야 해요.",
+                "text": "표 읽기를 시작할 때는 네 가지를 차례로 확인해요. 제목·단위·행과 열·합계를 확인하면 필요한 값을 찾기 쉬워요.\n\n첫째, 제목이에요. 무엇에 대한 표인지가 여기 있어요. 「지점별 분기 매출」과 「지점별 분기 이익」은 전혀 다른 표인데 숫자만 보면 구별되지 않아요.\n\n둘째, 단위예요. $3{,}200$이 만 원인지 억 원인지, 명인지 천 명인지에 따라 숫자가 나타내는 실제 양이 달라져요. 단위는 보통 표 위나 아래에 작게 붙어 있어요.\n\n셋째, 줄과 열이 각각 무엇인지예요. 줄이 지점이고 열이 분기인지, 그 반대인지를 먼저 정해요. 그래야 어느 방향으로 읽을지가 정해져요.\n\n넷째, 합계가 있는지예요. 합계 줄이 있으면 비중 문제가 훨씬 빨라지고, 없으면 직접 더해야 해요.",
                 "definitions": [
                   {
                     "conceptKey": "table-reading",
@@ -127,12 +127,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-reading:sheet:v2",
+          "sectionId": "ncs-data-reading:sheet:v3",
           "role": "explanation",
           "title": "표 하나를 함께 읽기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-reading:sheet:text:v2",
+              "blockId": "ncs-data-reading:sheet:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -142,7 +142,7 @@
               }
             },
             {
-              "blockId": "table:branch-sales",
+              "blockId": "table:branch-sales:v3",
               "kind": "core.table",
               "typeVersion": 1,
               "required": true,
@@ -207,12 +207,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-reading:share:v2",
+          "sectionId": "ncs-data-reading:share:v3",
           "role": "explanation",
           "title": "비중은 전체를 먼저",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-reading:share:text:v2",
+              "blockId": "ncs-data-reading:share:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -228,7 +228,7 @@
               }
             },
             {
-              "blockId": "ncs-data-reading:share:drawing:v2",
+              "blockId": "ncs-data-reading:share:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -400,12 +400,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-reading:example:v2",
+          "sectionId": "ncs-data-reading:example:v3",
           "role": "worked_example",
           "title": "표 하나로 세 가지 묻기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-reading:example:text:v2",
+              "blockId": "ncs-data-reading:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -417,12 +417,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-reading:practice:v2",
+          "sectionId": "ncs-data-reading:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-reading:practice:problems:v2",
+              "blockId": "ncs-data-reading:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -439,12 +439,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-reading:check:v2",
+          "sectionId": "ncs-data-reading:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-reading:check:problems:v2",
+              "blockId": "ncs-data-reading:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -460,12 +460,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-reading:summary:v2",
+          "sectionId": "ncs-data-reading:summary:v3",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-reading:summary:text:v2",
+              "blockId": "ncs-data-reading:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -495,7 +495,7 @@
     {
       "public": {
         "lessonKey": "ncs-data-change",
-        "versionId": "ncs-data-change:v3",
+        "versionId": "ncs-data-change:v4",
         "title": "증감과 증감률: 얼마나 늘었나",
         "summary": "늘어난 양과 늘어난 비율을 구분하고, 기준을 잡아 증감률을 구해요.",
         "estimatedMinutes": 20,
@@ -511,29 +511,29 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-data-change:amount:v3",
+          "sectionId": "ncs-data-change:amount:v4",
           "role": "explanation",
           "title": "늘어난 양",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:amount:text:v3",
+              "blockId": "ncs-data-change:amount:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "표가 두 시점을 보여 주면 시험은 거의 언제나 「얼마나 늘었나」를 묻습니다. 그런데 이 물음에는 답이 둘이에요.\n\n하나는 증감량이에요. 나중 값에서 처음 값을 뺀 것이고요. 단위가 그대로 남아요 — 몇 명, 몇만 원.",
+                "text": "두 시점의 값을 비교할 때는 늘거나 줄어든 양과 그 비율을 구할 수 있어요. 둘을 구별해 볼게요.\n\n하나는 증감량이에요. 나중 값에서 처음 값을 뺀 것이고요. 단위가 그대로 남아요 — 몇 명, 몇만 원.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-data-change:rate:v3",
+          "sectionId": "ncs-data-change:rate:v4",
           "role": "explanation",
           "title": "늘어난 비율",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:rate:text:v3",
+              "blockId": "ncs-data-change:rate:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -551,22 +551,22 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:base:v3",
+          "sectionId": "ncs-data-change:base:v4",
           "role": "explanation",
           "title": "기준은 언제나 이전 값",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:base:text:v3",
+              "blockId": "ncs-data-change:base:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "증감률에서 가장 많이 틀리는 곳은 나누는 수예요. 나중 값이 아니라 처음 값으로 나눕니다.\n\n$40{,}000$명이 $50{,}000$명이 되었으면 늘어난 $10{,}000$을 $40{,}000$으로 나눠 $25\\%$예요. $50{,}000$으로 나눈 $20\\%$는 틀린 답인데, 시험은 그 $20\\%$를 보기에 꼭 넣어 둬요.\n\n여러 해에 걸친 증가율도 더할 수 없어요. $2022 \\rightarrow 2023$이 $25\\%$, $2023 \\rightarrow 2024$가 $30\\%$라고 해서 두 해 동안 $55\\%$가 아니에요. $40{,}000$이 $65{,}000$이 되었으니 $\\frac{25{,}000}{40{,}000} = 62.5\\%$예요. 기준이 해마다 달라지기 때문이에요.\n\n그리고 %와 %p가 있어요. 점유율이 $8\\%$에서 $10\\%$가 되면 $2$%p 오른 것이고, 비율로는 $\\frac{2}{8} = 25\\%$ 오른 것이에요. 같은 사실을 두 수로 말할 수 있으니, 문장이 어느 쪽을 묻는지 읽어야 해요.",
+                "text": "증감률에서 가장 많이 틀리는 곳은 나누는 수예요. 나중 값이 아니라 처음 값으로 나눕니다.\n\n$40{,}000$명이 $50{,}000$명이 되었으면 늘어난 $10{,}000$을 $40{,}000$으로 나눠 $25\\%$예요. $50{,}000$으로 나눈 $20\\%$는 틀린 답인데, 기준을 나중 값으로 잘못 잡으면 이처럼 다른 결과가 나와요.\n\n여러 해에 걸친 증가율도 더할 수 없어요. $2022 \\rightarrow 2023$이 $25\\%$, $2023 \\rightarrow 2024$가 $30\\%$라고 해서 두 해 동안 $55\\%$가 아니에요. $40{,}000$이 $65{,}000$이 되었으니 $\\frac{25{,}000}{40{,}000} = 62.5\\%$예요. 기준이 해마다 달라지기 때문이에요.\n\n그리고 %와 %p가 있어요. 점유율이 $8\\%$에서 $10\\%$가 되면 $2$%p 오른 것이고, 비율로는 $\\frac{2}{8} = 25\\%$ 오른 것이에요. 같은 사실을 두 수로 말할 수 있으니, 문장이 어느 쪽을 묻는지 읽어야 해요.",
                 "definitions": []
               }
             },
             {
-              "blockId": "ncs-data-change:growth:drawing:v3",
+              "blockId": "ncs-data-change:growth:drawing:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -726,12 +726,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:example:v3",
+          "sectionId": "ncs-data-change:example:v4",
           "role": "worked_example",
           "title": "증가율이 가장 큰 곳 찾기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:example:text:v3",
+              "blockId": "ncs-data-change:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -743,12 +743,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:practice:v3",
+          "sectionId": "ncs-data-change:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:practice:problems:v3",
+              "blockId": "ncs-data-change:practice:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -765,12 +765,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:check:v3",
+          "sectionId": "ncs-data-change:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:check:problems:v3",
+              "blockId": "ncs-data-change:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -786,17 +786,17 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:summary:v3",
+          "sectionId": "ncs-data-change:summary:v4",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:summary:text:v3",
+              "blockId": "ncs-data-change:summary:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "증감량은 빼서 구하고 증감률은 그것을 처음 값으로 나눠 구해요. 나누는 수는 언제나 이전 값이에요.\n\n해마다의 증가율은 더할 수 없고, %와 %p는 다른 말이에요. 여러 줄을 비교할 때는 줄거나 그대로인 줄을 먼저 버리면 계산이 절반으로 줄어요.\n\n이 수업의 개념은 증감률이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "증감량은 빼서 구하고 증감률은 그것을 처음 값으로 나눠 구해요. 나누는 수는 언제나 이전 값이에요.\n\n해마다의 증가율은 더할 수 없고, %와 %p는 다른 말이에요. 증가율이 가장 큰 항목을 찾을 때, 증가한 항목이 있다면 줄거나 그대로인 항목은 제외할 수 있어요.\n\n이 수업의 개념은 증감률이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "growth-rate",
@@ -821,8 +821,8 @@
     {
       "public": {
         "lessonKey": "ncs-data-compare",
-        "versionId": "ncs-data-compare:v3",
-        "title": "두 값을 이어 보고, 말하지 않은 것을 가려내기",
+        "versionId": "ncs-data-compare:v4",
+        "title": "부분과 비율로 전체 구하기, 표로 알 수 있는 것 구별하기",
         "summary": "두 값을 이어 표에 없는 값을 구하고, 표가 말하지 않은 것을 가려내요.",
         "estimatedMinutes": 20,
         "conceptKeys": [
@@ -837,22 +837,22 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-data-compare:join:v3",
+          "sectionId": "ncs-data-compare:join:v4",
           "role": "explanation",
           "title": "두 값을 이으면 셋째 값이 나와요",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-compare:join:text:v3",
+              "blockId": "ncs-data-compare:join:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "표가 두 가지를 함께 보여 주면 그 둘을 이어 표에 없는 값을 구할 수 있어요. 자료해석에서 가장 자주 나오는 이음은 부분과 비율이에요.\n\n$\\text{부분} = \\text{전체} \\times \\text{비율}$이니 거꾸로 $\\text{전체} = \\frac{\\text{부분}}{\\text{비율}}$이에요. A사의 매출이 $80$억 원이고 점유율이 $10\\%$라면 시장 전체는 $80 \\div 0.1 = 800$억 원이에요.\n\n이 이음이 강력한 이유가 있어요. 표가 「시장 규모」라는 열을 갖고 있지 않아도 답이 나오거든요. 시험은 그래서 두 열을 주고 셋째를 묻습니다.\n\n여기서 흥미로운 일이 벌어져요. $2024$년은 매출 $92$억, 점유율 $12\\%$니 시장은 $92 \\div 0.12 = 766.6\\ldots$억 원이에요. A사는 컸는데 시장은 줄었어요. 점유율이 오른 이유의 절반이 그것이에요.",
+                "text": "2023년에 A사의 매출이 $80$억 원이고 시장 전체 매출의 $10\\%$라고 해 볼게요. 시장 전체 매출은 얼마일까요?\n\n$10\\%$는 전체를 똑같이 열 부분으로 나눈 것 중 하나예요. 그 하나가 $80$억 원이므로 전체는 $80\\times10=800$억 원이에요.\n\n같은 계산을 $80\\div0.1=800$으로 쓸 수 있어요. 이처럼 부분의 양을 전체에서 차지하는 비율로 나누면 전체의 양을 구할 수 있어요. 비율은 $10\\%$를 $0.1$로 바꾸어 넣어요.\n\n다음 해인 $2024$년에는 A사의 매출이 $92$억 원, 점유율이 $12\\%$예요. 시장 전체 매출은 $92\\div0.12=766.6\\ldots$억 원이에요.\n\nA사의 매출은 늘었지만 시장 전체 매출은 줄었어요. 회사 매출이 늘어난 것과 시장 규모가 줄어든 것 모두 점유율을 높이는 방향으로 작용했어요. 점유율만 보고 회사 매출이나 시장 규모가 각각 얼마나 변했는지 알 수는 없어요.",
                 "definitions": []
               }
             },
             {
-              "blockId": "ncs-data-compare:market:drawing:v3",
+              "blockId": "ncs-data-compare:market:drawing:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -953,12 +953,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-compare:silent:v3",
+          "sectionId": "ncs-data-compare:silent:v4",
           "role": "explanation",
           "title": "표가 말하지 않은 것",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-compare:silent:text:v3",
+              "blockId": "ncs-data-compare:silent:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -974,7 +974,7 @@
               }
             },
             {
-              "blockId": "table:branch-sales",
+              "blockId": "table:branch-sales:v4",
               "kind": "core.table",
               "typeVersion": 1,
               "required": true,
@@ -1039,12 +1039,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-compare:example:v3",
+          "sectionId": "ncs-data-compare:example:v4",
           "role": "worked_example",
           "title": "총량과 비율을 섞지 않기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-compare:example:text:v3",
+              "blockId": "ncs-data-compare:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1056,12 +1056,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-compare:practice:v3",
+          "sectionId": "ncs-data-compare:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-compare:practice:problems:v3",
+              "blockId": "ncs-data-compare:practice:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1078,12 +1078,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-compare:check:v3",
+          "sectionId": "ncs-data-compare:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-compare:check:problems:v3",
+              "blockId": "ncs-data-compare:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1099,17 +1099,17 @@
           ]
         },
         {
-          "sectionId": "ncs-data-compare:summary:v3",
+          "sectionId": "ncs-data-compare:summary:v4",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-compare:summary:text:v3",
+              "blockId": "ncs-data-compare:summary:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "부분과 비율을 이으면 전체가 나와요. $\\text{전체} = \\frac{\\text{부분}}{\\text{비율}}$이고, 표에 그 열이 없어도 구할 수 있어요.\n\n비율의 변화는 총량의 변화를 말해 주지 않고 그 반대도 마찬가지예요. 표에 없는 것을 읽어 내지 않는 것이 이 영역의 능력이에요 — 「알 수 없다」가 답일 때가 자주 있어요.\n\n이 수업의 개념은 표가 말하는 것이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "부분의 양을 비율로 나누면 전체의 양을 구할 수 있어요. $\\text{전체} = \\frac{\\text{부분}}{\\text{비율}}$이고, 표에 그 열이 없어도 구할 수 있어요.\n\n비율의 변화는 총량의 변화를 말해 주지 않고 그 반대도 마찬가지예요. 표에 없는 것을 읽어 내지 않는 것이 이 영역의 능력이에요 — 「알 수 없다」가 답일 때가 자주 있어요.\n\n이 수업의 개념은 표가 말하는 것이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "table-inference",
@@ -1674,7 +1674,7 @@
     {
       "public": {
         "lessonKey": "ncs-condition",
-        "versionId": "ncs-condition:v2",
+        "versionId": "ncs-condition:v3",
         "title": "조건을 걸어 고르기: 지워 나가면 빨라진다",
         "summary": "표와 조건이 함께 주어진 문항에서 후보를 걸러 내고, 순위와 합계를 비교해 하나를 골라요.",
         "estimatedMinutes": 20,
@@ -1690,12 +1690,12 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-condition:sift:v2",
+          "sectionId": "ncs-condition:sift:v3",
           "role": "explanation",
           "title": "다 따지지 않고 지워 나간다",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:sift:text:v2",
+              "blockId": "ncs-condition:sift:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1711,7 +1711,7 @@
               }
             },
             {
-              "blockId": "ncs-condition:sift:drawing:v2",
+              "blockId": "ncs-condition:sift:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1951,22 +1951,22 @@
           ]
         },
         {
-          "sectionId": "ncs-condition:weight:v2",
+          "sectionId": "ncs-condition:weight:v3",
           "role": "explanation",
           "title": "점수를 매겨 고르는 문항",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:weight:text:v2",
+              "blockId": "ncs-condition:weight:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "조건이 「걸러 내기」가 아니라 「점수 매기기」일 때도 있어요. 항목마다 가중치를 주고 합이 가장 높은 곳을 고르는 모양이에요.\n\n이때는 순서가 반대예요. 지울 수가 없으니 모두 계산해야 하거든요. 다만 계산을 줄일 수는 있어요.\n\n첫째, 모든 후보에 공통으로 더해지는 값은 빼고 계산해도 순위가 바뀌지 않아요.\n\n둘째, 가중치가 가장 큰 항목부터 봐요. 그 항목에서 크게 뒤진 후보는 나머지로 뒤집기 어려워요.\n\n셋째, 소수점 아래는 대개 순위를 바꾸지 않아요. 점수가 촘촘할 때만 끝까지 계산해요.\n\n아래 표가 그런 문항의 생김새예요. 가중치가 $0.5$인 품질에서 $C$가 앞서 있으니 $C$부터 확인하는 것이 빨라요.",
+                "text": "조건이 「걸러 내기」가 아니라 「점수 매기기」일 때도 있어요. 항목마다 가중치를 주고 합이 가장 높은 곳을 고르는 모양이에요.\n\n이때는 순서가 반대예요. 지울 수가 없으니 모두 계산해야 하거든요. 다만 계산을 줄일 수는 있어요.\n\n첫째, 모든 후보에 공통으로 더해지는 값은 빼고 계산해도 순위가 바뀌지 않아요.\n\n둘째, 가중치가 가장 큰 항목부터 봐요. 다만 최종 순위는 모든 항목을 합한 점수로 확인해야 해요.\n\n셋째, 점수 차이가 작으면 반올림하기 전의 값으로 비교해요. 소수점 아래의 값이 순위를 바꿀 수 있어요.\n\n아래 표가 그런 문항의 생김새예요. 가중치가 $0.5$인 품질에서 $C$가 앞서 있으니 $C$부터 확인하는 것이 빨라요.",
                 "definitions": []
               }
             },
             {
-              "blockId": "ncs-condition:weight:table:v2",
+              "blockId": "ncs-condition:weight:table:v3",
               "kind": "core.table",
               "typeVersion": 1,
               "required": true,
@@ -2031,12 +2031,12 @@
           ]
         },
         {
-          "sectionId": "ncs-condition:example:v2",
+          "sectionId": "ncs-condition:example:v3",
           "role": "worked_example",
           "title": "표 하나로 끝까지 가 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:example:text:v2",
+              "blockId": "ncs-condition:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -2048,12 +2048,12 @@
           ]
         },
         {
-          "sectionId": "ncs-condition:practice:v2",
+          "sectionId": "ncs-condition:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:practice:problems:v2",
+              "blockId": "ncs-condition:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -2070,12 +2070,12 @@
           ]
         },
         {
-          "sectionId": "ncs-condition:check:v2",
+          "sectionId": "ncs-condition:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:check:problems:v2",
+              "blockId": "ncs-condition:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -2091,12 +2091,12 @@
           ]
         },
         {
-          "sectionId": "ncs-condition:summary:v2",
+          "sectionId": "ncs-condition:summary:v3",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:summary:text:v2",
+              "blockId": "ncs-condition:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,

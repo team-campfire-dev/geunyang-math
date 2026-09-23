@@ -3158,6 +3158,930 @@
           ]
         }
       ]
+    },
+    {
+      "problemSetId": "quadratic-functions:drill",
+      "courseKey": "quadratic-functions",
+      "name": "이차함수 모아 풀기",
+      "versionId": "quadratic-functions:drill:v2",
+      "problems": [
+        {
+          "problemVersionId": "quadratic-functions:drill-1:v1",
+          "conceptKeys": [
+            "quadratic-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = x^2$에서 $x = -5$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(-5)^2$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-2:v1",
+          "conceptKeys": [
+            "quadratic-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = -x^2$에서 $x = 4$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -16
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "제곱한 뒤 부호를 붙여요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-3:v1",
+          "conceptKeys": [
+            "quadratic-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = ax^2$의 그래프가 점 $(3, 18)$을 지날 때 $a$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$18 = a \\times 9$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-4:v1",
+          "conceptKeys": [
+            "quadratic-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = x^2 - 16$의 그래프가 가로축과 만나는 점의 $x$좌표 중 양수인 것을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 0$을 넣으면 이차방정식이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-5:v1",
+          "conceptKeys": [
+            "quadratic-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 위가 둥근 포물선은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$y = -3x^2$"
+              },
+              {
+                "id": "b",
+                "text": "$y = 3x^2$"
+              },
+              {
+                "id": "c",
+                "text": "$y = x^2 + 3$"
+              },
+              {
+                "id": "d",
+                "text": "$y = 3x$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$y = -3x^2$"
+              },
+              {
+                "id": "b",
+                "text": "$y = 3x^2$"
+              },
+              {
+                "id": "c",
+                "text": "$y = x^2 + 3$"
+              },
+              {
+                "id": "d",
+                "text": "$y = 3x$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x^2$의 계수의 부호를 보세요."
+              }
+            }
+          ],
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "sign-and-opening-flipped"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-6:v1",
+          "conceptKeys": [
+            "quadratic-function"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = \\frac{1}{2}x^2$에서 $x = 4$일 때 $y$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$16$의 절반이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-7:v1",
+          "conceptKeys": [
+            "vertex"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = (x-7)^2 + 2$의 꼭짓점의 $x$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호 안을 $0$으로 만드는 $x$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-8:v1",
+          "conceptKeys": [
+            "vertex"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = (x+5)^2 - 3$의 꼭짓점의 $x$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$x+5$는 $x-(-5)$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-9:v1",
+          "conceptKeys": [
+            "vertex"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 3(x-2)^2 + 6$의 꼭짓점의 $y$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "괄호 안이 $0$일 때의 값이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-10:v1",
+          "conceptKeys": [
+            "vertex"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = x^2 + 4$의 꼭짓점의 $x$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 0
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "좌우로는 옮기지 않았어요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-11:v1",
+          "conceptKeys": [
+            "parabola-shift"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = x^2$을 아래로 $6$만큼 옮긴 그래프의 식에서 상수항을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "아래로 옮기면 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-12:v1",
+          "conceptKeys": [
+            "parabola-shift"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = x^2$을 왼쪽으로 $3$만큼 옮긴 그래프의 식은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$y = (x+3)^2$"
+              },
+              {
+                "id": "b",
+                "text": "$y = (x-3)^2$"
+              },
+              {
+                "id": "c",
+                "text": "$y = x^2 + 3$"
+              },
+              {
+                "id": "d",
+                "text": "$y = x^2 - 3$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$y = (x+3)^2$"
+              },
+              {
+                "id": "b",
+                "text": "$y = (x-3)^2$"
+              },
+              {
+                "id": "c",
+                "text": "$y = x^2 + 3$"
+              },
+              {
+                "id": "d",
+                "text": "$y = x^2 - 3$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "왼쪽으로 옮기면 괄호 안에서 더해요."
+              }
+            }
+          ],
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "shift-sign-flipped"
+            },
+            {
+              "answer": "c",
+              "misconception": "shift-axis-swapped"
+            },
+            {
+              "answer": "d",
+              "misconception": "shift-axis-swapped"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-13:v2",
+          "conceptKeys": [
+            "parabola-shift"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-13:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = 2x^2$을 오른쪽으로 $4$만큼 옮긴 그래프의 꼭짓점의 $x$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-13:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원래 그래프의 꼭짓점은 $(0,0)$이에요. 오른쪽으로 $4$만큼 옮기면 꼭짓점의 $x$좌표에 $4$를 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-14:v1",
+          "conceptKeys": [
+            "parabola-shift"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "꼭짓점이 $(1, -2)$이고 $y = x^2$과 모양이 같은 포물선의 식은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$y = (x-1)^2 - 2$"
+              },
+              {
+                "id": "b",
+                "text": "$y = (x+1)^2 - 2$"
+              },
+              {
+                "id": "c",
+                "text": "$y = (x-1)^2 + 2$"
+              },
+              {
+                "id": "d",
+                "text": "$y = (x+1)^2 + 2$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$y = (x-1)^2 - 2$"
+              },
+              {
+                "id": "b",
+                "text": "$y = (x+1)^2 - 2$"
+              },
+              {
+                "id": "c",
+                "text": "$y = (x-1)^2 + 2$"
+              },
+              {
+                "id": "d",
+                "text": "$y = (x+1)^2 + 2$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$p$와 $q$를 표준형에 넣어요."
+              }
+            }
+          ],
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "shift-sign-flipped"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-15:v1",
+          "conceptKeys": [
+            "parabola-shift"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = x^2$을 위로 $2$, 오른쪽으로 $5$만큼 옮긴 그래프의 꼭짓점의 $y$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "위로 옮긴 만큼이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-16:v1",
+          "conceptKeys": [
+            "quadratic-max-min"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = x^2 - 2x + 5$의 가장 작은 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$(x-1)^2 + 4$로 고쳐요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-17:v1",
+          "conceptKeys": [
+            "quadratic-max-min"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = x^2 + 10x + 30$의 꼭짓점의 $x$좌표를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": -5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10$의 절반이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-18:v1",
+          "conceptKeys": [
+            "quadratic-max-min"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = -x^2 + 6x - 5$의 가장 큰 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$-(x-3)^2 + 4$로 고쳐요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-19:v1",
+          "conceptKeys": [
+            "quadratic-max-min"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$y = x^2 - 8x + 20$을 $y = (x-4)^2 + k$ 꼴로 고쳤을 때 $k$의 값을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$16$을 더하고 다시 빼요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "quadratic-functions:drill-20:v1",
+          "conceptKeys": [
+            "quadratic-max-min"
+          ],
+          "promptContent": [
+            {
+              "blockId": "quadratic-functions:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "위가 둥근 포물선이 가지는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "가장 큰 값"
+              },
+              {
+                "id": "b",
+                "text": "가장 작은 값"
+              },
+              {
+                "id": "c",
+                "text": "둘 다"
+              },
+              {
+                "id": "d",
+                "text": "둘 다 아니다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "가장 큰 값"
+              },
+              {
+                "id": "b",
+                "text": "가장 작은 값"
+              },
+              {
+                "id": "c",
+                "text": "둘 다"
+              },
+              {
+                "id": "d",
+                "text": "둘 다 아니다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "quadratic-functions:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "꼭짓점이 가장 높은 자리예요."
+              }
+            }
+          ],
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "max-min-flipped"
+            }
+          ]
+        }
+      ]
     }
   ],
   "diagnostics": [],

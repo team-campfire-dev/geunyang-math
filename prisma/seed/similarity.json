@@ -406,8 +406,8 @@
     {
       "public": {
         "lessonKey": "parallel-ratio",
-        "versionId": "parallel-ratio:v2",
-        "title": "평행선과 선분의 비: 나란하면 비가 옮겨 간다",
+        "versionId": "parallel-ratio:v3",
+        "title": "평행선과 선분의 비: 평행선이 삼각형의 두 변을 같은 비로 나눈다",
         "summary": "삼각형을 가로지르는 평행선이 두 변을 같은 비로 나누는 것을 보고, 중점연결정리까지 가요.",
         "estimatedMinutes": 13,
         "conceptKeys": [
@@ -421,12 +421,12 @@
       },
       "sections": [
         {
-          "sectionId": "parallel-ratio:explanation:v2",
+          "sectionId": "parallel-ratio:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "parallel-ratio:explanation:divide:v2",
+              "blockId": "parallel-ratio:explanation:divide:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -447,7 +447,7 @@
               }
             },
             {
-              "blockId": "parallel-ratio:explanation:drawing:v2",
+              "blockId": "parallel-ratio:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -614,12 +614,12 @@
               }
             },
             {
-              "blockId": "parallel-ratio:explanation:midpoint:v2",
+              "blockId": "parallel-ratio:explanation:midpoint:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "가장 많이 쓰는 경우는 반으로 나눌 때예요. $D$와 $E$가 각각 중점이면 $\\overline{DE}$는 $\\overline{BC}$와 나란해요. 길이는 그 절반이고요.\n\n이것을 중점연결정리라고 불러요.\n\n닮음비가 $1:2$이니 길이도 절반인 거예요. 특별한 정리가 아니라 닮음을 반으로 읽은 것뿐이에요.",
+                "text": "삼각형 $ABC$의 변 $AB$, $AC$의 중점을 각각 $D$, $E$라고 해요. 그러면 $AD:DB=AE:EC=1:1$이에요. 두 변을 같은 비로 나누므로 $DE$와 $BC$는 평행해요.\n\n$\\triangle ADE$와 $\\triangle ABC$는 닮음이고, $AD:AB=1:2$예요. 대응하는 변 $DE$와 $BC$의 길이도 $1:2$이므로 $DE$의 길이는 $BC$의 절반이에요.\n\n이처럼 삼각형의 두 변의 중점을 이은 선분이 나머지 변과 평행하고 길이가 그 절반이라는 성질을 중점연결정리라고 해요.",
                 "definitions": [
                   {
                     "conceptKey": "parallel-ratio",
@@ -630,7 +630,7 @@
               }
             },
             {
-              "blockId": "parallel-ratio:explanation:trapezoid:v2",
+              "blockId": "parallel-ratio:explanation:trapezoid:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -648,12 +648,12 @@
           ]
         },
         {
-          "sectionId": "parallel-ratio:example:v2",
+          "sectionId": "parallel-ratio:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "parallel-ratio:example:text:v2",
+              "blockId": "parallel-ratio:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -671,12 +671,12 @@
           ]
         },
         {
-          "sectionId": "parallel-ratio:practice:v2",
+          "sectionId": "parallel-ratio:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "parallel-ratio:practice:problems:v2",
+              "blockId": "parallel-ratio:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -693,12 +693,12 @@
           ]
         },
         {
-          "sectionId": "parallel-ratio:check:v2",
+          "sectionId": "parallel-ratio:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "parallel-ratio:check:problems:v2",
+              "blockId": "parallel-ratio:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -714,12 +714,12 @@
           ]
         },
         {
-          "sectionId": "parallel-ratio:summary:v2",
+          "sectionId": "parallel-ratio:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "parallel-ratio:summary:text:v2",
+              "blockId": "parallel-ratio:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -754,8 +754,8 @@
     {
       "public": {
         "lessonKey": "centroid",
-        "versionId": "centroid:v2",
-        "title": "무게중심: 중선을 둘과 하나로 나눈다",
+        "versionId": "centroid:v3",
+        "title": "무게중심: 중선을 2 대 1로 나누는 점",
         "summary": "세 중선이 한 점에서 만나는 것과, 그 점이 중선을 2 대 1로 나누는 것을 확인해요.",
         "estimatedMinutes": 12,
         "conceptKeys": [
@@ -768,12 +768,12 @@
       },
       "sections": [
         {
-          "sectionId": "centroid:explanation:v2",
+          "sectionId": "centroid:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "centroid:explanation:median:v2",
+              "blockId": "centroid:explanation:median:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -783,7 +783,7 @@
               }
             },
             {
-              "blockId": "centroid:explanation:center:v2",
+              "blockId": "centroid:explanation:center:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -799,7 +799,7 @@
               }
             },
             {
-              "blockId": "centroid:explanation:drawing:v2",
+              "blockId": "centroid:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1021,12 +1021,196 @@
               }
             },
             {
-              "blockId": "centroid:explanation:why:v2",
+              "blockId": "centroid:proof-drawing:v3",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 320,
+                "height": 230,
+                "alt": "삼각형 ABC의 중점 D, E와 중선의 교점 G. 삼각형 GAB와 GDE의 대응변 AB와 DE는 평행하고 길이의 비가 2 대 1이다.",
+                "caption": "삼각형 GAB와 GDE를 비교해요. AB와 DE는 평행하고, 길이의 비는 2 대 1이에요.",
+                "items": [
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        160,
+                        30
+                      ],
+                      [
+                        40,
+                        185
+                      ],
+                      [
+                        280,
+                        185
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        160,
+                        133.33
+                      ],
+                      [
+                        160,
+                        30
+                      ],
+                      [
+                        40,
+                        185
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill",
+                    "stroke": "green",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        160,
+                        133.33
+                      ],
+                      [
+                        160,
+                        185
+                      ],
+                      [
+                        220,
+                        107.5
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "orange",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160,
+                    "y1": 30,
+                    "x2": 160,
+                    "y2": 185,
+                    "stroke": "green",
+                    "strokeWidth": 1.4
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 40,
+                    "y1": 185,
+                    "x2": 220,
+                    "y2": 107.5,
+                    "stroke": "green",
+                    "strokeWidth": 1.4
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 160,
+                    "y1": 185,
+                    "x2": 220,
+                    "y2": 107.5,
+                    "stroke": "orange",
+                    "strokeWidth": 1.4
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 160,
+                    "cy": 133.33,
+                    "rx": 3,
+                    "ry": 3,
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 19,
+                    "text": "A",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 28,
+                    "y": 197,
+                    "text": "B",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 292,
+                    "y": 197,
+                    "text": "C",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 160,
+                    "y": 205,
+                    "text": "D",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 238,
+                    "y": 105,
+                    "text": "E",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 146,
+                    "y": 127,
+                    "text": "G",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 72,
+                    "y": 103,
+                    "text": "2",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "green"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 203,
+                    "y": 156,
+                    "text": "1",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "centroid:explanation:why:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "이유는 중점연결정리에 있어요. 두 변의 중점을 이은 선분은 밑변과 나란하고 길이가 절반이에요.\n\n그러니 두 중선이 만드는 삼각형 둘이 닮음이 돼요. 닮음비는 $1:2$고요. 그래서 만나는 점이 각 중선을 $2:1$로 자르는 거예요.\n\n넓이도 깔끔하게 나뉘어요. 중선 하나는 삼각형을 넓이가 같은 둘로 나눠요. 세 중선을 모두 그으면 넓이가 같은 여섯 조각이 되고요.\n\n그러니 무게중심과 두 꼭짓점이 만드는 삼각형은 전체의 $\\dfrac{1}{3}$이에요. 넓이가 $30$인 삼각형이라면 여섯 조각 하나는 $5$, 세 조각짜리 하나는 $10$이에요.",
+                "text": "왜 중선을 $2:1$로 나누는지 확인해 볼게요. 삼각형 $ABC$에서 변 $BC$의 중점을 $D$, 변 $AC$의 중점을 $E$라 하고, 중선 $AD$와 $BE$가 만나는 점을 $G$라고 해요.\n\n중점연결정리에 따라 $DE$와 $AB$는 평행하고, $AB:DE=2:1$이에요.\n\n$\\triangle GAB$와 $\\triangle GDE$를 비교해요. $\\angle AGB$와 $\\angle DGE$는 맞꼭지각이라 같아요. $AB$와 $DE$가 평행하므로 $\\angle GAB$와 $\\angle GDE$도 엇각으로 같아요. 두 각이 각각 같으니 두 삼각형은 닮음이에요.\n\n대응하는 변은 $AB$와 $DE$, $GA$와 $GD$, $GB$와 $GE$예요. 따라서 $GA:GD=GB:GE=2:1$이에요. 무게중심 $G$는 꼭짓점에서 출발했을 때 중선을 $2:1$로 나눠요.\n\n세 중선을 모두 그으면 넓이가 같은 작은 삼각형 여섯 개가 생겨요. 무게중심과 두 꼭짓점을 이은 삼각형은 그중 두 개로 이루어져 있으므로 전체 넓이의 $\\frac{1}{3}$이에요.",
                 "definitions": [
                   {
                     "conceptKey": "parallel-ratio",
@@ -1044,12 +1228,12 @@
           ]
         },
         {
-          "sectionId": "centroid:example:v2",
+          "sectionId": "centroid:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "centroid:example:text:v2",
+              "blockId": "centroid:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1067,12 +1251,12 @@
           ]
         },
         {
-          "sectionId": "centroid:practice:v2",
+          "sectionId": "centroid:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "centroid:practice:problems:v2",
+              "blockId": "centroid:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1089,12 +1273,12 @@
           ]
         },
         {
-          "sectionId": "centroid:check:v2",
+          "sectionId": "centroid:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "centroid:check:problems:v2",
+              "blockId": "centroid:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1110,12 +1294,12 @@
           ]
         },
         {
-          "sectionId": "centroid:summary:v2",
+          "sectionId": "centroid:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "centroid:summary:text:v2",
+              "blockId": "centroid:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,

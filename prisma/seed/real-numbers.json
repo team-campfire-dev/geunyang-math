@@ -897,7 +897,7 @@
     {
       "public": {
         "lessonKey": "irrational-number",
-        "versionId": "irrational-number:v3",
+        "versionId": "irrational-number:v4",
         "title": "무리수와 실수: 수직선에 빈틈이 없으려면",
         "summary": "분수로 적을 수 없는 수가 있다는 것을 보고, 유리수와 합쳐 수직선을 채우는 수 전체를 만나요.",
         "estimatedMinutes": 12,
@@ -913,12 +913,12 @@
       },
       "sections": [
         {
-          "sectionId": "irrational-number:explanation:v3",
+          "sectionId": "irrational-number:explanation:v4",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "irrational-number:explanation:text:v3",
+              "blockId": "irrational-number:explanation:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -934,7 +934,7 @@
               }
             },
             {
-              "blockId": "irrational-number:explanation:drawing:v3",
+              "blockId": "irrational-number:explanation:drawing:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1134,7 +1134,7 @@
               }
             },
             {
-              "blockId": "irrational-number:explanation:text-2:v3",
+              "blockId": "irrational-number:explanation:text-2:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1155,24 +1155,24 @@
               }
             },
             {
-              "blockId": "irrational-number:explanation:text-3:v3",
+              "blockId": "irrational-number:explanation:text-3:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "크기를 비교할 때는 제곱해 보세요. $\\sqrt{5}$와 $2$ 중 어느 쪽이 클까요? 제곱하면 $5$와 $4$예요. $5 > 4$이니 $\\sqrt{5}$가 커요.\n\n어림잡는 것도 같은 방법이에요. $\\sqrt{30}$은 $5^2 = 25$와 $6^2 = 36$ 사이에 있어요. 그러니 $5$와 $6$ 사이의 수예요.",
+                "text": "크기를 비교할 때는 제곱해 보세요. $\\sqrt{5}$와 $2$ 중 어느 쪽이 클까요? 제곱하면 $5$와 $4$예요. $5 > 4$이니 $\\sqrt{5}$가 커요.\n\n어림잡는 것도 같은 방법이에요. $30$은 $5^2=25$와 $6^2=36$ 사이에 있어요. 양수끼리는 제곱한 수가 클수록 원래 수도 크므로 $5<\\sqrt{30}<6$이에요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "irrational-number:example:v3",
+          "sectionId": "irrational-number:example:v4",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "irrational-number:example:text:v3",
+              "blockId": "irrational-number:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1190,12 +1190,12 @@
           ]
         },
         {
-          "sectionId": "irrational-number:practice:v3",
+          "sectionId": "irrational-number:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "irrational-number:practice:problems:v3",
+              "blockId": "irrational-number:practice:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1212,12 +1212,12 @@
           ]
         },
         {
-          "sectionId": "irrational-number:check:v3",
+          "sectionId": "irrational-number:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "irrational-number:check:problems:v3",
+              "blockId": "irrational-number:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1233,12 +1233,12 @@
           ]
         },
         {
-          "sectionId": "irrational-number:summary:v3",
+          "sectionId": "irrational-number:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "irrational-number:summary:text:v3",
+              "blockId": "irrational-number:summary:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1273,7 +1273,7 @@
     {
       "public": {
         "lessonKey": "radical-arithmetic",
-        "versionId": "radical-arithmetic:v3",
+        "versionId": "radical-arithmetic:v4",
         "title": "근호의 계산: 곱하고 나누고, 분모를 정리하기",
         "summary": "근호끼리 곱하고 나누는 규칙을 익히고, 근호 안을 간단히 하거나 분모에서 걷어내요.",
         "estimatedMinutes": 12,
@@ -1290,17 +1290,17 @@
       },
       "sections": [
         {
-          "sectionId": "radical-arithmetic:explanation:v3",
+          "sectionId": "radical-arithmetic:explanation:v4",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "radical-arithmetic:explanation:text:v3",
+              "blockId": "radical-arithmetic:explanation:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "근호끼리 곱할 때는 안의 수끼리 곱하면 돼요. $\\sqrt{2} \\times \\sqrt{3} = \\sqrt{6}$이에요. 나눗셈도 마찬가지로 $\\frac{\\sqrt{6}}{\\sqrt{2}} = \\sqrt{3}$이에요.\n\n넓이로 보면 당연해요. 두 번 곱해서 $2$가 되는 수와 두 번 곱해서 $3$이 되는 수가 있어요. 둘을 곱한 수를 두 번 곱하면 $2 \\times 3 = 6$이 되니까요.\n\n이 규칙을 거꾸로 쓰면 근호 안을 간단히 할 수 있어요. $\\sqrt{12} = \\sqrt{4 \\times 3} = \\sqrt{4} \\times \\sqrt{3} = 2\\sqrt{3}$이에요. 근호 안에서 제곱수를 찾아 밖으로 꺼내는 거예요.",
+                "text": "근호끼리 곱할 때는 안의 수끼리 곱하면 돼요. $\\sqrt{2} \\times \\sqrt{3} = \\sqrt{6}$이에요. 나눗셈도 마찬가지로 $\\frac{\\sqrt{6}}{\\sqrt{2}} = \\sqrt{3}$이에요.\n\n곱한 수를 제곱해 보면 이 규칙을 확인할 수 있어요. 두 번 곱해서 $2$가 되는 수와 두 번 곱해서 $3$이 되는 수가 있어요. 둘을 곱한 수를 두 번 곱하면 $2 \\times 3 = 6$이 되니까요.\n\n이 규칙을 거꾸로 쓰면 근호 안을 간단히 할 수 있어요. $\\sqrt{12} = \\sqrt{4 \\times 3} = \\sqrt{4} \\times \\sqrt{3} = 2\\sqrt{3}$이에요. 근호 안에서 제곱수를 찾아 밖으로 꺼내는 거예요.",
                 "definitions": [
                   {
                     "conceptKey": "radical-arithmetic",
@@ -1311,7 +1311,7 @@
               }
             },
             {
-              "blockId": "radical-arithmetic:explanation:drawing:v3",
+              "blockId": "radical-arithmetic:explanation:drawing:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1581,7 +1581,7 @@
               }
             },
             {
-              "blockId": "radical-arithmetic:explanation:text-2:v3",
+              "blockId": "radical-arithmetic:explanation:text-2:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1597,12 +1597,12 @@
               }
             },
             {
-              "blockId": "radical-arithmetic:explanation:text-3:v3",
+              "blockId": "radical-arithmetic:explanation:text-3:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "분모에 근호가 있으면 값을 가늠하기 어려워요. $\\frac{1}{\\sqrt{2}}$가 얼마쯤인지 바로 안 떠오르죠.\n\n분자와 분모에 같은 수를 곱해도 값은 그대로예요. 이 성질로 분모의 근호를 걷어내요. $\\frac{1}{\\sqrt{2}} = \\frac{\\sqrt{2}}{2}$가 되고, 이러면 $1.414 \\div 2$로 대번에 어림할 수 있어요. 이것을 분모의 유리화라고 해요.",
+                "text": "$\\frac{1}{\\sqrt{2}}$의 분모를 유리수로 바꿔 볼게요. 분자와 분모에 같은 수인 $\\sqrt{2}$를 곱해요. 분수의 값은 변하지 않아요.\n\n$\\frac{1}{\\sqrt{2}}=\\frac{1\\times\\sqrt{2}}{\\sqrt{2}\\times\\sqrt{2}}=\\frac{\\sqrt{2}}{2}$예요. 분모에서 $\\sqrt{2}\\times\\sqrt{2}=2$가 된 것이죠.\n\n이처럼 분수의 값을 바꾸지 않으면서 분모를 유리수로 만드는 것을 분모의 유리화라고 해요. $\\sqrt{2}$가 약 $1.414$이므로, 이 분수는 약 $1.414\\div2=0.707$이에요.",
                 "definitions": [
                   {
                     "conceptKey": "rationalizing",
@@ -1615,12 +1615,12 @@
           ]
         },
         {
-          "sectionId": "radical-arithmetic:example:v3",
+          "sectionId": "radical-arithmetic:example:v4",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "radical-arithmetic:example:text:v3",
+              "blockId": "radical-arithmetic:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1638,12 +1638,12 @@
           ]
         },
         {
-          "sectionId": "radical-arithmetic:practice:v3",
+          "sectionId": "radical-arithmetic:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "radical-arithmetic:practice:problems:v3",
+              "blockId": "radical-arithmetic:practice:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1660,12 +1660,12 @@
           ]
         },
         {
-          "sectionId": "radical-arithmetic:check:v3",
+          "sectionId": "radical-arithmetic:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "radical-arithmetic:check:problems:v3",
+              "blockId": "radical-arithmetic:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1681,17 +1681,17 @@
           ]
         },
         {
-          "sectionId": "radical-arithmetic:summary:v3",
+          "sectionId": "radical-arithmetic:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "radical-arithmetic:summary:text:v3",
+              "blockId": "radical-arithmetic:summary:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "곱셈과 나눗셈은 근호 안의 수끼리 하면 돼요. 이 규칙을 거꾸로 쓰면 근호 안의 제곱수를 밖으로 꺼낼 수 있어요.\n\n덧셈과 뺄셈은 동류항처럼 모아요. 근호 안이 같아야 모을 수 있고, 다르면 그대로 둬요.\n\n분모에 근호가 있으면 분자와 분모에 같은 근호를 곱해 걷어내요. 이것이 분모의 유리화예요. 값이 얼마쯤인지 가늠하기 위해서고요.\n\n여기까지가 제곱근을 다루는 기본 계산이에요. 다음 과정에서 이차방정식을 풀 때 그대로 써요.",
+                "text": "곱셈과 나눗셈은 근호 안의 수끼리 하면 돼요. 이 규칙을 거꾸로 쓰면 근호 안의 제곱수를 밖으로 꺼낼 수 있어요.\n\n덧셈과 뺄셈은 동류항처럼 모아요. 근호 안이 같아야 모을 수 있고, 다르면 그대로 둬요.\n\n분모가 $\\sqrt{2}$일 때 분자와 분모에 각각 $\\sqrt{2}$를 곱하면 분모가 $2$가 돼요. 이렇게 분수의 값은 유지하면서 분모를 유리수로 만드는 것이 분모의 유리화예요.\n\n여기까지가 제곱근을 다루는 기본 계산이에요. 다음 과정에서 이차방정식을 풀 때 그대로 써요.",
                 "definitions": [
                   {
                     "conceptKey": "radical-arithmetic",

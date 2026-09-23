@@ -937,7 +937,7 @@
     {
       "public": {
         "lessonKey": "factorization-formula",
-        "versionId": "factorization-formula:v3",
+        "versionId": "factorization-formula:v4",
         "title": "공식으로 인수분해: 더해서 얼마, 곱해서 얼마",
         "summary": "곱셈 공식을 오른쪽에서 왼쪽으로 읽어, 공통인수가 없는 식도 곱의 꼴로 되돌려요.",
         "estimatedMinutes": 12,
@@ -953,12 +953,12 @@
       },
       "sections": [
         {
-          "sectionId": "factorization-formula:explanation:v3",
+          "sectionId": "factorization-formula:explanation:v4",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "factorization-formula:explanation:text:v3",
+              "blockId": "factorization-formula:explanation:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -979,7 +979,7 @@
               }
             },
             {
-              "blockId": "factorization-formula:explanation:drawing:v3",
+              "blockId": "factorization-formula:explanation:drawing:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1262,12 +1262,12 @@
               }
             },
             {
-              "blockId": "factorization-formula:explanation:text-2:v3",
+              "blockId": "factorization-formula:explanation:text-2:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "완전제곱식도 자주 나와요. $x^2 + 8x + 16$은 끝이 $4^2$이고 가운데가 $2 \\times 4$예요. 그래서 $(x+4)^2$이에요. 「끝이 제곱수이고 가운데가 그 수의 두 배」인지 보면 알 수 있어요.\n\n항이 둘뿐인데 가운데가 없는 모양도 있어요. $x^2 - 9$는 $x^2 - 3^2$이니 $(x+3)(x-3)$이에요. 제곱에서 제곱을 뺀 모양은 늘 「합 곱하기 차」로 나뉘어요.",
+                "text": "완전제곱식도 자주 나와요. $x^2+8x+16$에서 상수항 $16$은 $4^2$이고, $x$의 계수 $8$은 $2\\times4$예요. 따라서 $x^2+2\\times4\\times x+4^2=(x+4)^2$이에요.\n\n항이 둘뿐인데 가운데가 없는 모양도 있어요. $x^2 - 9$는 $x^2 - 3^2$이니 $(x+3)(x-3)$이에요. 제곱에서 제곱을 뺀 모양은 늘 「합 곱하기 차」로 나뉘어요.",
                 "definitions": [
                   {
                     "conceptKey": "completing-square",
@@ -1278,7 +1278,7 @@
               }
             },
             {
-              "blockId": "factorization-formula:explanation:text-3:v3",
+              "blockId": "factorization-formula:explanation:text-3:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1301,17 +1301,17 @@
           ]
         },
         {
-          "sectionId": "factorization-formula:example:v3",
+          "sectionId": "factorization-formula:example:v4",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "factorization-formula:example:text:v3",
+              "blockId": "factorization-formula:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$x^2 - 7x + 12$를 인수분해해 볼게요.\n\n곱해서 $12$가 되는 두 수를 적어 봐요. $1 \\times 12$, $2 \\times 6$, $3 \\times 4$예요.\n\n가운데가 $-7$로 음수인데 끝의 $12$는 양수예요. 곱이 양수이면서 합이 음수이려면 둘 다 음수여야 해요.\n\n$-3$과 $-4$를 보면 곱이 $12$, 합이 $-7$이에요. 그래서 $(x-3)(x-4)$예요.\n\n확인해 볼게요. $(x-3)(x-4) = x^2 - 4x - 3x + 12 = x^2 - 7x + 12$. 맞아요.\n\n하나 더, $2x^2 - 8$을 볼게요. 제곱에서 제곱을 뺀 모양 같지만 $2x^2$은 제곱이 아니에요.\n\n이럴 때는 앞 수업의 첫걸음부터예요. 공통인수 $2$를 먼저 빼내면 $2(x^2 - 4)$예요. 이제 괄호 안이 $x^2 - 2^2$이니 $2(x+2)(x-2)$예요. 공통인수를 먼저 빼내는 순서는 언제나 같아요.",
+                "text": "$x^2 - 7x + 12$를 인수분해해 볼게요.\n\n곱해서 $12$가 되는 두 수를 적어 봐요. $1 \\times 12$, $2 \\times 6$, $3 \\times 4$예요.\n\n$x$의 계수 $-7$은 음수이고 상수항 $12$는 양수예요. 곱이 양수이면서 합이 음수이려면 둘 다 음수여야 해요.\n\n$-3$과 $-4$를 보면 곱이 $12$, 합이 $-7$이에요. 그래서 $(x-3)(x-4)$예요.\n\n확인해 볼게요. $(x-3)(x-4) = x^2 - 4x - 3x + 12 = x^2 - 7x + 12$. 맞아요.\n\n하나 더, $2x^2 - 8$을 볼게요. 두 항에 공통인수 $2$가 있으므로 먼저 묶어 낼 수 있어요.\n\n이럴 때는 앞 수업의 첫걸음부터예요. 공통인수 $2$를 먼저 빼내면 $2(x^2 - 4)$예요. 이제 괄호 안이 $x^2 - 2^2$이니 $2(x+2)(x-2)$예요. 공통인수가 있는지 먼저 확인하면 적용할 공식을 찾기 쉬워요.",
                 "definitions": [
                   {
                     "conceptKey": "factorization",
@@ -1324,12 +1324,12 @@
           ]
         },
         {
-          "sectionId": "factorization-formula:practice:v3",
+          "sectionId": "factorization-formula:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "factorization-formula:practice:problems:v3",
+              "blockId": "factorization-formula:practice:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1346,12 +1346,12 @@
           ]
         },
         {
-          "sectionId": "factorization-formula:check:v3",
+          "sectionId": "factorization-formula:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "factorization-formula:check:problems:v3",
+              "blockId": "factorization-formula:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1367,17 +1367,17 @@
           ]
         },
         {
-          "sectionId": "factorization-formula:summary:v3",
+          "sectionId": "factorization-formula:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "factorization-formula:summary:text:v3",
+              "blockId": "factorization-formula:summary:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "곱셈 공식을 거꾸로 읽으면 인수분해 공식이 돼요.\n\n$x^2 + (a+b)x + ab$는 「더해서 가운데, 곱해서 끝」인 두 수를 찾아요. 그러면 $(x+a)(x+b)$로 나뉘어요. 곱부터 찾는 편이 빨라요.\n\n끝이 제곱수이고 가운데가 그 수의 두 배이면 완전제곱식이에요. 제곱에서 제곱을 뺀 모양이면 합 곱하기 차고요.\n\n무엇을 하든 공통인수를 먼저 빼내고 시작해요. 다음 과정에서 이 방법으로 이차방정식을 풀어요.",
+                "text": "곱셈 공식을 거꾸로 읽으면 인수분해 공식이 돼요.\n\n$x^2 + (a+b)x + ab$는 합이 $x$의 계수 $a+b$이고 곱이 상수항 $ab$인 두 수를 찾아요. 그러면 $(x+a)(x+b)$로 나뉘어요. 곱부터 찾는 편이 빨라요.\n\n$x^2+2ax+a^2=(x+a)^2$은 완전제곱식이에요. 상수항이 $a^2$이고 $x$의 계수가 $2a$인지 확인해요. 제곱에서 제곱을 뺀 모양이면 합 곱하기 차고요.\n\n무엇을 하든 공통인수를 먼저 빼내고 시작해요. 다음 과정에서 이 방법으로 이차방정식을 풀어요.",
                 "definitions": [
                   {
                     "conceptKey": "factorization-formula",

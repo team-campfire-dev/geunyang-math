@@ -77,7 +77,7 @@
     {
       "public": {
         "lessonKey": "ncs-price",
-        "versionId": "ncs-price:v2",
+        "versionId": "ncs-price:v3",
         "title": "원가와 정가: 붙인 만큼과 깎은 만큼",
         "summary": "원가에 이익을 붙여 정가를 정하고, 정가에서 깎아 판매가를 구해요.",
         "estimatedMinutes": 10,
@@ -94,12 +94,12 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-price:cost:v2",
+          "sectionId": "ncs-price:cost:v3",
           "role": "explanation",
           "title": "붙일 때의 기준은 원가",
           "contentBlocks": [
             {
-              "blockId": "ncs-price:cost:text:v2",
+              "blockId": "ncs-price:cost:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -117,17 +117,17 @@
           ]
         },
         {
-          "sectionId": "ncs-price:discount:v2",
+          "sectionId": "ncs-price:discount:v3",
           "role": "explanation",
           "title": "깎을 때의 기준은 정가",
           "contentBlocks": [
             {
-              "blockId": "ncs-price:discount:text:v2",
+              "blockId": "ncs-price:discount:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "할인은 정가에서 깎는 거예요. 깎은 돈이 정가의 몇 %인지를 할인율이라고 해요.\n\n$18{,}000$원을 $10\\%$ 깎으면 깎이는 돈은 $1{,}800$원, 판매가는 $16{,}200$원이에요.\n\n여기서 한 가지만 붙들면 돼요. 붙일 때의 기준은 원가이고, 깎을 때의 기준은 정가예요. $20\\%$ 붙였다가 $10\\%$ 깎았다고 해서 $10\\%$ 남는 것이 아닌 이유가 이거예요.",
+                "text": "할인은 정가에서 깎는 거예요. 깎은 돈이 정가의 몇 %인지를 할인율이라고 해요.\n\n$18{,}000$원을 $10\\%$ 깎으면 깎이는 돈은 $1{,}800$원, 판매가는 $16{,}200$원이에요.\n\n계산의 기준이 되는 금액을 확인해요. 붙일 때의 기준은 원가이고, 깎을 때의 기준은 정가예요. $20\\%$ 붙였다가 $10\\%$ 깎았다고 해서 $10\\%$ 남는 것이 아닌 이유가 이거예요.",
                 "definitions": [
                   {
                     "conceptKey": "discount-rate",
@@ -138,7 +138,7 @@
               }
             },
             {
-              "blockId": "ncs-price:explanation:drawing:v2",
+              "blockId": "ncs-price:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -272,12 +272,12 @@
           ]
         },
         {
-          "sectionId": "ncs-price:example:v2",
+          "sectionId": "ncs-price:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-price:example:text:v2",
+              "blockId": "ncs-price:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -289,12 +289,12 @@
           ]
         },
         {
-          "sectionId": "ncs-price:practice:v2",
+          "sectionId": "ncs-price:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-price:practice:problems:v2",
+              "blockId": "ncs-price:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -311,12 +311,12 @@
           ]
         },
         {
-          "sectionId": "ncs-price:check:v2",
+          "sectionId": "ncs-price:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-price:check:problems:v2",
+              "blockId": "ncs-price:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -332,12 +332,12 @@
           ]
         },
         {
-          "sectionId": "ncs-price:summary:v2",
+          "sectionId": "ncs-price:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-price:summary:text:v2",
+              "blockId": "ncs-price:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -372,7 +372,7 @@
     {
       "public": {
         "lessonKey": "ncs-concentration",
-        "versionId": "ncs-concentration:v2",
+        "versionId": "ncs-concentration:v3",
         "title": "소금물의 농도: 녹아 있는 양으로 따지기",
         "summary": "소금물에서 소금이 차지하는 비율을 구하고, 물을 더하거나 날려 농도를 바꿔요.",
         "estimatedMinutes": 10,
@@ -388,12 +388,12 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-concentration:meaning:v2",
+          "sectionId": "ncs-concentration:meaning:v3",
           "role": "explanation",
           "title": "나누는 수는 소금물 전체",
           "contentBlocks": [
             {
-              "blockId": "ncs-concentration:meaning:text:v2",
+              "blockId": "ncs-concentration:meaning:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -409,7 +409,7 @@
               }
             },
             {
-              "blockId": "ncs-concentration:explanation:drawing:v2",
+              "blockId": "ncs-concentration:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -579,29 +579,29 @@
           ]
         },
         {
-          "sectionId": "ncs-concentration:change:v2",
+          "sectionId": "ncs-concentration:change:v3",
           "role": "explanation",
           "title": "물을 더해도 소금은 그대로",
           "contentBlocks": [
             {
-              "blockId": "ncs-concentration:change:text:v2",
+              "blockId": "ncs-concentration:change:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "문제가 물을 더하라고 하든 끓여서 날리라고 하든, 소금의 양은 그대로예요. 움직이는 것은 소금물 전체의 양뿐이에요.\n\n그래서 소금을 먼저 구해 붙들어 두세요. 그다음에 전체가 얼마가 되는지만 따지면 돼요.",
+                "text": "소금물에 물만 더하거나 물만 증발시키면 소금의 양은 변하지 않아요. 달라지는 것은 소금물 전체의 양이에요.\n\n먼저 원래 소금물에 들어 있는 소금의 양을 구해요. 그다음 물을 더하거나 뺀 뒤의 소금물 양을 구해요. 소금의 양을 새 소금물 양으로 나누고 $100$을 곱하면 바뀐 농도를 백분율로 나타낼 수 있어요.\n\n예를 들어 소금 $20$g이 들어 있는 소금물 $250$g에 물 $150$g을 더하면, 소금물은 $400$g이 돼요. 소금은 여전히 $20$g이므로 농도는 $20\\div400\\times100=5$, 즉 $5\\%$예요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-concentration:example:v2",
+          "sectionId": "ncs-concentration:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-concentration:example:text:v2",
+              "blockId": "ncs-concentration:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -613,12 +613,12 @@
           ]
         },
         {
-          "sectionId": "ncs-concentration:practice:v2",
+          "sectionId": "ncs-concentration:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-concentration:practice:problems:v2",
+              "blockId": "ncs-concentration:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -635,12 +635,12 @@
           ]
         },
         {
-          "sectionId": "ncs-concentration:check:v2",
+          "sectionId": "ncs-concentration:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-concentration:check:problems:v2",
+              "blockId": "ncs-concentration:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -656,17 +656,17 @@
           ]
         },
         {
-          "sectionId": "ncs-concentration:summary:v2",
+          "sectionId": "ncs-concentration:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-concentration:summary:text:v2",
+              "blockId": "ncs-concentration:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "농도는 소금을 소금물 전체로 나눈 비율이고, 소금의 양은 소금물에 농도를 곱한 값이에요.\n\n물을 더하거나 날리는 문제는 소금을 먼저 구해 붙들어 두세요. 그다음에 전체가 얼마가 되는지만 따지면 돼요.\n\n이 수업의 개념은 농도예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "농도는 소금을 소금물 전체로 나눈 비율이고, 소금의 양은 소금물에 농도를 곱한 값이에요.\n\n물만 더하거나 증발시켜도 소금의 양은 변하지 않아요. 소금의 양을 먼저 구한 뒤, 바뀐 소금물 전체의 양으로 나누어 새 농도를 구해요.\n\n이 수업의 개념은 농도예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "concentration",
@@ -691,7 +691,7 @@
     {
       "public": {
         "lessonKey": "ncs-speed",
-        "versionId": "ncs-speed:v2",
+        "versionId": "ncs-speed:v3",
         "title": "속력·시간·거리: 셋 중 둘을 알면",
         "summary": "거리와 시간으로 속력을 구하고, 단위를 맞춰 왕복과 환산 문제를 풀어요.",
         "estimatedMinutes": 10,
@@ -706,17 +706,17 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-speed:meaning:v2",
+          "sectionId": "ncs-speed:meaning:v3",
           "role": "explanation",
           "title": "셋 중 둘을 알면 나머지가 나온다",
           "contentBlocks": [
             {
-              "blockId": "ncs-speed:meaning:text:v2",
+              "blockId": "ncs-speed:meaning:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "한 시간에 얼마나 가는지를 하나의 수로 나타낸 비율이 속력이에요. $\\text{속력} = \\frac{\\text{거리}}{\\text{시간}}$이고, 여기서 $\\text{거리} = \\text{속력} \\times \\text{시간}$과 $\\text{시간} = \\frac{\\text{거리}}{\\text{속력}}$이 따라 나와요. 외울 것은 하나예요.\n\n$180$km를 $3$시간에 갔다면 속력은 시속 $60$km예요. 같은 속력으로 계속 간다면 두 시간에 $120$km, 네 시간에 $240$km처럼 시간에 비례해요.",
+                "text": "단위 시간 동안 이동한 거리를 나타내는 값이 속력이에요. 시속은 한 시간에 가는 거리이고, 초속은 한 초에 가는 거리예요. $\\text{속력} = \\frac{\\text{거리}}{\\text{시간}}$이고, 여기서 $\\text{거리} = \\text{속력} \\times \\text{시간}$과 $\\text{시간} = \\frac{\\text{거리}}{\\text{속력}}$이 따라 나와요. 외울 것은 하나예요.\n\n$180$km를 $3$시간에 갔다면 속력은 시속 $60$km예요. 같은 속력으로 계속 간다면 두 시간에 $120$km, 네 시간에 $240$km처럼 시간에 비례해요.",
                 "definitions": [
                   {
                     "conceptKey": "speed",
@@ -727,7 +727,7 @@
               }
             },
             {
-              "blockId": "ncs-speed:explanation:drawing:v2",
+              "blockId": "ncs-speed:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -889,17 +889,17 @@
           ]
         },
         {
-          "sectionId": "ncs-speed:units:v2",
+          "sectionId": "ncs-speed:units:v3",
           "role": "explanation",
           "title": "틀리는 원인은 계산이 아니라 단위",
           "contentBlocks": [
             {
-              "blockId": "ncs-speed:units:text:v2",
+              "blockId": "ncs-speed:units:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "시험에서 실제로 틀리는 원인은 계산이 아니라 단위예요. $30$분은 $0.5$시간, $90$분은 $1.5$시간이에요. 시속을 초속으로 바꿀 때는 $1$시간이 $3{,}600$초, $1$km가 $1{,}000$m라는 것만 쓰면 돼요.\n\n거리가 같은데 갈 때와 올 때의 속력이 다르면, 두 속력을 더해 반으로 나누지 않아요. 걸린 시간을 각각 구해 더하는 것이 언제나 맞는 길이에요.",
+                "text": "속력과 시간의 단위가 서로 맞는지 먼저 확인해요. 시속을 사용할 때는 분을 시간으로 바꿔요. $30$분은 $0.5$시간, $90$분은 $1.5$시간이에요. 시속을 초속으로 바꿀 때는 $1$시간이 $3{,}600$초, $1$km가 $1{,}000$m라는 것만 쓰면 돼요.\n\n거리가 같은데 갈 때와 올 때의 속력이 다르면, 두 속력을 더해 반으로 나누지 않아요. 걸린 시간을 각각 구해 더하는 것이 언제나 맞는 길이에요.",
                 "definitions": [
                   {
                     "conceptKey": "unit-conversion",
@@ -912,12 +912,12 @@
           ]
         },
         {
-          "sectionId": "ncs-speed:example:v2",
+          "sectionId": "ncs-speed:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-speed:example:text:v2",
+              "blockId": "ncs-speed:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -929,12 +929,12 @@
           ]
         },
         {
-          "sectionId": "ncs-speed:practice:v2",
+          "sectionId": "ncs-speed:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-speed:practice:problems:v2",
+              "blockId": "ncs-speed:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -951,12 +951,12 @@
           ]
         },
         {
-          "sectionId": "ncs-speed:check:v2",
+          "sectionId": "ncs-speed:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-speed:check:problems:v2",
+              "blockId": "ncs-speed:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -972,12 +972,12 @@
           ]
         },
         {
-          "sectionId": "ncs-speed:summary:v2",
+          "sectionId": "ncs-speed:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-speed:summary:text:v2",
+              "blockId": "ncs-speed:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1007,7 +1007,7 @@
     {
       "public": {
         "lessonKey": "ncs-work",
-        "versionId": "ncs-work:v2",
+        "versionId": "ncs-work:v3",
         "title": "일률: 전체를 1로 두면 하루치가 보인다",
         "summary": "혼자 며칠 걸리는지를 하루치로 바꾸어 더하고, 함께 하면 며칠인지 구해요.",
         "estimatedMinutes": 10,
@@ -1023,12 +1023,12 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-work:why:v2",
+          "sectionId": "ncs-work:why:v3",
           "role": "explanation",
           "title": "날수는 더할 수 없다",
           "contentBlocks": [
             {
-              "blockId": "ncs-work:why:text:v2",
+              "blockId": "ncs-work:why:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1046,22 +1046,22 @@
           ]
         },
         {
-          "sectionId": "ncs-work:one:v2",
+          "sectionId": "ncs-work:one:v3",
           "role": "explanation",
           "title": "전체를 1로 두면 하루치가 보인다",
           "contentBlocks": [
             {
-              "blockId": "ncs-work:one:text:v2",
+              "blockId": "ncs-work:one:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "전체 일을 $1$로 두는 것이 시작이에요. 얼마짜리 일인지는 문제가 말해 주지 않고, 말해 줄 필요도 없거든요. $6$일이 걸리면 하루에 $\\dfrac{1}{6}$, $12$일이 걸리면 하루에 $\\dfrac{1}{12}$이에요.\n\n둘이 함께 하면 하루치가 더해져요. $\\dfrac{1}{6} + \\dfrac{1}{12} = \\dfrac{3}{12} = \\dfrac{1}{4}$이니 하루에 전체의 $\\dfrac{1}{4}$을 하고, $4$일이면 끝나요.\n\n걸리는 날수는 하루치의 역수예요. 하루에 $\\dfrac{1}{4}$을 하면 $4$일, $\\dfrac{2}{5}$를 하면 $\\dfrac{5}{2}$일이에요. 마지막에 뒤집는 것을 잊기 쉬우니 조심해요.",
+                "text": "각 사람이 매일 일정한 양의 일을 한다고 가정해요. 전체 일을 $1$로 두는 것이 시작이에요. 얼마짜리 일인지는 문제가 말해 주지 않고, 말해 줄 필요도 없거든요. $6$일이 걸리면 하루에 $\\dfrac{1}{6}$, $12$일이 걸리면 하루에 $\\dfrac{1}{12}$이에요.\n\n둘이 함께 하면 하루치가 더해져요. $\\dfrac{1}{6} + \\dfrac{1}{12} = \\dfrac{3}{12} = \\dfrac{1}{4}$이니 하루에 전체의 $\\dfrac{1}{4}$을 하고, $4$일이면 끝나요.\n\n걸리는 날수는 전체 일의 양 $1$을 하루에 하는 일의 양으로 나누어 구해요. 따라서 하루에 하는 일의 양의 역수와 같아요. 하루에 $\\dfrac{1}{4}$을 하면 $4$일, $\\dfrac{2}{5}$를 하면 $\\dfrac{5}{2}$일이에요. 마지막에 뒤집는 것을 잊기 쉬우니 조심해요.",
                 "definitions": []
               }
             },
             {
-              "blockId": "ncs-work:explanation:drawing:v2",
+              "blockId": "ncs-work:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1195,12 +1195,12 @@
           ]
         },
         {
-          "sectionId": "ncs-work:variants:v2",
+          "sectionId": "ncs-work:variants:v3",
           "role": "explanation",
           "title": "모양이 바뀌어도 방법은 같다",
           "contentBlocks": [
             {
-              "blockId": "ncs-work:variants:text:v2",
+              "blockId": "ncs-work:variants:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1212,12 +1212,12 @@
           ]
         },
         {
-          "sectionId": "ncs-work:example:v2",
+          "sectionId": "ncs-work:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-work:example:text:v2",
+              "blockId": "ncs-work:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1229,12 +1229,12 @@
           ]
         },
         {
-          "sectionId": "ncs-work:practice:v2",
+          "sectionId": "ncs-work:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-work:practice:problems:v2",
+              "blockId": "ncs-work:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1251,12 +1251,12 @@
           ]
         },
         {
-          "sectionId": "ncs-work:check:v2",
+          "sectionId": "ncs-work:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-work:check:problems:v2",
+              "blockId": "ncs-work:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1272,17 +1272,17 @@
           ]
         },
         {
-          "sectionId": "ncs-work:summary:v2",
+          "sectionId": "ncs-work:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-work:summary:text:v2",
+              "blockId": "ncs-work:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "날수는 더할 수 없지만 하루치는 더할 수 있어요. 그래서 전체를 $1$로 두고 하루치로 바꿔요.\n\n$n$일이 걸리면 하루치는 $\\dfrac{1}{n}$이고, 함께 하면 하루치를 더해요.\n\n걸리는 날수는 합친 하루치의 역수예요. 마지막에 뒤집는 것을 잊지 마세요.\n\n중간에 사람이 바뀌면 한 일을 세어 남은 일부터 구해요.\n\n이 수업의 개념은 일률이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "날수는 더할 수 없지만 하루치는 더할 수 있어요. 그래서 전체를 $1$로 두고 하루치로 바꿔요.\n\n$n$일이 걸리면 하루치는 $\\dfrac{1}{n}$이고, 함께 하면 하루치를 더해요.\n\n전체 일을 $1$로 두었으므로, 걸리는 날수는 $1$을 두 사람이 하루에 하는 일의 양으로 나눈 값이에요.\n\n중간에 사람이 바뀌면 한 일을 세어 남은 일부터 구해요.\n\n이 수업의 개념은 일률이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "work-rate",
@@ -1741,7 +1741,7 @@
     {
       "public": {
         "lessonKey": "ncs-exchange",
-        "versionId": "ncs-exchange:v2",
+        "versionId": "ncs-exchange:v3",
         "title": "환율과 수수료: 어느 쪽으로 바꾸는가",
         "summary": "환율로 두 돈을 오가는 방향을 구분하고, 수수료가 붙는 곳을 짚어요.",
         "estimatedMinutes": 10,
@@ -1757,17 +1757,17 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-exchange:meaning:v2",
+          "sectionId": "ncs-exchange:meaning:v3",
           "role": "explanation",
           "title": "어느 쪽으로 바꾸는가",
           "contentBlocks": [
             {
-              "blockId": "ncs-exchange:meaning:text:v2",
+              "blockId": "ncs-exchange:meaning:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "환율은 다른 나라 돈 하나가 우리 돈으로 얼마인지를 적은 값이에요. 「$1$달러 $=$ $1{,}300$원」이라면 환율이 $1{,}300$이에요.\n\n여기서 정할 것은 딱 하나, 어느 쪽으로 바꾸느냐예요.\n\n달러를 원으로 바꿀 때는 환율을 곱해요. $1{,}300$원짜리가 몇 개 있느냐를 묻는 것이니까요. $20$달러면 $20 \\times 1{,}300 = 26{,}000$원이에요.\n\n원을 달러로 바꿀 때는 나눠요. 가진 돈 안에 $1{,}300$원이 몇 번 들어가느냐를 묻는 것이거든요. $65{,}000$원이면 $65{,}000 \\div 1{,}300 = 50$달러예요.\n\n곱할지 나눌지 헷갈릴 때는 크기로 가늠해 보세요. 달러 수는 원 금액보다 훨씬 작은 수여야 해요. 답이 원 금액보다 크게 나왔다면 뒤집힌 거예요.",
+                "text": "환율은 다른 나라 돈 하나가 우리 돈으로 얼마인지를 적은 값이에요. 「$1$달러 $=$ $1{,}300$원」이라면 환율이 $1{,}300$이에요.\n\n여기서 정할 것은 딱 하나, 어느 쪽으로 바꾸느냐예요.\n\n달러를 원으로 바꿀 때는 환율을 곱해요. $1{,}300$원짜리가 몇 개 있느냐를 묻는 것이니까요. $20$달러면 $20 \\times 1{,}300 = 26{,}000$원이에요.\n\n원을 달러로 바꿀 때는 나눠요. 가진 돈 안에 $1{,}300$원이 몇 번 들어가느냐를 묻는 것이거든요. $65{,}000$원이면 $65{,}000 \\div 1{,}300 = 50$달러예요.\n\n곱할지 나눌지 헷갈릴 때는 크기로 가늠해 보세요. 이 예에서는 $1$달러에 $1{,}300$원이므로, 달러로 나타낸 수는 원으로 나타낸 수의 $\\frac{1}{1{,}300}$이에요. 답이 원 금액보다 크게 나왔다면 뒤집힌 거예요.",
                 "definitions": [
                   {
                     "conceptKey": "exchange-rate",
@@ -1778,7 +1778,7 @@
               }
             },
             {
-              "blockId": "ncs-exchange:explanation:drawing:v2",
+              "blockId": "ncs-exchange:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -2003,29 +2003,29 @@
           ]
         },
         {
-          "sectionId": "ncs-exchange:fee:v2",
+          "sectionId": "ncs-exchange:fee:v3",
           "role": "explanation",
           "title": "수수료와 환율의 오르내림",
           "contentBlocks": [
             {
-              "blockId": "ncs-exchange:fee:text:v2",
+              "blockId": "ncs-exchange:fee:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "환전에는 수수료가 붙는 일이 많아요. 수수료는 대개 바꾸는 금액에 대한 비율로 매겨요. $1\\%$라면 $26{,}000$원을 바꿀 때 $260$원을 더 내는 식이에요.\n\n수수료를 「더 내는지」 「받을 돈에서 빼는지」는 문제가 정해요. 사는 쪽이면 더 내고, 파는 쪽이면 받을 돈에서 빠진다고 보면 대개 맞아요.\n\n환율이 오르면 같은 달러를 사는 데 원이 더 들어요. 우리 돈의 값이 내려갔다는 뜻이고요.",
+                "text": "환전에는 수수료가 붙는 일이 많아요. 수수료는 대개 바꾸는 금액에 대한 비율로 매겨요. $1\\%$라면 $26{,}000$원을 바꿀 때 $260$원을 더 내는 식이에요.\n\n수수료를 「더 내는지」 「받을 돈에서 빼는지」는 문제가 정해요. 문제에 적힌 수수료의 기준 금액과 지급 방식을 확인해 계산해요.\n\n환율이 오르면 같은 달러를 사는 데 원이 더 들어요. 우리 돈의 값이 내려갔다는 뜻이고요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-exchange:example:v2",
+          "sectionId": "ncs-exchange:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-exchange:example:text:v2",
+              "blockId": "ncs-exchange:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -2037,12 +2037,12 @@
           ]
         },
         {
-          "sectionId": "ncs-exchange:practice:v2",
+          "sectionId": "ncs-exchange:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-exchange:practice:problems:v2",
+              "blockId": "ncs-exchange:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -2059,12 +2059,12 @@
           ]
         },
         {
-          "sectionId": "ncs-exchange:check:v2",
+          "sectionId": "ncs-exchange:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-exchange:check:problems:v2",
+              "blockId": "ncs-exchange:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -2080,17 +2080,17 @@
           ]
         },
         {
-          "sectionId": "ncs-exchange:summary:v2",
+          "sectionId": "ncs-exchange:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-exchange:summary:text:v2",
+              "blockId": "ncs-exchange:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "달러를 원으로 바꿀 때는 환율을 곱하고, 원을 달러로 바꿀 때는 나눠요.\n\n달러 수는 원 금액보다 훨씬 작아야 해요. 크기로 한 번 가늠해 보면 뒤집힌 것을 잡을 수 있어요.\n\n수수료는 대개 바꾸는 금액에 대한 비율이에요.\n\n환율이 오르면 같은 달러를 사는 데 원이 더 들고, 우리 돈의 값은 내려간 거예요.\n\n이 수업의 개념은 환율이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "달러를 원으로 바꿀 때는 환율을 곱하고, 원을 달러로 바꿀 때는 나눠요.\n\n이 수업의 환율은 $1$달러에 $1{,}300$원이므로 달러 수는 원 금액을 $1{,}300$으로 나눈 값이에요. 크기로 한 번 가늠해 보면 뒤집힌 것을 잡을 수 있어요.\n\n수수료는 대개 바꾸는 금액에 대한 비율이에요.\n\n환율이 오르면 같은 달러를 사는 데 원이 더 들고, 우리 돈의 값은 내려간 거예요.\n\n이 수업의 개념은 환율이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "exchange-rate",

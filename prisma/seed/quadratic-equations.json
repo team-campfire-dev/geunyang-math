@@ -921,7 +921,7 @@
     {
       "public": {
         "lessonKey": "quadratic-formula",
-        "versionId": "quadratic-formula:v3",
+        "versionId": "quadratic-formula:v4",
         "title": "근의 공식: 어떤 이차방정식에도 통하는 하나의 길",
         "summary": "완전제곱식 만들기를 문자로 한 번에 해 두고, 계수만 넣으면 풀리는 공식으로 써요.",
         "estimatedMinutes": 12,
@@ -938,12 +938,12 @@
       },
       "sections": [
         {
-          "sectionId": "quadratic-formula:explanation:v3",
+          "sectionId": "quadratic-formula:explanation:v4",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-formula:explanation:text:v3",
+              "blockId": "quadratic-formula:explanation:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -964,7 +964,7 @@
               }
             },
             {
-              "blockId": "quadratic-formula:explanation:drawing:v3",
+              "blockId": "quadratic-formula:explanation:drawing:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1189,12 +1189,12 @@
               }
             },
             {
-              "blockId": "quadratic-formula:explanation:text-2:v3",
+              "blockId": "quadratic-formula:explanation:text-2:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "근호 안의 $b^2 - 4ac$는 특별한 이름을 가지고 있어요. 판별식이라고 해요. 이 값 하나로 해가 몇 개인지 미리 알 수 있거든요.\n\n양수이면 근호가 서로 다른 두 값을 내놓아요. 그래서 해가 둘이에요. $0$이면 $\\pm$가 붙어도 같은 값이니 해가 하나, 곧 중근이에요.\n\n음수이면 어떨까요. 제곱해서 음수가 되는 수는 없다고 배웠죠. 그래서 이 방정식을 만족하는 실수가 없어요. 해가 없다고 말해요.",
+                "text": "근호 안의 $b^2 - 4ac$는 특별한 이름을 가지고 있어요. 판별식이라고 해요. 이 값 하나로 해가 몇 개인지 미리 알 수 있거든요.\n\n판별식이 양수이면 $\\sqrt{b^2-4ac}$는 양수 하나를 나타내요. 근의 공식에서 이 수를 더할 때와 뺄 때의 결과가 다르므로 서로 다른 해가 두 개예요. $0$이면 $\\pm$가 붙어도 같은 값이니 해가 하나, 곧 중근이에요.\n\n음수이면 어떨까요. 제곱해서 음수가 되는 수는 없다고 배웠죠. 그래서 이 방정식을 만족하는 실수가 없어요. 해가 없다고 말해요.",
                 "definitions": [
                   {
                     "conceptKey": "discriminant",
@@ -1205,7 +1205,7 @@
               }
             },
             {
-              "blockId": "quadratic-formula:explanation:text-3:v3",
+              "blockId": "quadratic-formula:explanation:text-3:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1223,12 +1223,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-formula:example:v3",
+          "sectionId": "quadratic-formula:example:v4",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-formula:example:text:v3",
+              "blockId": "quadratic-formula:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1251,12 +1251,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-formula:practice:v3",
+          "sectionId": "quadratic-formula:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-formula:practice:problems:v3",
+              "blockId": "quadratic-formula:practice:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1273,12 +1273,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-formula:check:v3",
+          "sectionId": "quadratic-formula:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-formula:check:problems:v3",
+              "blockId": "quadratic-formula:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1294,12 +1294,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-formula:summary:v3",
+          "sectionId": "quadratic-formula:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-formula:summary:text:v3",
+              "blockId": "quadratic-formula:summary:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,

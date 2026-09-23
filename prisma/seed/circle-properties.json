@@ -433,7 +433,7 @@
     {
       "public": {
         "lessonKey": "circle-tangent",
-        "versionId": "circle-tangent:v2",
+        "versionId": "circle-tangent:v3",
         "title": "접선의 성질: 닿는 점에서 직각",
         "summary": "접선이 반지름과 직각을 이룬다는 것과, 밖의 한 점에서 그은 두 접선의 길이가 같다는 것을 봐요.",
         "estimatedMinutes": 11,
@@ -448,12 +448,12 @@
       },
       "sections": [
         {
-          "sectionId": "circle-tangent:explanation:v2",
+          "sectionId": "circle-tangent:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "circle-tangent:explanation:text:v2",
+              "blockId": "circle-tangent:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -474,7 +474,7 @@
               }
             },
             {
-              "blockId": "circle-tangent:explanation:drawing:v2",
+              "blockId": "circle-tangent:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -691,7 +691,7 @@
               }
             },
             {
-              "blockId": "circle-tangent:explanation:text-2:v2",
+              "blockId": "circle-tangent:explanation:text-2:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -707,7 +707,7 @@
               }
             },
             {
-              "blockId": "circle-tangent:explanation:text-3:v2",
+              "blockId": "circle-tangent:explanation:text-3:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -725,12 +725,12 @@
           ]
         },
         {
-          "sectionId": "circle-tangent:example:v2",
+          "sectionId": "circle-tangent:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "circle-tangent:example:text:v2",
+              "blockId": "circle-tangent:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -753,20 +753,20 @@
           ]
         },
         {
-          "sectionId": "circle-tangent:practice:v2",
+          "sectionId": "circle-tangent:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "circle-tangent:practice:problems:v2",
+              "blockId": "circle-tangent:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "circle-tangent:practice",
-                "problemSetVersionId": "circle-tangent:practice:v1",
+                "problemSetVersionId": "circle-tangent:practice:v2",
                 "problemVersionIds": [
-                  "circle-tangent:practice-1:v1",
+                  "circle-tangent:practice-1:v2",
                   "circle-tangent:practice-2:v1",
                   "circle-tangent:practice-3:v1"
                 ]
@@ -775,20 +775,20 @@
           ]
         },
         {
-          "sectionId": "circle-tangent:check:v2",
+          "sectionId": "circle-tangent:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "circle-tangent:check:problems:v2",
+              "blockId": "circle-tangent:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "circle-tangent:check",
-                "problemSetVersionId": "circle-tangent:check:v1",
+                "problemSetVersionId": "circle-tangent:check:v2",
                 "problemVersionIds": [
-                  "circle-tangent:check-1:v1",
+                  "circle-tangent:check-1:v2",
                   "circle-tangent:check-2:v1"
                 ]
               }
@@ -796,12 +796,12 @@
           ]
         },
         {
-          "sectionId": "circle-tangent:summary:v2",
+          "sectionId": "circle-tangent:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "circle-tangent:summary:text:v2",
+              "blockId": "circle-tangent:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -831,9 +831,9 @@
       ],
       "review": {
         "problemSetId": "circle-tangent:review",
-        "problemSetVersionId": "circle-tangent:review:v1",
+        "problemSetVersionId": "circle-tangent:review:v2",
         "problemVersionIds": [
-          "circle-tangent:homework-1:v1",
+          "circle-tangent:homework-1:v2",
           "circle-tangent:homework-2:v1"
         ]
       }
@@ -2791,6 +2791,1257 @@
             }
           ],
           "solution": []
+        },
+        {
+          "problemVersionId": "circle-properties:drill-12:v1",
+          "conceptKeys": [
+            "circle-tangent"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-12:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원 밖의 한 점에서 접선은 몇 개 그을 수 있나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-12:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "위아래로 하나씩이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-properties:drill-13:v1",
+          "conceptKeys": [
+            "circle-tangent"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원 밖의 한 점에서 그은 두 접선의 길이는 어떤가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "서로 같다"
+              },
+              {
+                "id": "b",
+                "text": "서로 다르다"
+              },
+              {
+                "id": "c",
+                "text": "합이 지름이다"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "서로 같다"
+              },
+              {
+                "id": "b",
+                "text": "서로 다르다"
+              },
+              {
+                "id": "c",
+                "text": "합이 지름이다"
+              },
+              {
+                "id": "d",
+                "text": "알 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 직각삼각형이 합동이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-properties:drill-14:v1",
+          "conceptKeys": [
+            "inscribed-angle"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중심각이 $100°$인 호를 바라보는 원주각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 50
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "절반이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-properties:drill-15:v1",
+          "conceptKeys": [
+            "inscribed-angle"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원주각이 $25°$일 때 같은 호의 중심각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 50
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 배예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-properties:drill-16:v1",
+          "conceptKeys": [
+            "inscribed-angle"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-16:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반원을 바라보는 원주각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 90
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-16:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중심각이 $180°$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-properties:drill-17:v1",
+          "conceptKeys": [
+            "inscribed-angle"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원에 내접하는 사각형의 한 각이 $80°$일 때 마주 보는 각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 100
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합이 $180°$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-properties:drill-18:v1",
+          "conceptKeys": [
+            "inscribed-angle"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중심각이 $60°$인 호를 바라보는 원주각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "절반이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-properties:drill-19:v1",
+          "conceptKeys": [
+            "inscribed-angle"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원에 내접하는 사각형의 한 각이 $120°$일 때 마주 보는 각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "합이 $180°$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-properties:drill-20:v1",
+          "conceptKeys": [
+            "inscribed-angle"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "같은 호를 바라보는 원주각들의 크기는 어떤가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "모두 같다"
+              },
+              {
+                "id": "b",
+                "text": "보는 자리마다 다르다"
+              },
+              {
+                "id": "c",
+                "text": "합이 $360°$다"
+              },
+              {
+                "id": "d",
+                "text": "중심각과 같다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "모두 같다"
+              },
+              {
+                "id": "b",
+                "text": "보는 자리마다 다르다"
+              },
+              {
+                "id": "c",
+                "text": "합이 $360°$다"
+              },
+              {
+                "id": "d",
+                "text": "중심각과 같다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "자리를 옮겨도 그대로예요."
+              }
+            }
+          ],
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "d",
+              "misconception": "inscribed-as-central"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "circle-tangent:practice",
+      "courseKey": "circle-properties",
+      "name": "접선의 성질 연습",
+      "versionId": "circle-tangent:practice:v2",
+      "problems": [
+        {
+          "problemVersionId": "circle-tangent:practice-1:v2",
+          "conceptKeys": [
+            "circle-tangent"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-tangent:practice-1:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $5$인 원의 중심에서 $13$만큼 떨어진 점에서 그은 접선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-tangent:practice-1:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "접선과 접점까지의 반지름은 수직이에요. 접선의 길이를 $x$라 하면 $x^2+5^2=13^2$이에요. $x^2$을 구한 뒤, 제곱해서 그 값이 되는 양수 $x$를 구해 보세요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "circle-tangent:practice-1:v2:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원 밖의 점, 접점, 원의 중심을 이으면 직각삼각형이 돼요. 빗변의 길이는 $13$, 나머지 두 변은 반지름 $5$와 접선의 길이 $x$예요. 피타고라스 정리에 따라 $x^2=13^2-5^2=144$이에요. 길이는 양수이므로 $x=12$이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "circle-tangent:practice-2:v1",
+          "conceptKeys": [
+            "circle-tangent"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-tangent:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "접선과 접점을 지나는 반지름이 이루는 각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 90
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-tangent:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "수직이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-tangent:practice-3:v1",
+          "conceptKeys": [
+            "circle-tangent"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-tangent:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $6$인 원에서 접선의 길이가 $8$일 때 중심에서 그 점까지의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-tangent:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$36 + 64$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "circle-tangent:check",
+      "courseKey": "circle-properties",
+      "name": "접선의 성질 확인",
+      "versionId": "circle-tangent:check:v2",
+      "problems": [
+        {
+          "problemVersionId": "circle-tangent:check-1:v2",
+          "conceptKeys": [
+            "circle-tangent"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-tangent:check-1:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $9$인 원의 중심에서 $15$만큼 떨어진 점에서 그은 접선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-tangent:check-1:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "접선과 접점까지의 반지름은 수직이에요. 접선의 길이를 $x$라 하면 $x^2+9^2=15^2$이에요. $x^2$을 구한 뒤, 제곱해서 그 값이 되는 양수 $x$를 구해 보세요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "circle-tangent:check-1:v2:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원 밖의 점, 접점, 원의 중심을 이으면 직각삼각형이 돼요. 빗변의 길이는 $15$, 나머지 두 변은 반지름 $9$와 접선의 길이 $x$예요. 피타고라스 정리에 따라 $x^2=15^2-9^2=144$이에요. 길이는 양수이므로 $x=12$이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "circle-tangent:check-2:v1",
+          "conceptKeys": [
+            "circle-tangent"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-tangent:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원 밖의 한 점에서 그은 두 접선에 대한 설명으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "길이가 서로 같다"
+              },
+              {
+                "id": "b",
+                "text": "길이가 서로 다르다"
+              },
+              {
+                "id": "c",
+                "text": "서로 수직이다"
+              },
+              {
+                "id": "d",
+                "text": "한 개만 그을 수 있다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "길이가 서로 같다"
+              },
+              {
+                "id": "b",
+                "text": "길이가 서로 다르다"
+              },
+              {
+                "id": "c",
+                "text": "서로 수직이다"
+              },
+              {
+                "id": "d",
+                "text": "한 개만 그을 수 있다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-tangent:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 직각삼각형이 합동이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "circle-tangent:review",
+      "courseKey": "circle-properties",
+      "name": "접선의 성질 복습",
+      "versionId": "circle-tangent:review:v2",
+      "problems": [
+        {
+          "problemVersionId": "circle-tangent:homework-1:v2",
+          "conceptKeys": [
+            "circle-tangent"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-tangent:homework-1:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $8$인 원의 중심에서 $17$만큼 떨어진 점에서 그은 접선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-tangent:homework-1:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "접선과 접점까지의 반지름은 수직이에요. 접선의 길이를 $x$라 하면 $x^2+8^2=17^2$이에요. $x^2$을 구한 뒤, 제곱해서 그 값이 되는 양수 $x$를 구해 보세요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "circle-tangent:homework-1:v2:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원 밖의 점, 접점, 원의 중심을 이으면 직각삼각형이 돼요. 빗변의 길이는 $17$, 나머지 두 변은 반지름 $8$와 접선의 길이 $x$예요. 피타고라스 정리에 따라 $x^2=17^2-8^2=225$이에요. 길이는 양수이므로 $x=15$이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "circle-tangent:homework-2:v1",
+          "conceptKeys": [
+            "circle-tangent"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-tangent:homework-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $5$인 원에서 접선의 길이가 $12$일 때 중심에서 그 점까지의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 13
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-tangent:homework-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$25 + 144$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "circle-properties:drill",
+      "courseKey": "circle-properties",
+      "name": "원의 성질 모아 풀기",
+      "versionId": "circle-properties:drill:v2",
+      "problems": [
+        {
+          "problemVersionId": "circle-properties:drill-1:v1",
+          "conceptKeys": [
+            "circle-chord"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $5$인 원에서 중심으로부터 $4$만큼 떨어진 현의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "절반이 $3$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-properties:drill-2:v1",
+          "conceptKeys": [
+            "circle-chord"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $10$인 원에서 중심으로부터 $8$만큼 떨어진 현의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "절반이 $6$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-properties:drill-3:v1",
+          "conceptKeys": [
+            "circle-chord"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $13$인 원에서 길이가 $10$인 현과 중심 사이의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "절반은 $5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-properties:drill-4:v1",
+          "conceptKeys": [
+            "circle-chord"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $25$인 원에서 중심으로부터 $20$만큼 떨어진 현의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "절반이 $15$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-properties:drill-5:v1",
+          "conceptKeys": [
+            "circle-chord"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 원에서 가장 긴 현은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "지름"
+              },
+              {
+                "id": "b",
+                "text": "반지름"
+              },
+              {
+                "id": "c",
+                "text": "접선"
+              },
+              {
+                "id": "d",
+                "text": "호"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "지름"
+              },
+              {
+                "id": "b",
+                "text": "반지름"
+              },
+              {
+                "id": "c",
+                "text": "접선"
+              },
+              {
+                "id": "d",
+                "text": "호"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중심에서의 거리가 $0$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-properties:drill-6:v1",
+          "conceptKeys": [
+            "circle-chord"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $17$인 원에서 길이가 $30$인 현과 중심 사이의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "절반은 $15$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-properties:drill-7:v2",
+          "conceptKeys": [
+            "circle-tangent"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-7:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $5$인 원의 중심에서 $13$만큼 떨어진 점에서 그은 접선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-7:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "접선과 접점까지의 반지름은 수직이에요. 접선의 길이를 $x$라 하면 $x^2+5^2=13^2$이에요. $x^2$을 구한 뒤, 제곱해서 그 값이 되는 양수 $x$를 구해 보세요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "circle-properties:drill-7:v2:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원 밖의 점, 접점, 원의 중심을 이으면 직각삼각형이 돼요. 빗변의 길이는 $13$, 나머지 두 변은 반지름 $5$와 접선의 길이 $x$예요. 피타고라스 정리에 따라 $x^2=13^2-5^2=144$이에요. 길이는 양수이므로 $x=12$이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "circle-properties:drill-8:v2",
+          "conceptKeys": [
+            "circle-tangent"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-8:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $8$인 원의 중심에서 $17$만큼 떨어진 점에서 그은 접선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-8:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "접선과 접점까지의 반지름은 수직이에요. 접선의 길이를 $x$라 하면 $x^2+8^2=17^2$이에요. $x^2$을 구한 뒤, 제곱해서 그 값이 되는 양수 $x$를 구해 보세요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "circle-properties:drill-8:v2:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원 밖의 점, 접점, 원의 중심을 이으면 직각삼각형이 돼요. 빗변의 길이는 $17$, 나머지 두 변은 반지름 $8$와 접선의 길이 $x$예요. 피타고라스 정리에 따라 $x^2=17^2-8^2=225$이에요. 길이는 양수이므로 $x=15$이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "circle-properties:drill-9:v1",
+          "conceptKeys": [
+            "circle-tangent"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "접선과 접점을 지나는 반지름이 이루는 각은 몇 도인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 90
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "수직이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "circle-properties:drill-10:v2",
+          "conceptKeys": [
+            "circle-tangent"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-10:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $9$인 원에서 접선의 길이가 $12$일 때 중심에서 그 점까지의 거리를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-10:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "중심과 접점을 이은 반지름은 접선에 수직이에요. 구하려는 거리를 $d$라 하면 $d^2=9^2+12^2$이에요. 두 제곱의 합을 구한 뒤, 제곱해서 그 값이 되는 양수 $d$를 찾아보세요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "circle-properties:drill-10:v2:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "구하려는 거리는 직각삼각형의 빗변이에요. $d^2=9^2+12^2=81+144=225$예요. 길이는 양수이므로 $d=15$예요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "circle-properties:drill-11:v2",
+          "conceptKeys": [
+            "circle-tangent"
+          ],
+          "promptContent": [
+            {
+              "blockId": "circle-properties:drill-11:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "반지름이 $7$인 원의 중심에서 $25$만큼 떨어진 점에서 그은 접선의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 24
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "circle-properties:drill-11:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "접선과 접점까지의 반지름은 수직이에요. 접선의 길이를 $x$라 하면 $x^2+7^2=25^2$이에요. $x^2$을 구한 뒤, 제곱해서 그 값이 되는 양수 $x$를 구해 보세요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "circle-properties:drill-11:v2:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원 밖의 점, 접점, 원의 중심을 이으면 직각삼각형이 돼요. 빗변의 길이는 $25$, 나머지 두 변은 반지름 $7$와 접선의 길이 $x$예요. 피타고라스 정리에 따라 $x^2=25^2-7^2=576$이에요. 길이는 양수이므로 $x=24$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "circle-properties:drill-12:v1",

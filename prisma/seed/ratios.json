@@ -4,7 +4,7 @@
     {
       "key": "ratios",
       "title": "비와 비율",
-      "summary": "두 양을 견주어 비율로 나타내고, 백분율로 바꿔 할인과 이자를 계산해요.",
+      "summary": "두 양을 비교해 비율로 나타내고, 백분율로 바꿔 할인과 이자를 계산해요.",
       "order": 30,
       "lessons": [
         {
@@ -50,8 +50,8 @@
     {
       "public": {
         "lessonKey": "ratio-meaning",
-        "versionId": "ratio-meaning:v3",
-        "title": "비와 비율: 두 양을 견주기",
+        "versionId": "ratio-meaning:v4",
+        "title": "비와 비율: 두 양을 비교하기",
         "summary": "두 양을 비로 나타내고, 기준량에 대한 비율을 하나의 수로 구해요.",
         "estimatedMinutes": 10,
         "conceptKeys": [
@@ -67,17 +67,17 @@
       },
       "sections": [
         {
-          "sectionId": "ratio-meaning:explanation:v3",
+          "sectionId": "ratio-meaning:explanation:v4",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "ratio-meaning:explanation:text:v3",
+              "blockId": "ratio-meaning:explanation:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "두 양을 견주어 나타낸 것을 비라고 해요. 물 200 mL와 원액 50 mL를 견주면 $200:50$이라고 써요. 앞의 수가 기준이 아니라, 콜론 뒤의 수를 기준으로 삼아 읽어요.\n\n기준량에 대해 비교하는 양이 얼마인지를 하나의 수로 나타낸 것이 비율이에요. 비율은 비교하는 양을 기준량으로 나눈 몫이에요.\n\n$200:50$의 비율은 $\\frac{200}{50}=4$예요. 원액 1만큼에 물이 4만큼이라는 뜻이에요. 비율은 분수로도 소수로도 쓸 수 있어요.",
+                "text": "물 200 mL와 원액 50 mL를 섞어 주스를 만든다고 해 볼게요. 물의 양과 원액의 양을 비교해 $200:50$이라고 쓸 수 있어요. 이처럼 두 양을 비교해 나타낸 것이 비예요.\n\n$200:50$에서는 뒤에 쓴 원액 50 mL가 기준량이고, 앞에 쓴 물 200 mL가 비교하는 양이에요.\n\n비교하는 양을 기준량으로 나눈 값을 비율이라고 해요. $200\\div50=4$이므로 물의 양은 원액의 양의 4배예요. 원액 1 mL마다 물 4 mL를 넣는다는 뜻이죠.\n\n비율은 $\\frac{200}{50}$처럼 분수로 쓰거나, $4$처럼 계산한 값으로 쓸 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "ratio",
@@ -98,13 +98,13 @@
               }
             },
             {
-              "blockId": "ratio-meaning:explanation:drawing:v3",
+              "blockId": "ratio-meaning:explanation:drawing:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "alt": "원액 한 칸에 물 네 칸을 견준 막대",
-                "caption": "기준량을 정하고, 그것으로 나눠 하나의 수로",
+                "alt": "원액 한 칸에 물 네 칸을 비교한 막대",
+                "caption": "물의 양을 원액의 양으로 나누면 비율은 4예요",
                 "items": [
                   {
                     "kind": "strip",
@@ -225,17 +225,17 @@
           ]
         },
         {
-          "sectionId": "ratio-meaning:example:v3",
+          "sectionId": "ratio-meaning:example:v4",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ratio-meaning:example:text:v3",
+              "blockId": "ratio-meaning:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "주스 12잔을 만드는 데 컵 3개가 쓰였어요. 컵 수에 대한 주스 잔 수의 비율을 구해 볼게요.\n\n기준량은 「에 대한」 앞에 오는 컵 3개예요. 비교하는 양은 주스 12잔이에요.\n\n비율은 $\\frac{12}{3}=4$예요. 컵 하나마다 주스 4잔이라는 뜻이에요.\n\n기준량과 비교하는 양을 바꿔 쓰면 $\\frac{3}{12}=\\frac{1}{4}$로 값이 달라져요. 무엇을 기준으로 삼았는지가 비율의 절반이에요.",
+                "text": "사과 12개를 바구니 3개에 똑같이 나누어 담아요. 바구니 수에 대한 사과 수의 비율을 구해 볼게요.\n\n기준량은 바구니 3개이고, 비교하는 양은 사과 12개예요. 비로 쓰면 $12:3$이에요.\n\n비율은 $\\frac{12}{3}=4$예요. 바구니 하나에 사과 4개씩 담는다는 뜻이에요.\n\n순서를 바꾸어 사과 수에 대한 바구니 수의 비율을 구하면 $\\frac{3}{12}=\\frac{1}{4}$이 돼요. 기준량이 달라지면 비율도 달라지므로, 무엇을 기준으로 비교하는지 먼저 확인해요.",
                 "definitions": [
                   {
                     "conceptKey": "rate",
@@ -248,12 +248,12 @@
           ]
         },
         {
-          "sectionId": "ratio-meaning:practice:v3",
+          "sectionId": "ratio-meaning:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ratio-meaning:practice:problems:v3",
+              "blockId": "ratio-meaning:practice:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -270,12 +270,12 @@
           ]
         },
         {
-          "sectionId": "ratio-meaning:check:v3",
+          "sectionId": "ratio-meaning:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ratio-meaning:check:problems:v3",
+              "blockId": "ratio-meaning:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -291,17 +291,17 @@
           ]
         },
         {
-          "sectionId": "ratio-meaning:summary:v3",
+          "sectionId": "ratio-meaning:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ratio-meaning:summary:text:v3",
+              "blockId": "ratio-meaning:summary:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "비는 두 양을 견주어 나타낸 것이고, 비율은 비교하는 양을 기준량으로 나눈 하나의 수예요. 무엇이 기준량인지 먼저 정해야 해요.\n\n이 수업의 개념은 비·비율이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "비는 두 양을 비교해 나타낸 것이고, 비율은 비교하는 양을 기준량으로 나눈 하나의 수예요. 무엇이 기준량인지 먼저 정해야 해요.\n\n이 수업의 개념은 비·비율이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "ratio",
@@ -331,7 +331,7 @@
     {
       "public": {
         "lessonKey": "percentage-meaning",
-        "versionId": "percentage-meaning:v2",
+        "versionId": "percentage-meaning:v3",
         "title": "백분율: 기준량을 100으로 보기",
         "summary": "비율을 기준량 100에 대한 수로 바꿔 %로 나타내요.",
         "estimatedMinutes": 10,
@@ -348,17 +348,17 @@
       },
       "sections": [
         {
-          "sectionId": "percentage-meaning:explanation:v2",
+          "sectionId": "percentage-meaning:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "percentage-meaning:explanation:text:v2",
+              "blockId": "percentage-meaning:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "기준량을 100으로 보았을 때 비교하는 양이 얼마인지를 백분율이라고 해요. 기호 %를 붙여 써요.\n\n비율 $0.25$는 기준량 100에 대해 25예요. 그래서 25%라고 써요. 비율에 100을 곱하면 백분율이 되고, 백분율을 100으로 나누면 비율이 돼요.\n\n$\\frac{1}{4}$, $0.25$, 25%는 모두 같은 양의 다른 이름이에요. 어느 쪽으로 쓰든 견주는 크기는 달라지지 않아요.",
+                "text": "기준량을 100으로 보았을 때 비교하는 양이 얼마인지를 백분율이라고 해요. 기호 %를 붙여 써요.\n\n비율 $0.25$는 기준량 100에 대해 25예요. 그래서 25%라고 써요. 비율에 100을 곱하면 백분율이 되고, 백분율을 100으로 나누면 비율이 돼요.\n\n$\\frac{1}{4}$, $0.25$, 25%는 모두 같은 양의 다른 이름이에요. 어느 쪽으로 쓰든 나타내는 비율은 달라지지 않아요.",
                 "definitions": [
                   {
                     "conceptKey": "percentage",
@@ -374,7 +374,7 @@
               }
             },
             {
-              "blockId": "percentage-meaning:explanation:drawing:v2",
+              "blockId": "percentage-meaning:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -753,12 +753,12 @@
           ]
         },
         {
-          "sectionId": "percentage-meaning:example:v2",
+          "sectionId": "percentage-meaning:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "percentage-meaning:example:text:v2",
+              "blockId": "percentage-meaning:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -774,7 +774,7 @@
               }
             },
             {
-              "blockId": "percentage-meaning:example:drawing:v2",
+              "blockId": "percentage-meaning:example:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -869,12 +869,12 @@
           ]
         },
         {
-          "sectionId": "percentage-meaning:practice:v2",
+          "sectionId": "percentage-meaning:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "percentage-meaning:practice:problems:v2",
+              "blockId": "percentage-meaning:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -891,12 +891,12 @@
           ]
         },
         {
-          "sectionId": "percentage-meaning:check:v2",
+          "sectionId": "percentage-meaning:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "percentage-meaning:check:problems:v2",
+              "blockId": "percentage-meaning:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -912,12 +912,12 @@
           ]
         },
         {
-          "sectionId": "percentage-meaning:summary:v2",
+          "sectionId": "percentage-meaning:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "percentage-meaning:summary:text:v2",
+              "blockId": "percentage-meaning:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,

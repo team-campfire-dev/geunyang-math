@@ -46,7 +46,7 @@
     {
       "public": {
         "lessonKey": "polynomial-division",
-        "versionId": "polynomial-division:v3",
+        "versionId": "polynomial-division:v4",
         "title": "다항식의 나눗셈: 수를 나누듯이",
         "summary": "차수가 높은 항부터 덜어 내며 몫과 나머지를 구하고, 나눗셈을 곱셈 한 줄로 다시 적어요.",
         "estimatedMinutes": 12,
@@ -62,17 +62,17 @@
       },
       "sections": [
         {
-          "sectionId": "polynomial-division:explanation:v3",
+          "sectionId": "polynomial-division:explanation:v4",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-division:explanation:text:v3",
+              "blockId": "polynomial-division:explanation:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$17$을 $5$로 나누면 몫이 $3$, 나머지가 $2$예요. 한 줄로 적으면 $17 = 5 \\times 3 + 2$죠.\n\n식을 식으로 나누는 것을 다항식의 나눗셈이라고 해요. 수를 나눌 때와 절차가 같아요.\n\n$x^2 + 3x + 5$를 $x + 1$로 나눠 볼게요.\n\n차수가 가장 높은 항부터 봐요. $x^2$을 만들려면 $x+1$에 $x$를 곱해야 해요. 그러니 몫의 첫 항은 $x$예요.\n\n$x(x+1) = x^2 + x$를 덜어 내면 $2x + 5$가 남아요. 다시 $2x$를 만들려면 $2$를 곱해야 해요. 몫의 다음 항은 $2$예요.\n\n$2(x+1) = 2x + 2$를 덜어 내면 $3$이 남아요. 이제 $x+1$로는 더 덜어 낼 수 없어요. 몫은 $x+2$, 나머지는 $3$이에요.",
+                "text": "$17$을 $5$로 나누면 몫이 $3$, 나머지가 $2$예요. 한 줄로 적으면 $17 = 5 \\times 3 + 2$죠.\n\n식을 식으로 나누는 것을 다항식의 나눗셈이라고 해요. 수를 나눌 때와 절차가 같아요.\n\n$x^2 + 3x + 5$를 $x + 1$로 나눠 볼게요.\n\n차수가 가장 높은 항부터 봐요. $x^2$을 만들려면 $x+1$에 $x$를 곱해야 해요. 그러니 몫의 첫 항은 $x$예요.\n\n나누어지는 식에서 $x(x+1)=x^2+x$를 빼요. $(x^2+3x+5)-(x^2+x)=2x+5$예요. 다시 $2x$를 만들려면 $2$를 곱해야 해요. 몫의 다음 항은 $2$예요.\n\n남은 식에서 $2(x+1)=2x+2$를 빼면 $(2x+5)-(2x+2)=3$이에요. 나머지 $3$의 차수가 나누는 식 $x+1$의 차수보다 낮으므로 멈춰요. 몫은 $x+2$, 나머지는 $3$이에요.",
                 "definitions": [
                   {
                     "conceptKey": "polynomial-division",
@@ -83,7 +83,7 @@
               }
             },
             {
-              "blockId": "polynomial-division:explanation:drawing:v3",
+              "blockId": "polynomial-division:explanation:drawing:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -320,7 +320,7 @@
               }
             },
             {
-              "blockId": "polynomial-division:explanation:after:v3",
+              "blockId": "polynomial-division:explanation:after:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -338,17 +338,17 @@
           ]
         },
         {
-          "sectionId": "polynomial-division:example:v3",
+          "sectionId": "polynomial-division:example:v4",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-division:example:text:v3",
+              "blockId": "polynomial-division:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$2x^2 - x - 1$을 $x - 1$로 나눠 볼게요.\n\n$2x^2$을 만들려면 $x-1$에 $2x$를 곱해야 해요. 몫의 첫 항은 $2x$예요.\n\n$2x(x-1) = 2x^2 - 2x$를 덜어 내요. $(-x) - (-2x) = x$이니 $x - 1$이 남아요. 부호를 조심할 부분이에요.\n\n남은 $x$를 만들려면 $1$을 곱해야 해요. 몫의 다음 항은 $1$이에요.\n\n$1(x-1) = x-1$을 덜어 내면 $0$이 남아요. 몫은 $2x+1$, 나머지는 $0$이에요.\n\n나머지가 $0$이면 딱 나누어떨어진 거예요. 곧 $2x^2 - x - 1 = (x-1)(2x+1)$이에요.\n\n식을 곱의 모양으로 바꾸는 것이 인수분해예요. 나눗셈이 인수분해를 하나 만들어 준 거예요.",
+                "text": "$2x^2 - x - 1$을 $x - 1$로 나눠 볼게요.\n\n$2x^2$을 만들려면 $x-1$에 $2x$를 곱해야 해요. 몫의 첫 항은 $2x$예요.\n\n$2x(x-1)=2x^2-2x$를 원래 식에서 빼요. $(2x^2-x-1)-(2x^2-2x)=x-1$이에요. 괄호를 뺄 때 $-2x$의 부호가 바뀌므로 $-x+2x=x$가 돼요.\n\n남은 $x$를 만들려면 $1$을 곱해야 해요. 몫의 다음 항은 $1$이에요.\n\n$1(x-1)=x-1$을 남은 식에서 빼면 $(x-1)-(x-1)=0$이에요. 몫은 $2x+1$, 나머지는 $0$이에요.\n\n나머지가 $0$이면 딱 나누어떨어진 거예요. 곧 $2x^2 - x - 1 = (x-1)(2x+1)$이에요.\n\n식을 곱의 모양으로 바꾸는 것이 인수분해예요. 나눗셈이 인수분해를 하나 만들어 준 거예요.",
                 "definitions": [
                   {
                     "conceptKey": "factorization",
@@ -361,12 +361,12 @@
           ]
         },
         {
-          "sectionId": "polynomial-division:practice:v3",
+          "sectionId": "polynomial-division:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-division:practice:problems:v3",
+              "blockId": "polynomial-division:practice:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -383,12 +383,12 @@
           ]
         },
         {
-          "sectionId": "polynomial-division:check:v3",
+          "sectionId": "polynomial-division:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-division:check:problems:v3",
+              "blockId": "polynomial-division:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -404,17 +404,17 @@
           ]
         },
         {
-          "sectionId": "polynomial-division:summary:v3",
+          "sectionId": "polynomial-division:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-division:summary:text:v3",
+              "blockId": "polynomial-division:summary:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "다항식의 나눗셈은 수의 나눗셈과 절차가 같아요. 차수가 높은 항부터 덜어 내요.\n\n나머지의 차수가 나누는 식보다 낮아지면 멈춰요.\n\n결과는 $A = BQ + R$ 한 줄로 적어요.\n\n나머지가 $0$이면 나누어떨어진 것이고, 그때 나누는 식은 인수예요.\n\n이 수업의 개념은 다항식의 나눗셈이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "다항식의 나눗셈은 수의 나눗셈과 절차가 같아요. 차수가 가장 높은 항을 없애도록 몫의 항을 정하고, 나누는 식에 그 항을 곱한 식을 빼요.\n\n나머지의 차수가 나누는 식보다 낮아지면 멈춰요.\n\n결과는 $A = BQ + R$ 한 줄로 적어요.\n\n나머지가 $0$이면 나누어떨어진 것이고, 그때 나누는 식은 인수예요.\n\n이 수업의 개념은 다항식의 나눗셈이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "polynomial-division",
@@ -769,7 +769,7 @@
     {
       "public": {
         "lessonKey": "factor-theorem",
-        "versionId": "factor-theorem:v3",
+        "versionId": "factor-theorem:v4",
         "title": "인수정리: 나머지가 0이면 인수다",
         "summary": "값이 0이 되는 수를 찾아 삼차 이상의 식을 인수분해하고, 고차방정식의 해까지 얻어요.",
         "estimatedMinutes": 12,
@@ -785,17 +785,17 @@
       },
       "sections": [
         {
-          "sectionId": "factor-theorem:explanation:v3",
+          "sectionId": "factor-theorem:explanation:v4",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "factor-theorem:explanation:text:v3",
+              "blockId": "factor-theorem:explanation:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "나머지정리에서 나머지가 $0$인 경우만 따로 떼어 볼게요.\n\n$f(a) = 0$이면 나머지가 $0$이니 $f(x) = (x-a)Q(x)$예요. 나머지 항이 아예 사라졌죠.\n\n곧 $x - a$가 $f(x)$의 인수라는 뜻이에요. 이것을 인수정리라고 해요.\n\n반대도 성립해요. $x-a$가 인수이면 $f(a) = 0$이에요.\n\n「값이 $0$이 되는 수」와 「인수」는 한 가지의 두 이름이에요.",
+                "text": "나머지정리에서 나머지가 $0$인 경우만 따로 떼어 볼게요.\n\n$f(a) = 0$이면 나머지가 $0$이니 $f(x) = (x-a)Q(x)$예요. 나머지 항이 아예 사라졌죠.\n\n곧 $x - a$가 $f(x)$의 인수라는 뜻이에요. 이것을 인수정리라고 해요.\n\n반대도 성립해요. $x-a$가 인수이면 $f(a) = 0$이에요.\n\n$f(a)=0$을 만족하는 수가 $a$일 때, 인수는 수 $a$ 자체가 아니라 식 $x-a$예요.",
                 "definitions": [
                   {
                     "conceptKey": "factor-theorem",
@@ -806,7 +806,7 @@
               }
             },
             {
-              "blockId": "factor-theorem:explanation:drawing:v3",
+              "blockId": "factor-theorem:explanation:drawing:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1085,12 +1085,12 @@
               }
             },
             {
-              "blockId": "factor-theorem:explanation:after:v3",
+              "blockId": "factor-theorem:explanation:after:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "이차식까지는 인수분해 공식으로 곱의 모양을 만들었어요. 삼차 이상에는 그런 공식이 없어요.\n\n대신 인수정리를 써요. $f(x) = x^3 - 7x + 6$이라면 작은 수를 하나씩 넣어 봐요.\n\n$f(1) = 1 - 7 + 6 = 0$이니 $x - 1$이 인수예요.\n\n찾았으면 $x-1$로 나눠요. 몫은 $x^2 + x - 6$이에요.\n\n이차식으로 내려왔으니 아는 방법으로 $(x+3)(x-2)$가 돼요. 모두 모으면 $f(x) = (x-1)(x+3)(x-2)$예요.",
+                "text": "앞에서는 이차식의 인수분해 공식을 배웠어요. 삼차 이상의 식에도 적용할 수 있는 공식이 있지만, 배운 공식을 바로 적용하기 어려운 식도 있어요.\n\n대신 인수정리를 써요. $f(x) = x^3 - 7x + 6$이라면 작은 수를 하나씩 넣어 봐요.\n\n$f(1) = 1 - 7 + 6 = 0$이니 $x - 1$이 인수예요.\n\n찾았으면 $x-1$로 나눠요. 몫은 $x^2 + x - 6$이에요.\n\n이차식으로 내려왔으니 아는 방법으로 $(x+3)(x-2)$가 돼요. 모두 모으면 $f(x) = (x-1)(x+3)(x-2)$예요.",
                 "definitions": [
                   {
                     "conceptKey": "factorization-formula",
@@ -1101,12 +1101,12 @@
               }
             },
             {
-              "blockId": "factor-theorem:explanation:guess:v3",
+              "blockId": "factor-theorem:explanation:guess:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "넣어 볼 수를 아무렇게나 고르지는 않아요. 상수항의 약수를 먼저 봐요.\n\n$6$의 약수인 $\\pm 1, \\pm 2, \\pm 3, \\pm 6$ 안에 답이 있어요.\n\n식을 곱의 모양으로 바꾸는 것이 인수분해예요. 그 상수항은 각 인수의 상수항을 곱한 값이니까요.\n\n고차방정식도 같은 방법으로 풀어요. $x^3 - 7x + 6 = 0$은 $(x-1)(x+3)(x-2) = 0$이에요.\n\n곱한 것 중 하나가 $0$이어야 곱이 $0$이 돼요. 그러니 해는 $1$, $-3$, $2$예요.",
+                "text": "넣어 볼 수를 아무렇게나 고르지는 않아요. 상수항의 약수를 먼저 봐요.\n\n이 식은 모든 계수가 정수이고 최고차항의 계수가 $1$이에요. 정수인 근이 있다면 상수항 $6$의 약수에 양수와 음수 부호를 붙인 $\\pm1,\\pm2,\\pm3,\\pm6$ 중에 있어요. 이 후보들을 대입해 $f(x)=0$인지 확인해요.\n\n식을 곱의 모양으로 바꾸는 것이 인수분해예요. 그 상수항은 각 인수의 상수항을 곱한 값이니까요.\n\n고차방정식도 같은 방법으로 풀어요. $x^3 - 7x + 6 = 0$은 $(x-1)(x+3)(x-2) = 0$이에요.\n\n곱한 것 중 하나가 $0$이어야 곱이 $0$이 돼요. 그러니 해는 $1$, $-3$, $2$예요.",
                 "definitions": [
                   {
                     "conceptKey": "factorization",
@@ -1119,29 +1119,29 @@
           ]
         },
         {
-          "sectionId": "factor-theorem:example:v3",
+          "sectionId": "factor-theorem:example:v4",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "factor-theorem:example:text:v3",
+              "blockId": "factor-theorem:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$f(x) = x^3 - 4x^2 + x + 6$을 인수분해해 볼게요.\n\n상수항 $6$의 약수부터 넣어 봐요. $f(1) = 1 - 4 + 1 + 6 = 4$이니 $1$은 아니에요.\n\n$f(-1) = -1 - 4 - 1 + 6 = 0$이에요. 찾았어요. $x + 1$이 인수예요.\n\n$x+1$로 나누면 몫은 $x^2 - 5x + 6$이에요.\n\n몫이 이차식이니 익숙한 방법으로 곱의 모양을 만들어요. 곱해서 $6$, 더해서 $-5$인 두 수는 $-2$와 $-3$이에요.\n\n$f(x) = (x+1)(x-2)(x-3)$이에요.\n\n확인은 상수항으로 빠르게 할 수 있어요. $1 \\times (-2) \\times (-3) = 6$이니 처음 식과 같아요.",
+                "text": "$f(x) = x^3 - 4x^2 + x + 6$을 인수분해해 볼게요.\n\n상수항 $6$의 약수부터 넣어 봐요. $f(1) = 1 - 4 + 1 + 6 = 4$이니 $1$은 아니에요.\n\n$f(-1) = -1 - 4 - 1 + 6 = 0$이에요. 찾았어요. $x + 1$이 인수예요.\n\n$x+1$로 나누면 몫은 $x^2 - 5x + 6$이에요.\n\n몫이 이차식이니 익숙한 방법으로 곱의 모양을 만들어요. 곱해서 $6$, 더해서 $-5$인 두 수는 $-2$와 $-3$이에요.\n\n$f(x) = (x+1)(x-2)(x-3)$이에요.\n\n확인하려면 $(x+1)(x-2)(x-3)$을 전개해요. 먼저 $(x-2)(x-3)=x^2-5x+6$이고, 여기에 $x+1$을 곱하면 $x^3-4x^2+x+6$으로 원래 식과 같아요. 상수항만 같다고 전체 식이 같은 것은 아니에요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "factor-theorem:practice:v3",
+          "sectionId": "factor-theorem:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "factor-theorem:practice:problems:v3",
+              "blockId": "factor-theorem:practice:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1158,12 +1158,12 @@
           ]
         },
         {
-          "sectionId": "factor-theorem:check:v3",
+          "sectionId": "factor-theorem:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "factor-theorem:check:problems:v3",
+              "blockId": "factor-theorem:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1179,17 +1179,17 @@
           ]
         },
         {
-          "sectionId": "factor-theorem:summary:v3",
+          "sectionId": "factor-theorem:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "factor-theorem:summary:text:v3",
+              "blockId": "factor-theorem:summary:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$f(a) = 0$이면 $x - a$가 인수이고, 거꾸로도 성립해요.\n\n삼차 이상의 식은 값이 $0$이 되는 수를 하나 찾아요. 그 인수로 나눠 차수를 낮추면 돼요.\n\n이차식까지 내려오면 아는 방법으로 끝내요. 넣어 볼 수는 상수항의 약수 중에서 골라요.\n\n고차방정식의 해도 같은 방법으로 얻어요. 인수분해해서 곱이 $0$이 되는 값을 읽으면 돼요.\n\n이 수업의 개념은 인수정리예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "$f(a) = 0$이면 $x - a$가 인수이고, 거꾸로도 성립해요.\n\n삼차 이상의 식은 값이 $0$이 되는 수를 하나 찾아요. 그 인수로 나눠 차수를 낮추면 돼요.\n\n이차식까지 내려오면 아는 방법으로 끝내요. 모든 계수가 정수이고 최고차항의 계수가 $1$이면, 정수인 근의 후보는 상수항의 약수에 양수와 음수 부호를 붙여 구해요.\n\n고차방정식의 해도 같은 방법으로 얻어요. 인수분해해서 곱이 $0$이 되는 값을 읽으면 돼요.\n\n이 수업의 개념은 인수정리예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "factor-theorem",

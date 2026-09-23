@@ -56,7 +56,7 @@
     {
       "public": {
         "lessonKey": "imaginary-unit",
-        "versionId": "imaginary-unit:v2",
+        "versionId": "imaginary-unit:v3",
         "title": "허수와 복소수: 제곱해서 음수가 되는 수를 만들다",
         "summary": "제곱해서 음수가 되는 수가 없다는 벽을 넘어, 수를 한 칸 넓혀요.",
         "estimatedMinutes": 12,
@@ -73,17 +73,17 @@
       },
       "sections": [
         {
-          "sectionId": "imaginary-unit:explanation:v2",
+          "sectionId": "imaginary-unit:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "imaginary-unit:explanation:text:v2",
+              "blockId": "imaginary-unit:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$x^2 = -1$을 풀어 볼까요. 제곱해서 음수가 되는 실수는 없어요. 그러니 해가 없어요.\n\n앞 과정에서도 같은 벽을 만났어요. 근의 개수를 가려내는 $b^2 - 4ac$를 판별식이라고 했죠. 판별식이 음수이면 「해가 없다」고 했어요.\n\n수학은 이런 벽을 만나면 수를 넓혀 왔어요. 빼기가 모자라 음수를 만들었어요. 나누기가 모자라 분수를, 제곱근이 모자라 무리수를 만들었고요.\n\n이번에도 같은 일을 해요.",
+                "text": "$x^2 = -1$을 풀어 볼까요. 제곱해서 음수가 되는 실수는 없어요. 그러니 해가 없어요.\n\n앞 과정에서도 같은 벽을 만났어요. 근의 개수를 가려내는 $b^2 - 4ac$를 판별식이라고 했죠. 판별식이 음수이면 「해가 없다」고 했어요.\n\n계산 결과를 나타내기 위해 수의 범위를 넓힐 수 있어요. $3-5=-2$는 자연수로 나타낼 수 없어 음수가 필요해요. $1\\div2=\\frac{1}{2}$은 정수로 나타낼 수 없어 분수가 필요하고요. 제곱해서 $2$가 되는 양수는 유리수로 나타낼 수 없는 $\\sqrt{2}$예요.\n\n이번에도 같은 일을 해요.",
                 "definitions": [
                   {
                     "conceptKey": "discriminant",
@@ -94,7 +94,7 @@
               }
             },
             {
-              "blockId": "imaginary-unit:explanation:unit:v2",
+              "blockId": "imaginary-unit:explanation:unit:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -110,12 +110,12 @@
               }
             },
             {
-              "blockId": "imaginary-unit:explanation:number:v2",
+              "blockId": "imaginary-unit:explanation:number:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "실수와 $i$를 섞어 $a + bi$ 형태로 쓴 수를 복소수라고 해요. $a$를 실수부, $b$를 허수부라고 불러요.\n\n$b$가 $0$이면 그냥 실수예요. 그러니 복소수는 실수를 밀어낸 것이 아니라 품은 것이에요.\n\n실수는 복소수 중에서 허수부가 $0$인 것들이에요.\n\n그림으로 보면 $i$를 곱하는 일은 사분의 일 바퀴 도는 일이에요. $1$에 $i$를 곱하면 수직선을 벗어나 위로 올라가요. 한 번 더 곱하면 $-1$에 닿고요.\n\n두 번 돌면 반대편이라는 것이 $i^2 = -1$이에요.",
+                "text": "실수와 $i$를 섞어 $a + bi$ 형태로 쓴 수를 복소수라고 해요. $a$를 실수부, $b$를 허수부라고 불러요.\n\n$b$가 $0$이면 그냥 실수예요. 예를 들어 $3=3+0i$이므로 실수 $3$도 복소수예요.\n\n실수는 복소수 중에서 허수부가 $0$인 것들이에요.\n\n그림으로 보면 $i$를 곱하는 일은 사분의 일 바퀴 도는 일이에요. $1$에 $i$를 곱하면 수직선을 벗어나 위로 올라가요. 한 번 더 곱하면 $-1$에 닿고요.\n\n두 번 돌면 반대편이라는 것이 $i^2 = -1$이에요.",
                 "definitions": [
                   {
                     "conceptKey": "complex-number",
@@ -126,7 +126,7 @@
               }
             },
             {
-              "blockId": "imaginary-unit:explanation:drawing:v2",
+              "blockId": "imaginary-unit:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -308,12 +308,12 @@
           ]
         },
         {
-          "sectionId": "imaginary-unit:example:v2",
+          "sectionId": "imaginary-unit:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "imaginary-unit:example:text:v2",
+              "blockId": "imaginary-unit:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -331,12 +331,12 @@
           ]
         },
         {
-          "sectionId": "imaginary-unit:practice:v2",
+          "sectionId": "imaginary-unit:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "imaginary-unit:practice:problems:v2",
+              "blockId": "imaginary-unit:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -353,12 +353,12 @@
           ]
         },
         {
-          "sectionId": "imaginary-unit:check:v2",
+          "sectionId": "imaginary-unit:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "imaginary-unit:check:problems:v2",
+              "blockId": "imaginary-unit:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -374,17 +374,17 @@
           ]
         },
         {
-          "sectionId": "imaginary-unit:summary:v2",
+          "sectionId": "imaginary-unit:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "imaginary-unit:summary:text:v2",
+              "blockId": "imaginary-unit:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "제곱해서 $-1$이 되는 수를 하나 두고 $i$라 부르기로 했어요. 그것이 허수단위예요.\n\n음수의 제곱근은 $\\sqrt{-9} = 3i$처럼 적어요.\n\n$a + bi$ 형태의 수가 복소수이고, 허수부가 $0$이면 실수예요. 복소수는 실수를 품고 있어요.\n\n$i$의 거듭제곱은 네 개마다 되풀이돼요. 지수를 $4$로 나눈 나머지만 보면 돼요.\n\n이 수업의 개념은 허수단위·복소수예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "제곱해서 $-1$이 되는 수를 하나 두고 $i$라 부르기로 했어요. 그것이 허수단위예요.\n\n음수의 제곱근은 $\\sqrt{-9} = 3i$처럼 적어요.\n\n$a + bi$ 형태의 수가 복소수이고, 허수부가 $0$이면 실수예요. 복소수는 실수를 포함해요.\n\n$i$의 거듭제곱은 네 개마다 되풀이돼요. 지수를 $4$로 나눈 나머지만 보면 돼요.\n\n이 수업의 개념은 허수단위·복소수예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "imaginary-unit",
@@ -815,7 +815,7 @@
     {
       "public": {
         "lessonKey": "root-coefficient",
-        "versionId": "root-coefficient:v2",
+        "versionId": "root-coefficient:v3",
         "title": "근과 계수의 관계: 풀지 않고 두 근의 합과 곱을 안다",
         "summary": "근의 공식을 한 번만 들여다보면 두 근의 합과 곱이 계수에서 바로 읽혀요.",
         "estimatedMinutes": 12,
@@ -831,17 +831,17 @@
       },
       "sections": [
         {
-          "sectionId": "root-coefficient:explanation:v2",
+          "sectionId": "root-coefficient:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "root-coefficient:explanation:text:v2",
+              "blockId": "root-coefficient:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$x^2 - 5x + 6 = 0$의 두 근은 $2$와 $3$이에요. 더하면 $5$, 곱하면 $6$이죠.\n\n$x$나 $x^2$ 앞에 붙은 수를 계수라고 해요. 이 식의 계수를 다시 보면 가운데가 $-5$, 끝이 $6$이에요.\n\n우연이 아니에요.",
+                "text": "$x^2 - 5x + 6 = 0$의 두 근은 $2$와 $3$이에요. 더하면 $5$, 곱하면 $6$이죠.\n\n$x$나 $x^2$ 앞에 붙은 수를 계수라고 해요. 이 식에서 $x$의 계수는 $-5$이고, 문자가 없는 상수항은 $6$이에요.\n\n우연이 아니에요.",
                 "definitions": [
                   {
                     "conceptKey": "coefficient",
@@ -852,12 +852,12 @@
               }
             },
             {
-              "blockId": "root-coefficient:explanation:why:v2",
+              "blockId": "root-coefficient:explanation:why:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "식을 곱의 모양으로 바꾸는 인수분해로 보면 당장 보여요.\n\n두 근이 $\\alpha$와 $\\beta$이면 식은 $(x - \\alpha)(x - \\beta) = 0$이에요.\n\n펼치면 $x^2 - (\\alpha + \\beta)x + \\alpha\\beta = 0$이고요.\n\n가운데는 합의 반대 부호, 끝은 곱이에요.",
+                "text": "식을 곱의 모양으로 바꾸는 인수분해로 보면 당장 보여요.\n\n두 근이 $\\alpha$와 $\\beta$이면 식은 $(x - \\alpha)(x - \\beta) = 0$이에요.\n\n펼치면 $x^2 - (\\alpha + \\beta)x + \\alpha\\beta = 0$이고요.\n\n$x$의 계수는 두 근의 합에 $-1$을 곱한 값이고, 상수항은 두 근의 곱이에요.",
                 "definitions": [
                   {
                     "conceptKey": "factorization",
@@ -868,7 +868,7 @@
               }
             },
             {
-              "blockId": "root-coefficient:explanation:rule:v2",
+              "blockId": "root-coefficient:explanation:rule:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -884,12 +884,12 @@
               }
             },
             {
-              "blockId": "root-coefficient:explanation:use:v2",
+              "blockId": "root-coefficient:explanation:use:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "쓸모가 분명해요. 두 근을 각각 구하지 않아도 돼요. 「두 근의 합」이나 「두 근의 곱」만 묻는 물음에 바로 답할 수 있어요.\n\n근이 지저분해도 합과 곱은 깔끔한 경우가 많거든요.\n\n$x^2 + x + 1 = 0$이 그래요. 판별식이 음수라 실수인 해가 없어요. 그래도 두 근의 합은 $-1$, 곱은 $1$이에요.\n\n그림으로 보면 두 근은 꼭짓점 좌우에 있어요. 꼭짓점을 지나는 세로선에서 똑같이 벌어져 있고요.",
+                "text": "쓸모가 분명해요. 두 근을 각각 구하지 않아도 돼요. 「두 근의 합」이나 「두 근의 곱」만 묻는 물음에 바로 답할 수 있어요.\n\n각 근에 근호나 $i$가 들어 있어도, 두 근의 합이나 곱은 정수가 될 수 있어요.\n\n$x^2 + x + 1 = 0$이 그래요. 판별식이 음수라 실수인 해가 없어요. 그래도 두 근의 합은 $-1$, 곱은 $1$이에요.\n\n실근이 서로 다른 두 개일 때는 그래프로도 확인할 수 있어요. 두 근은 포물선과 $x$축의 두 교점의 $x$좌표이며, 대칭축에서 같은 거리만큼 떨어져 있어요. 앞의 $x^2+x+1=0$은 실근이 없으므로 이 그래프 설명을 적용할 수 없어요.",
                 "definitions": [
                   {
                     "conceptKey": "discriminant",
@@ -900,7 +900,7 @@
               }
             },
             {
-              "blockId": "root-coefficient:explanation:drawing:v2",
+              "blockId": "root-coefficient:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1083,12 +1083,12 @@
           ]
         },
         {
-          "sectionId": "root-coefficient:example:v2",
+          "sectionId": "root-coefficient:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "root-coefficient:example:text:v2",
+              "blockId": "root-coefficient:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1098,7 +1098,7 @@
               }
             },
             {
-              "blockId": "root-coefficient:example:apply:v2",
+              "blockId": "root-coefficient:example:apply:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1116,12 +1116,12 @@
           ]
         },
         {
-          "sectionId": "root-coefficient:practice:v2",
+          "sectionId": "root-coefficient:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "root-coefficient:practice:problems:v2",
+              "blockId": "root-coefficient:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1138,12 +1138,12 @@
           ]
         },
         {
-          "sectionId": "root-coefficient:check:v2",
+          "sectionId": "root-coefficient:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "root-coefficient:check:problems:v2",
+              "blockId": "root-coefficient:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1159,12 +1159,12 @@
           ]
         },
         {
-          "sectionId": "root-coefficient:summary:v2",
+          "sectionId": "root-coefficient:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "root-coefficient:summary:text:v2",
+              "blockId": "root-coefficient:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
