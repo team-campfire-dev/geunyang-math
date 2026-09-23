@@ -46,9 +46,9 @@
     {
       "public": {
         "lessonKey": "counting-rule",
-        "versionId": "counting-rule:v1",
+        "versionId": "counting-rule:v2",
         "title": "합의 법칙과 곱의 법칙: 더할 때와 곱할 때",
-        "summary": "빠뜨리지도 겹치지도 않게 세는 두 가지 길을 가르고, 언제 더하고 언제 곱하는지 정해요.",
+        "summary": "빠뜨리지도 겹치지도 않게 세는 두 가지 길을 나누고, 언제 더하고 언제 곱하는지 정해요.",
         "estimatedMinutes": 12,
         "conceptKeys": [
           "counting-rule"
@@ -61,36 +61,78 @@
       },
       "sections": [
         {
-          "sectionId": "counting-rule:explanation:v1",
+          "sectionId": "counting-rule:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "counting-rule:explanation:text:v1",
+              "blockId": "counting-rule:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "세는 일에도 규칙이 있어요. 빠뜨리지도 않고 겹치지도 않게 세려면 두 가지만 가리면 됩니다. 「둘 중 하나를 고르는가」와 「둘 다 잇달아 고르는가」예요.\n\n버스로 가는 길이 $3$개, 지하철로 가는 길이 $2$개라고 해 볼게요. 버스를 타든 지하철을 타든 학교에 가면 되니 길은 $3 + 2 = 5$개예요. 둘 중 하나를 고르는 일이라 더해요. 이것을 합의 법칙이라고 해요.\n\n이번에는 윗옷 $2$벌과 바지 $3$벌이에요. 윗옷만 입고 나갈 수는 없죠. 둘 다 골라야 해요. 윗옷 하나마다 바지 고르는 방법이 $3$가지씩이니 $2 \\times 3 = 6$가지예요. 이것이 곱의 법칙이에요.\n\n가르는 기준은 「또는」과 「그리고」예요. 또는이면 더하고, 그리고면 곱해요.\n\n합의 법칙에는 조건이 하나 붙어요. 두 경우가 겹치지 않아야 해요. 겹치는 것이 있으면 두 번 센 만큼 빼 줘야 하고요.\n\n그림으로 그려 보면 헷갈릴 일이 줄어요. 갈래를 그리고 갈래마다 또 갈래를 그리면, 끝의 개수가 답이에요. 이렇게 그린 그림을 수형도라고 해요.\n\n세 단계 이상이어도 같아요. $1$부터 $5$까지 적힌 카드에서 한 장씩 세 번 뽑아 세 자리 수를 만든다면 (뽑은 카드를 다시 넣는다면) $5 \\times 5 \\times 5 = 125$가지예요.",
+                "text": "세는 일에도 규칙이 있어요. 일이 일어나는 방법이 몇 가지인지 센 값을 경우의 수라고 해요.\n\n빠뜨리지도 않고 겹치지도 않게 세려면 두 가지만 가리면 돼요.\n\n「둘 중 하나를 고르는가」와 「둘 다 잇달아 고르는가」예요.",
                 "definitions": [
                   {
-                    "conceptKey": "counting-rule",
-                    "surface": "합의 법칙",
+                    "conceptKey": "counting-cases",
+                    "surface": "경우의 수",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "counting-rule:explanation:drawing:v1",
+              "blockId": "counting-rule:explanation:rules:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "버스로 가는 길이 $3$개, 지하철로 가는 길이 $2$개라고 해 볼게요. 버스를 타든 지하철을 타든 학교에 가면 돼요.\n\n그러니 길은 $3 + 2 = 5$개예요. 둘 중 하나를 고르는 일이라 더해요.\n\n이번에는 윗옷 $2$벌과 바지 $3$벌이에요. 윗옷만 입고 나갈 수는 없죠. 둘 다 골라야 해요.\n\n윗옷 하나마다 바지 고르는 방법이 $3$가지씩이니 $2 \\times 3 = 6$가지예요.\n\n이 두 가지를 합의 법칙과 곱의 법칙이라고 해요. 나누는 기준은 「또는」과 「그리고」예요. 또는이면 더하고, 그리고면 곱해요.",
+                "definitions": [
+                  {
+                    "conceptKey": "counting-rule",
+                    "surface": "합의 법칙과 곱의 법칙",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "counting-rule:explanation:overlap:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "더하는 쪽에는 조건이 하나 붙어요. 두 경우가 겹치지 않아야 해요.\n\n겹치는 것이 있으면 두 번 센 만큼 빼 줘야 하고요.\n\n그림으로 그려 보면 헷갈릴 일이 줄어요. 가지를 그리고 가지마다 또 가지를 그려요.\n\n그러면 끝의 개수가 답이에요. 이렇게 그린 그림을 수형도라고 해요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "counting-rule:explanation:steps:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "세 단계 이상이어도 같아요. $1$부터 $5$까지 적힌 카드가 있어요. 한 장씩 세 번 뽑아 세 자리 수를 만든다고 해 볼게요.\n\n뽑은 카드를 다시 넣는다면 $5 \\times 5 \\times 5 = 125$가지예요.\n\n같은 수를 거듭 곱했으니 지수법칙에서 쓰던 $5^3$으로 적어도 돼요.",
+                "definitions": [
+                  {
+                    "conceptKey": "exponent-law",
+                    "surface": "지수법칙",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "counting-rule:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "윗옷 두 벌에서 갈라진 가지마다 바지 세 벌이 다시 갈라져 끝이 여섯 개가 되는 그림",
-                "caption": "갈래마다 또 갈라지니 곱하는 거예요",
+                "alt": "윗옷 두 벌에서 뻗은 가지마다 바지 세 벌이 다시 뻗어 끝이 여섯 개가 되는 그림",
+                "caption": "가지마다 또 나뉘니 곱하는 거예요",
                 "items": [
                   {
                     "kind": "ellipse",
@@ -489,29 +531,35 @@
           ]
         },
         {
-          "sectionId": "counting-rule:example:v1",
+          "sectionId": "counting-rule:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "counting-rule:example:text:v1",
+              "blockId": "counting-rule:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "동전 하나와 주사위 하나를 함께 던질 때 나올 수 있는 경우를 세어 볼게요.\n\n동전은 앞면과 뒷면으로 $2$가지, 주사위는 $1$부터 $6$까지 $6$가지예요.\n\n둘을 함께 던지니 둘 다 정해져야 한 경우가 돼요. 「그리고」이니 곱해요. $2 \\times 6 = 12$가지예요.\n\n이번에는 다른 물음이에요. 주사위 하나를 던질 때 $2$의 배수 또는 $5$ 이상이 나오는 경우는 몇 가지일까요.\n\n$2$의 배수는 $2, 4, 6$으로 $3$가지, $5$ 이상은 $5, 6$으로 $2$가지예요. 「또는」이니 더하고 싶지만, 잠깐요.\n\n$6$이 양쪽에 다 들어 있어요. 그냥 더하면 $6$을 두 번 세게 돼요.\n\n$3 + 2 - 1 = 4$가지예요. 겹치는 것을 한 번 빼 줘야 해요. 실제로 세어 보면 $2, 4, 5, 6$으로 네 가지가 맞아요.",
-                "definitions": []
+                "text": "동전 하나와 주사위 하나를 함께 던져 볼게요. 나올 수 있는 경우를 세는 거예요.\n\n동전은 앞면과 뒷면으로 $2$가지, 주사위는 $1$부터 $6$까지 $6$가지예요.\n\n둘을 함께 던지니 둘 다 정해져야 한 경우가 돼요. 「그리고」이니 곱해요. $2 \\times 6 = 12$가지예요.\n\n이번에는 다른 물음이에요. 주사위 하나를 던져 $2$의 배수 또는 $5$ 이상이 나오는 경우는 몇 가지일까요.\n\n$2$의 배수는 $2, 4, 6$으로 $3$가지, $5$ 이상은 $5, 6$으로 $2$가지예요.\n\n「또는」이니 덧셈으로 묶고 싶죠. 그런데 잠깐요.\n\n$6$이 양쪽에 다 들어 있어요. 그냥 더하면 $6$을 두 번 세게 돼요.\n\n겹치는 것을 한 번 빼 줘야 해요. $3 + 2 - 1 = 4$가지예요.\n\n실제로 세어 보면 $2, 4, 5, 6$으로 네 가지가 맞아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "addition",
+                    "surface": "덧셈",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "counting-rule:practice:v1",
+          "sectionId": "counting-rule:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "counting-rule:practice:problems:v1",
+              "blockId": "counting-rule:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -528,12 +576,12 @@
           ]
         },
         {
-          "sectionId": "counting-rule:check:v1",
+          "sectionId": "counting-rule:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "counting-rule:check:problems:v1",
+              "blockId": "counting-rule:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -549,18 +597,24 @@
           ]
         },
         {
-          "sectionId": "counting-rule:summary:v1",
+          "sectionId": "counting-rule:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "counting-rule:summary:text:v1",
+              "blockId": "counting-rule:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "「또는」이면 더하고 「그리고」면 곱해요. 이 한 줄이 세는 일의 뼈대예요.\n\n더할 때는 겹치는 것이 없는지 보세요. 있으면 두 번 센 만큼 빼요.\n\n잇달아 고르는 일은 단계마다의 가짓수를 곱해요. 단계가 셋이면 셋을 곱하고요.\n\n헷갈리면 수형도를 그려 보세요. 끝의 개수가 답이에요.",
-                "definitions": []
+                "text": "「또는」이면 더하고 「그리고」면 곱해요. 이 한 줄이 세는 일의 뼈대예요.\n\n더할 때는 겹치는 것이 없는지 보세요. 있으면 두 번 센 만큼 빼요.\n\n잇달아 고르는 일은 단계마다의 가짓수를 곱해요. 단계가 셋이면 셋을 곱하고요.\n\n헷갈리면 수형도를 그려 보세요. 끝의 개수가 답이에요.\n\n이 수업의 개념은 합의 법칙과 곱의 법칙이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "counting-rule",
+                    "surface": "합의 법칙과 곱의 법칙",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -578,7 +632,7 @@
     {
       "public": {
         "lessonKey": "permutation",
-        "versionId": "permutation:v1",
+        "versionId": "permutation:v2",
         "title": "순열: 순서가 있는 뽑기",
         "summary": "뽑아서 줄을 세우는 경우를 세고, 곱이 하나씩 줄어드는 이유를 봐요.",
         "estimatedMinutes": 12,
@@ -593,17 +647,49 @@
       },
       "sections": [
         {
-          "sectionId": "permutation:explanation:v1",
+          "sectionId": "permutation:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "permutation:explanation:text:v1",
+              "blockId": "permutation:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "세 사람 가, 나, 다가 세 자리에 앉는 방법은 몇 가지일까요.\n\n곱의 법칙으로 세면 돼요. 첫 사람은 세 자리 중 아무 데나 앉을 수 있으니 $3$가지. 그러면 남은 자리는 둘이니 둘째 사람은 $2$가지. 셋째 사람에게는 한 자리만 남으니 $1$가지.\n\n$3 \\times 2 \\times 1 = 6$가지예요. 고를 수 있는 것이 하나씩 줄어드는 것이 핵심이에요.\n\n이렇게 $1$부터 $n$까지 모두 곱한 것을 $n!$이라 쓰고 「$n$ 팩토리얼」이라고 읽어요. $3! = 6$이에요.\n\n다섯 사람 중 세 사람만 뽑아 줄을 세운다면요? 끝까지 곱하지 않고 세 번만 곱해요. $5 \\times 4 \\times 3 = 60$가지예요.\n\n이것을 순열이라 하고 $_5\\mathrm{P}_3$로 적어요. $n$개에서 $r$개를 뽑아 줄 세우는 것은 $n$부터 하나씩 줄여 가며 $r$번 곱하면 돼요.\n\n「줄을 세운다」는 말이 중요해요. 순열은 순서를 따져요. 가나다와 다나가를 서로 다른 경우로 세는 거예요. 자리에 앉히거나, 번호를 매기거나, 회장과 부회장을 뽑는 일이 모두 그래요.",
+                "text": "세 사람 가, 나, 다가 세 자리에 앉는 방법은 몇 가지일까요.\n\n잇달아 고르는 일이니 곱의 법칙으로 세면 돼요.\n\n첫 사람은 세 자리 중 아무 데나 앉을 수 있으니 $3$가지예요. 그러면 남은 자리는 둘이니 둘째 사람은 $2$가지고요.\n\n셋째 사람에게는 한 자리만 남으니 $1$가지예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "counting-rule",
+                    "surface": "곱의 법칙",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "permutation:explanation:factorial:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$3 \\times 2 \\times 1 = 6$가지예요. 경우의 수가 $6$인 거예요.\n\n고를 수 있는 것이 하나씩 줄어드는 것이 핵심이에요.\n\n이렇게 $1$부터 $n$까지 모두 곱한 것을 $n!$이라 써요. 「$n$ 팩토리얼」이라고 읽고요. $3! = 6$이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "counting-cases",
+                    "surface": "경우의 수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "permutation:explanation:pick:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "다섯 사람 중 세 사람만 뽑아 줄을 세운다면요? 끝까지 곱하지 않고 세 번만 곱해요. $5 \\times 4 \\times 3 = 60$가지예요.\n\n이렇게 뽑아서 줄 세우는 것을 순열이라 하고 $_5\\mathrm{P}_3$로 적어요.\n\n$n$개에서 $r$개를 뽑아 줄 세울 때는 $n$부터 하나씩 줄여 가며 $r$번 곱해요.",
                 "definitions": [
                   {
                     "conceptKey": "permutation",
@@ -614,7 +700,17 @@
               }
             },
             {
-              "blockId": "permutation:explanation:drawing:v1",
+              "blockId": "permutation:explanation:order:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "「줄을 세운다」는 말이 중요해요. 순열은 순서를 따져요.\n\n가나다와 다나가를 서로 다른 경우로 세는 거예요.\n\n자리에 앉히거나, 번호를 매기거나, 회장과 부회장을 뽑는 일이 모두 그래요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "permutation:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -852,29 +948,35 @@
           ]
         },
         {
-          "sectionId": "permutation:example:v1",
+          "sectionId": "permutation:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "permutation:example:text:v1",
+              "blockId": "permutation:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$1$, $2$, $3$, $4$가 적힌 카드 넉 장에서 두 장을 뽑아 두 자리 수를 만들어 볼게요. 몇 개나 만들 수 있을까요.\n\n십의 자리에 올 수 있는 카드는 넉 장 모두이니 $4$가지예요.\n\n일의 자리에는 남은 석 장 중 하나가 오니 $3$가지예요.\n\n$4 \\times 3 = 12$개예요. $_4\\mathrm{P}_2$를 계산한 것과 같아요.\n\n여기서 $12$와 $21$은 서로 다른 수죠. 순서가 다르면 다른 경우예요. 그래서 순열이에요.\n\n만약 카드를 뽑은 뒤 다시 넣는다면 답이 달라져요. 일의 자리에도 넉 장 모두 올 수 있으니 $4 \\times 4 = 16$개예요.\n\n다시 넣느냐 아니냐가 곱하는 수를 정해요. 문제를 읽을 때 꼭 확인하세요.",
-                "definitions": []
+                "text": "$1$, $2$, $3$, $4$가 적힌 카드 넉 장이 있어요. 두 장을 뽑아 두 자리 수를 만들어 볼게요.\n\n십의 자리에 올 수 있는 카드는 넉 장 모두이니 $4$가지예요.\n\n일의 자리에는 남은 석 장 중 하나가 오니 $3$가지예요.\n\n$4 \\times 3 = 12$개예요. $_4\\mathrm{P}_2$를 계산한 것과 같아요.\n\n여기서 $12$와 $21$은 서로 다른 수죠. 순서가 다르면 다른 경우예요. 그래서 순열이에요.\n\n만약 카드를 뽑은 뒤 다시 넣는다면 답이 달라져요. 일의 자리에도 넉 장 모두 올 수 있어요.\n\n$4 \\times 4 = 16$개예요. 같은 수를 거듭 곱했으니 지수법칙의 $4^2$이기도 해요.\n\n다시 넣느냐 아니냐가 곱하는 수를 정해요. 문제를 읽을 때 꼭 확인하세요.",
+                "definitions": [
+                  {
+                    "conceptKey": "exponent-law",
+                    "surface": "지수법칙",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "permutation:practice:v1",
+          "sectionId": "permutation:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "permutation:practice:problems:v1",
+              "blockId": "permutation:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -891,12 +993,12 @@
           ]
         },
         {
-          "sectionId": "permutation:check:v1",
+          "sectionId": "permutation:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "permutation:check:problems:v1",
+              "blockId": "permutation:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -912,18 +1014,24 @@
           ]
         },
         {
-          "sectionId": "permutation:summary:v1",
+          "sectionId": "permutation:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "permutation:summary:text:v1",
+              "blockId": "permutation:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "뽑아서 줄을 세우는 경우를 세는 것이 순열이에요. 순서가 다르면 다른 경우로 세요.\n\n$n$개를 모두 줄 세우면 $n$부터 $1$까지 곱한 $n!$이에요.\n\n$n$개에서 $r$개만 뽑아 줄 세우면 $n$부터 하나씩 줄여 $r$번 곱해요.\n\n뽑은 것을 다시 넣는지 아닌지에 따라 곱하는 수가 달라져요.",
-                "definitions": []
+                "text": "뽑아서 줄을 세우는 경우를 세는 것이 순열이에요. 순서가 다르면 다른 경우로 세요.\n\n$n$개를 모두 줄 세우면 $n$부터 $1$까지 곱한 $n!$이에요.\n\n$n$개에서 $r$개만 뽑아 줄 세우면 $n$부터 하나씩 줄여 $r$번 곱해요.\n\n뽑은 것을 다시 넣는지 아닌지에 따라 곱하는 수가 달라져요.\n\n이 수업의 개념은 순열이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "permutation",
+                    "surface": "순열",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -941,7 +1049,7 @@
     {
       "public": {
         "lessonKey": "combination",
-        "versionId": "combination:v1",
+        "versionId": "combination:v2",
         "title": "조합: 순서가 없는 뽑기",
         "summary": "뽑기만 하고 줄은 세우지 않는 경우를 세고, 순열에서 순서를 지워 구해요.",
         "estimatedMinutes": 12,
@@ -956,17 +1064,33 @@
       },
       "sections": [
         {
-          "sectionId": "combination:explanation:v1",
+          "sectionId": "combination:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "combination:explanation:text:v1",
+              "blockId": "combination:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$5$명 중 대표 $2$명을 뽑는다고 해 볼게요. 회장과 부회장이 아니라 그냥 대표 둘이에요.\n\n순열로 세면 $5 \\times 4 = 20$가지예요. 그런데 이 셈에는 「가나」와 「나가」가 따로 들어 있어요. 둘 다 가와 나가 뽑힌 같은 경우인데 말이죠.\n\n뽑힌 사람이 같으면 한 가지로 세야 해요. 순서를 따지지 않는 이런 뽑기를 조합이라고 해요.\n\n구하는 법은 간단해요. 순열로 센 다음, 한 덩어리 안에 몇 개가 들어 있는지로 나눠요. 둘을 줄 세우는 방법이 $2! = 2$가지이니 $20 \\div 2 = 10$가지예요.\n\n$n$개에서 $r$개를 뽑는 조합은 $_n\\mathrm{C}_r$로 적고, $_n\\mathrm{P}_r$을 $r!$로 나눈 값이에요.\n\n셋을 뽑는다면 $3! = 6$으로 나눠요. $5$명 중 $3$명을 뽑는 경우는 $(5 \\times 4 \\times 3) \\div 6 = 10$가지예요.\n\n$5$명 중 $3$명을 뽑는 것과 $2$명을 뽑는 것이 둘 다 $10$가지인 게 우연이 아니에요. $3$명을 고르는 일은 남길 $2$명을 고르는 일과 같으니까요.\n\n순열인지 조합인지는 한 가지만 물어보면 갈려요. 뽑힌 것들끼리 자리가 다른가요? 회장과 부회장이면 다르니 순열, 그냥 대표 둘이면 같으니 조합이에요.",
+                "text": "$5$명 중 대표 $2$명을 뽑는다고 해 볼게요. 회장과 부회장이 아니라 그냥 대표 둘이에요.\n\n순열로 세면 $5 \\times 4 = 20$가지예요.\n\n그런데 이 계산에는 「가나」와 「나가」가 따로 들어 있어요. 둘 다 가와 나가 뽑힌 같은 경우인데 말이죠.",
+                "definitions": [
+                  {
+                    "conceptKey": "permutation",
+                    "surface": "순열",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "combination:explanation:name:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "뽑힌 사람이 같으면 한 가지로 세야 해요.\n\n이렇게 순서를 따지지 않는 뽑기를 조합이라고 해요.",
                 "definitions": [
                   {
                     "conceptKey": "combination",
@@ -977,7 +1101,33 @@
               }
             },
             {
-              "blockId": "combination:explanation:drawing:v1",
+              "blockId": "combination:explanation:divide:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "구하는 법은 간단해요. 먼저 순서를 따져 세요. 그다음 한 덩어리에 몇 개가 들어 있는지로 나눠요.\n\n둘을 줄 세우는 방법이 $2! = 2$가지이니 $20 \\div 2 = 10$가지예요.\n\n$n$개에서 $r$개를 뽑는 조합은 $_n\\mathrm{C}_r$로 적어요. $_n\\mathrm{P}_r$을 $r!$로 나눈 값이고요.\n\n셋을 뽑는다면 $3! = 6$으로 나눠요. $5$명 중 $3$명을 뽑는 경우는 $(5 \\times 4 \\times 3) \\div 6 = 10$가지예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "combination:explanation:tell:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$5$명 중 $3$명을 뽑는 경우의 수와 $2$명을 뽑는 경우의 수가 같아요. 우연이 아니에요.\n\n$3$명을 고르는 일은 남길 $2$명을 고르는 일과 같으니까요.\n\n순열인지 조합인지는 한 가지만 물어보면 정해져요. 뽑힌 것들의 순서가 중요한가요?\n\n회장과 부회장이면 중요하니 순열이에요. 그냥 대표 둘이면 중요하지 않으니 조합이고요.",
+                "definitions": [
+                  {
+                    "conceptKey": "counting-cases",
+                    "surface": "경우의 수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "combination:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1306,12 +1456,12 @@
           ]
         },
         {
-          "sectionId": "combination:example:v1",
+          "sectionId": "combination:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "combination:example:text:v1",
+              "blockId": "combination:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1323,12 +1473,12 @@
           ]
         },
         {
-          "sectionId": "combination:practice:v1",
+          "sectionId": "combination:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "combination:practice:problems:v1",
+              "blockId": "combination:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1345,12 +1495,12 @@
           ]
         },
         {
-          "sectionId": "combination:check:v1",
+          "sectionId": "combination:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "combination:check:problems:v1",
+              "blockId": "combination:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1366,18 +1516,29 @@
           ]
         },
         {
-          "sectionId": "combination:summary:v1",
+          "sectionId": "combination:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "combination:summary:text:v1",
+              "blockId": "combination:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "뽑기만 하고 줄은 세우지 않는 것이 조합이에요.\n\n순열로 센 다음 뽑는 개수의 팩토리얼로 나누면 돼요. 순서만 다른 것들이 한 덩어리로 묶여요.\n\n$n$개에서 $r$개를 뽑는 것은 남길 $n-r$개를 고르는 것과 같아, 두 값이 늘 같아요.\n\n순열과 조합을 가르는 물음은 하나예요. 뽑힌 것들끼리 자리가 다른가요?",
-                "definitions": []
+                "text": "뽑기만 하고 줄은 세우지 않는 것이 조합이에요.\n\n순열로 센 다음 뽑는 개수의 팩토리얼로 나누면 돼요. 순서만 다른 것들이 한 덩어리로 묶여요.\n\n$n$개에서 $r$개를 뽑는 것은 남길 $n-r$개를 고르는 것과 같아요. 그래서 두 값이 늘 같아요.\n\n두 가지를 나누는 물음은 하나예요. 뽑힌 것들의 순서가 중요한가요?\n\n이 수업의 개념은 조합이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "combination",
+                    "surface": "조합",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "permutation",
+                    "surface": "순열",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
