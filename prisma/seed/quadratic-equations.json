@@ -4,7 +4,7 @@
     {
       "key": "quadratic-equations",
       "title": "이차방정식",
-      "summary": "곱이 0이 되는 자리를 찾아 풀고, 인수분해가 막히면 제곱의 꼴로 고쳐 풀고, 마지막에는 어떤 식에도 통하는 공식을 얻어요.",
+      "summary": "곱이 0이 되는 경우를 찾아 풀고, 인수분해가 막히면 제곱의 형태로 고쳐 풀고, 마지막에는 어떤 식에도 통하는 공식을 얻어요.",
       "order": 330,
       "track": "middle",
       "lessons": [
@@ -56,9 +56,9 @@
     {
       "public": {
         "lessonKey": "quadratic-equation",
-        "versionId": "quadratic-equation:v2",
+        "versionId": "quadratic-equation:v3",
         "title": "이차방정식과 그 해: 곱이 0이 될 때",
-        "summary": "차수가 둘인 방정식을 만나고, 곱이 0이 되는 자리를 찾아 인수분해로 풀어요.",
+        "summary": "차수가 둘인 방정식을 만나고, 곱이 0이 되는 경우를 찾아 인수분해로 풀어요.",
         "estimatedMinutes": 12,
         "conceptKeys": [
           "quadratic-equation",
@@ -73,21 +73,42 @@
       },
       "sections": [
         {
-          "sectionId": "quadratic-equation:explanation:v2",
+          "sectionId": "quadratic-equation:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-equation:explanation:text:v2",
+              "blockId": "quadratic-equation:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$2x + 1 = 0$처럼 문자의 차수가 $1$인 방정식을 일차방정식이라 했어요. $x^2 - x - 6 = 0$처럼 차수가 $2$인 방정식을 이차방정식이라고 해요.\n\n달라지는 것이 하나 있어요. 일차방정식의 해는 하나뿐이지만 이차방정식의 해는 보통 둘이에요. $x^2 = 9$를 보면 $x$는 $3$일 수도 $-3$일 수도 있죠.\n\n그럼 어떻게 풀까요. 이항해서 한쪽을 $0$으로 만드는 것까지는 같아요. 그다음이 새로워요.\n\n$0$에는 다른 수에 없는 성질이 있어요. 두 수를 곱해 $0$이 나왔다면 둘 중 적어도 하나는 $0$이에요. $5$가 나왔다면 두 수가 무엇인지 알 수 없지만, $0$이라면 범인이 좁혀져요. 이것을 곱이 0이 되는 성질이라고 불러요.\n\n그래서 왼쪽을 인수분해해 곱의 꼴로 만들어요. $x^2 - x - 6 = 0$은 $(x-3)(x+2) = 0$이 돼요.\n\n이제 $x - 3 = 0$이거나 $x + 2 = 0$이에요. 갈래마다 일차방정식이니 이미 풀 줄 알아요. $x = 3$ 또는 $x = -2$예요.\n\n두 갈래가 같은 답을 내놓을 때도 있어요. $(x-4)^2 = 0$은 양쪽 모두 $x = 4$예요. 이런 해를 중근이라고 불러요.",
+                "text": "$2x + 1 = 0$처럼 문자의 차수가 $1$인 방정식을 일차방정식이라 했어요. $x^2 - x - 6 = 0$처럼 차수가 $2$인 방정식은 이차방정식이라고 해요.\n\n달라지는 것이 하나 있어요. 일차방정식의 해는 하나뿐이에요. 그런데 이차방정식의 해는 보통 둘이에요. $x^2 = 9$를 보면 $x$는 $3$일 수도 $-3$일 수도 있죠.",
                 "definitions": [
+                  {
+                    "conceptKey": "linear-equation",
+                    "surface": "일차방정식",
+                    "scopeKind": "global"
+                  },
                   {
                     "conceptKey": "quadratic-equation",
                     "surface": "이차방정식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "quadratic-equation:explanation:text-2:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "그럼 어떻게 풀까요. 이항해서 한쪽을 $0$으로 만드는 것까지는 같아요. 그다음이 새로워요.\n\n$0$에는 다른 수에 없는 성질이 있어요. 두 수를 곱해 $0$이 나왔다면 둘 중 적어도 하나는 $0$이에요. $5$가 나왔다면 두 수가 무엇인지 알 수 없어요. 하지만 $0$이라면 경우가 확 좁혀져요. 이것을 곱이 0이 되는 성질이라고 불러요.",
+                "definitions": [
+                  {
+                    "conceptKey": "transposition",
+                    "surface": "이항",
                     "scopeKind": "global"
                   },
                   {
@@ -99,14 +120,14 @@
               }
             },
             {
-              "blockId": "quadratic-equation:explanation:drawing:v2",
+              "blockId": "quadratic-equation:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "곱이 0인 식이 두 갈래로 갈라져 각각 일차방정식이 되는 그림",
+                "alt": "곱이 0인 식이 두 경우로 나뉘어 각각 일차방정식이 되는 그림",
                 "caption": "곱이 0이면 둘 중 하나는 반드시 0이에요",
                 "items": [
                   {
@@ -262,7 +283,7 @@
                     ]
                   },
                   {
-                    "caption": "둘 중 하나가 $0$일 때뿐이에요. 그래서 갈래가 둘로 나뉘어요.",
+                    "caption": "둘 중 하나가 $0$일 때뿐이에요. 그래서 경우가 둘로 나뉘어요.",
                     "changes": [
                       {
                         "id": "box1",
@@ -309,7 +330,7 @@
                     ]
                   },
                   {
-                    "caption": "갈래마다 일차방정식이라 이미 풀 줄 알아요. 그래서 해가 둘이에요.",
+                    "caption": "경우마다 일차방정식이라 이미 풀 줄 알아요. 그래서 해가 둘이에요.",
                     "changes": [
                       {
                         "id": "box1",
@@ -358,33 +379,55 @@
                 ],
                 "frameMs": 1700
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "quadratic-equation:example:v2",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "quadratic-equation:example:text:v2",
+              "blockId": "quadratic-equation:explanation:text-3:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$x^2 = 5x$를 풀어 볼게요.\n\n양변을 $x$로 나누고 싶어지지만, 그러면 안 돼요. $x$가 $0$일 수도 있는데 $0$으로 나눌 수는 없으니까요. 실제로 나누면 $x = 5$만 남고 해 하나를 잃어버려요.\n\n올바른 길은 한쪽을 $0$으로 만드는 거예요. $x^2 - 5x = 0$.\n\n왼쪽을 인수분해해요. 공통인수 $x$를 빼내면 $x(x - 5) = 0$이에요.\n\n곱이 $0$이니 $x = 0$이거나 $x - 5 = 0$이에요. 해는 $x = 0$과 $x = 5$, 둘이에요.\n\n확인은 넣어 보는 거예요. $x = 0$이면 양변이 $0$, $x = 5$이면 양변이 $25$. 둘 다 맞아요.",
-                "definitions": []
+                "text": "그래서 왼쪽을 인수분해해 곱의 형태로 만들어요. $x^2 - x - 6 = 0$은 $(x-3)(x+2) = 0$이 돼요.\n\n이제 $x - 3 = 0$이거나 $x + 2 = 0$이에요. 경우마다 일차방정식이니 이미 풀 줄 알아요. $x = 3$ 또는 $x = -2$예요.\n\n두 경우가 같은 답을 내놓을 때도 있어요. $(x-4)^2 = 0$은 양쪽 모두 $x = 4$예요. 이런 해를 중근이라고 불러요.",
+                "definitions": [
+                  {
+                    "conceptKey": "factorization",
+                    "surface": "인수분해",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "quadratic-equation:practice:v2",
+          "sectionId": "quadratic-equation:example:v3",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "quadratic-equation:example:text:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$x^2 = 5x$를 풀어 볼게요.\n\n양변을 $x$로 나누고 싶어지지만 그러면 안 돼요. $x$가 $0$일 수도 있는데 $0$으로 나눌 수는 없으니까요. 실제로 나누면 $x = 5$만 남고 해 하나를 잃어버려요.\n\n올바른 길은 한쪽을 $0$으로 만드는 거예요. $x^2 - 5x = 0$.\n\n왼쪽을 인수분해해요. 공통인수 $x$를 빼내면 $x(x - 5) = 0$이에요.\n\n곱이 $0$이니 $x = 0$이거나 $x - 5 = 0$이에요. 해는 $x = 0$과 $x = 5$, 둘이에요.\n\n확인은 넣어 보는 거예요. $x = 0$이면 양변이 $0$, $x = 5$이면 양변이 $25$. 둘 다 맞아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "factorization",
+                    "surface": "인수분해",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "quadratic-equation:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-equation:practice:problems:v2",
+              "blockId": "quadratic-equation:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -401,12 +444,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-equation:check:v2",
+          "sectionId": "quadratic-equation:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-equation:check:problems:v2",
+              "blockId": "quadratic-equation:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -422,18 +465,39 @@
           ]
         },
         {
-          "sectionId": "quadratic-equation:summary:v2",
+          "sectionId": "quadratic-equation:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-equation:summary:text:v2",
+              "blockId": "quadratic-equation:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "차수가 둘인 방정식이 이차방정식이고, 해는 보통 두 개예요.\n\n푸는 순서는 이항해서 한쪽을 $0$으로, 그다음 인수분해해서 곱의 꼴로예요.\n\n곱이 $0$이면 둘 중 하나는 $0$이라는 성질이 답을 갈래로 나눠 줘요. 갈래마다 일차방정식이에요.\n\n양변을 문자로 나누지 마세요. 그 문자가 $0$인 해를 잃어버려요.",
-                "definitions": []
+                "text": "차수가 둘인 방정식이 이차방정식이에요. 해는 보통 두 개고요.\n\n푸는 순서는 이래요. 이항해서 한쪽을 $0$으로 만들고, 인수분해해서 곱의 형태로 바꿔요.\n\n곱이 0이 되는 성질이 답을 두 경우로 나눠 줘요. 경우마다 일차방정식이에요.\n\n양변을 문자로 나누지 마세요. 그 문자가 $0$인 해를 잃어버려요.",
+                "definitions": [
+                  {
+                    "conceptKey": "quadratic-equation",
+                    "surface": "이차방정식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "transposition",
+                    "surface": "이항",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "factorization",
+                    "surface": "인수분해",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "zero-product",
+                    "surface": "곱이 0이 되는 성질",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -451,9 +515,9 @@
     {
       "public": {
         "lessonKey": "completing-square",
-        "versionId": "completing-square:v2",
+        "versionId": "completing-square:v3",
         "title": "제곱근으로 풀기와 완전제곱식 만들기",
-        "summary": "인수분해가 되지 않는 이차방정식을 제곱의 꼴로 고쳐, 제곱근으로 풀어요.",
+        "summary": "인수분해가 되지 않는 이차방정식을 제곱의 형태로 고쳐, 제곱근으로 풀어요.",
         "estimatedMinutes": 12,
         "conceptKeys": [
           "completing-square"
@@ -467,18 +531,23 @@
       },
       "sections": [
         {
-          "sectionId": "completing-square:explanation:v2",
+          "sectionId": "completing-square:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "completing-square:explanation:text:v2",
+              "blockId": "completing-square:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$x^2 = 9$는 인수분해하지 않아도 풀려요. 제곱해서 $9$가 되는 수를 찾으면 되니 $x = \\pm 3$이에요.\n\n$(x-1)^2 = 16$도 같아요. 괄호 안을 하나의 덩어리로 보면 제곱해서 $16$이 되는 수이니 $x - 1 = \\pm 4$이고, $x = 5$ 또는 $x = -3$이에요.\n\n그러니 이차방정식을 「무엇의 제곱 = 어떤 수」 꼴로만 만들 수 있으면 제곱근으로 바로 풀 수 있어요. 그 꼴로 고치는 것을 완전제곱식 만들기라고 해요.\n\n$x^2 + 6x$를 볼게요. 여기에 무엇을 더해야 제곱이 될까요. $(x+a)^2 = x^2 + 2ax + a^2$이니 $2a = 6$에서 $a = 3$, 더할 것은 $a^2 = 9$예요.\n\n규칙으로 적으면 「$x$ 계수의 절반을 제곱한 값」이에요. $6$의 절반은 $3$, 제곱하면 $9$.\n\n그림으로 보면 왜 절반인지 보여요. $6x$짜리 띠를 $3x$ 둘로 갈라 두 변에 붙이면 모서리 한 칸이 비는데, 그 칸이 $3 \\times 3 = 9$예요.\n\n물론 마음대로 더할 수는 없어요. 방정식이니 더한 만큼 다른 쪽에도 더하거나, 같은 줄에서 다시 빼 줘야 해요.",
+                "text": "$x^2 = 9$는 인수분해하지 않아도 풀려요. 제곱해서 $9$가 되는 수를 찾으면 되니 $x = \\pm 3$이에요.\n\n$(x-1)^2 = 16$도 같아요. 괄호 안을 하나의 덩어리로 보세요. 제곱해서 $16$이 되는 수이니 $x - 1 = \\pm 4$예요. 그래서 $x = 5$ 또는 $x = -3$이에요.\n\n그러니 이차방정식을 「무엇의 제곱 = 어떤 수」 형태로만 만들면 돼요. 그러면 제곱근으로 바로 풀 수 있어요. 그 형태로 고치는 것을 완전제곱식 만들기라고 해요.",
                 "definitions": [
+                  {
+                    "conceptKey": "square-root",
+                    "surface": "제곱근",
+                    "scopeKind": "global"
+                  },
                   {
                     "conceptKey": "completing-square",
                     "surface": "완전제곱식 만들기",
@@ -488,15 +557,31 @@
               }
             },
             {
-              "blockId": "completing-square:explanation:drawing:v2",
+              "blockId": "completing-square:explanation:text-2:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$x^2 + 6x$를 볼게요. 여기에 무엇을 더해야 제곱이 될까요. $(x+a)^2 = x^2 + 2ax + a^2$이니 $2a = 6$에서 $a = 3$이에요. 더할 것은 $a^2 = 9$예요.\n\n규칙으로 적으면 「$x$ 계수의 절반을 제곱한 값」이에요. $6$의 절반은 $3$, 제곱하면 $9$.\n\n그림으로 보면 왜 절반인지 보여요. $6x$짜리 띠를 $3x$ 둘로 나눠 두 변에 붙여요. 그러면 모서리 한 칸이 비는데, 그 칸이 $3 \\times 3 = 9$예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "coefficient",
+                    "surface": "계수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "completing-square:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "6x짜리 띠를 반으로 갈라 한 조각을 돌려 아래에 붙이니 모서리 한 칸이 비는 그림",
-                "caption": "반으로 갈라 두 변에 붙이면 모서리 한 칸이 비어요",
+                "alt": "6x짜리 띠를 반으로 나눠 한 조각을 돌려 아래에 붙이니 모서리 한 칸이 비는 그림",
+                "caption": "반으로 나눠 두 변에 붙이면 모서리 한 칸이 비어요",
                 "items": [
                   {
                     "kind": "text",
@@ -634,7 +719,7 @@
                     ]
                   },
                   {
-                    "caption": "띠를 반으로 갈라 한 조각을 돌려 아래에 붙여요. 각각 $3x$예요.",
+                    "caption": "띠를 반으로 나눠 한 조각을 돌려 아래에 붙여요. 각각 $3x$예요.",
                     "changes": [
                       {
                         "id": "half2",
@@ -700,33 +785,60 @@
                 ],
                 "frameMs": 1800
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "completing-square:example:v2",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "completing-square:example:text:v2",
+              "blockId": "completing-square:explanation:text-3:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$x^2 - 4x - 1 = 0$을 풀어 볼게요. 곱해서 $-1$, 더해서 $-4$인 정수는 없으니 인수분해로는 막혀요.\n\n먼저 상수항을 오른쪽으로 옮겨요. $x^2 - 4x = 1$.\n\n왼쪽을 제곱으로 만들려면 $x$ 계수 $-4$의 절반인 $-2$를 제곱한 $4$를 더해야 해요. 양변에 더해요.\n\n$x^2 - 4x + 4 = 1 + 4$, 곧 $(x-2)^2 = 5$예요.\n\n이제 제곱근으로 풀어요. $x - 2 = \\pm\\sqrt{5}$이니 $x = 2 \\pm \\sqrt{5}$예요.\n\n앞 과정에서 배운 근호가 여기서 쓰여요. 답이 딱 떨어지지 않는 것이 이상한 게 아니라, 이차방정식의 해는 원래 무리수인 경우가 많아요.",
-                "definitions": []
+                "text": "물론 마음대로 더할 수는 없어요. 등식의 성질을 지켜야 하니까요. 한쪽에 더한 만큼 다른 쪽에도 더하거나, 같은 줄에서 다시 빼 주세요.",
+                "definitions": [
+                  {
+                    "conceptKey": "equality-property",
+                    "surface": "등식의 성질",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "completing-square:practice:v2",
+          "sectionId": "completing-square:example:v3",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "completing-square:example:text:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 4x - 1 = 0$을 풀어 볼게요. 곱해서 $-1$, 더해서 $-4$인 정수는 없어요. 그래서 인수분해로는 막혀요.\n\n먼저 상수항을 오른쪽으로 옮겨요. $x^2 - 4x = 1$.\n\n왼쪽을 제곱으로 만들려면 무엇을 더할까요. $x$ 계수 $-4$의 절반인 $-2$를 제곱한 $4$예요. 양변에 더해요.\n\n$x^2 - 4x + 4 = 1 + 4$, 곧 $(x-2)^2 = 5$예요.\n\n이제 제곱근으로 풀어요. $x - 2 = \\pm\\sqrt{5}$이니 $x = 2 \\pm \\sqrt{5}$예요.\n\n앞 과정에서 배운 근호가 여기서 쓰여요. 답이 딱 떨어지지 않아도 이상한 게 아니에요. 이차방정식의 해는 원래 무리수인 경우가 많아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "square-root",
+                    "surface": "제곱근",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "irrational-number",
+                    "surface": "무리수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "completing-square:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "completing-square:practice:problems:v2",
+              "blockId": "completing-square:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -743,12 +855,12 @@
           ]
         },
         {
-          "sectionId": "completing-square:check:v2",
+          "sectionId": "completing-square:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "completing-square:check:problems:v2",
+              "blockId": "completing-square:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -764,18 +876,34 @@
           ]
         },
         {
-          "sectionId": "completing-square:summary:v2",
+          "sectionId": "completing-square:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "completing-square:summary:text:v2",
+              "blockId": "completing-square:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "「무엇의 제곱 = 어떤 수」 꼴이면 제곱근으로 바로 풀려요. 부호가 두 개라는 것만 잊지 마세요.\n\n그 꼴로 만들려면 $x$ 계수의 절반을 제곱한 값을 더해요. 그림에서 모서리 한 칸을 채우는 일이에요.\n\n방정식에서는 한쪽에 더한 만큼 다른 쪽에도 더해야 해요.\n\n이 과정을 문자 $a$, $b$, $c$로 한 번에 해 두면 어떤 이차방정식에도 쓰는 공식이 나와요. 다음 수업이에요.",
-                "definitions": []
+                "text": "「무엇의 제곱 = 어떤 수」 형태이면 제곱근으로 바로 풀려요. 부호가 두 개라는 것만 잊지 마세요.\n\n그 형태로 만들려면 $x$ 계수의 절반을 제곱한 값을 더해요. 그림에서 모서리 한 칸을 채우는 일이에요.\n\n방정식에서는 한쪽에 더한 만큼 다른 쪽에도 더해야 해요.\n\n이 과정을 문자 $a$, $b$, $c$로 한 번에 해 두면 어떻게 될까요. 어떤 이차방정식에도 쓰는 근의 공식이 나와요. 다음 수업이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "square-root",
+                    "surface": "제곱근",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "coefficient",
+                    "surface": "계수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "quadratic-formula",
+                    "surface": "근의 공식",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -793,7 +921,7 @@
     {
       "public": {
         "lessonKey": "quadratic-formula",
-        "versionId": "quadratic-formula:v2",
+        "versionId": "quadratic-formula:v3",
         "title": "근의 공식: 어떤 이차방정식에도 통하는 하나의 길",
         "summary": "완전제곱식 만들기를 문자로 한 번에 해 두고, 계수만 넣으면 풀리는 공식으로 써요.",
         "estimatedMinutes": 12,
@@ -810,33 +938,33 @@
       },
       "sections": [
         {
-          "sectionId": "quadratic-formula:explanation:v2",
+          "sectionId": "quadratic-formula:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-formula:explanation:text:v2",
+              "blockId": "quadratic-formula:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "앞 수업의 완전제곱식 만들기는 어떤 이차방정식에도 통해요. 그렇다면 매번 하지 말고 $ax^2 + bx + c = 0$에 대해 한 번만 해 두면 되겠죠. 그 결과가 근의 공식이에요.\n\n$x = \\dfrac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$\n\n쓰는 법은 간단해요. 한쪽을 $0$으로 만들고, $a$와 $b$와 $c$를 부호까지 그대로 읽어 넣어요. $2x^2 - 7x + 3 = 0$이면 $a = 2$, $b = -7$, $c = 3$이에요. $b$를 $7$로 읽는 실수가 가장 흔해요.\n\n근호 안의 $b^2 - 4ac$는 특별한 이름을 가지고 있어요. 판별식이라고 해요. 이 값 하나로 해가 몇 개인지 미리 알 수 있거든요.\n\n양수이면 근호가 서로 다른 두 값을 내놓으니 해가 둘이에요. $0$이면 $\\pm$가 붙어도 같은 값이니 해가 하나, 곧 중근이에요.\n\n음수이면 어떨까요. 제곱해서 음수가 되는 수는 없다고 배웠죠. 그래서 이 방정식을 만족하는 실수가 없어요. 해가 없다고 말해요.\n\n인수분해가 되는 식에도 공식을 쓸 수 있어요. 다만 인수분해가 눈에 보인다면 그쪽이 훨씬 빨라요. 공식은 눈에 보이지 않을 때 꺼내는 길이에요.",
+                "text": "앞 수업의 완전제곱식 만들기는 어떤 이차방정식에도 통해요. 그렇다면 매번 하지 말고 한 번만 해 두면 되겠죠. $ax^2 + bx + c = 0$에 대해 미리 해 둔 결과가 근의 공식이에요.\n\n$x = \\dfrac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$\n\n쓰는 법은 간단해요. 한쪽을 $0$으로 만들고 $a$와 $b$와 $c$를 부호까지 그대로 읽어 넣어요. $2x^2 - 7x + 3 = 0$이면 $a = 2$, $b = -7$, $c = 3$이에요. $b$를 $7$로 읽는 실수가 가장 흔해요.",
                 "definitions": [
                   {
-                    "conceptKey": "quadratic-formula",
-                    "surface": "근의 공식",
+                    "conceptKey": "completing-square",
+                    "surface": "완전제곱식 만들기",
                     "scopeKind": "global"
                   },
                   {
-                    "conceptKey": "discriminant",
-                    "surface": "판별식",
+                    "conceptKey": "quadratic-formula",
+                    "surface": "근의 공식",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "quadratic-formula:explanation:drawing:v2",
+              "blockId": "quadratic-formula:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -977,7 +1105,7 @@
                     ]
                   },
                   {
-                    "caption": "공식의 $a$, $b$, $c$ 자리에 그대로 넣어요.",
+                    "caption": "공식의 $a$, $b$, $c$ 빈칸에 그대로 넣어요.",
                     "changes": [
                       {
                         "id": "law",
@@ -1014,7 +1142,7 @@
                     ]
                   },
                   {
-                    "caption": "계산하면 해가 나와요. 인수분해가 보이지 않을 때 꺼내는 길이에요.",
+                    "caption": "계산하면 해가 나와요. 인수분해가 보이지 않을 때 꺼내는 방법이에요.",
                     "changes": [
                       {
                         "id": "law",
@@ -1059,33 +1187,76 @@
                 ],
                 "frameMs": 1800
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "quadratic-formula:example:v2",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "quadratic-formula:example:text:v2",
+              "blockId": "quadratic-formula:explanation:text-2:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$x^2 - 5x + 6 = 0$을 공식으로 풀어 볼게요.\n\n$a = 1$, $b = -5$, $c = 6$이에요.\n\n판별식부터 구해요. $b^2 - 4ac = (-5)^2 - 4 \\times 1 \\times 6 = 25 - 24 = 1$이에요. 양수이니 해가 둘이겠네요.\n\n공식에 넣어요. $x = \\dfrac{5 \\pm \\sqrt{1}}{2} = \\dfrac{5 \\pm 1}{2}$.\n\n$\\dfrac{6}{2} = 3$과 $\\dfrac{4}{2} = 2$, 곧 $x = 3$ 또는 $x = 2$예요.\n\n이 식은 사실 $(x-2)(x-3) = 0$으로 인수분해돼요. 같은 답에 닿았죠. 보이면 인수분해가 빠르고, 보이지 않으면 공식이 있어요.\n\n$-b$에서 부호를 한 번 더 뒤집는다는 것만 조심하세요. $b = -5$이니 $-b = 5$예요.",
-                "definitions": []
+                "text": "근호 안의 $b^2 - 4ac$는 특별한 이름을 가지고 있어요. 판별식이라고 해요. 이 값 하나로 해가 몇 개인지 미리 알 수 있거든요.\n\n양수이면 근호가 서로 다른 두 값을 내놓아요. 그래서 해가 둘이에요. $0$이면 $\\pm$가 붙어도 같은 값이니 해가 하나, 곧 중근이에요.\n\n음수이면 어떨까요. 제곱해서 음수가 되는 수는 없다고 배웠죠. 그래서 이 방정식을 만족하는 실수가 없어요. 해가 없다고 말해요.",
+                "definitions": [
+                  {
+                    "conceptKey": "discriminant",
+                    "surface": "판별식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "quadratic-formula:explanation:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "인수분해가 되는 식에도 공식을 쓸 수 있어요. 다만 인수분해가 눈에 보인다면 그쪽이 훨씬 빨라요. 공식은 눈에 보이지 않을 때 꺼내는 방법이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "factorization",
+                    "surface": "인수분해",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "quadratic-formula:practice:v2",
+          "sectionId": "quadratic-formula:example:v3",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "quadratic-formula:example:text:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 5x + 6 = 0$을 근의 공식으로 풀어 볼게요.\n\n$a = 1$, $b = -5$, $c = 6$이에요.\n\n판별식부터 구해요. $b^2 - 4ac = (-5)^2 - 4 \\times 1 \\times 6 = 25 - 24 = 1$이에요. 양수이니 해가 둘이겠네요.\n\n공식에 넣어요. $x = \\dfrac{5 \\pm \\sqrt{1}}{2} = \\dfrac{5 \\pm 1}{2}$.\n\n$\\dfrac{6}{2} = 3$과 $\\dfrac{4}{2} = 2$, 곧 $x = 3$ 또는 $x = 2$예요.\n\n이 식은 사실 $(x-2)(x-3) = 0$으로 인수분해돼요. 같은 답에 닿았죠. 보이면 인수분해가 빠르고, 보이지 않으면 공식이 있어요.\n\n$-b$에서 부호를 한 번 더 뒤집는다는 것만 조심하세요. $b = -5$이니 $-b = 5$예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "quadratic-formula",
+                    "surface": "근의 공식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "discriminant",
+                    "surface": "판별식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "quadratic-formula:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-formula:practice:problems:v2",
+              "blockId": "quadratic-formula:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1102,12 +1273,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-formula:check:v2",
+          "sectionId": "quadratic-formula:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-formula:check:problems:v2",
+              "blockId": "quadratic-formula:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1123,18 +1294,39 @@
           ]
         },
         {
-          "sectionId": "quadratic-formula:summary:v2",
+          "sectionId": "quadratic-formula:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-formula:summary:text:v2",
+              "blockId": "quadratic-formula:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "근의 공식은 완전제곱식 만들기를 문자로 한 번에 해 둔 것이에요. 계수 셋을 부호까지 읽어 넣으면 돼요.\n\n근호 안의 $b^2 - 4ac$가 판별식이고, 양수면 해가 둘, $0$이면 중근, 음수면 해가 없어요.\n\n인수분해가 보이면 그쪽이 빠르고, 보이지 않을 때 공식을 꺼내요.\n\n여기까지가 이차방정식이에요. 다음 과정에서는 같은 식을 그래프로 보며 이 해가 어디에 있는지 눈으로 확인해요.",
-                "definitions": []
+                "text": "근의 공식은 완전제곱식 만들기를 문자로 한 번에 해 둔 것이에요. 계수 셋을 부호까지 읽어 넣으면 돼요.\n\n근호 안의 $b^2 - 4ac$가 판별식이에요. 양수면 해가 둘, $0$이면 중근, 음수면 해가 없어요.\n\n인수분해가 보이면 그쪽이 빠르고, 보이지 않을 때 공식을 꺼내요.\n\n다음 과정에서는 같은 식을 그래프로 봐요. 이차함수의 그래프에서 이 해가 어디에 있는지 눈으로 확인해요.",
+                "definitions": [
+                  {
+                    "conceptKey": "quadratic-formula",
+                    "surface": "근의 공식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "completing-square",
+                    "surface": "완전제곱식 만들기",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "discriminant",
+                    "surface": "판별식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "quadratic-function",
+                    "surface": "이차함수",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]

@@ -46,7 +46,7 @@
     {
       "public": {
         "lessonKey": "representative-value",
-        "versionId": "representative-value:v1",
+        "versionId": "representative-value:v2",
         "title": "대푯값: 하나의 수로 대신 말하기",
         "summary": "평균과 중앙값과 최빈값이 각각 무엇을 대신하는지, 언제 어느 것을 골라야 하는지 봐요.",
         "estimatedMinutes": 11,
@@ -61,17 +61,17 @@
       },
       "sections": [
         {
-          "sectionId": "representative-value:explanation:v1",
+          "sectionId": "representative-value:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "representative-value:explanation:text:v1",
+              "blockId": "representative-value:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "자료 전체를 하나의 수로 대신 말하고 싶을 때 쓰는 값을 대푯값이라 해요. 세 가지가 있어요.\n\n평균은 모두 더해 개수로 나눈 값이에요. 높은 데를 덜어 낮은 데를 메워 모두 같은 높이로 폈을 때의 그 높이라고 생각하면 좋아요.\n\n평균은 모든 값을 반영하지만, 그래서 아주 크거나 아주 작은 값 하나에 크게 끌려가요. $1$, $2$, $3$, $4$, $100$의 평균은 $22$인데, 이 수로 다섯을 대신 말하기는 어렵죠.\n\n중앙값은 크기 순으로 늘어놓았을 때 한가운데 있는 값이에요. 자료가 짝수 개면 가운데 두 값의 평균이고요.\n\n방금 그 자료의 중앙값은 $3$이에요. 극단적인 값에 끌려가지 않아요. 집값이나 소득처럼 한쪽으로 크게 치우친 자료에서 중앙값을 쓰는 이유예요.\n\n최빈값은 가장 자주 나온 값이에요. 신발 크기나 좋아하는 색처럼 수로 더할 수 없는 자료에도 쓸 수 있어요. 가장 많이 팔린 치수를 알고 싶을 때 평균 치수는 쓸모가 없으니까요.\n\n최빈값은 여럿일 수도 있고 없을 수도 있어요. 모두 한 번씩 나왔다면 최빈값이 없어요.\n\n셋 중 무엇을 고를지는 자료가 정해요. 고르게 퍼져 있으면 평균, 한쪽으로 치우쳐 있으면 중앙값, 수가 아닌 자료면 최빈값이에요.",
+                "text": "자료 전체를 하나의 수로 대신 말하고 싶을 때가 있어요. 그때 쓰는 값이 대푯값이에요. 세 가지가 있어요.\n\n평균은 모두 더해 개수로 나눈 값이에요. 높은 데를 덜어 낮은 데를 메워 보세요. 모두 같은 높이로 폈을 때의 그 높이가 평균이에요.\n\n평균은 모든 값을 반영해요. 그래서 아주 크거나 아주 작은 값 하나에 크게 끌려가요. $1$, $2$, $3$, $4$, $100$의 평균은 $22$예요. 이 수로 다섯을 대신 말하기는 어렵죠.",
                 "definitions": [
                   {
                     "conceptKey": "representative-value",
@@ -82,7 +82,7 @@
               }
             },
             {
-              "blockId": "representative-value:explanation:drawing:v1",
+              "blockId": "representative-value:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -424,7 +424,7 @@
                     ]
                   },
                   {
-                    "caption": "모두 같은 높이가 되는 자리를 그어 봐요. 남는 데도 있고 모자란 데도 있죠.",
+                    "caption": "모두 같은 높이가 되는 선을 그어 봐요. 남는 데도 있고 모자란 데도 있죠.",
                     "changes": [
                       {
                         "id": "level",
@@ -472,33 +472,76 @@
                 ],
                 "frameMs": 1800
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "representative-value:example:v1",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "representative-value:example:text:v1",
+              "blockId": "representative-value:explanation:text-2:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "다섯 사람의 점수가 $4$, $6$, $7$, $8$, $10$이에요. 세 대푯값을 모두 구해 볼게요.\n\n평균은 모두 더해 $35$이고 다섯으로 나누면 $7$이에요.\n\n중앙값은 크기 순으로 늘어놓은 가운데 값이니 $7$이고요.\n\n모두 한 번씩만 나왔으니 최빈값은 없어요.\n\n이번엔 $4$, $6$, $7$, $8$, $100$으로 바꿔 볼게요. 평균은 $125 \\div 5 = 25$로 껑충 뛰어요.\n\n하지만 중앙값은 여전히 $7$이에요. 가운데 자리는 바뀌지 않았으니까요. 값 하나가 크게 달라졌을 때 어느 쪽이 더 믿을 만한지 보이죠.\n\n자료가 짝수 개일 때도 해 볼게요. $3$, $5$, $8$, $10$의 중앙값은 가운데 두 값 $5$와 $8$의 평균인 $6.5$예요.",
-                "definitions": []
+                "text": "중앙값은 크기 순으로 늘어놓았을 때 한가운데 있는 값이에요. 자료가 짝수 개면 가운데 두 값의 평균이고요.\n\n방금 그 자료의 중앙값은 $3$이에요. 극단적인 값에 끌려가지 않아요. 집값이나 소득처럼 한쪽으로 크게 치우친 자료에서 중앙값을 쓰는 이유예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "representative-value",
+                    "surface": "중앙값",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "representative-value:explanation:text-3:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "최빈값은 가장 자주 나온 값이에요. 도수분포표에서 도수가 가장 큰 값이라고 해도 같은 말이고요. 신발 크기나 좋아하는 색처럼 수로 더할 수 없는 자료에도 쓸 수 있어요. 가장 많이 팔린 치수를 알고 싶을 때 평균 치수는 쓸모가 없으니까요.\n\n최빈값은 여럿일 수도 있고 없을 수도 있어요. 모두 한 번씩 나왔다면 최빈값이 없어요.\n\n셋 중 무엇을 고를지는 자료가 정해요. 고르게 퍼져 있으면 평균, 한쪽으로 치우쳐 있으면 중앙값, 수가 아닌 자료면 최빈값이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "representative-value",
+                    "surface": "최빈값",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "frequency-table",
+                    "surface": "도수분포표",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "representative-value:practice:v1",
+          "sectionId": "representative-value:example:v2",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "representative-value:example:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "다섯 사람의 점수가 $4$, $6$, $7$, $8$, $10$이에요. 세 대푯값을 모두 구해 볼게요.\n\n평균은 모두 더해 $35$이고 다섯으로 나누면 $7$이에요.\n\n중앙값은 크기 순으로 늘어놓은 가운데 값이니 $7$이고요.\n\n모두 한 번씩만 나왔으니 최빈값은 없어요.\n\n이번엔 $4$, $6$, $7$, $8$, $100$으로 바꿔 볼게요. 평균은 $125 \\div 5 = 25$로 껑충 뛰어요.\n\n하지만 중앙값은 여전히 $7$이에요. 가운데 값은 바뀌지 않았으니까요. 값 하나가 크게 달라졌을 때 어느 쪽이 더 믿을 만한지 보이죠.\n\n자료가 짝수 개일 때도 해 볼게요. $3$, $5$, $8$, $10$의 중앙값은 가운데 두 값 $5$와 $8$의 평균인 $6.5$예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "representative-value",
+                    "surface": "대푯값",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "representative-value:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "representative-value:practice:problems:v1",
+              "blockId": "representative-value:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -515,12 +558,12 @@
           ]
         },
         {
-          "sectionId": "representative-value:check:v1",
+          "sectionId": "representative-value:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "representative-value:check:problems:v1",
+              "blockId": "representative-value:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -536,18 +579,24 @@
           ]
         },
         {
-          "sectionId": "representative-value:summary:v1",
+          "sectionId": "representative-value:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "representative-value:summary:text:v1",
+              "blockId": "representative-value:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "평균은 모두 더해 개수로 나눈 값이고, 고르게 폈을 때의 높이예요.\n\n중앙값은 크기 순의 한가운데 값이라 극단적인 값에 끌려가지 않아요.\n\n최빈값은 가장 자주 나온 값이고, 수가 아닌 자료에도 쓸 수 있어요.\n\n고르게 퍼져 있으면 평균, 치우쳐 있으면 중앙값, 수가 아니면 최빈값이에요.",
-                "definitions": []
+                "text": "평균은 모두 더해 개수로 나눈 값이고, 고르게 폈을 때의 높이예요.\n\n중앙값은 크기 순의 한가운데 값이라 극단적인 값에 끌려가지 않아요.\n\n최빈값은 가장 자주 나온 값이고, 수가 아닌 자료에도 쓸 수 있어요.\n\n이 셋이 대푯값이에요. 고르게 퍼져 있으면 평균, 치우쳐 있으면 중앙값, 수가 아니면 최빈값이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "representative-value",
+                    "surface": "대푯값",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -565,7 +614,7 @@
     {
       "public": {
         "lessonKey": "variance",
-        "versionId": "variance:v1",
+        "versionId": "variance:v2",
         "title": "산포도: 평균이 같아도 다를 수 있다",
         "summary": "편차와 분산과 표준편차로 자료가 얼마나 흩어져 있는지를 하나의 수로 적어요.",
         "estimatedMinutes": 12,
@@ -580,18 +629,23 @@
       },
       "sections": [
         {
-          "sectionId": "variance:explanation:v1",
+          "sectionId": "variance:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "variance:explanation:text:v1",
+              "blockId": "variance:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "평균이 같다고 같은 자료는 아니에요. 한 반은 모두 $70$점 언저리이고 다른 반은 $40$점과 $100$점이 섞여 있어도 평균은 같을 수 있거든요.\n\n그래서 「얼마나 흩어져 있는가」를 재는 값이 필요해요. 이런 값을 산포도라 해요.\n\n먼저 편차예요. 편차는 각 값에서 평균을 뺀 값이에요. 평균보다 크면 양수, 작으면 음수고요.\n\n편차를 모두 더하면 언제나 $0$이에요. 위로 남은 만큼과 아래로 모자란 만큼이 정확히 상쇄되니까요. 그래서 편차의 평균으로는 흩어진 정도를 잴 수 없어요.\n\n부호를 없애려고 편차를 제곱해서 평균을 냅니다. 이 값이 분산이에요.\n\n분산은 제곱한 값이라 단위가 원래와 달라져요. 점수의 분산은 「점」이 아니라 「점의 제곱」인 셈이죠. 그래서 제곱근을 취해 단위를 되돌린 값을 함께 씁니다. 이것이 표준편차예요.\n\n값이 클수록 넓게 퍼져 있고, $0$이면 모든 값이 평균과 같다는 뜻이에요.\n\n구하는 순서는 늘 같아요. 평균을 구하고, 편차를 구하고, 제곱해서 평균을 내고, 제곱근을 취해요.",
+                "text": "평균이 같다고 같은 자료는 아니에요. 한 반은 모두 $70$점 언저리예요. 다른 반은 $40$점과 $100$점이 섞여 있고요. 그래도 평균은 같을 수 있어요.\n\n그래서 「얼마나 흩어져 있는가」를 재는 값이 필요해요. 이런 값을 산포도라 해요.",
                 "definitions": [
+                  {
+                    "conceptKey": "representative-value",
+                    "surface": "평균",
+                    "scopeKind": "global"
+                  },
                   {
                     "conceptKey": "variance",
                     "surface": "산포도",
@@ -601,7 +655,7 @@
               }
             },
             {
-              "blockId": "variance:explanation:drawing:v1",
+              "blockId": "variance:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -883,33 +937,81 @@
                 ],
                 "frameMs": 1700
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "variance:example:v1",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "variance:example:text:v1",
+              "blockId": "variance:explanation:text-2:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$2$, $4$, $6$, $8$, $10$의 분산과 표준편차를 구해 볼게요.\n\n먼저 평균이에요. 모두 더하면 $30$이고 다섯으로 나누면 $6$이에요.\n\n편차는 각 값에서 $6$을 뺀 값이니 $-4$, $-2$, $0$, $2$, $4$예요. 더하면 $0$이 되는 것을 확인할 수 있어요.\n\n이제 제곱해요. $16$, $4$, $0$, $4$, $16$이고 합이 $40$이에요.\n\n분산은 이 합을 개수로 나눈 값이니 $40 \\div 5 = 8$이에요.\n\n표준편차는 분산의 제곱근이니 $\\sqrt{8} = 2\\sqrt{2}$고요.\n\n값이 모두 같은 자료도 해 볼게요. $5$, $5$, $5$, $5$의 평균은 $5$, 편차는 모두 $0$, 분산도 $0$, 표준편차도 $0$이에요. 흩어짐이 없다는 뜻이에요.",
-                "definitions": []
+                "text": "먼저 편차예요. 편차는 각 값에서 평균을 뺀 값이에요. 평균보다 크면 양수, 작으면 음수고요.\n\n편차를 모두 더하면 언제나 $0$이에요. 위로 남은 만큼과 아래로 모자란 만큼이 정확히 상쇄되니까요. 그래서 편차의 평균으로는 흩어진 정도를 잴 수 없어요.\n\n부호를 없애려고 편차를 제곱해서 평균을 내요. 이 값이 분산이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "variance",
+                    "surface": "분산",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "variance:explanation:text-3:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "분산은 제곱한 값이라 단위가 원래와 달라져요. 점수의 분산은 「점」이 아니라 「점의 제곱」 단위예요. 그래서 제곱근을 취해 단위를 되돌린 값을 함께 써요. 이것이 표준편차예요.\n\n값이 클수록 넓게 퍼져 있어요. $0$이면 모든 값이 평균과 같다는 뜻이고요.\n\n구하는 순서는 늘 같아요. 평균을 구하고, 편차를 구하고, 제곱해서 평균을 내고, 제곱근을 취해요.",
+                "definitions": [
+                  {
+                    "conceptKey": "square-root",
+                    "surface": "제곱근",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "variance",
+                    "surface": "표준편차",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "variance:practice:v1",
+          "sectionId": "variance:example:v2",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "variance:example:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$2$, $4$, $6$, $8$, $10$의 분산과 표준편차를 구해 볼게요.\n\n먼저 평균이에요. 모두 더하면 $30$이고 다섯으로 나누면 $6$이에요.\n\n편차는 각 값에서 $6$을 뺀 값이니 $-4$, $-2$, $0$, $2$, $4$예요. 더하면 $0$이 되는 것을 확인할 수 있어요.\n\n이제 제곱해요. $16$, $4$, $0$, $4$, $16$이고 합이 $40$이에요.\n\n분산은 이 합을 개수로 나눈 값이니 $40 \\div 5 = 8$이에요.\n\n표준편차는 분산의 제곱근이니 $\\sqrt{8} = 2\\sqrt{2}$고요.\n\n값이 모두 같은 자료도 해 볼게요. $5$, $5$, $5$, $5$의 평균은 $5$예요. 편차는 모두 $0$, 분산도 $0$, 표준편차도 $0$이고요. 흩어짐이 없다는 뜻이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "variance",
+                    "surface": "분산",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "square-root",
+                    "surface": "제곱근",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "variance:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "variance:practice:problems:v1",
+              "blockId": "variance:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -926,12 +1028,12 @@
           ]
         },
         {
-          "sectionId": "variance:check:v1",
+          "sectionId": "variance:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "variance:check:problems:v1",
+              "blockId": "variance:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -947,18 +1049,34 @@
           ]
         },
         {
-          "sectionId": "variance:summary:v1",
+          "sectionId": "variance:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "variance:summary:text:v1",
+              "blockId": "variance:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "편차는 값에서 평균을 뺀 것이고, 편차의 합은 언제나 $0$이에요.\n\n그래서 제곱해서 평균을 낸 값을 쓰는데, 이것이 분산이에요.\n\n분산의 제곱근이 표준편차이고, 단위가 원래 자료와 같아져요.\n\n값이 클수록 넓게 퍼져 있고, $0$이면 모든 값이 평균과 같아요.",
-                "definitions": []
+                "text": "편차는 값에서 평균을 뺀 것이고, 편차의 합은 언제나 $0$이에요.\n\n그래서 제곱해서 평균을 낸 값을 써요. 이것이 분산이에요.\n\n분산의 제곱근이 표준편차이고, 단위가 원래 자료와 같아져요.\n\n값이 클수록 넓게 퍼져 있고, $0$이면 모든 값이 평균과 같아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "representative-value",
+                    "surface": "평균",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "variance",
+                    "surface": "분산",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "square-root",
+                    "surface": "제곱근",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -976,7 +1094,7 @@
     {
       "public": {
         "lessonKey": "scatter-plot",
-        "versionId": "scatter-plot:v1",
+        "versionId": "scatter-plot:v2",
         "title": "산점도와 상관관계: 두 양이 함께 움직이는가",
         "summary": "두 값을 짝지어 찍은 점들이 어느 쪽으로 몰리는지 읽고, 관계가 있다고 원인이 되지는 않는다는 것을 봐요.",
         "estimatedMinutes": 11,
@@ -991,18 +1109,23 @@
       },
       "sections": [
         {
-          "sectionId": "scatter-plot:explanation:v1",
+          "sectionId": "scatter-plot:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "scatter-plot:explanation:text:v1",
+              "blockId": "scatter-plot:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "한 사람에 대해 두 가지를 재었다고 해 볼게요. 키와 몸무게, 공부 시간과 점수처럼요.\n\n이 두 값을 좌표로 삼아 점 하나로 찍고, 모든 사람의 점을 한 그림에 모은 것이 산점도예요.\n\n산점도는 점 하나하나보다 전체 모양을 봐요. 점들이 어느 쪽으로 몰려 있는지가 두 양의 관계를 말해 주거든요.\n\n오른쪽 위로 올라가는 띠를 이루면 한쪽이 커질 때 다른 쪽도 커진다는 뜻이에요. 이것을 양의 상관관계라 해요.\n\n오른쪽 아래로 내려가면 한쪽이 커질 때 다른 쪽은 작아진다는 뜻이고, 음의 상관관계라 해요.\n\n어느 쪽으로도 기울지 않고 흩어져 있으면 상관관계가 없다고 말해요.\n\n띠가 좁을수록 관계가 뚜렷해요. 넓게 퍼져 있으면 관계는 있어 보여도 약한 거예요.\n\n한 가지 조심할 것이 있어요. 관계가 있다는 것과 하나가 다른 하나의 원인이라는 것은 다른 말이에요. 아이스크림 판매량과 물놀이 사고는 함께 늘지만, 아이스크림이 사고를 일으키는 것은 아니에요. 둘 다 더위라는 다른 이유를 따라 움직인 것뿐이죠.",
+                "text": "한 사람에 대해 두 가지를 재었다고 해 볼게요. 키와 몸무게, 공부 시간과 점수처럼요.\n\n이 두 값을 좌표로 삼아 점 하나로 찍어요. 모든 사람의 점을 한 그림에 모은 것이 산점도예요.\n\n산점도는 점 하나하나보다 전체 모양을 봐요. 점들이 어느 쪽으로 몰려 있는지가 두 양의 관계를 말해 주거든요.",
                 "definitions": [
+                  {
+                    "conceptKey": "coordinate-plane",
+                    "surface": "좌표",
+                    "scopeKind": "global"
+                  },
                   {
                     "conceptKey": "scatter-plot",
                     "surface": "산점도",
@@ -1012,7 +1135,7 @@
               }
             },
             {
-              "blockId": "scatter-plot:explanation:drawing:v1",
+              "blockId": "scatter-plot:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1318,33 +1441,65 @@
                 ],
                 "frameMs": 1700
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "scatter-plot:example:v1",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "scatter-plot:example:text:v1",
+              "blockId": "scatter-plot:explanation:text-2:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "공부 시간과 점수를 짝지어 찍은 산점도를 읽어 볼게요.\n\n점들이 왼쪽 아래에서 오른쪽 위로 이어지는 띠를 이루고 있어요.\n\n공부 시간이 길수록 점수가 높은 쪽으로 몰려 있다는 뜻이니 양의 상관관계예요.\n\n다른 예도 볼게요. 자동차의 무게와 연비를 찍으면 오른쪽 아래로 내려가요. 무거울수록 연비가 낮으니 음의 상관관계고요.\n\n신발 크기와 수학 점수라면 어떨까요. 점들이 아무 데나 흩어져 어느 쪽으로도 기울지 않아요. 상관관계가 없는 거예요.\n\n마지막으로 조심할 점이에요. 어린이의 신발 크기와 어휘력은 함께 커져요. 그렇다고 신발을 키운다고 어휘력이 늘지는 않아요. 둘 다 나이를 따라 늘어난 것뿐이니까요.",
+                "text": "오른쪽 위로 올라가는 띠를 이루면 어떨까요. 한쪽이 커질 때 다른 쪽도 커진다는 뜻이에요. 이것을 양의 상관관계라 해요.\n\n오른쪽 아래로 내려가면 한쪽이 커질 때 다른 쪽은 작아진다는 뜻이에요. 음의 상관관계라 해요.\n\n어느 쪽으로도 기울지 않고 흩어져 있으면 상관관계가 없다고 말해요.\n\n띠가 좁을수록 관계가 뚜렷해요. 넓게 퍼져 있으면 관계는 있어 보여도 약한 거예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "scatter-plot",
+                    "surface": "상관관계",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "scatter-plot:explanation:text-3:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "한 가지 조심할 것이 있어요. 관계가 있다는 것과 하나가 다른 하나의 원인이라는 것은 다른 말이에요. 아이스크림 판매량과 물놀이 사고는 함께 늘어요. 하지만 아이스크림이 사고를 일으키는 것은 아니에요. 둘 다 더위라는 다른 이유를 따라 움직인 것뿐이죠.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "scatter-plot:practice:v1",
+          "sectionId": "scatter-plot:example:v2",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "scatter-plot:example:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "공부 시간과 점수를 짝지어 찍은 산점도를 읽어 볼게요.\n\n점들이 왼쪽 아래에서 오른쪽 위로 이어지는 띠를 이루고 있어요.\n\n공부 시간이 길수록 점수가 높은 쪽으로 몰려 있다는 뜻이에요. 그러니 양의 상관관계예요.\n\n다른 예도 볼게요. 자동차의 무게와 연비를 찍으면 오른쪽 아래로 내려가요. 무거울수록 연비가 낮으니 음의 상관관계고요.\n\n신발 크기와 수학 점수라면 어떨까요. 점들이 아무 데나 흩어져 어느 쪽으로도 기울지 않아요. 상관관계가 없는 거예요.\n\n마지막으로 조심할 점이에요. 어린이의 신발 크기와 어휘력은 함께 커져요. 그렇다고 신발을 키운다고 어휘력이 늘지는 않아요. 둘 다 나이를 따라 늘어난 것뿐이니까요.",
+                "definitions": [
+                  {
+                    "conceptKey": "scatter-plot",
+                    "surface": "산점도",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "scatter-plot:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "scatter-plot:practice:problems:v1",
+              "blockId": "scatter-plot:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1361,12 +1516,12 @@
           ]
         },
         {
-          "sectionId": "scatter-plot:check:v1",
+          "sectionId": "scatter-plot:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "scatter-plot:check:problems:v1",
+              "blockId": "scatter-plot:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1382,18 +1537,29 @@
           ]
         },
         {
-          "sectionId": "scatter-plot:summary:v1",
+          "sectionId": "scatter-plot:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "scatter-plot:summary:text:v1",
+              "blockId": "scatter-plot:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "두 값을 짝지어 점으로 찍은 그림이 산점도예요.\n\n오른쪽 위로 올라가면 양의 상관관계, 오른쪽 아래로 내려가면 음의 상관관계예요.\n\n어느 쪽으로도 기울지 않으면 상관관계가 없고, 띠가 좁을수록 관계가 뚜렷해요.\n\n관계가 있다고 원인이 되지는 않아요. 다른 이유를 함께 따라 움직였을 수 있어요.",
-                "definitions": []
+                "text": "두 값을 좌표로 삼아 점으로 찍은 그림이 산점도예요.\n\n오른쪽 위로 올라가면 양의 상관관계, 오른쪽 아래로 내려가면 음의 상관관계예요.\n\n어느 쪽으로도 기울지 않으면 상관관계가 없고, 띠가 좁을수록 관계가 뚜렷해요.\n\n관계가 있다고 원인이 되지는 않아요. 다른 이유를 함께 따라 움직였을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "coordinate-plane",
+                    "surface": "좌표",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "scatter-plot",
+                    "surface": "산점도",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]

@@ -46,7 +46,7 @@
     {
       "public": {
         "lessonKey": "trig-ratio",
-        "versionId": "trig-ratio:v1",
+        "versionId": "trig-ratio:v2",
         "title": "삼각비의 뜻: 각이 변의 비를 정한다",
         "summary": "직각삼각형에서 각 하나가 세 변의 비를 정한다는 것을 닮음으로 확인해요.",
         "estimatedMinutes": 12,
@@ -61,18 +61,23 @@
       },
       "sections": [
         {
-          "sectionId": "trig-ratio:explanation:v1",
+          "sectionId": "trig-ratio:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "trig-ratio:explanation:text:v1",
+              "blockId": "trig-ratio:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "직각삼각형에서 직각이 아닌 한 각의 크기를 정하면, 세 각이 모두 정해져요. 직각과 그 각을 알면 나머지 하나는 빼기로 나오니까요.\n\n세 각이 같은 직각삼각형들은 모두 닮음이에요. 그러니 크기가 어떻든 변의 비는 같아요. 각 하나가 변의 비를 정하는 거예요.\n\n이 비에 이름을 붙인 것이 삼각비예요. 각 $A$를 기준으로 세 가지를 정해요.\n\n사인은 맞변을 빗변으로 나눈 값이고 $\\sin A$로 적어요. 여기서 맞변이란 각 $A$의 맞은편 변이에요.\n\n코사인은 밑변을 빗변으로 나눈 값이고 $\\cos A$로 적어요. 밑변은 각 $A$를 낀 변 중 빗변이 아닌 쪽이고요.\n\n탄젠트는 맞변을 밑변으로 나눈 값이고 $\\tan A$로 적어요. $\\dfrac{\\sin A}{\\cos A}$와 같은데, 빗변이 위아래에서 약분되기 때문이에요.\n\n세 변이 $3$, $4$, $5$인 직각삼각형에서 $3$의 맞은편 각을 $A$라 하면 $\\sin A = \\dfrac{3}{5}$, $\\cos A = \\dfrac{4}{5}$, $\\tan A = \\dfrac{3}{4}$예요.\n\n헷갈릴 때는 기준이 되는 각을 먼저 찍고, 그 각에서 보아 맞은편이 어디이고 붙어 있는 쪽이 어디인지 짚어 보세요. 각이 바뀌면 맞변과 밑변도 바뀌어요.",
+                "text": "직각삼각형에서 직각이 아닌 한 각의 크기를 정해 보세요. 그러면 세 각이 모두 정해져요. 직각과 그 각을 알면 나머지 하나는 빼기로 나오니까요.\n\n세 각이 같은 직각삼각형들은 모두 닮음이에요. 그러니 크기가 어떻든 변의 비는 같아요. 각 하나가 변의 비를 정하는 거예요.\n\n이 비에 이름을 붙인 것이 삼각비예요.",
                 "definitions": [
+                  {
+                    "conceptKey": "similar-triangles",
+                    "surface": "닮음",
+                    "scopeKind": "global"
+                  },
                   {
                     "conceptKey": "trig-ratio",
                     "surface": "삼각비",
@@ -82,7 +87,7 @@
               }
             },
             {
-              "blockId": "trig-ratio:explanation:drawing:v1",
+              "blockId": "trig-ratio:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -239,33 +244,70 @@
                 ],
                 "frameMs": 1800
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "trig-ratio:example:v1",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "trig-ratio:example:text:v1",
+              "blockId": "trig-ratio:explanation:text-2:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "세 변이 $3$, $4$, $5$인 직각삼각형이 있어요. 직각을 낀 두 변이 $3$과 $4$고, $3$의 맞은편 각을 $A$라 할게요.\n\n$\\sin A$는 맞변을 빗변으로 나눈 값이니 $\\dfrac{3}{5}$이에요.\n\n$\\cos A$는 밑변을 빗변으로 나눈 값이니 $\\dfrac{4}{5}$이고요.\n\n$\\tan A$는 맞변을 밑변으로 나눈 값이니 $\\dfrac{3}{4}$예요.\n\n하나를 알면 나머지도 구할 수 있어요. $\\sin A = \\dfrac{5}{13}$이라면 빗변이 $13$, 맞변이 $5$인 직각삼각형을 그리면 돼요.\n\n남은 변은 피타고라스 정리로 구해요. $13^2 - 5^2 = 144$이니 밑변은 $12$고, $\\cos A = \\dfrac{12}{13}$, $\\tan A = \\dfrac{5}{12}$예요.\n\n삼각비는 길이가 아니라 비라서, 삼각형을 두 배로 키워도 값이 그대로예요.",
+                "text": "각 $A$를 기준으로 세 가지를 정해요.\n\n사인은 맞변을 빗변으로 나눈 값이고 $\\sin A$로 적어요. 맞변이란 각 $A$의 맞은편 변이에요.\n\n코사인은 밑변을 빗변으로 나눈 값이고 $\\cos A$로 적어요. 밑변은 각 $A$를 낀 변 중 빗변이 아닌 쪽이고요.\n\n탄젠트는 맞변을 밑변으로 나눈 값이고 $\\tan A$로 적어요. $\\dfrac{\\sin A}{\\cos A}$와 같아요. 빗변이 위아래에서 약분되기 때문이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "reduce",
+                    "surface": "약분",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "trig-ratio:explanation:text-3:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $3$, $4$, $5$인 직각삼각형을 볼게요. $3$의 맞은편 각을 $A$라 하면 $\\sin A = \\dfrac{3}{5}$, $\\cos A = \\dfrac{4}{5}$, $\\tan A = \\dfrac{3}{4}$예요.\n\n헷갈릴 때는 기준이 되는 각을 먼저 찍으세요. 그 각에서 보아 맞은편이 어디인지, 붙어 있는 쪽이 어디인지 짚어 보세요. 각이 바뀌면 맞변과 밑변도 바뀌어요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "trig-ratio:practice:v1",
+          "sectionId": "trig-ratio:example:v2",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "trig-ratio:example:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $3$, $4$, $5$인 직각삼각형이 있어요. 직각을 낀 두 변이 $3$과 $4$고, $3$의 맞은편 각을 $A$라 할게요.\n\n$\\sin A$는 맞변을 빗변으로 나눈 값이니 $\\dfrac{3}{5}$이에요.\n\n$\\cos A$는 밑변을 빗변으로 나눈 값이니 $\\dfrac{4}{5}$이고요.\n\n$\\tan A$는 맞변을 밑변으로 나눈 값이니 $\\dfrac{3}{4}$예요.\n\n하나를 알면 나머지도 구할 수 있어요. $\\sin A = \\dfrac{5}{13}$이라면 빗변이 $13$, 맞변이 $5$인 직각삼각형을 그리면 돼요.\n\n남은 변은 피타고라스 정리로 구해요. $13^2 - 5^2 = 144$이니 밑변은 $12$예요. 그래서 $\\cos A = \\dfrac{12}{13}$, $\\tan A = \\dfrac{5}{12}$고요.\n\n삼각비는 길이가 아니라 비율이에요. 그래서 삼각형을 두 배로 키워도 값이 그대로예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "pythagoras",
+                    "surface": "피타고라스 정리",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "trig-ratio",
+                    "surface": "삼각비",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "trig-ratio:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "trig-ratio:practice:problems:v1",
+              "blockId": "trig-ratio:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -282,12 +324,12 @@
           ]
         },
         {
-          "sectionId": "trig-ratio:check:v1",
+          "sectionId": "trig-ratio:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "trig-ratio:check:problems:v1",
+              "blockId": "trig-ratio:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -303,18 +345,29 @@
           ]
         },
         {
-          "sectionId": "trig-ratio:summary:v1",
+          "sectionId": "trig-ratio:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "trig-ratio:summary:text:v1",
+              "blockId": "trig-ratio:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "직각삼각형에서 각 하나가 정해지면 세 변의 비가 따라 정해져요. 닮음이기 때문이에요.\n\n$\\sin A$는 맞변÷빗변, $\\cos A$는 밑변÷빗변, $\\tan A$는 맞변÷밑변이에요.\n\n$\\tan A$는 $\\dfrac{\\sin A}{\\cos A}$와 같아요.\n\n기준이 되는 각을 먼저 찍고 맞변과 밑변을 짚는 것이 순서예요.",
-                "definitions": []
+                "text": "직각삼각형에서 각 하나가 정해지면 세 변의 비가 따라 정해져요. 닮음이기 때문이에요. 그 비가 삼각비예요.\n\n$\\sin A$는 맞변÷빗변, $\\cos A$는 밑변÷빗변, $\\tan A$는 맞변÷밑변이에요.\n\n$\\tan A$는 $\\dfrac{\\sin A}{\\cos A}$와 같아요.\n\n기준이 되는 각을 먼저 찍고 맞변과 밑변을 짚는 것이 순서예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "similar-triangles",
+                    "surface": "닮음",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "trig-ratio",
+                    "surface": "삼각비",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -332,7 +385,7 @@
     {
       "public": {
         "lessonKey": "special-angles",
-        "versionId": "special-angles:v1",
+        "versionId": "special-angles:v2",
         "title": "특별한 각의 삼각비: 외우지 않고 그려서",
         "summary": "30도, 45도, 60도의 삼각비를 정삼각형과 정사각형에서 끌어내고, 0도와 90도까지 봐요.",
         "estimatedMinutes": 12,
@@ -348,36 +401,41 @@
       },
       "sections": [
         {
-          "sectionId": "special-angles:explanation:v1",
+          "sectionId": "special-angles:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "special-angles:explanation:text:v1",
+              "blockId": "special-angles:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "삼각비의 값은 대개 자로 재야 알 수 있어요. 그런데 특별한 각 셋만은 그리기만 하면 값이 나와요.\n\n한 변이 $2$인 정삼각형을 반으로 갈라 보세요. 꼭지각 $60°$가 반으로 나뉘어 $30°$가 되고, 밑변도 반으로 나뉘어 $1$이 돼요. 남은 변은 피타고라스 정리로 $\\sqrt{3}$이고요.\n\n그러니 $\\sin 30° = \\dfrac{1}{2}$, $\\cos 30° = \\dfrac{\\sqrt{3}}{2}$, $\\tan 30° = \\dfrac{1}{\\sqrt{3}}$이에요. 같은 삼각형을 $60°$ 쪽에서 보면 $\\sin 60° = \\dfrac{\\sqrt{3}}{2}$, $\\cos 60° = \\dfrac{1}{2}$예요.\n\n$\\sin 30°$와 $\\cos 60°$가 같은 것이 우연이 아니에요. 두 각을 더하면 $90°$라 한쪽의 맞변이 다른 쪽의 밑변이거든요.\n\n한 변이 $1$인 정사각형을 대각선으로 갈라도 마찬가지예요. 직각이 반으로 나뉘어 $45°$가 되고 대각선은 $\\sqrt{2}$예요. 그래서 $\\sin 45° = \\cos 45° = \\dfrac{1}{\\sqrt{2}}$이고 $\\tan 45° = 1$이에요.\n\n$0°$와 $90°$는 그릴 수 없지만 각을 점점 줄이거나 키워 보면 값이 보여요. 각이 $0°$에 가까워지면 맞변이 사라지니 $\\sin 0° = 0$, 밑변이 빗변과 같아지니 $\\cos 0° = 1$이에요.\n\n반대로 $90°$에 가까워지면 $\\sin 90° = 1$, $\\cos 90° = 0$이고요. $\\tan 90°$는 나눌 밑변이 $0$이 되어 정할 수 없어요.\n\n각이 커질수록 사인은 커지고 코사인은 작아져요. 값을 잊었을 때 어느 쪽인지 가늠하는 데 도움이 돼요.",
+                "text": "삼각비의 값은 대개 자로 재야 알 수 있어요. 그런데 특별한 각 셋만은 그리기만 하면 값이 나와요.\n\n한 변이 $2$인 정삼각형을 반으로 나눠 보세요. 꼭지각 $60°$가 반으로 나뉘어 $30°$가 돼요. 밑변도 반으로 나뉘어 $1$이 되고요. 남은 변은 피타고라스 정리로 $\\sqrt{3}$이에요.\n\n그러니 $\\sin 30° = \\dfrac{1}{2}$, $\\cos 30° = \\dfrac{\\sqrt{3}}{2}$, $\\tan 30° = \\dfrac{1}{\\sqrt{3}}$이에요. 같은 삼각형을 $60°$ 쪽에서 보면 $\\sin 60° = \\dfrac{\\sqrt{3}}{2}$, $\\cos 60° = \\dfrac{1}{2}$예요.\n\n$\\sin 30°$와 $\\cos 60°$가 같은 것은 우연이 아니에요. 두 각을 더하면 $90°$거든요. 그래서 한쪽의 맞변이 다른 쪽의 밑변이 돼요.",
                 "definitions": [
                   {
                     "conceptKey": "special-angles",
                     "surface": "특별한 각",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "pythagoras",
+                    "surface": "피타고라스 정리",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "special-angles:explanation:drawing:v1",
+              "blockId": "special-angles:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "정삼각형을 반으로 가르고 정사각형을 대각선으로 갈라 30도와 60도, 45도를 얻는 그림",
-                "caption": "특별한 각은 정삼각형과 정사각형을 가르면 나와요",
+                "alt": "정삼각형을 반으로 나누고 정사각형을 대각선으로 나눠 30도와 60도, 45도를 얻는 그림",
+                "caption": "특별한 각은 정삼각형과 정사각형을 나누면 나와요",
                 "items": [
                   {
                     "kind": "text",
@@ -590,7 +648,7 @@
                     ]
                   },
                   {
-                    "caption": "정삼각형을 반으로 가르면 꼭지각이 반으로 나뉘어 $30°$와 $60°$가 생겨요.",
+                    "caption": "정삼각형을 반으로 나누면 꼭지각이 반으로 나뉘어 $30°$와 $60°$가 생겨요.",
                     "changes": [
                       {
                         "id": "cut1",
@@ -632,7 +690,7 @@
                     ]
                   },
                   {
-                    "caption": "정사각형을 대각선으로 가르면 직각이 반으로 나뉘어 $45°$ 둘이 생겨요.",
+                    "caption": "정사각형을 대각선으로 나누면 직각이 반으로 나뉘어 $45°$ 둘이 생겨요.",
                     "changes": [
                       {
                         "id": "cut1",
@@ -678,33 +736,65 @@
                 ],
                 "frameMs": 1800
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "special-angles:example:v1",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "special-angles:example:text:v1",
+              "blockId": "special-angles:explanation:text-2:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$2\\sin 30° + \\tan 45°$의 값을 구해 볼게요.\n\n$\\sin 30° = \\dfrac{1}{2}$이니 $2\\sin 30° = 1$이에요.\n\n$\\tan 45° = 1$이니 더하면 $2$예요.\n\n$4\\cos 60°$도 해 볼게요. $\\cos 60° = \\dfrac{1}{2}$이니 $4 \\times \\dfrac{1}{2} = 2$예요.\n\n값이 기억나지 않으면 삼각형을 그려 보세요. 한 변이 $2$인 정삼각형을 반으로 가르면 $1$, $\\sqrt{3}$, $2$가 나오고, 한 변이 $1$인 정사각형을 가르면 $1$, $1$, $\\sqrt{2}$가 나와요.\n\n$30°$의 사인이 $\\dfrac{1}{2}$인지 $\\dfrac{\\sqrt{3}}{2}$인지 헷갈릴 때는 「작은 각이면 맞변도 짧다」를 떠올리면 돼요. $30°$는 작은 각이니 사인도 작은 쪽인 $\\dfrac{1}{2}$이에요.",
+                "text": "한 변이 $1$인 정사각형을 대각선으로 나눠도 마찬가지예요. 직각이 반으로 나뉘어 $45°$가 되고 대각선은 $\\sqrt{2}$예요. 그래서 $\\sin 45° = \\cos 45° = \\dfrac{1}{\\sqrt{2}}$이고 $\\tan 45° = 1$이에요.\n\n$\\dfrac{1}{\\sqrt{2}}$은 분모의 유리화를 거쳐 $\\dfrac{\\sqrt{2}}{2}$로 적기도 해요. 같은 값이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "rationalizing",
+                    "surface": "분모의 유리화",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "special-angles:explanation:text-3:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$0°$와 $90°$는 그릴 수 없어요. 그래도 각을 점점 줄이거나 키워 보면 값이 보여요. 각이 $0°$에 가까워지면 맞변이 사라져요. 그러니 $\\sin 0° = 0$이에요. 밑변은 빗변과 같아지니 $\\cos 0° = 1$이고요.\n\n반대로 $90°$에 가까워지면 $\\sin 90° = 1$, $\\cos 90° = 0$이에요. $\\tan 90°$는 나눌 밑변이 $0$이 되어 정할 수 없어요.\n\n각이 커질수록 사인은 커지고 코사인은 작아져요. 값을 잊었을 때 어느 쪽인지 가늠하는 데 도움이 돼요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "special-angles:practice:v1",
+          "sectionId": "special-angles:example:v2",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "special-angles:example:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$2\\sin 30° + \\tan 45°$의 값을 구해 볼게요.\n\n$\\sin 30° = \\dfrac{1}{2}$이니 $2\\sin 30° = 1$이에요.\n\n$\\tan 45° = 1$이니 더하면 $2$예요.\n\n$4\\cos 60°$도 해 볼게요. $\\cos 60° = \\dfrac{1}{2}$이니 $4 \\times \\dfrac{1}{2} = 2$예요.\n\n값이 기억나지 않으면 삼각형을 그려 보세요. 한 변이 $2$인 정삼각형을 반으로 나누면 $1$, $\\sqrt{3}$, $2$가 나와요. 한 변이 $1$인 정사각형을 나누면 $1$, $1$, $\\sqrt{2}$가 나오고요.\n\n$30°$의 사인이 $\\dfrac{1}{2}$인지 $\\dfrac{\\sqrt{3}}{2}$인지 헷갈릴 때가 있어요. 그럴 때는 「작은 각이면 맞변도 짧다」를 떠올리면 돼요. $30°$는 작은 각이니 사인도 작은 쪽인 $\\dfrac{1}{2}$이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "trig-ratio",
+                    "surface": "사인",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "special-angles:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "special-angles:practice:problems:v1",
+              "blockId": "special-angles:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -721,12 +811,12 @@
           ]
         },
         {
-          "sectionId": "special-angles:check:v1",
+          "sectionId": "special-angles:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "special-angles:check:problems:v1",
+              "blockId": "special-angles:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -742,18 +832,29 @@
           ]
         },
         {
-          "sectionId": "special-angles:summary:v1",
+          "sectionId": "special-angles:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "special-angles:summary:text:v1",
+              "blockId": "special-angles:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "정삼각형을 반으로 가르면 $30°$와 $60°$가, 정사각형을 대각선으로 가르면 $45°$가 나와요.\n\n$\\sin 30° = \\cos 60° = \\dfrac{1}{2}$이고 $\\tan 45° = 1$이에요.\n\n$\\sin 0° = 0$, $\\cos 0° = 1$, $\\sin 90° = 1$, $\\cos 90° = 0$이에요.\n\n각이 커질수록 사인은 커지고 코사인은 작아져요.",
-                "definitions": []
+                "text": "정삼각형을 반으로 나누면 $30°$와 $60°$가 나와요. 정사각형을 대각선으로 나누면 $45°$가 나오고요.\n\n$\\sin 30° = \\cos 60° = \\dfrac{1}{2}$이고 $\\tan 45° = 1$이에요.\n\n$\\sin 0° = 0$, $\\cos 0° = 1$, $\\sin 90° = 1$, $\\cos 90° = 0$이에요.\n\n각이 커질수록 사인은 커지고 코사인은 작아져요. 여기까지가 특별한 각의 삼각비예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "trig-ratio",
+                    "surface": "사인",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "special-angles",
+                    "surface": "특별한 각의 삼각비",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -771,7 +872,7 @@
     {
       "public": {
         "lessonKey": "trig-use",
-        "versionId": "trig-use:v1",
+        "versionId": "trig-use:v2",
         "title": "삼각비의 활용: 잴 수 없는 길이를 구한다",
         "summary": "각과 한 변으로 높이를 구하고, 두 변과 낀 각으로 삼각형의 넓이를 구해요.",
         "estimatedMinutes": 12,
@@ -786,17 +887,38 @@
       },
       "sections": [
         {
-          "sectionId": "trig-use:explanation:v1",
+          "sectionId": "trig-use:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "trig-use:explanation:text:v1",
+              "blockId": "trig-use:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "삼각비가 쓸모 있는 까닭은 직접 갈 수 없는 곳의 길이를 구할 수 있기 때문이에요. 나무 꼭대기까지 자를 댈 수는 없지만, 떨어진 자리에서 올려다본 각과 거리는 잴 수 있으니까요.\n\n직각삼각형에서 한 변과 한 각을 알면 나머지 변이 나와요. 빗변을 알면 맞변은 빗변에 $\\sin A$를 곱한 값이고, 밑변은 빗변에 $\\cos A$를 곱한 값이에요.\n\n밑변을 알면 맞변은 밑변에 $\\tan A$를 곱한 값이고요. 무엇을 알고 무엇을 구하는지에 따라 셋 중 하나를 고르면 돼요.\n\n빗변이 $10$이고 한 예각이 $30°$라면 그 각의 맞은편 변은 $10 \\times \\dfrac{1}{2} = 5$예요. 밑변이 $12$이고 밑각이 $45°$라면 높이는 $12 \\times 1 = 12$고요.\n\n삼각형의 넓이에도 써요. 넓이는 밑변 곱하기 높이의 절반인데, 높이를 직접 재지 못할 때가 많거든요.\n\n두 변의 길이와 그 사이 각을 알면 높이가 나와요. 두 변을 $a$, $b$라 하고 낀 각을 $C$라 하면 높이는 $b \\sin C$이고, 넓이는 $\\dfrac{1}{2}ab\\sin C$예요.\n\n두 변이 $6$과 $8$이고 낀 각이 $30°$라면 높이는 $6 \\times \\dfrac{1}{2} = 3$이고 넓이는 $\\dfrac{1}{2} \\times 8 \\times 3 = 12$예요.\n\n왜 절반인지는 같은 삼각형을 하나 더 돌려 붙여 보면 알 수 있어요. 평행사변형이 되거든요.",
+                "text": "삼각비가 쓸모 있는 까닭이 있어요. 직접 갈 수 없는 곳의 길이를 구할 수 있거든요. 나무 꼭대기까지 자를 댈 수는 없어요. 하지만 떨어진 곳에서 올려다본 각과 거리는 잴 수 있어요.\n\n직각삼각형에서 한 변과 한 각을 알면 나머지 변이 나와요. 빗변을 알면 맞변은 빗변에 $\\sin A$를 곱한 값이에요. 밑변은 빗변에 $\\cos A$를 곱한 값이고요.\n\n밑변을 알면 맞변은 밑변에 $\\tan A$를 곱한 값이에요. 무엇을 알고 무엇을 구하는지에 따라 셋 중 하나를 고르면 돼요.\n\n빗변이 $10$이고 한 예각이 $30°$라면 그 각의 맞은편 변은 $10 \\times \\dfrac{1}{2} = 5$예요. 밑변이 $12$이고 밑각이 $45°$라면 높이는 $12 \\times 1 = 12$고요.",
+                "definitions": [
+                  {
+                    "conceptKey": "trig-ratio",
+                    "surface": "삼각비",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "plane-length",
+                    "surface": "길이를 구할",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "trig-use:explanation:text-2:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 넓이에도 써요. 넓이는 밑변 곱하기 높이의 절반이에요. 그런데 높이를 직접 재지 못할 때가 많거든요.\n\n두 변의 길이와 그 사이 각을 알면 높이가 나와요. 두 변을 $a$, $b$라 하고 낀 각을 $C$라 해 볼게요. 높이는 $b \\sin C$이고 넓이는 $\\dfrac{1}{2}ab\\sin C$예요.\n\n두 변이 $6$과 $8$이고 낀 각이 $30°$라면 높이는 $6 \\times \\dfrac{1}{2} = 3$이에요. 넓이는 $\\dfrac{1}{2} \\times 8 \\times 3 = 12$고요.",
                 "definitions": [
                   {
                     "conceptKey": "trig-use",
@@ -807,7 +929,7 @@
               }
             },
             {
-              "blockId": "trig-use:explanation:drawing:v1",
+              "blockId": "trig-use:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1002,33 +1124,60 @@
                 ],
                 "frameMs": 1800
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "trig-use:example:v1",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "trig-use:example:text:v1",
+              "blockId": "trig-use:explanation:text-3:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "빗변이 $10$이고 한 예각이 $30°$인 직각삼각형에서 그 각의 맞은편 변을 구해 볼게요.\n\n맞변은 빗변 곱하기 사인이니 $10 \\times \\sin 30° = 10 \\times \\dfrac{1}{2} = 5$예요.\n\n빗변의 절반이네요. $30°$일 때는 늘 그래요.\n\n이번엔 넓이예요. 두 변이 $10$과 $12$이고 낀 각이 $30°$인 삼각형의 넓이를 구해요.\n\n$\\dfrac{1}{2} \\times 10 \\times 12 \\times \\sin 30° = \\dfrac{1}{2} \\times 120 \\times \\dfrac{1}{2} = 30$이에요.\n\n밑변이 $12$이고 밑각이 $45°$인 직각삼각형의 높이도 해 볼게요. $12 \\times \\tan 45° = 12 \\times 1 = 12$예요. 밑변과 높이가 같으니 이등변직각삼각형이에요.\n\n무엇을 아는지부터 적어 두면 어느 삼각비를 쓸지 헷갈리지 않아요. 빗변이 있으면 사인이나 코사인, 없으면 탄젠트예요.",
-                "definitions": []
+                "text": "왜 절반인지는 같은 삼각형을 하나 더 돌려 붙여 보면 알 수 있어요. 평행사변형이 되거든요.",
+                "definitions": [
+                  {
+                    "conceptKey": "parallelogram",
+                    "surface": "평행사변형",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "trig-use:practice:v1",
+          "sectionId": "trig-use:example:v2",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "trig-use:example:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "빗변이 $10$이고 한 예각이 $30°$인 직각삼각형이에요. 그 각의 맞은편 변을 구해 볼게요.\n\n맞변은 빗변 곱하기 사인이니 $10 \\times \\sin 30° = 10 \\times \\dfrac{1}{2} = 5$예요.\n\n빗변의 절반이네요. $30°$일 때는 늘 그래요.\n\n이번엔 넓이예요. 두 변이 $10$과 $12$이고 낀 각이 $30°$인 삼각형의 넓이를 구해요.\n\n$\\dfrac{1}{2} \\times 10 \\times 12 \\times \\sin 30° = \\dfrac{1}{2} \\times 120 \\times \\dfrac{1}{2} = 30$이에요.\n\n밑변이 $12$이고 밑각이 $45°$인 직각삼각형의 높이도 해 볼게요. $12 \\times \\tan 45° = 12 \\times 1 = 12$예요. 밑변과 높이가 같으니 이등변삼각형이면서 직각삼각형이에요.\n\n무엇을 아는지부터 적어 두면 어느 삼각비를 쓸지 헷갈리지 않아요. 빗변이 있으면 사인이나 코사인, 없으면 탄젠트예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "isosceles",
+                    "surface": "이등변삼각형",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "trig-ratio",
+                    "surface": "삼각비",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "trig-use:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "trig-use:practice:problems:v1",
+              "blockId": "trig-use:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1045,12 +1194,12 @@
           ]
         },
         {
-          "sectionId": "trig-use:check:v1",
+          "sectionId": "trig-use:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "trig-use:check:problems:v1",
+              "blockId": "trig-use:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1066,18 +1215,34 @@
           ]
         },
         {
-          "sectionId": "trig-use:summary:v1",
+          "sectionId": "trig-use:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "trig-use:summary:text:v1",
+              "blockId": "trig-use:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "빗변을 알면 맞변은 빗변 곱하기 사인, 밑변은 빗변 곱하기 코사인이에요.\n\n밑변을 알면 맞변은 밑변 곱하기 탄젠트고요.\n\n두 변과 낀 각을 알면 넓이는 $\\dfrac{1}{2}ab\\sin C$예요.\n\n같은 삼각형을 돌려 붙여 평행사변형을 만들면 왜 절반인지 보여요.",
-                "definitions": []
+                "text": "빗변을 알면 맞변은 빗변 곱하기 사인, 밑변은 빗변 곱하기 코사인이에요.\n\n밑변을 알면 맞변은 밑변 곱하기 탄젠트고요.\n\n두 변과 낀 각을 알면 넓이는 $\\dfrac{1}{2}ab\\sin C$예요.\n\n같은 삼각형을 돌려 붙여 평행사변형을 만들면 왜 절반인지 보여요. 여기까지가 삼각비의 활용이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "trig-ratio",
+                    "surface": "사인",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "parallelogram",
+                    "surface": "평행사변형",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "trig-use",
+                    "surface": "삼각비의 활용",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]

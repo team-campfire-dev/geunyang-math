@@ -51,7 +51,7 @@
     {
       "public": {
         "lessonKey": "multiplication-formula",
-        "versionId": "multiplication-formula:v2",
+        "versionId": "multiplication-formula:v3",
         "title": "곱셈 공식: 자주 나오는 모양은 외워서 쓴다",
         "summary": "괄호가 있는 곱셈을 하나하나 풀어 보고, 자주 나오는 세 모양을 넓이 그림으로 확인해요.",
         "estimatedMinutes": 12,
@@ -68,23 +68,39 @@
       },
       "sections": [
         {
-          "sectionId": "multiplication-formula:explanation:v2",
+          "sectionId": "multiplication-formula:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "multiplication-formula:explanation:text:v2",
+              "blockId": "multiplication-formula:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$(x+2)(x+3)$처럼 괄호끼리 곱할 때는 앞 괄호의 각 항을 뒤 괄호의 각 항에 하나씩 곱해요. 네 번 곱한 뒤 같은 것끼리 모으면 $x^2 + 3x + 2x + 6 = x^2 + 5x + 6$이에요. 이렇게 괄호를 풀어 쓰는 것을 전개라고 해요.\n\n그런데 몇 가지 모양은 하도 자주 나와서, 매번 네 번 곱하기보다 결과를 외워 두는 편이 빨라요. 그것이 곱셈 공식이에요.\n\n첫째, $(a+b)^2 = a^2 + 2ab + b^2$예요. 가운데 $2ab$를 빠뜨리는 실수가 가장 흔해요. $(x+3)^2$은 $x^2 + 9$가 아니라 $x^2 + 6x + 9$예요.\n\n둘째, $(a-b)^2 = a^2 - 2ab + b^2$이에요. 부호만 가운데에서 바뀌고 끝은 그대로 양수예요.\n\n셋째, $(a+b)(a-b) = a^2 - b^2$이에요. 가운데 항이 $-ab$와 $+ab$로 서로 지워져서 두 항만 남아요.\n\n넷째, $(x+a)(x+b) = x^2 + (a+b)x + ab$예요. 「더해서 가운데, 곱해서 끝」이라고 기억해 두세요. 다음 수업에서 이 식을 거꾸로 읽게 되는데, 그때 이 문장이 그대로 쓰여요.\n\n그림으로 보면 외우지 않아도 떠올릴 수 있어요. 한 변이 $a+b$인 정사각형을 네 조각으로 나누면 $a^2$ 하나, $ab$ 둘, $b^2$ 하나예요.",
+                "text": "$(x+2)(x+3)$처럼 괄호끼리 곱해 볼게요. 앞 괄호의 각 항을 뒤 괄호의 각 항에 하나씩 곱해요. 네 번 곱한 뒤 동류항끼리 모아요. $x^2 + 3x + 2x + 6 = x^2 + 5x + 6$이에요.\n\n이렇게 괄호를 풀어 쓰는 것을 전개라고 해요.",
                 "definitions": [
+                  {
+                    "conceptKey": "like-term",
+                    "surface": "동류항",
+                    "scopeKind": "global"
+                  },
                   {
                     "conceptKey": "expansion",
                     "surface": "전개",
                     "scopeKind": "global"
-                  },
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "multiplication-formula:explanation:text-2:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "몇 가지 모양은 하도 자주 나와요. 매번 네 번 곱하기보다 결과를 외워 두는 편이 빨라요. 그것이 곱셈 공식이에요.\n\n첫째, $(a+b)^2 = a^2 + 2ab + b^2$예요. 가운데 $2ab$를 빠뜨리는 실수가 가장 흔해요. $(x+3)^2$은 $x^2 + 9$가 아니라 $x^2 + 6x + 9$예요.\n\n둘째, $(a-b)^2 = a^2 - 2ab + b^2$이에요. 부호만 가운데에서 바뀌고 끝은 그대로 양수예요.\n\n셋째, $(a+b)(a-b) = a^2 - b^2$이에요. 가운데 항이 $-ab$와 $+ab$로 서로 지워져요. 그래서 두 항만 남아요.\n\n넷째, $(x+a)(x+b) = x^2 + (a+b)x + ab$예요. 「더해서 가운데, 곱해서 끝」이라고 기억해 두세요.",
+                "definitions": [
                   {
                     "conceptKey": "multiplication-formula",
                     "surface": "곱셈 공식",
@@ -94,15 +110,25 @@
               }
             },
             {
-              "blockId": "multiplication-formula:explanation:drawing:v2",
+              "blockId": "multiplication-formula:explanation:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "그림으로 보면 외우지 않아도 떠올릴 수 있어요. 한 변이 $a+b$인 정사각형을 네 조각으로 나눠 보세요. $a^2$ 하나, $ab$ 둘, $b^2$ 하나예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "multiplication-formula:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "한 변이 a 더하기 b인 정사각형이 네 조각으로 갈라져 넓이가 보이는 그림",
-                "caption": "갈라 보면 ab짜리가 두 개예요",
+                "alt": "한 변이 a 더하기 b인 정사각형이 네 조각으로 나뉘어 넓이가 보이는 그림",
+                "caption": "나눠 보면 ab짜리가 두 개예요",
                 "items": [
                   {
                     "kind": "text",
@@ -267,7 +293,7 @@
                     ]
                   },
                   {
-                    "caption": "가로와 세로를 각각 $a$와 $b$에서 끊으면 네 조각으로 갈라져요.",
+                    "caption": "가로와 세로를 각각 $a$와 $b$에서 끊으면 네 조각으로 나뉘어요.",
                     "changes": [
                       {
                         "id": "aa",
@@ -379,29 +405,45 @@
           ]
         },
         {
-          "sectionId": "multiplication-formula:example:v2",
+          "sectionId": "multiplication-formula:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "multiplication-formula:example:text:v2",
+              "blockId": "multiplication-formula:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$(2x+3)(x-4)$를 전개해 볼게요. 공식에 딱 맞는 모양이 아니니 하나씩 곱해요.\n\n$2x \\times x = 2x^2$, $2x \\times (-4) = -8x$, $3 \\times x = 3x$, $3 \\times (-4) = -12$예요.\n\n모두 더하면 $2x^2 - 8x + 3x - 12$이고, 같은 것끼리 모아 $2x^2 - 5x - 12$예요.\n\n음수를 곱할 때 부호를 놓치기 쉬우니 괄호째로 곱해 두는 습관이 좋아요.\n\n이번에는 공식이 통하는 것을 볼게요. $(3x+2)(3x-2)$는 「같은 것 더하기, 같은 것 빼기」 모양이에요.\n\n$a = 3x$, $b = 2$로 보면 $a^2 - b^2$이니 $(3x)^2 - 2^2 = 9x^2 - 4$예요. 네 번 곱하지 않고 한 번에 끝났어요.",
-                "definitions": []
+                "text": "$(2x+3)(x-4)$를 전개해 볼게요. 공식에 딱 맞는 모양이 아니니 하나씩 곱해요.\n\n$2x \\times x = 2x^2$, $2x \\times (-4) = -8x$, $3 \\times x = 3x$, $3 \\times (-4) = -12$예요.\n\n모두 더하면 $2x^2 - 8x + 3x - 12$예요. 동류항을 모아 $2x^2 - 5x - 12$가 돼요.\n\n음수를 곱할 때 부호를 놓치기 쉬워요. 괄호째로 곱해 두는 습관이 좋아요.\n\n이번에는 곱셈 공식이 통하는 것을 볼게요. $(3x+2)(3x-2)$는 「같은 것 더하기, 같은 것 빼기」 모양이에요.\n\n$a = 3x$, $b = 2$로 보면 $a^2 - b^2$이에요. 그러니 $(3x)^2 - 2^2 = 9x^2 - 4$예요. 네 번 곱하지 않고 한 번에 끝났어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "expansion",
+                    "surface": "전개",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "like-term",
+                    "surface": "동류항",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "multiplication-formula",
+                    "surface": "곱셈 공식",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "multiplication-formula:practice:v2",
+          "sectionId": "multiplication-formula:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "multiplication-formula:practice:problems:v2",
+              "blockId": "multiplication-formula:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -418,12 +460,12 @@
           ]
         },
         {
-          "sectionId": "multiplication-formula:check:v2",
+          "sectionId": "multiplication-formula:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "multiplication-formula:check:problems:v2",
+              "blockId": "multiplication-formula:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -439,18 +481,34 @@
           ]
         },
         {
-          "sectionId": "multiplication-formula:summary:v2",
+          "sectionId": "multiplication-formula:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "multiplication-formula:summary:text:v2",
+              "blockId": "multiplication-formula:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "괄호끼리의 곱셈은 각 항을 하나씩 곱한 뒤 같은 것끼리 모으는 것이 전부예요.\n\n자주 나오는 네 모양은 외워 두면 빨라요. $(a+b)^2$과 $(a-b)^2$은 가운데 $2ab$를 잊지 않는 것이 핵심이고, $(a+b)(a-b)$는 가운데가 지워져 $a^2-b^2$만 남아요.\n\n$(x+a)(x+b) = x^2 + (a+b)x + ab$는 「더해서 가운데, 곱해서 끝」이에요.\n\n다음 수업에서는 이 공식들을 오른쪽에서 왼쪽으로 읽어요. 그것이 인수분해예요.",
-                "definitions": []
+                "text": "괄호끼리의 곱셈은 전개가 전부예요. 각 항을 하나씩 곱한 뒤 동류항을 모으면 돼요.\n\n자주 나오는 네 모양은 외워 두면 빨라요. $(a+b)^2$과 $(a-b)^2$은 가운데 $2ab$를 잊지 않는 것이 핵심이에요. $(a+b)(a-b)$는 가운데가 지워져 $a^2-b^2$만 남아요.\n\n$(x+a)(x+b) = x^2 + (a+b)x + ab$는 「더해서 가운데, 곱해서 끝」이에요.\n\n다음 수업에서는 이 공식들을 오른쪽에서 왼쪽으로 읽어요. 그것이 인수분해예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "expansion",
+                    "surface": "전개",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "like-term",
+                    "surface": "동류항",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "factorization",
+                    "surface": "인수분해",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -468,7 +526,7 @@
     {
       "public": {
         "lessonKey": "common-factor",
-        "versionId": "common-factor:v2",
+        "versionId": "common-factor:v3",
         "title": "인수분해: 더한 식을 곱한 식으로 되돌리기",
         "summary": "전개의 반대 방향으로 가는 길을 열고, 모든 항에 함께 든 것을 앞으로 빼내요.",
         "estimatedMinutes": 12,
@@ -484,28 +542,38 @@
       },
       "sections": [
         {
-          "sectionId": "common-factor:explanation:v2",
+          "sectionId": "common-factor:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "common-factor:explanation:text:v2",
+              "blockId": "common-factor:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$3(x+2)$를 전개하면 $3x + 6$이에요. 이번에는 거꾸로 가 볼게요. $3x + 6$을 보고 $3(x+2)$를 찾아내는 거예요. 이렇게 더한 식을 곱한 식으로 되돌리는 것을 인수분해라고 해요.\n\n왜 되돌릴까요. 곱한 식은 「무엇을 곱했더니 이렇게 됐는가」를 말해 주기 때문이에요. 다음 과정에서 이차방정식을 풀 때, 곱이 $0$이라는 사실 하나로 답이 나오게 돼요.\n\n가장 먼저 할 일은 늘 같아요. 모든 항에 함께 들어 있는 것을 찾아 앞으로 빼내요. $3x + 6$에서는 $3x = 3 \\times x$이고 $6 = 3 \\times 2$이니 $3$이 함께 들어 있어요.\n\n문자도 함께 들어 있으면 같이 빼내요. $x^2 - 4x$는 두 항 모두 $x$를 품고 있으니 $x(x-4)$예요.\n\n둘 다 있으면 둘 다 빼내요. $4x^2 + 6x$는 수로는 $2$, 문자로는 $x$가 함께 있으니 $2x(2x+3)$이에요. 가능한 한 많이 빼내는 것이 요령이에요. $2(2x^2+3x)$에서 멈추면 아직 덜 된 거예요.\n\n맞게 했는지 확인하는 방법은 하나뿐이에요. 다시 전개해서 처음 식으로 돌아오면 맞아요.\n\n빼낸 것과 괄호 안에 남은 것을 그 식의 인수라고 불러요. $3x+6$의 인수는 $3$과 $x+2$예요.",
+                "text": "$3(x+2)$를 전개하면 $3x + 6$이에요. 이번에는 거꾸로 가 볼게요. $3x + 6$을 보고 $3(x+2)$를 찾아내는 거예요. 이렇게 더한 식을 곱한 식으로 되돌리는 것을 인수분해라고 해요.\n\n왜 되돌릴까요. 곱한 식은 무엇을 곱해서 이렇게 됐는지 말해 주기 때문이에요. 다음 과정에서 이차방정식을 풀 때 쓰여요. 곱이 $0$이라는 사실 하나로 답이 나오거든요.",
                 "definitions": [
+                  {
+                    "conceptKey": "expansion",
+                    "surface": "전개",
+                    "scopeKind": "global"
+                  },
                   {
                     "conceptKey": "factorization",
                     "surface": "인수분해",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "quadratic-equation",
+                    "surface": "이차방정식",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "common-factor:explanation:drawing:v2",
+              "blockId": "common-factor:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -717,33 +785,71 @@
                 ],
                 "frameMs": 1700
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "common-factor:example:v2",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "common-factor:example:text:v2",
+              "blockId": "common-factor:explanation:text-2:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$6x^2 - 9x$를 인수분해해 볼게요.\n\n수부터 봐요. $6$과 $9$에 함께 들어 있는 가장 큰 수는 $3$이에요.\n\n문자를 봐요. $x^2$과 $x$에 함께 들어 있는 것은 $x$예요. $x^2$은 $x \\times x$니까요.\n\n그래서 $3x$를 빼내요. 각 항을 $3x$로 나누면 $6x^2 \\div 3x = 2x$, $-9x \\div 3x = -3$이에요.\n\n$6x^2 - 9x = 3x(2x - 3)$이에요.\n\n확인해 볼게요. $3x \\times 2x = 6x^2$, $3x \\times (-3) = -9x$. 처음 식으로 돌아왔으니 맞아요.\n\n빼낸 뒤 괄호 안이 $1$이 되는 경우도 있어요. $5x + 5$는 $5(x+1)$이지, $5(x)$가 아니에요. $5 = 5 \\times 1$이니 $1$이 남는다는 것을 잊지 마세요.",
-                "definitions": []
+                "text": "가장 먼저 할 일은 늘 같아요. 모든 항에 함께 들어 있는 것을 찾아 앞으로 빼내요. $3x + 6$에서는 $3x = 3 \\times x$이고 $6 = 3 \\times 2$예요. 그러니 $3$이 함께 들어 있어요.\n\n문자도 함께 들어 있으면 같이 빼내요. $x^2 - 4x$는 두 항 모두 $x$를 품고 있으니 $x(x-4)$예요.\n\n둘 다 있으면 둘 다 빼내요. $4x^2 + 6x$는 수로는 $2$, 문자로는 $x$가 함께 있어요. 그래서 $2x(2x+3)$이에요. 가능한 한 많이 빼내는 것이 요령이에요. $2(2x^2+3x)$에서 멈추면 아직 덜 된 거예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "variable",
+                    "surface": "문자",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "common-factor:explanation:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "맞게 했는지 확인하는 방법은 하나뿐이에요. 다시 전개해서 처음 식으로 돌아오면 맞아요.\n\n빼낸 것과 괄호 안에 남은 것을 그 식의 인수라고 불러요. $3x+6$의 인수는 $3$과 $x+2$예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "expansion",
+                    "surface": "전개",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "common-factor:practice:v2",
+          "sectionId": "common-factor:example:v3",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "common-factor:example:text:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$6x^2 - 9x$를 인수분해해 볼게요.\n\n수부터 봐요. $6$과 $9$에 함께 들어 있는 가장 큰 수는 $3$이에요.\n\n문자를 봐요. $x^2$과 $x$에 함께 들어 있는 것은 $x$예요. $x^2$은 $x \\times x$니까요.\n\n그래서 $3x$를 빼내요. 각 항을 $3x$로 나누면 $6x^2 \\div 3x = 2x$, $-9x \\div 3x = -3$이에요.\n\n$6x^2 - 9x = 3x(2x - 3)$이에요.\n\n확인해 볼게요. $3x \\times 2x = 6x^2$, $3x \\times (-3) = -9x$. 처음 식으로 돌아왔으니 맞아요.\n\n빼낸 뒤 괄호 안이 $1$이 되는 경우도 있어요. $5x + 5$는 $5(x+1)$이지 $5(x)$가 아니에요. $5 = 5 \\times 1$이니 $1$이 남는다는 것을 잊지 마세요.",
+                "definitions": [
+                  {
+                    "conceptKey": "factorization",
+                    "surface": "인수분해",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "common-factor:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "common-factor:practice:problems:v2",
+              "blockId": "common-factor:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -760,12 +866,12 @@
           ]
         },
         {
-          "sectionId": "common-factor:check:v2",
+          "sectionId": "common-factor:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "common-factor:check:problems:v2",
+              "blockId": "common-factor:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -781,18 +887,39 @@
           ]
         },
         {
-          "sectionId": "common-factor:summary:v2",
+          "sectionId": "common-factor:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "common-factor:summary:text:v2",
+              "blockId": "common-factor:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "인수분해는 전개의 반대 방향이에요. 더한 식을 곱한 식으로 되돌려요.\n\n첫걸음은 늘 공통으로 든 것을 빼내는 것이고, 수와 문자를 모두 살펴 가능한 한 많이 빼내요.\n\n확인은 다시 전개해 보는 것으로 해요. 처음 식으로 돌아오면 맞아요.\n\n공통으로 든 것이 없을 때도 인수분해가 되는 식이 있어요. 다음 수업에서 그 모양들을 만나요.",
-                "definitions": []
+                "text": "인수분해는 전개의 반대 방향이에요. 더한 식을 곱한 식으로 되돌려요.\n\n첫걸음은 늘 공통으로 든 것을 빼내는 것이에요. 수와 문자를 모두 살펴 가능한 한 많이 빼내요.\n\n확인은 다시 전개해 보는 것으로 해요. 처음 식으로 돌아오면 맞아요.\n\n공통으로 든 것이 없어도 인수분해가 되는 식이 있어요. 다음 수업에서 인수분해 공식을 만나요.",
+                "definitions": [
+                  {
+                    "conceptKey": "factorization",
+                    "surface": "인수분해",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "expansion",
+                    "surface": "전개",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "variable",
+                    "surface": "문자",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "factorization-formula",
+                    "surface": "인수분해 공식",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -810,7 +937,7 @@
     {
       "public": {
         "lessonKey": "factorization-formula",
-        "versionId": "factorization-formula:v2",
+        "versionId": "factorization-formula:v3",
         "title": "공식으로 인수분해: 더해서 얼마, 곱해서 얼마",
         "summary": "곱셈 공식을 오른쪽에서 왼쪽으로 읽어, 공통인수가 없는 식도 곱의 꼴로 되돌려요.",
         "estimatedMinutes": 12,
@@ -826,35 +953,40 @@
       },
       "sections": [
         {
-          "sectionId": "factorization-formula:explanation:v2",
+          "sectionId": "factorization-formula:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "factorization-formula:explanation:text:v2",
+              "blockId": "factorization-formula:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$x^2 + 5x + 6$에는 모든 항에 함께 든 것이 없어요. 그래도 인수분해가 돼요. 앞 수업에서 외운 곱셈 공식을 오른쪽에서 왼쪽으로 읽으면 되거든요.\n\n$(x+a)(x+b) = x^2 + (a+b)x + ab$였죠. 거꾸로 읽으면, 가운데 계수가 두 수의 합이고 끝의 수가 두 수의 곱이에요. 그러니 「더해서 $5$, 곱해서 $6$」인 두 수를 찾으면 돼요. $2$와 $3$이에요. 그래서 $(x+2)(x+3)$이에요.\n\n찾는 순서는 곱부터예요. 곱해서 $6$이 되는 짝은 $1$과 $6$, $2$와 $3$뿐이라 후보가 몇 개 없어요. 합이 되는 짝을 그중에서 고르면 돼요.\n\n부호도 곱이 알려 줘요. 끝의 수가 음수이면 두 수의 부호가 서로 달라요. $x^2 + 2x - 8$은 곱해서 $-8$, 더해서 $2$이니 $4$와 $-2$, 곧 $(x+4)(x-2)$예요.\n\n완전제곱식도 자주 나와요. $x^2 + 8x + 16$은 끝이 $4^2$이고 가운데가 $2 \\times 4$이니 $(x+4)^2$이에요. 「끝이 제곱수이고 가운데가 그 수의 두 배」인지 보면 알 수 있어요.\n\n항이 둘뿐인데 가운데가 없는 모양도 있어요. $x^2 - 9$는 $x^2 - 3^2$이니 $(x+3)(x-3)$이에요. 제곱에서 제곱을 뺀 모양은 늘 「합 곱하기 차」로 갈라져요.\n\n이렇게 곱셈 공식을 거꾸로 읽어 만든 것들을 인수분해 공식이라고 불러요. 어느 경우든 확인은 같아요. 다시 전개해서 처음 식으로 돌아오면 맞아요.",
+                "text": "$x^2 + 5x + 6$에는 모든 항에 함께 든 것이 없어요. 그래도 인수분해가 돼요. 앞 수업에서 외운 곱셈 공식을 오른쪽에서 왼쪽으로 읽으면 되거든요.\n\n$(x+a)(x+b) = x^2 + (a+b)x + ab$였죠. 거꾸로 읽어 볼게요. 가운데 계수가 두 수의 합이에요. 끝의 수가 두 수의 곱이고요. 그러니 「더해서 $5$, 곱해서 $6$」인 두 수를 찾으면 돼요. $2$와 $3$이에요. 그래서 $(x+2)(x+3)$이에요.\n\n찾는 순서는 곱부터예요. 곱해서 $6$이 되는 짝은 $1$과 $6$, $2$와 $3$뿐이라 후보가 몇 개 없어요. 그중에서 합이 맞는 짝을 고르면 돼요.\n\n부호도 곱이 알려 줘요. 끝의 수가 음수이면 두 수의 부호가 서로 달라요. $x^2 + 2x - 8$은 곱해서 $-8$, 더해서 $2$예요. 그러니 $4$와 $-2$, 곧 $(x+4)(x-2)$예요.",
                 "definitions": [
                   {
-                    "conceptKey": "factorization-formula",
-                    "surface": "인수분해 공식",
+                    "conceptKey": "multiplication-formula",
+                    "surface": "곱셈 공식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "coefficient",
+                    "surface": "계수",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "factorization-formula:explanation:drawing:v2",
+              "blockId": "factorization-formula:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "가로 x 더하기 2, 세로 x 더하기 3인 직사각형이 네 조각으로 갈라져 넓이가 보이는 그림",
+                "alt": "가로 x 더하기 2, 세로 x 더하기 3인 직사각형이 네 조각으로 나뉘어 넓이가 보이는 그림",
                 "caption": "더해서 5, 곱해서 6이 되는 두 수가 가로와 세로예요",
                 "items": [
                   {
@@ -1020,7 +1152,7 @@
                     ]
                   },
                   {
-                    "caption": "네 조각으로 갈라 넓이를 세면 $x^2$, $2x$, $3x$, $6$이에요.",
+                    "caption": "네 조각으로 나눠 넓이를 세면 $x^2$, $2x$, $3x$, $6$이에요.",
                     "changes": [
                       {
                         "id": "xx",
@@ -1128,33 +1260,76 @@
                 ],
                 "frameMs": 1700
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "factorization-formula:example:v2",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "factorization-formula:example:text:v2",
+              "blockId": "factorization-formula:explanation:text-2:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$x^2 - 7x + 12$를 인수분해해 볼게요.\n\n곱해서 $12$가 되는 두 수를 적어 봐요. $1 \\times 12$, $2 \\times 6$, $3 \\times 4$예요.\n\n가운데가 $-7$로 음수인데 끝의 $12$는 양수예요. 곱이 양수이면서 합이 음수이려면 둘 다 음수여야 해요.\n\n$-3$과 $-4$를 보면 곱이 $12$, 합이 $-7$이에요. 그래서 $(x-3)(x-4)$예요.\n\n확인해 볼게요. $(x-3)(x-4) = x^2 - 4x - 3x + 12 = x^2 - 7x + 12$. 맞아요.\n\n하나 더, $2x^2 - 8$을 볼게요. 제곱에서 제곱을 뺀 모양 같지만 $2x^2$은 제곱이 아니에요.\n\n이럴 때는 앞 수업의 첫걸음부터예요. 공통인수 $2$를 먼저 빼내면 $2(x^2 - 4)$이고, 이제 괄호 안이 $x^2 - 2^2$이니 $2(x+2)(x-2)$예요. 공통인수를 먼저 빼내는 순서는 언제나 같아요.",
-                "definitions": []
+                "text": "완전제곱식도 자주 나와요. $x^2 + 8x + 16$은 끝이 $4^2$이고 가운데가 $2 \\times 4$예요. 그래서 $(x+4)^2$이에요. 「끝이 제곱수이고 가운데가 그 수의 두 배」인지 보면 알 수 있어요.\n\n항이 둘뿐인데 가운데가 없는 모양도 있어요. $x^2 - 9$는 $x^2 - 3^2$이니 $(x+3)(x-3)$이에요. 제곱에서 제곱을 뺀 모양은 늘 「합 곱하기 차」로 나뉘어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "completing-square",
+                    "surface": "완전제곱식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "factorization-formula:explanation:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "이렇게 곱셈 공식을 거꾸로 읽어 만든 것들을 인수분해 공식이라고 불러요. 어느 경우든 확인은 같아요. 다시 전개해서 처음 식으로 돌아오면 맞아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "factorization-formula",
+                    "surface": "인수분해 공식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "expansion",
+                    "surface": "전개",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "factorization-formula:practice:v2",
+          "sectionId": "factorization-formula:example:v3",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "factorization-formula:example:text:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 7x + 12$를 인수분해해 볼게요.\n\n곱해서 $12$가 되는 두 수를 적어 봐요. $1 \\times 12$, $2 \\times 6$, $3 \\times 4$예요.\n\n가운데가 $-7$로 음수인데 끝의 $12$는 양수예요. 곱이 양수이면서 합이 음수이려면 둘 다 음수여야 해요.\n\n$-3$과 $-4$를 보면 곱이 $12$, 합이 $-7$이에요. 그래서 $(x-3)(x-4)$예요.\n\n확인해 볼게요. $(x-3)(x-4) = x^2 - 4x - 3x + 12 = x^2 - 7x + 12$. 맞아요.\n\n하나 더, $2x^2 - 8$을 볼게요. 제곱에서 제곱을 뺀 모양 같지만 $2x^2$은 제곱이 아니에요.\n\n이럴 때는 앞 수업의 첫걸음부터예요. 공통인수 $2$를 먼저 빼내면 $2(x^2 - 4)$예요. 이제 괄호 안이 $x^2 - 2^2$이니 $2(x+2)(x-2)$예요. 공통인수를 먼저 빼내는 순서는 언제나 같아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "factorization",
+                    "surface": "인수분해",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "factorization-formula:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "factorization-formula:practice:problems:v2",
+              "blockId": "factorization-formula:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1171,12 +1346,12 @@
           ]
         },
         {
-          "sectionId": "factorization-formula:check:v2",
+          "sectionId": "factorization-formula:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "factorization-formula:check:problems:v2",
+              "blockId": "factorization-formula:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1192,18 +1367,34 @@
           ]
         },
         {
-          "sectionId": "factorization-formula:summary:v2",
+          "sectionId": "factorization-formula:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "factorization-formula:summary:text:v2",
+              "blockId": "factorization-formula:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "곱셈 공식을 거꾸로 읽으면 인수분해 공식이 돼요.\n\n$x^2 + (a+b)x + ab$는 「더해서 가운데, 곱해서 끝」인 두 수를 찾아 $(x+a)(x+b)$로 갈라요. 곱부터 찾는 편이 빨라요.\n\n끝이 제곱수이고 가운데가 그 수의 두 배이면 완전제곱식, 제곱에서 제곱을 뺀 모양이면 합 곱하기 차예요.\n\n무엇을 하든 공통인수를 먼저 빼내고 시작해요. 다음 과정에서 이 손놀림으로 이차방정식을 풀어요.",
-                "definitions": []
+                "text": "곱셈 공식을 거꾸로 읽으면 인수분해 공식이 돼요.\n\n$x^2 + (a+b)x + ab$는 「더해서 가운데, 곱해서 끝」인 두 수를 찾아요. 그러면 $(x+a)(x+b)$로 나뉘어요. 곱부터 찾는 편이 빨라요.\n\n끝이 제곱수이고 가운데가 그 수의 두 배이면 완전제곱식이에요. 제곱에서 제곱을 뺀 모양이면 합 곱하기 차고요.\n\n무엇을 하든 공통인수를 먼저 빼내고 시작해요. 다음 과정에서 이 방법으로 이차방정식을 풀어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "factorization-formula",
+                    "surface": "인수분해 공식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "completing-square",
+                    "surface": "완전제곱식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "quadratic-equation",
+                    "surface": "이차방정식",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
