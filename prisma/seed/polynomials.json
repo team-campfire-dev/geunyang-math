@@ -451,7 +451,7 @@
     {
       "public": {
         "lessonKey": "monomial-arithmetic",
-        "versionId": "monomial-arithmetic:v2",
+        "versionId": "monomial-arithmetic:v3",
         "title": "단항식의 곱셈과 나눗셈: 갈라서 계산하기",
         "summary": "곱으로만 이어진 식을 수 부분과 문자 부분으로 갈라 계산하고 다시 붙여요.",
         "estimatedMinutes": 10,
@@ -466,17 +466,17 @@
       },
       "sections": [
         {
-          "sectionId": "monomial-arithmetic:explanation:v2",
+          "sectionId": "monomial-arithmetic:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "monomial-arithmetic:explanation:text:v2",
+              "blockId": "monomial-arithmetic:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$3x^2$처럼 덧셈과 뺄셈 없이 곱으로만 이어진 식을 단항식이라고 해요. 항이 하나뿐이라는 뜻이에요.\n\n단항식끼리 곱할 때는 갈라서 하면 쉬워요. 수는 수끼리, 문자는 문자끼리 모아 각각 계산한 다음 다시 붙이는 거예요.\n\n$3x^2 \\times 4x$로 해 볼게요. 수끼리는 $3 \\times 4 = 12$, 문자끼리는 $x^2 \\times x = x^3$이에요. 붙이면 $12x^3$이고요.\n\n곱셈은 순서를 바꿔도 결과가 같아서 이렇게 갈라도 괜찮아요.\n\n나눗셈도 같아요. $12x^5 \\div 3x^2$은 수끼리 $12 \\div 3 = 4$, 문자끼리 $x^5 \\div x^2 = x^3$이라 $4x^3$이에요. 문자 부분은 지수를 뺍니다.\n\n부호는 수 쪽에 붙여 함께 계산해요. $-2a \\times 3a = -6a^2$입니다.",
+                "text": "$3x^2$처럼 덧셈과 뺄셈 없이 곱으로만 이어진 식을 단항식이라고 해요. 항이 하나뿐이라는 뜻이에요.\n\n단항식끼리 곱할 때는 같은 것끼리 모으면 쉬워요. 수는 수끼리, 문자는 문자끼리 모아 각각 계산한 다음 다시 붙이는 거예요.\n\n$3x^2 \\times 4x$로 해 볼게요. 수끼리는 $3 \\times 4 = 12$, 문자끼리는 $x^2 \\times x = x^3$이에요. 붙이면 $12x^3$이고요.\n\n곱셈은 순서를 바꿔도 결과가 같아서 이렇게 모아도 괜찮아요.\n\n나눗셈도 같아요. $12x^5 \\div 3x^2$은 수끼리 $12 \\div 3 = 4$, 문자끼리 $x^5 \\div x^2 = x^3$이라 $4x^3$이에요. 문자 부분은 지수를 뺍니다.\n\n부호는 수 쪽에 붙여 함께 계산해요. $-2a \\times 3a = -6a^2$입니다.",
                 "definitions": [
                   {
                     "conceptKey": "monomial",
@@ -487,7 +487,7 @@
               }
             },
             {
-              "blockId": "monomial-arithmetic:explanation:drawing:v2",
+              "blockId": "monomial-arithmetic:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -628,17 +628,17 @@
           ]
         },
         {
-          "sectionId": "monomial-arithmetic:example:v2",
+          "sectionId": "monomial-arithmetic:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "monomial-arithmetic:example:text:v2",
+              "blockId": "monomial-arithmetic:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$(-3x^2y) \\times 2xy^3$을 계산해 볼게요. 문자가 둘인 단항식이지만 방법은 같아요.\n\n수끼리 먼저요. $-3 \\times 2 = -6$이에요. 부호는 수 쪽에서 처리합니다.\n\n이제 문자를 종류별로 갈라요. $x$끼리는 $x^2 \\times x = x^3$이고, $y$끼리는 $y \\times y^3 = y^4$예요. 밑이 다른 $x$와 $y$는 서로 섞이지 않아요.\n\n모두 붙이면 $-6x^3y^4$이에요.\n\n나눗셈이 섞이면 분수로 바꿔 두면 안전해요. $8x^3 \\div 4x \\div x$는 $\\frac{8x^3}{4x \\times x}$로 적고 정리하면 $2x$예요. 나눗셈을 왼쪽부터 차례로 하지 않고 한꺼번에 묶어 버리면 답이 달라지니 조심하세요.",
+                "text": "$(-3x^2y) \\times 2xy^3$을 계산해 볼게요. 문자가 둘인 단항식이지만 방법은 같아요.\n\n수끼리 먼저요. $-3 \\times 2 = -6$이에요. 부호는 수 쪽에서 처리합니다.\n\n이제 문자를 종류별로 모아요. $x$끼리는 $x^2 \\times x = x^3$이고, $y$끼리는 $y \\times y^3 = y^4$예요. 밑이 다른 $x$와 $y$는 서로 섞이지 않아요.\n\n모두 붙이면 $-6x^3y^4$이에요.\n\n나눗셈이 섞이면 분수로 바꿔 두면 안전해요. $8x^3 \\div 4x \\div x$는 $\\frac{8x^3}{4x \\times x}$로 적고 정리하면 $2x$예요. 나눗셈을 왼쪽부터 차례로 하지 않고 한꺼번에 묶어 버리면 답이 달라지니 조심하세요.",
                 "definitions": [
                   {
                     "conceptKey": "monomial",
@@ -651,12 +651,12 @@
           ]
         },
         {
-          "sectionId": "monomial-arithmetic:practice:v2",
+          "sectionId": "monomial-arithmetic:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "monomial-arithmetic:practice:problems:v2",
+              "blockId": "monomial-arithmetic:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -673,12 +673,12 @@
           ]
         },
         {
-          "sectionId": "monomial-arithmetic:check:v2",
+          "sectionId": "monomial-arithmetic:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "monomial-arithmetic:check:problems:v2",
+              "blockId": "monomial-arithmetic:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -694,17 +694,17 @@
           ]
         },
         {
-          "sectionId": "monomial-arithmetic:summary:v2",
+          "sectionId": "monomial-arithmetic:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "monomial-arithmetic:summary:text:v2",
+              "blockId": "monomial-arithmetic:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "곱으로만 이어진 식이 단항식이에요.\n\n단항식끼리 곱하고 나눌 때는 수는 수끼리, 문자는 같은 문자끼리 갈라 계산한 뒤 다시 붙여요. 부호는 수 쪽에 붙여 함께 처리합니다.\n\n이 수업의 개념은 단항식이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "곱으로만 이어진 식이 단항식이에요.\n\n단항식끼리 곱하고 나눌 때는 수는 수끼리, 문자는 같은 문자끼리 모아 계산한 뒤 다시 붙여요. 부호는 수 쪽에 붙여 함께 처리합니다.\n\n이 수업의 개념은 단항식이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "monomial",
@@ -729,7 +729,7 @@
     {
       "public": {
         "lessonKey": "polynomial-arithmetic",
-        "versionId": "polynomial-arithmetic:v3",
+        "versionId": "polynomial-arithmetic:v4",
         "title": "다항식의 덧셈과 뺄셈: 빼기 괄호를 조심하기",
         "summary": "항이 여럿인 식을 더하고 빼며, 빼기 괄호가 안쪽 부호를 모두 바꾼다는 것을 익혀요.",
         "estimatedMinutes": 10,
@@ -746,17 +746,17 @@
       },
       "sections": [
         {
-          "sectionId": "polynomial-arithmetic:explanation:v3",
+          "sectionId": "polynomial-arithmetic:explanation:v4",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-arithmetic:explanation:text:v3",
+              "blockId": "polynomial-arithmetic:explanation:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$2x+3$이나 $x^2-4x+1$처럼 항이 여럿인 식을 다항식이라고 해요. 항이 하나뿐인 단항식도 다항식에 들어갑니다.\n\n가장 높은 차수가 그 식의 차수예요. $x^2-4x+1$은 이차식이고 $2x+3$은 일차식이에요.\n\n다항식의 덧셈과 뺄셈은 괄호를 풀고 동류항을 모으는 일이에요. 새로운 계산이 아니라 일차식에서 하던 것을 항이 늘어난 식에 그대로 하는 거예요.\n\n더할 때는 괄호 안이 그대로 나와요. $(2x+3) + (3x-1) = 2x+3+3x-1$이고, 모으면 $5x+2$예요.\n\n뺄 때가 조심할 자리예요. 빼기 괄호는 안쪽 「모든」 항의 부호를 바꿔요. $(2x+3)-(x-1)$은 $2x+3-x+1$이고, 정리하면 $x+4$예요. 뒤쪽 $-1$이 $+1$로 바뀌는 것을 놓치기 쉬워요.",
+                "text": "$2x+3$이나 $x^2-4x+1$처럼 항이 여럿인 식을 다항식이라고 해요. 항이 하나뿐인 단항식도 다항식에 들어갑니다.\n\n가장 높은 차수가 그 식의 차수예요. $x^2-4x+1$은 이차식이고 $2x+3$은 일차식이에요.\n\n다항식의 덧셈과 뺄셈은 괄호를 풀고 동류항을 모으는 일이에요. 새로운 계산이 아니라 일차식에서 하던 것을 항이 늘어난 식에 그대로 하는 거예요.\n\n더할 때는 괄호 안이 그대로 나와요. $(2x+3) + (3x-1) = 2x+3+3x-1$이고, 모으면 $5x+2$예요.\n\n뺄 때를 조심해야 해요. 빼기 괄호는 안쪽 「모든」 항의 부호를 바꿔요. $(2x+3)-(x-1)$은 $2x+3-x+1$이고, 정리하면 $x+4$예요. 뒤쪽 $-1$이 $+1$로 바뀌는 것을 놓치기 쉬워요.",
                 "definitions": [
                   {
                     "conceptKey": "polynomial",
@@ -772,7 +772,7 @@
               }
             },
             {
-              "blockId": "polynomial-arithmetic:explanation:drawing:v3",
+              "blockId": "polynomial-arithmetic:explanation:drawing:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1030,12 +1030,12 @@
           ]
         },
         {
-          "sectionId": "polynomial-arithmetic:example:v3",
+          "sectionId": "polynomial-arithmetic:example:v4",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-arithmetic:example:text:v3",
+              "blockId": "polynomial-arithmetic:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1053,12 +1053,12 @@
           ]
         },
         {
-          "sectionId": "polynomial-arithmetic:practice:v3",
+          "sectionId": "polynomial-arithmetic:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-arithmetic:practice:problems:v3",
+              "blockId": "polynomial-arithmetic:practice:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1075,12 +1075,12 @@
           ]
         },
         {
-          "sectionId": "polynomial-arithmetic:check:v3",
+          "sectionId": "polynomial-arithmetic:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-arithmetic:check:problems:v3",
+              "blockId": "polynomial-arithmetic:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1096,12 +1096,12 @@
           ]
         },
         {
-          "sectionId": "polynomial-arithmetic:summary:v3",
+          "sectionId": "polynomial-arithmetic:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "polynomial-arithmetic:summary:text:v3",
+              "blockId": "polynomial-arithmetic:summary:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
