@@ -69,7 +69,7 @@
     {
       "public": {
         "lessonKey": "ncs-frequency",
-        "versionId": "ncs-frequency:v1",
+        "versionId": "ncs-frequency:v2",
         "title": "빈도와 비중: 몇 건이고, 몇 %인가",
         "summary": "자료를 세어 빈도를 구하고, 전체로 나누어 비중으로 바꿔요.",
         "estimatedMinutes": 10,
@@ -82,26 +82,55 @@
           "percentage-of",
           "rate"
         ],
-        "sectionCount": 5
+        "sectionCount": 6
       },
       "sections": [
         {
-          "sectionId": "ncs-frequency:explanation:v1",
+          "sectionId": "ncs-frequency:count:v2",
           "role": "explanation",
-          "title": "개념 만나기",
+          "title": "먼저 몇 건인지 센다",
           "contentBlocks": [
             {
-              "blockId": "ncs-frequency:explanation:text:v1",
+              "blockId": "ncs-frequency:count:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "길잡이 과정에서 통계가 무엇을 하는지 훑었어요. 여기서부터는 손에 익히는 자리예요.\n\n통계는 어려운 계산이 아니라 세는 것에서 시작해요. 어떤 값이 몇 번 나타났는지 센 것이 빈도예요. 고객 문의를 유형별로 세면 배송 $80$건, 반품 $50$건, 결제 $70$건, 기타 $50$건처럼 나와요.\n\n빈도만으로는 많은지 적은지 말하기 어려워요. 배송 문의 $80$건은 전체가 $100$건일 때와 $1{,}000$건일 때 뜻이 전혀 달라요. 그래서 전체로 나눈 값, 비중을 함께 봅니다.\n\n$\\text{비중} = \\frac{\\text{부분}}{\\text{전체}}$이고, 백분율로 쓰려면 $100$을 곱해요. 배송 문의의 비중은 $\\frac{80}{250} = 0.32$, 즉 $32\\%$예요.\n\n거꾸로 전체와 비중을 알면 부분을 구할 수 있어요. 고객 $500$명의 $35\\%$가 신규라면 신규 고객은 $500 \\times 0.35 = 175$명이에요. 시험에서는 이 두 방향이 번갈아 나옵니다.",
-                "definitions": []
+                "text": "통계는 세는 일에서 시작해요. 어려운 계산이 아니에요.\n\n어떤 값이 몇 번 나왔는지 센 수가 빈도예요. 고객 문의를 유형별로 세어 볼게요. 배송 $80$건, 반품 $50$건, 결제 $70$건, 기타 $50$건이에요. 이 네 수가 각 유형의 빈도예요.\n\n그런데 빈도만으로는 많은지 적은지 말하기 어려워요. 배송 문의 $80$건은 전체가 $100$건일 때와 $1{,}000$건일 때 뜻이 전혀 달라요.",
+                "definitions": [
+                  {
+                    "conceptKey": "frequency",
+                    "surface": "빈도",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-frequency:share:v2",
+          "role": "explanation",
+          "title": "전체로 나누면 비중이 된다",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-frequency:share:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "그래서 전체로 나눈 값을 함께 봐요. 전체에서 그 부분이 차지하는 만큼이 비중이에요.\n\n$\\text{비중} = \\frac{\\text{부분}}{\\text{전체}}$이고, 백분율로 쓰려면 $100$을 곱해요. 배송 문의의 비중은 $\\frac{80}{250} = 0.32$, 즉 $32\\%$예요.\n\n거꾸로 전체와 비중을 알면 부분을 구할 수 있어요. 고객 $500$명의 $35\\%$가 신규라면 신규 고객은 $500 \\times 0.35 = 175$명이에요. 시험에서는 이 두 방향이 번갈아 나와요.",
+                "definitions": [
+                  {
+                    "conceptKey": "proportion",
+                    "surface": "비중",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             },
             {
-              "blockId": "ncs-frequency:explanation:drawing:v1",
+              "blockId": "ncs-frequency:share:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -325,29 +354,29 @@
           ]
         },
         {
-          "sectionId": "ncs-frequency:example:v1",
+          "sectionId": "ncs-frequency:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-frequency:example:text:v1",
+              "blockId": "ncs-frequency:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "어느 달의 부서별 지출이 인건비 $1{,}800$만 원, 임차료 $600$만 원, 재료비 $1{,}200$만 원, 기타 $400$만 원이었어요. 인건비의 비중을 구해 볼게요.\n\n먼저 전체예요. $1{,}800 + 600 + 1{,}200 + 400 = 4{,}000$만 원이에요. 비중을 묻는 문제는 전체를 먼저 구하는 것이 거의 항상 첫 걸음이에요.\n\n인건비의 비중은 $\\frac{1{,}800}{4{,}000} = 0.45$, 즉 $45\\%$예요.\n\n여기서 조심할 것이 하나 있어요. 네 항목의 비중을 각각 구하면 $45\\%$, $15\\%$, $30\\%$, $10\\%$이고 더하면 $100\\%$가 돼요. 비중은 이렇게 전체가 $100\\%$가 되도록 나눈 몫이에요. 서로 다른 전체를 기준으로 구한 비중끼리는 더할 수 없다는 뜻이기도 해요.",
+                "text": "어느 달의 부서별 지출이에요. 인건비 $1{,}800$만 원, 임차료 $600$만 원, 재료비 $1{,}200$만 원, 기타 $400$만 원이었어요. 인건비의 비중을 구해 볼게요.\n\n먼저 전체를 구해요. $1{,}800 + 600 + 1{,}200 + 400 = 4{,}000$만 원이에요. 비중을 묻는 문제는 전체부터 구해요. 거의 항상 첫 단계예요.\n\n인건비의 비중은 $\\frac{1{,}800}{4{,}000} = 0.45$, 즉 $45\\%$예요.\n\n조심할 것이 하나 있어요. 네 항목의 비중을 각각 구하면 $45\\%$, $15\\%$, $30\\%$, $10\\%$이고 더하면 $100\\%$가 돼요. 비중은 같은 전체를 $100\\%$로 놓고 나눈 값이에요. 전체가 서로 다른 비중끼리는 더할 수 없다는 뜻이기도 해요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-frequency:practice:v1",
+          "sectionId": "ncs-frequency:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-frequency:practice:problems:v1",
+              "blockId": "ncs-frequency:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -364,12 +393,12 @@
           ]
         },
         {
-          "sectionId": "ncs-frequency:check:v1",
+          "sectionId": "ncs-frequency:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-frequency:check:problems:v1",
+              "blockId": "ncs-frequency:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -385,18 +414,29 @@
           ]
         },
         {
-          "sectionId": "ncs-frequency:summary:v1",
+          "sectionId": "ncs-frequency:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-frequency:summary:text:v1",
+              "blockId": "ncs-frequency:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "빈도는 센 수이고, 비중은 그것을 전체로 나눈 값이에요. 비중을 묻는 문제는 전체를 먼저 구해요.\n\n전체와 비중을 알면 부분은 곱셈으로 구해요. 같은 전체에서 나온 비중들은 더해서 $100\\%$가 돼요.",
-                "definitions": []
+                "text": "빈도는 센 수이고, 비중은 그것을 전체로 나눈 값이에요. 비중을 묻는 문제는 전체를 먼저 구해요.\n\n전체와 비중을 알면 부분은 곱셈으로 구해요. 같은 전체에서 나온 비중들은 더해서 $100\\%$가 돼요.\n\n이 수업의 개념은 빈도와 비중이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "frequency",
+                    "surface": "빈도",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "proportion",
+                    "surface": "비중",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -414,7 +454,7 @@
     {
       "public": {
         "lessonKey": "ncs-mean",
-        "versionId": "ncs-mean:v1",
+        "versionId": "ncs-mean:v2",
         "title": "평균: 여럿을 하나의 수로",
         "summary": "합계와 개수로 평균을 구하고, 인원이 다른 집단을 합칠 때의 가중평균을 익혀요.",
         "estimatedMinutes": 10,
@@ -427,26 +467,55 @@
           "rate",
           "percentage-of"
         ],
-        "sectionCount": 5
+        "sectionCount": 6
       },
       "sections": [
         {
-          "sectionId": "ncs-mean:explanation:v1",
+          "sectionId": "ncs-mean:average:v2",
           "role": "explanation",
-          "title": "개념 만나기",
+          "title": "평균은 합계를 개수로 나눈 값",
           "contentBlocks": [
             {
-              "blockId": "ncs-mean:explanation:text:v1",
+              "blockId": "ncs-mean:average:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "길잡이 과정에서 평균과 합계가 서로 뒤집힌다는 것과, 인원이 다르면 가중평균이라는 것을 봤어요. 여기서는 그 둘을 문제 앞에서 바로 쓸 수 있을 만큼 익혀요.\n\n평균은 여러 값을 대표하는 하나의 수예요. $\\text{평균} = \\frac{\\text{합계}}{\\text{개수}}$이고, 이 식은 뒤집어서도 자주 씁니다. $\\text{합계} = \\text{평균} \\times \\text{개수}$예요.\n\n시험에서는 뒤집은 쪽이 더 많이 나와요. 「네 달 평균이 $250$개인데 앞의 세 달이 $230$, $260$, $240$개였다면 남은 한 달은?」 같은 물음은 평균을 합계로 바꾸는 순간 뺄셈 하나로 끝나요.\n\n조심할 곳은 평균끼리 더할 때예요. A부서 $20$명의 평균이 $80$점, B부서 $30$명의 평균이 $70$점일 때 전체 평균은 $75$점이 아니에요. 사람 수가 다르기 때문이에요.\n\n각 집단의 합계를 먼저 구해 더하고, 전체 인원으로 나눕니다. $\\frac{20 \\times 80 + 30 \\times 70}{50} = \\frac{3{,}700}{50} = 74$점이에요. 이렇게 개수를 무게로 삼아 구한 평균을 가중평균이라고 해요. 값은 언제나 사람이 많은 쪽으로 끌려갑니다.\n\n집단이 셋 이상이어도 같아요. $10$명 평균 $85$점, $20$명 평균 $70$점, $20$명 평균 $65$점이면 $\\frac{850 + 1{,}400 + 1{,}300}{50} = 71$점이에요. 무게가 인원이 아니라 비율로 주어질 때도 방법은 같아요 — 전체를 $100$명이라 두고 인원으로 바꿔 놓으면 돼요.",
-                "definitions": []
+                "text": "여러 값을 대표하는 하나의 수가 평균이에요. 합계를 개수로 나눈 값이고요.\n\n$\\text{평균} = \\frac{\\text{합계}}{\\text{개수}}$이고, 이 식은 뒤집어서도 자주 써요. $\\text{합계} = \\text{평균} \\times \\text{개수}$예요.\n\n시험에서는 뒤집은 쪽이 더 많이 나와요. 「네 달 평균이 $250$개인데 앞의 세 달이 $230$, $260$, $240$개였다면 남은 한 달은?」 이런 물음은 평균을 합계로 바꾸는 순간 뺄셈 하나로 끝나요.",
+                "definitions": [
+                  {
+                    "conceptKey": "mean",
+                    "surface": "평균",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-mean:weighted:v2",
+          "role": "explanation",
+          "title": "인원이 다르면 가중평균",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-mean:weighted:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "평균끼리 더할 때는 조심해요. A부서 $20$명의 평균이 $80$점, B부서 $30$명의 평균이 $70$점이에요. 전체 평균은 $75$점이 아니에요. 사람 수가 다르기 때문이에요.\n\n각 집단의 합계를 먼저 구해 더하고, 전체 인원으로 나눠요. $\\frac{20 \\times 80 + 30 \\times 70}{50} = \\frac{3{,}700}{50} = 74$점이에요. 이렇게 개수를 무게로 삼아 구한 평균을 가중평균이라고 해요. 값은 언제나 사람이 많은 쪽으로 끌려가요.\n\n집단이 셋 이상이어도 같아요. $10$명 평균 $85$점, $20$명 평균 $70$점, $20$명 평균 $65$점이면 $\\frac{850 + 1{,}400 + 1{,}300}{50} = 71$점이에요. 무게가 인원이 아니라 비율로 주어질 때도 방법은 같아요. 전체를 $100$명이라 두고 인원으로 바꿔 놓으면 돼요.",
+                "definitions": [
+                  {
+                    "conceptKey": "weighted-mean",
+                    "surface": "가중평균",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             },
             {
-              "blockId": "ncs-mean:explanation:drawing:v1",
+              "blockId": "ncs-mean:weighted:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -624,29 +693,29 @@
           ]
         },
         {
-          "sectionId": "ncs-mean:example:v1",
+          "sectionId": "ncs-mean:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-mean:example:text:v1",
+              "blockId": "ncs-mean:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "상반기 매출이 $1$월부터 $6$월까지 $280$, $310$, $300$, $330$, $290$, $290$만 원이었어요. 하반기 평균이 $320$만 원이라면 한 해 평균은 얼마인지 구해 볼게요.\n\n먼저 상반기예요. 합계는 $1{,}800$만 원이고 평균은 $\\frac{1{,}800}{6} = 300$만 원이에요.\n\n하반기는 평균만 주어졌으니 합계로 바꿔요. $320 \\times 6 = 1{,}920$만 원이에요.\n\n한 해 평균은 $\\frac{1{,}800 + 1{,}920}{12} = \\frac{3{,}720}{12} = 310$만 원이에요.\n\n이번에는 두 기간의 개수가 $6$개월로 같아서 $\\frac{300 + 320}{2} = 310$으로 구해도 값이 같아요. 개수가 같을 때만 그렇습니다. 한쪽이 $6$개월, 다른 쪽이 $3$개월이었다면 두 평균의 한가운데는 답이 아니에요.",
+                "text": "상반기 매출이 $1$월부터 $6$월까지 $280$, $310$, $300$, $330$, $290$, $290$만 원이었어요. 하반기 평균이 $320$만 원이라면 한 해 평균은 얼마일까요.\n\n먼저 상반기예요. 합계는 $1{,}800$만 원이고 평균은 $\\frac{1{,}800}{6} = 300$만 원이에요.\n\n하반기는 평균만 주어졌으니 합계로 바꿔요. $320 \\times 6 = 1{,}920$만 원이에요.\n\n한 해 평균은 $\\frac{1{,}800 + 1{,}920}{12} = \\frac{3{,}720}{12} = 310$만 원이에요.\n\n이번에는 두 기간의 개수가 $6$개월로 같아요. 그래서 $\\frac{300 + 320}{2} = 310$으로 구해도 값이 같아요. 개수가 같을 때만 그래요. 한쪽이 $6$개월, 다른 쪽이 $3$개월이었다면 두 평균의 한가운데는 답이 아니에요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-mean:practice:v1",
+          "sectionId": "ncs-mean:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-mean:practice:problems:v1",
+              "blockId": "ncs-mean:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -663,12 +732,12 @@
           ]
         },
         {
-          "sectionId": "ncs-mean:check:v1",
+          "sectionId": "ncs-mean:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-mean:check:problems:v1",
+              "blockId": "ncs-mean:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -684,18 +753,29 @@
           ]
         },
         {
-          "sectionId": "ncs-mean:summary:v1",
+          "sectionId": "ncs-mean:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-mean:summary:text:v1",
+              "blockId": "ncs-mean:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "평균은 합계를 개수로 나눈 값이고, 합계는 평균에 개수를 곱한 값이에요. 문제가 평균을 주면 합계로 바꿔 보세요.\n\n인원이 다른 집단을 합칠 때는 합계끼리 더해 전체 인원으로 나눠요. 두 평균의 한가운데는 인원이 같을 때만 맞아요.",
-                "definitions": []
+                "text": "평균은 합계를 개수로 나눈 값이고, 합계는 평균에 개수를 곱한 값이에요. 문제가 평균을 주면 합계로 바꿔 보세요.\n\n인원이 다른 집단을 합칠 때는 합계끼리 더해 전체 인원으로 나눠요. 이것이 가중평균이에요. 두 평균의 한가운데는 인원이 같을 때만 맞아요.\n\n이 수업의 개념은 평균과 가중평균이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "mean",
+                    "surface": "평균",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "weighted-mean",
+                    "surface": "가중평균",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -713,7 +793,7 @@
     {
       "public": {
         "lessonKey": "ncs-spread",
-        "versionId": "ncs-spread:v1",
+        "versionId": "ncs-spread:v2",
         "title": "대표값과 흩어진 정도",
         "summary": "평균·중앙값·최빈값 가운데 알맞은 대표값을 고르고, 범위와 표준편차로 흩어진 정도를 읽어요.",
         "estimatedMinutes": 10,
@@ -725,26 +805,101 @@
           "mean",
           "frequency"
         ],
-        "sectionCount": 5
+        "sectionCount": 8
       },
       "sections": [
         {
-          "sectionId": "ncs-spread:explanation:v1",
+          "sectionId": "ncs-spread:median:v2",
           "role": "explanation",
-          "title": "개념 만나기",
+          "title": "한가운데 오는 값",
           "contentBlocks": [
             {
-              "blockId": "ncs-spread:explanation:text:v1",
+              "blockId": "ncs-spread:median:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "길잡이 과정에서 유난한 값이 섞이면 평균 대신 중앙값을 본다는 것을 봤어요. 여기서는 그 셋을 실제로 구하는 법과, 흩어진 정도를 재는 법을 익혀요.\n\n중앙값은 크기 순으로 놓았을 때 한가운데 오는 값이에요. 개수가 홀수면 한가운데가 하나라 그것이 중앙값이고, 짝수면 가운데 두 값의 평균이에요. $4$, $6$, $8$, $10$, $12$, $14$의 중앙값은 $\\frac{8 + 10}{2} = 9$예요. 여기서 자주 틀려요 — 자료에 없는 수가 중앙값이 될 수 있어요.\n\n최빈값은 가장 여러 번 나타난 값이에요. 가장 많이 팔린 치수, 가장 많이 들어온 문의 유형처럼 수로 더할 수 없는 자료에서는 최빈값만이 뜻을 가져요. 같은 횟수인 값이 둘이면 최빈값도 둘이고, 모두 한 번씩이면 최빈값은 없어요.\n\n흩어진 정도를 재는 가장 간단한 수는 범위예요. $\\text{범위} = \\text{최댓값} - \\text{최솟값}$이고, 양 끝 두 값만 쓰기 때문에 유난한 값 하나에 크게 휘둘려요.\n\n표준편차는 모든 값을 씁니다. 각 값이 평균에서 얼마나 떨어졌는지를 재고, 그 떨어진 정도를 평균 낸 것이에요. 시험이 표준편차를 손으로 계산하게 하는 일은 드물고, 두 자료 중 어느 쪽이 더 퍼져 있는지를 묻는 쪽이 대부분이에요. 그때는 범위만 견주어도 대개 답이 보여요.",
-                "definitions": []
+                "text": "크기 순으로 놓았을 때 한가운데 오는 값이 중앙값이에요.\n\n개수가 홀수면 한가운데 값 하나가 중앙값이에요. 짝수면 가운데 두 값의 평균이고요. $4$, $6$, $8$, $10$, $12$, $14$의 중앙값은 $\\frac{8 + 10}{2} = 9$예요.\n\n여기서 자주 틀려요. 자료에 없는 수가 중앙값이 될 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "median-mode",
+                    "surface": "중앙값",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-spread:mode:v2",
+          "role": "explanation",
+          "title": "가장 여러 번 나온 값",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-spread:mode:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "가장 여러 번 나타난 값은 최빈값이에요.\n\n가장 많이 팔린 치수를 떠올려 보세요. 가장 많이 들어온 문의 유형도 그래요. 수로 더할 수 없는 자료예요. 이런 자료에서는 최빈값만이 뜻을 가져요.\n\n같은 횟수인 값이 둘이면 최빈값도 둘이에요. 모두 한 번씩이면 최빈값은 없어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "median-mode",
+                    "surface": "최빈값",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-spread:range:v2",
+          "role": "explanation",
+          "title": "범위: 최댓값에서 최솟값을 뺀다",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-spread:range:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "흩어진 정도를 재는 가장 간단한 수는 범위예요.\n\n$\\text{범위} = \\text{최댓값} - \\text{최솟값}$이에요. 양 끝 두 값만 쓰기 때문에 유난한 값 하나에 크게 휘둘려요.",
+                "definitions": [
+                  {
+                    "conceptKey": "dispersion",
+                    "surface": "범위",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-spread:deviation:v2",
+          "role": "explanation",
+          "title": "표준편차: 평균에서 떨어진 정도",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-spread:deviation:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "표준편차는 모든 값을 써요. 각 값이 평균에서 얼마나 떨어졌는지 재요. 그 떨어진 정도를 평균 낸 수예요.\n\n시험이 표준편차를 손으로 계산하게 하는 일은 드물어요. 두 자료 중 어느 쪽이 더 퍼져 있는지 묻는 쪽이 대부분이에요. 그때는 범위만 비교해도 대개 답이 보여요.",
+                "definitions": [
+                  {
+                    "conceptKey": "dispersion",
+                    "surface": "표준편차",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             },
             {
-              "blockId": "ncs-spread:explanation:drawing:v1",
+              "blockId": "ncs-spread:deviation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -994,29 +1149,29 @@
           ]
         },
         {
-          "sectionId": "ncs-spread:example:v1",
+          "sectionId": "ncs-spread:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-spread:example:text:v1",
+              "blockId": "ncs-spread:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "두 팀의 하루 처리 건수를 닷새 동안 적었어요. A팀은 $96$, $98$, $100$, $102$, $104$건이고 B팀은 $80$, $90$, $100$, $110$, $120$건이에요.\n\n평균은 두 팀 모두 $100$건이에요. 합계가 각각 $500$건이고 날수가 $5$일이니까요. 평균만 보면 두 팀은 같아 보여요.\n\n범위를 보면 달라져요. A팀은 $104 - 96 = 8$건, B팀은 $120 - 80 = 40$건이에요. B팀은 잘하는 날과 못하는 날의 차이가 다섯 배예요.\n\n중앙값은 둘 다 $100$건이라 여기서는 평균과 같아요. 대표값이 같아도 흩어진 정도가 다르면 다른 팀이에요. 인원을 새로 배치하거나 재고를 잡을 때 B팀 쪽이 더 큰 여유를 두어야 하는 이유가 이것이에요.",
+                "text": "두 팀의 하루 처리 건수를 닷새 동안 적었어요. A팀은 $96$, $98$, $100$, $102$, $104$건이고 B팀은 $80$, $90$, $100$, $110$, $120$건이에요.\n\n평균은 두 팀 모두 $100$건이에요. 합계가 각각 $500$건이고 날수가 $5$일이니까요. 평균만 보면 두 팀은 같아 보여요.\n\n범위를 보면 달라져요. A팀은 $104 - 96 = 8$건, B팀은 $120 - 80 = 40$건이에요. B팀은 잘하는 날과 못하는 날의 차이가 다섯 배예요.\n\n중앙값은 둘 다 $100$건이라 여기서는 평균과 같아요. 대표값이 같아도 흩어진 정도가 다르면 다른 팀이에요. 인원을 배치하거나 재고를 잡을 때가 그래요. B팀 쪽에 더 큰 여유를 두어야 해요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-spread:practice:v1",
+          "sectionId": "ncs-spread:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-spread:practice:problems:v1",
+              "blockId": "ncs-spread:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1033,12 +1188,12 @@
           ]
         },
         {
-          "sectionId": "ncs-spread:check:v1",
+          "sectionId": "ncs-spread:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-spread:check:problems:v1",
+              "blockId": "ncs-spread:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1054,18 +1209,29 @@
           ]
         },
         {
-          "sectionId": "ncs-spread:summary:v1",
+          "sectionId": "ncs-spread:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-spread:summary:text:v1",
+              "blockId": "ncs-spread:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "평균·중앙값·최빈값은 모두 대표값이고, 자료의 생김새에 따라 알맞은 것이 달라요. 유난히 크거나 작은 값이 섞이면 평균 대신 중앙값을 봐요.\n\n범위는 최댓값에서 최솟값을 뺀 값이고, 표준편차는 평균에서 떨어진 정도예요. 평균이 같아도 흩어진 정도는 다를 수 있어요.",
-                "definitions": []
+                "text": "평균·중앙값·최빈값은 모두 대표값이고, 자료의 생김새에 따라 알맞은 것이 달라요. 유난히 크거나 작은 값이 섞이면 평균 대신 중앙값을 봐요.\n\n범위는 최댓값에서 최솟값을 뺀 값이고, 표준편차는 평균에서 떨어진 정도예요. 평균이 같아도 흩어진 정도는 다를 수 있어요.\n\n이 수업의 개념은 중앙값과 최빈값, 그리고 범위와 표준편차예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "median-mode",
+                    "surface": "중앙값",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "dispersion",
+                    "surface": "표준편차",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -1083,7 +1249,7 @@
     {
       "public": {
         "lessonKey": "ncs-chance",
-        "versionId": "ncs-chance:v1",
+        "versionId": "ncs-chance:v2",
         "title": "경우의 수와 확률: 세어서 나눈다",
         "summary": "「또는」과 「그리고」로 경우를 세고, 그 수로 확률을 구하고, 「적어도」는 뒤집어 풀어요.",
         "estimatedMinutes": 15,
@@ -1096,21 +1262,44 @@
           "probability-rules",
           "proportion"
         ],
-        "sectionCount": 5
+        "sectionCount": 7
       },
       "sections": [
         {
-          "sectionId": "ncs-chance:explanation:v1",
+          "sectionId": "ncs-chance:counting:v2",
           "role": "explanation",
-          "title": "개념 만나기",
+          "title": "「또는」이면 더하고 「그리고」면 곱한다",
           "contentBlocks": [
             {
-              "blockId": "ncs-chance:explanation:text:v1",
+              "blockId": "ncs-chance:counting:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "시험에서 확률 문항은 대개 어렵지 않아요. 세는 일과 나누는 일, 둘뿐이거든요. 틀리는 자리는 계산이 아니라 세는 방식이에요.\n\n세는 방식은 문제의 말이 정해요. 「또는」이면 더하고 「그리고」면 곱해요. 사원증 번호를 앞자리 $3$가지와 뒷자리 $4$가지로 만든다면 둘을 이어 붙이는 것이니 $3 \\times 4 = 12$가지예요.\n\n더할 때는 겹치는 것이 없는지 봐야 해요. 「$A$팀이거나 신입」이라면 둘 다인 사람을 두 번 세게 되거든요.\n\n확률은 바라는 경우를 모든 경우로 나눈 값이에요. 스무 개 중 불량이 셋이면 불량일 확률은 $\\dfrac{3}{20}$, 백분율로는 $15\\%$예요.\n\n업무에서는 백분율로 묻는 일이 많아요. 불량률, 합격률, 응답률이 모두 확률을 백분율로 적은 것이에요. 분수로 구해 놓고 $100$을 곱하는 것이 안전해요.\n\n「적어도 하나」가 보이면 뒤집어 푸세요. 반대가 「하나도 없다」 한 가지뿐이라 훨씬 짧아요. 세 개를 검사해 적어도 하나가 불량일 확률은 $1$에서 셋 다 정상일 확률을 뺀 값이에요.\n\n이어지는 일은 곱해요. 불량률이 $10\\%$인 공정을 두 번 거쳐 둘 다 불량일 확률은 $0.1 \\times 0.1 = 0.01$, 곧 $1\\%$예요.\n\n마지막으로 조심할 것. 확률은 $0$과 $1$ 사이예요. $120\\%$가 나왔다면 어딘가에서 겹치는 것을 두 번 셌다는 뜻이에요.",
+                "text": "시험에서 확률 문항은 대개 어렵지 않아요. 세는 일과 나누는 일, 둘뿐이거든요. 틀리는 원인은 계산이 아니라 세는 방식이에요.\n\n몇 가지가 나올 수 있는지 센 것이 경우의 수예요. 세는 방식은 문제의 말이 정해요. 「또는」이면 더하고 「그리고」면 곱해요.\n\n사원증 번호를 앞자리 $3$가지와 뒷자리 $4$가지로 만든다고 해 볼게요. 둘을 이어 붙이는 것이니 $3 \\times 4 = 12$가지예요.\n\n더할 때는 겹치는 것이 없는지 봐야 해요. 「$A$팀이거나 신입」이라면 둘 다인 사람을 두 번 세게 되거든요.",
+                "definitions": [
+                  {
+                    "conceptKey": "chance",
+                    "surface": "경우의 수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chance:probability:v2",
+          "role": "explanation",
+          "title": "확률은 세어서 나눈 값",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chance:probability:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "확률은 바라는 경우를 모든 경우로 나눈 값이에요. 스무 개 중 불량이 셋이면 불량일 확률은 $\\dfrac{3}{20}$, 백분율로는 $15\\%$예요.\n\n업무에서는 백분율로 묻는 일이 많아요. 불량률, 합격률, 응답률이 모두 확률을 백분율로 적은 것이에요. 분수로 구해 놓고 $100$을 곱하는 것이 안전해요.",
                 "definitions": [
                   {
                     "conceptKey": "chance",
@@ -1121,7 +1310,7 @@
               }
             },
             {
-              "blockId": "ncs-chance:explanation:drawing:v1",
+              "blockId": "ncs-chance:probability:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1453,29 +1642,46 @@
           ]
         },
         {
-          "sectionId": "ncs-chance:example:v1",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
+          "sectionId": "ncs-chance:atleast:v2",
+          "role": "explanation",
+          "title": "「적어도」는 뒤집어 푼다",
           "contentBlocks": [
             {
-              "blockId": "ncs-chance:example:text:v1",
+              "blockId": "ncs-chance:atleast:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "부품 스무 개 중 셋이 불량이에요. 하나를 꺼낼 때 불량일 확률을 백분율로 구해 볼게요.\n\n모든 경우는 스무 가지, 바라는 경우는 세 가지예요. 확률은 $\\dfrac{3}{20}$이고요.\n\n백분율로 고치면 $\\dfrac{3}{20} \\times 100 = 15\\%$예요.\n\n세는 문제도 해 볼게요. 상의 $4$종과 하의 $3$종으로 만들 수 있는 차림은 몇 가지일까요. 「그리고」이니 곱해서 $12$가지예요.\n\n「적어도」는 뒤집어요. 불량률이 $10\\%$인 부품 둘을 꺼낼 때 적어도 하나가 불량일 확률은요.\n\n둘 다 정상일 확률이 $0.9 \\times 0.9 = 0.81$이니, 구하려는 값은 $1 - 0.81 = 0.19$, 곧 $19\\%$예요.\n\n하나씩 세면 「첫째만 불량」, 「둘째만 불량」, 「둘 다 불량」 셋을 더해야 하지만 뒤집으면 한 번으로 끝나요.",
+                "text": "「적어도 하나」가 보이면 뒤집어 푸세요. 반대가 「하나도 없다」 한 가지뿐이라 훨씬 짧아요. 세 개를 검사한다고 해 볼게요. 셋 다 정상일 확률을 $1$에서 빼면 돼요.\n\n이어지는 일은 곱해요. 불량률이 $10\\%$인 공정을 두 번 거쳐 둘 다 불량일 확률은 $0.1 \\times 0.1 = 0.01$, 곧 $1\\%$예요.\n\n마지막으로 조심할 것이 있어요. 확률은 $0$과 $1$ 사이예요. $120\\%$가 나왔다면 어딘가에서 겹치는 것을 두 번 셌다는 뜻이에요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-chance:practice:v1",
+          "sectionId": "ncs-chance:example:v2",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chance:example:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "부품 스무 개 중 셋이 불량이에요. 하나를 꺼낼 때 불량일 확률을 백분율로 구해 볼게요.\n\n모든 경우는 스무 가지, 바라는 경우는 세 가지예요. 확률은 $\\dfrac{3}{20}$이고요. 백분율로 고치면 $\\dfrac{3}{20} \\times 100 = 15\\%$예요.\n\n세는 문제도 해 볼게요. 상의 $4$종과 하의 $3$종으로 만들 수 있는 차림은 몇 가지일까요. 「그리고」이니 곱해서 $12$가지예요.\n\n「적어도」는 뒤집어요. 불량률이 $10\\%$인 부품 둘을 꺼내요. 적어도 하나가 불량일 확률을 구해 볼게요. 둘 다 정상일 확률이 $0.9 \\times 0.9 = 0.81$이니, 구하려는 값은 $1 - 0.81 = 0.19$, 곧 $19\\%$예요.\n\n하나씩 세면 「첫째만 불량」, 「둘째만 불량」, 「둘 다 불량」 셋을 더해야 해요. 뒤집으면 한 번으로 끝나요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chance:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chance:practice:problems:v1",
+              "blockId": "ncs-chance:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1492,12 +1698,12 @@
           ]
         },
         {
-          "sectionId": "ncs-chance:check:v1",
+          "sectionId": "ncs-chance:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chance:check:problems:v1",
+              "blockId": "ncs-chance:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1513,18 +1719,24 @@
           ]
         },
         {
-          "sectionId": "ncs-chance:summary:v1",
+          "sectionId": "ncs-chance:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chance:summary:text:v1",
+              "blockId": "ncs-chance:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "「또는」이면 더하고 「그리고」면 곱해요. 더할 때는 겹치는 것이 없는지 확인해요.\n\n확률은 바라는 경우를 모든 경우로 나눈 값이고, 업무에서는 대개 백분율로 적어요.\n\n「적어도」가 보이면 $1$에서 반대 경우를 빼는 쪽이 훨씬 짧아요.\n\n확률이 $1$을 넘었다면 어딘가를 두 번 센 거예요.",
-                "definitions": []
+                "text": "「또는」이면 더하고 「그리고」면 곱해요. 더할 때는 겹치는 것이 없는지 확인해요.\n\n확률은 바라는 경우를 모든 경우로 나눈 값이고, 업무에서는 대개 백분율로 적어요.\n\n「적어도」가 보이면 $1$에서 반대 경우를 빼는 쪽이 훨씬 짧아요. 확률이 $1$을 넘었다면 어딘가를 두 번 센 거예요.\n\n이 수업의 개념은 경우의 수와 확률이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "chance",
+                    "surface": "확률",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]

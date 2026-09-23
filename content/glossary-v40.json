@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "frequency",
+      "label": "빈도",
+      "assessable": true
+    },
+    {
+      "key": "proportion",
+      "label": "비중",
+      "assessable": true
+    },
+    {
+      "key": "mean",
+      "label": "평균",
+      "assessable": true
+    },
+    {
+      "key": "weighted-mean",
+      "label": "가중평균",
+      "assessable": true
+    },
+    {
+      "key": "median-mode",
+      "label": "중앙값과 최빈값",
+      "assessable": true
+    },
+    {
+      "key": "dispersion",
+      "label": "범위와 표준편차",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "frequency",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "빈도",
+      "summary": "몇 번 나왔는지 센 수예요.",
+      "blocks": [
+        {
+          "blockId": "global:frequency:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "어떤 값이 몇 번 나왔는지 센 수가 빈도예요. 문의를 유형별로 세어 배송 $80$건, 반품 $50$건처럼 적은 것이 빈도고요. 셀 수 있는 것이면 무엇에나 붙어요 — 건수, 사람 수, 횟수가 모두 빈도예요. 다만 빈도만으로는 많은지 적은지 말하기 어려워요. $80$건은 전체가 $100$건일 때와 $1{,}000$건일 때 뜻이 전혀 다르니까요. 그래서 빈도를 구하면 전체가 얼마인지도 함께 적어 두세요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "몇 건인지 셀 때"
+    },
+    {
+      "conceptKey": "proportion",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "비중",
+      "summary": "부분을 전체로 나눈 값이에요.",
+      "blocks": [
+        {
+          "blockId": "global:proportion:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "전체에서 어느 부분이 차지하는 만큼이 비중이에요. $\\text{비중} = \\frac{\\text{부분}}{\\text{전체}}$이고, 백분율로 쓰려면 $100$을 곱해요. 전체 $250$건 가운데 배송이 $80$건이면 비중은 $0.32$, 곧 $32\\%$예요. 비중을 묻는 문제는 전체를 먼저 구하는 것이 첫 단계예요. 거꾸로 전체와 비중을 알면 부분은 곱셈으로 나와요. 같은 전체에서 나온 비중은 모두 더하면 $100\\%$가 되고, 전체가 서로 다른 비중끼리는 더할 수 없어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "몇 %를 차지하는지 구할 때"
+    },
+    {
+      "conceptKey": "mean",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "평균",
+      "summary": "합계를 개수로 나눈 값이에요.",
+      "blocks": [
+        {
+          "blockId": "global:mean:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "여러 값을 대표하는 하나의 수가 평균이에요. $\\text{평균} = \\frac{\\text{합계}}{\\text{개수}}$예요. 시험에서는 이 식을 뒤집은 쪽이 더 자주 나와요 — $\\text{합계} = \\text{평균} \\times \\text{개수}$예요. 「네 달 평균이 $250$개인데 앞의 세 달이 $230$, $260$, $240$개였다면 남은 한 달은?」 같은 물음은 평균을 합계로 바꾸는 순간 뺄셈 하나로 끝나요. 평균은 유난히 크거나 작은 값 하나에 쉽게 끌려가요. 그럴 때는 중앙값도 함께 봐요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "여럿을 하나의 수로 줄일 때"
+    },
+    {
+      "conceptKey": "weighted-mean",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "가중평균",
+      "summary": "개수를 무게로 삼아 구한 평균이에요.",
+      "blocks": [
+        {
+          "blockId": "global:weighted-mean:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "인원이 다른 두 집단을 합칠 때는 두 평균의 한가운데가 답이 아니에요. 각 집단의 합계를 먼저 구해 더하고, 전체 인원으로 나눠요. $20$명 평균 $80$점과 $30$명 평균 $70$점을 합치면 $\\frac{20 \\times 80 + 30 \\times 70}{50} = 74$점이에요. 이렇게 개수를 무게로 삼아 구한 평균이 가중평균이고, 값은 언제나 수가 많은 쪽으로 끌려가요. 두 평균을 더해 반으로 나누어도 되는 때는 개수가 같을 때뿐이에요. 무게가 인원이 아니라 비율로 주어지면 전체를 $100$명이라 두고 인원으로 바꿔 놓으면 돼요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "인원이 다른 집단의 평균을 합칠 때"
+    },
+    {
+      "conceptKey": "median-mode",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "중앙값과 최빈값",
+      "summary": "한가운데 값과, 가장 여러 번 나온 값이에요.",
+      "blocks": [
+        {
+          "blockId": "global:median-mode:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "중앙값은 크기 순으로 놓았을 때 한가운데 오는 값이에요. 개수가 홀수면 한가운데 값 하나이고, 짝수면 가운데 두 값의 평균이에요. $4$, $6$, $8$, $10$, $12$, $14$의 중앙값은 $9$예요 — 자료에 없는 수가 중앙값이 될 수 있어요. 최빈값은 가장 여러 번 나타난 값이에요. 가장 많이 팔린 치수처럼 수로 더할 수 없는 자료에서는 최빈값만이 뜻을 가져요. 같은 횟수인 값이 둘이면 최빈값도 둘이고, 모두 한 번씩이면 최빈값은 없어요. 유난히 크거나 작은 값이 섞이면 평균보다 중앙값이 자료를 더 잘 대표해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "평균이 자료를 대표하지 못할 때"
+    },
+    {
+      "conceptKey": "dispersion",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "범위와 표준편차",
+      "summary": "값들이 얼마나 퍼져 있는지 재요.",
+      "blocks": [
+        {
+          "blockId": "global:dispersion:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "대표값이 같아도 자료가 같지는 않아요. 그래서 흩어진 정도를 함께 봐요. 가장 간단한 수는 범위예요 — $\\text{범위} = \\text{최댓값} - \\text{최솟값}$이에요. 양 끝 두 값만 쓰기 때문에 유난한 값 하나에 크게 휘둘려요. 표준편차는 모든 값을 써요. 각 값이 평균에서 얼마나 떨어졌는지 재고, 그 떨어진 정도를 평균 낸 수예요. 손으로 계산하게 하는 문제는 드물고, 두 자료 중 어느 쪽이 더 퍼져 있는지 묻는 쪽이 대부분이에요. 그때는 범위만 비교해도 대개 답이 보여요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "평균이 같은 두 자료를 구별할 때"
+    }
+  ]
+}
