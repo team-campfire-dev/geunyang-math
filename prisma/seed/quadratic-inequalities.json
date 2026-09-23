@@ -46,7 +46,7 @@
     {
       "public": {
         "lessonKey": "quadratic-inequality",
-        "versionId": "quadratic-inequality:v1",
+        "versionId": "quadratic-inequality:v2",
         "title": "이차부등식: 그래프가 축 위에 있는 구간을 찾는다",
         "summary": "부등식을 그래프의 높낮이로 바꿔 읽고, 두 근을 경계로 구간을 말해요.",
         "estimatedMinutes": 12,
@@ -62,17 +62,33 @@
       },
       "sections": [
         {
-          "sectionId": "quadratic-inequality:explanation:v1",
+          "sectionId": "quadratic-inequality:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-inequality:explanation:text:v1",
+              "blockId": "quadratic-inequality:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$x^2 - 5x + 6 < 0$을 풀어 볼게요. 일차부등식처럼 이항해서 정리하는 방법은 통하지 않아요. $x$가 두 군데에 있으니까요.\n\n이런 것을 이차부등식이라고 해요. 푸는 길은 그래프로 바꿔 읽는 거예요. $y = x^2 - 5x + 6$이라는 함수를 두고, 이 물음을 「$y$가 음수가 되는 $x$는 어디인가」로 바꾸는 거예요. $y$가 음수라는 것은 그래프가 가로축보다 아래에 있다는 뜻이에요.\n\n그러니 먼저 축과 만나는 자리를 찾아요. $x^2 - 5x + 6 = 0$을 풀면 $x = 2$와 $x = 3$이에요. 이미 아는 일이죠.\n\n이 두 점이 경계예요. 아래로 볼록한 포물선이니 두 점 사이에서만 축 아래로 내려가요. 그래서 해는 $2 < x < 3$이에요.\n\n부등호가 반대면 구간도 반대예요. $x^2 - 5x + 6 > 0$의 해는 두 근 바깥, 곧 $x < 2$ 또는 $x > 3$이에요. 「사이」와 「바깥」으로 기억해 두면 편해요.\n\n등호가 붙으면 경계도 포함해요. $\\le$이면 $2 \\le x \\le 3$이에요.\n\n$x^2$의 계수가 음수이면 포물선이 뒤집혀 있으니 사이와 바깥도 뒤바뀌어요. 헷갈리면 양변에 $-1$을 곱해 계수를 양수로 만들고 부등호를 뒤집는 편이 안전해요. 그래프를 한 번 그려 보는 것이 가장 확실하고요.",
+                "text": "$x^2 - 5x + 6 < 0$을 풀어 볼게요.\n\n문자의 차수가 $1$인 부등식을 일차부등식이라고 했죠. 거기서 쓰던 이항은 여기서 통하지 않아요. $x$가 두 군데에 있으니까요.",
+                "definitions": [
+                  {
+                    "conceptKey": "linear-inequality",
+                    "surface": "일차부등식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "quadratic-inequality:explanation:graph:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "이렇게 차수가 $2$인 부등식을 이차부등식이라고 해요.\n\n푸는 길은 그래프로 바꿔 읽는 거예요. $y = x^2 - 5x + 6$이라는 함수를 하나 두어요.\n\n그러면 물음이 「$y$가 음수가 되는 $x$는 어디인가」가 돼요.\n\n$y$가 음수라는 것은 그래프가 가로축보다 아래에 있다는 뜻이에요.",
                 "definitions": [
                   {
                     "conceptKey": "quadratic-inequality",
@@ -83,7 +99,39 @@
               }
             },
             {
-              "blockId": "quadratic-inequality:explanation:drawing:v1",
+              "blockId": "quadratic-inequality:explanation:border:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "그러니 먼저 축과 만나는 곳을 찾아요.\n\n$x^2 - 5x + 6 = 0$처럼 차수가 $2$인 방정식을 이차방정식이라고 했죠. 풀면 $x = 2$와 $x = 3$이에요. 이미 아는 일이에요.\n\n이 두 점이 경계예요. 아래로 볼록한 포물선이니 두 점 사이에서만 축 아래로 내려가요.\n\n그래서 해는 $2 < x < 3$이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "quadratic-equation",
+                    "surface": "이차방정식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "quadratic-inequality:explanation:flip:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "부등호가 반대면 구간도 반대예요. $x^2 - 5x + 6 > 0$의 해는 두 근 바깥이에요. 곧 $x < 2$ 또는 $x > 3$이고요.\n\n「사이」와 「바깥」으로 기억해 두면 편해요.\n\n등호가 붙으면 경계도 포함해요. $\\le$이면 $2 \\le x \\le 3$이에요.\n\n$x^2$ 앞에 붙은 수를 계수라고 했죠. 그 계수가 음수이면 포물선이 뒤집혀요. 사이와 바깥도 뒤바뀌고요.\n\n헷갈리면 양변에 $-1$을 곱해 계수를 양수로 만들어요. 그때 부등호를 뒤집는 것만 잊지 마세요.",
+                "definitions": [
+                  {
+                    "conceptKey": "coefficient",
+                    "surface": "계수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "quadratic-inequality:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -263,29 +311,35 @@
           ]
         },
         {
-          "sectionId": "quadratic-inequality:example:v1",
+          "sectionId": "quadratic-inequality:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-inequality:example:text:v1",
+              "blockId": "quadratic-inequality:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$x^2 + x - 6 \\ge 0$을 풀어 볼게요.\n\n먼저 경계를 찾아요. $x^2 + x - 6 = 0$은 $(x+3)(x-2) = 0$이니 $x = -3$과 $x = 2$예요.\n\n$x^2$의 계수가 양수라 아래로 볼록해요. 값이 $0$보다 크거나 같은 곳은 두 근의 바깥이에요.\n\n등호가 붙었으니 경계도 포함해요. 해는 $x \\le -3$ 또는 $x \\ge 2$예요.\n\n확인해 볼까요. $x = 0$은 두 근 사이인데 넣어 보면 $-6$으로 음수예요. 해가 아닌 것이 맞아요. $x = 3$을 넣으면 $6$으로 양수, 해가 맞고요.\n\n이렇게 구간 하나에서 아무 수나 하나 넣어 보는 것이 가장 빠른 확인법이에요.\n\n$-x^2 + 4 > 0$처럼 계수가 음수이면 양변에 $-1$을 곱해 $x^2 - 4 < 0$으로 바꿔요. 부등호가 뒤집힌다는 것만 잊지 마세요. 해는 $-2 < x < 2$예요.",
-                "definitions": []
+                "text": "$x^2 + x - 6 \\ge 0$을 풀어 볼게요.\n\n먼저 경계를 찾아요. $x^2 + x - 6 = 0$은 $(x+3)(x-2) = 0$이니 $x = -3$과 $x = 2$예요.\n\n$x^2$의 계수가 양수라 아래로 볼록해요. 값이 $0$보다 크거나 같은 곳은 두 근의 바깥이에요.\n\n등호가 붙었으니 경계도 포함해요. 이렇게 부등식을 성립시키는 $x$ 전체를 부등식의 해라고 해요. 여기서는 $x \\le -3$ 또는 $x \\ge 2$예요.\n\n확인해 볼까요. $x = 0$은 두 근 사이인데 넣어 보면 $-6$으로 음수예요. 해가 아닌 것이 맞아요.\n\n$x = 3$을 넣으면 $6$으로 양수예요. 해가 맞고요.\n\n구간마다 아무 수나 하나 넣어 봐요. 가장 빠른 확인법이에요.\n\n$-x^2 + 4 > 0$처럼 계수가 음수이면 양변에 $-1$을 곱해요. $x^2 - 4 < 0$이 되죠. 부등호가 뒤집힌다는 것만 잊지 마세요. 해는 $-2 < x < 2$예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "inequality-solution",
+                    "surface": "부등식의 해",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "quadratic-inequality:practice:v1",
+          "sectionId": "quadratic-inequality:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-inequality:practice:problems:v1",
+              "blockId": "quadratic-inequality:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -302,12 +356,12 @@
           ]
         },
         {
-          "sectionId": "quadratic-inequality:check:v1",
+          "sectionId": "quadratic-inequality:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-inequality:check:problems:v1",
+              "blockId": "quadratic-inequality:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -323,18 +377,24 @@
           ]
         },
         {
-          "sectionId": "quadratic-inequality:summary:v1",
+          "sectionId": "quadratic-inequality:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "quadratic-inequality:summary:text:v1",
+              "blockId": "quadratic-inequality:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "이차부등식은 「그래프가 축의 위에 있는가 아래에 있는가」를 묻는 물음이에요.\n\n먼저 $= 0$으로 두고 경계가 되는 두 근을 찾아요.\n\n아래로 볼록한 경우, 음수인 곳은 두 근 사이, 양수인 곳은 두 근 바깥이에요. 등호가 붙으면 경계도 넣어요.\n\n계수가 음수이면 양변에 $-1$을 곱해 뒤집어 놓고 푸는 편이 안전해요.",
-                "definitions": []
+                "text": "이차부등식은 「그래프가 축의 위에 있는가 아래에 있는가」를 묻는 물음이에요.\n\n먼저 $= 0$으로 두고 경계가 되는 두 근을 찾아요.\n\n아래로 볼록한 경우, 음수인 곳은 두 근 사이예요. 양수인 곳은 두 근 바깥이고요. 등호가 붙으면 경계도 넣어요.\n\n계수가 음수이면 양변에 $-1$을 곱해 뒤집어 놓고 푸는 편이 안전해요.\n\n이 수업의 개념은 이차부등식이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "quadratic-inequality",
+                    "surface": "이차부등식",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -352,9 +412,9 @@
     {
       "public": {
         "lessonKey": "simultaneous-inequality",
-        "versionId": "simultaneous-inequality:v1",
-        "title": "연립부등식: 두 조건이 겹치는 자리",
-        "summary": "조건마다 구간을 따로 구한 뒤, 둘 다에 드는 자리만 남겨요.",
+        "versionId": "simultaneous-inequality:v2",
+        "title": "연립부등식: 두 조건이 겹치는 구간",
+        "summary": "조건마다 구간을 따로 구한 뒤, 둘 다에 드는 부분만 남겨요.",
         "estimatedMinutes": 12,
         "conceptKeys": [
           "simultaneous-inequality"
@@ -368,17 +428,17 @@
       },
       "sections": [
         {
-          "sectionId": "simultaneous-inequality:explanation:v1",
+          "sectionId": "simultaneous-inequality:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "simultaneous-inequality:explanation:text:v1",
+              "blockId": "simultaneous-inequality:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "조건이 둘 이상 붙는 경우가 있어요. 「$x^2 - 3x \\le 0$이면서 $x \\ge 2$」처럼요. 이것을 연립부등식이라고 해요.\n\n연립방정식에서는 두 식을 더하거나 대입했지만, 부등식은 그렇게 하지 않아요. 훨씬 단순해요. 조건마다 구간을 따로 구한 다음, 둘 다에 드는 자리만 남기면 돼요.\n\n$x^2 - 3x \\le 0$은 $x(x-3) \\le 0$이니 $0 \\le x \\le 3$이에요. 둘째 조건은 $x \\ge 2$이고요.\n\n두 구간을 같은 수직선 위에 그려 놓고 겹치는 데를 보면 $2 \\le x \\le 3$이에요.\n\n머리로만 하면 경계에서 자주 틀려요. 수직선에 그려 보는 습관이 가장 안전해요.\n\n겹치는 데가 없으면 해가 없어요. 「$x < 1$이면서 $x > 5$」 같은 경우예요. 해가 없다는 것도 답이에요.\n\n$-1 < x^2 - 1 < 3$처럼 가운데에 식이 낀 꼴은 두 부등식으로 갈라 각각 풀고 겹치면 돼요. $x^2 > 0$과 $x^2 < 4$로 갈라지죠.",
+                "text": "조건이 둘 이상 붙는 경우가 있어요. 「$x^2 - 3x \\le 0$이면서 $x \\ge 2$」처럼요.\n\n이렇게 여러 부등식을 함께 놓은 것을 연립부등식이라고 해요.",
                 "definitions": [
                   {
                     "conceptKey": "simultaneous-inequality",
@@ -389,15 +449,47 @@
               }
             },
             {
-              "blockId": "simultaneous-inequality:explanation:drawing:v1",
+              "blockId": "simultaneous-inequality:explanation:method:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "여러 방정식을 함께 놓은 연립방정식에서는 두 식을 더하거나 대입했죠. 부등식은 그렇게 하지 않아요.\n\n훨씬 단순해요. 조건마다 구간을 따로 구해요. 그다음 둘 다에 드는 부분만 남기면 돼요.",
+                "definitions": [
+                  {
+                    "conceptKey": "simultaneous-equations",
+                    "surface": "연립방정식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "simultaneous-inequality:explanation:overlap:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$x^2 - 3x \\le 0$은 $x(x-3) \\le 0$이니 $0 \\le x \\le 3$이에요. 둘째 조건은 $x \\ge 2$이고요.\n\n이 구간 하나하나가 각 부등식의 해예요.\n\n두 구간을 같은 수직선 위에 그려 놓고 겹치는 데를 봐요. $2 \\le x \\le 3$이에요.\n\n머리로만 하면 경계에서 자주 틀려요. 수직선에 그려 보는 습관이 가장 안전해요.\n\n겹치는 데가 없으면 해가 없어요. 「$x < 1$이면서 $x > 5$」 같은 경우예요. 해가 없다는 것도 답이에요.\n\n$-1 < x^2 - 1 < 3$처럼 가운데에 식이 낀 형태도 있어요. 두 부등식으로 나눠 각각 풀고 겹치면 돼요. $x^2 > 0$과 $x^2 < 4$로 나뉘죠.",
+                "definitions": [
+                  {
+                    "conceptKey": "inequality-solution",
+                    "surface": "부등식의 해",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "simultaneous-inequality:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "두 조건의 구간을 위아래로 그리고 겹치는 자리를 아래에 모으는 그림",
-                "caption": "두 구간이 겹치는 자리가 답이에요",
+                "alt": "두 조건의 구간을 위아래로 그리고 겹치는 부분을 아래에 모으는 그림",
+                "caption": "두 구간이 겹치는 부분이 답이에요",
                 "items": [
                   {
                     "kind": "line",
@@ -628,29 +720,35 @@
           ]
         },
         {
-          "sectionId": "simultaneous-inequality:example:v1",
+          "sectionId": "simultaneous-inequality:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "simultaneous-inequality:example:text:v1",
+              "blockId": "simultaneous-inequality:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$x^2 - 3x \\le 0$이면서 $x \\ge 2$인 $x$를 찾아볼게요.\n\n첫째 조건부터요. $x(x-3) \\le 0$이니 두 근은 $0$과 $3$이고, 아래로 볼록하니 해는 두 근 사이, 곧 $0 \\le x \\le 3$이에요.\n\n둘째 조건은 그대로 $x \\ge 2$예요.\n\n수직선에 두 구간을 그려 보면 $2$부터 $3$까지가 겹쳐요. 답은 $2 \\le x \\le 3$이에요.\n\n여기에 속하는 정수를 세면 $2$와 $3$, 두 개예요.\n\n하나 더 볼게요. $x^2 - 4 < 0$이면서 $x > 1$인 경우예요.\n\n첫째는 $-2 < x < 2$, 둘째는 $x > 1$이니 겹치는 데는 $1 < x < 2$예요. 여기에는 정수가 하나도 없어요. 구간이 있다고 정수가 있는 것은 아니에요.",
-                "definitions": []
+                "text": "$x^2 - 3x \\le 0$이면서 $x \\ge 2$인 $x$를 찾아볼게요.\n\n첫째 조건부터요. $x(x-3) \\le 0$이니 두 근은 $0$과 $3$이에요. 아래로 볼록하니 해는 두 근 사이, 곧 $0 \\le x \\le 3$이에요.\n\n둘째 조건은 그대로 $x \\ge 2$예요.\n\n수직선에 두 구간을 그려 보면 $2$부터 $3$까지가 겹쳐요. 답은 $2 \\le x \\le 3$이에요.\n\n여기에 속하는 정수를 세 볼까요. 소수점이 없는 수가 정수예요. $2$와 $3$, 두 개예요.\n\n하나 더 볼게요. $x^2 - 4 < 0$이면서 $x > 1$인 경우예요.\n\n첫째는 $-2 < x < 2$, 둘째는 $x > 1$이니 겹치는 데는 $1 < x < 2$예요.\n\n여기에는 정수가 하나도 없어요. 구간이 있다고 정수가 있는 것은 아니에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "integer",
+                    "surface": "정수",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "simultaneous-inequality:practice:v1",
+          "sectionId": "simultaneous-inequality:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "simultaneous-inequality:practice:problems:v1",
+              "blockId": "simultaneous-inequality:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -667,12 +765,12 @@
           ]
         },
         {
-          "sectionId": "simultaneous-inequality:check:v1",
+          "sectionId": "simultaneous-inequality:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "simultaneous-inequality:check:problems:v1",
+              "blockId": "simultaneous-inequality:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -688,18 +786,24 @@
           ]
         },
         {
-          "sectionId": "simultaneous-inequality:summary:v1",
+          "sectionId": "simultaneous-inequality:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "simultaneous-inequality:summary:text:v1",
+              "blockId": "simultaneous-inequality:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "연립부등식은 조건마다 구간을 따로 구한 뒤 겹치는 데만 남기는 일이에요.\n\n수직선에 그려 보면 경계에서 틀리지 않아요.\n\n겹치는 데가 없으면 해가 없어요. 그것도 답이에요.\n\n가운데에 식이 낀 꼴은 두 부등식으로 갈라 각각 풀고 겹쳐요.",
-                "definitions": []
+                "text": "연립부등식은 조건마다 구간을 따로 구해요. 그다음 겹치는 부분만 남겨요.\n\n수직선에 그려 보면 경계에서 틀리지 않아요.\n\n겹치는 데가 없으면 해가 없어요. 그것도 답이에요.\n\n가운데에 식이 낀 형태는 두 부등식으로 나눠 각각 풀고 겹쳐요.\n\n이 수업의 개념은 연립부등식이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "simultaneous-inequality",
+                    "surface": "연립부등식",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -717,7 +821,7 @@
     {
       "public": {
         "lessonKey": "always-positive",
-        "versionId": "always-positive:v1",
+        "versionId": "always-positive:v2",
         "title": "늘 성립할 조건: 판별식으로 따진다",
         "summary": "어떤 x를 넣어도 성립하려면 그래프가 축에서 떨어져 있어야 해요. 그 조건을 판별식으로 적어요.",
         "estimatedMinutes": 12,
@@ -733,28 +837,60 @@
       },
       "sections": [
         {
-          "sectionId": "always-positive:explanation:v1",
+          "sectionId": "always-positive:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "always-positive:explanation:text:v1",
+              "blockId": "always-positive:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "이번에는 다른 물음이에요. 「$x^2 - 4x + k > 0$이 모든 실수 $x$에서 성립하려면 $k$가 얼마여야 할까」 같은 것이요.\n\n지금까지는 $x$를 찾았는데, 여기서는 $x$가 무엇이든 성립하게 만드는 $k$를 찾아요. 물음의 방향이 바뀌었어요.\n\n그래프로 보면 간단해요. 아래로 볼록한 포물선의 값이 늘 양수라는 것은, 그래프가 가로축보다 늘 위에 있다는 뜻이에요. 곧 축과 만나지 않아야 해요.\n\n축과 만나는 자리는 $= 0$으로 둔 이차방정식의 해였죠. 만나지 않는다는 것은 그 방정식에 실수인 해가 없다는 뜻이고, 그것은 판별식이 음수라는 뜻이에요.\n\n$x^2 - 4x + k$의 판별식은 $16 - 4k$예요. 이것이 음수여야 하니 $16 - 4k < 0$, 곧 $k > 4$예요.\n\n네 가지를 함께 정리해 두면 편해요. 아래로 볼록할 때, 늘 양수이려면 판별식이 음수, 늘 $0$ 이상이려면 판별식이 $0$ 이하예요. 등호가 붙으면 축에 닿는 것까지는 괜찮다는 뜻이거든요.\n\n위로 볼록한 경우는 뒤집어 생각하면 돼요. 늘 음수일 조건이 판별식이 음수인 것이고요. 잊었다면 그래프를 하나 그려 보세요. 조건을 외우는 것보다 그림이 빨라요.",
+                "text": "이번에는 다른 물음이에요. 「$x^2 - 4x + k > 0$이 모든 실수 $x$에서 성립하려면 $k$가 얼마여야 할까」 같은 것이요.\n\n지금까지는 $x$를 찾았어요. 여기서는 $x$가 무엇이든 성립하게 만드는 $k$를 찾아요.\n\n이렇게 어떤 $x$를 넣어도 성립하게 만드는 것을 늘 성립할 조건이라고 해요. 물음의 방향이 바뀐 거예요.",
                 "definitions": [
                   {
                     "conceptKey": "always-positive",
-                    "surface": "모든 실수",
+                    "surface": "늘 성립할 조건",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "always-positive:explanation:drawing:v1",
+              "blockId": "always-positive:explanation:graph:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "그래프로 보면 간단해요. 아래로 볼록한 포물선의 값이 늘 양수라고 해 볼게요.\n\n그래프가 가로축보다 늘 위에 있다는 뜻이에요. 곧 축과 만나지 않아야 해요.\n\n축과 만나는 곳은 $= 0$으로 둔 이차방정식의 해였죠. 만나지 않는다는 것은 그 방정식에 실수인 해가 없다는 뜻이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "quadratic-equation",
+                    "surface": "이차방정식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "always-positive:explanation:discriminant:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "실수인 해가 있는지는 $b^2 - 4ac$로 가려내요. 이것을 판별식이라고 했죠. 해가 없다는 것은 판별식이 음수라는 뜻이에요.\n\n$x^2 - 4x + k$의 판별식은 $16 - 4k$예요. 이것이 음수여야 하니 $16 - 4k < 0$, 곧 $k > 4$예요.\n\n정리해 두면 편해요. 아래로 볼록할 때 늘 양수이려면 판별식이 음수예요. 늘 $0$ 이상이려면 판별식이 $0$ 이하고요.\n\n등호가 붙으면 축에 닿는 것까지는 괜찮다는 뜻이거든요.\n\n위로 볼록한 경우는 뒤집어 생각하면 돼요. 잊었다면 포물선을 하나 그려 보세요. 조건을 외우는 것보다 그림이 빨라요.",
+                "definitions": [
+                  {
+                    "conceptKey": "discriminant",
+                    "surface": "판별식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "always-positive:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -945,29 +1081,45 @@
           ]
         },
         {
-          "sectionId": "always-positive:example:v1",
+          "sectionId": "always-positive:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "always-positive:example:text:v1",
+              "blockId": "always-positive:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$x^2 + 6x + k > 0$이 모든 실수 $x$에서 성립하도록 하는 $k$의 범위를 구해 볼게요.\n\n$x^2$의 계수가 $1$로 양수이니 아래로 볼록해요. 값이 늘 양수이려면 축과 만나지 않아야 해요.\n\n판별식을 구해요. $b^2 - 4ac = 36 - 4k$예요.\n\n만나지 않으려면 이 값이 음수여야 해요. $36 - 4k < 0$에서 $4k > 36$, 곧 $k > 9$예요.\n\n확인해 볼까요. $k = 10$이면 $x^2 + 6x + 10 = (x+3)^2 + 1$이고 꼭짓점의 값이 $1$로 양수예요. 늘 양수가 맞아요.\n\n$k = 9$였다면 $(x+3)^2$이 되어 $x = -3$에서 값이 $0$이에요. $> 0$이 아니라 등호가 걸리니 안 돼요. $k > 9$에서 등호가 빠진 이유예요.\n\n만약 문제가 $\\ge 0$이었다면 축에 닿아도 괜찮으니 $k \\ge 9$가 답이에요. 등호 하나가 조건을 바꿔요.",
+                "text": "$x^2 + 6x + k > 0$이 모든 실수 $x$에서 성립하도록 하는 $k$의 범위를 구해 볼게요.\n\n$x^2$의 계수가 $1$로 양수이니 아래로 볼록해요. 값이 늘 양수이려면 축과 만나지 않아야 해요.\n\n판별식을 구해요. $b^2 - 4ac = 36 - 4k$예요.\n\n만나지 않으려면 이 값이 음수여야 해요. $36 - 4k < 0$에서 $4k > 36$, 곧 $k > 9$예요.",
                 "definitions": []
+              }
+            },
+            {
+              "blockId": "always-positive:example:check:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "확인해 볼까요. $k = 10$이면 $x^2 + 6x + 10 = (x+3)^2 + 1$이에요.\n\n포물선이 방향을 바꾸는 점을 꼭짓점이라고 했죠. 여기서는 그 값이 $1$로 양수예요. 늘 양수가 맞아요.\n\n$k = 9$였다면 $(x+3)^2$이 되어 $x = -3$에서 값이 $0$이에요.\n\n$> 0$이 아니라 등호가 걸리니 안 돼요. $k > 9$에서 등호가 빠진 이유예요.\n\n만약 문제가 $\\ge 0$이었다면 축에 닿아도 괜찮아요. 그러면 $k \\ge 9$가 답이에요. 등호 하나가 조건을 바꿔요.",
+                "definitions": [
+                  {
+                    "conceptKey": "vertex",
+                    "surface": "꼭짓점",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "always-positive:practice:v1",
+          "sectionId": "always-positive:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "always-positive:practice:problems:v1",
+              "blockId": "always-positive:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -984,12 +1136,12 @@
           ]
         },
         {
-          "sectionId": "always-positive:check:v1",
+          "sectionId": "always-positive:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "always-positive:check:problems:v1",
+              "blockId": "always-positive:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1005,18 +1157,24 @@
           ]
         },
         {
-          "sectionId": "always-positive:summary:v1",
+          "sectionId": "always-positive:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "always-positive:summary:text:v1",
+              "blockId": "always-positive:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "「모든 실수에서 성립할 조건」은 그래프가 축과 만나지 않을 조건이에요.\n\n아래로 볼록하고 늘 양수이려면 판별식이 음수, 늘 $0$ 이상이려면 판별식이 $0$ 이하예요.\n\n등호 하나가 조건을 바꾸니 부등호를 끝까지 보세요.\n\n조건이 헷갈리면 포물선을 하나 그려 보는 편이 외우는 것보다 빨라요.",
-                "definitions": []
+                "text": "「모든 실수에서 성립할 조건」은 그래프가 축과 만나지 않을 조건이에요.\n\n아래로 볼록하고 늘 양수이려면 판별식이 음수예요. 늘 $0$ 이상이려면 판별식이 $0$ 이하고요.\n\n등호 하나가 조건을 바꾸니 부등호를 끝까지 보세요.\n\n조건이 헷갈리면 포물선을 하나 그려 보세요. 외우는 것보다 빨라요.\n\n이 수업의 개념은 늘 성립할 조건이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "always-positive",
+                    "surface": "늘 성립할 조건",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
