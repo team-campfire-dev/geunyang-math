@@ -21,7 +21,25 @@ export function databaseTests(directory = 'tests') {
     .filter((name) => readFileSync(`${directory}/${name}`, 'utf8').includes(gate)).sort();
 }
 
+const name = 'TEST_DATABASE_URL';
+
+/**
+ * Reads the one variable this file is about out of `.env`, when it is not already in the
+ * environment. Only that one: `.env` also carries `CONTENT_OPEN_ACCESS` and `DEV_LOGIN_ENABLED`,
+ * which open doors the tests are there to check are shut — loading the whole file breaks nineteen
+ * of them. The workers are spawned after this runs and inherit what it sets, so writing it here
+ * reaches every test file, including the seven that never read `.env` for themselves.
+ */
+function fromEnvFile() {
+  try {
+    const line = readFileSync('.env', 'utf8').split('\n').map((row) => row.trim())
+      .find((row) => row.startsWith(`${name}=`));
+    return line?.slice(name.length + 1).trim() || null;
+  } catch { return null; }
+}
+
 export default function notice() {
+  process.env[name] ??= fromEnvFile() ?? undefined;
   if (process.env.TEST_DATABASE_URL) return;
   const held = databaseTests();
   if (!held.length) return;

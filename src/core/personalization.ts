@@ -78,6 +78,9 @@ export function recommend(input: {
   const due = [...input.assignments].filter(a => a.status === 'assigned' && a.policy.kind !== 'practice' && new Date(a.recommendedAt) <= input.now)
     .sort((a, b) => a.recommendedAt.localeCompare(b.recommendedAt))[0];
   return { recommendations, plan: { version: personalizationVersion, readiness, sessionMinutes: dailyMinutes, preferredLessonKey: chosen?.lessonKey ?? null,
+    // What the sorting above just used, said out loud: a screen asking 「지금 어디쯤인가」 needs the
+    // same set, and working it out twice in two places is how the two answers drift apart.
+    onTheWay: [...onTheWay],
     review: due ? { recipientId: due.recipientId, reason: '권장 복습 시점이 되었어요. 새 수업 전에 배운 내용을 다시 떠올려 보세요. 늦게 풀어도 괜찮아요.' } : null } };
 }
 

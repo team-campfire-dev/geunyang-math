@@ -49,7 +49,7 @@ const learningState = (overrides: Partial<LearningState> = {}): LearningState =>
   user: { id: 'u1', displayName: '학습자', targetCourseKey: null, dailyMinutes: 10 },
   lessons: catalogue, enrollments: [], assignments: [], recommendations: [],
   diagnostic: null, diagnosticOffering: null,
-  plan: { version: '1', readiness: [], review: null, sessionMinutes: 10, preferredLessonKey: null },
+  plan: { version: '1', readiness: [], review: null, sessionMinutes: 10, preferredLessonKey: null, onTheWay: [] },
   recommendationHistory: [], concepts: [], misconceptions: [], ...overrides,
 });
 const enrolled = (completedSectionIds: string[] = [], status: 'active' | 'completed' = 'active') =>
@@ -68,13 +68,19 @@ function serve(options: { signedIn?: boolean; state?: LearningState; lesson?: Le
     // What the public catalogue offers. A course without a track is one an older server sent.
     courses: options.courses ?? [{ key: 'fractions', title: '분수', summary: '분수를 처음부터' }, { key: 'decimals', title: '소수', summary: '소수를 처음부터' }] as PublicCourse[],
     catalogue: options.catalogue ?? catalogue,
+    developmentLogin: false,
     deletes: 0,
     after: undefined as ((action: LearningAction) => LearningState) | undefined,
   };
   const reply = (body: unknown, status = 200) => ({ ok: status < 400, status, json: async () => body }) as Response;
   globalThis.fetch = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
-    if (url.endsWith('/api/v1/session')) return reply({ user: state.signedIn ? { id: 'u1', displayName: '학습자' } : null, developmentLogin: false, googleLogin: true });
+    if (url.endsWith('/api/v1/session')) return reply({ user: state.signedIn ? { id: state.learning.user.id, displayName: state.learning.user.displayName } : null, developmentLogin: state.developmentLogin, googleLogin: true });
+    // The development login this deployment offers: it makes a learner and signs them in.
+    if (url.endsWith('/api/v1/dev-session')) {
+      state.signedIn = true;
+      return reply({ user: { id: state.learning.user.id, displayName: state.learning.user.displayName }, developmentLogin: true, googleLogin: false });
+    }
     if (url.includes('/api/v1/learning?catalog=1')) return reply({ courses: state.courses, lessons: state.catalogue, concepts: [{ key: 'term.denominator', label: '분모' }], problemSets: shelf });
     if (url.includes('/api/v1/learning?lessonKey=')) return reply(state.lesson);
     if (url.endsWith('/api/v1/account') && init?.method === 'DELETE') {
@@ -122,7 +128,9 @@ const document_text = (selector: string) => window.document.querySelector(select
 const statusPill = () => window.document.querySelector('.lesson-header .pill')!.textContent;
 
 let server: ReturnType<typeof serve>;
-beforeEach(() => { vi.useFakeTimers(); window.history.replaceState({}, '', '/'); server = serve(); });
+// The first-step dialog remembers in this browser that it has been offered, so a test that does
+// not clear that would only ever see it once, and which test that was would depend on the order.
+beforeEach(() => { vi.useFakeTimers(); window.history.replaceState({}, '', '/'); window.localStorage.clear(); server = serve(); });
 afterEach(() => { vi.useRealTimers(); });
 
 describe('a lesson opened without starting it', () => {
@@ -649,7 +657,7 @@ describe('a course beside the line the catalogue is ordered along', () => {
     fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
     await until(() => expect(screen.getAllByText('응용계산').length).toBeGreaterThan(1));
   };
-  const headings = () => [...window.document.querySelectorAll('.track-heading h2, .catalog-banner h3')].map((node) => node.textContent);
+  const headings = () => [...window.document.querySelectorAll('.track-heading h2, .catalog-banner strong')].map((node) => node.textContent);
 
   it('is listed under its own line rather than after the last school course', async () => {
     server = twoTracks();
@@ -686,7 +694,7 @@ describe('a course beside the line the catalogue is ordered along', () => {
     fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
     await until(() => expect(screen.getAllByText('정수와 유리수').length).toBeGreaterThan(0));
     // 기초 과정 keeps no years, so its courses sit under the line itself; 중학교 과정 is cut in two.
-    expect([...window.document.querySelectorAll('.track-heading h2, .stage-heading, .catalog-banner h3')].map((node) => node.textContent))
+    expect([...window.document.querySelectorAll('.track-heading h2, .stage-heading, .catalog-banner strong')].map((node) => node.textContent))
       .toEqual(['기초 과정', '분수', '중학교 과정', '중1', '정수와 유리수', '중2', '일차함수']);
     expect([...window.document.querySelectorAll('.course-filter-line')].map((row) => [...row.children].map((node) => node.textContent)))
       .toEqual([['모든 코스'], ['분수'], ['중1', '정수와 유리수'], ['중2', '일차함수']]);
@@ -883,5 +891,311 @@ describe('where the learner is standing', () => {
     // learner went: leaving a five-step lesson should be one press of back, not five.
     expect(at()).toBe('?lesson=fraction-meaning&step=2');
     expect(window.history.length).toBe(entries);
+  });
+});
+
+/**
+ * The first thing a learner is asked, and until now the thing nobody was asked at all.
+ *
+ * 「배우려는 과정」 decides what a placement has to settle and which way a recommendation leans, and
+ * it sat behind a button in the sidebar that a new learner has no reason to press. Left empty it
+ * makes everyone the same person, and everyone was handed the first lesson of the catalogue.
+ */
+describe('the first step a new learner is asked for', () => {
+  const school: PublicCourse[] = [
+    { key: 'fractions', title: '분수', summary: '분수를 처음부터', track: 'basics' },
+    { key: 'integers', title: '정수와 유리수', summary: '음수를 읽어요', track: 'middle', stage: 'middle-1' },
+    { key: 'expressions', title: '문자와 식', summary: '식을 세워요', track: 'middle', stage: 'middle-1' },
+    { key: 'systems', title: '연립방정식', summary: '두 식을 함께', track: 'middle', stage: 'middle-2' },
+  ];
+  const dialog = () => window.document.querySelector('.first-step');
+
+  it('asks where somebody is coming from before it asks for a course', async () => {
+    server = serve({ courses: school });
+    render(<LearningWorkspace />);
+    await until(() => expect(dialog()).toBeTruthy());
+    expect(screen.getByRole('heading', { level: 2, name: '학습자님, 반가워요.' })).toBeDefined();
+    // Years and lines, not a list of every course there is: 「중1」 is a question somebody can answer.
+    const grounds = [...dialog()!.querySelectorAll('.first-step-choice strong')].map((node) => node.textContent);
+    expect(grounds).toEqual(['기초 과정', '중학교 과정 중1', '중학교 과정 중2', '잘 모르겠어요']);
+    expect(grounds, '고르는 자리에 과정을 통째로 늘어놓는다').not.toContain('연립방정식');
+  });
+
+  it('carries the three answers into one profile update', async () => {
+    server = serve({ courses: school });
+    render(<LearningWorkspace />);
+    await until(() => expect(dialog()).toBeTruthy());
+    fireEvent.click(screen.getByRole('button', { name: /중학교 과정 중1/ }));
+    // Only the courses of that year are offered, which is four fewer decisions than the catalogue.
+    await until(() => expect(screen.getByRole('button', { name: /문자와 식/ })).toBeDefined());
+    expect(screen.queryByRole('button', { name: /연립방정식/ })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: /문자와 식/ }));
+    await until(() => expect(screen.getByRole('button', { name: '20분' })).toBeDefined());
+    fireEvent.click(screen.getByRole('button', { name: '20분' }));
+    fireEvent.click(screen.getByRole('button', { name: /이렇게 시작할게요/ }));
+    await until(() => expect(server.of('profile.update')).toHaveLength(1));
+    expect(server.of('profile.update')[0]).toEqual({ action: 'profile.update', targetCourseKey: 'expressions', dailyMinutes: 20 });
+  });
+
+  it('lets somebody who cannot name a year skip straight past the courses', async () => {
+    server = serve({ courses: school });
+    render(<LearningWorkspace />);
+    await until(() => expect(dialog()).toBeTruthy());
+    fireEvent.click(screen.getByRole('button', { name: /잘 모르겠어요/ }));
+    // Nothing to pick between when you could not say where you are; the placement is what settles it.
+    await until(() => expect(screen.getByRole('button', { name: /이렇게 시작할게요/ })).toBeDefined());
+    expect(screen.getByText(/시작점 확인으로 자리부터 찾아봐요/)).toBeDefined();
+    fireEvent.click(screen.getByRole('button', { name: /이렇게 시작할게요/ }));
+    await until(() => expect(server.of('profile.update')).toHaveLength(1));
+    expect(server.of('profile.update')[0]).toEqual({ action: 'profile.update', targetCourseKey: null, dailyMinutes: 10 });
+  });
+
+  it('does not ask somebody who has already said something', async () => {
+    server = serve({ state: learningState({ user: { id: 'u1', displayName: '학습자', targetCourseKey: 'fractions', dailyMinutes: 10 } }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByRole('heading', { level: 1, name: /학습자님/ })).toBeDefined());
+    await tick(5);
+    expect(dialog()).toBeNull();
+  });
+
+  it('does not ask somebody who has already opened a lesson', async () => {
+    server = serve({ state: enrolled() });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByRole('heading', { level: 1, name: /학습자님/ })).toBeDefined());
+    await tick(5);
+    expect(dialog()).toBeNull();
+  });
+
+  it('asks again when the account in this tab turns out to be somebody else', async () => {
+    render(<LearningWorkspace />);
+    await until(() => expect(dialog()).toBeTruthy());
+    fireEvent.click(screen.getByRole('button', { name: '나중에 고를게요' }));
+    await tick();
+    // Coming back to a tab that was signed in as somebody else — the screen re-reads the session
+    // and finds a different account. A second learner at the same desk is a second learner, not
+    // the first one coming back, and «asked once» is counted per account rather than per tab.
+    server.state.learning = learningState({ user: { id: 'u2', displayName: '다른 학습자', targetCourseKey: null, dailyMinutes: 10 } });
+    await act(async () => { window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true })); });
+    await until(() => expect(dialog()).toBeTruthy());
+    expect(screen.getByRole('heading', { level: 2, name: '다른 학습자님, 반가워요.' })).toBeDefined();
+  });
+
+  it('asks once, and counts the asking rather than the answering', async () => {
+    render(<LearningWorkspace />);
+    await until(() => expect(dialog()).toBeTruthy());
+    fireEvent.click(screen.getByRole('button', { name: '나중에 고를게요' }));
+    await tick();
+    expect(dialog()).toBeNull();
+    // Coming back tomorrow having chosen nothing is not a reason to be asked again.
+    cleanup();
+    server = serve();
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByRole('heading', { level: 1, name: /학습자님/ })).toBeDefined());
+    await tick(5);
+    expect(dialog()).toBeNull();
+  });
+});
+
+/**
+ * What the home screen offers, which is one thing.
+ *
+ * It used to offer a recommended lesson, a placement, the whole catalogue, a review, a problem set
+ * and two ways to overrule the recommendation, all at once and all at the same weight.
+ */
+describe('the one thing the home screen offers', () => {
+  const hero = () => window.document.querySelector('.page-home .hero-copy');
+  const heroAction = () => hero()!.querySelector('.hero-button')!.textContent;
+
+  it('sends a learner with no record at all to find their starting point', async () => {
+    server = serve({ state: learningState({ diagnosticOffering: { version: 'v3', title: '시작점 확인', description: '지금 어디쯤인지 봐요', scope: 20, estimatedMinutes: 5 } }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(hero()).toBeTruthy());
+    expect(hero()!.textContent).toContain('어디서 시작하면 편할까요?');
+    expect(heroAction()).toContain('시작점 확인하기');
+  });
+
+  it('puts a review that is due above the lesson that would come next', async () => {
+    const second = { ...assignment(), id: 'r2', recipientId: 'r2', title: '소수의 의미 복습', submissionId: 's2' };
+    server = serve({ state: learningState({
+      assignments: [assignment(), second],
+      plan: { version: '1', readiness: [], sessionMinutes: 10, preferredLessonKey: null, onTheWay: [],
+        review: { recipientId: 'r1', reason: '권장 복습 시점이 되었어요.' } },
+      recommendations: [{ lessonKey, reason: '여기부터요.', kind: 'start', suggestedMinutes: 10 }],
+    }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(hero()).toBeTruthy());
+    expect(hero()!.textContent).toContain('분수의 의미 복습');
+    expect(heroAction()).toContain('복습부터 시작하기');
+    // And the shelf below moves on to the next one rather than offering the same work twice.
+    const rows = [...window.document.querySelectorAll('.page-home .assignment-row .assignment-info strong')].map((node) => node.textContent);
+    expect(rows).toEqual(['소수의 의미 복습']);
+  });
+
+  it('offers the recommended lesson once there is a record to recommend from', async () => {
+    server = serve({ state: { ...enrolled(), recommendations: [{ lessonKey, reason: '이어가 보세요.', kind: 'continue', suggestedMinutes: 10 }] } });
+    render(<LearningWorkspace />);
+    await until(() => expect(hero()).toBeTruthy());
+    expect(hero()!.textContent).toContain('이어가 보세요.');
+    expect(heroAction()).toContain('이어서 학습하기');
+  });
+
+  it('folds the reasoning away instead of standing it beside the offer', async () => {
+    server = serve({ state: { ...enrolled(), diagnosticOffering: { version: 'v3', title: '시작점 확인', description: '지금 어디쯤인지 봐요', scope: 20, estimatedMinutes: 5 } } });
+    render(<LearningWorkspace />);
+    await until(() => expect(hero()).toBeTruthy());
+    const reasoning = window.document.querySelector('.personalization-details')!;
+    expect(reasoning.hasAttribute('open'), '추천의 근거가 제안과 나란히 펼쳐져 있다').toBe(false);
+    // Folded, not removed: everything that used to compete with the offer is still reachable.
+    expect(reasoning.textContent).toContain('다른 수업 직접 고르기');
+    expect(reasoning.textContent).toContain('시작점 확인하기');
+  });
+});
+
+/**
+ * The catalogue, which is thirty-eight courses and a hundred and twenty-seven lessons.
+ *
+ * It used to draw all of it at once, every course open and every lesson card, with a row of
+ * thirty-eight chips above it as the only way to narrow anything. That is not a list somebody
+ * reads; it is a list somebody scrolls past.
+ */
+describe('the lessons screen and the size of the catalogue', () => {
+  const many: PublicCourse[] = [
+    { key: 'fractions', title: '분수', summary: '분수를 처음부터', track: 'basics' },
+    { key: 'integers', title: '정수와 유리수', summary: '음수부터', track: 'middle', stage: 'middle-1' },
+    { key: 'functions', title: '일차함수', summary: '직선으로', track: 'middle', stage: 'middle-2' },
+    { key: 'quadratics', title: '이차함수', summary: '포물선으로', track: 'middle', stage: 'middle-3' },
+  ];
+  const lesson = (lessonKey: string, title: string, courseKey: string, summary = '설명이에요'): PublicLesson =>
+    ({ lessonKey, versionId: `${lessonKey}:v1`, title, summary, estimatedMinutes: 10,
+      conceptKeys: [], prerequisiteConceptKeys: [], sectionCount: 2, courseKey });
+  const spread = [lesson('fraction-meaning', '분수의 의미', 'fractions'), lesson('negative', '음수와 수직선', 'integers'),
+    lesson('linear', '일차함수와 그래프', 'functions'), lesson('parabola', '이차함수와 그래프', 'quadratics')];
+  const open = async (over: Partial<LearningState> = {}) => {
+    server = serve({ courses: many, catalogue: spread, state: learningState({ lessons: spread, ...over }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: '수업' }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
+    await until(() => expect(screen.getByRole('heading', { level: 1, name: '배우고 싶은 코스부터.' })).toBeDefined());
+  };
+  const courseNames = () => [...window.document.querySelectorAll('.catalog-banner strong')].map((node) => node.textContent);
+  const cards = () => [...window.document.querySelectorAll('.page-lessons .class-grid .class-card h3')].map((node) => node.textContent);
+
+  it('opens on the courses this learner actually has, not on the whole catalogue', async () => {
+    await open({ user: { id: 'u1', displayName: '학습자', targetCourseKey: 'functions', dailyMinutes: 10 } });
+    expect(courseNames()).toEqual(['일차함수']);
+    expect(screen.getByRole('button', { name: '내 과정 1' })).toBeDefined();
+    expect(screen.getByText(/나머지 3개는 「전체」에서 볼 수 있어요/)).toBeDefined();
+  });
+
+  it('counts what somebody is in the middle of as theirs, alongside what they came for', async () => {
+    await open({
+      user: { id: 'u1', displayName: '학습자', targetCourseKey: 'quadratics', dailyMinutes: 10 },
+      enrollments: [{ id: 'e1', lessonKey: 'negative', lessonVersionId: 'negative:v1', completedSectionIds: [], status: 'active', attempts: [] }],
+    });
+    expect(courseNames()).toEqual(['정수와 유리수', '이차함수']);
+  });
+
+  it('shows a visitor the catalogue, because there is no 「내 과정」 to show them', async () => {
+    server = serve({ signedIn: false, courses: many, catalogue: spread });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: '수업' }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
+    await until(() => expect(courseNames().length).toBe(4));
+    expect(screen.queryByRole('button', { name: /내 과정/ })).toBeNull();
+  });
+
+  it('names every course it is not drawing, and draws none of their lessons', async () => {
+    await open({ user: { id: 'u1', displayName: '학습자', targetCourseKey: 'functions', dailyMinutes: 10 } });
+    fireEvent.click(screen.getByRole('button', { name: '전체 4' }));
+    // Every course is named — nothing is hidden — but only the learner's own is opened, so the
+    // screen is four headings and one grid rather than four grids.
+    expect(courseNames()).toEqual(['분수', '정수와 유리수', '일차함수', '이차함수']);
+    expect(cards()).toEqual(['일차함수와 그래프']);
+    // And any of them opens when asked.
+    fireEvent.click(screen.getByRole('button', { name: /이차함수/, expanded: false }));
+    expect(cards()).toContain('이차함수와 그래프');
+  });
+
+  it('finds a lesson by name across the whole catalogue, whatever the scope is showing', async () => {
+    await open({ user: { id: 'u1', displayName: '학습자', targetCourseKey: 'fractions', dailyMinutes: 10 } });
+    expect(courseNames()).toEqual(['분수']);
+    fireEvent.change(screen.getByPlaceholderText('코스나 수업 이름으로 찾기'), { target: { value: '그래프' } });
+    // Two lessons in two courses neither of which is this learner's, found by their own names.
+    expect(courseNames()).toEqual(['일차함수', '이차함수']);
+    expect(cards()).toEqual(['일차함수와 그래프', '이차함수와 그래프']);
+    expect(screen.getByText(/찾기는 범위와 상관없이 카탈로그 전체를 봐요/)).toBeDefined();
+  });
+
+  it('says so when a name turns up nothing, rather than showing an empty page', async () => {
+    await open();
+    fireEvent.change(screen.getByPlaceholderText('코스나 수업 이름으로 찾기'), { target: { value: '미적분' } });
+    expect(courseNames()).toEqual([]);
+    expect(screen.getByRole('heading', { name: '찾는 이름이 없어요' })).toBeDefined();
+    fireEvent.click(screen.getAllByRole('button', { name: /찾기 지우기/ }).at(-1)!);
+    expect(courseNames().length).toBeGreaterThan(0);
+  });
+
+  it('draws how far through a course somebody is, and nothing where they have not begun', async () => {
+    await open({
+      user: { id: 'u1', displayName: '학습자', targetCourseKey: 'fractions', dailyMinutes: 10 },
+      enrollments: [{ id: 'e1', lessonKey: 'fraction-meaning', lessonVersionId: 'fraction-meaning:v1', completedSectionIds: [], status: 'completed', attempts: [] }],
+    });
+    const banner = window.document.querySelector('.catalog-banner')!;
+    expect(banner.textContent).toContain('1 / 1개 완료');
+    expect(banner.querySelector('.catalog-progress b')!.getAttribute('style')).toContain('width: 100%');
+    // An empty bar under every course of a catalogue nobody has started says 「you have done none of
+    // this」 thirty-eight times over. The count above it already says it once, quietly.
+    fireEvent.click(screen.getByRole('button', { name: '전체 4' }));
+    const untouched = [...window.document.querySelectorAll('.catalog-banner')]
+      .find((node) => node.textContent?.includes('이차함수'))!;
+    expect(untouched.querySelector('.catalog-progress b')).toBeNull();
+  });
+});
+
+/**
+ * Changing what you came for changes what a placement has to settle, and a run under way follows.
+ * That is a thing to be told, not to discover by finding the screen asking again.
+ */
+describe('what saving the profile says about the placement', () => {
+  const run = (over: Partial<NonNullable<LearningState['diagnostic']>> = {}) => ({
+    id: 'run', version: 'v1', status: 'active' as const, completedAt: null,
+    scope: 12, settled: 4, asked: 2, inferred: 2, answered: 2, currentProblem: null, results: [], ...over,
+  });
+  const openProfile = async (state: LearningState) => {
+    server = serve({ state });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: /학습자/ }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: /학습자/ })[0]);
+    await until(() => expect(screen.getByRole('heading', { name: '무엇을 배우러 오셨나요?' })).toBeDefined());
+  };
+  const save = async (after: LearningState) => {
+    server.state.after = () => after;
+    fireEvent.click(screen.getByRole('button', { name: /이렇게 시작할게요/ }));
+    await tick();
+  };
+
+  it('says the placement carries on, and that nothing already answered is asked again', async () => {
+    const before = learningState({ diagnostic: run() });
+    await openProfile(before);
+    await save(learningState({ diagnostic: run({ scope: 26, currentProblem: { problemVersionId: 'q9' } as never }) }));
+    expect(screen.getByText(/시작점 확인이 새 과정에 맞춰 이어져요 — 이미 답한 문항은 다시 묻지 않아요/)).toBeDefined();
+  });
+
+  it('says a finished placement has a few more to put, rather than reopening it silently', async () => {
+    await openProfile(learningState({ diagnostic: run({ status: 'completed', completedAt: '2026-09-22T00:00:00.000Z' }) }));
+    await save(learningState({ diagnostic: run({ status: 'active', scope: 26, currentProblem: { problemVersionId: 'q9' } as never }) }));
+    expect(screen.getByText(/새 과정에 필요해진 것만 시작점 확인에서 몇 가지 더 물어볼게요/)).toBeDefined();
+  });
+
+  it('says so when the new way is one the answers have already settled', async () => {
+    await openProfile(learningState({ diagnostic: run({ status: 'completed' }) }));
+    await save(learningState({ diagnostic: run({ status: 'completed', scope: 5 }) }));
+    expect(screen.getByText(/이미 확인한 것으로 충분해서 더 묻지 않아요/)).toBeDefined();
+  });
+
+  it('says nothing about a placement when the profile did not move one', async () => {
+    await openProfile(learningState({ diagnostic: run() }));
+    await save(learningState({ diagnostic: run() }));
+    expect(screen.getByText(/배우려는 과정과 시간을 반영했어요/)).toBeDefined();
   });
 });

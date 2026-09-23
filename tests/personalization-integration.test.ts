@@ -208,8 +208,96 @@ describe.skipIf(!url)('personalized learning on MySQL', () => {
     await expect(service.act(narrow.id, { action: 'profile.update', targetCourseKey: 'placement', dailyMinutes: 10 }))
       .rejects.toMatchObject({ status: 404 });
     expect((await service.act(narrow.id, { action: 'profile.update', targetCourseKey: null, dailyMinutes: 10 })).state.user.targetCourseKey).toBeNull();
-    // The placement already under way keeps the scope it started with.
-    expect((await service.state(narrow.id)).diagnostic!.scope).toBe(narrowRun.scope);
+    // The placement under way follows them: saying nothing is asking about the whole school line
+    // again, which is the scope somebody who never named a course is placed against.
+    const carried = (await service.state(narrow.id)).diagnostic!;
+    expect(carried.scope).toBeGreaterThan(narrowRun.scope);
+    expect(carried.scope).toBe(wideRun.scope);
+  });
+
+  /**
+   * Changing what you came for, halfway through being placed.
+   *
+   * A run cannot simply be handed the new scope: every verdict is derived by replaying the answers,
+   * and the descent chooses each question by what it settles among everything still open, so a
+   * different scope makes it choose differently and the stored answers stop matching. Each answer
+   * keeps the scope it was given under instead, and the run carries on from where it is.
+   */
+  describe('a learner who changes course while being placed', () => {
+    /** What the run itself is holding, which is where a verdict either survives a change or does not. */
+    const heldBy = async (userId: string) => (await db.diagnosticRun.findFirstOrThrow({ where: { userId } }))
+      .placement as { placed: Record<string, string>; scope: string[]; stretches?: { from: number; scope: string[] }[] };
+
+    /**
+     * That a widened run goes on to *ask* is measured against the published bank, in
+     * `tests/placement.test.ts` — this scenario deliberately installs the historical three-topic
+     * diagnostic, whose six questions are all about 분수, so there is nothing here it could put.
+     * What this holds is the part that is the service's: the stretch is recorded, the answers stand,
+     * and no verdict already reached is disturbed.
+     */
+    it('records the new scope as a stretch without disturbing what the answers already settled', async () => {
+      const user = await learner();
+      await service.act(user.id, { action: 'profile.update', targetCourseKey: 'fractions', dailyMinutes: 10 });
+      const state = await place(user.id, answers);
+      const answered = state.diagnostic!.answered;
+      const before = await heldBy(user.id);
+      expect(Object.keys(before.placed).length).toBeGreaterThan(0);
+
+      const after = (await service.act(user.id, { action: 'profile.update', targetCourseKey: 'integers', dailyMinutes: 10 })).state;
+      const carried = await heldBy(user.id);
+      // Nothing was unasked: every verdict the first stretch reached is still the same verdict.
+      for (const [key, outcome] of Object.entries(before.placed)) expect(carried.placed[key], key).toBe(outcome);
+      // The answers stand, under the scope they were given under, and the new scope begins after them.
+      expect(after.diagnostic!.answered).toBe(answered);
+      expect(carried.stretches).toHaveLength(2);
+      expect(carried.stretches![1].from).toBe(answered);
+      expect(carried.scope.length).toBeGreaterThan(before.scope.length);
+      // A run never invents a question it does not hold: this bank asks about 분수 and nothing else,
+      // so the way to 정수와 유리수 is one it has no way of putting and it stays finished.
+      expect(after.diagnostic!.status).toBe('completed');
+      expect(after.diagnostic!.currentProblem).toBeNull();
+    });
+
+    it('asks nothing more when the new way is one the answers have already settled', async () => {
+      // Placed against the whole school line, so any one course of it is a way already walked.
+      const user = await learner();
+      const done = await place(user.id, answers);
+      expect(done.diagnostic!.status).toBe('completed');
+
+      const narrowed = (await service.act(user.id, { action: 'profile.update', targetCourseKey: 'fractions', dailyMinutes: 10 })).state;
+      expect(narrowed.diagnostic!.status, '이미 정해진 곳을 다시 묻는다').toBe('completed');
+      expect(narrowed.diagnostic!.currentProblem).toBeNull();
+      // Narrowing is not a case of its own — a scope with nothing left to ask simply has nothing
+      // left to ask — and the verdicts reached under the wider one are all still held.
+      const held = await heldBy(user.id);
+      expect(Object.keys(held.placed).length).toBeGreaterThan(held.scope.length - 1);
+    });
+
+    it('does not let changing course become a way of answering the same question twice', async () => {
+      const user = await learner();
+      await service.act(user.id, { action: 'profile.update', targetCourseKey: 'fractions', dailyMinutes: 10 });
+      let state = (await service.act(user.id, { action: 'diagnostic.start' })).state;
+      const put: string[] = [];
+      for (const course of ['decimals', 'ratios', 'fractions', null] as const) {
+        while (state.diagnostic?.currentProblem) {
+          put.push(state.diagnostic.currentProblem.problemVersionId);
+          state = (await service.act(user.id, answer(state.diagnostic, meantFor(state.diagnostic)))).state;
+        }
+        state = (await service.act(user.id, { action: 'profile.update', targetCourseKey: course, dailyMinutes: 10 })).state;
+      }
+      // A concept is settled once and never revisited, so changing course buys questions about
+      // concepts nobody has answered for, and nothing else.
+      expect(new Set(put).size).toBe(put.length);
+    });
+
+    it('leaves a run alone when only the daily minutes changed', async () => {
+      const user = await learner();
+      await service.act(user.id, { action: 'profile.update', targetCourseKey: 'fractions', dailyMinutes: 10 });
+      const started = (await service.act(user.id, { action: 'diagnostic.start' })).state.diagnostic!;
+      const same = (await service.act(user.id, { action: 'profile.update', targetCourseKey: 'fractions', dailyMinutes: 20 })).state;
+      expect(same.diagnostic!.scope).toBe(started.scope);
+      expect(same.diagnostic!.currentProblem?.problemVersionId).toBe(started.currentProblem?.problemVersionId);
+    });
   });
 
   it('reads the placement a run recorded rather than working it out again', async () => {

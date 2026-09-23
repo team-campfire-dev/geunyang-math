@@ -5,7 +5,7 @@ import { recommend, reviewSelection, conceptReadiness, type Evidence } from '@/c
 import { assignmentWindow, parseAssignmentPolicy, parseAssignmentSchedule, practicePolicy, recipientDates, reviewPolicy } from '@/core/assignment';
 import { glossaryEntries } from '@/core/glossary';
 import { conceptGraph, placementScope } from '@/core/concept-graph';
-import { placement, placementProgress, type PlacementState } from '@/core/placement';
+import { placement, placementProgress, type PlacementState, type PlacementStretch } from '@/core/placement';
 import { canExploreDefinitions, leafGlossary } from '@/shared/definition-exploration';
 import { definitionRefId, mayReferenceDefinition } from '@/shared/rich-text';
 import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
@@ -22,7 +22,17 @@ import { AppError } from './errors';
  * bank already is — a lesson published halfway through must not change which question comes next, or
  * move a learner who has stopped answering.
  */
-type StoredPlacement = PlacementState & { lessons: { conceptKeys: string[]; prerequisiteConceptKeys: string[] }[] };
+type StoredPlacement = PlacementState & {
+  lessons: { conceptKeys: string[]; prerequisiteConceptKeys: string[] }[];
+  /**
+   * The scope each stretch of answers was put under, once a learner has changed what they came for.
+   * Absent on every run started before they could, which is the same as one stretch from the start.
+   */
+  stretches?: PlacementStretch[];
+};
+
+/** How a stored run says what it was asked under, however long ago it was started. */
+const stretchesOf = (held: StoredPlacement): PlacementStretch[] => held.stretches ?? [{ from: 0, scope: held.scope }];
 
 const id = z.string().min(1).max(191);
 const definitionRef = z.object({
@@ -109,6 +119,49 @@ export class LearningService {
     const tracks = new Map((await db.course.findMany({ select: { key: true, track: true } })).map(row => [row.key, row.track]));
     return lessons.filter(lesson => isSchoolTrack((tracks.get(lesson.courseKey) ?? defaultCourseTrack) as CourseTrack))
       .flatMap(lesson => lesson.conceptKeys);
+  }
+
+  /**
+   * Carrying a placement on after the learner changes what they came for.
+   *
+   * The scope cannot simply be replaced. Every verdict in a run is derived by replaying its answers,
+   * and the descent chooses each question by what it would settle among everything still open — so a
+   * different scope makes it choose differently, and the answers already stored stop matching what
+   * it would have asked. Measured on the published bank, even a scope that strictly contains the old
+   * one disagrees from the third answer on.
+   *
+   * So the scope is appended to rather than replaced, and each answer keeps the scope it was given
+   * under. Nothing already decided is unasked, no question is ever put twice, and the run simply
+   * carries on into what the new course needs. A run that had finished can find it has something
+   * left to ask — that is the point of it, not a mistake — and one whose new way is already settled
+   * finds nothing and stays finished, which is what 「좁아지면 아무것도 하지 않는다」 comes to here.
+   *
+   * There is no new place to raise a verdict from: a concept is settled once and never revisited, so
+   * changing course repeatedly buys questions about concepts nobody has answered for, and nothing else.
+   */
+  private async carryPlacementOn(tx: Tx, userId: string) {
+    const definition = await currentDiagnostic(tx);
+    if (!definition) return;
+    const run = await tx.diagnosticRun.findUnique({ where: { userId_version: { userId, version: definition.versionId } } });
+    const held = run?.placement as StoredPlacement | null;
+    if (!run || !held) return;
+    const published = await this.catalog(tx);
+    const learner = await tx.user.findUniqueOrThrow({ where: { id: userId }, select: { targetCourseKey: true } });
+    // Against the catalogue this run froze, not today's: a run is replayed on the shape it started
+    // with, and a concept the catalogue only learned about afterwards has no question in its bank.
+    const graph = conceptGraph(held.lessons);
+    const scope = placementScope(graph, await this.placementTargets(tx, published, learner.targetCourseKey));
+    const stretches = stretchesOf(held);
+    if (stretches[stretches.length - 1].scope.join('\u0000') === scope.join('\u0000')) return;
+    const answers = run.answers as unknown as DiagnosticAnswer[];
+    // A stretch that never had an answer put under it is replaced rather than kept: somebody who
+    // changes their mind twice before answering once chose twice, not three times.
+    const next: PlacementStretch[] = [...stretches.filter((stretch) => stretch.from < answers.length), { from: answers.length, scope }];
+    const after = placement(graph, next, run.document as unknown as StoredProblem[], answers);
+    const completed = !after.next;
+    await tx.diagnosticRun.update({ where: { id: run.id }, data: {
+      placement: asJson({ ...held, scope: after.state.scope, stretches: next, placed: after.state.placed, source: after.state.source } satisfies StoredPlacement),
+      status: completed ? 'completed' : 'active', completedAt: completed ? run.completedAt ?? new Date() : null } });
   }
 
   /** The latest version of every published lesson, in the order its course gives it. */
@@ -363,7 +416,7 @@ export class LearningService {
     const diagnosticAnswers = (diagnostic?.answers ?? []) as unknown as DiagnosticAnswer[];
     const completedDiagnostic = diagnostic?.status === 'completed';
     const stored = (diagnostic?.placement ?? null) as StoredPlacement | null;
-    const asking = stored && diagnosticBank ? placement(conceptGraph(stored.lessons), stored.scope, diagnosticBank, diagnosticAnswers) : null;
+    const asking = stored && diagnosticBank ? placement(conceptGraph(stored.lessons), stretchesOf(stored), diagnosticBank, diagnosticAnswers) : null;
     const readiness = conceptReadiness(conceptLabels, completedDiagnostic ? stored : null, evidence);
     const { recommendations, plan } = recommend({ lessons, enrollments: enrollments.map(e => ({ lessonKey: e.lessonVersion.lessonKey, status: e.status })),
       assignments, readiness, dailyMinutes: user.dailyMinutes, targetCourseKey: user.targetCourseKey, now: new Date(), preferredLessonKey: user.preferredLessonKey });
@@ -503,7 +556,8 @@ export class LearningService {
               const held = run.placement as StoredPlacement | null;
               if (!held) throw conflict('예전 방식으로 시작한 시작점 확인이에요. 새로 시작해 주세요.');
               const graph = conceptGraph(held.lessons);
-              const asked = placement(graph, held.scope, bank, answers).next;
+              const stretches = stretchesOf(held);
+              const asked = placement(graph, stretches, bank, answers).next;
               if (!asked || asked.problemVersionId !== action.problemVersionId) throw conflict('현재 진단 문제부터 확인해 주세요.');
               const problem = bank.find(p => p.problemVersionId === asked.problemVersionId)!;
               const result = action.answer === null ? null : gradeAnswer(action.answer, problem.gradingSpec, false);
@@ -513,10 +567,10 @@ export class LearningService {
               const settled = result?.status === 'correct' ? 'correct' as const : result ? 'incorrect' as const : 'skipped' as const;
               const next: DiagnosticAnswer[] = [...answers, { problemVersionId: problem.problemVersionId, answer: action.answer, status: settled }];
               // A placement ends when the descent has nothing left it can ask, not at a fixed length.
-              const after = placement(graph, held.scope, bank, next);
+              const after = placement(graph, stretches, bank, next);
               const completed = !after.next;
               await tx.diagnosticRun.update({ where: { id: run.id }, data: { answers: asJson(next),
-                placement: asJson({ ...held, placed: after.state.placed, source: after.state.source } satisfies StoredPlacement),
+                placement: asJson({ ...held, scope: after.state.scope, placed: after.state.placed, source: after.state.source } satisfies StoredPlacement),
                 status: completed ? 'completed' : 'active', completedAt: completed ? new Date() : null } });
               return {};
             }
@@ -524,7 +578,9 @@ export class LearningService {
               // A course with nothing published in it is not a destination — the placement's own
               // course holds the question bank and no lessons. Clearing it is always allowed.
               if (action.targetCourseKey && !(await tx.lessonVersion.findFirst({ where: { lesson: { course: { key: action.targetCourseKey } } } }))) throw notFound();
+              const before = await tx.user.findUniqueOrThrow({ where: { id: userId }, select: { targetCourseKey: true } });
               await tx.user.update({ where: { id: userId }, data: { targetCourseKey: action.targetCourseKey, dailyMinutes: action.dailyMinutes } });
+              if (before.targetCourseKey !== action.targetCourseKey) await this.carryPlacementOn(tx, userId);
               return {};
             }
             case 'enrollment.start': {
