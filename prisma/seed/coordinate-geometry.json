@@ -51,7 +51,7 @@
     {
       "public": {
         "lessonKey": "distance-midpoint",
-        "versionId": "distance-midpoint:v1",
+        "versionId": "distance-midpoint:v2",
         "title": "두 점 사이의 거리와 중점: 좌표를 빼서 잰다",
         "summary": "도형을 좌표평면에 올려놓고, 자 없이 계산만으로 거리와 한가운데를 구해요.",
         "estimatedMinutes": 12,
@@ -67,17 +67,49 @@
       },
       "sections": [
         {
-          "sectionId": "distance-midpoint:explanation:v1",
+          "sectionId": "distance-midpoint:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "distance-midpoint:explanation:text:v1",
+              "blockId": "distance-midpoint:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "도형을 좌표평면 위에 올려놓으면, 그림으로 따지던 것을 계산으로 따질 수 있어요. 자를 대지 않고도 길이를 재는 거예요.\n\n두 점 $A(1,1)$과 $B(5,4)$ 사이의 거리를 구해 볼게요. 두 점을 잇는 선분을 빗변으로 하는 직각삼각형을 그리면 돼요.\n\n가로로 얼마나 떨어졌나요. $5 - 1 = 4$예요. 세로로는 $4 - 1 = 3$이고요. 좌표를 빼기만 하면 나와요.\n\n이제 피타고라스 정리예요. 빗변의 제곱은 $4^2 + 3^2 = 25$이니 거리는 $\\sqrt{25} = 5$예요.\n\n식으로 적으면 두 점 사이의 거리는 $\\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$예요. 외우기보다 직각삼각형을 떠올리는 편이 든든해요.\n\n빼는 순서는 걱정하지 않아도 돼요. 어차피 제곱하니 부호가 사라지거든요.\n\n한가운데 점은 더 쉬워요. 가로도 반, 세로도 반이니 좌표를 각각 더해서 $2$로 나눠요. $A(1,1)$과 $B(5,4)$의 중점은 $\\left(\\dfrac{1+5}{2}, \\dfrac{1+4}{2}\\right) = (3, 2.5)$예요. 평균을 구하는 일과 같아요.",
+                "text": "가로와 세로에 눈금을 매긴 판을 좌표평면이라고 했죠. 어디에 있는지를 수로 말하는 판이에요.\n\n도형을 좌표평면 위에 올려놓아 볼게요. 그림으로 따지던 것을 계산으로 따질 수 있어요.\n\n자를 대지 않고도 길이를 재는 거예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "coordinate-plane",
+                    "surface": "좌표평면",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "distance-midpoint:explanation:right:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 점 $A(1,1)$과 $B(5,4)$ 사이의 거리를 구해 볼게요.\n\n두 점을 잇는 선분을 빗변으로 하는 직각삼각형을 그리면 돼요.\n\n가로로 얼마나 떨어졌나요. $5 - 1 = 4$예요. 세로로는 $4 - 1 = 3$이고요. 좌표를 빼기만 하면 나와요.\n\n직각삼각형에서 빗변의 제곱은 두 변의 제곱을 더한 값이에요. 피타고라스 정리라고 했죠.\n\n$4^2 + 3^2 = 25$이니 거리는 $\\sqrt{25} = 5$예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "pythagoras",
+                    "surface": "피타고라스 정리",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "distance-midpoint:explanation:formula:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "식으로 적으면 두 점 사이의 거리는 $\\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$예요.\n\n외우기보다 직각삼각형을 떠올리는 편이 든든해요.\n\n빼는 순서는 걱정하지 않아도 돼요. 어차피 제곱하니 부호가 사라지거든요.",
                 "definitions": [
                   {
                     "conceptKey": "distance-formula",
@@ -88,7 +120,17 @@
               }
             },
             {
-              "blockId": "distance-midpoint:explanation:drawing:v1",
+              "blockId": "distance-midpoint:explanation:mid:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "한가운데 점은 더 쉬워요. 가로도 반, 세로도 반이에요. 좌표를 각각 더해서 $2$로 나누면 돼요.\n\n$A(1,1)$과 $B(5,4)$의 중점은 $\\left(\\dfrac{1+5}{2}, \\dfrac{1+4}{2}\\right) = (3, 2.5)$예요.\n\n평균을 구하는 일과 같아요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "distance-midpoint:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -323,29 +365,35 @@
           ]
         },
         {
-          "sectionId": "distance-midpoint:example:v1",
+          "sectionId": "distance-midpoint:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "distance-midpoint:example:text:v1",
+              "blockId": "distance-midpoint:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$A(-2, 3)$과 $B(4, -5)$ 사이의 거리를 구해 볼게요.\n\n가로 차이는 $4 - (-2) = 6$이에요. 음수를 빼니 부호에 주의하세요.\n\n세로 차이는 $-5 - 3 = -8$이에요. 음수가 나왔지만 제곱하면 사라지니 그대로 둬요.\n\n거리는 $\\sqrt{6^2 + (-8)^2} = \\sqrt{36 + 64} = \\sqrt{100} = 10$이에요.\n\n중점도 구해 볼게요. $\\left(\\dfrac{-2+4}{2}, \\dfrac{3+(-5)}{2}\\right) = (1, -1)$이에요.\n\n확인해 보면 중점에서 $A$까지의 거리와 $B$까지의 거리가 각각 $5$로 같아요. 한가운데가 맞네요.\n\n좌표평면에 올리면 「그림을 그려 재는 일」이 「수를 빼고 제곱하는 일」이 돼요. 이것이 도형을 좌표로 다루는 이유예요.",
-                "definitions": []
+                "text": "$A(-2, 3)$과 $B(4, -5)$ 사이의 거리를 구해 볼게요.\n\n가로 차이는 $4 - (-2) = 6$이에요. 음수를 빼니 부호에 주의하세요.\n\n세로 차이는 $-5 - 3 = -8$이에요. 음수가 나왔지만 제곱하면 사라지니 그대로 둬요.\n\n$6^2 + (-8)^2 = 36 + 64 = 100$이에요.\n\n제곱해서 $100$이 되는 수, 곧 제곱근을 구하면 $10$이에요. 거리는 $10$이고요.\n\n중점도 구해 볼게요. $\\left(\\dfrac{-2+4}{2}, \\dfrac{3+(-5)}{2}\\right) = (1, -1)$이에요.\n\n확인해 보면 중점에서 $A$까지와 $B$까지가 각각 $5$로 같아요. 한가운데가 맞네요.\n\n좌표평면에 올리면 「그림을 그려 재는 일」이 「수를 빼고 제곱하는 일」이 돼요.",
+                "definitions": [
+                  {
+                    "conceptKey": "square-root",
+                    "surface": "제곱근",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "distance-midpoint:practice:v1",
+          "sectionId": "distance-midpoint:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "distance-midpoint:practice:problems:v1",
+              "blockId": "distance-midpoint:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -362,12 +410,12 @@
           ]
         },
         {
-          "sectionId": "distance-midpoint:check:v1",
+          "sectionId": "distance-midpoint:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "distance-midpoint:check:problems:v1",
+              "blockId": "distance-midpoint:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -383,18 +431,24 @@
           ]
         },
         {
-          "sectionId": "distance-midpoint:summary:v1",
+          "sectionId": "distance-midpoint:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "distance-midpoint:summary:text:v1",
+              "blockId": "distance-midpoint:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "두 점 사이의 거리는 가로 차이와 세로 차이를 두 변으로 하는 직각삼각형의 빗변이에요.\n\n$\\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$이고, 제곱하니 빼는 순서는 상관없어요.\n\n중점은 각 좌표의 평균이에요. 가로도 반, 세로도 반이니까요.\n\n다음 수업에서는 점 대신 직선을 식으로 적어요.",
-                "definitions": []
+                "text": "두 점 사이의 거리는 직각삼각형의 빗변이에요. 가로 차이와 세로 차이가 두 변이고요.\n\n$\\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$이에요. 제곱하니 빼는 순서는 상관없어요.\n\n중점은 각 좌표의 평균이에요. 가로도 반, 세로도 반이니까요.\n\n이 수업의 개념은 두 점 사이의 거리예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "distance-formula",
+                    "surface": "두 점 사이의 거리",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -412,7 +466,7 @@
     {
       "public": {
         "lessonKey": "line-equation",
-        "versionId": "line-equation:v1",
+        "versionId": "line-equation:v2",
         "title": "직선의 방정식: 점 하나와 기울기 하나",
         "summary": "직선을 식으로 적는 법을 익히고, 두 직선이 평행한지 수직인지 기울기로 가려요.",
         "estimatedMinutes": 12,
@@ -429,33 +483,76 @@
       },
       "sections": [
         {
-          "sectionId": "line-equation:explanation:v1",
+          "sectionId": "line-equation:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "line-equation:explanation:text:v1",
+              "blockId": "line-equation:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "일차함수에서 직선의 기울기와 절편을 읽었어요. 이제 거꾸로, 조건에서 직선의 식을 세워 볼게요.\n\n직선 하나를 정하는 데 필요한 것은 두 가지예요. 어디를 지나는지와 얼마나 기울었는지. 점 하나와 기울기 하나면 직선이 하나로 정해져요.\n\n기울기가 $m$이고 점 $(x_1, y_1)$을 지나는 직선의 방정식은 $y - y_1 = m(x - x_1)$이에요. 이 식이 왜 맞는지는 기울기의 뜻으로 보면 돼요. 세로 변화를 가로 변화로 나눈 것이 $m$이니까요.\n\n두 점이 주어졌다면 기울기부터 구해요. 세로 차이를 가로 차이로 나누면 되죠. 그다음은 위와 같아요.\n\n두 직선의 관계도 기울기가 말해 줘요. 기울기가 같으면 평행해요. 아무리 가도 만나지 않아요.\n\n수직일 조건은 조금 뜻밖이에요. 두 기울기를 곱해 $-1$이 되면 직각으로 만나요. 기울기가 $2$인 직선에 수직인 직선의 기울기는 $-\\dfrac{1}{2}$예요.\n\n부호가 반대이고 뒤집힌 수라고 기억하면 편해요. 가파르게 올라가는 직선에 수직인 직선은 완만하게 내려가요.",
+                "text": "$y = ax + b$처럼 그래프가 직선이 되는 함수를 일차함수라고 했죠.\n\n거기서는 직선을 보고 기울기와 절편을 읽었어요.\n\n이제 거꾸로 해요. 조건에서 직선의 식을 세워 볼게요.",
                 "definitions": [
                   {
-                    "conceptKey": "line-equation",
-                    "surface": "직선의 방정식",
-                    "scopeKind": "global"
-                  },
-                  {
-                    "conceptKey": "parallel-perpendicular",
-                    "surface": "평행",
+                    "conceptKey": "linear-function",
+                    "surface": "일차함수",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "line-equation:explanation:drawing:v1",
+              "blockId": "line-equation:explanation:two:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "직선 하나를 정하는 데 필요한 것은 두 가지예요. 어디를 지나는지와 얼마나 기울었는지요.\n\n세로 변화를 가로 변화로 나눈 값을 기울기라고 했죠.\n\n점 하나와 기울기 하나면 직선이 하나로 정해져요.",
+                "definitions": [
+                  {
+                    "conceptKey": "slope",
+                    "surface": "기울기",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "line-equation:explanation:formula:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "기울기가 $m$이고 점 $(x_1, y_1)$을 지나는 직선의 방정식은 $y - y_1 = m(x - x_1)$이에요.\n\n이 식이 왜 맞는지는 기울기의 뜻으로 보면 돼요. 세로 변화를 가로 변화로 나눈 것이 $m$이니까요.\n\n두 점이 주어졌다면 기울기부터 구해요. 세로 차이를 가로 차이로 나누면 되죠. 그다음은 위와 같아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "line-equation",
+                    "surface": "직선의 방정식",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "line-equation:explanation:relation:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 직선의 평행과 수직도 기울기가 말해 줘요.\n\n기울기가 같으면 평행해요. 아무리 가도 만나지 않아요.\n\n수직일 조건은 조금 뜻밖이에요. 두 기울기를 곱해 $-1$이 되면 직각으로 만나요.\n\n기울기가 $2$인 직선에 수직인 직선의 기울기는 $-\\dfrac{1}{2}$예요.\n\n부호가 반대이고 뒤집힌 수라고 기억하면 편해요. 가파르게 올라가는 직선에 수직인 직선은 완만하게 내려가요.",
+                "definitions": [
+                  {
+                    "conceptKey": "parallel-perpendicular",
+                    "surface": "평행과 수직",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "line-equation:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -624,29 +721,35 @@
           ]
         },
         {
-          "sectionId": "line-equation:example:v1",
+          "sectionId": "line-equation:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "line-equation:example:text:v1",
+              "blockId": "line-equation:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "두 점 $(1, 2)$와 $(3, 8)$을 지나는 직선의 식을 구해 볼게요.\n\n기울기부터요. 세로 차이는 $8 - 2 = 6$, 가로 차이는 $3 - 1 = 2$이니 기울기는 $3$이에요.\n\n이제 점 하나를 골라 넣어요. $(1,2)$로 하면 $y - 2 = 3(x - 1)$이에요.\n\n풀어 쓰면 $y = 3x - 1$이에요. 다른 점 $(3,8)$을 넣어 보면 $9 - 1 = 8$로 맞아요.\n\n이번에는 이 직선에 수직이고 점 $(0, 4)$를 지나는 직선이에요.\n\n수직이려면 기울기의 곱이 $-1$이어야 하니 $3 \\times m = -1$에서 $m = -\\dfrac{1}{3}$이에요.\n\n$(0,4)$를 지나니 $y = -\\dfrac{1}{3}x + 4$예요. $y$절편이 $4$인 것은 점의 $x$좌표가 $0$이라 바로 읽혀요.",
-                "definitions": []
+                "text": "두 점 $(1, 2)$와 $(3, 8)$을 지나는 직선의 식을 구해 볼게요.\n\n기울기부터요. 세로 차이는 $8 - 2 = 6$, 가로 차이는 $3 - 1 = 2$예요. 기울기는 $3$이고요.\n\n이제 점 하나를 골라 넣어요. $(1,2)$로 하면 $y - 2 = 3(x - 1)$이에요.\n\n풀어 쓰면 $y = 3x - 1$이에요. 다른 점 $(3,8)$을 넣어 보면 $9 - 1 = 8$로 맞아요.\n\n이번에는 이 직선에 수직이고 점 $(0, 4)$를 지나는 직선이에요.\n\n수직이려면 기울기의 곱이 $-1$이어야 해요. $3 \\times m = -1$에서 $m = -\\dfrac{1}{3}$이에요.\n\n$(0,4)$를 지나니 $y = -\\dfrac{1}{3}x + 4$예요.\n\n그래프가 축과 만나는 값을 절편이라고 했죠. 점의 $x$좌표가 $0$이라 $y$절편 $4$가 바로 읽혀요.",
+                "definitions": [
+                  {
+                    "conceptKey": "intercept",
+                    "surface": "절편",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "line-equation:practice:v1",
+          "sectionId": "line-equation:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "line-equation:practice:problems:v1",
+              "blockId": "line-equation:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -663,12 +766,12 @@
           ]
         },
         {
-          "sectionId": "line-equation:check:v1",
+          "sectionId": "line-equation:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "line-equation:check:problems:v1",
+              "blockId": "line-equation:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -684,18 +787,29 @@
           ]
         },
         {
-          "sectionId": "line-equation:summary:v1",
+          "sectionId": "line-equation:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "line-equation:summary:text:v1",
+              "blockId": "line-equation:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "점 하나와 기울기 하나면 직선이 정해져요. $y - y_1 = m(x - x_1)$이에요.\n\n두 점이 주어지면 기울기부터 구하고, 그다음은 같아요.\n\n기울기가 같으면 평행, 곱해서 $-1$이면 수직이에요.\n\n다음 수업에서는 직선 대신 원을 식으로 적어요. 거리가 그 열쇠예요.",
-                "definitions": []
+                "text": "점 하나와 기울기 하나면 직선이 정해져요. 직선의 방정식은 $y - y_1 = m(x - x_1)$이에요.\n\n두 점이 주어지면 기울기부터 구하고, 그다음은 같아요.\n\n기울기가 같으면 평행, 곱해서 $-1$이면 수직이에요.\n\n이 수업의 개념은 직선의 방정식·평행과 수직이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "line-equation",
+                    "surface": "직선의 방정식",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "parallel-perpendicular",
+                    "surface": "평행과 수직",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -713,7 +827,7 @@
     {
       "public": {
         "lessonKey": "circle-equation",
-        "versionId": "circle-equation:v1",
+        "versionId": "circle-equation:v2",
         "title": "원의 방정식: 중심에서 거리가 같은 점",
         "summary": "거리를 재는 식을 그대로 원의 식으로 삼고, 풀어 쓴 식에서 중심과 반지름을 되찾아요.",
         "estimatedMinutes": 12,
@@ -729,17 +843,33 @@
       },
       "sections": [
         {
-          "sectionId": "circle-equation:explanation:v1",
+          "sectionId": "circle-equation:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "circle-equation:explanation:text:v1",
+              "blockId": "circle-equation:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "원은 「한 점에서 거리가 같은 점을 모두 모은 것」이에요. 거리를 재는 법을 앞 수업에서 배웠으니, 원의 식도 거기서 바로 나와요.\n\n중심이 $(a, b)$이고 반지름이 $r$인 원 위의 점 $(x, y)$는 중심까지의 거리가 늘 $r$이에요. $\\sqrt{(x-a)^2 + (y-b)^2} = r$이죠.\n\n양변을 제곱하면 근호가 사라져요. $(x-a)^2 + (y-b)^2 = r^2$. 이것이 원의 방정식이에요.\n\n식에서 바로 읽을 수 있어요. 괄호 안을 $0$으로 만드는 값이 중심이고, 오른쪽은 반지름의 제곱이에요. $(x-2)^2 + (y+1)^2 = 16$이면 중심은 $(2, -1)$, 반지름은 $4$예요. 부호를 뒤집어 읽는 것은 포물선의 꼭짓점과 같아요.\n\n그런데 풀어 쓴 꼴로 주어지기도 해요. $x^2 + y^2 - 4x + 2y + 1 = 0$ 같은 식이요. 이대로는 중심이 보이지 않아요.\n\n이차함수에서 하던 일을 그대로 해요. $x$끼리, $y$끼리 모아 완전제곱식을 만들어요. $x^2 - 4x$에는 $4$를, $y^2 + 2y$에는 $1$을 더하고 그만큼 빼요.\n\n$(x-2)^2 + (y+1)^2 = 4$가 되니 중심 $(2,-1)$, 반지름 $2$예요. 완전제곱식 만들기가 방정식에서, 이차함수에서, 이제 원에서 세 번째로 쓰였어요.",
+                "text": "원은 「한 점에서 거리가 같은 점을 모두 모은 것」이에요.\n\n앞 수업에서 두 점 사이의 거리를 재는 법을 배웠죠. 원의 식도 거기서 바로 나와요.",
+                "definitions": [
+                  {
+                    "conceptKey": "distance-formula",
+                    "surface": "두 점 사이의 거리",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "circle-equation:explanation:derive:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "중심이 $(a, b)$이고 반지름이 $r$인 원을 생각해 볼게요. 원 위의 점 $(x, y)$는 중심까지의 거리가 늘 $r$이에요.\n\n$\\sqrt{(x-a)^2 + (y-b)^2} = r$이죠.\n\n양변을 제곱하면 근호가 사라져요. $(x-a)^2 + (y-b)^2 = r^2$이에요.\n\n이것이 원의 방정식이에요.",
                 "definitions": [
                   {
                     "conceptKey": "circle-equation",
@@ -750,7 +880,39 @@
               }
             },
             {
-              "blockId": "circle-equation:explanation:drawing:v1",
+              "blockId": "circle-equation:explanation:read:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "식에서 바로 읽을 수 있어요. 괄호 안을 $0$으로 만드는 값이 중심이에요. 오른쪽은 반지름의 제곱이고요.\n\n$(x-2)^2 + (y+1)^2 = 16$이면 중심은 $(2, -1)$, 반지름은 $4$예요.\n\n포물선이 방향을 바꾸는 점을 꼭짓점이라고 했죠. 거기서도 괄호 안 부호를 뒤집어 읽었어요. 여기서도 똑같아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "vertex",
+                    "surface": "꼭짓점",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "circle-equation:explanation:expand:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "그런데 풀어 쓴 형태로 주어지기도 해요. $x^2 + y^2 - 4x + 2y + 1 = 0$ 같은 식이요. 이대로는 중심이 보이지 않아요.\n\n이차함수에서 하던 완전제곱식 만들기를 그대로 해요. $x$끼리, $y$끼리 모으는 거예요.\n\n$x^2 - 4x$에는 $4$를, $y^2 + 2y$에는 $1$을 더하고 그만큼 빼요.\n\n$(x-2)^2 + (y+1)^2 = 4$가 되니 중심 $(2,-1)$, 반지름 $2$예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "completing-square",
+                    "surface": "완전제곱식 만들기",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "circle-equation:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -932,29 +1094,29 @@
           ]
         },
         {
-          "sectionId": "circle-equation:example:v1",
+          "sectionId": "circle-equation:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "circle-equation:example:text:v1",
+              "blockId": "circle-equation:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "중심이 $(1, -2)$이고 반지름이 $5$인 원의 식을 적어 볼게요.\n\n$(x - 1)^2 + (y - (-2))^2 = 5^2$이니 $(x-1)^2 + (y+2)^2 = 25$예요.\n\n중심의 좌표가 음수이면 괄호 안이 덧셈이 된다는 것만 조심하면 돼요.\n\n이번에는 반대예요. $x^2 + y^2 + 6x - 8y = 0$의 중심과 반지름을 구해 볼게요.\n\n$x$끼리 모아요. $x^2 + 6x$에 $9$를 더해 $(x+3)^2$을 만들고, 더한 만큼 오른쪽에도 더해요.\n\n$y$끼리도요. $y^2 - 8y$에 $16$을 더해 $(y-4)^2$을 만들고, 오른쪽에도 더해요.\n\n$(x+3)^2 + (y-4)^2 = 0 + 9 + 16 = 25$예요. 중심은 $(-3, 4)$, 반지름은 $5$예요.\n\n원점을 지나는지 확인해 볼까요. $x = 0$, $y = 0$을 처음 식에 넣으면 $0$이 맞으니 원점을 지나요. 중심에서 원점까지의 거리가 $\\sqrt{9 + 16} = 5$, 곧 반지름과 같으니 당연한 일이에요.",
+                "text": "중심이 $(1, -2)$이고 반지름이 $5$인 원의 식을 적어 볼게요.\n\n$(x - 1)^2 + (y - (-2))^2 = 5^2$이니 $(x-1)^2 + (y+2)^2 = 25$예요.\n\n중심의 좌표가 음수이면 괄호 안이 더하기가 돼요. 그것만 조심하면 돼요.\n\n이번에는 반대예요. $x^2 + y^2 + 6x - 8y = 0$의 중심과 반지름을 구해 볼게요.\n\n$x$끼리 모아요. $x^2 + 6x$에 $9$를 더해 $(x+3)^2$을 만들고, 더한 만큼 오른쪽에도 더해요.\n\n$y$끼리도요. $y^2 - 8y$에 $16$을 더해 $(y-4)^2$을 만들고, 오른쪽에도 더해요.\n\n$(x+3)^2 + (y-4)^2 = 0 + 9 + 16 = 25$예요. 중심은 $(-3, 4)$, 반지름은 $5$예요.\n\n원점을 지나는지 확인해 볼까요. $x = 0$, $y = 0$을 처음 식에 넣으면 $0$이 맞으니 원점을 지나요.\n\n중심에서 원점까지의 거리가 $\\sqrt{9 + 16} = 5$예요. 반지름과 같으니 당연한 일이에요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "circle-equation:practice:v1",
+          "sectionId": "circle-equation:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "circle-equation:practice:problems:v1",
+              "blockId": "circle-equation:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -971,12 +1133,12 @@
           ]
         },
         {
-          "sectionId": "circle-equation:check:v1",
+          "sectionId": "circle-equation:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "circle-equation:check:problems:v1",
+              "blockId": "circle-equation:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -992,18 +1154,24 @@
           ]
         },
         {
-          "sectionId": "circle-equation:summary:v1",
+          "sectionId": "circle-equation:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "circle-equation:summary:text:v1",
+              "blockId": "circle-equation:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "원은 중심에서 거리가 같은 점을 모은 것이고, 그래서 거리를 재는 식이 곧 원의 식이에요.\n\n$(x-a)^2 + (y-b)^2 = r^2$에서 중심 $(a,b)$와 반지름 $r$을 바로 읽어요. 괄호 안의 부호는 뒤집어 읽어요.\n\n풀어 쓴 식은 $x$끼리, $y$끼리 모아 완전제곱식을 만들어 되돌려요.\n\n여기까지가 도형을 좌표로 다루는 첫걸음이에요. 자를 대지 않고 계산만으로 거리와 자리를 말할 수 있게 됐어요.",
-                "definitions": []
+                "text": "원은 중심에서 거리가 같은 점을 모은 것이에요. 그래서 거리를 재는 식이 곧 원의 식이에요.\n\n$(x-a)^2 + (y-b)^2 = r^2$에서 중심 $(a,b)$와 반지름 $r$을 바로 읽어요. 괄호 안의 부호는 뒤집어 읽고요.\n\n풀어 쓴 식은 $x$끼리, $y$끼리 모아 완전제곱식을 만들어 되돌려요.\n\n이 수업의 개념은 원의 방정식이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "circle-equation",
+                    "surface": "원의 방정식",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
