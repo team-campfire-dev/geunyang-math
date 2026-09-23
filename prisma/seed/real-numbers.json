@@ -65,7 +65,7 @@
     {
       "public": {
         "lessonKey": "repeating-decimal",
-        "versionId": "repeating-decimal:v2",
+        "versionId": "repeating-decimal:v3",
         "title": "유한소수와 순환소수: 분수를 소수로 폈을 때",
         "summary": "분수를 소수로 고쳐 보고, 어떤 분수가 딱 떨어지고 어떤 분수가 끝없이 되풀이되는지 미리 가려내요.",
         "estimatedMinutes": 12,
@@ -82,33 +82,28 @@
       },
       "sections": [
         {
-          "sectionId": "repeating-decimal:explanation:v2",
+          "sectionId": "repeating-decimal:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "repeating-decimal:explanation:text:v2",
+              "blockId": "repeating-decimal:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$\\frac{1}{4}$을 소수로 고치면 $0.25$에서 딱 끝나요. $\\frac{1}{3}$은 $0.333\\cdots$으로 아무리 나눠도 끝나지 않아요.\n\n끝이 있는 소수를 유한소수, 같은 숫자가 끝없이 되풀이되는 소수를 순환소수라고 해요.\n\n되풀이되는 부분을 순환마디라 하고, 그 부분의 처음과 끝 숫자 위에 점을 찍어 적어요. $0.333\\cdots$은 $0.\\dot{3}$, $0.272727\\cdots$은 $0.\\dot{2}\\dot{7}$이에요.\n\n나눠 보기 전에도 어느 쪽인지 알 수 있어요. 먼저 기약분수로 만들고 분모를 곱셈으로 쪼개 봐요. $2$와 $5$만 남으면 유한소수예요.\n\n이유는 간단해요. 유한소수는 $0.25 = \\frac{25}{100}$처럼 분모가 $10$, $100$, $1000$인 분수로 쓸 수 있는 수인데, $10 = 2 \\times 5$이니 분모에 $2$와 $5$ 말고 다른 수가 있으면 아무리 곱해도 $10$의 거듭제곱이 되지 않아요.\n\n$\\frac{7}{20}$은 $20 = 2 \\times 2 \\times 5$라 유한소수, $\\frac{3}{14}$는 $14 = 2 \\times 7$이라 $7$이 걸려 순환소수예요.\n\n반대로 순환소수를 분수로 되돌릴 수도 있어요. 되풀이되는 부분을 같은 자리에 겹쳐 놓고 빼 버리는 것이 요령이에요.",
+                "text": "$\\frac{1}{4}$을 소수로 고치면 $0.25$에서 끝나요. $\\frac{1}{3}$은 $0.333\\cdots$으로 아무리 나눠도 끝나지 않아요.\n\n끝이 있는 소수를 유한소수라고 해요. 같은 숫자가 끝없이 되풀이되는 소수는 순환소수예요.\n\n되풀이되는 부분은 순환마디라고 불러요. 순환마디의 처음과 끝 숫자 위에 점을 찍어 적어요. $0.333\\cdots$은 $0.\\dot{3}$, $0.272727\\cdots$은 $0.\\dot{2}\\dot{7}$이에요.",
                 "definitions": [
                   {
                     "conceptKey": "repeating-decimal",
                     "surface": "순환소수",
-                    "scopeKind": "global"
-                  },
-                  {
-                    "conceptKey": "decimal-to-fraction",
-                    "surface": "분수로 되돌릴",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "repeating-decimal:explanation:drawing:v2",
+              "blockId": "repeating-decimal:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -358,7 +353,7 @@
                     ]
                   },
                   {
-                    "caption": "한 바퀴 돌아 처음 자리로 돌아왔어요. 여기서부터는 같은 일이 끝없이 되풀이돼요.",
+                    "caption": "한 바퀴 돌아 처음으로 돌아왔어요. 여기서부터 같은 일이 끝없이 되풀이돼요.",
                     "changes": [
                       {
                         "id": "tok"
@@ -395,33 +390,76 @@
                 ],
                 "frameMs": 1600
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "repeating-decimal:example:v2",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "repeating-decimal:example:text:v2",
+              "blockId": "repeating-decimal:explanation:text-2:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$0.\\dot{4}$를 분수로 고쳐 볼게요.\n\n구하려는 수에 이름을 붙여요. $x = 0.444\\cdots$\n\n순환마디가 한 자리니 $10$을 곱해 소수점을 한 칸 옮겨요. $10x = 4.444\\cdots$\n\n두 식의 소수점 아래가 똑같아졌어요. 빼면 그 부분이 통째로 사라져요.\n\n$10x - x = 4.444\\cdots - 0.444\\cdots = 4$이므로 $9x = 4$, 곧 $x = \\frac{4}{9}$예요.\n\n순환마디가 두 자리인 $0.\\dot{1}\\dot{2}$라면 $100$을 곱해요. $100x - x = 12$이니 $99x = 12$, $x = \\frac{12}{99} = \\frac{4}{33}$이에요.\n\n곱하는 수는 늘 $10$이 아니라 「순환마디의 자릿수만큼」 $10$을 거듭 곱한 수예요.",
-                "definitions": []
+                "text": "나눠 보기 전에도 어느 쪽인지 알 수 있어요. 먼저 기약분수로 고치세요. 그다음 분모를 곱셈으로 쪼개 봐요. $2$와 $5$만 남으면 유한소수예요.\n\n이유는 간단해요. 유한소수는 분모가 $10$, $100$, $1000$인 분수로 쓸 수 있어요. $0.25 = \\frac{25}{100}$처럼요. 그런데 $10 = 2 \\times 5$예요. 분모에 $2$와 $5$ 말고 다른 수가 섞이면 $10$의 거듭제곱이 될 수 없어요.\n\n$\\frac{7}{20}$은 $20 = 2 \\times 2 \\times 5$라 유한소수예요. $\\frac{3}{14}$는 $14 = 2 \\times 7$이라 $7$이 걸려요. 그래서 순환소수예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "irreducible-fraction",
+                    "surface": "기약분수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "repeating-decimal:explanation:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "반대로 순환소수를 분수로 되돌릴 수도 있어요. 되풀이되는 부분끼리 겹쳐 놓고 빼는 것이 요령이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "decimal-to-fraction",
+                    "surface": "분수로 되돌릴",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "repeating-decimal:practice:v2",
+          "sectionId": "repeating-decimal:example:v3",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "repeating-decimal:example:text:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$0.\\dot{4}$를 분수로 고쳐 볼게요.\n\n구하려는 수에 이름을 붙여요. $x = 0.444\\cdots$\n\n순환마디가 한 자릿수예요. 그래서 $10$을 곱해 소수점을 한 칸 옮겨요. $10x = 4.444\\cdots$\n\n두 식은 소수점 아래가 똑같아요. 빼면 그 부분이 통째로 사라져요.\n\n$10x - x = 4.444\\cdots - 0.444\\cdots = 4$예요. 곧 $9x = 4$, $x = \\frac{4}{9}$예요.\n\n$0.\\dot{1}\\dot{2}$는 순환마디가 두 자릿수예요. 이때는 $100$을 곱해요. $100x - x = 12$이니 $99x = 12$예요. 약분하면 $x = \\frac{12}{99} = \\frac{4}{33}$이에요.\n\n곱하는 수는 늘 $10$이 아니에요. 순환마디의 자릿수만큼 $10$을 거듭 곱한 수예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "decimal-to-fraction",
+                    "surface": "분수로 고쳐",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "reduce",
+                    "surface": "약분",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "repeating-decimal:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "repeating-decimal:practice:problems:v2",
+              "blockId": "repeating-decimal:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -438,12 +476,12 @@
           ]
         },
         {
-          "sectionId": "repeating-decimal:check:v2",
+          "sectionId": "repeating-decimal:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "repeating-decimal:check:problems:v2",
+              "blockId": "repeating-decimal:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -459,18 +497,34 @@
           ]
         },
         {
-          "sectionId": "repeating-decimal:summary:v2",
+          "sectionId": "repeating-decimal:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "repeating-decimal:summary:text:v2",
+              "blockId": "repeating-decimal:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "분수를 소수로 고치면 딱 끝나거나, 끝없이 되풀이되거나 둘 중 하나예요. 세 번째 경우는 없어요.\n\n어느 쪽인지는 기약분수의 분모로 알 수 있어요. $2$와 $5$만 있으면 유한소수, 다른 수가 섞이면 순환소수예요.\n\n순환소수를 분수로 되돌릴 때는 순환마디의 자릿수만큼 $10$을 곱해 두 식을 만들고, 빼서 되풀이되는 부분을 지워요.\n\n끝나지도 않고 되풀이되지도 않는 소수가 남았는데, 그것이 다음 수업에서 만날 수예요.",
-                "definitions": []
+                "text": "분수를 소수로 고치면 딱 끝나거나 끝없이 되풀이돼요. 세 번째 경우는 없어요.\n\n어느 쪽인지는 기약분수의 분모로 알 수 있어요. $2$와 $5$만 있으면 유한소수예요. 다른 수가 섞이면 순환소수예요.\n\n순환소수를 분수로 되돌릴 때는 순환마디의 자릿수만큼 $10$을 곱해요. 그렇게 두 식을 만들어 빼면 되풀이되는 부분이 지워져요.\n\n끝나지도 않고 되풀이되지도 않는 소수도 있어요. 그 수가 다음 수업에서 만날 무리수예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "repeating-decimal",
+                    "surface": "순환소수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "decimal-to-fraction",
+                    "surface": "분수로 되돌릴",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "irrational-number",
+                    "surface": "무리수",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -488,7 +542,7 @@
     {
       "public": {
         "lessonKey": "square-root",
-        "versionId": "square-root:v2",
+        "versionId": "square-root:v3",
         "title": "제곱근: 제곱해서 그 수가 되는 수",
         "summary": "넓이를 알 때 한 변을 되묻는 물음으로 제곱근을 만나고, 근호를 읽고 쓰는 법을 익혀요.",
         "estimatedMinutes": 12,
@@ -504,28 +558,33 @@
       },
       "sections": [
         {
-          "sectionId": "square-root:explanation:v2",
+          "sectionId": "square-root:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "square-root:explanation:text:v2",
+              "blockId": "square-root:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$3$을 두 번 곱하면 $9$예요. 거꾸로 물어볼게요. 두 번 곱해서 $9$가 되는 수는 무엇일까요?\n\n$3$이 맞지만 하나 더 있어요. $(-3) \\times (-3)$도 $9$예요. 이렇게 제곱해서 $a$가 되는 수를 $a$의 제곱근이라고 해요.\n\n양수의 제곱근은 늘 두 개, 부호만 다른 짝이에요. $0$의 제곱근은 $0$ 하나뿐이고, 음수의 제곱근은 없어요. 어떤 수를 제곱해도 음수가 나오지 않으니까요.\n\n$9$처럼 운 좋게 딱 떨어지는 수도 있지만 $2$의 제곱근은 우리가 아는 어떤 분수로도 적을 수 없어요. 그래서 근호라는 기호를 만들어 $\\sqrt{2}$라고 적어요.\n\n$\\sqrt{a}$는 $a$의 제곱근 중 「양수인 쪽」만 가리켜요. 음수인 쪽은 $-\\sqrt{a}$라고 써요. $9$의 제곱근은 $\\pm 3$ 두 개지만, $\\sqrt{9}$라고 쓰면 그중 $3$ 하나예요.\n\n여기서 자주 미끄러져요. $\\sqrt{(-5)^2}$은 $-5$가 아니라 $5$예요. 괄호 안을 먼저 제곱하면 $25$이고, 근호는 양수인 쪽을 내놓으니까요. 근호를 벗기면 절댓값이 남는다고 기억해 두면 편해요.\n\n크기 견주기는 그대로예요. 넓이가 넓으면 한 변도 길어요. $11 < 13$이니 $\\sqrt{11} < \\sqrt{13}$이에요.",
+                "text": "$3$을 두 번 곱하면 $9$예요. 거꾸로 물어볼게요. 두 번 곱해서 $9$가 되는 수는 무엇일까요?\n\n$3$이 맞아요. 그런데 하나 더 있어요. $(-3) \\times (-3)$도 $9$니까요. 이렇게 제곱해서 $a$가 되는 수를 $a$의 제곱근이라고 해요.\n\n양수의 제곱근은 늘 두 개예요. 부호만 다른 짝이고요. $0$의 제곱근은 $0$ 하나뿐이에요. 음수의 제곱근은 없어요. 어떤 수를 제곱해도 음수가 되지 않으니까요.",
                 "definitions": [
                   {
                     "conceptKey": "square-root",
                     "surface": "제곱근",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "negative-number",
+                    "surface": "음수",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "square-root:explanation:drawing:v2",
+              "blockId": "square-root:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -702,33 +761,65 @@
                 ],
                 "frameMs": 1700
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "square-root:example:v2",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "square-root:example:text:v2",
+              "blockId": "square-root:explanation:text-2:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$\\sqrt{(-6)^2}$의 값을 구해 볼게요.\n\n근호 안부터 계산해요. $(-6)^2 = 36$이에요. 음수를 두 번 곱했으니 양수가 됐어요.\n\n이제 $\\sqrt{36}$이고, 제곱해서 $36$이 되는 수 중 양수인 쪽이니 $6$이에요.\n\n$-6$이라고 답하기 쉬운데, 근호가 내놓는 값은 늘 $0$ 이상이에요. 안에 있던 부호는 제곱하는 순간 사라졌어요.\n\n하나 더 볼게요. $\\sqrt{7}$과 $3$ 중 어느 쪽이 클까요? 근호를 없애기보다 둘 다 제곱해서 견주는 편이 쉬워요.\n\n$(\\sqrt{7})^2 = 7$이고 $3^2 = 9$예요. $7 < 9$이니 $\\sqrt{7} < 3$이에요.",
+                "text": "$9$처럼 딱 떨어지는 수도 있어요. 하지만 $2$의 제곱근은 어떤 분수로도 적을 수 없어요. 그래서 근호라는 기호를 만들어 $\\sqrt{2}$라고 적어요.\n\n$\\sqrt{a}$는 $a$의 제곱근 중 양수인 쪽만 가리켜요. 음수인 쪽은 $-\\sqrt{a}$라고 써요. $9$의 제곱근은 $\\pm 3$ 두 개예요. 하지만 $\\sqrt{9}$라고 쓰면 그중 $3$ 하나예요.",
                 "definitions": []
+              }
+            },
+            {
+              "blockId": "square-root:explanation:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "여기서 자주 미끄러져요. $\\sqrt{(-5)^2}$은 $-5$가 아니라 $5$예요. 괄호 안을 먼저 제곱하면 $25$이니까요. 근호는 양수인 쪽을 내놓아요. 근호를 벗기면 절댓값이 남는다고 기억해 두세요.\n\n크기 비교는 그대로예요. 넓이가 넓으면 한 변도 길어요. $11 < 13$이니 $\\sqrt{11} < \\sqrt{13}$이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "absolute-value",
+                    "surface": "절댓값",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "square-root:practice:v2",
+          "sectionId": "square-root:example:v3",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "square-root:example:text:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{(-6)^2}$의 값을 구해 볼게요.\n\n근호 안부터 계산해요. $(-6)^2 = 36$이에요. 음수를 두 번 곱했으니 양수가 됐어요.\n\n이제 $\\sqrt{36}$이에요. $36$의 제곱근 중 양수인 쪽이니 $6$이에요.\n\n$-6$이라고 답하기 쉬워요. 하지만 근호가 내놓는 값은 늘 $0$ 이상이에요. 안에 있던 부호는 제곱하는 순간 사라졌어요.\n\n하나 더 볼게요. $\\sqrt{7}$과 $3$ 중 어느 쪽이 클까요? 근호를 없애기보다 둘 다 제곱해서 비교하는 편이 쉬워요.\n\n$(\\sqrt{7})^2 = 7$이고 $3^2 = 9$예요. $7 < 9$이니 $\\sqrt{7} < 3$이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "square-root",
+                    "surface": "제곱근",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "square-root:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "square-root:practice:problems:v2",
+              "blockId": "square-root:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -745,12 +836,12 @@
           ]
         },
         {
-          "sectionId": "square-root:check:v2",
+          "sectionId": "square-root:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "square-root:check:problems:v2",
+              "blockId": "square-root:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -766,18 +857,29 @@
           ]
         },
         {
-          "sectionId": "square-root:summary:v2",
+          "sectionId": "square-root:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "square-root:summary:text:v2",
+              "blockId": "square-root:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "제곱근은 「제곱해서 그 수가 되는 수」예요. 넓이를 알 때 한 변을 되묻는 물음과 같아요.\n\n양수에는 제곱근이 두 개 있고 부호만 달라요. $\\sqrt{a}$는 그중 양수인 쪽, $-\\sqrt{a}$는 음수인 쪽이에요.\n\n근호를 벗기면 절댓값이 남아요. $\\sqrt{(-5)^2} = 5$예요.\n\n크기는 근호 안의 수로 견주고, 근호가 있는 수와 없는 수는 둘 다 제곱해서 견줘요.",
-                "definitions": []
+                "text": "제곱근은 제곱해서 그 수가 되는 수예요. 넓이를 알 때 한 변을 되묻는 물음과 같아요.\n\n양수에는 제곱근이 두 개 있고 부호만 달라요. $\\sqrt{a}$는 그중 양수인 쪽, $-\\sqrt{a}$는 음수인 쪽이에요.\n\n근호를 벗기면 절댓값이 남아요. $\\sqrt{(-5)^2} = 5$예요.\n\n크기는 근호 안의 수로 비교해요. 근호가 있는 수와 없는 수는 둘 다 제곱해서 비교해요.",
+                "definitions": [
+                  {
+                    "conceptKey": "square-root",
+                    "surface": "제곱근",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "absolute-value",
+                    "surface": "절댓값",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -795,7 +897,7 @@
     {
       "public": {
         "lessonKey": "irrational-number",
-        "versionId": "irrational-number:v2",
+        "versionId": "irrational-number:v3",
         "title": "무리수와 실수: 수직선에 빈틈이 없으려면",
         "summary": "분수로 적을 수 없는 수가 있다는 것을 보고, 유리수와 합쳐 수직선을 채우는 수 전체를 만나요.",
         "estimatedMinutes": 12,
@@ -811,17 +913,17 @@
       },
       "sections": [
         {
-          "sectionId": "irrational-number:explanation:v2",
+          "sectionId": "irrational-number:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "irrational-number:explanation:text:v2",
+              "blockId": "irrational-number:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "앞에서 분수를 소수로 고치면 딱 끝나거나 되풀이되거나 둘 중 하나라고 했어요. 뒤집어 말하면, 끝나지도 않고 되풀이되지도 않는 소수는 분수로 적을 수 없다는 뜻이에요.\n\n$\\sqrt{2} = 1.41421356\\cdots$이 그래요. 아무리 자리를 늘려도 끝나지 않고, 되풀이되는 마디도 나타나지 않아요. 이런 수를 무리수라고 해요. 분수의 「비」로 나타낼 수 없는 수라는 뜻이에요.\n\n원주율 $\\pi = 3.141592\\cdots$도 무리수예요.\n\n근호가 붙었다고 모두 무리수는 아니에요. $\\sqrt{4} = 2$, $\\sqrt{0.25} = 0.5$처럼 딱 떨어지면 유리수예요. 근호 안이 어떤 수의 제곱인지부터 보세요.\n\n유리수와 무리수를 모두 합친 것을 실수라고 해요. 실수는 수직선을 빈틈없이 채워요. 수직선 위의 점 하나마다 실수 하나가, 실수 하나마다 점 하나가 있어요.\n\n크기를 견줄 때는 제곱해서 견주면 편해요. $\\sqrt{5}$와 $2$ 중 어느 쪽이 클까요? 제곱하면 $5$와 $4$이고 $5 > 4$이니 $\\sqrt{5}$가 커요.\n\n어림잡는 것도 같은 방법이에요. $\\sqrt{30}$은 $5^2 = 25$와 $6^2 = 36$ 사이에 있으니 $5$와 $6$ 사이의 수예요.",
+                "text": "앞에서 분수를 소수로 고치면 딱 끝나거나 되풀이된다고 했어요. 뒤집어 말하면 이래요. 끝나지도 않고 되풀이되지도 않는 소수는 분수로 적을 수 없어요.\n\n$\\sqrt{2} = 1.41421356\\cdots$이 그래요. 아무리 자릿수를 늘려도 끝나지 않아요. 되풀이되는 마디도 나타나지 않고요. 이런 수를 무리수라고 해요.\n\n원주율 $\\pi = 3.141592\\cdots$도 무리수예요.",
                 "definitions": [
                   {
                     "conceptKey": "irrational-number",
@@ -832,7 +934,7 @@
               }
             },
             {
-              "blockId": "irrational-number:explanation:drawing:v2",
+              "blockId": "irrational-number:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1030,33 +1132,70 @@
                 ],
                 "frameMs": 1700
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "irrational-number:example:v2",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "irrational-number:example:text:v2",
+              "blockId": "irrational-number:explanation:text-2:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$\\sqrt{50}$이 어느 두 정수 사이에 있는지 알아볼게요.\n\n근호를 없애려 하지 말고, 가까운 제곱수를 양옆에서 찾아요.\n\n$7^2 = 49$이고 $8^2 = 64$예요. $49 < 50 < 64$이니 $\\sqrt{49} < \\sqrt{50} < \\sqrt{64}$, 곧 $7 < \\sqrt{50} < 8$이에요.\n\n$50$은 $49$에 아주 가까우니 $\\sqrt{50}$도 $7$에 가깝겠다는 것까지 알 수 있어요.\n\n이번에는 $3 < \\sqrt{n} < 4$인 자연수 $n$이 몇 개인지 세어 볼게요.\n\n세 변을 모두 제곱하면 $9 < n < 16$이에요. 부등호에 등호가 없으니 $9$와 $16$은 빼고, $10$부터 $15$까지 여섯 개예요.",
+                "text": "근호가 붙었다고 모두 무리수는 아니에요. $\\sqrt{4} = 2$, $\\sqrt{0.25} = 0.5$처럼 딱 떨어지면 유리수예요. 근호 안이 어떤 수의 제곱인지부터 보세요.\n\n유리수와 무리수를 모두 합친 것이 실수예요. 실수는 수직선을 빈틈없이 채워요. 수직선 위의 점 하나마다 실수 하나가 있어요. 실수 하나마다 점 하나가 있고요.",
+                "definitions": [
+                  {
+                    "conceptKey": "square-root",
+                    "surface": "근호",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "rational-number",
+                    "surface": "유리수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "irrational-number:explanation:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "크기를 비교할 때는 제곱해 보세요. $\\sqrt{5}$와 $2$ 중 어느 쪽이 클까요? 제곱하면 $5$와 $4$예요. $5 > 4$이니 $\\sqrt{5}$가 커요.\n\n어림잡는 것도 같은 방법이에요. $\\sqrt{30}$은 $5^2 = 25$와 $6^2 = 36$ 사이에 있어요. 그러니 $5$와 $6$ 사이의 수예요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "irrational-number:practice:v2",
+          "sectionId": "irrational-number:example:v3",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "irrational-number:example:text:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{50}$이 어느 두 정수 사이에 있는지 알아볼게요.\n\n근호를 없애려 하지 마세요. 가까운 제곱수를 양옆에서 찾으면 돼요.\n\n$7^2 = 49$이고 $8^2 = 64$예요. $49 < 50 < 64$이니 $\\sqrt{49} < \\sqrt{50} < \\sqrt{64}$예요. 곧 $7 < \\sqrt{50} < 8$이에요.\n\n$50$은 $49$에 아주 가까워요. 그러니 $\\sqrt{50}$도 $7$에 가깝겠다는 것까지 알 수 있어요.\n\n이번에는 $3 < \\sqrt{n} < 4$인 자연수 $n$이 몇 개인지 세어 볼게요.\n\n세 변을 모두 제곱하면 $9 < n < 16$이에요. 부등호에 등호가 없으니 $9$와 $16$은 빼요. $10$부터 $15$까지 여섯 개예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "integer",
+                    "surface": "정수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "irrational-number:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "irrational-number:practice:problems:v2",
+              "blockId": "irrational-number:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1073,12 +1212,12 @@
           ]
         },
         {
-          "sectionId": "irrational-number:check:v2",
+          "sectionId": "irrational-number:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "irrational-number:check:problems:v2",
+              "blockId": "irrational-number:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1094,18 +1233,29 @@
           ]
         },
         {
-          "sectionId": "irrational-number:summary:v2",
+          "sectionId": "irrational-number:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "irrational-number:summary:text:v2",
+              "blockId": "irrational-number:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "끝나지도 않고 되풀이되지도 않는 소수가 무리수예요. 분수로는 적을 수 없어요.\n\n근호가 있다고 다 무리수는 아니에요. 근호 안이 제곱수이면 딱 떨어지는 유리수예요.\n\n유리수와 무리수를 합친 실수가 수직선을 빈틈없이 채워요.\n\n크기를 견주거나 어림잡을 때는 제곱해서, 또는 가까운 제곱수를 양옆에서 찾아 견줘요.",
-                "definitions": []
+                "text": "끝나지도 않고 되풀이되지도 않는 소수가 무리수예요. 분수로는 적을 수 없어요.\n\n근호가 있다고 다 무리수는 아니에요. 근호 안이 제곱수이면 딱 떨어지는 유리수예요.\n\n유리수와 무리수를 합친 실수가 수직선을 빈틈없이 채워요.\n\n크기를 비교하거나 어림잡을 때는 제곱해 보세요. 또는 가까운 제곱수를 양옆에서 찾으세요.",
+                "definitions": [
+                  {
+                    "conceptKey": "irrational-number",
+                    "surface": "무리수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "rational-number",
+                    "surface": "유리수",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -1123,7 +1273,7 @@
     {
       "public": {
         "lessonKey": "radical-arithmetic",
-        "versionId": "radical-arithmetic:v2",
+        "versionId": "radical-arithmetic:v3",
         "title": "근호의 계산: 곱하고 나누고, 분모를 정리하기",
         "summary": "근호끼리 곱하고 나누는 규칙을 익히고, 근호 안을 간단히 하거나 분모에서 걷어내요.",
         "estimatedMinutes": 12,
@@ -1140,40 +1290,35 @@
       },
       "sections": [
         {
-          "sectionId": "radical-arithmetic:explanation:v2",
+          "sectionId": "radical-arithmetic:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "radical-arithmetic:explanation:text:v2",
+              "blockId": "radical-arithmetic:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "근호끼리 곱할 때는 안의 수끼리 곱하면 돼요. $\\sqrt{2} \\times \\sqrt{3} = \\sqrt{6}$이에요. 나눗셈도 마찬가지로 $\\frac{\\sqrt{6}}{\\sqrt{2}} = \\sqrt{3}$이에요.\n\n넓이로 보면 당연해요. 두 번 곱해서 $2$가 되는 수와 두 번 곱해서 $3$이 되는 수를 곱하면, 그것을 두 번 곱했을 때 $2 \\times 3 = 6$이 되니까요.\n\n이 규칙을 거꾸로 쓰면 근호 안을 간단히 할 수 있어요. $\\sqrt{12} = \\sqrt{4 \\times 3} = \\sqrt{4} \\times \\sqrt{3} = 2\\sqrt{3}$. 근호 안에서 제곱수를 찾아 밖으로 꺼내는 거예요.\n\n덧셈은 사정이 달라요. $\\sqrt{2} + \\sqrt{3}$은 $\\sqrt{5}$가 아니에요. 넓이가 $2$인 정사각형과 $3$인 정사각형의 한 변을 이어 붙여도 넓이 $5$짜리 한 변이 되지는 않아요.\n\n근호의 덧셈과 뺄셈은 동류항을 모으듯 해요. $\\sqrt{3}$을 하나의 문자처럼 보면 $2\\sqrt{3} + 3\\sqrt{3} = 5\\sqrt{3}$이에요. 근호 안이 다르면 모을 수 없어요.\n\n마지막으로 하나 더. 분모에 근호가 있으면 값을 가늠하기 어려워요. $\\frac{1}{\\sqrt{2}}$가 얼마쯤인지 바로 안 떠오르죠.\n\n분자와 분모에 같은 수를 곱해도 값은 그대로라는 성질을 써서 분모의 근호를 걷어내요. $\\frac{1}{\\sqrt{2}} = \\frac{\\sqrt{2}}{2}$이고, 이러면 $1.414 \\div 2$로 대번에 어림할 수 있어요. 이것을 분모의 유리화라고 해요.",
+                "text": "근호끼리 곱할 때는 안의 수끼리 곱하면 돼요. $\\sqrt{2} \\times \\sqrt{3} = \\sqrt{6}$이에요. 나눗셈도 마찬가지로 $\\frac{\\sqrt{6}}{\\sqrt{2}} = \\sqrt{3}$이에요.\n\n넓이로 보면 당연해요. 두 번 곱해서 $2$가 되는 수와 두 번 곱해서 $3$이 되는 수가 있어요. 둘을 곱한 수를 두 번 곱하면 $2 \\times 3 = 6$이 되니까요.\n\n이 규칙을 거꾸로 쓰면 근호 안을 간단히 할 수 있어요. $\\sqrt{12} = \\sqrt{4 \\times 3} = \\sqrt{4} \\times \\sqrt{3} = 2\\sqrt{3}$이에요. 근호 안에서 제곱수를 찾아 밖으로 꺼내는 거예요.",
                 "definitions": [
                   {
                     "conceptKey": "radical-arithmetic",
                     "surface": "근호 안을 간단히",
-                    "scopeKind": "global"
-                  },
-                  {
-                    "conceptKey": "rationalizing",
-                    "surface": "분모의 유리화",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "radical-arithmetic:explanation:drawing:v2",
+              "blockId": "radical-arithmetic:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "넓이 12인 정사각형이 넓이 3짜리 네 조각으로 갈라지고 한 변이 두 칸임을 보이는 그림",
+                "alt": "넓이 12인 정사각형이 넓이 3짜리 네 조각으로 나뉘고 한 변이 두 칸임을 보이는 그림",
                 "caption": "한 변은 넓이 3짜리 두 칸, 곧 2루트 3이에요",
                 "items": [
                   {
@@ -1322,7 +1467,7 @@
                     ]
                   },
                   {
-                    "caption": "넓이 $3$짜리 네 조각으로 똑같이 갈라져요.",
+                    "caption": "넓이 $3$짜리 네 조각으로 똑같이 나뉘어요.",
                     "changes": [
                       {
                         "id": "q1",
@@ -1434,33 +1579,71 @@
                 ],
                 "frameMs": 1600
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "radical-arithmetic:example:v2",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "radical-arithmetic:example:text:v2",
+              "blockId": "radical-arithmetic:explanation:text-2:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$\\sqrt{48}$을 간단히 해 볼게요.\n\n$48$ 안에서 가장 큰 제곱수를 찾아요. $48 = 16 \\times 3$이고 $16 = 4^2$이에요.\n\n$\\sqrt{48} = \\sqrt{16} \\times \\sqrt{3} = 4\\sqrt{3}$이에요.\n\n$48 = 4 \\times 12$로 잡아도 틀리지 않아요. $2\\sqrt{12}$가 되는데 $\\sqrt{12}$가 또 간단해지니 $2 \\times 2\\sqrt{3} = 4\\sqrt{3}$으로 같은 답에 닿아요. 한 번에 끝내려면 가장 큰 제곱수를 찾는 편이 빨라요.\n\n이번에는 $\\frac{6}{\\sqrt{3}}$의 분모를 유리화해 볼게요.\n\n분모의 $\\sqrt{3}$을 없애려면 $\\sqrt{3}$을 한 번 더 곱하면 돼요. 분자에도 똑같이 곱해요.\n\n$\\frac{6}{\\sqrt{3}} = \\frac{6 \\times \\sqrt{3}}{\\sqrt{3} \\times \\sqrt{3}} = \\frac{6\\sqrt{3}}{3} = 2\\sqrt{3}$이에요.",
-                "definitions": []
+                "text": "덧셈은 사정이 달라요. $\\sqrt{2} + \\sqrt{3}$은 $\\sqrt{5}$가 아니에요. 넓이가 $2$인 정사각형과 $3$인 정사각형을 떠올려 보세요. 두 한 변을 이어 붙여도 넓이 $5$짜리 한 변이 되지는 않아요.\n\n근호의 덧셈과 뺄셈은 동류항을 모으듯 해요. $\\sqrt{3}$을 하나의 문자처럼 보면 $2\\sqrt{3} + 3\\sqrt{3} = 5\\sqrt{3}$이에요. 근호 안이 다르면 모을 수 없어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "like-term",
+                    "surface": "동류항",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "radical-arithmetic:explanation:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "분모에 근호가 있으면 값을 가늠하기 어려워요. $\\frac{1}{\\sqrt{2}}$가 얼마쯤인지 바로 안 떠오르죠.\n\n분자와 분모에 같은 수를 곱해도 값은 그대로예요. 이 성질로 분모의 근호를 걷어내요. $\\frac{1}{\\sqrt{2}} = \\frac{\\sqrt{2}}{2}$가 되고, 이러면 $1.414 \\div 2$로 대번에 어림할 수 있어요. 이것을 분모의 유리화라고 해요.",
+                "definitions": [
+                  {
+                    "conceptKey": "rationalizing",
+                    "surface": "분모의 유리화",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "radical-arithmetic:practice:v2",
+          "sectionId": "radical-arithmetic:example:v3",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "radical-arithmetic:example:text:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$\\sqrt{48}$을 간단히 해 볼게요.\n\n$48$ 안에서 가장 큰 제곱수를 찾아요. $48 = 16 \\times 3$이고 $16 = 4^2$이에요.\n\n$\\sqrt{48} = \\sqrt{16} \\times \\sqrt{3} = 4\\sqrt{3}$이에요.\n\n$48 = 4 \\times 12$로 잡아도 틀리지 않아요. $2\\sqrt{12}$가 되는데 $\\sqrt{12}$가 또 간단해져요. $2 \\times 2\\sqrt{3} = 4\\sqrt{3}$으로 같은 답에 닿아요. 한 번에 끝내려면 가장 큰 제곱수를 찾는 편이 빨라요.\n\n이번에는 $\\frac{6}{\\sqrt{3}}$의 분모를 유리화해 볼게요.\n\n분모의 $\\sqrt{3}$을 없애려면 $\\sqrt{3}$을 한 번 더 곱하면 돼요. 분자에도 똑같이 곱해요.\n\n$\\frac{6}{\\sqrt{3}} = \\frac{6 \\times \\sqrt{3}}{\\sqrt{3} \\times \\sqrt{3}} = \\frac{6\\sqrt{3}}{3} = 2\\sqrt{3}$이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "rationalizing",
+                    "surface": "유리화",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "radical-arithmetic:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "radical-arithmetic:practice:problems:v2",
+              "blockId": "radical-arithmetic:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1477,12 +1660,12 @@
           ]
         },
         {
-          "sectionId": "radical-arithmetic:check:v2",
+          "sectionId": "radical-arithmetic:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "radical-arithmetic:check:problems:v2",
+              "blockId": "radical-arithmetic:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1498,18 +1681,39 @@
           ]
         },
         {
-          "sectionId": "radical-arithmetic:summary:v2",
+          "sectionId": "radical-arithmetic:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "radical-arithmetic:summary:text:v2",
+              "blockId": "radical-arithmetic:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "곱셈과 나눗셈은 근호 안의 수끼리 하면 돼요. 이 규칙을 거꾸로 쓰면 근호 안의 제곱수를 밖으로 꺼낼 수 있어요.\n\n덧셈과 뺄셈은 동류항처럼 모아요. 근호 안이 같아야 모을 수 있고, 다르면 그대로 둬요.\n\n분모에 근호가 있으면 분자와 분모에 같은 근호를 곱해 걷어내요. 값이 얼마쯤인지 가늠하기 위해서예요.\n\n여기까지가 제곱근을 다루는 손놀림이에요. 다음 과정에서 이차방정식을 풀 때 그대로 쓰게 돼요.",
-                "definitions": []
+                "text": "곱셈과 나눗셈은 근호 안의 수끼리 하면 돼요. 이 규칙을 거꾸로 쓰면 근호 안의 제곱수를 밖으로 꺼낼 수 있어요.\n\n덧셈과 뺄셈은 동류항처럼 모아요. 근호 안이 같아야 모을 수 있고, 다르면 그대로 둬요.\n\n분모에 근호가 있으면 분자와 분모에 같은 근호를 곱해 걷어내요. 이것이 분모의 유리화예요. 값이 얼마쯤인지 가늠하기 위해서고요.\n\n여기까지가 제곱근을 다루는 기본 계산이에요. 다음 과정에서 이차방정식을 풀 때 그대로 써요.",
+                "definitions": [
+                  {
+                    "conceptKey": "radical-arithmetic",
+                    "surface": "근호 안의 수끼리",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "like-term",
+                    "surface": "동류항",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "rationalizing",
+                    "surface": "분모의 유리화",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "quadratic-equation",
+                    "surface": "이차방정식",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
