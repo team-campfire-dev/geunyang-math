@@ -172,3 +172,78 @@ describe('placing someone against the published bank', () => {
     }
   });
 });
+
+/**
+ * A learner who changes their mind about what they came for, halfway through being placed.
+ *
+ * The scope cannot simply be replaced: every verdict is derived by replaying the answers, and the
+ * descent chooses each question by what it settles among everything still open, so a different
+ * scope makes it choose differently and the stored answers stop matching. Measured on this bank,
+ * even a scope that strictly contains the old one disagrees from the third answer on.
+ */
+describe('a placement whose scope changes partway through', () => {
+  const courses = seeds.flatMap((seed) => seed.courses);
+  const conceptsOf = (courseKey: string) => {
+    const held = new Set(courses.find((course) => course.key === courseKey)!.lessons.map((lesson) => lesson.key));
+    return lessons.filter((lesson) => held.has(lesson.lessonKey)).flatMap((lesson) => lesson.conceptKeys);
+  };
+  const equations = placementScope(graph, conceptsOf('equations'));
+  const systems = placementScope(graph, conceptsOf('systems'));
+  /** Answers `count` questions correctly under one scope, the way a run would have stored them. */
+  const answerSome = (only: string[], count: number) => {
+    const answers: PlacementAnswer[] = [];
+    for (let index = 0; index < count; index += 1) {
+      const { next } = placement(graph, only, bank, answers);
+      if (!next) break;
+      answers.push({ problemVersionId: next.problemVersionId, status: 'correct' });
+    }
+    return answers;
+  };
+
+  it('cannot simply be handed the new scope, which is why the stretches exist', () => {
+    // 연립방정식 needs everything 일차방정식 needs and more, and it still disagrees.
+    expect(equations.every((key) => systems.includes(key)), '연립방정식이 일차방정식을 품지 않는다').toBe(true);
+    const answers = answerSome(equations, 4);
+    expect(() => placement(graph, systems, bank, answers)).toThrow(/배치 기록이 어긋난다/);
+  });
+
+  it('replays cleanly when each answer keeps the scope it was given under', () => {
+    const answers = answerSome(equations, 4);
+    const carried = placement(graph, [{ from: 0, scope: equations }, { from: answers.length, scope: systems }], bank, answers);
+    // Nothing thrown, nothing unasked: every verdict the first stretch reached is still here.
+    const before = placement(graph, equations, bank, answers).state;
+    for (const [key, outcome] of Object.entries(before.placed)) expect(carried.state.placed[key]).toBe(outcome);
+    // And it carries on, into what the new course needs rather than what the old one did.
+    expect(carried.next).toBeTruthy();
+    expect(carried.consumed).toBe(answers.length);
+  });
+
+  it('counts progress against where the learner is going now, not everywhere they have been', () => {
+    const answers = answerSome(equations, 4);
+    const carried = placement(graph, [{ from: 0, scope: equations }, { from: answers.length, scope: systems }], bank, answers);
+    expect(carried.state.scope).toEqual(systems);
+    expect(placementProgress(carried.state).scope).toBe(systems.length);
+  });
+
+  it('never puts a question twice, however often somebody changes their mind', () => {
+    const first = answerSome(equations, 3);
+    const stretches = [{ from: 0, scope: equations }, { from: first.length, scope: systems }];
+    const answers = [...first];
+    for (let guard = 0; guard <= bank.length; guard += 1) {
+      const { next } = placement(graph, stretches, bank, answers);
+      if (!next) break;
+      answers.push({ problemVersionId: next.problemVersionId, status: 'correct' });
+    }
+    expect(new Set(answers.map((answer) => answer.problemVersionId)).size).toBe(answers.length);
+  });
+
+  it('asks nothing more when the new way is one the answers have already settled', () => {
+    // Narrowing is not a case of its own: a scope holding only what is already decided simply has
+    // nothing left to ask, which is what «좁아지면 아무것도 하지 않는다» amounts to in the mechanism.
+    const answers = answerSome(equations, 40);
+    const decided = Object.keys(placement(graph, equations, bank, answers).state.placed);
+    const narrowed = placement(graph, [{ from: 0, scope: equations }, { from: answers.length, scope: decided }], bank, answers);
+    expect(narrowed.next, '이미 정해진 곳을 다시 묻는다').toBeNull();
+    expect(narrowed.consumed).toBe(answers.length);
+  });
+});

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import Link from 'next/link';
-import { courseStageLabels, courseTrackLabels, courseTracks, defaultCourseTrack, stagesOf, type ActionResponse, type AssignmentView, type AttemptView, type CourseTrack, type LessonDocument, type ContentBlock, type EnrollmentView, type LearningAction, type LearningState, type PublicLesson, type PublicProblem, type PublicProblemSet, type PublicConcept, type PublicCourse } from '@/shared/api';
+import { courseStageLabels, courseTrackLabels, courseTracks, defaultCourseTrack, stagesOf, type ActionResponse, type AssignmentView, type AttemptView, type CourseTrack, type DiagnosticView, type LessonDocument, type ContentBlock, type EnrollmentView, type LearningAction, type LearningState, type PublicLesson, type PublicProblem, type PublicProblemSet, type PublicConcept, type PublicCourse } from '@/shared/api';
 import { ApiError, learningApi, supportsWebAuthentication, type Session } from './api-client';
 import { placeSearch, readPlace, sameWork, type Page, type Place } from './app-url';
 import { assertLearningResponseAccount, clearAuthReturn, GOOGLE_LOGIN_PATH, isNativeBrowser, LearningResponseError, parseAuthError, readAuthReturn, saveAuthReturn, type AuthReturn } from './auth-client';
@@ -775,9 +775,30 @@ export function LearningWorkspace() {
         : '하루 학습 시간을 반영했어요. 배우려는 과정은 언제든 왼쪽 아래에서 고를 수 있어요.');
     } catch { /* Shown in dialog and page. */ }
   }
+  /**
+   * What saving the profile did to the placement, when it did anything.
+   *
+   * Changing what you came for changes what a placement has to settle, and a run under way follows
+   * — the answers already given keep the scope they were given under, and the descent carries on
+   * into what the new course needs. That is a thing to be told, not to discover by finding the
+   * screen asking again.
+   */
+  function placementNotice(before: DiagnosticView | null, after: DiagnosticView | null | undefined) {
+    if (!before || !after || before.scope === after.scope) return null;
+    if (!after.currentProblem) return '배우려는 과정을 반영했어요. 시작점 확인은 이미 확인한 것으로 충분해서 더 묻지 않아요.';
+    return before.status === 'completed'
+      ? '배우려는 과정을 반영했어요. 새 과정에 필요해진 것만 시작점 확인에서 몇 가지 더 물어볼게요 — 지금까지 확인한 것은 그대로예요.'
+      : '배우려는 과정을 반영했어요. 시작점 확인이 새 과정에 맞춰 이어져요 — 이미 답한 문항은 다시 묻지 않아요.';
+  }
   async function saveProfile(event: FormEvent) {
     event.preventDefault();
-    try { await dispatch({ action: 'profile.update', targetCourseKey: target || null, dailyMinutes: minutes }); setModal(null); setNotice('배우려는 과정과 시간을 반영했어요. 다음 추천과 새 복습 과제에 적용하며, 이미 받은 과제는 그대로 유지해요.'); } catch { /* Shown in dialog and page. */ }
+    const before = state?.diagnostic ?? null;
+    try {
+      const response = await dispatch({ action: 'profile.update', targetCourseKey: target || null, dailyMinutes: minutes });
+      setModal(null);
+      setNotice(placementNotice(before, response.state.diagnostic)
+        ?? '배우려는 과정과 시간을 반영했어요. 다음 추천과 새 복습 과제에 적용하며, 이미 받은 과제는 그대로 유지해요.');
+    } catch { /* Shown in dialog and page. */ }
   }
 
   const courseTitle = (item: PublicLesson) => courses.find((course) => course.key === item.courseKey)?.title ?? '수업';

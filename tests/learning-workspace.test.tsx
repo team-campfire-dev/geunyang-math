@@ -1151,3 +1151,51 @@ describe('the lessons screen and the size of the catalogue', () => {
     expect(untouched.querySelector('.catalog-progress b')).toBeNull();
   });
 });
+
+/**
+ * Changing what you came for changes what a placement has to settle, and a run under way follows.
+ * That is a thing to be told, not to discover by finding the screen asking again.
+ */
+describe('what saving the profile says about the placement', () => {
+  const run = (over: Partial<NonNullable<LearningState['diagnostic']>> = {}) => ({
+    id: 'run', version: 'v1', status: 'active' as const, completedAt: null,
+    scope: 12, settled: 4, asked: 2, inferred: 2, answered: 2, currentProblem: null, results: [], ...over,
+  });
+  const openProfile = async (state: LearningState) => {
+    server = serve({ state });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: /학습자/ }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: /학습자/ })[0]);
+    await until(() => expect(screen.getByRole('heading', { name: '무엇을 배우러 오셨나요?' })).toBeDefined());
+  };
+  const save = async (after: LearningState) => {
+    server.state.after = () => after;
+    fireEvent.click(screen.getByRole('button', { name: /이렇게 시작할게요/ }));
+    await tick();
+  };
+
+  it('says the placement carries on, and that nothing already answered is asked again', async () => {
+    const before = learningState({ diagnostic: run() });
+    await openProfile(before);
+    await save(learningState({ diagnostic: run({ scope: 26, currentProblem: { problemVersionId: 'q9' } as never }) }));
+    expect(screen.getByText(/시작점 확인이 새 과정에 맞춰 이어져요 — 이미 답한 문항은 다시 묻지 않아요/)).toBeDefined();
+  });
+
+  it('says a finished placement has a few more to put, rather than reopening it silently', async () => {
+    await openProfile(learningState({ diagnostic: run({ status: 'completed', completedAt: '2026-09-22T00:00:00.000Z' }) }));
+    await save(learningState({ diagnostic: run({ status: 'active', scope: 26, currentProblem: { problemVersionId: 'q9' } as never }) }));
+    expect(screen.getByText(/새 과정에 필요해진 것만 시작점 확인에서 몇 가지 더 물어볼게요/)).toBeDefined();
+  });
+
+  it('says so when the new way is one the answers have already settled', async () => {
+    await openProfile(learningState({ diagnostic: run({ status: 'completed' }) }));
+    await save(learningState({ diagnostic: run({ status: 'completed', scope: 5 }) }));
+    expect(screen.getByText(/이미 확인한 것으로 충분해서 더 묻지 않아요/)).toBeDefined();
+  });
+
+  it('says nothing about a placement when the profile did not move one', async () => {
+    await openProfile(learningState({ diagnostic: run() }));
+    await save(learningState({ diagnostic: run() }));
+    expect(screen.getByText(/배우려는 과정과 시간을 반영했어요/)).toBeDefined();
+  });
+});
