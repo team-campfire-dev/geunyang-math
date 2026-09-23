@@ -51,7 +51,7 @@
     {
       "public": {
         "lessonKey": "set-basics",
-        "versionId": "set-basics:v1",
+        "versionId": "set-basics:v2",
         "title": "집합과 원소: 조건이 분명해야 집합이다",
         "summary": "무엇이 들어가고 무엇이 빠지는지 누구나 똑같이 가릴 수 있을 때만 집합이에요.",
         "estimatedMinutes": 12,
@@ -66,17 +66,17 @@
       },
       "sections": [
         {
-          "sectionId": "set-basics:explanation:v1",
+          "sectionId": "set-basics:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "set-basics:explanation:text:v1",
+              "blockId": "set-basics:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "「$10$보다 작은 $3$의 배수」라고 하면 무엇이 들어갈까요. $3$, $6$, $9$예요. 누가 세어도 같아요.\n\n「키가 큰 사람」이라고 하면 어떨까요. $175$cm는 큰 걸까요? 사람마다 답이 달라요. 이렇게 기준이 사람에 따라 갈리면 모임은 되어도 집합은 아니에요.\n\n들어가는지 아닌지를 누구나 똑같이 가릴 수 있는 모임, 그것이 집합이에요. 집합에 든 하나하나를 원소라고 해요.\n\n적는 법은 두 가지예요. 원소를 다 적는 $\\{3, 6, 9\\}$와, 조건을 적는 「$10$보다 작은 $3$의 배수」예요. 원소가 많거나 끝이 없으면 조건으로 적는 편이 낫고요.\n\n$3$이 집합 $A$의 원소라는 것을 $3 \\in A$로 적어요. 아니면 $\\notin$이고요.\n\n집합 $A$의 원소가 모두 집합 $B$에도 들어 있으면 $A$를 $B$의 부분집합이라고 해요. $\\{1, 2\\}$는 $\\{1, 2, 3\\}$의 부분집합이에요.\n\n부분집합을 셀 때는 앞 과정의 곱의 법칙이 그대로 쓰여요. 원소 하나하나에 대해 「넣는다」와 「뺀다」 두 갈래가 있으니, 원소가 $n$개면 부분집합은 $2^n$개예요. 아무것도 넣지 않은 것과 전부 넣은 것까지 포함해서요.",
+                "text": "「$10$보다 작은 $3$의 배수」라고 하면 무엇이 들어갈까요. $3$, $6$, $9$예요. 누가 세어도 같아요.\n\n「키가 큰 사람」이라고 하면 어떨까요. $175$cm는 큰 걸까요? 사람마다 답이 달라요.\n\n이렇게 기준이 사람마다 다르면 모임은 되어도 집합은 아니에요.\n\n들어가는지 아닌지를 누구나 똑같이 가릴 수 있는 모임, 그것이 집합이에요. 집합에 든 하나하나는 원소라고 해요.",
                 "definitions": [
                   {
                     "conceptKey": "set",
@@ -87,7 +87,33 @@
               }
             },
             {
-              "blockId": "set-basics:explanation:drawing:v1",
+              "blockId": "set-basics:explanation:write:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "적는 법은 두 가지예요. 원소를 다 적는 $\\{3, 6, 9\\}$가 하나예요. 조건을 적는 「$10$보다 작은 $3$의 배수」가 다른 하나고요.\n\n원소가 많거나 끝이 없으면 조건으로 적는 편이 나아요.\n\n$3$이 집합 $A$의 원소라는 것은 $3 \\in A$로 적어요. 아니면 $\\notin$이고요.\n\n집합 $A$의 원소가 모두 집합 $B$에도 들어 있다고 해 볼게요. 그러면 $A$를 $B$의 부분집합이라고 해요. $\\{1, 2\\}$는 $\\{1, 2, 3\\}$의 부분집합이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "set-basics:explanation:count:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "부분집합을 셀 때는 앞 과정의 곱의 법칙이 그대로 쓰여요.\n\n원소 하나하나에 「넣는다」와 「뺀다」 두 가지가 있어요.\n\n그러니 원소가 $n$개면 부분집합은 $2^n$개예요. 아무것도 넣지 않은 것과 전부 넣은 것까지 포함해서요.",
+                "definitions": [
+                  {
+                    "conceptKey": "counting-rule",
+                    "surface": "곱의 법칙",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "set-basics:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -95,7 +121,7 @@
                 "width": 320,
                 "height": 200,
                 "alt": "조건에 맞는 수만 울타리 안으로 들어오고 맞지 않는 수는 밖으로 밀려나는 그림",
-                "caption": "조건이 분명해야 넣을지 말지가 갈려요",
+                "caption": "조건이 분명해야 넣을지 말지가 가려져요",
                 "items": [
                   {
                     "kind": "text",
@@ -335,29 +361,35 @@
           ]
         },
         {
-          "sectionId": "set-basics:example:v1",
+          "sectionId": "set-basics:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "set-basics:example:text:v1",
+              "blockId": "set-basics:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$A = \\{1, 2, 3\\}$의 부분집합을 모두 적어 볼게요.\n\n원소마다 넣을지 말지를 정하면 하나의 부분집합이 정해져요. $1$을 넣거나 빼고, $2$를 넣거나 빼고, $3$을 넣거나 빼요.\n\n갈래가 $2 \\times 2 \\times 2 = 8$가지이니 부분집합도 $8$개예요.\n\n적어 보면 $\\{\\}$, $\\{1\\}$, $\\{2\\}$, $\\{3\\}$, $\\{1,2\\}$, $\\{1,3\\}$, $\\{2,3\\}$, $\\{1,2,3\\}$이에요.\n\n아무것도 넣지 않은 $\\{\\}$도 부분집합이에요. 이것을 공집합이라고 해요. 전부 넣은 $A$ 자신도 부분집합이고요.\n\n그래서 원소가 $n$개인 집합의 부분집합은 늘 $2^n$개예요. 원소가 넷이면 $16$개, 다섯이면 $32$개예요.\n\n$2^n$이라는 식이 어디서 왔는지 보이시죠. 새 공식이 아니라 곱의 법칙이에요.",
-                "definitions": []
+                "text": "$A = \\{1, 2, 3\\}$의 부분집합을 모두 적어 볼게요.\n\n원소마다 넣을지 말지를 정하면 하나의 부분집합이 정해져요.\n\n$1$을 넣거나 빼고, $2$를 넣거나 빼고, $3$을 넣거나 빼요.\n\n경우의 수가 $2 \\times 2 \\times 2 = 8$이니 부분집합도 $8$개예요.\n\n적어 보면 $\\{\\}$, $\\{1\\}$, $\\{2\\}$, $\\{3\\}$, $\\{1,2\\}$, $\\{1,3\\}$, $\\{2,3\\}$, $\\{1,2,3\\}$이에요.\n\n아무것도 넣지 않은 $\\{\\}$도 부분집합이에요. 이것을 공집합이라고 해요. 전부 넣은 $A$ 자신도 부분집합이고요.\n\n그래서 원소가 $n$개인 집합의 부분집합은 늘 $2^n$개예요. 원소가 넷이면 $16$개, 다섯이면 $32$개예요.\n\n$2^n$이라는 식이 어디서 왔는지 보이시죠. 새 공식이 아니라 곱의 법칙이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "counting-cases",
+                    "surface": "경우의 수",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "set-basics:practice:v1",
+          "sectionId": "set-basics:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "set-basics:practice:problems:v1",
+              "blockId": "set-basics:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -374,12 +406,12 @@
           ]
         },
         {
-          "sectionId": "set-basics:check:v1",
+          "sectionId": "set-basics:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "set-basics:check:problems:v1",
+              "blockId": "set-basics:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -395,18 +427,24 @@
           ]
         },
         {
-          "sectionId": "set-basics:summary:v1",
+          "sectionId": "set-basics:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "set-basics:summary:text:v1",
+              "blockId": "set-basics:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "들어가는지 아닌지를 누구나 똑같이 가릴 수 있어야 집합이에요. 「키가 큰 사람」은 집합이 아니에요.\n\n원소를 다 적거나 조건을 적어 나타내요.\n\n원소가 모두 다른 집합에 들어 있으면 부분집합이에요. 공집합과 자기 자신도 포함해요.\n\n원소가 $n$개이면 부분집합은 $2^n$개예요. 원소마다 넣고 빼는 두 갈래가 있기 때문이에요.",
-                "definitions": []
+                "text": "들어가는지 아닌지를 누구나 똑같이 가릴 수 있어야 집합이에요. 「키가 큰 사람」은 집합이 아니에요.\n\n원소를 다 적거나 조건을 적어 나타내요.\n\n원소가 모두 다른 집합에 들어 있으면 부분집합이에요. 공집합과 자기 자신도 포함해요.\n\n원소가 $n$개이면 부분집합은 $2^n$개예요. 원소마다 넣고 빼는 두 가지가 있기 때문이에요.\n\n이 수업의 개념은 집합이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "set",
+                    "surface": "집합",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -424,7 +462,7 @@
     {
       "public": {
         "lessonKey": "set-operation",
-        "versionId": "set-operation:v1",
+        "versionId": "set-operation:v2",
         "title": "교집합과 합집합, 여집합: 겹치는 것과 모은 것",
         "summary": "두 집합을 겹쳐 보고, 모아 보고, 뒤집어 보며 원소의 개수를 세요.",
         "estimatedMinutes": 12,
@@ -439,17 +477,17 @@
       },
       "sections": [
         {
-          "sectionId": "set-operation:explanation:v1",
+          "sectionId": "set-operation:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "set-operation:explanation:text:v1",
+              "blockId": "set-operation:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$A = \\{1, 2, 3\\}$, $B = \\{2, 3, 4\\}$를 두고 볼게요.\n\n양쪽에 다 든 원소를 모은 것을 교집합이라 하고 $A \\cap B$로 적어요. 여기서는 $\\{2, 3\\}$이에요.\n\n어느 한쪽에라도 든 것을 모두 모은 것은 합집합이고 $A \\cup B$로 적어요. $\\{1, 2, 3, 4\\}$예요.\n\n생각하는 전체 범위를 정해 두고 그 안에서 $A$에 들지 않은 것을 모으면 여집합이에요. 전체가 $\\{1,2,3,4,5\\}$라면 $A$의 여집합은 $\\{4, 5\\}$고요.\n\n개수를 셀 때 주의할 곳이 하나 있어요. $A$의 원소가 $3$개, $B$의 원소가 $3$개인데 합집합은 $6$개가 아니라 $4$개예요.\n\n겹치는 $2$와 $3$을 두 번 셌기 때문이에요. 그래서 한 번 빼 줘야 해요. $n(A \\cup B) = n(A) + n(B) - n(A \\cap B)$예요.\n\n앞 과정에서 「또는」을 셀 때 겹치는 것을 뺐던 것과 똑같은 일이에요. 그때는 경우를 셌고 지금은 원소를 셀 뿐이에요.\n\n그림으로는 울타리 두 개를 겹쳐 그려요. 겹친 부분이 교집합, 두 울타리가 덮은 전체가 합집합, 울타리 밖이 여집합이에요.",
+                "text": "$A = \\{1, 2, 3\\}$, $B = \\{2, 3, 4\\}$를 두고 볼게요.\n\n양쪽에 다 든 원소를 모은 것을 교집합이라 하고 $A \\cap B$로 적어요.\n\n여기서는 $\\{2, 3\\}$이에요.",
                 "definitions": [
                   {
                     "conceptKey": "set-operation",
@@ -460,15 +498,51 @@
               }
             },
             {
-              "blockId": "set-operation:explanation:drawing:v1",
+              "blockId": "set-operation:explanation:union:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "어느 한쪽에라도 든 것을 모두 모으면 합집합이에요. $A \\cup B$로 적고요.\n\n여기서는 $\\{1, 2, 3, 4\\}$예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "set-operation:explanation:complement:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "생각하는 전체 범위를 먼저 정해 둬요. 그 안에서 $A$에 들지 않은 것을 모으면 여집합이에요.\n\n전체가 $\\{1,2,3,4,5\\}$라면 $A$의 여집합은 $\\{4, 5\\}$고요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "set-operation:explanation:count:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "개수를 셀 때 주의할 곳이 하나 있어요. $A$의 원소가 $3$개, $B$의 원소가 $3$개예요. 그런데 합집합은 $6$개가 아니라 $4$개예요.\n\n겹치는 $2$와 $3$을 두 번 셌기 때문이에요. 그래서 한 번 빼 줘야 해요.\n\n$n(A \\cup B) = n(A) + n(B) - n(A \\cap B)$예요.\n\n앞 과정에서 「또는」을 셀 때도 겹치는 것을 뺐죠. 합의 법칙에 붙던 조건과 똑같은 일이에요. 그때는 경우를 셌고 지금은 원소를 셀 뿐이에요.\n\n그림으로는 울타리 두 개를 겹쳐 그려요. 겹친 부분이 교집합이에요. 두 울타리가 덮은 전체가 합집합, 울타리 밖이 여집합이고요.",
+                "definitions": [
+                  {
+                    "conceptKey": "counting-rule",
+                    "surface": "합의 법칙",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "set-operation:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "두 울타리가 다가와 겹치고 겹친 자리에 든 원소가 드러나는 그림",
-                "caption": "두 울타리가 겹치는 자리가 교집합이에요",
+                "alt": "두 울타리가 다가와 겹치고 겹친 부분에 든 원소가 드러나는 그림",
+                "caption": "두 울타리가 겹치는 부분이 교집합이에요",
                 "items": [
                   {
                     "kind": "ellipse",
@@ -662,29 +736,35 @@
           ]
         },
         {
-          "sectionId": "set-operation:example:v1",
+          "sectionId": "set-operation:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "set-operation:example:text:v1",
+              "blockId": "set-operation:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "어느 반 학생 $30$명 중 축구를 좋아하는 학생이 $18$명, 야구를 좋아하는 학생이 $15$명, 둘 다 좋아하는 학생이 $7$명이라고 해요. 둘 중 하나라도 좋아하는 학생은 몇 명일까요.\n\n$18 + 15 = 33$이라고 답하면 반 전체보다 많아져요. 뭔가 잘못됐죠.\n\n둘 다 좋아하는 $7$명을 양쪽에서 한 번씩, 그러니까 두 번 셌기 때문이에요.\n\n$18 + 15 - 7 = 26$명이에요.\n\n이번에는 둘 다 좋아하지 않는 학생을 구해 볼게요.\n\n전체 $30$명에서 하나라도 좋아하는 $26$명을 빼면 $4$명이에요. 이것이 여집합을 쓰는 방식이에요.\n\n「하나라도」의 반대는 「하나도 아닌」이에요. 전체에서 빼면 바로 나와요.",
-                "definitions": []
+                "text": "어느 반 학생 $30$명을 전체 집합으로 두고 세어 볼게요.\n\n축구를 좋아하는 학생이 $18$명, 야구를 좋아하는 학생이 $15$명이에요. 둘 다 좋아하는 학생은 $7$명이고요.\n\n둘 중 하나라도 좋아하는 학생은 몇 명일까요.\n\n$18 + 15 = 33$이라고 답하면 반 전체보다 많아져요. 뭔가 잘못됐죠.\n\n둘 다 좋아하는 $7$명을 양쪽에서 한 번씩, 그러니까 두 번 셌기 때문이에요.\n\n$18 + 15 - 7 = 26$명이에요.\n\n이번에는 둘 다 좋아하지 않는 학생을 구해 볼게요.\n\n전체 $30$명에서 하나라도 좋아하는 $26$명을 빼면 $4$명이에요. 이것이 여집합을 쓰는 방식이에요.\n\n「하나라도」의 반대는 「하나도 아닌」이에요. 전체에서 빼면 바로 나와요.",
+                "definitions": [
+                  {
+                    "conceptKey": "set",
+                    "surface": "집합",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "set-operation:practice:v1",
+          "sectionId": "set-operation:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "set-operation:practice:problems:v1",
+              "blockId": "set-operation:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -701,12 +781,12 @@
           ]
         },
         {
-          "sectionId": "set-operation:check:v1",
+          "sectionId": "set-operation:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "set-operation:check:problems:v1",
+              "blockId": "set-operation:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -722,18 +802,24 @@
           ]
         },
         {
-          "sectionId": "set-operation:summary:v1",
+          "sectionId": "set-operation:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "set-operation:summary:text:v1",
+              "blockId": "set-operation:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "양쪽에 다 든 것이 교집합, 어느 한쪽에라도 든 것이 합집합, 전체에서 빠진 것이 여집합이에요.\n\n$n(A \\cup B) = n(A) + n(B) - n(A \\cap B)$예요. 겹치는 것을 두 번 세니 한 번 빼요.\n\n「하나도 아닌」 경우는 전체에서 「하나라도 인」 경우를 빼면 나와요.\n\n울타리 두 개를 그려 놓고 세는 것이 가장 안전해요.",
-                "definitions": []
+                "text": "양쪽에 다 든 것이 교집합이에요. 어느 한쪽에라도 든 것이 합집합, 전체에서 빠진 것이 여집합이고요.\n\n$n(A \\cup B) = n(A) + n(B) - n(A \\cap B)$예요. 겹치는 것을 두 번 세니 한 번 빼요.\n\n「하나도 아닌」 경우는 전체에서 「하나라도 인」 경우를 빼면 나와요.\n\n울타리 두 개를 그려 놓고 세는 것이 가장 안전해요.\n\n이 수업의 개념은 집합의 연산이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "set-operation",
+                    "surface": "집합의 연산",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -751,7 +837,7 @@
     {
       "public": {
         "lessonKey": "proposition",
-        "versionId": "proposition:v1",
+        "versionId": "proposition:v2",
         "title": "명제와 대우: 뒤집어도 같은 말",
         "summary": "참인지 거짓인지 가려지는 문장을 다루고, 뒤집어도 참·거짓이 변하지 않는 짝을 찾아요.",
         "estimatedMinutes": 12,
@@ -767,23 +853,60 @@
       },
       "sections": [
         {
-          "sectionId": "proposition:explanation:v1",
+          "sectionId": "proposition:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "proposition:explanation:text:v1",
+              "blockId": "proposition:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "「$2$는 짝수다」는 참이고 「$3$은 짝수다」는 거짓이에요. 이렇게 참인지 거짓인지 분명히 가려지는 문장을 명제라고 해요.\n\n「이 음식은 맛있다」는 명제가 아니에요. 사람마다 다르니까요. 집합에서 「키가 큰 사람」이 집합이 아니었던 것과 같은 이유예요.\n\n「비가 오면 땅이 젖는다」처럼 「$p$이면 $q$」 꼴이 자주 나와요. 앞을 가정, 뒤를 결론이라고 해요.\n\n여기서 셋을 만들 수 있어요. 자리만 바꾼 「$q$이면 $p$」는 역, 둘 다 부정한 「$p$가 아니면 $q$가 아니다」는 이, 자리도 바꾸고 부정도 한 「$q$가 아니면 $p$가 아니다」는 대우예요.\n\n중요한 것은 이거예요. 역과 이는 처음 명제와 참·거짓이 다를 수 있지만, 대우는 늘 같아요.\n\n「비가 오면 땅이 젖는다」가 참이어도 역인 「땅이 젖으면 비가 왔다」는 거짓일 수 있어요. 물을 뿌렸을 수도 있으니까요. 하지만 대우인 「땅이 젖지 않았으면 비가 오지 않았다」는 반드시 참이에요.\n\n그래서 어떤 명제를 증명하기 어려울 때 대우를 대신 증명하기도 해요. 같은 말이니까요. $p$인 것들의 모임이 $q$인 것들의 모임 안에 쏙 들어가 있다고 그려 보면 왜 그런지 보여요.",
+                "text": "「$2$는 짝수다」는 참이고 「$3$은 짝수다」는 거짓이에요.\n\n이렇게 참인지 거짓인지 분명히 가려지는 문장을 명제라고 해요.",
                 "definitions": [
                   {
                     "conceptKey": "proposition",
                     "surface": "명제",
                     "scopeKind": "global"
-                  },
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "proposition:explanation:not:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "「이 음식은 맛있다」는 명제가 아니에요. 사람마다 다르니까요.\n\n앞 수업에서 「키가 큰 사람」이 집합이 아니었죠. 같은 이유예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "set",
+                    "surface": "집합",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "proposition:explanation:parts:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "「비가 오면 땅이 젖는다」처럼 「$p$이면 $q$」 형태가 자주 나와요.\n\n앞을 가정, 뒤를 결론이라고 해요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "proposition:explanation:three:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "여기서 셋을 만들 수 있어요.\n\n앞뒤만 바꾼 「$q$이면 $p$」는 역이에요.\n\n둘 다 부정한 「$p$가 아니면 $q$가 아니다」는 이고요.\n\n앞뒤를 바꾸고 부정까지 한 「$q$가 아니면 $p$가 아니다」는 대우예요.",
+                "definitions": [
                   {
                     "conceptKey": "contrapositive",
                     "surface": "대우",
@@ -793,15 +916,25 @@
               }
             },
             {
-              "blockId": "proposition:explanation:drawing:v1",
+              "blockId": "proposition:explanation:same:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "중요한 것은 이거예요. 역과 이는 처음 명제와 참·거짓이 다를 수 있어요. 그런데 대우는 늘 같아요.\n\n「비가 오면 땅이 젖는다」가 참이라고 해 볼게요. 역인 「땅이 젖으면 비가 왔다」는 거짓일 수 있어요. 물을 뿌렸을 수도 있으니까요.\n\n하지만 「땅이 젖지 않았으면 비가 오지 않았다」는 반드시 참이에요.\n\n그래서 증명하기 어려운 명제는 대우를 대신 증명하기도 해요. 같은 말이니까요.\n\n$p$인 것들의 모임이 $q$인 것들의 모임 안에 쏙 들어가 있다고 그려 보세요. 왜 그런지 보여요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "proposition:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "가정과 결론 상자가 자리를 바꾸고 각각 부정이 붙어 대우가 되는 그림",
-                "caption": "자리를 바꾸고 부정을 붙이면 대우예요",
+                "alt": "가정과 결론 상자가 앞뒤를 바꾸고 각각 부정이 붙어 대우가 되는 그림",
+                "caption": "앞뒤를 바꾸고 부정을 붙이면 대우예요",
                 "items": [
                   {
                     "kind": "rect",
@@ -1047,29 +1180,29 @@
           ]
         },
         {
-          "sectionId": "proposition:example:v1",
+          "sectionId": "proposition:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "proposition:example:text:v1",
+              "blockId": "proposition:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "「$x = 2$이면 $x^2 = 4$이다」를 보고 역과 대우를 만들어 볼게요.\n\n먼저 이 명제 자체는 참이에요. $2$를 제곱하면 $4$니까요.\n\n역은 자리를 바꾼 「$x^2 = 4$이면 $x = 2$이다」예요. 이것은 거짓이에요. $x$가 $-2$일 수도 있거든요.\n\n이렇게 참이 아닌 예 하나를 찾으면 거짓임이 밝혀져요. 그 하나를 반례라고 해요.\n\n대우는 자리도 바꾸고 부정도 한 「$x^2 \\ne 4$이면 $x \\ne 2$이다」예요. 이것은 참이에요.\n\n처음 명제가 참이었으니 대우도 참인 것이 당연해요. 둘은 같은 말이니까요.\n\n역이 거짓인데 대우가 참인 것을 보면, 역과 대우가 아주 다른 것임을 알 수 있어요. 자리만 바꾼 것과 자리를 바꾸고 부정까지 한 것의 차이예요.",
+                "text": "「$x = 2$이면 $x^2 = 4$이다」를 보고 역과 대우를 만들어 볼게요.\n\n먼저 이 명제 자체는 참이에요. $2$를 제곱하면 $4$니까요.\n\n역은 앞뒤를 바꾼 「$x^2 = 4$이면 $x = 2$이다」예요. 이것은 거짓이에요. $x$가 $-2$일 수도 있거든요.\n\n이렇게 참이 아닌 예를 하나 찾으면 거짓임이 밝혀져요. 그 하나를 반례라고 해요.\n\n대우는 앞뒤를 바꾸고 부정도 한 「$x^2 \\ne 4$이면 $x \\ne 2$이다」예요. 이것은 참이에요.\n\n처음 명제가 참이었으니 대우도 참인 것이 당연해요. 둘은 같은 말이니까요.\n\n역은 거짓인데 대우는 참이죠. 역과 대우가 아주 다른 것임을 알 수 있어요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "proposition:practice:v1",
+          "sectionId": "proposition:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "proposition:practice:problems:v1",
+              "blockId": "proposition:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1086,12 +1219,12 @@
           ]
         },
         {
-          "sectionId": "proposition:check:v1",
+          "sectionId": "proposition:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "proposition:check:problems:v1",
+              "blockId": "proposition:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1107,18 +1240,29 @@
           ]
         },
         {
-          "sectionId": "proposition:summary:v1",
+          "sectionId": "proposition:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "proposition:summary:text:v1",
+              "blockId": "proposition:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "참인지 거짓인지 분명히 가려지는 문장이 명제예요.\n\n「$p$이면 $q$」에서 자리를 바꾸면 역, 둘 다 부정하면 이, 자리를 바꾸고 부정하면 대우예요.\n\n역과 이는 참·거짓이 달라질 수 있지만 대우는 처음 명제와 늘 같아요.\n\n거짓임을 보이려면 반례 하나면 충분해요.",
-                "definitions": []
+                "text": "참인지 거짓인지 분명히 가려지는 문장이 명제예요.\n\n「$p$이면 $q$」에서 앞뒤를 바꾸면 역이에요. 둘 다 부정하면 이, 앞뒤를 바꾸고 부정하면 대우고요.\n\n역과 이는 참·거짓이 달라질 수 있어요. 그런데 대우는 처음 명제와 늘 같아요.\n\n거짓임을 보이려면 반례 하나면 충분해요.\n\n이 수업의 개념은 명제·대우예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "proposition",
+                    "surface": "명제",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "contrapositive",
+                    "surface": "대우",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]

@@ -4,7 +4,7 @@
     {
       "key": "plane-figures",
       "title": "평면도형",
-      "summary": "다각형의 각을 삼각형으로 갈라 세고, 원의 둘레와 넓이를 구하고, 원의 일부가 전체의 얼마인지 재요.",
+      "summary": "다각형의 각을 삼각형으로 나눠 세고, 원의 둘레와 넓이를 구하고, 원의 일부가 전체의 얼마인지 재요.",
       "order": 160,
       "track": "middle",
       "stage": "middle-1",
@@ -46,9 +46,9 @@
     {
       "public": {
         "lessonKey": "polygon-angles",
-        "versionId": "polygon-angles:v1",
-        "title": "다각형의 내각과 외각: 삼각형으로 갈라서 센다",
-        "summary": "다각형을 삼각형으로 갈라 내각의 합을 구하고, 외각의 합이 늘 같은 이유를 봐요.",
+        "versionId": "polygon-angles:v2",
+        "title": "다각형의 내각과 외각: 삼각형으로 나눠서 센다",
+        "summary": "다각형을 삼각형으로 나눠 내각의 합을 구하고, 외각의 합이 늘 같은 이유를 봐요.",
         "estimatedMinutes": 12,
         "conceptKeys": [
           "polygon-angles"
@@ -61,36 +61,67 @@
       },
       "sections": [
         {
-          "sectionId": "polygon-angles:explanation:v1",
+          "sectionId": "polygon-angles:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "polygon-angles:explanation:text:v1",
+              "blockId": "polygon-angles:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "삼각형의 세 각을 더하면 $180°$예요. 세 각을 오려 한 점에 모아 붙이면 일직선이 되는 것으로 확인할 수 있어요. 평행선의 엇각으로 설명할 수도 있고요.\n\n그럼 오각형은요? 새로 재지 않아도 돼요. 한 꼭짓점에서 대각선을 그어 삼각형으로 가르면 되거든요.\n\n오각형은 삼각형 셋으로 갈라져요. 그러니 내각의 합은 $180° \\times 3 = 540°$예요.\n\n몇 개로 갈라지는지는 세어 보면 규칙이 보여요. 사각형은 둘, 오각형은 셋, 육각형은 넷이에요. $n$각형이면 $n - 2$개예요. 그래서 내각의 합은 $180° \\times (n-2)$예요.\n\n외각은 한 변을 늘였을 때 이웃 변과 이루는 각이에요. 내각과 이웃하니 둘을 더하면 $180°$고요.\n\n놀라운 것은 외각의 합이에요. 몇 각형이든 늘 $360°$예요. 다각형의 둘레를 한 바퀴 걸으며 꼭짓점마다 도는 각을 모두 더하면 결국 제자리로 돌아오니 한 바퀴, 곧 $360°$인 거예요.\n\n정다각형이면 모든 각이 같으니 나누기만 하면 돼요. 정육각형의 한 내각은 $720° \\div 6 = 120°$, 한 외각은 $360° \\div 6 = 60°$예요.",
+                "text": "삼각형의 세 각을 더하면 $180°$예요. 세 각을 오려 한 점에 모아 붙이면 일직선이 돼요. 평행선의 엇각으로 설명할 수도 있고요.\n\n그럼 오각형은요? 새로 재지 않아도 돼요. 한 꼭짓점에서 대각선을 그어 삼각형으로 나누면 되거든요.\n\n오각형은 삼각형 셋으로 나뉘어요. 그러니 내각의 합은 $180° \\times 3 = 540°$예요.\n\n몇 개로 나뉘는지는 세어 보면 규칙이 보여요. 사각형은 둘, 오각형은 셋, 육각형은 넷이에요. $n$각형이면 $n - 2$개예요. 그래서 내각의 합은 $180° \\times (n-2)$예요.",
                 "definitions": [
                   {
                     "conceptKey": "polygon-angles",
                     "surface": "내각의 합",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "parallel-lines",
+                    "surface": "평행선",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "polygon-angles:explanation:drawing:v1",
+              "blockId": "polygon-angles:explanation:exterior:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "외각은 한 변을 늘였을 때 이웃 변과 이루는 각이에요. 내각과 이웃하니 둘을 더하면 $180°$고요.\n\n놀라운 것은 외각의 합이에요. 몇 각형이든 늘 $360°$예요.\n\n다각형의 둘레를 한 바퀴 걸으며 꼭짓점마다 도는 각을 모두 더해 봐요. 결국 제자리로 돌아오니 한 바퀴, 곧 $360°$예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "polygon-angles",
+                    "surface": "외각",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "polygon-angles:explanation:regular:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "정다각형은 모든 변과 모든 각이 같은 다각형이에요. 그래서 나누기만 하면 한 각을 구할 수 있어요.\n\n정육각형의 내각의 합은 $180° \\times 4 = 720°$예요. 그러니 한 내각은 $720° \\div 6 = 120°$고, 한 외각은 $360° \\div 6 = 60°$예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "polygon-angles:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "오각형이 한 꼭짓점에서 그은 대각선으로 삼각형 셋으로 갈라지는 그림",
-                "caption": "삼각형 몇 개로 갈라지는지가 내각의 합을 정해요",
+                "alt": "오각형이 한 꼭짓점에서 그은 대각선으로 삼각형 셋으로 나뉘는 그림",
+                "caption": "삼각형 몇 개로 나뉘는지가 내각의 합을 정해요",
                 "items": [
                   {
                     "kind": "polygon",
@@ -229,7 +260,7 @@
                     ]
                   },
                   {
-                    "caption": "한 꼭짓점에서 대각선을 그어 봐요. 삼각형 셋으로 갈라져요.",
+                    "caption": "한 꼭짓점에서 대각선을 그어 봐요. 삼각형 셋으로 나뉘어요.",
                     "changes": [
                       {
                         "id": "d1",
@@ -293,29 +324,35 @@
           ]
         },
         {
-          "sectionId": "polygon-angles:example:v1",
+          "sectionId": "polygon-angles:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "polygon-angles:example:text:v1",
+              "blockId": "polygon-angles:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
                 "text": "정팔각형의 한 내각의 크기를 구해 볼게요.\n\n먼저 내각의 합이에요. $n = 8$이니 $180° \\times (8 - 2) = 180° \\times 6 = 1080°$예요.\n\n정다각형이라 여덟 각이 모두 같으니 $1080° \\div 8 = 135°$예요.\n\n외각으로 구하면 더 빨라요. 외각의 합은 늘 $360°$이니 한 외각은 $360° \\div 8 = 45°$이고, 내각은 $180° - 45° = 135°$예요. 같은 답이지만 계산이 훨씬 가벼워요.\n\n거꾸로 물어볼게요. 한 외각이 $30°$인 정다각형은 몇 각형일까요.\n\n외각의 합이 $360°$이니 $360° \\div 30° = 12$, 정십이각형이에요.\n\n내각으로 물으면 한 번 더 거쳐야 해요. 한 내각이 $150°$라면 외각이 $30°$이고, 그래서 정십이각형이에요. 외각을 거치는 길이 대개 짧아요.",
-                "definitions": []
+                "definitions": [
+                  {
+                    "conceptKey": "polygon-angles",
+                    "surface": "내각",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "polygon-angles:practice:v1",
+          "sectionId": "polygon-angles:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "polygon-angles:practice:problems:v1",
+              "blockId": "polygon-angles:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -332,12 +369,12 @@
           ]
         },
         {
-          "sectionId": "polygon-angles:check:v1",
+          "sectionId": "polygon-angles:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "polygon-angles:check:problems:v1",
+              "blockId": "polygon-angles:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -353,18 +390,24 @@
           ]
         },
         {
-          "sectionId": "polygon-angles:summary:v1",
+          "sectionId": "polygon-angles:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "polygon-angles:summary:text:v1",
+              "blockId": "polygon-angles:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$n$각형은 한 꼭짓점에서 그은 대각선으로 삼각형 $n-2$개로 갈라져요. 그래서 내각의 합이 $180° \\times (n-2)$예요.\n\n외각은 내각과 이웃해 합이 $180°$이고, 외각의 합은 몇 각형이든 늘 $360°$예요.\n\n한 바퀴 돌아 제자리로 오기 때문이에요.\n\n정다각형이면 나누기만 하면 되고, 외각을 거치는 길이 대개 짧아요.",
-                "definitions": []
+                "text": "$n$각형은 한 꼭짓점에서 그은 대각선으로 삼각형 $n-2$개로 나뉘어요. 그래서 내각의 합이 $180° \\times (n-2)$예요.\n\n외각은 내각과 이웃해 합이 $180°$이고, 외각의 합은 몇 각형이든 늘 $360°$예요.\n\n한 바퀴 돌아 제자리로 오기 때문이에요.\n\n정다각형이면 나누기만 하면 되고, 외각을 거치는 길이 대개 짧아요.\n\n이 수업의 개념은 다각형의 내각과 외각이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "polygon-angles",
+                    "surface": "다각형의 내각과 외각",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -382,7 +425,7 @@
     {
       "public": {
         "lessonKey": "circle-measure",
-        "versionId": "circle-measure:v1",
+        "versionId": "circle-measure:v2",
         "title": "원의 둘레와 넓이: 지름을 세 번 대고도 조금",
         "summary": "원주율이 무엇인지 재어 보고, 둘레와 넓이를 구하는 식을 세워요.",
         "estimatedMinutes": 10,
@@ -398,28 +441,59 @@
       },
       "sections": [
         {
-          "sectionId": "circle-measure:explanation:v1",
+          "sectionId": "circle-measure:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "circle-measure:explanation:text:v1",
+              "blockId": "circle-measure:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "둥근 통의 둘레를 실로 재어 펴 놓고, 그 통의 지름과 견주어 볼게요. 지름을 자 삼아 둘레에 대어 보면 세 번 대고도 조금 남아요.\n\n놀라운 것은 어떤 원이든 그렇다는 거예요. 큰 원이든 작은 원이든 「둘레 ÷ 지름」이 늘 같은 값이에요. 이 값을 원주율이라 하고 $\\pi$로 적어요. $3.14159\\cdots$로 끝없이 이어지는 무리수예요.\n\n그러니 둘레는 지름의 $\\pi$배예요. 반지름을 $r$이라 하면 지름이 $2r$이니 둘레는 $2\\pi r$이에요.\n\n넓이는 $\\pi r^2$이에요. 왜 그런지는 원을 아주 가는 부채꼴로 잘라 번갈아 끼워 맞춰 보면 보여요. 가로가 둘레의 절반($\\pi r$), 세로가 반지름($r$)인 직사각형에 가까워지거든요.\n\n그래서 넓이는 $\\pi r \\times r = \\pi r^2$이에요. 가늘게 자를수록 더 직사각형에 가까워져요.\n\n반지름이 두 배가 되면 둘레는 두 배지만 넓이는 네 배가 돼요. 넓이에는 $r$이 두 번 들어 있으니까요. 피자 크기를 고를 때 지름이 두 배면 양이 네 배라는 것이 이 때문이에요.\n\n답을 적을 때는 $\\pi$를 그대로 두는 편이 많아요. 반지름이 $5$인 원의 넓이는 $25\\pi$라고 적어요.",
+                "text": "둥근 통의 둘레를 실로 재어 펴 놓고, 그 통의 지름과 비교해 볼게요. 지름을 자 삼아 둘레에 대어 보면 세 번 대고도 조금 남아요.\n\n놀라운 것은 어떤 원이든 그렇다는 거예요. 큰 원이든 작은 원이든 「둘레 ÷ 지름」이 늘 같은 값이에요.\n\n이 값을 원주율이라 하고 $\\pi$로 적어요. $3.14159\\cdots$로 끝없이 이어지는 무리수예요.",
                 "definitions": [
                   {
                     "conceptKey": "circle-measure",
                     "surface": "원주율",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "irrational-number",
+                    "surface": "무리수",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "circle-measure:explanation:drawing:v1",
+              "blockId": "circle-measure:explanation:formula:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "둘레는 지름의 $\\pi$배예요. 반지름을 $r$이라 하면 지름이 $2r$이니 둘레는 $2\\pi r$이에요.\n\n넓이는 $\\pi r^2$이에요. 왜 그런지는 원을 아주 가는 부채꼴로 잘라 번갈아 끼워 맞춰 보면 보여요. 가로가 둘레의 절반($\\pi r$), 세로가 반지름($r$)인 직사각형에 가까워지거든요.\n\n그래서 넓이는 $\\pi r \\times r = \\pi r^2$이에요. 가늘게 자를수록 더 직사각형에 가까워져요.",
+                "definitions": [
+                  {
+                    "conceptKey": "sector",
+                    "surface": "부채꼴",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "circle-measure:explanation:scale:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "반지름이 두 배가 되면 둘레는 두 배지만 넓이는 네 배가 돼요. 넓이에는 $r$이 두 번 들어 있으니까요. 피자 크기를 고를 때 지름이 두 배면 양이 네 배라는 것이 이 때문이에요.\n\n답을 적을 때는 $\\pi$를 그대로 두는 편이 많아요. 반지름이 $5$인 원의 넓이는 $25\\pi$라고 적어요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "circle-measure:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -667,29 +741,35 @@
           ]
         },
         {
-          "sectionId": "circle-measure:example:v1",
+          "sectionId": "circle-measure:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "circle-measure:example:text:v1",
+              "blockId": "circle-measure:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "반지름이 $6$인 원의 둘레와 넓이를 구해 볼게요.\n\n둘레는 $2\\pi r$이니 $2 \\times \\pi \\times 6 = 12\\pi$예요.\n\n넓이는 $\\pi r^2$이니 $\\pi \\times 6^2 = 36\\pi$예요.\n\n$\\pi$를 $3.14$로 어림하면 둘레는 약 $37.7$, 넓이는 약 $113$이에요. 필요할 때만 수로 바꿔요.\n\n거꾸로도 해 볼게요. 넓이가 $49\\pi$인 원의 반지름은 얼마일까요.\n\n$\\pi r^2 = 49\\pi$에서 $r^2 = 49$이니 $r = 7$이에요. 제곱근을 구하는 일이 여기서도 나와요.\n\n둘레가 $20\\pi$인 원이라면 $2\\pi r = 20\\pi$에서 $r = 10$이에요. $\\pi$는 양변에 똑같이 있으니 지워 버리면 계산이 가벼워져요.",
-                "definitions": []
+                "text": "반지름이 $6$인 원의 둘레와 넓이를 구해 볼게요.\n\n둘레는 $2\\pi r$이니 $2 \\times \\pi \\times 6 = 12\\pi$예요.\n\n넓이는 $\\pi r^2$이니 $\\pi \\times 6^2 = 36\\pi$예요.\n\n$\\pi$를 $3.14$로 어림하면 둘레는 약 $37.7$, 넓이는 약 $113$이에요. 필요할 때만 수로 바꿔요.\n\n거꾸로도 해 볼게요. 넓이가 $49\\pi$인 원의 반지름은 얼마일까요.\n\n$\\pi r^2 = 49\\pi$에서 $r^2 = 49$이니 $r = 7$이에요. 제곱해서 $49$가 되는 수, 곧 제곱근을 구하는 일이 여기서도 나와요.\n\n둘레가 $20\\pi$인 원이라면 $2\\pi r = 20\\pi$에서 $r = 10$이에요. $\\pi$는 양변에 똑같이 있으니 지워 버리면 계산이 가벼워져요.",
+                "definitions": [
+                  {
+                    "conceptKey": "square-root",
+                    "surface": "제곱근",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "circle-measure:practice:v1",
+          "sectionId": "circle-measure:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "circle-measure:practice:problems:v1",
+              "blockId": "circle-measure:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -706,12 +786,12 @@
           ]
         },
         {
-          "sectionId": "circle-measure:check:v1",
+          "sectionId": "circle-measure:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "circle-measure:check:problems:v1",
+              "blockId": "circle-measure:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -727,18 +807,24 @@
           ]
         },
         {
-          "sectionId": "circle-measure:summary:v1",
+          "sectionId": "circle-measure:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "circle-measure:summary:text:v1",
+              "blockId": "circle-measure:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "어떤 원이든 「둘레 ÷ 지름」이 같고, 그 값이 원주율 $\\pi$예요. 대략 $3.14$고요.\n\n둘레는 $2\\pi r$, 넓이는 $\\pi r^2$이에요.\n\n넓이의 식은 원을 가는 부채꼴로 잘라 직사각형으로 맞춰 보면 나와요.\n\n반지름이 두 배면 둘레는 두 배, 넓이는 네 배예요.",
-                "definitions": []
+                "text": "어떤 원이든 「둘레 ÷ 지름」이 같고, 그 값이 원주율 $\\pi$예요. 대략 $3.14$고요.\n\n둘레는 $2\\pi r$, 넓이는 $\\pi r^2$이에요.\n\n넓이의 식은 원을 가는 부채꼴로 잘라 직사각형으로 맞춰 보면 나와요.\n\n반지름이 두 배면 둘레는 두 배, 넓이는 네 배예요.\n\n이 수업의 개념은 원의 둘레와 넓이예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "circle-measure",
+                    "surface": "원주율",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -756,7 +842,7 @@
     {
       "public": {
         "lessonKey": "sector",
-        "versionId": "sector:v2",
+        "versionId": "sector:v3",
         "title": "부채꼴: 중심각이 정하는 몫",
         "summary": "원의 일부가 전체의 얼마인지를 중심각으로 재고, 호의 길이와 넓이를 구해요.",
         "estimatedMinutes": 10,
@@ -772,17 +858,17 @@
       },
       "sections": [
         {
-          "sectionId": "sector:explanation:v2",
+          "sectionId": "sector:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "sector:explanation:text:v2",
+              "blockId": "sector:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "원에서 두 반지름과 그 사이의 호로 둘러싸인 부분을 부채꼴이라고 해요. 피자 한 조각 모양이죠. 두 반지름이 벌어진 각을 중심각이라고 해요.\n\n중심각이 $90°$인 부채꼴은 원의 얼마일까요. 한 바퀴가 $360°$이니 $\\dfrac{90}{360} = \\dfrac{1}{4}$, 사분의 일이에요.\n\n그러면 호의 길이도 원 둘레의 사분의 일, 넓이도 원 넓이의 사분의 일이에요. 중심각을 두 배로 벌리면 호도 넓이도 두 배가 돼요. 앞 수업에서 배운 정비례예요.\n\n식으로 적으면 이래요. 반지름이 $r$이고 중심각이 $x$도인 부채꼴에서 호의 길이는 $2\\pi r \\times \\dfrac{x}{360}$, 넓이는 $\\pi r^2 \\times \\dfrac{x}{360}$이에요.\n\n외울 것이 둘로 보이지만 사실 하나예요. 「원 전체에 $\\dfrac{x}{360}$을 곱한다」가 전부거든요.\n\n부채꼴의 넓이를 호의 길이로 구하는 길도 있어요. 넓이는 $\\dfrac{1}{2} \\times$ 호의 길이 $\\times$ 반지름이에요. 삼각형의 넓이와 닮은 꼴인데, 부채꼴을 아주 가늘게 잘라 삼각형처럼 보면 그럴듯해요.\n\n같은 원에서 중심각이 같으면 호도 넓이도 같아요. 거꾸로 호가 같으면 중심각도 같고요. 다만 현의 길이는 중심각에 정비례하지 않아요. 각이 두 배가 되어도 현은 두 배가 안 돼요.",
+                "text": "원에서 두 반지름과 그 사이의 호로 둘러싸인 부분을 부채꼴이라고 해요. 피자 한 조각 모양이죠.\n\n두 반지름이 벌어진 각은 중심각이라고 해요.\n\n중심각이 $90°$인 부채꼴은 원의 얼마일까요. 한 바퀴가 $360°$이니 $\\dfrac{90}{360} = \\dfrac{1}{4}$, 사분의 일이에요.",
                 "definitions": [
                   {
                     "conceptKey": "sector",
@@ -793,7 +879,39 @@
               }
             },
             {
-              "blockId": "sector:explanation:drawing:v2",
+              "blockId": "sector:explanation:proportion:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "호의 길이도 원 둘레의 사분의 일, 넓이도 원 넓이의 사분의 일이에요. 중심각을 두 배로 벌리면 호도 넓이도 두 배가 돼요. 앞 수업에서 배운 정비례예요.\n\n식으로 적으면 이래요. 반지름이 $r$이고 중심각이 $x$도인 부채꼴에서 호의 길이는 $2\\pi r \\times \\dfrac{x}{360}$, 넓이는 $\\pi r^2 \\times \\dfrac{x}{360}$이에요.\n\n외울 것이 둘로 보이지만 사실 하나예요. 「원 전체에 $\\dfrac{x}{360}$을 곱한다」가 전부거든요.",
+                "definitions": [
+                  {
+                    "conceptKey": "direct-proportion",
+                    "surface": "정비례",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "sector:explanation:chord:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "부채꼴의 넓이를 호의 길이로 구하는 길도 있어요. 넓이는 $\\dfrac{1}{2} \\times$ 호의 길이 $\\times$ 반지름이에요. 삼각형의 넓이를 구하는 방법과 닮았는데, 부채꼴을 아주 가늘게 잘라 삼각형처럼 보면 그럴듯해요.\n\n같은 원에서 중심각이 같으면 호도 넓이도 같아요. 거꾸로 호가 같으면 중심각도 같고요.\n\n다만 현의 길이는 중심각에 정비례하지 않아요. 현은 호의 두 끝을 곧게 이은 선분이에요. 각이 두 배가 되어도 현은 두 배가 안 돼요.",
+                "definitions": [
+                  {
+                    "conceptKey": "circle-chord",
+                    "surface": "현",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "sector:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -969,29 +1087,35 @@
           ]
         },
         {
-          "sectionId": "sector:example:v2",
+          "sectionId": "sector:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "sector:example:text:v2",
+              "blockId": "sector:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
                 "text": "반지름이 $6$이고 중심각이 $60°$인 부채꼴의 호의 길이와 넓이를 구해 볼게요.\n\n먼저 전체의 얼마인지 봐요. $\\dfrac{60}{360} = \\dfrac{1}{6}$, 육분의 일이에요.\n\n원의 둘레는 $2\\pi \\times 6 = 12\\pi$이니 호의 길이는 $12\\pi \\times \\dfrac{1}{6} = 2\\pi$예요.\n\n원의 넓이는 $\\pi \\times 36 = 36\\pi$이니 부채꼴의 넓이는 $36\\pi \\times \\dfrac{1}{6} = 6\\pi$예요.\n\n다른 길로도 확인해 볼게요. 넓이 $= \\dfrac{1}{2} \\times$ 호 $\\times$ 반지름 $= \\dfrac{1}{2} \\times 2\\pi \\times 6 = 6\\pi$. 같아요.\n\n거꾸로도 물을 수 있어요. 반지름이 $9$이고 호의 길이가 $6\\pi$인 부채꼴의 중심각은 몇 도일까요.\n\n원 둘레가 $18\\pi$이니 호는 전체의 $\\dfrac{6\\pi}{18\\pi} = \\dfrac{1}{3}$이에요. 중심각은 $360° \\times \\dfrac{1}{3} = 120°$예요.",
-                "definitions": []
+                "definitions": [
+                  {
+                    "conceptKey": "sector",
+                    "surface": "부채꼴",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "sector:practice:v2",
+          "sectionId": "sector:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "sector:practice:problems:v2",
+              "blockId": "sector:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1008,12 +1132,12 @@
           ]
         },
         {
-          "sectionId": "sector:check:v2",
+          "sectionId": "sector:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "sector:check:problems:v2",
+              "blockId": "sector:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1029,18 +1153,29 @@
           ]
         },
         {
-          "sectionId": "sector:summary:v2",
+          "sectionId": "sector:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "sector:summary:text:v2",
+              "blockId": "sector:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "부채꼴은 두 반지름과 호로 둘러싸인 부분이고, 두 반지름이 벌어진 각이 중심각이에요.\n\n중심각이 전체의 $\\dfrac{x}{360}$이면 호도 넓이도 그만큼이에요. 정비례하니까요.\n\n호의 길이는 $2\\pi r \\times \\dfrac{x}{360}$, 넓이는 $\\pi r^2 \\times \\dfrac{x}{360}$이에요. 「원 전체에 몫을 곱한다」 하나예요.\n\n넓이는 $\\dfrac{1}{2} \\times$ 호 $\\times$ 반지름으로도 구해요. 다만 현의 길이는 중심각에 정비례하지 않아요.",
-                "definitions": []
+                "text": "부채꼴은 두 반지름과 호로 둘러싸인 부분이고, 두 반지름이 벌어진 각이 중심각이에요.\n\n중심각이 전체의 $\\dfrac{x}{360}$이면 호도 넓이도 그만큼이에요. 정비례하니까요.\n\n호의 길이는 $2\\pi r \\times \\dfrac{x}{360}$, 넓이는 $\\pi r^2 \\times \\dfrac{x}{360}$이에요. 「원 전체에 몫을 곱한다」 하나예요.\n\n넓이는 $\\dfrac{1}{2} \\times$ 호 $\\times$ 반지름으로도 구해요. 다만 현의 길이는 중심각에 정비례하지 않아요.\n\n이 수업의 개념은 부채꼴이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "sector",
+                    "surface": "부채꼴",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "direct-proportion",
+                    "surface": "정비례",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
