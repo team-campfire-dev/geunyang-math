@@ -4,7 +4,7 @@
     {
       "key": "data-basics",
       "title": "자료의 정리",
-      "summary": "흩어진 자료를 구간으로 묶고, 그림으로 세우고, 크기가 다른 집단끼리도 견줄 수 있게 만들어요.",
+      "summary": "흩어진 자료를 구간으로 묶고, 그림으로 세우고, 크기가 다른 집단끼리도 비교할 수 있게 만들어요.",
       "order": 180,
       "track": "middle",
       "stage": "middle-1",
@@ -46,7 +46,7 @@
     {
       "public": {
         "lessonKey": "frequency-table",
-        "versionId": "frequency-table:v1",
+        "versionId": "frequency-table:v2",
         "title": "도수분포표: 구간으로 묶어 세기",
         "summary": "흩어진 자료를 구간으로 묶어, 어디에 몰려 있는지 보이게 만들어요.",
         "estimatedMinutes": 10,
@@ -61,17 +61,17 @@
       },
       "sections": [
         {
-          "sectionId": "frequency-table:explanation:v1",
+          "sectionId": "frequency-table:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "frequency-table:explanation:text:v1",
+              "blockId": "frequency-table:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "점수 서른 개를 그냥 늘어놓으면 무엇을 알 수 있을까요. 가장 높은 점수와 낮은 점수 정도예요. 어디에 몰려 있는지는 보이지 않아요.\n\n그래서 구간으로 묶어요. $50$점대, $60$점대처럼 나누고 각 구간에 몇 개가 들었는지 세는 거예요. 이렇게 만든 표를 도수분포표라 하고, 각 구간에 든 자료의 개수를 도수라고 해요.\n\n구간 하나를 계급, 구간의 폭을 계급의 크기라고 불러요.\n\n계급을 몇 개로 나눌지는 정해진 답이 없지만 보통 다섯에서 열다섯 사이로 해요. 너무 적으면 뭉뚱그려져 안 보이고, 너무 많으면 흩어져 역시 안 보이거든요.\n\n묶으면 얻는 것과 잃는 것이 함께 있어요. 몰려 있는 자리는 보이게 되지만, 개별 값은 사라져요. $60$점대에 셋이라는 것은 알아도 그것이 $61$인지 $69$인지는 표에 없어요.\n\n그 중간쯤을 원할 때 쓰는 것이 줄기와 잎 그림이에요. 십의 자리를 줄기로, 일의 자리를 잎으로 적으면 묶어 보면서도 원래 값을 잃지 않아요. 자료가 적을 때 좋아요.\n\n값을 대표로 하나 골라야 할 때는 계급의 한가운데 값을 써요. 이것을 계급값이라고 해요. $60$점 이상 $70$점 미만이면 계급값은 $65$예요.",
+                "text": "점수 서른 개를 그냥 늘어놓으면 무엇을 알 수 있을까요. 가장 높은 점수와 낮은 점수 정도예요. 어디에 몰려 있는지는 보이지 않아요.\n\n그래서 구간으로 묶어요. $50$점대, $60$점대처럼 나누고 각 구간에 몇 개가 들었는지 세는 거예요.\n\n이렇게 만든 표를 도수분포표라고 해요. 각 구간에 든 자료의 개수는 도수라고 하고요.",
                 "definitions": [
                   {
                     "conceptKey": "frequency-table",
@@ -82,7 +82,27 @@
               }
             },
             {
-              "blockId": "frequency-table:explanation:drawing:v1",
+              "blockId": "frequency-table:explanation:class:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "구간 하나를 계급, 구간의 폭을 계급의 크기라고 불러요.\n\n계급을 몇 개로 나눌지는 정해진 답이 없지만 보통 다섯에서 열다섯 사이로 해요. 너무 적으면 뭉뚱그려져 안 보이고, 너무 많으면 흩어져 역시 안 보이거든요.\n\n값을 대표로 하나 골라야 할 때는 계급의 한가운데 값을 써요. 이것을 계급값이라고 해요. $60$점 이상 $70$점 미만이면 계급값은 $65$예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "frequency-table:explanation:tradeoff:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "묶으면 얻는 것과 잃는 것이 함께 있어요. 어디에 몰려 있는지는 보이게 되지만, 개별 값은 사라져요.\n\n$60$점대에 셋이라는 것은 알아도 그것이 $61$인지 $69$인지는 표에 없어요.\n\n그 중간쯤을 원할 때 쓰는 것이 줄기와 잎 그림이에요. 십의 자리를 줄기로, 일의 자리를 잎으로 적으면 묶어 보면서도 원래 값을 잃지 않아요. 자료가 적을 때 좋아요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "frequency-table:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -426,29 +446,45 @@
           ]
         },
         {
-          "sectionId": "frequency-table:example:v1",
+          "sectionId": "frequency-table:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "frequency-table:example:text:v1",
+              "blockId": "frequency-table:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "학생 $20$명의 점수를 $10$점 간격으로 묶었더니 이렇게 나왔어요.\n\n$50$점대 $2$명, $60$점대 $5$명, $70$점대 $8$명, $80$점대 $4$명, $90$점대 $1$명이에요.\n\n도수를 모두 더하면 $2 + 5 + 8 + 4 + 1 = 20$으로 전체와 같아야 해요. 다르면 어딘가 빠뜨린 거예요.\n\n가장 많은 계급은 $70$점대예요. 여덟 명이 거기 몰려 있어요.\n\n$70$점 미만인 학생은 몇 명일까요. $2 + 5 = 7$명이에요.\n\n$80$점 이상인 학생은요. $4 + 1 = 5$명이고, 전체의 $\\dfrac{5}{20} = \\dfrac{1}{4}$, 곧 $25\\%$예요.\n\n계급값으로 평균을 어림할 수도 있어요. 각 계급값에 도수를 곱해 더하고 전체 수로 나누면 되는데, 원래 값을 잃었으니 진짜 평균과 조금 다를 수 있어요. 어림이라는 것을 잊지 마세요.",
-                "definitions": []
+                "text": "학생 $20$명의 점수를 $10$점 간격으로 묶었더니 이렇게 나왔어요.\n\n$50$점대 $2$명, $60$점대 $5$명, $70$점대 $8$명, $80$점대 $4$명, $90$점대 $1$명이에요.\n\n도수를 모두 더하면 $2 + 5 + 8 + 4 + 1 = 20$으로 전체와 같아야 해요. 다르면 어딘가 빠뜨린 거예요.\n\n가장 많은 계급은 $70$점대예요. 여덟 명이 거기 몰려 있어요.\n\n$70$점 미만인 학생은 몇 명일까요. $2 + 5 = 7$명이에요.\n\n$80$점 이상인 학생은요. $4 + 1 = 5$명이고, 전체의 $\\dfrac{5}{20} = \\dfrac{1}{4}$, 백분율로는 $25\\%$예요.\n\n평균처럼 자료 전체를 하나의 수로 대신 말하는 값을 대푯값이라고 해요. 계급값에 도수를 곱해 더하고 전체 수로 나누면 평균을 어림할 수 있어요.\n\n다만 원래 값을 잃었으니 진짜 평균과 조금 다를 수 있어요. 어림이라는 것을 잊지 마세요.",
+                "definitions": [
+                  {
+                    "conceptKey": "frequency-table",
+                    "surface": "도수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "percentage",
+                    "surface": "백분율",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "representative-value",
+                    "surface": "대푯값",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "frequency-table:practice:v1",
+          "sectionId": "frequency-table:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "frequency-table:practice:problems:v1",
+              "blockId": "frequency-table:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -465,12 +501,12 @@
           ]
         },
         {
-          "sectionId": "frequency-table:check:v1",
+          "sectionId": "frequency-table:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "frequency-table:check:problems:v1",
+              "blockId": "frequency-table:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -486,18 +522,24 @@
           ]
         },
         {
-          "sectionId": "frequency-table:summary:v1",
+          "sectionId": "frequency-table:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "frequency-table:summary:text:v1",
+              "blockId": "frequency-table:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "흩어진 자료를 구간으로 묶어 개수를 센 표가 도수분포표예요. 구간이 계급, 개수가 도수고요.\n\n묶으면 몰려 있는 자리가 보이지만 개별 값은 사라져요. 얻는 것과 잃는 것이 함께 있어요.\n\n줄기와 잎 그림은 묶어 보면서도 원래 값을 남겨 둬요. 자료가 적을 때 좋아요.\n\n도수의 합은 반드시 전체 개수와 같아요. 확인하는 습관을 들이세요.",
-                "definitions": []
+                "text": "흩어진 자료를 구간으로 묶어 개수를 센 표가 도수분포표예요. 구간이 계급, 개수가 도수고요.\n\n묶으면 어디에 몰려 있는지는 보이지만 개별 값은 사라져요. 얻는 것과 잃는 것이 함께 있어요.\n\n줄기와 잎 그림은 묶어 보면서도 원래 값을 남겨 둬요. 자료가 적을 때 좋아요.\n\n도수의 합은 반드시 전체 개수와 같아요. 확인하는 습관을 들이세요.\n\n이 수업의 개념은 도수분포표예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "frequency-table",
+                    "surface": "도수분포표",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -515,9 +557,9 @@
     {
       "public": {
         "lessonKey": "histogram",
-        "versionId": "histogram:v1",
+        "versionId": "histogram:v2",
         "title": "히스토그램: 표를 그림으로 세우기",
-        "summary": "표의 숫자를 막대 높이로 세워, 한눈에 견줄 수 있게 만들어요.",
+        "summary": "표의 숫자를 막대 높이로 세워, 한눈에 비교할 수 있게 만들어요.",
         "estimatedMinutes": 10,
         "conceptKeys": [
           "histogram"
@@ -530,28 +572,65 @@
       },
       "sections": [
         {
-          "sectionId": "histogram:explanation:v1",
+          "sectionId": "histogram:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "histogram:explanation:text:v1",
+              "blockId": "histogram:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "도수분포표는 정확하지만 한눈에 들어오지는 않아요. 숫자를 하나씩 읽어야 하니까요.\n\n그래서 그림으로 세워요. 가로축에 계급을, 세로축에 도수를 두고 계급마다 도수만큼 막대를 세운 것이 히스토그램이에요.\n\n막대그래프와 닮았지만 다른 점이 있어요. 히스토그램의 막대는 서로 붙어 있어요. 계급이 끊기지 않고 이어지는 구간이기 때문이에요. 막대그래프는 종류를 세는 것이라 떨어뜨려 그려요.\n\n막대의 넓이에도 뜻이 있어요. 계급의 크기가 모두 같으면 막대의 넓이는 도수에 정비례해요. 그래서 막대 전체의 넓이는 「계급의 크기 × 전체 도수」예요.\n\n막대 끝의 한가운데를 차례로 이으면 도수분포다각형이 돼요. 양 끝에는 도수가 $0$인 계급이 있다고 보고 축까지 내려 닫아요.\n\n다각형으로 그리면 두 집단을 겹쳐 그려 견주기 좋아요. 막대는 겹치면 가려지지만 선은 겹쳐도 둘 다 보이거든요.\n\n모양에서 읽을 것이 많아요. 가운데가 높으면 평균 근처에 몰린 것이고, 한쪽으로 치우쳤으면 그쪽에 쏠린 것이고, 봉우리가 둘이면 성격이 다른 두 무리가 섞였을 수 있어요.",
+                "text": "도수분포표는 정확하지만 한눈에 들어오지는 않아요. 숫자를 하나씩 읽어야 하니까요.\n\n그래서 그림으로 세워요. 가로축에 계급을, 세로축에 도수를 두고 계급마다 도수만큼 막대를 세워요. 이것이 히스토그램이에요.\n\n막대그래프와 닮았지만 다른 점이 있어요. 히스토그램의 막대는 서로 붙어 있어요. 계급이 끊기지 않고 이어지는 구간이기 때문이에요. 막대그래프는 종류를 세는 것이라 떨어뜨려 그려요.",
                 "definitions": [
                   {
                     "conceptKey": "histogram",
                     "surface": "히스토그램",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "frequency-table",
+                    "surface": "도수분포표",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "histogram:explanation:drawing:v1",
+              "blockId": "histogram:explanation:area:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "막대의 넓이에도 뜻이 있어요. 계급의 크기가 모두 같으면 막대의 넓이는 도수에 정비례해요. 그래서 막대 전체의 넓이는 「계급의 크기 × 전체 도수」예요.\n\n막대 끝의 한가운데를 차례로 이으면 도수분포다각형이 돼요. 양 끝에는 도수가 $0$인 계급이 있다고 보고 축까지 내려 닫아요.\n\n다각형으로 그리면 두 집단을 겹쳐 그려 비교하기 좋아요. 막대는 겹치면 가려지지만 선은 겹쳐도 둘 다 보이거든요.",
+                "definitions": [
+                  {
+                    "conceptKey": "direct-proportion",
+                    "surface": "정비례",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "histogram:explanation:shape:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "모양에서 읽을 것이 많아요. 가운데가 높으면 평균 근처에 몰린 것이고, 한쪽으로 치우쳤으면 그쪽에 쏠린 것이에요. 봉우리가 둘이면 성격이 다른 두 무리가 섞였을 수 있어요.\n\n얼마나 흩어져 있는지를 수로 재는 것은 산포도예요. 중학교 3학년에서 만나요.",
+                "definitions": [
+                  {
+                    "conceptKey": "variance",
+                    "surface": "산포도",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "histogram:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -559,7 +638,7 @@
                 "width": 320,
                 "height": 200,
                 "alt": "표의 도수가 막대 높이로 서고 막대 끝을 이으면 선이 되는 그림",
-                "caption": "높이로 세우면 한눈에 견줄 수 있어요",
+                "caption": "높이로 세우면 한눈에 비교할 수 있어요",
                 "items": [
                   {
                     "kind": "line",
@@ -767,7 +846,7 @@
                     ]
                   },
                   {
-                    "caption": "막대 끝의 한가운데를 이으면 도수분포다각형이 돼요. 모양을 견주기 좋아요.",
+                    "caption": "막대 끝의 한가운데를 이으면 도수분포다각형이 돼요. 모양을 비교하기 좋아요.",
                     "changes": [
                       {
                         "id": "b1",
@@ -806,29 +885,40 @@
           ]
         },
         {
-          "sectionId": "histogram:example:v1",
+          "sectionId": "histogram:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "histogram:example:text:v1",
+              "blockId": "histogram:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "도수가 $2, 5, 8, 4, 1$인 표를 히스토그램으로 그렸다고 해 볼게요.\n\n막대 다섯 개가 붙어 서고, 높이는 차례로 $2, 5, 8, 4, 1$이에요.\n\n가장 높은 막대는 세 번째, 도수 $8$인 계급이에요. 자료가 거기 몰려 있다는 뜻이고요.\n\n계급의 크기가 $10$이라면 막대 전체의 넓이는 $10 \\times 20 = 200$이에요. 전체 도수에 계급의 크기를 곱한 값이죠.\n\n이제 두 반을 견줘 볼게요. 한 반은 가운데가 높고 다른 반은 오른쪽이 높다면, 두 반의 평균이 비슷해도 성적이 퍼진 모양은 아주 다른 거예요.\n\n막대로는 겹쳐 그리기 어려우니 도수분포다각형으로 바꿔 겹쳐 그려요. 두 선의 봉우리 자리를 견주면 한눈에 보여요.\n\n다만 사람 수가 다른 두 반은 이대로 견줄 수 없어요. $30$명 반의 「$8$명」과 $20$명 반의 「$6$명」 중 어느 쪽이 많은지는 높이만으로 알 수 없거든요. 다음 수업이 그 이야기예요.",
-                "definitions": []
+                "text": "도수가 $2, 5, 8, 4, 1$인 표를 히스토그램으로 그렸다고 해 볼게요.\n\n막대 다섯 개가 붙어 서고, 높이는 차례로 $2, 5, 8, 4, 1$이에요.\n\n가장 높은 막대는 세 번째, 도수 $8$인 계급이에요. 자료가 거기 몰려 있다는 뜻이고요.\n\n계급의 크기가 $10$이라면 막대 전체의 넓이는 $10 \\times 20 = 200$이에요. 전체 도수에 계급의 크기를 곱한 값이죠.\n\n이제 두 반을 비교해 볼게요. 한 반은 가운데가 높고 다른 반은 오른쪽이 높다면, 두 반의 평균이 비슷해도 성적이 퍼진 모양은 아주 다른 거예요.\n\n막대로는 겹쳐 그리기 어려우니 도수분포다각형으로 바꿔 겹쳐 그려요. 두 선의 봉우리 위치를 비교하면 한눈에 보여요.\n\n다만 사람 수가 다른 두 반은 이대로 비교할 수 없어요. $30$명 반의 「$8$명」과 $20$명 반의 「$6$명」 중 어느 쪽이 많은지는 높이만으로 알 수 없거든요. 전체로 나누어 비교하는 상대도수가 다음 수업이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "histogram",
+                    "surface": "히스토그램",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "relative-frequency",
+                    "surface": "상대도수",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "histogram:practice:v1",
+          "sectionId": "histogram:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "histogram:practice:problems:v1",
+              "blockId": "histogram:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -845,12 +935,12 @@
           ]
         },
         {
-          "sectionId": "histogram:check:v1",
+          "sectionId": "histogram:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "histogram:check:problems:v1",
+              "blockId": "histogram:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -866,18 +956,24 @@
           ]
         },
         {
-          "sectionId": "histogram:summary:v1",
+          "sectionId": "histogram:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "histogram:summary:text:v1",
+              "blockId": "histogram:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "계급을 가로로, 도수를 세로로 두고 막대를 세운 것이 히스토그램이에요.\n\n계급이 이어지는 구간이라 막대가 서로 붙어 있어요. 막대그래프와 다른 점이에요.\n\n막대 끝을 이으면 도수분포다각형이 되고, 두 집단을 겹쳐 견주기 좋아요.\n\n모양에서 몰린 자리와 치우침을 읽어요. 다만 크기가 다른 두 집단은 높이만으로 견줄 수 없어요.",
-                "definitions": []
+                "text": "계급을 가로로, 도수를 세로로 두고 막대를 세운 것이 히스토그램이에요.\n\n계급이 이어지는 구간이라 막대가 서로 붙어 있어요. 막대그래프와 다른 점이에요.\n\n막대 끝을 이으면 도수분포다각형이 되고, 두 집단을 겹쳐 비교하기 좋아요.\n\n모양에서 어디에 몰렸는지와 치우침을 읽어요. 다만 크기가 다른 두 집단은 높이만으로 비교할 수 없어요.\n\n이 수업의 개념은 히스토그램이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "histogram",
+                    "surface": "히스토그램",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -895,9 +991,9 @@
     {
       "public": {
         "lessonKey": "relative-frequency",
-        "versionId": "relative-frequency:v1",
-        "title": "상대도수: 크기가 다른 집단을 견주기",
-        "summary": "개수만으로는 견줄 수 없는 두 집단을, 전체로 나누어 같은 자 위에 올려요.",
+        "versionId": "relative-frequency:v2",
+        "title": "상대도수: 크기가 다른 집단을 비교하기",
+        "summary": "개수만으로는 비교할 수 없는 두 집단을, 전체로 나누어 같은 자 위에 올려요.",
         "estimatedMinutes": 10,
         "conceptKeys": [
           "relative-frequency"
@@ -911,17 +1007,17 @@
       },
       "sections": [
         {
-          "sectionId": "relative-frequency:explanation:v1",
+          "sectionId": "relative-frequency:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "relative-frequency:explanation:text:v1",
+              "blockId": "relative-frequency:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$30$명인 반에서 $8$명, $20$명인 반에서 $6$명이 $90$점을 넘었어요. 어느 반이 더 잘했을까요.\n\n개수만 보면 $8$명이 많아 보여요. 그런데 사람 수가 다르잖아요. 그대로 견주면 큰 반이 늘 유리해요.\n\n그래서 각각을 전체로 나눠요. $8 \\div 30 = 0.27$, $6 \\div 20 = 0.30$이에요. 작은 반 쪽이 오히려 높아요.\n\n이렇게 도수를 전체 도수로 나눈 값을 상대도수라고 해요. 전체에서 차지하는 몫이에요.\n\n상대도수는 늘 $0$과 $1$ 사이이고, 모두 더하면 반드시 $1$이에요. 전체를 나눠 가진 것이니까요. 더했을 때 $1$이 아니면 어딘가 틀린 거예요.\n\n백분율로 바꾸면 $100$을 곱하면 돼요. $0.27$은 $27\\%$죠. 비와 비율에서 하던 일과 같아요.\n\n상대도수의 쓸모는 하나로 정리돼요. 크기가 다른 집단을 같은 자 위에 올려놓는 것.\n\n거꾸로도 쓸 수 있어요. 상대도수와 전체 도수를 알면 도수가 나와요. 전체 $40$명에서 상대도수가 $0.15$이면 $40 \\times 0.15 = 6$명이에요.",
+                "text": "$30$명인 반에서 $8$명, $20$명인 반에서 $6$명이 $90$점을 넘었어요. 어느 반이 더 잘했을까요.\n\n개수만 보면 $8$명이 많아 보여요. 그런데 사람 수가 다르잖아요. 그대로 비교하면 큰 반이 늘 유리해요.\n\n그래서 각각을 전체로 나눠요. $8 \\div 30 = 0.27$, $6 \\div 20 = 0.30$이에요. 작은 반 쪽이 오히려 높아요.\n\n이렇게 도수를 전체 도수로 나눈 값을 상대도수라고 해요. 전체에서 차지하는 몫이에요.",
                 "definitions": [
                   {
                     "conceptKey": "relative-frequency",
@@ -932,15 +1028,46 @@
               }
             },
             {
-              "blockId": "relative-frequency:explanation:drawing:v1",
+              "blockId": "relative-frequency:explanation:check:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "상대도수는 늘 $0$과 $1$ 사이예요. 모두 더하면 반드시 $1$이고요. 전체를 나눠 가진 것이니까요.\n\n더했을 때 $1$이 아니면 어딘가 틀린 거예요.\n\n백분율로 바꾸려면 $100$을 곱하면 돼요. $0.27$은 $27\\%$죠. 비율에서 하던 일과 같아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "percentage",
+                    "surface": "백분율",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "rate",
+                    "surface": "비율",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "relative-frequency:explanation:use:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "상대도수의 쓸모는 하나로 정리돼요. 크기가 다른 집단을 같은 자 위에 올려놓는 것이에요.\n\n거꾸로도 쓸 수 있어요. 상대도수와 전체 도수를 알면 도수가 나와요. 전체 $40$명에서 상대도수가 $0.15$이면 $40 \\times 0.15 = 6$명이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "relative-frequency:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "사람 수가 다른 두 반의 막대를 같은 길이의 띠로 바꿔 견주는 그림",
-                "caption": "전체로 나누면 크기가 달라도 견줄 수 있어요",
+                "alt": "사람 수가 다른 두 반의 막대를 같은 길이의 띠로 바꿔 비교하는 그림",
+                "caption": "전체로 나누면 크기가 달라도 비교할 수 있어요",
                 "items": [
                   {
                     "kind": "text",
@@ -1082,7 +1209,7 @@
                     "kind": "text",
                     "x": 160,
                     "y": 186,
-                    "text": "전체로 나누면 견줄 수 있어요",
+                    "text": "전체로 나누면 비교할 수 있어요",
                     "size": 11,
                     "anchor": "middle",
                     "fill": "orange",
@@ -1205,29 +1332,45 @@
           ]
         },
         {
-          "sectionId": "relative-frequency:example:v1",
+          "sectionId": "relative-frequency:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "relative-frequency:example:text:v1",
+              "blockId": "relative-frequency:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$40$명인 반의 점수를 묶었더니 $70$점대가 $14$명이었어요. 상대도수를 구해 볼게요.\n\n$14 \\div 40 = 0.35$예요. 백분율로는 $35\\%$고요.\n\n다른 계급도 구해 상대도수를 모두 더하면 $1$이 되어야 해요. 확인하는 습관을 들이면 실수를 잡을 수 있어요.\n\n이번에는 거꾸로예요. 전체가 $200$명이고 어떤 계급의 상대도수가 $0.12$라면 그 계급의 도수는 몇일까요.\n\n$200 \\times 0.12 = 24$명이에요.\n\n두 집단을 견주는 예도 볼게요. A반 $25$명 중 $10$명, B반 $40$명 중 $14$명이 안경을 썼어요.\n\n$10 \\div 25 = 0.4$, $14 \\div 40 = 0.35$. 사람 수는 B반이 많지만 비율은 A반이 높아요. 「몇 명인가」와 「얼마나 흔한가」는 다른 물음이에요.",
-                "definitions": []
+                "text": "$40$명인 반의 점수를 묶었더니 $70$점대가 $14$명이었어요. 상대도수를 구해 볼게요.\n\n$14 \\div 40 = 0.35$예요. 백분율로는 $35\\%$고요.\n\n다른 계급도 구해 상대도수를 모두 더하면 $1$이 되어야 해요. 확인하는 습관을 들이면 실수를 잡을 수 있어요.\n\n이번에는 거꾸로예요. 전체가 $200$명이고 어떤 계급의 상대도수가 $0.12$라면 그 계급의 도수는 몇일까요.\n\n$200 \\times 0.12 = 24$명이에요.\n\n두 집단을 비교하는 예도 볼게요. A반 $25$명 중 $10$명, B반 $40$명 중 $14$명이 안경을 썼어요.\n\n$10 \\div 25 = 0.4$, $14 \\div 40 = 0.35$. 사람 수는 B반이 많지만 비율은 A반이 높아요. 「몇 명인가」와 「얼마나 흔한가」는 다른 물음이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "relative-frequency",
+                    "surface": "상대도수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "percentage",
+                    "surface": "백분율",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "rate",
+                    "surface": "비율",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "relative-frequency:practice:v1",
+          "sectionId": "relative-frequency:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "relative-frequency:practice:problems:v1",
+              "blockId": "relative-frequency:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1244,12 +1387,12 @@
           ]
         },
         {
-          "sectionId": "relative-frequency:check:v1",
+          "sectionId": "relative-frequency:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "relative-frequency:check:problems:v1",
+              "blockId": "relative-frequency:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1265,18 +1408,24 @@
           ]
         },
         {
-          "sectionId": "relative-frequency:summary:v1",
+          "sectionId": "relative-frequency:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "relative-frequency:summary:text:v1",
+              "blockId": "relative-frequency:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "도수를 전체 도수로 나눈 값이 상대도수예요. 전체에서 차지하는 몫이고요.\n\n늘 $0$과 $1$ 사이이고 모두 더하면 $1$이에요. 아니면 어딘가 틀린 거예요.\n\n크기가 다른 두 집단을 같은 자 위에 올려놓는 것이 상대도수의 쓸모예요.\n\n상대도수와 전체 도수를 알면 도수를 되찾을 수 있어요.",
-                "definitions": []
+                "text": "도수를 전체 도수로 나눈 값이 상대도수예요. 전체에서 차지하는 몫이고요.\n\n늘 $0$과 $1$ 사이이고 모두 더하면 $1$이에요. 아니면 어딘가 틀린 거예요.\n\n크기가 다른 두 집단을 같은 자 위에 올려놓는 것이 상대도수의 쓸모예요.\n\n상대도수와 전체 도수를 알면 도수를 되찾을 수 있어요.\n\n이 수업의 개념은 상대도수예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "relative-frequency",
+                    "surface": "상대도수",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]

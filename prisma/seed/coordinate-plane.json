@@ -4,7 +4,7 @@
     {
       "key": "coordinate-plane",
       "title": "좌표평면과 그래프",
-      "summary": "두 수로 자리를 가리키는 법을 익히고, 함께 커지는 관계와 한쪽이 작아지는 관계를 그래프로 봐요.",
+      "summary": "두 수로 위치를 가리키는 법을 익히고, 함께 커지는 관계와 한쪽이 작아지는 관계를 그래프로 봐요.",
       "order": 140,
       "track": "middle",
       "stage": "middle-1",
@@ -46,9 +46,9 @@
     {
       "public": {
         "lessonKey": "coordinate-plane",
-        "versionId": "coordinate-plane:v2",
-        "title": "순서쌍과 좌표평면: 두 수로 자리를 가리키기",
-        "summary": "수직선 하나로는 모자란 자리를, 두 수를 짝지어 가리키는 법을 익혀요.",
+        "versionId": "coordinate-plane:v3",
+        "title": "순서쌍과 좌표평면: 두 수로 위치를 가리키기",
+        "summary": "수직선 하나로는 모자란 위치를, 두 수를 짝지어 가리키는 법을 익혀요.",
         "estimatedMinutes": 10,
         "conceptKeys": [
           "coordinate-plane"
@@ -61,17 +61,17 @@
       },
       "sections": [
         {
-          "sectionId": "coordinate-plane:explanation:v2",
+          "sectionId": "coordinate-plane:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "coordinate-plane:explanation:text:v2",
+              "blockId": "coordinate-plane:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "수직선 위의 자리는 수 하나로 가리킬 수 있었어요. 그런데 교실의 자리나 지도의 위치는 수 하나로 부족해요. 앞에서 몇 번째인지와 옆에서 몇 번째인지, 둘이 있어야 하죠.\n\n그래서 수직선 두 개를 직각으로 겹쳐 놓아요. 가로를 $x$축, 세로를 $y$축, 두 축이 만나는 자리를 원점이라 해요. 이렇게 만든 바닥을 좌표평면이라고 합니다.\n\n자리는 두 수를 짝지어 $(3, 2)$처럼 적어요. 이것을 순서쌍이라고 해요.\n\n「순서」라는 말이 붙은 이유가 있어요. $(3, 2)$와 $(2, 3)$은 서로 다른 자리예요. 앞의 수가 가로, 뒤의 수가 세로라는 약속을 지켜야 해요.\n\n찾아가는 순서도 같아요. 원점에서 가로로 먼저 가고, 그다음 세로로 움직여요.\n\n축이 평면을 넷으로 가르는데 이것을 사분면이라고 해요. 오른쪽 위부터 시계 반대 방향으로 제$1$사분면, 제$2$, 제$3$, 제$4$사분면이에요. 부호로 가릴 수 있어요. 둘 다 양수면 제$1$사분면, 둘 다 음수면 제$3$사분면이에요.\n\n축 위의 점은 어느 사분면에도 속하지 않아요. 경계는 어느 쪽도 아니거든요.",
+                "text": "수직선 위의 위치는 수 하나로 가리킬 수 있었어요. 그런데 교실의 자리나 지도의 위치는 수 하나로 부족해요. 앞에서 몇 번째인지와 옆에서 몇 번째인지, 둘이 있어야 하죠.\n\n그래서 수직선 두 개를 직각으로 겹쳐 놓아요. 가로를 $x$축, 세로를 $y$축이라고 해요. 두 축이 만나는 점은 원점이에요.\n\n이렇게 만든 바닥을 좌표평면이라고 합니다.",
                 "definitions": [
                   {
                     "conceptKey": "coordinate-plane",
@@ -82,7 +82,33 @@
               }
             },
             {
-              "blockId": "coordinate-plane:explanation:drawing:v2",
+              "blockId": "coordinate-plane:explanation:pair:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "좌표평면 위의 점은 두 수를 짝지어 $(3, 2)$처럼 적어요. 이것을 순서쌍이라고 해요.\n\n「순서」라는 말이 붙은 이유가 있어요. $(3, 2)$와 $(2, 3)$은 서로 다른 점이에요. 앞의 수가 가로, 뒤의 수가 세로라는 약속을 지켜야 해요.\n\n찾아가는 순서도 같아요. 원점에서 가로로 먼저 가고, 그다음 세로로 움직여요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "coordinate-plane:explanation:quadrant:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 축이 평면을 넷으로 나눠요. 이 넷을 사분면이라고 해요. 오른쪽 위부터 시계 반대 방향으로 제$1$사분면, 제$2$, 제$3$, 제$4$사분면이에요.\n\n부호만 보면 알 수 있어요. 두 수가 다 양수면 제$1$사분면이에요. 두 수가 다 음수면, 곧 둘 다 $0$보다 작으면 제$3$사분면이고요.\n\n축 위의 점은 어느 사분면에도 속하지 않아요. 경계는 어느 쪽도 아니거든요.",
+                "definitions": [
+                  {
+                    "conceptKey": "negative-number",
+                    "surface": "음수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "coordinate-plane:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -281,7 +307,7 @@
                     ]
                   },
                   {
-                    "caption": "그다음 세로로 올라가요. 위로 $2$칸. 그 자리를 $(3, 2)$라고 적어요.",
+                    "caption": "그다음 세로로 올라가요. 위로 $2$칸. 그 점을 $(3, 2)$라고 적어요.",
                     "changes": [
                       {
                         "id": "across",
@@ -308,29 +334,35 @@
           ]
         },
         {
-          "sectionId": "coordinate-plane:example:v2",
+          "sectionId": "coordinate-plane:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "coordinate-plane:example:text:v2",
+              "blockId": "coordinate-plane:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "점 $(-2, 3)$이 어느 사분면에 있는지 알아볼게요.\n\n가로 좌표가 $-2$로 음수이니 원점에서 왼쪽이에요.\n\n세로 좌표가 $3$으로 양수이니 위쪽이고요.\n\n왼쪽 위, 곧 제$2$사분면이에요.\n\n부호만 보면 바로 알 수 있어요. 제$1$사분면은 $(+, +)$, 제$2$는 $(-, +)$, 제$3$은 $(-, -)$, 제$4$는 $(+, -)$예요.\n\n$(0, 5)$는 어떨까요. 가로로 움직이지 않았으니 $y$축 위에 있어요. 축 위의 점은 사분면에 속하지 않아요.\n\n$(4, -1)$과 $(-1, 4)$도 견줘 볼게요. 숫자는 같지만 앞뒤가 다르니 한쪽은 제$4$사분면, 다른 쪽은 제$2$사분면이에요. 순서쌍에서 순서가 왜 중요한지 보여 주는 예예요.",
-                "definitions": []
+                "text": "점 $(-2, 3)$이 어느 사분면에 있는지 알아볼게요.\n\n가로 좌표가 $-2$로 음수이니 원점에서 왼쪽이에요.\n\n세로 좌표가 $3$으로 양수이니 위쪽이고요.\n\n왼쪽 위, 곧 제$2$사분면이에요.\n\n부호만 보면 바로 알 수 있어요. 제$1$사분면은 $(+, +)$, 제$2$는 $(-, +)$, 제$3$은 $(-, -)$, 제$4$는 $(+, -)$예요.\n\n$(0, 5)$는 어떨까요. 가로로 움직이지 않았으니 $y$축 위에 있어요. 축 위의 점은 사분면에 속하지 않아요.\n\n$(4, -1)$과 $(-1, 4)$도 비교해 볼게요. 숫자는 같지만 앞뒤가 다르니 한쪽은 제$4$사분면, 다른 쪽은 제$2$사분면이에요. 순서쌍에서 순서가 왜 중요한지 보여 주는 예예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "negative-number",
+                    "surface": "음수",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "coordinate-plane:practice:v2",
+          "sectionId": "coordinate-plane:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "coordinate-plane:practice:problems:v2",
+              "blockId": "coordinate-plane:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -347,12 +379,12 @@
           ]
         },
         {
-          "sectionId": "coordinate-plane:check:v2",
+          "sectionId": "coordinate-plane:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "coordinate-plane:check:problems:v2",
+              "blockId": "coordinate-plane:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -368,18 +400,24 @@
           ]
         },
         {
-          "sectionId": "coordinate-plane:summary:v2",
+          "sectionId": "coordinate-plane:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "coordinate-plane:summary:text:v2",
+              "blockId": "coordinate-plane:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "수직선 두 개를 직각으로 겹쳐 놓은 것이 좌표평면이에요. 가로가 $x$축, 세로가 $y$축이에요.\n\n자리는 「가로, 세로」 순서로 적고, 순서를 바꾸면 다른 자리가 돼요.\n\n축이 평면을 넷으로 가르고, 좌표의 부호로 어느 사분면인지 알 수 있어요.\n\n축 위의 점은 어느 사분면에도 속하지 않아요.",
-                "definitions": []
+                "text": "수직선 두 개를 직각으로 겹쳐 놓은 것이 좌표평면이에요. 가로가 $x$축, 세로가 $y$축이에요.\n\n점은 「가로, 세로」 순서로 적고, 순서를 바꾸면 다른 점이 돼요.\n\n두 축이 평면을 넷으로 나누고, 좌표의 부호로 어느 사분면인지 알 수 있어요.\n\n축 위의 점은 어느 사분면에도 속하지 않아요.\n\n이 수업의 개념은 좌표평면이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "coordinate-plane",
+                    "surface": "좌표평면",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -397,7 +435,7 @@
     {
       "public": {
         "lessonKey": "direct-proportion",
-        "versionId": "direct-proportion:v1",
+        "versionId": "direct-proportion:v2",
         "title": "정비례: 같은 비로 함께 커진다",
         "summary": "한쪽이 두 배가 되면 다른 쪽도 두 배가 되는 관계를 식과 그래프로 봐요.",
         "estimatedMinutes": 10,
@@ -413,17 +451,17 @@
       },
       "sections": [
         {
-          "sectionId": "direct-proportion:explanation:v1",
+          "sectionId": "direct-proportion:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "direct-proportion:explanation:text:v1",
+              "blockId": "direct-proportion:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "한 자루에 $2$천 원인 연필을 사요. 한 자루면 $2$천 원, 두 자루면 $4$천 원, 세 자루면 $6$천 원이에요.\n\n자루 수가 두 배가 되면 값도 두 배가 돼요. 세 배가 되면 값도 세 배고요. 이렇게 한쪽이 몇 배가 될 때 다른 쪽도 같은 배로 커지는 관계를 정비례라고 해요.\n\n식으로 적으면 $y = 2x$예요. 일반적으로 $y = ax$ 꼴이고, 이 $a$를 비례상수라고 불러요.\n\n다르게 보는 법도 있어요. $\\dfrac{y}{x}$가 늘 같아요. $\\dfrac{2}{1} = \\dfrac{4}{2} = \\dfrac{6}{3} = 2$죠. 몫이 일정하다는 것이 정비례의 다른 얼굴이에요.\n\n그래프로 그리면 특징이 뚜렷해요. 점을 찍어 이으면 원점을 지나는 곧은 직선이 돼요.\n\n원점을 지나는 이유는 분명해요. 연필을 $0$자루 사면 $0$원이니까요. $x$가 $0$이면 $y$도 $0$이에요.\n\n비례상수가 음수이면 오른쪽으로 갈수록 내려가는 직선이 돼요. 그래도 원점을 지나는 것은 같아요. 중학교 2학년에서 배울 일차함수는 이 직선을 위아래로 옮긴 것이에요.",
+                "text": "한 자루에 $2$천 원인 연필을 사요. 한 자루면 $2$천 원, 두 자루면 $4$천 원, 세 자루면 $6$천 원이에요.\n\n자루 수가 두 배가 되면 값도 두 배가 돼요. 세 배가 되면 값도 세 배고요.\n\n이렇게 한쪽이 몇 배가 될 때 다른 쪽도 같은 배로 커지는 관계를 정비례라고 해요.",
                 "definitions": [
                   {
                     "conceptKey": "direct-proportion",
@@ -434,7 +472,38 @@
               }
             },
             {
-              "blockId": "direct-proportion:explanation:drawing:v1",
+              "blockId": "direct-proportion:explanation:constant:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "식으로 적으면 $y = 2x$예요. 일반적으로는 $y = ax$ 형태예요. 여기서 $a$를 비례상수라고 불러요.\n\n다르게 보는 법도 있어요. $\\dfrac{y}{x}$가 늘 같아요. $\\dfrac{2}{1} = \\dfrac{4}{2} = \\dfrac{6}{3} = 2$죠.\n\n몫이 일정하다는 것도 정비례를 말하는 또 하나의 방법이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "direct-proportion:explanation:graph:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "그래프로 그리면 특징이 뚜렷해요. 점을 찍어 이으면 원점을 지나는 곧은 직선이 돼요.\n\n원점을 지나는 이유는 분명해요. 연필을 $0$자루 사면 $0$원이니까요. $x$가 $0$이면 $y$도 $0$이에요.\n\n비례상수가 음수이면 오른쪽으로 갈수록 내려가는 직선이 돼요. 그래도 원점을 지나는 것은 같아요.\n\n중학교 2학년에서 배울 일차함수는 이 직선을 위아래로 옮긴 것이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "negative-number",
+                    "surface": "음수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "linear-function",
+                    "surface": "일차함수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "direct-proportion:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -661,29 +730,35 @@
           ]
         },
         {
-          "sectionId": "direct-proportion:example:v1",
+          "sectionId": "direct-proportion:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "direct-proportion:example:text:v1",
+              "blockId": "direct-proportion:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$y$가 $x$에 정비례하고 $x = 3$일 때 $y = 12$라고 해요. 식을 구해 볼게요.\n\n정비례이니 $y = ax$ 꼴이에요. 여기에 아는 값을 넣어요.\n\n$12 = a \\times 3$에서 $a = 4$예요. 그러니 $y = 4x$예요.\n\n이제 $x = 7$일 때의 $y$도 구할 수 있어요. $y = 4 \\times 7 = 28$이에요.\n\n비례상수는 $\\dfrac{y}{x}$로 바로 구할 수도 있어요. $\\dfrac{12}{3} = 4$죠. 어느 쪽이든 같아요.\n\n반대로 $y = 24$일 때의 $x$도 구해 볼게요. $24 = 4x$에서 $x = 6$이에요.\n\n식 하나를 손에 넣으면 어느 쪽을 물어도 답할 수 있어요. 그것이 관계를 식으로 적는 이유예요.",
-                "definitions": []
+                "text": "$y$가 $x$에 정비례하고 $x = 3$일 때 $y = 12$라고 해요. 식을 구해 볼게요.\n\n정비례이니 $y = ax$ 형태예요. 여기에 아는 값을 넣어요.\n\n$12 = a \\times 3$에서 $a = 4$예요. 그러니 $y = 4x$예요.\n\n이제 $x = 7$일 때의 $y$도 구할 수 있어요. $y = 4 \\times 7 = 28$이에요.\n\n비례상수는 $\\dfrac{y}{x}$로 바로 구할 수도 있어요. $\\dfrac{12}{3} = 4$죠. 어느 쪽이든 같아요.\n\n반대로 $y = 24$일 때의 $x$도 구해 볼게요. $24 = 4x$에서 $x = 6$이에요.\n\n식 하나를 손에 넣으면 어느 쪽을 물어도 답할 수 있어요. 그것이 관계를 식으로 적는 이유예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "direct-proportion",
+                    "surface": "정비례",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "direct-proportion:practice:v1",
+          "sectionId": "direct-proportion:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "direct-proportion:practice:problems:v1",
+              "blockId": "direct-proportion:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -700,12 +775,12 @@
           ]
         },
         {
-          "sectionId": "direct-proportion:check:v1",
+          "sectionId": "direct-proportion:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "direct-proportion:check:problems:v1",
+              "blockId": "direct-proportion:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -721,18 +796,24 @@
           ]
         },
         {
-          "sectionId": "direct-proportion:summary:v1",
+          "sectionId": "direct-proportion:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "direct-proportion:summary:text:v1",
+              "blockId": "direct-proportion:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "한쪽이 몇 배가 될 때 다른 쪽도 같은 배로 커지면 정비례예요.\n\n식은 $y = ax$이고 $a$가 비례상수예요. $\\dfrac{y}{x}$가 늘 $a$로 일정해요.\n\n그래프는 원점을 지나는 직선이에요. $x$가 $0$이면 $y$도 $0$이니까요.\n\n값 하나를 알면 비례상수를 구할 수 있고, 그러면 어느 쪽이든 답할 수 있어요.",
-                "definitions": []
+                "text": "한쪽이 몇 배가 될 때 다른 쪽도 같은 배로 커지면 정비례예요.\n\n식은 $y = ax$이고 $a$가 비례상수예요. $\\dfrac{y}{x}$가 늘 $a$로 일정해요.\n\n그래프는 원점을 지나는 직선이에요. $x$가 $0$이면 $y$도 $0$이니까요.\n\n값 하나를 알면 비례상수를 구할 수 있고, 그러면 어느 쪽이든 답할 수 있어요.\n\n이 수업의 개념은 정비례예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "direct-proportion",
+                    "surface": "정비례",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -750,7 +831,7 @@
     {
       "public": {
         "lessonKey": "inverse-proportion",
-        "versionId": "inverse-proportion:v1",
+        "versionId": "inverse-proportion:v2",
         "title": "반비례: 한쪽이 커지면 다른 쪽이 작아진다",
         "summary": "곱이 늘 같은 관계를 만나고, 직선이 아닌 곡선 그래프를 처음 봐요.",
         "estimatedMinutes": 10,
@@ -766,17 +847,17 @@
       },
       "sections": [
         {
-          "sectionId": "inverse-proportion:explanation:v1",
+          "sectionId": "inverse-proportion:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "inverse-proportion:explanation:text:v1",
+              "blockId": "inverse-proportion:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "넓이가 $12$인 직사각형을 여러 개 만들어 볼게요. 가로가 $2$면 세로는 $6$, 가로가 $3$이면 세로는 $4$, 가로가 $4$면 세로는 $3$이에요.\n\n가로가 커질수록 세로가 작아져요. 넓이를 지켜야 하니까요. 이렇게 한쪽이 몇 배가 될 때 다른 쪽이 그만큼 나뉘는 관계를 반비례라고 해요.\n\n정비례에서는 몫이 일정했는데 반비례에서는 곱이 일정해요. $2 \\times 6 = 3 \\times 4 = 4 \\times 3 = 12$죠.\n\n식으로 적으면 $xy = 12$, 또는 $y = \\dfrac{12}{x}$예요. 일반적으로 $y = \\dfrac{a}{x}$ 꼴이고 $a$가 비례상수예요.\n\n$x$가 $0$이 될 수 없다는 점이 중요해요. 가로가 $0$인 직사각형은 없고, $0$으로 나눌 수도 없으니까요.\n\n그래프를 그리면 직선이 아니에요. 두 갈래로 나뉜 곡선이 되고, 축에 한없이 가까워지되 닿지는 않아요. 가로를 아무리 늘려도 세로가 $0$이 되지는 않거든요. 넓이가 $0$이 되어 버리니까요.\n\n고등학교에서 배울 유리함수가 바로 이 곡선이에요. 여기서 처음 만나는 셈이에요.",
+                "text": "넓이가 $12$인 직사각형을 여러 개 만들어 볼게요. 가로가 $2$면 세로는 $6$, 가로가 $3$이면 세로는 $4$, 가로가 $4$면 세로는 $3$이에요.\n\n가로가 커질수록 세로가 작아져요. 넓이를 지켜야 하니까요.\n\n이렇게 한쪽이 몇 배가 될 때 다른 쪽이 그만큼 나뉘는 관계를 반비례라고 해요.",
                 "definitions": [
                   {
                     "conceptKey": "inverse-proportion",
@@ -787,7 +868,39 @@
               }
             },
             {
-              "blockId": "inverse-proportion:explanation:drawing:v1",
+              "blockId": "inverse-proportion:explanation:constant:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "정비례에서는 몫이 일정했어요. 반비례에서는 곱이 일정해요. $2 \\times 6 = 3 \\times 4 = 4 \\times 3 = 12$죠.\n\n식으로 적으면 $xy = 12$, 또는 $y = \\dfrac{12}{x}$예요. 일반적으로는 $y = \\dfrac{a}{x}$ 형태이고 $a$가 비례상수예요.\n\n$x$가 $0$이 될 수 없다는 점이 중요해요. 가로가 $0$인 직사각형은 없고, $0$으로 나눌 수도 없으니까요.",
+                "definitions": [
+                  {
+                    "conceptKey": "direct-proportion",
+                    "surface": "정비례",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "inverse-proportion:explanation:graph:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "그래프를 그리면 직선이 아니에요. 두 부분으로 나뉜 곡선이 돼요.\n\n이 곡선은 축에 한없이 가까워지되 닿지는 않아요. 가로를 아무리 늘려도 세로가 $0$이 되지는 않거든요. 넓이가 $0$이 되어 버리니까요.\n\n고등학교에서 배울 유리함수가 바로 이 곡선이에요. 여기서 미리 만나는 거예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "rational-function",
+                    "surface": "유리함수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "inverse-proportion:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1023,29 +1136,35 @@
           ]
         },
         {
-          "sectionId": "inverse-proportion:example:v1",
+          "sectionId": "inverse-proportion:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "inverse-proportion:example:text:v1",
+              "blockId": "inverse-proportion:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
                 "text": "$y$가 $x$에 반비례하고 $x = 4$일 때 $y = 9$라고 해요. 식을 구해 볼게요.\n\n반비례이니 곱이 일정해요. $4 \\times 9 = 36$이 비례상수예요.\n\n식은 $y = \\dfrac{36}{x}$예요.\n\n$x = 6$일 때는 $y = \\dfrac{36}{6} = 6$이에요. $x$가 $1.5$배가 되니 $y$는 $1.5$로 나뉘었네요.\n\n$y = 12$일 때의 $x$도 구해 볼게요. $12 = \\dfrac{36}{x}$에서 $12x = 36$, 곧 $x = 3$이에요.\n\n생활에서도 자주 보여요. 같은 거리를 갈 때 속력과 걸리는 시간, 같은 일을 할 때 사람 수와 걸리는 날수가 그래요.\n\n$12$명이 $5$일 걸리는 일을 $15$명이 하면 며칠 걸릴까요. 곱이 $60$으로 일정하니 $60 \\div 15 = 4$일이에요.",
-                "definitions": []
+                "definitions": [
+                  {
+                    "conceptKey": "inverse-proportion",
+                    "surface": "반비례",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "inverse-proportion:practice:v1",
+          "sectionId": "inverse-proportion:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "inverse-proportion:practice:problems:v1",
+              "blockId": "inverse-proportion:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1062,12 +1181,12 @@
           ]
         },
         {
-          "sectionId": "inverse-proportion:check:v1",
+          "sectionId": "inverse-proportion:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "inverse-proportion:check:problems:v1",
+              "blockId": "inverse-proportion:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1083,18 +1202,29 @@
           ]
         },
         {
-          "sectionId": "inverse-proportion:summary:v1",
+          "sectionId": "inverse-proportion:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "inverse-proportion:summary:text:v1",
+              "blockId": "inverse-proportion:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "한쪽이 몇 배가 될 때 다른 쪽이 그만큼 나뉘면 반비례예요. 곱이 늘 같아요.\n\n식은 $y = \\dfrac{a}{x}$이고 $a$가 비례상수예요. $x$는 $0$이 될 수 없어요.\n\n그래프는 직선이 아니라 두 갈래로 나뉜 곡선이고, 축에 가까워지되 닿지 않아요.\n\n정비례는 몫이, 반비례는 곱이 일정하다고 기억하면 갈리지 않아요.",
-                "definitions": []
+                "text": "한쪽이 몇 배가 될 때 다른 쪽이 그만큼 나뉘면 반비례예요. 곱이 늘 같아요.\n\n식은 $y = \\dfrac{a}{x}$이고 $a$가 비례상수예요. $x$는 $0$이 될 수 없어요.\n\n그래프는 직선이 아니라 두 부분으로 나뉜 곡선이고, 축에 가까워지되 닿지 않아요.\n\n정비례는 몫이, 반비례는 곱이 일정하다고 기억하면 헷갈리지 않아요.\n\n이 수업의 개념은 반비례예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "inverse-proportion",
+                    "surface": "반비례",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "direct-proportion",
+                    "surface": "정비례",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
