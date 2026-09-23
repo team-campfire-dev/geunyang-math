@@ -319,7 +319,7 @@
     {
       "public": {
         "lessonKey": "decimal-fraction",
-        "versionId": "decimal-fraction:v2",
+        "versionId": "decimal-fraction:v3",
         "title": "소수와 분수: 같은 양의 두 이름",
         "summary": "소수를 분수로, 분수를 소수로 바꾸며 같은 양임을 확인해요.",
         "estimatedMinutes": 10,
@@ -336,12 +336,12 @@
       },
       "sections": [
         {
-          "sectionId": "decimal-fraction:explanation:v2",
+          "sectionId": "decimal-fraction:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "decimal-fraction:explanation:text:v2",
+              "blockId": "decimal-fraction:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -367,7 +367,7 @@
               }
             },
             {
-              "blockId": "decimal-fraction:explanation:drawing:v2",
+              "blockId": "decimal-fraction:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -466,17 +466,17 @@
           ]
         },
         {
-          "sectionId": "decimal-fraction:example:v2",
+          "sectionId": "decimal-fraction:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "decimal-fraction:example:text:v2",
+              "blockId": "decimal-fraction:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$0.25$를 가장 간단한 분수로 바꿔 볼게요.\n\n소수 둘째 자리까지 있으니 분모는 100이에요. $0.25=\\frac{25}{100}$.\n\n분자와 분모를 25로 나누면 $\\frac{25\\div25}{100\\div25}=\\frac{1}{4}$이에요. 1과 4는 더 이상 같은 수로 나눌 수 없으니 여기서 멈춰요.\n\n분모를 100으로 두고 멈춰도 값은 같지만, 더 이상 약분할 수 없는 꼴로 쓰면 크기를 한눈에 보기 쉬워요.",
+                "text": "$0.25$를 가장 간단한 분수로 바꿔 볼게요.\n\n소수 둘째 자리까지 있으니 분모는 100이에요. $0.25=\\frac{25}{100}$.\n\n분자와 분모를 25로 나누면 $\\frac{25\\div25}{100\\div25}=\\frac{1}{4}$이에요. 1과 4는 더 이상 같은 수로 나눌 수 없으니 여기서 멈춰요.\n\n분모를 100으로 두고 멈춰도 값은 같지만, 더 이상 약분할 수 없는 분수로 쓰면 크기를 한눈에 보기 쉬워요.",
                 "definitions": [
                   {
                     "conceptKey": "irreducible-fraction",
@@ -489,12 +489,12 @@
           ]
         },
         {
-          "sectionId": "decimal-fraction:practice:v2",
+          "sectionId": "decimal-fraction:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "decimal-fraction:practice:problems:v2",
+              "blockId": "decimal-fraction:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -511,12 +511,12 @@
           ]
         },
         {
-          "sectionId": "decimal-fraction:check:v2",
+          "sectionId": "decimal-fraction:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "decimal-fraction:check:problems:v2",
+              "blockId": "decimal-fraction:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -532,12 +532,12 @@
           ]
         },
         {
-          "sectionId": "decimal-fraction:summary:v2",
+          "sectionId": "decimal-fraction:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "decimal-fraction:summary:text:v2",
+              "blockId": "decimal-fraction:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
