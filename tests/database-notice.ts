@@ -38,9 +38,21 @@ function fromEnvFile() {
   } catch { return null; }
 }
 
+/**
+ * The database this run should use, or null when nothing names one — the environment first, then
+ * `.env`. Kept apart from the writing below because the difference between the two answers is the
+ * whole point: one gets handed to the workers, the other must leave the variable alone.
+ */
+export function configuredUrl(fromEnvironment: string | undefined, fromFile: string | null) {
+  return fromEnvironment || fromFile || null;
+}
+
 export default function notice() {
-  process.env[name] ??= fromEnvFile() ?? undefined;
-  if (process.env.TEST_DATABASE_URL) return;
+  const configured = configuredUrl(process.env[name], fromEnvFile());
+  // Only when there is one. `process.env.X = undefined` stores the string "undefined", and every
+  // MySQL test reads that as a named database: instead of skipping they all fail on `new URL(...)`,
+  // and this notice — the one thing that would have explained it — never prints.
+  if (configured) { process.env[name] = configured; return; }
   const held = databaseTests();
   if (!held.length) return;
   // CI의 것과 같은 모양이다(.github/workflows/ci.yml): root 계정, 이름이 _test로 끝나는 별도 데이터베이스.
