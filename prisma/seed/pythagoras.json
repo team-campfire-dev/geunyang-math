@@ -55,7 +55,7 @@
     {
       "public": {
         "lessonKey": "pythagoras",
-        "versionId": "pythagoras:v1",
+        "versionId": "pythagoras:v2",
         "title": "피타고라스 정리: 두 변을 알면 나머지 하나",
         "summary": "직각삼각형에서 세 변의 제곱 사이에 있는 관계를 넓이로 확인하고 길이를 구해요.",
         "estimatedMinutes": 12,
@@ -71,17 +71,17 @@
       },
       "sections": [
         {
-          "sectionId": "pythagoras:explanation:v1",
+          "sectionId": "pythagoras:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "pythagoras:explanation:text:v1",
+              "blockId": "pythagoras:explanation:theorem:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "직각삼각형에서는 두 변만 알면 나머지 한 변이 정해져요. 삼각형 모양이 하나로 굳어지니까요.\n\n그 관계가 피타고라스 정리예요. 직각을 낀 두 변을 $a$, $b$라 하고 빗변을 $c$라 하면 $a^2 + b^2 = c^2$이에요. 길이끼리 더하는 것이 아니라 제곱끼리 더한다는 것이 중요해요. $3 + 4$는 $5$가 아니지만 $3^2 + 4^2$은 $5^2$이거든요.\n\n왜 그런지는 넓이로 보면 보여요. 세 변마다 정사각형을 그리면 넓이가 각각 $a^2$, $b^2$, $c^2$이에요. $3$과 $4$인 경우라면 $9$칸과 $16$칸인데, 이 칸을 모두 옮기면 $25$칸짜리 정사각형이 빈틈없이 채워져요.\n\n구할 때는 무엇이 빗변인지부터 봐요. 빗변은 직각의 맞은편에 있는 가장 긴 변이에요.\n\n빗변을 구할 때는 더해요. $a^2 + b^2$을 구하고 제곱해서 그 값이 되는 수를 찾아요.\n\n빗변이 아닌 변을 구할 때는 빼요. $c^2 - a^2$을 구하는 거예요. 빼는 자리를 바꾸면 답이 달라지니, 가장 긴 변이 어느 것인지 먼저 확인하는 버릇을 들이면 좋아요.\n\n지금은 답이 딱 떨어지는 경우만 다뤄요. $3, 4, 5$나 $5, 12, 13$처럼요. 딱 떨어지지 않는 경우는 제곱근을 배우고 나면 어떤 수든 적을 수 있어요.",
+                "text": "직각삼각형에서는 두 변만 알면 나머지 한 변이 정해져요. 삼각형 모양이 하나로 굳어지니까요.\n\n그 관계가 피타고라스 정리예요. 직각을 낀 두 변을 $a$, $b$라 하고, 가장 긴 변을 $c$라 해 볼게요. 그러면 $a^2 + b^2 = c^2$이에요.\n\n길이끼리 더하는 것이 아니에요. 제곱끼리 더한다는 것이 중요해요. $3 + 4$는 $5$가 아니지만 $3^2 + 4^2$은 $5^2$이거든요.",
                 "definitions": [
                   {
                     "conceptKey": "pythagoras",
@@ -92,7 +92,23 @@
               }
             },
             {
-              "blockId": "pythagoras:explanation:drawing:v1",
+              "blockId": "pythagoras:explanation:area:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "왜 그런지는 넓이로 보면 보여요. 세 변마다 정사각형을 그리면 넓이가 각각 $a^2$, $b^2$, $c^2$이에요.\n\n$3$과 $4$인 경우라면 $9$칸과 $16$칸이에요. 이 칸을 모두 옮기면 $25$칸짜리 정사각형이 빈틈없이 채워져요.",
+                "definitions": [
+                  {
+                    "conceptKey": "special-quad",
+                    "surface": "정사각형",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "pythagoras:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -965,33 +981,55 @@
                 ],
                 "frameMs": 1800
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "pythagoras:example:v1",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "pythagoras:example:text:v1",
+              "blockId": "pythagoras:explanation:use:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "직각을 낀 두 변이 $6$과 $8$인 직각삼각형의 빗변을 구해 볼게요.\n\n빗변을 $c$라 하면 $6^2 + 8^2 = c^2$이에요. $36 + 64 = 100$이니 $c^2 = 100$이고요.\n\n제곱해서 $100$이 되는 양수는 $10$이니 빗변은 $10$이에요.\n\n이번엔 반대예요. 빗변이 $13$이고 한 변이 $5$일 때 나머지 한 변을 구해 볼게요.\n\n$5^2 + x^2 = 13^2$이니 $25 + x^2 = 169$이고, $x^2 = 144$, 곧 $x = 12$예요.\n\n여기서 $13^2 - 5^2$을 $(13-5)^2$으로 쓰면 안 돼요. $8^2 = 64$는 $144$가 아니니까요. 제곱을 먼저 하고 나서 빼야 해요.\n\n자주 나오는 세 수를 외워 두면 빠릅니다. $3, 4, 5$와 그 배수인 $6, 8, 10$, $9, 12, 15$, 그리고 $5, 12, 13$과 $8, 15, 17$, $7, 24, 25$예요.",
-                "definitions": []
+                "text": "구할 때는 무엇이 빗변인지부터 봐요. 빗변은 직각의 맞은편에 있는 가장 긴 변이에요.\n\n빗변을 구할 때는 더해요. $a^2 + b^2$을 구하고, 제곱해서 그 값이 되는 수를 찾아요.\n\n빗변이 아닌 변을 구할 때는 빼요. $c^2 - a^2$을 구하는 거예요. 빼는 순서를 바꾸면 답이 달라져요. 가장 긴 변이 어느 것인지 먼저 확인하는 버릇을 들이면 좋아요.\n\n지금은 답이 딱 떨어지는 경우만 다뤄요. $3, 4, 5$나 $5, 12, 13$처럼요. 딱 떨어지지 않는 경우는 제곱근을 배우고 나면 어떤 수든 적을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "square-root",
+                    "surface": "제곱근",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "pythagoras:practice:v1",
+          "sectionId": "pythagoras:example:v2",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "pythagoras:example:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "피타고라스 정리로 빗변을 구해 볼게요. 직각을 낀 두 변이 $6$과 $8$인 직각삼각형이에요.\n\n빗변을 $c$라 하면 $6^2 + 8^2 = c^2$이에요. $36 + 64 = 100$이니 $c^2 = 100$이고요.\n\n제곱해서 $100$이 되는 양수는 $10$이니 빗변은 $10$이에요.\n\n이번엔 반대예요. 빗변이 $13$이고 한 변이 $5$일 때 나머지 한 변을 구해 볼게요.\n\n$5^2 + x^2 = 13^2$이니 $25 + x^2 = 169$예요. 그러니 $x^2 = 144$, 곧 $x = 12$고요.\n\n여기서 $13^2 - 5^2$을 $(13-5)^2$으로 쓰면 안 돼요. $8^2 = 64$는 $144$가 아니니까요. 제곱을 먼저 하고 나서 빼야 해요.\n\n자주 나오는 세 수를 외워 두면 빨라요. $3, 4, 5$와 그 배수인 $6, 8, 10$, $9, 12, 15$가 있어요. $5, 12, 13$과 $8, 15, 17$, $7, 24, 25$도 자주 나와요.",
+                "definitions": [
+                  {
+                    "conceptKey": "pythagoras",
+                    "surface": "피타고라스 정리",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "pythagoras:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "pythagoras:practice:problems:v1",
+              "blockId": "pythagoras:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1008,12 +1046,12 @@
           ]
         },
         {
-          "sectionId": "pythagoras:check:v1",
+          "sectionId": "pythagoras:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "pythagoras:check:problems:v1",
+              "blockId": "pythagoras:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1029,18 +1067,29 @@
           ]
         },
         {
-          "sectionId": "pythagoras:summary:v1",
+          "sectionId": "pythagoras:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "pythagoras:summary:text:v1",
+              "blockId": "pythagoras:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "직각삼각형에서 $a^2 + b^2 = c^2$이고, $c$는 직각의 맞은편에 있는 가장 긴 변이에요.\n\n길이끼리가 아니라 제곱끼리 더한다는 것을 놓치지 마세요.\n\n빗변을 구하면 더하고, 다른 변을 구하면 제곱한 뒤에 빼요.\n\n세 변으로 그린 정사각형의 넓이를 옮겨 보면 왜 그런지가 보여요.",
-                "definitions": []
+                "text": "직각삼각형에서 $a^2 + b^2 = c^2$이에요. $c$는 직각의 맞은편에 있는 가장 긴 변이고요.\n\n길이끼리가 아니라 제곱끼리 더한다는 것을 놓치지 마세요.\n\n빗변을 구하면 더하고, 다른 변을 구하면 제곱한 뒤에 빼요.\n\n세 변으로 그린 정사각형의 넓이를 옮겨 보면 왜 그런지가 보여요.\n\n이 수업의 개념은 피타고라스 정리예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "pythagoras",
+                    "surface": "피타고라스 정리",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "special-quad",
+                    "surface": "정사각형",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -1058,7 +1107,7 @@
     {
       "public": {
         "lessonKey": "pythagoras-converse",
-        "versionId": "pythagoras-converse:v1",
+        "versionId": "pythagoras-converse:v2",
         "title": "정리의 역: 직각인지 아닌지 가려낸다",
         "summary": "세 변의 길이만 보고 직각인지, 예각인지, 둔각인지 가려내요.",
         "estimatedMinutes": 11,
@@ -1072,17 +1121,38 @@
       },
       "sections": [
         {
-          "sectionId": "pythagoras-converse:explanation:v1",
+          "sectionId": "pythagoras-converse:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "pythagoras-converse:explanation:text:v1",
+              "blockId": "pythagoras-converse:explanation:converse:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "피타고라스 정리는 「직각이면 $a^2 + b^2 = c^2$」이라고 말해요. 거꾸로도 성립할까요?\n\n성립해요. 세 변이 $a^2 + b^2 = c^2$을 만족하면 그 삼각형은 직각삼각형이에요. 이것을 피타고라스 정리의 역이라 불러요. 그래서 자를 대지 않고 길이만으로 직각인지 확인할 수 있어요.\n\n옛날부터 쓰던 방법이 있어요. 끈에 매듭을 열두 개 같은 간격으로 묶고 $3 : 4 : 5$로 삼각형을 만들면 한 각이 정확히 직각이 돼요. 땅에 직각을 그릴 때 쓰던 방법이에요.\n\n$a^2 + b^2 = c^2$을 만족하는 세 자연수를 피타고라스 수라고 해요. $3, 4, 5$와 $5, 12, 13$, $8, 15, 17$, $7, 24, 25$가 자주 나와요. 이들의 배수도 모두 피타고라스 수고요.\n\n같지 않을 때는 어떻게 될까요. 가장 긴 변을 $c$라 할 때 세 가지로 갈려요.\n\n$c^2$이 $a^2 + b^2$보다 작으면 $c$의 맞은편 각이 직각보다 작아 예각삼각형이에요.\n\n$c^2$이 더 크면 그 각이 직각보다 커서 둔각삼각형이고요. 가장 긴 변이 더 길어질수록 맞은편 각이 벌어진다고 생각하면 외우지 않아도 돼요.\n\n세 변이 $3$, $4$, $6$이면 $36 > 25$이니 둔각삼각형이에요. $4$, $5$, $6$이면 $36 < 41$이니 예각삼각형이고요.",
+                "text": "피타고라스 정리는 「직각이면 $a^2 + b^2 = c^2$」이라고 말해요. 거꾸로도 성립할까요?\n\n성립해요. 세 변이 $a^2 + b^2 = c^2$을 만족하면 그 삼각형은 직각삼각형이에요. 이것을 피타고라스 정리의 역이라고 불러요.\n\n그래서 자를 대지 않고 길이만으로 직각인지 확인할 수 있어요.\n\n옛날부터 쓰던 방법이 있어요. 끈에 매듭을 열두 개 같은 간격으로 묶고 $3 : 4 : 5$로 삼각형을 만들어요. 그러면 한 각이 정확히 직각이 돼요. 땅에 직각을 그릴 때 쓰던 방법이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "pythagoras",
+                    "surface": "피타고라스 정리",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "pythagoras-converse",
+                    "surface": "피타고라스 정리의 역",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "pythagoras-converse:explanation:triples:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$a^2 + b^2 = c^2$을 만족하는 세 자연수를 피타고라스 수라고 해요.\n\n$3, 4, 5$와 $5, 12, 13$, $8, 15, 17$, $7, 24, 25$가 자주 나와요. 이들의 배수도 모두 피타고라스 수고요.",
                 "definitions": [
                   {
                     "conceptKey": "pythagoras-converse",
@@ -1093,14 +1163,14 @@
               }
             },
             {
-              "blockId": "pythagoras-converse:explanation:drawing:v1",
+              "blockId": "pythagoras-converse:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "세 변이 3, 4, 6인 삼각형에서 제곱의 합과 가장 긴 변의 제곱을 막대로 견주는 그림",
+                "alt": "세 변이 3, 4, 6인 삼각형에서 제곱의 합과 가장 긴 변의 제곱을 막대로 비교하는 그림",
                 "caption": "두 제곱의 합과 가장 긴 변의 제곱 중 어느 쪽이 큰지가 각을 정해요",
                 "items": [
                   {
@@ -1268,7 +1338,7 @@
                     ]
                   },
                   {
-                    "caption": "가장 긴 변의 제곱과 나머지 두 변의 제곱의 합을 막대로 견주어 봐요.",
+                    "caption": "가장 긴 변의 제곱과 나머지 두 변의 제곱의 합을 막대로 비교해 봐요.",
                     "changes": [
                       {
                         "id": "bara",
@@ -1337,33 +1407,49 @@
                 ],
                 "frameMs": 1700
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "pythagoras-converse:example:v1",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "pythagoras-converse:example:text:v1",
+              "blockId": "pythagoras-converse:explanation:compare:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "세 변이 $6$, $8$, $10$인 삼각형이 어떤 삼각형인지 가려 볼게요.\n\n가장 긴 변은 $10$이에요. $6^2 + 8^2 = 36 + 64 = 100$이고 $10^2 = 100$이니 같아요.\n\n그러니 직각삼각형이에요.\n\n세 변이 $3$, $4$, $6$이면 어떨까요. 가장 긴 변은 $6$이고 $3^2 + 4^2 = 25$, $6^2 = 36$이에요.\n\n$36$이 더 크니 둔각삼각형이에요.\n\n세 변이 $4$, $5$, $6$이면 $4^2 + 5^2 = 41$이고 $6^2 = 36$이에요. 이번에는 제곱의 합이 더 크니 예각삼각형이고요.\n\n순서는 늘 같아요. 가장 긴 변을 찾고, 그 제곱과 나머지 두 제곱의 합을 견주면 끝이에요.",
+                "text": "같지 않을 때는 어떻게 될까요. 가장 긴 변을 $c$라 할 때 세 가지로 나뉘어요.\n\n$c^2$이 $a^2 + b^2$보다 작으면 $c$의 맞은편 각이 직각보다 작아요. 그래서 예각삼각형이에요.\n\n$c^2$이 더 크면 그 각이 직각보다 커요. 그래서 둔각삼각형이고요.\n\n가장 긴 변이 더 길어질수록 맞은편 각이 벌어진다고 생각하면 외우지 않아도 돼요.\n\n세 변이 $3$, $4$, $6$이면 $36 > 25$이니 둔각삼각형이에요. $4$, $5$, $6$이면 $36 < 41$이니 예각삼각형이고요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "pythagoras-converse:practice:v1",
+          "sectionId": "pythagoras-converse:example:v2",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "pythagoras-converse:example:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $6$, $8$, $10$인 삼각형이 어떤 삼각형인지 가려 볼게요.\n\n가장 긴 변은 $10$이에요. $6^2 + 8^2 = 36 + 64 = 100$이고 $10^2 = 100$이니 같아요.\n\n그러니 직각삼각형이에요. 피타고라스 정리의 역이 말하는 그대로고요.\n\n세 변이 $3$, $4$, $6$이면 어떨까요. 가장 긴 변은 $6$이고 $3^2 + 4^2 = 25$, $6^2 = 36$이에요.\n\n$36$이 더 크니 둔각삼각형이에요.\n\n세 변이 $4$, $5$, $6$이면 $4^2 + 5^2 = 41$이고 $6^2 = 36$이에요. 이번에는 제곱의 합이 더 크니 예각삼각형이고요.\n\n순서는 늘 같아요. 가장 긴 변을 찾고, 그 제곱과 나머지 두 제곱의 합을 비교하면 끝이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "pythagoras-converse",
+                    "surface": "피타고라스 정리의 역",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "pythagoras-converse:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "pythagoras-converse:practice:problems:v1",
+              "blockId": "pythagoras-converse:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1380,12 +1466,12 @@
           ]
         },
         {
-          "sectionId": "pythagoras-converse:check:v1",
+          "sectionId": "pythagoras-converse:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "pythagoras-converse:check:problems:v1",
+              "blockId": "pythagoras-converse:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1401,18 +1487,29 @@
           ]
         },
         {
-          "sectionId": "pythagoras-converse:summary:v1",
+          "sectionId": "pythagoras-converse:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "pythagoras-converse:summary:text:v1",
+              "blockId": "pythagoras-converse:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$a^2 + b^2 = c^2$을 만족하면 그 삼각형은 직각삼각형이에요. 정리의 역도 성립해요.\n\n그런 세 자연수를 피타고라스 수라 하고, $3, 4, 5$와 $5, 12, 13$이 대표예요.\n\n가장 긴 변의 제곱이 더 크면 둔각, 더 작으면 예각이에요.\n\n가장 긴 변이 길어질수록 맞은편 각이 벌어진다고 생각하면 돼요.",
-                "definitions": []
+                "text": "$a^2 + b^2 = c^2$을 만족하면 그 삼각형은 직각삼각형이에요. 피타고라스 정리의 역도 성립하는 거예요.\n\n그런 세 자연수를 피타고라스 수라 하고, $3, 4, 5$와 $5, 12, 13$이 대표예요.\n\n가장 긴 변의 제곱이 더 크면 둔각, 더 작으면 예각이에요.\n\n가장 긴 변이 길어질수록 맞은편 각이 벌어진다고 생각하면 돼요.\n\n이 수업의 개념은 피타고라스 정리의 역이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "pythagoras-converse",
+                    "surface": "피타고라스 수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "pythagoras",
+                    "surface": "피타고라스 정리",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -1430,7 +1527,7 @@
     {
       "public": {
         "lessonKey": "plane-length",
-        "versionId": "plane-length:v1",
+        "versionId": "plane-length:v2",
         "title": "평면에서 길이 구하기: 직각삼각형을 찾아낸다",
         "summary": "직사각형의 대각선, 이등변삼각형의 높이, 두 점 사이의 거리를 피타고라스 정리로 구해요.",
         "estimatedMinutes": 12,
@@ -1446,35 +1543,40 @@
       },
       "sections": [
         {
-          "sectionId": "plane-length:explanation:v1",
+          "sectionId": "plane-length:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "plane-length:explanation:text:v1",
+              "blockId": "plane-length:explanation:hidden:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "피타고라스 정리는 직각삼각형에서만 쓸 수 있어요. 그러니 문제를 푸는 일은 대개 숨어 있는 직각삼각형을 찾아내는 일이에요.\n\n직사각형의 대각선이 그 예예요. 대각선을 그으면 직사각형이 직각삼각형 둘로 갈라지고, 대각선은 그 삼각형의 빗변이 돼요. 가로 $8$, 세로 $6$이면 대각선은 $10$이에요.\n\n이등변삼각형의 높이도 마찬가지예요. 꼭지각에서 밑변에 수선을 내리면 밑변이 반으로 나뉘면서 직각삼각형이 생겨요. 밑변이 $16$이고 두 변이 $10$이면 반으로 나뉜 $8$과 빗변 $10$으로 높이가 $6$이 나와요.\n\n좌표평면에서 두 점 사이의 거리도 같은 방법이에요. 두 점을 잇는 선분을 빗변으로 삼고, 가로로 간 거리와 세로로 간 거리를 두 변으로 하는 직각삼각형을 그리면 돼요.\n\n$(1, 2)$와 $(7, 10)$이라면 가로로 $6$, 세로로 $8$만큼 갔으니 거리는 $10$이에요.\n\n가로 거리는 $x$끼리 빼고 세로 거리는 $y$끼리 빼요. 빼는 순서는 상관없어요. 제곱하면 부호가 사라지니까요.\n\n요령은 하나예요. 구하려는 길이를 빗변으로 삼는 직각삼각형을 그릴 수 있는지 먼저 살펴보세요. 수선을 하나 내리면 생기는 경우가 많아요.\n\n정사각형의 대각선이나 정삼각형의 높이처럼 딱 떨어지지 않는 경우는 제곱근을 배우고 나서 다뤄요.",
+                "text": "피타고라스 정리는 직각삼각형에서만 쓸 수 있어요. 그러니 문제를 푸는 일은 대개 숨어 있는 직각삼각형을 찾아내는 일이에요.\n\n직사각형의 대각선이 그 예예요. 대각선을 그으면 직사각형이 직각삼각형 둘로 나뉘어요. 대각선은 그 삼각형의 빗변이 되고요. 가로 $8$, 세로 $6$이면 대각선은 $10$이에요.\n\n이등변삼각형의 높이도 마찬가지예요. 꼭지각에서 밑변에 수선을 내리면 밑변이 반으로 나뉘어요. 그러면서 직각삼각형이 생기고요.\n\n밑변이 $16$이고 두 변이 $10$이면 어떨까요. 반으로 나뉜 $8$과 빗변 $10$으로 높이가 $6$이 나와요.",
                 "definitions": [
                   {
-                    "conceptKey": "plane-length",
-                    "surface": "두 점 사이의 거리",
+                    "conceptKey": "pythagoras",
+                    "surface": "피타고라스 정리",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "isosceles",
+                    "surface": "이등변삼각형",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "plane-length:explanation:drawing:v1",
+              "blockId": "plane-length:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "직사각형을 대각선으로 갈라 직각삼각형 하나를 옆으로 떼어 내어 대각선의 길이를 구하는 그림",
+                "alt": "직사각형을 대각선으로 나눠 직각삼각형 하나를 옆으로 떼어 내어 대각선의 길이를 구하는 그림",
                 "caption": "대각선을 그으면 직각삼각형이 생겨요",
                 "items": [
                   {
@@ -1664,33 +1766,81 @@
                 ],
                 "frameMs": 1700
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "plane-length:example:v1",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "plane-length:example:text:v1",
+              "blockId": "plane-length:explanation:coordinate:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "밑변이 $16$이고 나머지 두 변이 각각 $10$인 이등변삼각형의 높이를 구해 볼게요.\n\n꼭지각에서 밑변에 수선을 내리면 밑변이 $8$과 $8$로 나뉘어요. 이등변삼각형의 성질이에요.\n\n이제 직각을 낀 한 변이 $8$이고 빗변이 $10$인 직각삼각형이 생겼어요.\n\n$8^2 + h^2 = 10^2$이니 $64 + h^2 = 100$, 곧 $h^2 = 36$이고 높이는 $6$이에요.\n\n좌표평면도 해 볼게요. $(1, 2)$와 $(7, 10)$ 사이의 거리를 구해요.\n\n가로로 간 거리는 $7 - 1 = 6$, 세로로 간 거리는 $10 - 2 = 8$이에요. $6^2 + 8^2 = 100$이니 거리는 $10$이에요.\n\n$(-2, 1)$과 $(3, 13)$이라면 가로로 $5$, 세로로 $12$이니 거리는 $13$이에요. 음수가 섞여도 빼서 나온 값을 제곱하니 걱정할 것이 없어요.",
-                "definitions": []
+                "text": "좌표평면에서 두 점 사이의 거리도 같은 방법이에요. 두 점을 이은 선분을 빗변으로 삼아요. 그리고 가로로 간 거리와 세로로 간 거리를 두 변으로 하는 직각삼각형을 그리면 돼요.\n\n$(1, 2)$와 $(7, 10)$이라면 가로로 $6$, 세로로 $8$만큼 갔어요. 그러니 거리는 $10$이에요.\n\n가로 거리는 $x$끼리 빼고 세로 거리는 $y$끼리 빼요. 빼는 순서는 상관없어요. 제곱하면 부호가 사라지니까요.",
+                "definitions": [
+                  {
+                    "conceptKey": "coordinate-plane",
+                    "surface": "좌표평면",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "plane-length",
+                    "surface": "두 점 사이의 거리",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "plane-length:explanation:tip:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "요령은 하나예요. 구하려는 길이를 빗변으로 삼는 직각삼각형을 그릴 수 있는지 먼저 살펴보세요. 수선을 하나 내리면 생기는 경우가 많아요.\n\n정사각형의 대각선이나 정삼각형의 높이는 딱 떨어지지 않아요. 그런 경우는 제곱근을 배우고 나서 다뤄요.",
+                "definitions": [
+                  {
+                    "conceptKey": "square-root",
+                    "surface": "제곱근",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "plane-length:practice:v1",
+          "sectionId": "plane-length:example:v2",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "plane-length:example:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "밑변이 $16$이고 나머지 두 변이 각각 $10$인 이등변삼각형의 높이를 구해 볼게요.\n\n꼭지각에서 밑변에 수선을 내리면 밑변이 $8$과 $8$로 나뉘어요. 이등변삼각형의 성질이에요.\n\n이제 직각을 낀 한 변이 $8$이고 빗변이 $10$인 직각삼각형이 생겼어요.\n\n$8^2 + h^2 = 10^2$이니 $64 + h^2 = 100$이에요. 그러니 $h^2 = 36$이고 높이는 $6$이고요.\n\n좌표평면도 해 볼게요. $(1, 2)$와 $(7, 10)$ 사이의 거리를 구해요.\n\n가로로 간 거리는 $7 - 1 = 6$, 세로로 간 거리는 $10 - 2 = 8$이에요. $6^2 + 8^2 = 100$이니 거리는 $10$이에요.\n\n$(-2, 1)$과 $(3, 13)$이라면 가로로 $5$, 세로로 $12$이니 거리는 $13$이에요. 음수가 섞여도 걱정할 것이 없어요. 빼서 나온 값을 제곱하니까요.",
+                "definitions": [
+                  {
+                    "conceptKey": "isosceles",
+                    "surface": "이등변삼각형",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "coordinate-plane",
+                    "surface": "좌표평면",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "plane-length:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "plane-length:practice:problems:v1",
+              "blockId": "plane-length:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1707,12 +1857,12 @@
           ]
         },
         {
-          "sectionId": "plane-length:check:v1",
+          "sectionId": "plane-length:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "plane-length:check:problems:v1",
+              "blockId": "plane-length:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1728,18 +1878,29 @@
           ]
         },
         {
-          "sectionId": "plane-length:summary:v1",
+          "sectionId": "plane-length:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "plane-length:summary:text:v1",
+              "blockId": "plane-length:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "구하려는 길이를 빗변으로 삼는 직각삼각형을 찾는 것이 먼저예요.\n\n직사각형은 대각선으로, 이등변삼각형은 꼭지각에서 내린 수선으로 직각삼각형이 생겨요.\n\n좌표평면에서는 가로로 간 거리와 세로로 간 거리가 두 변이에요.\n\n수선을 하나 내려 보는 것이 가장 자주 쓰는 수예요.",
-                "definitions": []
+                "text": "구하려는 길이를 빗변으로 삼는 직각삼각형을 찾는 것이 먼저예요.\n\n직사각형은 대각선으로 직각삼각형이 생겨요. 이등변삼각형은 꼭지각에서 내린 수선으로 생기고요.\n\n좌표평면에서는 가로로 간 거리와 세로로 간 거리가 두 변이에요.\n\n수선을 하나 내려 보는 것이 가장 자주 쓰는 방법이에요.\n\n이 수업의 개념은 평면에서 길이 구하기예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "coordinate-plane",
+                    "surface": "좌표평면",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "plane-length",
+                    "surface": "평면에서 길이 구하기",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -1757,7 +1918,7 @@
     {
       "public": {
         "lessonKey": "solid-length",
-        "versionId": "solid-length:v1",
+        "versionId": "solid-length:v2",
         "title": "입체에서 길이 구하기: 두 번 쓰면 된다",
         "summary": "직육면체의 대각선과 원뿔의 높이를 피타고라스 정리를 두 번 써서 구해요.",
         "estimatedMinutes": 12,
@@ -1773,17 +1934,17 @@
       },
       "sections": [
         {
-          "sectionId": "solid-length:explanation:v1",
+          "sectionId": "solid-length:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "solid-length:explanation:text:v1",
+              "blockId": "solid-length:explanation:twice:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "입체에서도 쓰는 방법은 같아요. 다만 한 번으로는 안 되고 두 번 써야 하는 경우가 많아요.\n\n직육면체의 대각선이 대표예요. 마주 보는 두 꼭짓점을 잇는 선분인데, 이 선분이 빗변인 직각삼각형을 한 번에 그릴 수가 없어요.\n\n그래서 두 걸음으로 나눠요. 먼저 밑면의 대각선을 구해요. 밑면이 가로 $a$, 세로 $b$인 직사각형이니 밑면의 대각선의 제곱은 $a^2 + b^2$이에요.\n\n다음으로 그 대각선과 높이를 두 변으로 하는 직각삼각형을 세워요. 높이는 밑면과 수직이니 정말로 직각이에요. 그러니 직육면체의 대각선의 제곱은 $a^2 + b^2 + c^2$이 돼요.\n\n가로 $2$, 세로 $3$, 높이 $6$이면 $4 + 9 + 36 = 49$이니 대각선은 $7$이에요.\n\n원뿔에서도 써요. 원뿔은 밑면의 반지름과 높이와 모선이 직각삼각형을 이뤄요. 모선이 빗변이고요. 반지름이 $6$이고 모선이 $10$이면 높이는 $8$이에요.\n\n높이를 알면 부피를 구할 수 있고, 모선을 알면 옆면인 부채꼴의 반지름을 알 수 있어요. 그래서 원뿔 문제는 대개 이 직각삼각형에서 시작해요.\n\n정리하면, 입체에서는 어느 평면 위에 직각삼각형이 있는지를 먼저 정하고, 필요하면 그 결과를 들고 다음 평면으로 넘어가면 돼요.",
+                "text": "입체에서도 쓰는 방법은 같아요. 다만 한 번으로는 안 되고 두 번 써야 하는 경우가 많아요.\n\n직육면체의 대각선이 대표예요. 마주 보는 두 꼭짓점을 이은 선분이에요. 그런데 이 선분이 빗변인 직각삼각형을 한 번에 그릴 수가 없어요.",
                 "definitions": [
                   {
                     "conceptKey": "solid-length",
@@ -1794,7 +1955,17 @@
               }
             },
             {
-              "blockId": "solid-length:explanation:drawing:v1",
+              "blockId": "solid-length:explanation:steps:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "그래서 두 걸음으로 나눠요. 먼저 밑면의 대각선을 구해요. 밑면이 가로 $a$, 세로 $b$인 직사각형이니 밑면의 대각선의 제곱은 $a^2 + b^2$이에요.\n\n다음으로 그 대각선과 높이를 두 변으로 하는 직각삼각형을 세워요. 높이는 밑면과 수직이니 정말로 직각이에요.\n\n그러니 직육면체의 대각선의 제곱은 $a^2 + b^2 + c^2$이 돼요. 가로 $2$, 세로 $3$, 높이 $6$이면 $4 + 9 + 36 = 49$이니 대각선은 $7$이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "solid-length:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -2142,33 +2313,65 @@
                 ],
                 "frameMs": 1800
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "solid-length:example:v1",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "solid-length:example:text:v1",
+              "blockId": "solid-length:explanation:cone:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "가로 $2$, 세로 $3$, 높이 $6$인 직육면체의 대각선을 구해 볼게요.\n\n먼저 밑면의 대각선이에요. 밑면은 가로 $2$, 세로 $3$인 직사각형이니 대각선의 제곱은 $2^2 + 3^2 = 13$이에요. 이 값은 제곱인 채로 들고 가면 편해요.\n\n이제 그 대각선과 높이 $6$으로 직각삼각형을 세워요. 구하려는 대각선을 $d$라 하면 $13 + 6^2 = d^2$이니 $d^2 = 49$, 곧 $d = 7$이에요.\n\n밑면의 대각선을 굳이 길이로 바꾸지 않은 것이 요령이에요. 제곱인 채로 더하면 되니까요.\n\n원뿔도 해 볼게요. 밑면의 반지름이 $6$이고 모선이 $10$인 원뿔의 높이를 구해요.\n\n반지름과 높이와 모선이 직각삼각형을 이루고 모선이 빗변이니 $6^2 + h^2 = 10^2$이에요. $h^2 = 64$이니 높이는 $8$이고요.\n\n높이를 알았으니 부피도 구할 수 있어요. $\\dfrac{1}{3} \\times \\pi \\times 6^2 \\times 8 = 96\\pi$예요.",
-                "definitions": []
+                "text": "원뿔에서도 써요. 원뿔은 밑면의 반지름과 높이와 모선이 직각삼각형을 이뤄요.\n\n모선은 꼭짓점과 밑면의 둘레를 잇는 선분이에요. 이 직각삼각형에서는 모선이 빗변이고요. 반지름이 $6$이고 모선이 $10$이면 높이는 $8$이에요.\n\n높이를 알면 부피를 구할 수 있어요. 모선을 알면 옆면인 부채꼴의 반지름을 알 수 있고요. 그래서 원뿔 문제는 대개 이 직각삼각형에서 시작해요.\n\n정리하면 이래요. 입체에서는 어느 평면 위에 직각삼각형이 있는지를 먼저 정하세요. 필요하면 그 결과를 들고 다음 평면으로 넘어가면 돼요.",
+                "definitions": [
+                  {
+                    "conceptKey": "volume",
+                    "surface": "부피",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "sector",
+                    "surface": "부채꼴",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "solid-length:practice:v1",
+          "sectionId": "solid-length:example:v2",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "solid-length:example:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "가로 $2$, 세로 $3$, 높이 $6$인 직육면체의 대각선을 구해 볼게요.\n\n먼저 밑면의 대각선이에요. 밑면은 가로 $2$, 세로 $3$인 직사각형이니 대각선의 제곱은 $2^2 + 3^2 = 13$이에요. 이 값은 제곱인 채로 들고 가면 편해요.\n\n이제 그 대각선과 높이 $6$으로 직각삼각형을 세워요. 구하려는 대각선을 $d$라 하면 $13 + 6^2 = d^2$이에요. 그러니 $d^2 = 49$, 곧 $d = 7$이고요.\n\n밑면의 대각선을 굳이 길이로 바꾸지 않은 것이 요령이에요. 제곱인 채로 더하면 되니까요.\n\n원뿔도 해 볼게요. 밑면의 반지름이 $6$이고 모선이 $10$인 원뿔의 높이를 구해요.\n\n반지름과 높이와 모선이 직각삼각형을 이루고 모선이 빗변이에요. 그러니 $6^2 + h^2 = 10^2$이고, $h^2 = 64$이니 높이는 $8$이에요.\n\n높이를 알았으니 부피도 구할 수 있어요. $\\dfrac{1}{3} \\times \\pi \\times 6^2 \\times 8 = 96\\pi$예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "solid-length",
+                    "surface": "직육면체의 대각선",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "volume",
+                    "surface": "부피",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "solid-length:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "solid-length:practice:problems:v1",
+              "blockId": "solid-length:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -2185,12 +2388,12 @@
           ]
         },
         {
-          "sectionId": "solid-length:check:v1",
+          "sectionId": "solid-length:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "solid-length:check:problems:v1",
+              "blockId": "solid-length:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -2206,18 +2409,29 @@
           ]
         },
         {
-          "sectionId": "solid-length:summary:v1",
+          "sectionId": "solid-length:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "solid-length:summary:text:v1",
+              "blockId": "solid-length:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "직육면체의 대각선은 피타고라스 정리를 두 번 써서 구해요.\n\n밑면의 대각선을 제곱인 채로 구하고, 거기에 높이의 제곱을 더하면 돼요.\n\n그래서 대각선의 제곱이 $a^2 + b^2 + c^2$이에요.\n\n원뿔에서는 반지름과 높이와 모선이 직각삼각형을 이루고, 모선이 빗변이에요.",
-                "definitions": []
+                "text": "직육면체의 대각선은 피타고라스 정리를 두 번 써서 구해요.\n\n밑면의 대각선을 제곱인 채로 구하고, 거기에 높이의 제곱을 더하면 돼요.\n\n그래서 대각선의 제곱이 $a^2 + b^2 + c^2$이에요.\n\n원뿔에서는 반지름과 높이와 모선이 직각삼각형을 이루고, 모선이 빗변이에요.\n\n이 수업의 개념은 입체에서 길이 구하기예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "solid-length",
+                    "surface": "직육면체의 대각선",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "pythagoras",
+                    "surface": "피타고라스 정리",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]

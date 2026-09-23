@@ -55,7 +55,7 @@
     {
       "public": {
         "lessonKey": "isosceles",
-        "versionId": "isosceles:v1",
+        "versionId": "isosceles:v2",
         "title": "이등변삼각형: 접으면 포개지는 삼각형",
         "summary": "두 변이 같으면 두 밑각도 같은 이유를 합동으로 확인하고, 거꾸로도 성립하는지 봐요.",
         "estimatedMinutes": 12,
@@ -71,17 +71,17 @@
       },
       "sections": [
         {
-          "sectionId": "isosceles:explanation:v1",
+          "sectionId": "isosceles:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "isosceles:explanation:text:v1",
+              "blockId": "isosceles:explanation:name:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "두 변의 길이가 같은 삼각형을 이등변삼각형이라 해요. 길이가 같은 두 변이 만나는 각을 꼭지각, 나머지 두 각을 밑각이라 부르고요.\n\n눈으로 보면 두 밑각은 같아 보여요. 하지만 보이는 것과 그런 것은 다르니 이유를 대야 해요.\n\n꼭지각을 이등분하는 선을 그어 보세요. 삼각형이 둘로 갈라지는데, 이 둘은 합동이에요. 두 변의 길이가 같고, 그 사이에 낀 각이 같고, 이등분선은 두 삼각형이 함께 쓰니까요. 두 변과 낀 각이 같으면 합동이라는 조건이 그대로 들어맞아요.\n\n합동이면 대응하는 각도 같아요. 그래서 두 밑각의 크기가 같아요.\n\n덤으로 따라오는 것이 있어요. 갈라진 두 각이 같으니 각각 $90°$이고, 밑변도 반씩 나뉘어요. 그러니 꼭지각의 이등분선은 밑변을 수직이등분해요. 이등분선 하나가 네 가지 일을 한꺼번에 해요.\n\n거꾸로도 성립해요. 두 밑각이 같은 삼각형은 두 변의 길이도 같아요. 그래서 「두 변이 같다」와 「두 밑각이 같다」는 같은 말이에요. 어느 쪽을 알든 나머지를 쓸 수 있어요.\n\n세 변이 모두 같은 정삼각형은 이등변삼각형이기도 해서 세 각이 모두 같아요. 세 각의 합이 $180°$이니 한 각은 $60°$예요.",
+                "text": "두 변의 길이가 같은 삼각형을 이등변삼각형이라고 해요.\n\n각에도 이름이 있어요. 길이가 같은 두 변이 만나는 각이 꼭지각이에요. 나머지 두 각은 밑각이라고 불러요.\n\n눈으로 보면 두 밑각은 같아 보여요. 하지만 보이는 것과 실제는 달라요. 왜 그런지 이유를 대야 해요.",
                 "definitions": [
                   {
                     "conceptKey": "isosceles",
@@ -92,7 +92,7 @@
               }
             },
             {
-              "blockId": "isosceles:explanation:drawing:v1",
+              "blockId": "isosceles:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -320,33 +320,71 @@
                 ],
                 "frameMs": 1700
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "isosceles:example:v1",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "isosceles:example:text:v1",
+              "blockId": "isosceles:explanation:why:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "꼭지각이 $40°$인 이등변삼각형의 한 밑각을 구해 볼게요.\n\n세 각의 합은 $180°$예요. 꼭지각이 $40°$이니 두 밑각의 합은 $180° - 40° = 140°$고요.\n\n두 밑각은 크기가 같으니 하나는 $140° \\div 2 = 70°$예요.\n\n거꾸로도 해 볼게요. 한 밑각이 $65°$라면 꼭지각은 얼마일까요.\n\n밑각이 둘이니 $65° \\times 2 = 130°$이고, 꼭지각은 $180° - 130° = 50°$예요.\n\n밑각을 물으면 나누고, 꼭지각을 물으면 곱해서 빼요. 어느 쪽이 둘인지만 놓치지 않으면 돼요.\n\n각이 아니라 길이를 물을 수도 있어요. 밑변이 $10$인 이등변삼각형에서 꼭지각의 이등분선은 밑변을 수직이등분하니, 나뉜 한 조각은 $5$예요.",
-                "definitions": []
+                "text": "꼭지각을 이등분하는 선을 그어 보세요. 삼각형이 둘로 나뉘어요. 이 둘은 합동이에요.\n\n이유는 이래요. 두 변의 길이가 같아요. 그 사이에 낀 각도 같고요. 이등분선은 두 삼각형이 함께 써요. 두 변과 낀 각이 같으면 합동이라는 조건에 그대로 들어맞아요.\n\n합동이면 대응하는 각의 크기도 같아요. 그래서 두 밑각의 크기가 같아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "construction-congruence",
+                    "surface": "합동",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "isosceles:explanation:more:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "따라 나오는 것이 하나 더 있어요. 나뉜 두 각이 같으니 각각 $90°$예요. 밑변도 반씩 나뉘고요. 그러니 꼭지각의 이등분선은 밑변을 수직이등분해요.\n\n거꾸로도 성립해요. 두 밑각이 같으면 두 변의 길이도 같아요. 「두 변이 같다」와 「두 밑각이 같다」는 같은 말이에요.\n\n세 변이 모두 같은 정삼각형도 이등변삼각형이에요. 그래서 세 각이 모두 같아요. 세 각의 합은 $180°$이니 한 각은 $60°$예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "polygon-angles",
+                    "surface": "세 각의 합",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "isosceles:practice:v1",
+          "sectionId": "isosceles:example:v2",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "isosceles:example:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "꼭지각이 $40°$인 이등변삼각형의 한 밑각을 구해 볼게요.\n\n세 각의 합은 $180°$예요. 꼭지각이 $40°$이니 두 밑각의 합은 $180° - 40° = 140°$예요.\n\n두 밑각은 크기가 같아요. 그러니 한 밑각은 $140° \\div 2 = 70°$예요.\n\n거꾸로도 해 볼게요. 한 밑각이 $65°$라면 꼭지각은 얼마일까요.\n\n밑각이 둘이니 $65° \\times 2 = 130°$예요. 꼭지각은 $180° - 130° = 50°$고요.\n\n밑각을 물으면 나누고, 꼭지각을 물으면 곱해서 빼요. 어느 쪽이 둘인지만 놓치지 않으면 돼요.\n\n각이 아니라 길이를 물을 수도 있어요. 밑변이 $10$인 이등변삼각형을 볼게요. 꼭지각의 이등분선은 밑변을 수직이등분하니 나뉜 한 조각은 $5$예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "isosceles",
+                    "surface": "이등변삼각형",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "isosceles:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "isosceles:practice:problems:v1",
+              "blockId": "isosceles:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -363,12 +401,12 @@
           ]
         },
         {
-          "sectionId": "isosceles:check:v1",
+          "sectionId": "isosceles:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "isosceles:check:problems:v1",
+              "blockId": "isosceles:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -384,18 +422,29 @@
           ]
         },
         {
-          "sectionId": "isosceles:summary:v1",
+          "sectionId": "isosceles:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "isosceles:summary:text:v1",
+              "blockId": "isosceles:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "이등변삼각형은 두 변의 길이가 같은 삼각형이고, 두 밑각의 크기도 같아요.\n\n이유는 꼭지각의 이등분선이 삼각형을 합동인 둘로 가르기 때문이에요.\n\n그 이등분선은 밑변을 수직이등분하기도 해요.\n\n거꾸로 두 밑각이 같으면 두 변도 같아요. 정삼각형의 한 각이 $60°$인 것도 여기서 나와요.",
-                "definitions": []
+                "text": "이등변삼각형은 두 변의 길이가 같은 삼각형이에요. 두 밑각의 크기도 같아요.\n\n이유는 합동이에요. 꼭지각의 이등분선이 삼각형을 합동인 둘로 나누거든요. 그 이등분선은 밑변을 수직이등분하기도 해요.\n\n거꾸로 두 밑각이 같으면 두 변도 같아요. 정삼각형의 한 각이 $60°$인 것도 여기서 나와요.\n\n이 수업의 개념은 이등변삼각형이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "construction-congruence",
+                    "surface": "합동",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "isosceles",
+                    "surface": "이등변삼각형",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -413,8 +462,8 @@
     {
       "public": {
         "lessonKey": "triangle-center",
-        "versionId": "triangle-center:v1",
-        "title": "외심과 내심: 어디에서 재도 같은 자리",
+        "versionId": "triangle-center:v2",
+        "title": "외심과 내심: 어디에서 재도 같은 거리",
         "summary": "세 꼭짓점까지 거리가 같은 점과 세 변까지 거리가 같은 점을 찾고, 각의 크기를 구해요.",
         "estimatedMinutes": 13,
         "conceptKeys": [
@@ -429,17 +478,17 @@
       },
       "sections": [
         {
-          "sectionId": "triangle-center:explanation:v1",
+          "sectionId": "triangle-center:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "triangle-center:explanation:text:v1",
+              "blockId": "triangle-center:explanation:circum:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "삼각형 하나를 종이에 그려 두고, 세 꼭짓점에서 모두 같은 거리에 있는 점을 찾아볼게요.\n\n두 점에서 같은 거리에 있는 점들은 그 두 점을 잇는 선분의 수직이등분선 위에 놓여요. 그러니 세 변의 수직이등분선을 모두 그으면, 셋이 만나는 한 점이 세 꼭짓점 모두에서 같은 거리예요. 이 점이 외심이고, 그 거리를 반지름으로 삼은 원은 세 꼭짓점을 지나요. 이 원이 외접원이에요.\n\n직각삼각형이면 외심이 특별한 자리에 있어요. 바로 빗변의 중점이에요. 그러니 외접원의 반지름은 빗변의 절반이에요.\n\n외심에서 두 꼭짓점까지의 거리가 같으니 이등변삼각형이 생기고, 밑각이 같다는 성질을 쓰면 $\\angle BOC = 2\\angle A$가 나와요. 중심에서 본 각이 두 배예요.\n\n이번엔 세 변에서 모두 같은 거리에 있는 점을 찾아요. 한 각의 두 변에서 같은 거리에 있는 점들은 그 각의 이등분선 위에 놓여요. 그러니 세 각의 이등분선이 만나는 점이 내심이고, 그 거리를 반지름으로 한 원은 세 변에 닿아요. 이 원이 내접원이에요.\n\n내심에서는 $\\angle BIC = 90° + \\dfrac{1}{2}\\angle A$가 성립해요. $\\angle A$가 커질수록 아래쪽 두 각이 줄어드니, 그 절반만큼만 커지는 거예요.\n\n두 점은 대개 서로 다른 자리에 있어요. 정삼각형일 때만 겹쳐요.",
+                "text": "삼각형을 하나 그려 두고, 세 꼭짓점에서 모두 같은 거리에 있는 점을 찾아볼게요.\n\n두 점에서 같은 거리에 있는 점들은 한 직선 위에 있어요. 그 두 점을 이은 선분의 수직이등분선이에요.\n\n그러니 세 변의 수직이등분선을 모두 그어요. 셋이 만나는 점이 세 꼭짓점 모두에서 같은 거리예요. 이 점이 외심이에요.",
                 "definitions": [
                   {
                     "conceptKey": "triangle-center",
@@ -450,14 +499,30 @@
               }
             },
             {
-              "blockId": "triangle-center:explanation:drawing:v1",
+              "blockId": "triangle-center:explanation:circumcircle:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "외심에서 꼭짓점까지의 거리를 반지름으로 삼아 원을 그려 보세요. 그 원은 세 꼭짓점을 모두 지나요. 이 원이 외접원이에요.\n\n직각삼각형이면 외심이 특별한 곳에 있어요. 바로 빗변의 중점이에요. 그러니 외접원의 반지름은 빗변의 절반이에요.\n\n외심에서 두 꼭짓점까지의 거리는 같아요. 그래서 이등변삼각형이 생겨요. 밑각이 같다는 성질을 쓰면 $\\angle BOC = 2\\angle A$가 나와요. 중심에서 본 각이 두 배예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "isosceles",
+                    "surface": "이등변삼각형",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "triangle-center:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "직각삼각형의 외접원과 내접원, 그리고 두 중심이 서로 다른 자리에 있음을 보이는 그림",
+                "alt": "직각삼각형의 외접원과 내접원, 그리고 두 중심이 서로 다른 곳에 있음을 보이는 그림",
                 "caption": "세 꼭짓점을 지나는 원과 세 변에 닿는 원은 중심이 달라요",
                 "items": [
                   {
@@ -699,7 +764,7 @@
                     ]
                   },
                   {
-                    "caption": "이번엔 세 각의 이등분선이 만나는 자리로 중심을 옮겨요. 세 변까지 거리가 같아 변에 닿는 원이 돼요.",
+                    "caption": "이번엔 세 각의 이등분선이 만나는 점으로 중심을 옮겨요. 세 변까지 거리가 같아 변에 닿는 원이 돼요.",
                     "changes": [
                       {
                         "id": "ctr",
@@ -747,33 +812,55 @@
                 ],
                 "frameMs": 1800
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "triangle-center:example:v1",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "triangle-center:example:text:v1",
+              "blockId": "triangle-center:explanation:incircle:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "빗변의 길이가 $10$인 직각삼각형의 외접원의 반지름을 구해 볼게요.\n\n직각삼각형의 외심은 빗변의 중점이에요. 그러니 반지름은 $10 \\div 2 = 5$예요.\n\n각도 해 볼게요. $\\angle A = 50°$인 삼각형에서 외심을 $O$라 하면 $\\angle BOC$는 얼마일까요.\n\n$\\angle BOC = 2\\angle A$이니 $2 \\times 50° = 100°$예요.\n\n같은 삼각형에서 내심을 $I$라 하면 $\\angle BIC = 90° + \\dfrac{1}{2} \\times 50° = 115°$예요.\n\n둘을 헷갈리지 않는 방법이 있어요. 외심은 곱하기 둘, 내심은 $90°$에 절반을 더하기예요. 내심 쪽은 $\\angle A$가 아무리 작아도 $90°$보다 크다는 것을 기억하면 검산이 돼요.",
-                "definitions": []
+                "text": "이번엔 세 변에서 모두 같은 거리에 있는 점을 찾아요.\n\n한 각의 두 변에서 같은 거리에 있는 점들도 한 직선 위에 있어요. 그 각의 이등분선이에요.\n\n그러니 세 각의 이등분선이 만나는 점이 내심이에요. 그 거리를 반지름으로 한 원은 세 변에 닿아요. 이 원이 내접원이고요.\n\n내심에서는 $\\angle BIC = 90° + \\dfrac{1}{2}\\angle A$가 성립해요. $\\angle A$가 커질수록 아래쪽 두 각이 줄어들어요. 그래서 그 절반만큼만 커지는 거예요.\n\n두 점은 대개 서로 다른 곳에 있어요. 정삼각형일 때만 겹쳐요.",
+                "definitions": [
+                  {
+                    "conceptKey": "triangle-center",
+                    "surface": "내심",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "triangle-center:practice:v1",
+          "sectionId": "triangle-center:example:v2",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "triangle-center:example:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "빗변의 길이가 $10$인 직각삼각형의 외접원의 반지름을 구해 볼게요.\n\n직각삼각형의 외심은 빗변의 중점이에요. 그러니 반지름은 $10 \\div 2 = 5$예요.\n\n각도 해 볼게요. $\\angle A = 50°$인 삼각형에서 외심을 $O$라 하면 $\\angle BOC$는 얼마일까요.\n\n$\\angle BOC = 2\\angle A$이니 $2 \\times 50° = 100°$예요.\n\n같은 삼각형에서 내심을 $I$라 하면 $\\angle BIC = 90° + \\dfrac{1}{2} \\times 50° = 115°$예요.\n\n둘을 헷갈리지 않는 방법이 있어요. 외심은 곱하기 둘, 내심은 $90°$에 절반을 더하기예요.\n\n내심 쪽은 $\\angle A$가 아무리 작아도 $90°$보다 커요. 이것을 기억하면 검산이 돼요.",
+                "definitions": [
+                  {
+                    "conceptKey": "triangle-center",
+                    "surface": "외심",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "triangle-center:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "triangle-center:practice:problems:v1",
+              "blockId": "triangle-center:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -790,12 +877,12 @@
           ]
         },
         {
-          "sectionId": "triangle-center:check:v1",
+          "sectionId": "triangle-center:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "triangle-center:check:problems:v1",
+              "blockId": "triangle-center:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -811,18 +898,24 @@
           ]
         },
         {
-          "sectionId": "triangle-center:summary:v1",
+          "sectionId": "triangle-center:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "triangle-center:summary:text:v1",
+              "blockId": "triangle-center:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "외심은 세 변의 수직이등분선이 만나는 점이고, 세 꼭짓점까지 거리가 같아요.\n\n직각삼각형의 외심은 빗변의 중점이라 외접원의 반지름은 빗변의 절반이에요.\n\n내심은 세 각의 이등분선이 만나는 점이고, 세 변까지 거리가 같아요.\n\n각은 $\\angle BOC = 2\\angle A$, $\\angle BIC = 90° + \\dfrac{1}{2}\\angle A$로 구해요.",
-                "definitions": []
+                "text": "외심은 세 변의 수직이등분선이 만나는 점이에요. 세 꼭짓점까지 거리가 같아요.\n\n직각삼각형의 외심은 빗변의 중점이에요. 그래서 외접원의 반지름은 빗변의 절반이고요.\n\n내심은 세 각의 이등분선이 만나는 점이에요. 세 변까지 거리가 같아요.\n\n각은 $\\angle BOC = 2\\angle A$, $\\angle BIC = 90° + \\dfrac{1}{2}\\angle A$로 구해요.\n\n이 수업의 개념은 외심과 내심이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "triangle-center",
+                    "surface": "외심",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -840,7 +933,7 @@
     {
       "public": {
         "lessonKey": "parallelogram",
-        "versionId": "parallelogram:v1",
+        "versionId": "parallelogram:v2",
         "title": "평행사변형: 반 바퀴 돌려도 제자리",
         "summary": "두 쌍의 대변이 나란하다는 것 하나에서 대변, 대각, 대각선의 성질이 줄줄이 따라와요.",
         "estimatedMinutes": 12,
@@ -856,28 +949,59 @@
       },
       "sections": [
         {
-          "sectionId": "parallelogram:explanation:v1",
+          "sectionId": "parallelogram:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "parallelogram:explanation:text:v1",
+              "blockId": "parallelogram:explanation:name:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "두 쌍의 대변이 각각 나란한 사각형을 평행사변형이라 해요. 주어진 것은 「나란하다」 하나뿐인데, 여기서 따라 나오는 것이 꽤 많아요.\n\n대각선을 하나 그어 보세요. 사각형이 삼각형 둘로 갈라지는데, 이 둘은 합동이에요. 엇각이 같고 대각선은 함께 쓰니, 한 변과 그 양 끝 각이 같다는 조건에 들어맞거든요.\n\n합동이니 대응하는 변과 각이 같아요. 그래서 두 쌍의 대변의 길이가 같고, 두 쌍의 대각의 크기가 같아요.\n\n이웃한 두 각은 어떨까요. 나란한 두 직선을 한 직선이 가로지를 때 같은 쪽 각의 합은 $180°$예요. 그러니 이웃한 두 각을 더하면 $180°$가 돼요. 하나가 $70°$면 옆은 $110°$예요.\n\n대각선을 둘 다 그으면 또 하나가 보여요. 두 대각선은 서로 다른 것을 이등분해요. 만나는 점이 두 대각선 각각의 중점이라는 뜻이에요.\n\n이 모든 것을 한 문장으로 말할 수도 있어요. 평행사변형은 두 대각선이 만나는 점을 중심으로 반 바퀴 돌리면 처음 모양에 꼭 포개져요. 마주 보는 변은 마주 보는 변으로, 마주 보는 각은 마주 보는 각으로 옮겨 가니 서로 같을 수밖에 없어요.\n\n거꾸로도 쓸 수 있어요. 두 쌍의 대변의 길이가 같거나, 두 쌍의 대각의 크기가 같거나, 대각선이 서로 다른 것을 이등분하거나, 한 쌍의 대변이 나란하면서 길이도 같으면 평행사변형이에요.",
+                "text": "마주 보는 두 변을 대변이라고 해요. 두 쌍의 대변이 각각 나란한 사각형이 평행사변형이에요.\n\n나란하다는 것은 평행선을 이룬다는 말이에요. 주어진 것은 이 하나뿐이에요. 그런데 여기서 따라 나오는 것이 꽤 많아요.",
                 "definitions": [
                   {
                     "conceptKey": "parallelogram",
                     "surface": "평행사변형",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "parallel-lines",
+                    "surface": "평행선",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "parallelogram:explanation:drawing:v1",
+              "blockId": "parallelogram:explanation:congruent:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "대각선을 하나 그어 보세요. 사각형이 삼각형 둘로 나뉘어요. 이 둘은 합동이에요.\n\n엇각이 같고, 대각선은 두 삼각형이 함께 써요. 한 변과 그 양 끝 각이 같다는 조건에 들어맞거든요.\n\n합동이니 대응하는 변과 각이 같아요. 그래서 두 쌍의 대변의 길이가 같아요. 두 쌍의 대각의 크기도 같고요.",
+                "definitions": [
+                  {
+                    "conceptKey": "construction-congruence",
+                    "surface": "합동",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "parallelogram:explanation:angles:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "이웃한 두 각은 어떨까요. 나란한 두 직선을 한 직선이 가로지를 때, 같은 쪽 각의 합은 $180°$예요.\n\n그러니 이웃한 두 각을 더하면 $180°$가 돼요. 하나가 $70°$면 옆은 $110°$고요.\n\n대각선을 둘 다 그으면 또 하나가 보여요. 두 대각선은 서로 다른 것을 이등분해요. 만나는 점이 두 대각선 각각의 중점이라는 뜻이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "parallelogram:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1077,33 +1201,49 @@
                 ],
                 "frameMs": 1800
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "parallelogram:example:v1",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "parallelogram:example:text:v1",
+              "blockId": "parallelogram:explanation:turn:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "평행사변형 $ABCD$에서 $\\angle A = 70°$일 때 나머지 세 각을 구해 볼게요.\n\n$\\angle C$는 $\\angle A$와 마주 보는 각이니 $70°$예요.\n\n$\\angle B$는 $\\angle A$와 이웃하니 $180° - 70° = 110°$이고, $\\angle D$도 마주 보는 각이라 $110°$예요.\n\n확인해 볼게요. $70 + 110 + 70 + 110 = 360$이니 사각형의 네 각의 합과 맞아요.\n\n길이도 해 볼게요. $\\overline{AB} = 7$이면 마주 보는 $\\overline{CD}$도 $7$이에요.\n\n대각선 $\\overline{AC}$의 길이가 $12$라면, 두 대각선이 만나는 점은 $\\overline{AC}$를 이등분하니 한 조각이 $6$이에요. 다른 대각선의 길이는 알 수 없어요. 평행사변형에서 두 대각선의 길이는 같지 않아도 되거든요.",
+                "text": "이 모두를 한 문장으로 말할 수도 있어요. 평행사변형은 두 대각선이 만나는 점을 중심으로 반 바퀴 돌리면 처음 모양에 꼭 포개져요.\n\n마주 보는 변은 마주 보는 변으로 옮겨 가요. 마주 보는 각도 마주 보는 각으로 옮겨 가고요. 그러니 서로 같을 수밖에 없어요.\n\n거꾸로도 쓸 수 있어요. 다음 가운데 하나만 성립해도 평행사변형이에요.\n\n두 쌍의 대변의 길이가 같은 경우. 두 쌍의 대각의 크기가 같은 경우. 두 대각선이 서로 다른 것을 이등분하는 경우. 한 쌍의 대변이 나란하면서 길이도 같은 경우예요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "parallelogram:practice:v1",
+          "sectionId": "parallelogram:example:v2",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "parallelogram:example:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "평행사변형 $ABCD$에서 $\\angle A = 70°$일 때 나머지 세 각을 구해 볼게요.\n\n$\\angle C$는 $\\angle A$와 마주 보는 각이니 $70°$예요.\n\n$\\angle B$는 $\\angle A$와 이웃하니 $180° - 70° = 110°$이고, $\\angle D$도 마주 보는 각이라 $110°$예요.\n\n확인해 볼게요. $70 + 110 + 70 + 110 = 360$이니 사각형의 네 각의 합과 맞아요.\n\n길이도 해 볼게요. $\\overline{AB} = 7$이면 마주 보는 $\\overline{CD}$도 $7$이에요.\n\n대각선 $\\overline{AC}$의 길이가 $12$라면 어떨까요. 두 대각선이 만나는 점은 $\\overline{AC}$를 이등분하니 한 조각이 $6$이에요.\n\n다른 대각선의 길이는 알 수 없어요. 평행사변형에서 두 대각선의 길이는 같지 않아도 되거든요.",
+                "definitions": [
+                  {
+                    "conceptKey": "parallelogram",
+                    "surface": "평행사변형",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "parallelogram:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "parallelogram:practice:problems:v1",
+              "blockId": "parallelogram:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1120,12 +1260,12 @@
           ]
         },
         {
-          "sectionId": "parallelogram:check:v1",
+          "sectionId": "parallelogram:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "parallelogram:check:problems:v1",
+              "blockId": "parallelogram:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1141,18 +1281,24 @@
           ]
         },
         {
-          "sectionId": "parallelogram:summary:v1",
+          "sectionId": "parallelogram:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "parallelogram:summary:text:v1",
+              "blockId": "parallelogram:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "평행사변형은 두 쌍의 대변이 나란한 사각형이에요.\n\n대변끼리 길이가 같고, 대각끼리 크기가 같고, 이웃한 두 각의 합은 $180°$예요.\n\n두 대각선은 서로 다른 것을 이등분하지만, 길이는 같지 않아도 돼요.\n\n가운데 점을 중심으로 반 바퀴 돌리면 제자리라는 한 문장이 이 모두를 담고 있어요.",
-                "definitions": []
+                "text": "평행사변형은 두 쌍의 대변이 나란한 사각형이에요.\n\n대변끼리 길이가 같고, 대각끼리 크기가 같아요. 이웃한 두 각의 합은 $180°$고요.\n\n두 대각선은 서로 다른 것을 이등분해요. 다만 길이는 같지 않아도 돼요.\n\n가운데 점을 중심으로 반 바퀴 돌리면 제자리라는 한 문장이 이 모두를 담고 있어요.\n\n이 수업의 개념은 평행사변형이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "parallelogram",
+                    "surface": "평행사변형",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -1170,7 +1316,7 @@
     {
       "public": {
         "lessonKey": "special-quad",
-        "versionId": "special-quad:v1",
+        "versionId": "special-quad:v2",
         "title": "여러 가지 사각형: 조건을 더할수록 좁아진다",
         "summary": "사다리꼴에서 정사각형까지, 조건을 하나씩 더하며 사각형들이 어떻게 이어지는지 봐요.",
         "estimatedMinutes": 12,
@@ -1184,35 +1330,66 @@
       },
       "sections": [
         {
-          "sectionId": "special-quad:explanation:v1",
+          "sectionId": "special-quad:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "special-quad:explanation:text:v1",
+              "blockId": "special-quad:explanation:line:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "사각형들은 따로 떨어진 이름이 아니라 조건을 더해 가며 좁아지는 한 줄이에요.\n\n한 쌍의 대변이 나란하면 사다리꼴이에요. 여기에 나머지 한 쌍도 나란하다는 조건을 더하면 평행사변형이고요.\n\n평행사변형에 각의 조건을 더해 볼게요. 한 각이 직각이면 나머지도 모두 직각이 돼요. 이웃한 각의 합이 $180°$이고 대각끼리 같으니까요. 네 각이 모두 직각인 사각형이 직사각형이에요.\n\n직사각형에서는 두 대각선의 길이가 같아요. 평행사변형에서는 그렇지 않았는데, 각이 직각이 되면서 생긴 성질이에요.\n\n이번엔 변의 조건을 더해요. 이웃한 두 변의 길이가 같으면 네 변이 모두 같아지고, 이 사각형이 마름모예요.\n\n마름모에서는 두 대각선이 서로 수직이에요. 네 변이 같으니 대각선으로 갈라진 삼각형들이 모두 이등변삼각형이 되고, 꼭지각의 이등분선이 밑변을 수직이등분한다는 성질이 그대로 쓰이거든요. 그래서 마름모의 넓이는 두 대각선의 길이를 곱해 반으로 나누면 돼요.\n\n두 조건을 모두 더하면 정사각형이에요. 네 각이 직각이면서 네 변의 길이도 같으니, 정사각형은 직사각형이기도 하고 마름모이기도 해요. 두 대각선의 길이가 같고, 서로 수직이고, 서로 이등분해요.\n\n그러니 「정사각형은 직사각형인가요」라는 물음의 답은 그렇다예요. 조건을 더 가진 것일 뿐이니까요.",
+                "text": "사각형들은 따로 떨어진 이름이 아니에요. 조건을 더해 가며 좁아지는 한 줄이에요.\n\n한 쌍의 대변이 나란하면 사다리꼴이에요. 여기에 나머지 한 쌍도 나란하다는 조건을 더해 보세요. 그러면 평행사변형이에요.",
                 "definitions": [
                   {
-                    "conceptKey": "special-quad",
-                    "surface": "마름모",
+                    "conceptKey": "parallelogram",
+                    "surface": "평행사변형",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "special-quad:explanation:drawing:v1",
+              "blockId": "special-quad:explanation:rectangle:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "평행사변형에 각의 조건을 더해 볼게요. 한 각이 직각이면 나머지도 모두 직각이 돼요. 이웃한 각의 합이 $180°$이고 대각끼리 같으니까요.\n\n네 각이 모두 직각인 사각형이 직사각형이에요.\n\n직사각형에서는 두 대각선의 길이가 같아요. 평행사변형에서는 그렇지 않았어요. 각이 직각이 되면서 새로 생긴 성질이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "special-quad:explanation:rhombus:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "이번엔 변의 조건을 더해요. 이웃한 두 변의 길이가 같으면 네 변이 모두 같아져요. 이 사각형이 마름모예요.\n\n마름모에서는 두 대각선이 서로 수직이에요. 네 변이 같으니 대각선으로 나뉜 삼각형들이 모두 이등변삼각형이거든요. 꼭지각의 이등분선이 밑변을 수직이등분한다는 성질이 그대로 쓰여요.\n\n그래서 마름모의 넓이는 두 대각선의 길이를 곱해 반으로 나누면 돼요.",
+                "definitions": [
+                  {
+                    "conceptKey": "special-quad",
+                    "surface": "마름모",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "isosceles",
+                    "surface": "이등변삼각형",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "special-quad:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "직사각형과 마름모를 나타낸 두 원이 겹치는 자리로 정사각형 카드가 들어가는 그림",
+                "alt": "직사각형과 마름모를 나타낸 두 원이 겹치는 곳으로 정사각형 카드가 들어가는 그림",
                 "caption": "정사각형은 직사각형이면서 마름모예요",
                 "items": [
                   {
@@ -1333,7 +1510,7 @@
                     ]
                   },
                   {
-                    "caption": "두 원이 겹치는 자리예요. 정사각형은 직사각형이면서 마름모니까요.",
+                    "caption": "두 원이 겹치는 곳이에요. 정사각형은 직사각형이면서 마름모니까요.",
                     "changes": [
                       {
                         "id": "card",
@@ -1350,33 +1527,49 @@
                 ],
                 "frameMs": 1700
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "special-quad:example:v1",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "special-quad:example:text:v1",
+              "blockId": "special-quad:explanation:square:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "두 대각선의 길이가 $6$과 $8$인 마름모의 넓이를 구해 볼게요.\n\n마름모의 두 대각선은 서로 수직이고 서로를 이등분해요. 그러니 마름모는 가로 $8$, 세로 $6$인 직사각형 안에 꼭 들어가고, 그 직사각형의 절반을 차지해요.\n\n넓이는 $6 \\times 8 \\div 2 = 24$예요.\n\n성질을 견주는 문제도 자주 나와요. 직사각형은 두 대각선의 길이가 같지만 수직은 아니에요. 마름모는 두 대각선이 수직이지만 길이는 다를 수 있고요.\n\n둘 다 가진 것이 정사각형이에요. 길이도 같고 수직이기도 해요.\n\n「대각선의 길이가 같다」를 물으면 각의 조건을, 「대각선이 수직이다」를 물으면 변의 조건을 떠올리면 돼요.",
+                "text": "두 조건을 모두 더하면 정사각형이에요. 네 각이 직각이면서 네 변의 길이도 같아요.\n\n그러니 정사각형은 직사각형이기도 하고 마름모이기도 해요. 두 대각선의 길이가 같고, 서로 수직이고, 서로 이등분해요.\n\n「정사각형은 직사각형인가요」라는 물음의 답은 그렇다예요. 조건을 더 가진 것일 뿐이니까요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "special-quad:practice:v1",
+          "sectionId": "special-quad:example:v2",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "special-quad:example:text:v2",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 대각선의 길이가 $6$과 $8$인 마름모의 넓이를 구해 볼게요.\n\n마름모의 두 대각선은 서로 수직이고 서로를 이등분해요. 그러니 마름모는 가로 $8$, 세로 $6$인 직사각형 안에 꼭 들어가요. 그 직사각형의 절반을 차지하고요.\n\n넓이는 $6 \\times 8 \\div 2 = 24$예요.\n\n성질을 비교하는 문제도 자주 나와요. 직사각형은 두 대각선의 길이가 같지만 수직은 아니에요. 마름모는 두 대각선이 수직이지만 길이는 다를 수 있고요.\n\n둘 다 가진 것이 정사각형이에요. 길이도 같고 수직이기도 해요.\n\n「대각선의 길이가 같다」를 물으면 각의 조건을 떠올리세요. 「대각선이 수직이다」를 물으면 변의 조건을 떠올리면 돼요.",
+                "definitions": [
+                  {
+                    "conceptKey": "special-quad",
+                    "surface": "마름모",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "special-quad:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "special-quad:practice:problems:v1",
+              "blockId": "special-quad:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1393,12 +1586,12 @@
           ]
         },
         {
-          "sectionId": "special-quad:check:v1",
+          "sectionId": "special-quad:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "special-quad:check:problems:v1",
+              "blockId": "special-quad:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1414,18 +1607,29 @@
           ]
         },
         {
-          "sectionId": "special-quad:summary:v1",
+          "sectionId": "special-quad:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "special-quad:summary:text:v1",
+              "blockId": "special-quad:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "사다리꼴에 조건을 더하면 평행사변형, 각의 조건을 더하면 직사각형, 변의 조건을 더하면 마름모예요.\n\n직사각형은 두 대각선의 길이가 같고, 마름모는 두 대각선이 서로 수직이에요.\n\n마름모의 넓이는 두 대각선을 곱해 반으로 나눠요.\n\n두 조건을 모두 가진 것이 정사각형이라, 정사각형은 직사각형이면서 마름모예요.",
-                "definitions": []
+                "text": "사다리꼴에 조건을 더하면 평행사변형이에요. 거기에 각의 조건을 더하면 직사각형, 변의 조건을 더하면 마름모고요.\n\n직사각형은 두 대각선의 길이가 같아요. 마름모는 두 대각선이 서로 수직이에요.\n\n마름모의 넓이는 두 대각선을 곱해 반으로 나눠요.\n\n두 조건을 모두 가진 것이 정사각형이에요. 그래서 정사각형은 직사각형이면서 마름모예요.\n\n이 수업의 개념은 여러 가지 사각형이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "parallelogram",
+                    "surface": "평행사변형",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "special-quad",
+                    "surface": "마름모",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
