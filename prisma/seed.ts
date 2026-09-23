@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { readdirSync, readFileSync } from 'node:fs';
 import { z } from 'zod';
 import { ContentError, parseContentBundle } from '../src/core/content-bundle';
+import { compareContentBundleNames } from '../src/core/content-files';
 import { getDatabase } from '../src/server/db';
 import { importContent } from '../src/server/content-store';
 
@@ -16,7 +17,7 @@ import { importContent } from '../src/server/content-store';
  * bundles in `content/` hold definitions and nothing a learner could be marked against.
  */
 const bundlesIn = (directory: string, keep: (name: string) => boolean) =>
-  readdirSync(new URL(directory, import.meta.url)).filter(name => name.endsWith('.json') && keep(name)).sort()
+  readdirSync(new URL(directory, import.meta.url)).filter(name => name.endsWith('.json') && keep(name)).sort(compareContentBundleNames)
     .map(name => ({ name, bundle: parseContentBundle(JSON.parse(readFileSync(new URL(`${directory}${name}`, import.meta.url), 'utf8'))) }));
 
 async function seed() {

@@ -1,0 +1,691 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "ratio",
+      "label": "비",
+      "assessable": true
+    },
+    {
+      "key": "sector",
+      "label": "부채꼴",
+      "assessable": true
+    },
+    {
+      "key": "volume",
+      "label": "부피",
+      "assessable": true
+    },
+    {
+      "key": "rationalizing",
+      "label": "분모의 유리화",
+      "assessable": true
+    },
+    {
+      "key": "prime-number",
+      "label": "소수와 합성수",
+      "assessable": true
+    },
+    {
+      "key": "gcd-lcm",
+      "label": "최대공약수와 최소공배수",
+      "assessable": true
+    },
+    {
+      "key": "centroid",
+      "label": "삼각형의 무게중심",
+      "assessable": true
+    },
+    {
+      "key": "intercept",
+      "label": "절편",
+      "assessable": true
+    },
+    {
+      "key": "complex-number",
+      "label": "복소수",
+      "assessable": true
+    },
+    {
+      "key": "triangle-center",
+      "label": "삼각형의 외심과 내심",
+      "assessable": true
+    },
+    {
+      "key": "unit-conversion",
+      "label": "단위환산",
+      "assessable": true
+    },
+    {
+      "key": "exchange-rate",
+      "label": "환율",
+      "assessable": true
+    },
+    {
+      "key": "weighted-mean",
+      "label": "가중평균",
+      "assessable": true
+    },
+    {
+      "key": "dispersion",
+      "label": "범위와 표준편차",
+      "assessable": true
+    },
+    {
+      "key": "statistics-reading",
+      "label": "통계로 읽기",
+      "assessable": true
+    },
+    {
+      "key": "chart-reading",
+      "label": "도표 읽기",
+      "assessable": true
+    },
+    {
+      "key": "table-inference",
+      "label": "표가 말하는 것",
+      "assessable": true
+    },
+    {
+      "key": "concentration",
+      "label": "농도",
+      "assessable": true
+    },
+    {
+      "key": "work-rate",
+      "label": "일률",
+      "assessable": true
+    },
+    {
+      "key": "factor-theorem",
+      "label": "인수정리",
+      "assessable": true
+    },
+    {
+      "key": "distance-formula",
+      "label": "두 점 사이의 거리",
+      "assessable": true
+    },
+    {
+      "key": "composite-function",
+      "label": "합성함수",
+      "assessable": true
+    },
+    {
+      "key": "signed-addition",
+      "label": "부호가 있는 수의 덧셈",
+      "assessable": true
+    },
+    {
+      "key": "polyhedron",
+      "label": "다면체와 회전체",
+      "assessable": true
+    },
+    {
+      "key": "surface-area",
+      "label": "겉넓이",
+      "assessable": true
+    },
+    {
+      "key": "numeracy-scope",
+      "label": "수리능력의 네 영역",
+      "assessable": true
+    },
+    {
+      "key": "chart-making",
+      "label": "도표 만들기",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "ratio",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "비",
+      "summary": "두 양을 비교해 $a:b$처럼 나타낸 것이에요.",
+      "blocks": [
+        {
+          "blockId": "global:ratio:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "물 $200$mL와 원액 $50$mL의 양을 비교하면 $200:50$이라고 쓸 수 있어요. 뒤의 $50$이 기준량이고 앞의 $200$이 비교하는 양이에요. 두 수를 같은 수로 나누면 $4:1$이 돼요. 물의 양이 원액의 양의 $4$배라는 관계는 같아요. 비교하는 양을 기준량으로 나누어 구한 $4$를 비율이라고 해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "두 양을 비교해 나타낼 때"
+    },
+    {
+      "conceptKey": "sector",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "부채꼴",
+      "summary": "원의 두 반지름과 그 사이의 호로 둘러싸인 도형이에요.",
+      "blocks": [
+        {
+          "blockId": "global:sector:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "원의 중심에서 원 위의 두 점까지 그은 반지름과, 두 점 사이의 호로 둘러싸인 도형이 부채꼴이에요. 두 반지름이 이루는 각을 중심각이라고 해요. 중심각이 $90°$이면 한 바퀴 $360°$의 $\\frac14$이므로, 호의 길이와 넓이도 원 전체의 $\\frac14$이에요. 반지름이 $r$, 중심각이 $x°$이면 호의 길이는 $2\\pi r\\times\\frac{x}{360}$, 넓이는 $\\pi r^2\\times\\frac{x}{360}$이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "원의 일부를 다룰 때"
+    },
+    {
+      "conceptKey": "volume",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "부피",
+      "summary": "입체도형이 차지하는 공간의 크기예요.",
+      "blocks": [
+        {
+          "blockId": "global:volume:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "부피는 입체도형이 차지하는 공간의 크기예요. 길이를 cm로 재면 부피의 단위는 cm³이에요. 각기둥과 원기둥의 부피는 밑넓이에 높이를 곱해 구해요. 각뿔과 원뿔은 밑면과 높이가 같은 기둥의 부피의 $\\frac13$이에요. 반지름이 $r$인 구의 부피는 $\\frac43\\pi r^3$이에요. 도형의 종류에 맞는 공식을 골라야 해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "담기는 양을 구할 때"
+    },
+    {
+      "conceptKey": "rationalizing",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "분모의 유리화",
+      "summary": "분수의 값을 유지하면서 분모를 유리수로 바꾸는 것이에요.",
+      "blocks": [
+        {
+          "blockId": "global:rationalizing:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$\\frac{1}{\\sqrt{2}}$의 분모를 유리수로 바꿔 볼게요. 분자와 분모에 같은 수인 $\\sqrt{2}$를 곱해요. 분수의 값은 변하지 않아요.\n\n$\\frac{1}{\\sqrt{2}}=\\frac{1\\times\\sqrt{2}}{\\sqrt{2}\\times\\sqrt{2}}=\\frac{\\sqrt{2}}{2}$예요. 분모에서 $\\sqrt{2}\\times\\sqrt{2}=2$가 된 것이죠.\n\n이처럼 분수의 값을 바꾸지 않으면서 분모를 유리수로 만드는 것을 분모의 유리화라고 해요. $\\sqrt{2}$가 약 $1.414$이므로, 이 분수는 약 $1.414\\div2=0.707$이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "분모에 근호가 남았을 때"
+    },
+    {
+      "conceptKey": "prime-number",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "소수와 합성수",
+      "summary": "$1$보다 큰 자연수 중 약수가 $1$과 자기 자신뿐인 수가 소수예요.",
+      "blocks": [
+        {
+          "blockId": "global:prime-number:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$1$보다 큰 자연수 중 $1$과 자기 자신으로만 나누어떨어지는 수가 소수예요. $2, 3, 5, 7, 11, \\ldots$이 그렇고, 더 쪼갤 수 있는 $4, 6, 8, 9$ 같은 수는 합성수예요. $1$은 어느 쪽도 아니고, $2$는 소수 중 유일한 짝수예요. 소수인지 보려면 작은 소수부터 나눠 보되, 제곱해서 그 수를 넘는 소수까지만 확인하면 돼요. 더 큰 수로 나누어떨어진다면 짝이 되는 작은 수가 이미 걸렸을 테니까요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "수를 쪼갤 수 있는지 볼 때"
+    },
+    {
+      "conceptKey": "gcd-lcm",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "최대공약수와 최소공배수",
+      "summary": "공약수 중 가장 큰 수가 최대공약수, 공배수 중 가장 작은 자연수가 최소공배수예요.",
+      "blocks": [
+        {
+          "blockId": "global:gcd-lcm:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$12$와 $18$의 공약수는 $1,2,3,6$이므로 최대공약수는 $6$이에요. 두 수의 공통인 배수 중 가장 작은 자연수는 $36$이므로 최소공배수는 $36$이에요.\n\n소인수분해로 나타내면 $12=2^2\\times3$, $18=2\\times3^2$이에요. 최대공약수는 공통인 소인수마다 작은 지수를 골라 곱해 $2\\times3=6$이에요. 최소공배수는 나온 모든 종류의 소인수마다 큰 지수를 골라 곱해 $2^2\\times3^2=36$이에요.\n\n분수를 약분할 때 최대공약수로 나누면 한 번에 기약분수가 돼요. 통분할 때는 분모들의 최소공배수를 공통분모로 쓸 수 있어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "약분하거나 통분할 때"
+    },
+    {
+      "conceptKey": "centroid",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "삼각형의 무게중심",
+      "summary": "삼각형의 세 중선이 만나는 점이며, 각 중선을 꼭짓점 쪽부터 $2:1$로 나눠요.",
+      "blocks": [
+        {
+          "blockId": "global:centroid:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "삼각형의 꼭짓점과 마주 보는 변의 중점을 이은 선분을 중선이라고 해요. 세 중선은 한 점에서 만나며, 그 점이 무게중심이에요. 한 중선의 길이가 $12$라면 꼭짓점에서 무게중심까지는 $8$, 무게중심에서 변의 중점까지는 $4$예요. 길이의 비는 $8:4=2:1$이에요. 세 중선은 삼각형을 넓이가 같은 작은 삼각형 여섯 개로 나눠요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "중선의 길이나 조각의 넓이를 구할 때"
+    },
+    {
+      "conceptKey": "intercept",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "절편",
+      "summary": "$x$절편은 그래프와 $x$축의 교점의 $x$좌표, $y$절편은 그래프와 $y$축의 교점의 $y$좌표예요.",
+      "blocks": [
+        {
+          "blockId": "global:intercept:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$y=ax+b$에서 $b$가 $y$절편이고, 그래프가 $y$축과 만나는 점의 $y$좌표예요. $x=0$을 넣으면 바로 나옵니다. $x$절편은 그래프가 $x$축과 만나는 점의 $x$좌표이고, $y=0$을 넣어 풀면 나와요. 기울기와 $y$절편 둘만 알면 직선을 그릴 수 있어요 — $y$절편에 점을 찍고 기울기만큼 이동해 한 점을 더 잡으면 됩니다.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "그래프가 축을 지나는 자리를 말할 때"
+    },
+    {
+      "conceptKey": "complex-number",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "복소수",
+      "summary": "실수 $a,b$와 허수단위 $i$를 써서 $a+bi$로 나타낸 수예요.",
+      "blocks": [
+        {
+          "blockId": "global:complex-number:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$i^2=-1$인 허수단위 $i$를 사용해 $a+bi$로 나타낸 수를 복소수라고 해요. 여기서 $a,b$는 실수예요. $a$를 실수부, $b$를 허수부라고 해요. $2+3i$의 실수부는 $2$, 허수부는 $3$이에요. $b=0$이면 $a+0i=a$이므로 모든 실수도 복소수예요. 복소수의 범위에서는 $x^2=-1$의 해를 $i$와 $-i$로 나타낼 수 있어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "판별식이 음수인 방정식의 해를 말할 때"
+    },
+    {
+      "conceptKey": "triangle-center",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "삼각형의 외심과 내심",
+      "summary": "세 꼭짓점까지의 거리가 같은 점이 외심이고, 삼각형 내부에서 세 변까지의 거리가 같은 점이 내심이에요.",
+      "blocks": [
+        {
+          "blockId": "global:triangle-center:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "삼각형의 세 변의 수직이등분선이 만나는 점을 외심이라고 해요. 외심을 중심으로 세 꼭짓점을 지나는 외접원을 그릴 수 있어요. 직각삼각형의 외심은 빗변의 중점이고, 외접원의 반지름은 빗변의 절반이에요.\n\n세 각의 이등분선이 만나는 점은 내심이에요. 내심에서 각 변에 내린 수선의 길이는 같아요. 그 길이를 반지름으로 삼으면 세 변에 닿는 내접원을 그릴 수 있어요.\n\n삼각형의 꼭짓점을 $A,B,C$, 외심을 $O$, 내심을 $I$라고 할게요. 예각삼각형에서 $\\angle BOC=2\\angle BAC$예요. 내심의 각도 관계 $\\angle BIC=90°+\\frac12\\angle BAC$는 모든 삼각형에서 성립해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "원과 삼각형을 함께 다룰 때"
+    },
+    {
+      "conceptKey": "unit-conversion",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "단위환산",
+      "summary": "같은 양을 다른 단위로 나타내는 일이에요.",
+      "blocks": [
+        {
+          "blockId": "global:unit-conversion:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$2$km를 걷고 $500$m를 더 걸었다면, 걸은 거리를 $2+500=502$로 계산할 수는 없어요. 같은 길이 단위로 바꾸어야 더할 수 있어요.\n\n$2$km를 $2{,}000$m로 바꾸면 전체 거리는 $2{,}000+500=2{,}500$m예요. 이처럼 같은 양을 다른 단위로 나타내는 일을 단위환산이라고 해요.\n\n시간은 $1$시간 $=60$분, 무게는 $1$kg $=1{,}000$g처럼 바꿀 수 있어요.\n\n넓이와 부피의 단위도 구별해요. $1$m는 $100$cm이므로, $1$m²는 $100\\times100=10{,}000$cm²예요. $1$m³는 $100\\times100\\times100=1{,}000{,}000$cm³예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "단위가 섞여 있을 때"
+    },
+    {
+      "conceptKey": "exchange-rate",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "환율",
+      "summary": "서로 다른 두 나라의 돈을 바꾸는 비율이에요.",
+      "blocks": [
+        {
+          "blockId": "global:exchange-rate:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "환율은 두 나라 돈을 바꾸는 비율이에요. 예를 들어 $1$달러에 $1{,}300$원이라면 $20$달러는 $20\\times1{,}300=26{,}000$원이에요. 반대로 $65{,}000$원을 달러로 바꾸면 $65{,}000\\div1{,}300=50$달러예요. 곱하거나 나누기 전에 환율이 어떤 방향으로 주어졌는지 확인해요. 수수료가 있는 문제에서는 기준 금액과 수수료를 더하거나 빼는 조건도 확인해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "돈을 바꿀 때"
+    },
+    {
+      "conceptKey": "weighted-mean",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "가중평균",
+      "summary": "각 값에 가중치를 곱해 더한 뒤, 가중치의 합으로 나눈 평균이에요.",
+      "blocks": [
+        {
+          "blockId": "global:weighted-mean:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "A부서 $20$명의 평균 점수는 $80$점, B부서 $30$명의 평균 점수는 $70$점이에요. 두 부서를 합한 $50$명의 평균을 구해 볼게요.\n\n각 부서의 점수 합계를 먼저 구해요. A부서는 $20\\times80=1{,}600$점, B부서는 $30\\times70=2{,}100$점이에요.\n\n합계를 더한 뒤 전체 인원으로 나누면 $\\frac{1{,}600+2{,}100}{20+30}=74$점이에요. 두 평균만 더해 $2$로 나눈 $75$점과는 달라요. 인원이 많은 B부서의 평균이 더 많이 반영되기 때문이에요.\n\n이렇게 각 값에 정해진 비중을 반영해 구한 평균을 가중평균이라고 해요. 얼마나 반영할지를 나타내는 수를 가중치라고 해요. 여기서는 각 부서의 인원수 $20$과 $30$을 가중치로 썼어요.\n\n세 집단도 같은 방법으로 구해요. $10$명 평균 $85$점, $20$명 평균 $70$점, $20$명 평균 $65$점이라면 전체 평균은 $\\frac{10\\times85+20\\times70+20\\times65}{10+20+20}=71$점이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "인원이 다른 집단의 평균을 합칠 때"
+    },
+    {
+      "conceptKey": "dispersion",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "범위와 표준편차",
+      "summary": "범위와 표준편차는 자료의 값들이 얼마나 흩어져 있는지 나타내는 수예요.",
+      "blocks": [
+        {
+          "blockId": "global:dispersion:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "범위는 최댓값에서 최솟값을 뺀 값이에요. 표준편차는 각 값에서 평균을 뺀 뒤 제곱하고, 그 값들의 평균인 분산을 구한 다음 제곱근을 구해요.\n\n자료가 $2,4,6$이면 평균은 $4$예요. 범위는 $6-2=4$이고, 분산은 $\\frac{(-2)^2+0^2+2^2}{3}=\\frac83$이에요. 표준편차는 $\\sqrt{\\frac83}$이에요.\n\n범위는 최댓값과 최솟값만 쓰고, 표준편차는 모든 값을 써요. 따라서 범위만으로 표준편차의 크기를 판단할 수는 없어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "평균이 같은 두 자료를 구별할 때"
+    },
+    {
+      "conceptKey": "statistics-reading",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "통계로 읽기",
+      "summary": "대표값과 자료가 흩어진 정도 등을 구해 자료의 특성을 파악하는 일이에요.",
+      "blocks": [
+        {
+          "blockId": "global:statistics-reading:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "여러 값의 합계와 평균을 구하거나, 어떤 값이 몇 번 나오는지 세어 자료의 특성을 살펴봐요. 평균은 합계를 개수로 나눈 값이에요. 인원이 다른 집단을 합칠 때는 각 집단의 합계를 구해 더한 뒤 전체 인원으로 나눠요. 유난히 크거나 작은 값이 있으면 크기 순으로 가운데 있는 값인 중앙값도 확인해요. 평균이 같은 자료라도 값들이 흩어진 정도는 다를 수 있으므로 범위와 표준편차도 함께 살펴봐요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "자료를 하나의 수로 줄일 때"
+    },
+    {
+      "conceptKey": "chart-reading",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "도표 읽기",
+      "summary": "표와 그래프에서 필요한 정보를 찾아 비교하거나 계산해 해석하는 일이에요.",
+      "blocks": [
+        {
+          "blockId": "global:chart-reading:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "표나 그래프의 제목과 단위를 확인한 뒤, 행과 열 또는 가로축과 세로축이 무엇을 나타내는지 살펴봐요. 필요한 값을 찾고, 문제에서 묻는 합계·차이·비율 등을 구해요. 비율을 비교할 때는 기준이 되는 전체의 양도 확인해요. 표에 매출만 있다면 이익이나 매출이 변한 원인까지 알 수는 없어요. 자료로 확인할 수 있는 사실과 추가 정보가 필요한 내용을 구별해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "표와 그래프에서 값을 읽을 때"
+    },
+    {
+      "conceptKey": "table-inference",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "표가 말하는 것",
+      "summary": "표의 값으로 계산할 수 있는 것과 추가 정보가 필요한 것을 구별하는 일이에요.",
+      "blocks": [
+        {
+          "blockId": "global:table-inference:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "부분의 양과 전체에서 차지하는 비율을 알면, 부분의 양을 비율로 나누어 전체를 구할 수 있어요. 매출 $80$억 원이 시장 전체 매출의 $10\\%$이면 전체는 $80\\div0.1=800$억 원이에요. 반면 매출만으로 이익을 알 수는 없어요. 비용 정보가 더 필요하기 때문이에요. 표의 값과 계산으로 확인되는 내용까지만 판단해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "표로 말할 수 있는 것과 없는 것을 가릴 때"
+    },
+    {
+      "conceptKey": "concentration",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "농도",
+      "summary": "소금물 전체의 질량에 대한 소금의 질량의 비율이에요.",
+      "blocks": [
+        {
+          "blockId": "global:concentration:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "소금물의 농도를 백분율로 나타내려면 소금의 질량을 소금물 전체의 질량으로 나누고 $100$을 곱해요. 소금물 $200$g에 소금 $30$g이 들어 있으면 $30\\div200\\times100=15$이므로 농도는 $15\\%$예요. 물만 더하거나 물만 증발시키면 소금의 양은 변하지 않아요. 소금의 양을 바뀐 소금물 전체의 양으로 나누어 새 농도를 구해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "소금물 문제를 풀 때"
+    },
+    {
+      "conceptKey": "work-rate",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "일률",
+      "summary": "이 수업에서는 단위 시간에 처리하는 일의 양을 뜻해요.",
+      "blocks": [
+        {
+          "blockId": "global:work-rate:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "매일 일정한 양의 일을 처리한다고 가정해요. 전체 일을 $1$로 두고 혼자 끝내는 데 $6$일이 걸린다면 하루에 하는 일은 $\\frac16$이에요. 함께 일할 때는 각 사람이 하루에 하는 일을 더해요. 하루에 하는 일의 합이 $\\frac14$이면 걸리는 날수는 $1\\div\\frac14=4$일이에요. 중간에 작업자가 바뀌면 이미 한 일을 빼서 남은 일을 먼저 구해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "함께 하면 며칠인지 구할 때"
+    },
+    {
+      "conceptKey": "factor-theorem",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "인수정리",
+      "summary": "$f(a)=0$일 때 $x-a$가 다항식 $f(x)$의 인수라는 정리예요.",
+      "blocks": [
+        {
+          "blockId": "global:factor-theorem:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "나머지정리에 따라 $f(x)$를 $x-a$로 나눈 나머지는 $f(a)$예요. $f(a)=0$이면 나누어떨어지므로 $x-a$가 인수예요. 거꾸로 $x-a$가 인수이면 $f(a)=0$이에요. 예를 들어 $f(x)=x^3-7x+6$에서 $f(1)=0$이므로 $x-1$이 인수예요. $x-1$로 나누면 몫은 $x^2+x-6=(x+3)(x-2)$이므로 $f(x)=(x-1)(x+3)(x-2)$예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "삼차 이상의 식을 인수분해할 때"
+    },
+    {
+      "conceptKey": "distance-formula",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "두 점 사이의 거리",
+      "summary": "좌표로 두 점 사이의 선분의 길이를 구하는 공식이에요.",
+      "blocks": [
+        {
+          "blockId": "global:distance-formula:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "좌표를 빼면 가로로 얼마, 세로로 얼마 떨어졌는지가 나오고, 두 점을 잇는 선분은 그 둘을 두 변으로 하는 직각삼각형의 빗변이에요. 그래서 거리는 $\\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$이고, 제곱하니 빼는 순서는 상관없어요. 한가운데 점은 좌표를 각각 더해 $2$로 나눈 평균이에요. 가로도 반, 세로도 반이니까요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "좌표평면에서 길이를 잴 때"
+    },
+    {
+      "conceptKey": "composite-function",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "합성함수",
+      "summary": "한 함수에서 나온 값을 다른 함수에 넣어 만든 함수예요.",
+      "blocks": [
+        {
+          "blockId": "global:composite-function:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$f$에서 나온 값을 그대로 $g$에 넣는 것이고 $g(f(x))$로 적어요. 안쪽부터 바깥쪽으로 읽어요. $f(x) = 2x$, $g(x) = x+3$이면 $g(f(1))$은 $f(1) = 2$를 $g$에 넣어 $5$예요. 순서를 바꾸면 결과가 달라져요. $f(g(1))$은 $8$이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "함수를 차례로 지나게 할 때"
+    },
+    {
+      "conceptKey": "signed-addition",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "부호가 있는 수의 덧셈",
+      "summary": "양수와 음수를 더할 때 부호와 절댓값을 사용해 계산하는 방법이에요.",
+      "blocks": [
+        {
+          "blockId": "global:signed-addition:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "수직선 위를 걷는 일로 볼 수 있어요. 양수를 더하면 오른쪽으로, 음수를 더하면 왼쪽으로 그 수만큼 가고, 도착한 자리가 답이에요. 부호가 같으면 절댓값을 더하고 그 부호를 붙여요. 부호가 다르면 절댓값이 큰 쪽에서 작은 쪽을 빼고 큰 쪽의 부호를 붙여요. 빼기는 반대 부호를 더하는 것과 같아서 $5-3$과 $5+(-3)$은 같은 걸음이에요. 그래서 뺄셈을 따로 외울 필요가 없어요.",
+            "definitions": [
+              {
+                "conceptKey": "absolute-value",
+                "surface": "절댓값"
+              }
+            ]
+          }
+        }
+      ],
+      "usageNote": "부호를 지닌 채로 더하고 뺄 때"
+    },
+    {
+      "conceptKey": "polyhedron",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "다면체와 회전체",
+      "summary": "다면체는 다각형인 면으로만 둘러싸인 입체이고, 회전체는 평면도형을 축 둘레로 돌려 만든 입체예요.",
+      "blocks": [
+        {
+          "blockId": "global:polyhedron:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "다각형인 면으로만 둘러싸인 입체가 다면체예요. 면의 개수가 여섯이면 육면체라고 해요.\n\n각기둥은 서로 평행하고 합동인 두 다각형을 밑면으로 가져요. 각뿔은 하나의 밑면과 한 꼭짓점에서 만나는 삼각형 옆면들로 이루어져요.\n\n평면도형을 회전축 둘레로 한 바퀴 돌려 만든 입체가 회전체예요. 원기둥·원뿔·구가 그 예예요. 이 세 도형은 회전축에 수직인 평면으로 내부를 자르면 원 모양의 단면이 나타나요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "입체도형의 이름과 개수를 따질 때"
+    },
+    {
+      "conceptKey": "surface-area",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "겉넓이",
+      "summary": "입체도형의 겉면의 넓이를 모두 더한 값이에요.",
+      "blocks": [
+        {
+          "blockId": "global:surface-area:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "각기둥이나 원기둥은 전개도를 이용해 겉면 각 부분의 넓이를 더할 수 있어요. 원기둥의 전개도는 두 원과 하나의 직사각형이에요. 밑면 반지름이 $r$, 높이가 $h$이면 겉넓이는 $2\\pi r^2+2\\pi rh$예요. 구의 곡면은 평면에 펼칠 수 없으며, 반지름이 $r$인 구의 겉넓이는 $4\\pi r^2$이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "겉면의 넓이를 구할 때"
+    },
+    {
+      "conceptKey": "numeracy-scope",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "수리능력의 네 영역",
+      "summary": "수리능력은 기초연산·기초통계·도표분석·도표작성의 네 영역으로 나누어 배워요.",
+      "blocks": [
+        {
+          "blockId": "global:numeracy-scope:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "기초연산에서는 업무에 필요한 계산과 단위환산, 검산을 배워요. 기초통계에서는 평균 같은 대표값과 자료가 흩어진 정도를 살펴봐요. 도표분석에서는 표와 그래프의 값을 읽고 비교하거나 해석해요. 도표작성에서는 전달할 내용에 맞는 도표를 고르고, 축·눈금·제목·단위를 정해 자료를 나타내요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "문항이 어느 영역인지 가릴 때"
+    },
+    {
+      "conceptKey": "chart-making",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "도표 만들기",
+      "summary": "자료를 전달할 목적에 맞게 표나 그래프로 나타내는 일이에요.",
+      "blocks": [
+        {
+          "blockId": "global:chart-making:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "먼저 무엇을 보여 줄지 정해요. 항목별 크기 비교에는 막대그래프, 시간에 따른 변화에는 꺾은선그래프, 전체에 대한 구성비에는 원그래프를 사용할 수 있어요. 도표를 고른 뒤 축과 눈금 간격을 정하고 값을 표시해요. 제목·단위·자료의 기간과 출처도 적어요. 눈금의 시작점이나 간격이 차이를 과장하지 않는지 확인해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "도표를 만드는 차례를 떠올릴 때"
+    }
+  ]
+}

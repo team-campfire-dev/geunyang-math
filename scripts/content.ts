@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ContentError } from '../src/core/content-bundle';
+import { compareContentBundleNames } from '../src/core/content-files';
 import { getDatabase } from '../src/server/db';
 import { exportContent, importContent, publishBundle, retiredVersions, retireVersions, verifyContent } from '../src/server/content-store';
 import { parseContentBundle } from '../src/core/content-bundle';
@@ -28,7 +29,7 @@ export async function runContentCommand(args: string[]) {
     if (command === 'publish') {
       // Reviewed, answer-free bundles ship with the repository and publish once per released change.
       const directory = publishFlags.length ? publishFlags[1] : 'content';
-      const names = readdirSync(directory).filter(name => name.endsWith('.json')).sort();
+      const names = readdirSync(directory).filter(name => name.endsWith('.json')).sort(compareContentBundleNames);
       for (const name of names) {
         const path = join(directory, name);
         if (statSync(path).size > 5 * 1024 * 1024) throw new ContentError(`Bundle is limited to 5 MiB: ${name}`);

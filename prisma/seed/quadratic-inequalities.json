@@ -412,7 +412,7 @@
     {
       "public": {
         "lessonKey": "simultaneous-inequality",
-        "versionId": "simultaneous-inequality:v2",
+        "versionId": "simultaneous-inequality:v3",
         "title": "연립부등식: 두 조건이 겹치는 구간",
         "summary": "조건마다 구간을 따로 구한 뒤, 둘 다에 드는 부분만 남겨요.",
         "estimatedMinutes": 12,
@@ -428,12 +428,12 @@
       },
       "sections": [
         {
-          "sectionId": "simultaneous-inequality:explanation:v2",
+          "sectionId": "simultaneous-inequality:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "simultaneous-inequality:explanation:text:v2",
+              "blockId": "simultaneous-inequality:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -449,7 +449,7 @@
               }
             },
             {
-              "blockId": "simultaneous-inequality:explanation:method:v2",
+              "blockId": "simultaneous-inequality:explanation:method:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -465,7 +465,7 @@
               }
             },
             {
-              "blockId": "simultaneous-inequality:explanation:overlap:v2",
+              "blockId": "simultaneous-inequality:explanation:overlap:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -481,7 +481,7 @@
               }
             },
             {
-              "blockId": "simultaneous-inequality:explanation:drawing:v2",
+              "blockId": "simultaneous-inequality:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -720,17 +720,17 @@
           ]
         },
         {
-          "sectionId": "simultaneous-inequality:example:v2",
+          "sectionId": "simultaneous-inequality:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "simultaneous-inequality:example:text:v2",
+              "blockId": "simultaneous-inequality:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$x^2 - 3x \\le 0$이면서 $x \\ge 2$인 $x$를 찾아볼게요.\n\n첫째 조건부터요. $x(x-3) \\le 0$이니 두 근은 $0$과 $3$이에요. 아래로 볼록하니 해는 두 근 사이, 곧 $0 \\le x \\le 3$이에요.\n\n둘째 조건은 그대로 $x \\ge 2$예요.\n\n수직선에 두 구간을 그려 보면 $2$부터 $3$까지가 겹쳐요. 답은 $2 \\le x \\le 3$이에요.\n\n여기에 속하는 정수를 세 볼까요. 소수점이 없는 수가 정수예요. $2$와 $3$, 두 개예요.\n\n하나 더 볼게요. $x^2 - 4 < 0$이면서 $x > 1$인 경우예요.\n\n첫째는 $-2 < x < 2$, 둘째는 $x > 1$이니 겹치는 데는 $1 < x < 2$예요.\n\n여기에는 정수가 하나도 없어요. 구간이 있다고 정수가 있는 것은 아니에요.",
+                "text": "$x^2 - 3x \\le 0$이면서 $x \\ge 2$인 $x$를 찾아볼게요.\n\n첫째 조건부터요. $x(x-3) \\le 0$이니 두 근은 $0$과 $3$이에요. 아래로 볼록하니 해는 두 근 사이, 곧 $0 \\le x \\le 3$이에요.\n\n둘째 조건은 그대로 $x \\ge 2$예요.\n\n수직선에 두 구간을 그려 보면 $2$부터 $3$까지가 겹쳐요. 답은 $2 \\le x \\le 3$이에요.\n\n여기에 속하는 정수를 세 볼까요. 정수는 $\\ldots,-2,-1,0,1,2,\\ldots$와 같은 수예요. $2$와 $3$, 두 개예요.\n\n하나 더 볼게요. $x^2 - 4 < 0$이면서 $x > 1$인 경우예요.\n\n첫째는 $-2 < x < 2$, 둘째는 $x > 1$이니 겹치는 데는 $1 < x < 2$예요.\n\n여기에는 정수가 하나도 없어요. 구간이 있다고 정수가 있는 것은 아니에요.",
                 "definitions": [
                   {
                     "conceptKey": "integer",
@@ -743,12 +743,12 @@
           ]
         },
         {
-          "sectionId": "simultaneous-inequality:practice:v2",
+          "sectionId": "simultaneous-inequality:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "simultaneous-inequality:practice:problems:v2",
+              "blockId": "simultaneous-inequality:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -765,12 +765,12 @@
           ]
         },
         {
-          "sectionId": "simultaneous-inequality:check:v2",
+          "sectionId": "simultaneous-inequality:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "simultaneous-inequality:check:problems:v2",
+              "blockId": "simultaneous-inequality:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -786,12 +786,12 @@
           ]
         },
         {
-          "sectionId": "simultaneous-inequality:summary:v2",
+          "sectionId": "simultaneous-inequality:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "simultaneous-inequality:summary:text:v2",
+              "blockId": "simultaneous-inequality:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -821,7 +821,7 @@
     {
       "public": {
         "lessonKey": "always-positive",
-        "versionId": "always-positive:v2",
+        "versionId": "always-positive:v3",
         "title": "늘 성립할 조건: 판별식으로 따진다",
         "summary": "어떤 x를 넣어도 성립하려면 그래프가 축에서 떨어져 있어야 해요. 그 조건을 판별식으로 적어요.",
         "estimatedMinutes": 12,
@@ -837,12 +837,12 @@
       },
       "sections": [
         {
-          "sectionId": "always-positive:explanation:v2",
+          "sectionId": "always-positive:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "always-positive:explanation:text:v2",
+              "blockId": "always-positive:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -858,7 +858,7 @@
               }
             },
             {
-              "blockId": "always-positive:explanation:graph:v2",
+              "blockId": "always-positive:explanation:graph:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -874,7 +874,7 @@
               }
             },
             {
-              "blockId": "always-positive:explanation:discriminant:v2",
+              "blockId": "always-positive:explanation:discriminant:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -890,7 +890,7 @@
               }
             },
             {
-              "blockId": "always-positive:explanation:drawing:v2",
+              "blockId": "always-positive:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1081,12 +1081,12 @@
           ]
         },
         {
-          "sectionId": "always-positive:example:v2",
+          "sectionId": "always-positive:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "always-positive:example:text:v2",
+              "blockId": "always-positive:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1096,7 +1096,7 @@
               }
             },
             {
-              "blockId": "always-positive:example:check:v2",
+              "blockId": "always-positive:example:check:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1114,12 +1114,12 @@
           ]
         },
         {
-          "sectionId": "always-positive:practice:v2",
+          "sectionId": "always-positive:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "always-positive:practice:problems:v2",
+              "blockId": "always-positive:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1136,12 +1136,12 @@
           ]
         },
         {
-          "sectionId": "always-positive:check:v2",
+          "sectionId": "always-positive:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "always-positive:check:problems:v2",
+              "blockId": "always-positive:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1157,17 +1157,17 @@
           ]
         },
         {
-          "sectionId": "always-positive:summary:v2",
+          "sectionId": "always-positive:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "always-positive:summary:text:v2",
+              "blockId": "always-positive:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "「모든 실수에서 성립할 조건」은 그래프가 축과 만나지 않을 조건이에요.\n\n아래로 볼록하고 늘 양수이려면 판별식이 음수예요. 늘 $0$ 이상이려면 판별식이 $0$ 이하고요.\n\n등호 하나가 조건을 바꾸니 부등호를 끝까지 보세요.\n\n조건이 헷갈리면 포물선을 하나 그려 보세요. 외우는 것보다 빨라요.\n\n이 수업의 개념은 늘 성립할 조건이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "이차식의 값이 모든 실수 $x$에서 양수이려면, 그래프 전체가 $x$축보다 위에 있어야 해요. 값이 $0$ 이상이어도 되는 문제라면 $x$축에 닿는 경우도 포함해요.\n\n아래로 볼록하고 늘 양수이려면 판별식이 음수예요. 늘 $0$ 이상이려면 판별식이 $0$ 이하고요.\n\n등호 하나가 조건을 바꾸니 부등호를 끝까지 보세요.\n\n조건이 헷갈리면 포물선을 하나 그려 보세요. 외우는 것보다 빨라요.\n\n이 수업의 개념은 늘 성립할 조건이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "always-positive",

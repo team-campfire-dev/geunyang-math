@@ -46,7 +46,7 @@
     {
       "public": {
         "lessonKey": "polyhedron",
-        "versionId": "polyhedron:v3",
+        "versionId": "polyhedron:v4",
         "title": "다면체와 회전체: 면으로 둘러싸인 것과 돌려서 만든 것",
         "summary": "입체도형을 두 종류로 나누고, 이름이 무엇을 말하는지 읽어요.",
         "estimatedMinutes": 10,
@@ -61,17 +61,17 @@
       },
       "sections": [
         {
-          "sectionId": "polyhedron:explanation:v3",
+          "sectionId": "polyhedron:explanation:v4",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "polyhedron:explanation:text:v3",
+              "blockId": "polyhedron:explanation:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "입체도형은 만들어지는 방식으로 두 종류로 나눌 수 있어요.\n\n다각형인 면으로만 둘러싸인 것을 다면체라고 해요. 상자, 주사위, 피라미드가 그렇죠.\n\n면의 개수로 이름을 붙여요. 면이 넷이면 사면체, 여섯이면 육면체예요.",
+                "text": "이번 수업에서는 입체도형 중 다면체와 회전체를 살펴봐요.\n\n다각형인 면으로만 둘러싸인 것을 다면체라고 해요. 상자, 주사위, 피라미드가 그렇죠.\n\n면의 개수로 이름을 붙여요. 면이 넷이면 사면체, 여섯이면 육면체예요.",
                 "definitions": [
                   {
                     "conceptKey": "polyhedron",
@@ -82,17 +82,17 @@
               }
             },
             {
-              "blockId": "polyhedron:explanation:prism:v3",
+              "blockId": "polyhedron:explanation:prism:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "다면체 중에서도 두 밑면이 나란하고 옆면이 모두 직사각형인 것을 각기둥이라고 해요. 밑면이 하나이고 한 점에서 모이는 것은 각뿔이고요.\n\n밑면의 모양이 이름 앞에 붙어요. 밑면이 삼각형인 기둥은 삼각기둥이에요.",
+                "text": "다면체 중에서도 두 밑면이 서로 평행하고 합동인 다각형이며, 옆면이 모두 직사각형인 것을 각기둥이라고 해요. 밑면이 하나이고 한 점에서 모이는 것은 각뿔이고요.\n\n밑면의 모양이 이름 앞에 붙어요. 밑면이 삼각형인 기둥은 삼각기둥이에요.",
                 "definitions": []
               }
             },
             {
-              "blockId": "polyhedron:explanation:regular:v3",
+              "blockId": "polyhedron:explanation:regular:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -108,12 +108,12 @@
               }
             },
             {
-              "blockId": "polyhedron:explanation:revolution:v3",
+              "blockId": "polyhedron:explanation:revolution:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "다른 종류는 회전체예요. 평면도형을 직선 하나를 축으로 삼아 한 바퀴 돌려 만든 입체예요.\n\n직사각형을 돌리면 원기둥, 직각삼각형을 돌리면 원뿔, 반원을 돌리면 구가 돼요.\n\n회전체를 축을 품은 평면으로 자르면 자른 면이 늘 좌우 대칭이에요. 돌려서 만들었으니 당연한 일이죠.\n\n축에 수직으로 자르면 자른 면은 언제나 원이에요. 한 점이 축 둘레를 돌면 원을 그리니까요.",
+                "text": "평면도형을 한 직선 둘레로 한 바퀴 돌려 만든 입체도형을 회전체라고 해요. 이때 기준이 되는 직선을 회전축이라고 해요.\n\n직사각형의 한 변을 회전축으로 삼아 돌리면 원기둥이 돼요. 직각삼각형의 직각을 이루는 한 변을 축으로 돌리면 원뿔이 되고, 반원의 지름을 축으로 돌리면 구가 돼요.\n\n이 세 입체도형을 회전축을 포함하는 평면으로 자르면, 단면은 회전축을 기준으로 선대칭이에요. 원기둥은 직사각형, 원뿔은 이등변삼각형, 구는 원이 나타나요.\n\n회전축에 수직인 평면으로 내부를 자르면 세 입체도형 모두 원 모양의 단면이 나타나요.",
                 "definitions": [
                   {
                     "conceptKey": "polyhedron",
@@ -124,7 +124,7 @@
               }
             },
             {
-              "blockId": "polyhedron:explanation:drawing:v3",
+              "blockId": "polyhedron:explanation:drawing:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -334,17 +334,17 @@
           ]
         },
         {
-          "sectionId": "polyhedron:example:v3",
+          "sectionId": "polyhedron:example:v4",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "polyhedron:example:text:v3",
+              "blockId": "polyhedron:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "오각기둥의 면, 모서리, 꼭짓점의 개수를 세어 볼게요.\n\n면은 위아래 밑면 둘에 옆면 다섯, 모두 일곱이에요. 그래서 칠면체이기도 해요.\n\n꼭짓점은 밑면마다 다섯씩이니 열 개예요.\n\n모서리는 밑면마다 다섯씩 열, 위아래를 잇는 기둥이 다섯, 모두 열다섯이에요.\n\n세어 보면 규칙이 보여요. $n$각기둥은 면이 $n+2$, 꼭짓점이 $2n$, 모서리가 $3n$이에요.\n\n각뿔은 어떨까요. 오각뿔이면 면이 밑면 하나에 옆면 다섯으로 여섯, 꼭짓점이 여섯, 모서리가 열이에요. $n$각뿔은 면이 $n+1$, 꼭짓점이 $n+1$, 모서리가 $2n$이고요.\n\n어느 쪽이든 「면 + 꼭짓점 − 모서리 = 2」가 성립해요. 오각기둥은 $7 + 10 - 15 = 2$, 오각뿔은 $6 + 6 - 10 = 2$. 모든 다면체에서 그렇답니다.",
+                "text": "오각기둥의 면, 모서리, 꼭짓점의 개수를 세어 볼게요.\n\n면은 위아래 밑면 둘에 옆면 다섯, 모두 일곱이에요. 그래서 칠면체이기도 해요.\n\n꼭짓점은 밑면마다 다섯씩이니 열 개예요.\n\n모서리는 밑면마다 다섯씩 열, 위아래를 잇는 기둥이 다섯, 모두 열다섯이에요.\n\n세어 보면 규칙이 보여요. $n$각기둥은 면이 $n+2$, 꼭짓점이 $2n$, 모서리가 $3n$이에요.\n\n각뿔은 어떨까요. 오각뿔이면 면이 밑면 하나에 옆면 다섯으로 여섯, 꼭짓점이 여섯, 모서리가 열이에요. $n$각뿔은 면이 $n+1$, 꼭짓점이 $n+1$, 모서리가 $2n$이고요.\n\n어느 쪽이든 「면 + 꼭짓점 − 모서리 = 2」가 성립해요. 오각기둥은 $7 + 10 - 15 = 2$, 오각뿔은 $6 + 6 - 10 = 2$. 이 관계는 각기둥과 각뿔처럼 볼록한 다면체에서 성립해요.",
                 "definitions": [
                   {
                     "conceptKey": "polyhedron",
@@ -357,12 +357,12 @@
           ]
         },
         {
-          "sectionId": "polyhedron:practice:v3",
+          "sectionId": "polyhedron:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "polyhedron:practice:problems:v3",
+              "blockId": "polyhedron:practice:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -379,12 +379,12 @@
           ]
         },
         {
-          "sectionId": "polyhedron:check:v3",
+          "sectionId": "polyhedron:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "polyhedron:check:problems:v3",
+              "blockId": "polyhedron:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -400,17 +400,17 @@
           ]
         },
         {
-          "sectionId": "polyhedron:summary:v3",
+          "sectionId": "polyhedron:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "polyhedron:summary:text:v3",
+              "blockId": "polyhedron:summary:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "다각형인 면으로만 둘러싸인 입체가 다면체이고, 면의 개수로 이름을 붙여요.\n\n두 밑면이 나란하면 각기둥, 한 점에서 모이면 각뿔이에요. 정다면체는 다섯 가지뿐이고요.\n\n평면도형을 축 둘레로 돌려 만든 것이 회전체예요. 직사각형은 원기둥, 직각삼각형은 원뿔, 반원은 구가 돼요.\n\n회전체를 축에 수직으로 자르면 자른 면은 언제나 원이에요.\n\n이 수업의 개념은 다면체와 회전체예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "다각형인 면으로만 둘러싸인 입체가 다면체예요. 면의 개수가 여섯이면 육면체라고 해요.\n\n각기둥은 서로 평행하고 합동인 두 다각형을 밑면으로 가져요. 각뿔은 하나의 밑면과 한 꼭짓점에서 만나는 삼각형 옆면들로 이루어져요.\n\n평면도형을 회전축 둘레로 한 바퀴 돌려 만든 입체가 회전체예요. 원기둥·원뿔·구가 그 예예요. 이 세 도형은 회전축에 수직인 평면으로 내부를 자르면 원 모양의 단면이 나타나요.\n\n이 수업의 개념은 다면체와 회전체예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "polyhedron",
@@ -435,7 +435,7 @@
     {
       "public": {
         "lessonKey": "surface-area",
-        "versionId": "surface-area:v3",
+        "versionId": "surface-area:v4",
         "title": "겉넓이: 펼쳐서 모두 더한다",
         "summary": "입체의 겉면을 평면으로 펼쳐, 아는 넓이의 합으로 바꿔요.",
         "estimatedMinutes": 12,
@@ -451,17 +451,17 @@
       },
       "sections": [
         {
-          "sectionId": "surface-area:explanation:v3",
+          "sectionId": "surface-area:explanation:v4",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "surface-area:explanation:text:v3",
+              "blockId": "surface-area:explanation:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "입체의 겉면 넓이를 모두 더한 것을 겉넓이라고 해요. 구하는 법은 하나뿐이에요. 펼쳐서 더하는 거예요.\n\n입체를 잘라 평면에 펼친 그림을 전개도라고 해요. 전개도만 그리면 아는 도형의 넓이 문제로 바뀌어요.",
+                "text": "입체의 겉면 넓이를 모두 더한 것을 겉넓이라고 해요. 각기둥이나 원기둥은 겉면을 평면에 펼쳐서 각 부분의 넓이를 더할 수 있어요.\n\n입체를 잘라 평면에 펼친 그림을 전개도라고 해요. 전개도를 그릴 수 있는 입체는 각 부분의 넓이를 구해 더하면 돼요.",
                 "definitions": [
                   {
                     "conceptKey": "surface-area",
@@ -477,7 +477,7 @@
               }
             },
             {
-              "blockId": "surface-area:explanation:prism:v3",
+              "blockId": "surface-area:explanation:prism:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -487,7 +487,7 @@
               }
             },
             {
-              "blockId": "surface-area:explanation:cone:v3",
+              "blockId": "surface-area:explanation:cone:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -503,7 +503,7 @@
               }
             },
             {
-              "blockId": "surface-area:explanation:drawing:v3",
+              "blockId": "surface-area:explanation:drawing:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -966,12 +966,12 @@
           ]
         },
         {
-          "sectionId": "surface-area:example:v3",
+          "sectionId": "surface-area:example:v4",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "surface-area:example:text:v3",
+              "blockId": "surface-area:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -989,12 +989,12 @@
           ]
         },
         {
-          "sectionId": "surface-area:practice:v3",
+          "sectionId": "surface-area:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "surface-area:practice:problems:v3",
+              "blockId": "surface-area:practice:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1011,12 +1011,12 @@
           ]
         },
         {
-          "sectionId": "surface-area:check:v3",
+          "sectionId": "surface-area:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "surface-area:check:problems:v3",
+              "blockId": "surface-area:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1032,17 +1032,17 @@
           ]
         },
         {
-          "sectionId": "surface-area:summary:v3",
+          "sectionId": "surface-area:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "surface-area:summary:text:v3",
+              "blockId": "surface-area:summary:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "겉넓이는 겉면의 넓이를 모두 더한 것이고, 전개도를 그리면 아는 도형의 합으로 바뀌어요.\n\n기둥의 옆면을 펼치면 직사각형이에요. 가로가 밑면의 둘레, 세로가 높이고요.\n\n원뿔의 옆면은 부채꼴이 되고, 그 호가 밑면의 둘레와 같아요.\n\n구만은 펼칠 수 없어서 $4\\pi r^2$을 결과로 받아 둬요. 원 넷의 넓이와 같아요.\n\n이 수업의 개념은 겉넓이예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "겉넓이는 겉면의 넓이를 모두 더한 것이고, 전개도를 그리면 아는 도형의 합으로 바뀌어요.\n\n기둥의 옆면을 펼치면 직사각형이에요. 가로가 밑면의 둘레, 세로가 높이고요.\n\n원뿔의 옆면은 부채꼴이 되고, 그 호가 밑면의 둘레와 같아요.\n\n구의 곡면은 평면에 펼칠 수 없어요. 겉넓이 공식 $4\\pi r^2$을 사용해요. 원 넷의 넓이와 같아요.\n\n이 수업의 개념은 겉넓이예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "surface-area",
@@ -1072,7 +1072,7 @@
     {
       "public": {
         "lessonKey": "volume",
-        "versionId": "volume:v3",
+        "versionId": "volume:v4",
         "title": "부피: 밑넓이 곱하기 높이",
         "summary": "기둥의 부피가 왜 밑넓이 곱하기 높이인지 보고, 뿔과 구까지 넓혀요.",
         "estimatedMinutes": 12,
@@ -1088,12 +1088,12 @@
       },
       "sections": [
         {
-          "sectionId": "volume:explanation:v3",
+          "sectionId": "volume:explanation:v4",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "volume:explanation:text:v3",
+              "blockId": "volume:explanation:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1109,7 +1109,7 @@
               }
             },
             {
-              "blockId": "volume:explanation:cone:v3",
+              "blockId": "volume:explanation:cone:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1119,12 +1119,12 @@
               }
             },
             {
-              "blockId": "volume:explanation:scale:v3",
+              "blockId": "volume:explanation:scale:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "길이가 두 배가 되면 겉넓이는 네 배, 부피는 여덟 배가 돼요. 겉넓이에는 길이가 두 번, 부피에는 세 번 들어 있으니까요.\n\n큰 빵이 작은 빵보다 훨씬 배부른 이유이기도 해요. 중학교 2학년에서는 이것을 닮음비로 다시 만나요.",
+                "text": "도형의 모양을 유지하면서 모든 길이가 두 배가 되면 겉넓이는 네 배, 부피는 여덟 배가 돼요. 겉넓이에는 길이가 두 번, 부피에는 세 번 들어 있으니까요.\n\n큰 빵이 작은 빵보다 훨씬 배부른 이유이기도 해요. 중학교 2학년에서는 이것을 닮음비로 다시 만나요.",
                 "definitions": [
                   {
                     "conceptKey": "surface-area",
@@ -1140,7 +1140,7 @@
               }
             },
             {
-              "blockId": "volume:explanation:drawing:v3",
+              "blockId": "volume:explanation:drawing:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1767,12 +1767,12 @@
           ]
         },
         {
-          "sectionId": "volume:example:v3",
+          "sectionId": "volume:example:v4",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "volume:example:text:v3",
+              "blockId": "volume:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1795,12 +1795,12 @@
           ]
         },
         {
-          "sectionId": "volume:practice:v3",
+          "sectionId": "volume:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "volume:practice:problems:v3",
+              "blockId": "volume:practice:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1817,12 +1817,12 @@
           ]
         },
         {
-          "sectionId": "volume:check:v3",
+          "sectionId": "volume:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "volume:check:problems:v3",
+              "blockId": "volume:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1838,17 +1838,17 @@
           ]
         },
         {
-          "sectionId": "volume:summary:v3",
+          "sectionId": "volume:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "volume:summary:text:v3",
+              "blockId": "volume:summary:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "기둥의 부피는 밑넓이 곱하기 높이예요. 같은 판을 높이만큼 쌓은 것이니까요.\n\n뿔은 같은 밑면과 높이를 가진 기둥의 $\\dfrac{1}{3}$이에요.\n\n구는 $\\dfrac{4}{3}\\pi r^3$이고, 꼭 맞는 원기둥의 $\\dfrac{2}{3}$예요.\n\n길이가 두 배면 겉넓이는 네 배, 부피는 여덟 배예요.\n\n이 수업의 개념은 부피예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "기둥의 부피는 밑넓이 곱하기 높이예요. 같은 판을 높이만큼 쌓은 것이니까요.\n\n뿔은 같은 밑면과 높이를 가진 기둥의 $\\dfrac{1}{3}$이에요.\n\n구는 $\\dfrac{4}{3}\\pi r^3$이고, 꼭 맞는 원기둥의 $\\dfrac{2}{3}$예요.\n\n닮은 두 입체에서 대응하는 길이가 두 배면 겉넓이는 네 배, 부피는 여덟 배예요.\n\n이 수업의 개념은 부피예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "volume",

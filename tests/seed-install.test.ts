@@ -1,6 +1,8 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { parseContentBundle, validateReferences } from '@/core/content-bundle';
+import { compareContentBundleNames } from '@/core/content-files';
+import reviewedDictionary from '../content/glossary-v41.json';
 
 /**
  * Every seed bundle has to install into an **empty** database.
@@ -18,6 +20,7 @@ import { parseContentBundle, validateReferences } from '@/core/content-bundle';
 const bundles = readdirSync('prisma/seed').filter((name) => name.endsWith('.json')).sort()
   .map((name) => ({ name, bundle: parseContentBundle(JSON.parse(readFileSync(`prisma/seed/${name}`, 'utf8'))) }));
 const dictionaries = readdirSync('content').filter((name) => name.startsWith('glossary-'))
+  .sort(compareContentBundleNames)
   .map((name) => parseContentBundle(JSON.parse(readFileSync(`content/${name}`, 'utf8'))));
 const dictionaryConcepts = dictionaries.flatMap((entry) => entry.concepts);
 const dictionaryDefinitions = dictionaries.flatMap((entry) => entry.definitions);
@@ -25,6 +28,16 @@ const definitionKey = (definition: { conceptKey: string; scopeKind?: string; sco
   `${definition.scopeKind ?? 'global'}:${definition.scopeKey ?? ''}:${definition.conceptKey}`;
 
 describe('a bundle installed on its own', () => {
+  it('keeps reviewed definitions when older single-digit bundles are also installed', () => {
+    // Pin this regression to these revisions; future reviewed bundles may legitimately change the words.
+    const revisions = ['glossary-v41.json', 'glossary-v5.json', 'glossary-v40.json']
+      .sort(compareContentBundleNames)
+      .flatMap(name => parseContentBundle(JSON.parse(readFileSync(`content/${name}`, 'utf8'))).definitions);
+    const effective = new Map(revisions.map(definition => [definitionKey(definition), definition]));
+    for (const definition of parseContentBundle(reviewedDictionary).definitions) {
+      expect(effective.get(definitionKey(definition)), definition.conceptKey).toEqual(definition);
+    }
+  });
   it('resolves every reference against the dictionary and itself', () => {
     for (const { name, bundle } of bundles) {
       // What `prisma/seed.ts` hands the importer: the shared dictionary, then the bundle's own word.

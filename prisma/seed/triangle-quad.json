@@ -462,7 +462,7 @@
     {
       "public": {
         "lessonKey": "triangle-center",
-        "versionId": "triangle-center:v2",
+        "versionId": "triangle-center:v3",
         "title": "외심과 내심: 어디에서 재도 같은 거리",
         "summary": "세 꼭짓점까지 거리가 같은 점과 세 변까지 거리가 같은 점을 찾고, 각의 크기를 구해요.",
         "estimatedMinutes": 13,
@@ -478,12 +478,12 @@
       },
       "sections": [
         {
-          "sectionId": "triangle-center:explanation:v2",
+          "sectionId": "triangle-center:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "triangle-center:explanation:circum:v2",
+              "blockId": "triangle-center:explanation:circum:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -499,12 +499,128 @@
               }
             },
             {
-              "blockId": "triangle-center:explanation:circumcircle:v2",
+              "blockId": "triangle-center:circum-proof:v3",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 400,
+                "height": 220,
+                "alt": "예각삼각형 ABC의 외심 O를 세 꼭짓점과 연결한 그림. OA, OB, OC는 외접원의 반지름으로 길이가 같다.",
+                "caption": "OA = OB = OC이므로 삼각형 AOB와 AOC는 이등변삼각형이에요.",
+                "items": [
+                  {
+                    "kind": "ellipse",
+                    "cx": 200,
+                    "cy": 111.67,
+                    "rx": 86.67,
+                    "ry": 86.67,
+                    "fill": "none",
+                    "stroke": "green",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        200,
+                        25
+                      ],
+                      [
+                        120,
+                        145
+                      ],
+                      [
+                        280,
+                        145
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 200,
+                    "y1": 111.67,
+                    "x2": 200,
+                    "y2": 25,
+                    "stroke": "green",
+                    "strokeWidth": 1.4
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 200,
+                    "y1": 111.67,
+                    "x2": 120,
+                    "y2": 145,
+                    "stroke": "green",
+                    "strokeWidth": 1.4
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 200,
+                    "y1": 111.67,
+                    "x2": 280,
+                    "y2": 145,
+                    "stroke": "green",
+                    "strokeWidth": 1.4
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 200,
+                    "cy": 111.67,
+                    "rx": 3,
+                    "ry": 3,
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 200,
+                    "y": 16,
+                    "text": "A",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 105,
+                    "y": 158,
+                    "text": "B",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 295,
+                    "y": 158,
+                    "text": "C",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 200,
+                    "y": 135,
+                    "text": "O",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "green"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "triangle-center:explanation:circumcircle:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "외심에서 꼭짓점까지의 거리를 반지름으로 삼아 원을 그려 보세요. 그 원은 세 꼭짓점을 모두 지나요. 이 원이 외접원이에요.\n\n직각삼각형이면 외심이 특별한 곳에 있어요. 바로 빗변의 중점이에요. 그러니 외접원의 반지름은 빗변의 절반이에요.\n\n외심에서 두 꼭짓점까지의 거리는 같아요. 그래서 이등변삼각형이 생겨요. 밑각이 같다는 성질을 쓰면 $\\angle BOC = 2\\angle A$가 나와요. 중심에서 본 각이 두 배예요.",
+                "text": "외심을 중심으로 하고, 외심에서 꼭짓점까지의 거리를 반지름으로 삼아 원을 그려 보세요. 세 꼭짓점을 모두 지나는 이 원을 외접원이라고 해요.\n\n직각삼각형의 외심은 빗변의 중점이에요. 따라서 외접원의 반지름은 빗변의 절반이에요.\n\n삼각형의 꼭짓점을 $A,B,C$, 외심을 $O$라고 해요. 예각삼각형에서는 $\\angle BOC=2\\angle BAC$예요. 이 각도 관계는 바로 위 그림에서 같은 호 $BC$를 바라보는 두 각을 비교한 것이에요. 여기서 $\\angle BOC$는 $180°$보다 작은 각을 뜻해요.\n\n외심 $O$에서 세 꼭짓점까지의 거리는 반지름으로 같아요. $\\triangle AOB$와 $\\triangle AOC$는 이등변삼각형이므로 각각의 밑각이 같아요. $\\angle BAO=\\alpha$, $\\angle OAC=\\beta$라고 하면 $\\angle BAC=\\alpha+\\beta$예요.\n\n삼각형의 내각의 합을 쓰면 $\\angle AOB=180°-2\\alpha$, $\\angle AOC=180°-2\\beta$예요. 점 $O$ 둘레의 각을 더하면 $360°$이므로 $\\angle BOC=360°-(180°-2\\alpha)-(180°-2\\beta)=2\\angle BAC$예요.",
                 "definitions": [
                   {
                     "conceptKey": "isosceles",
@@ -515,7 +631,7 @@
               }
             },
             {
-              "blockId": "triangle-center:explanation:drawing:v2",
+              "blockId": "triangle-center:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -633,7 +749,7 @@
                     "kind": "text",
                     "x": 180,
                     "y": 94,
-                    "text": "외심",
+                    "text": "외심 O",
                     "size": 10,
                     "anchor": "start",
                     "fill": "green",
@@ -644,7 +760,7 @@
                     "kind": "text",
                     "x": 120,
                     "y": 136,
-                    "text": "내심",
+                    "text": "내심 I",
                     "size": 10,
                     "anchor": "middle",
                     "fill": "orange",
@@ -670,6 +786,33 @@
                     "fill": "orange",
                     "id": "say",
                     "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "x": 79,
+                    "y": 60,
+                    "text": "A",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 78,
+                    "y": 155,
+                    "text": "B",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 241,
+                    "y": 155,
+                    "text": "C",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
                   }
                 ],
                 "frames": [
@@ -769,7 +912,8 @@
                       {
                         "id": "ctr",
                         "dx": -39.9,
-                        "dy": 9.9
+                        "dy": 9.9,
+                        "opacity": 1
                       },
                       {
                         "id": "incircle",
@@ -814,12 +958,122 @@
               }
             },
             {
-              "blockId": "triangle-center:explanation:incircle:v2",
+              "blockId": "triangle-center:incenter-proof:v3",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 400,
+                "height": 200,
+                "alt": "삼각형 ABC의 내심 I와 선분 BI, CI. BI는 각 B를, CI는 각 C를 각각 이등분한다.",
+                "caption": "삼각형 BIC에서 B 쪽 각과 C 쪽 각은 원래 각의 절반이에요.",
+                "items": [
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        200,
+                        25
+                      ],
+                      [
+                        120,
+                        145
+                      ],
+                      [
+                        280,
+                        145
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        200,
+                        102.18
+                      ],
+                      [
+                        120,
+                        145
+                      ],
+                      [
+                        280,
+                        145
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "orange",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 200,
+                    "y1": 25,
+                    "x2": 200,
+                    "y2": 102.18,
+                    "stroke": "orange",
+                    "strokeWidth": 1.4,
+                    "dash": true
+                  },
+                  {
+                    "kind": "ellipse",
+                    "cx": 200,
+                    "cy": 102.18,
+                    "rx": 3,
+                    "ry": 3,
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 200,
+                    "y": 16,
+                    "text": "A",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 106,
+                    "y": 158,
+                    "text": "B",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 294,
+                    "y": 158,
+                    "text": "C",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 218,
+                    "y": 100,
+                    "text": "I",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "orange"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "triangle-center:explanation:incircle:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "이번엔 세 변에서 모두 같은 거리에 있는 점을 찾아요.\n\n한 각의 두 변에서 같은 거리에 있는 점들도 한 직선 위에 있어요. 그 각의 이등분선이에요.\n\n그러니 세 각의 이등분선이 만나는 점이 내심이에요. 그 거리를 반지름으로 한 원은 세 변에 닿아요. 이 원이 내접원이고요.\n\n내심에서는 $\\angle BIC = 90° + \\dfrac{1}{2}\\angle A$가 성립해요. $\\angle A$가 커질수록 아래쪽 두 각이 줄어들어요. 그래서 그 절반만큼만 커지는 거예요.\n\n두 점은 대개 서로 다른 곳에 있어요. 정삼각형일 때만 겹쳐요.",
+                "text": "이번에는 삼각형의 세 변까지의 거리가 모두 같은 점을 찾아요. 점에서 변까지의 거리는 그 변에 내린 수선의 길이로 재요.\n\n한 각의 내부에서 두 변까지의 거리가 같은 점은 각의 이등분선 위에 있어요. 삼각형의 세 각의 이등분선이 만나는 점을 내심이라고 해요. 내심을 중심으로 하고 세 변까지의 거리를 반지름으로 삼아 그린 원이 내접원이에요.\n\n삼각형 $ABC$의 내심을 $I$라고 해요. $BI$와 $CI$는 각의 이등분선이므로 $\\angle IBC=\\frac{1}{2}\\angle ABC$, $\\angle ICB=\\frac{1}{2}\\angle ACB$예요.\n\n삼각형 $BIC$의 내각의 합은 $180°$예요. 따라서 $\\angle BIC=180°-\\frac{1}{2}(\\angle ABC+\\angle ACB)$예요.\n\n원래 삼각형에서 $\\angle ABC+\\angle ACB=180°-\\angle BAC$이므로, $\\angle BIC=180°-\\frac{1}{2}(180°-\\angle BAC)=90°+\\frac{1}{2}\\angle BAC$이에요.\n\n외심과 내심은 정삼각형일 때 같은 점이고, 그 밖의 삼각형에서는 서로 다른 점이에요.",
                 "definitions": [
                   {
                     "conceptKey": "triangle-center",
@@ -832,17 +1086,17 @@
           ]
         },
         {
-          "sectionId": "triangle-center:example:v2",
+          "sectionId": "triangle-center:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "triangle-center:example:text:v2",
+              "blockId": "triangle-center:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "빗변의 길이가 $10$인 직각삼각형의 외접원의 반지름을 구해 볼게요.\n\n직각삼각형의 외심은 빗변의 중점이에요. 그러니 반지름은 $10 \\div 2 = 5$예요.\n\n각도 해 볼게요. $\\angle A = 50°$인 삼각형에서 외심을 $O$라 하면 $\\angle BOC$는 얼마일까요.\n\n$\\angle BOC = 2\\angle A$이니 $2 \\times 50° = 100°$예요.\n\n같은 삼각형에서 내심을 $I$라 하면 $\\angle BIC = 90° + \\dfrac{1}{2} \\times 50° = 115°$예요.\n\n둘을 헷갈리지 않는 방법이 있어요. 외심은 곱하기 둘, 내심은 $90°$에 절반을 더하기예요.\n\n내심 쪽은 $\\angle A$가 아무리 작아도 $90°$보다 커요. 이것을 기억하면 검산이 돼요.",
+                "text": "빗변의 길이가 $10$인 직각삼각형의 외접원의 반지름을 구해 볼게요.\n\n직각삼각형의 외심은 빗변의 중점이에요. 그러니 반지름은 $10 \\div 2 = 5$예요.\n\n각도 해 볼게요. $\\angle BAC=50°$인 예각삼각형 $ABC$에서 외심을 $O$라 하면 $\\angle BOC$는 얼마일까요.\n\n$\\angle BOC = 2\\angle A$이니 $2 \\times 50° = 100°$예요.\n\n같은 삼각형에서 내심을 $I$라 하면 $\\angle BIC = 90° + \\dfrac{1}{2} \\times 50° = 115°$예요.\n\n둘을 헷갈리지 않는 방법이 있어요. 외심은 곱하기 둘, 내심은 $90°$에 절반을 더하기예요.\n\n내심 쪽은 $\\angle A$가 아무리 작아도 $90°$보다 커요. 이것을 기억하면 검산이 돼요.",
                 "definitions": [
                   {
                     "conceptKey": "triangle-center",
@@ -855,12 +1109,12 @@
           ]
         },
         {
-          "sectionId": "triangle-center:practice:v2",
+          "sectionId": "triangle-center:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "triangle-center:practice:problems:v2",
+              "blockId": "triangle-center:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -877,12 +1131,12 @@
           ]
         },
         {
-          "sectionId": "triangle-center:check:v2",
+          "sectionId": "triangle-center:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "triangle-center:check:problems:v2",
+              "blockId": "triangle-center:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -898,17 +1152,17 @@
           ]
         },
         {
-          "sectionId": "triangle-center:summary:v2",
+          "sectionId": "triangle-center:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "triangle-center:summary:text:v2",
+              "blockId": "triangle-center:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "외심은 세 변의 수직이등분선이 만나는 점이에요. 세 꼭짓점까지 거리가 같아요.\n\n직각삼각형의 외심은 빗변의 중점이에요. 그래서 외접원의 반지름은 빗변의 절반이고요.\n\n내심은 세 각의 이등분선이 만나는 점이에요. 세 변까지 거리가 같아요.\n\n각은 $\\angle BOC = 2\\angle A$, $\\angle BIC = 90° + \\dfrac{1}{2}\\angle A$로 구해요.\n\n이 수업의 개념은 외심과 내심이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "외심은 세 변의 수직이등분선이 만나는 점이에요. 세 꼭짓점까지 거리가 같아요.\n\n직각삼각형의 외심은 빗변의 중점이에요. 그래서 외접원의 반지름은 빗변의 절반이고요.\n\n내심은 세 각의 이등분선이 만나는 점이에요. 세 변까지 거리가 같아요.\n\n삼각형의 꼭짓점을 $A,B,C$, 외심을 $O$, 내심을 $I$라고 해요. 예각삼각형에서 $\\angle BOC=2\\angle BAC$예요. 내심에 관한 $\\angle BIC=90°+\\frac{1}{2}\\angle BAC$는 모든 삼각형에서 성립해요.\n\n이 수업의 개념은 외심과 내심이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "triangle-center",
@@ -933,7 +1187,7 @@
     {
       "public": {
         "lessonKey": "parallelogram",
-        "versionId": "parallelogram:v2",
+        "versionId": "parallelogram:v3",
         "title": "평행사변형: 반 바퀴 돌려도 제자리",
         "summary": "두 쌍의 대변이 나란하다는 것 하나에서 대변, 대각, 대각선의 성질이 줄줄이 따라와요.",
         "estimatedMinutes": 12,
@@ -949,12 +1203,12 @@
       },
       "sections": [
         {
-          "sectionId": "parallelogram:explanation:v2",
+          "sectionId": "parallelogram:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "parallelogram:explanation:name:v2",
+              "blockId": "parallelogram:explanation:name:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -975,7 +1229,7 @@
               }
             },
             {
-              "blockId": "parallelogram:explanation:congruent:v2",
+              "blockId": "parallelogram:explanation:congruent:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -991,17 +1245,17 @@
               }
             },
             {
-              "blockId": "parallelogram:explanation:angles:v2",
+              "blockId": "parallelogram:explanation:angles:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "이웃한 두 각은 어떨까요. 나란한 두 직선을 한 직선이 가로지를 때, 같은 쪽 각의 합은 $180°$예요.\n\n그러니 이웃한 두 각을 더하면 $180°$가 돼요. 하나가 $70°$면 옆은 $110°$고요.\n\n대각선을 둘 다 그으면 또 하나가 보여요. 두 대각선은 서로 다른 것을 이등분해요. 만나는 점이 두 대각선 각각의 중점이라는 뜻이에요.",
+                "text": "이웃한 두 각은 어떨까요. 나란한 두 직선을 한 직선이 가로지를 때, 같은 쪽 각의 합은 $180°$예요.\n\n그러니 이웃한 두 각을 더하면 $180°$가 돼요. 하나가 $70°$면 옆은 $110°$고요.\n\n대각선을 둘 다 그으면 또 하나가 보여요. 두 대각선은 서로를 이등분해요. 만나는 점이 두 대각선 각각의 중점이라는 뜻이에요.",
                 "definitions": []
               }
             },
             {
-              "blockId": "parallelogram:explanation:drawing:v2",
+              "blockId": "parallelogram:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1203,24 +1457,24 @@
               }
             },
             {
-              "blockId": "parallelogram:explanation:turn:v2",
+              "blockId": "parallelogram:explanation:turn:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "이 모두를 한 문장으로 말할 수도 있어요. 평행사변형은 두 대각선이 만나는 점을 중심으로 반 바퀴 돌리면 처음 모양에 꼭 포개져요.\n\n마주 보는 변은 마주 보는 변으로 옮겨 가요. 마주 보는 각도 마주 보는 각으로 옮겨 가고요. 그러니 서로 같을 수밖에 없어요.\n\n거꾸로도 쓸 수 있어요. 다음 가운데 하나만 성립해도 평행사변형이에요.\n\n두 쌍의 대변의 길이가 같은 경우. 두 쌍의 대각의 크기가 같은 경우. 두 대각선이 서로 다른 것을 이등분하는 경우. 한 쌍의 대변이 나란하면서 길이도 같은 경우예요.",
+                "text": "이 모두를 한 문장으로 말할 수도 있어요. 평행사변형은 두 대각선이 만나는 점을 중심으로 반 바퀴 돌리면 처음 모양에 꼭 포개져요.\n\n마주 보는 변은 마주 보는 변으로 옮겨 가요. 마주 보는 각도 마주 보는 각으로 옮겨 가고요. 그러니 서로 같을 수밖에 없어요.\n\n거꾸로도 쓸 수 있어요. 다음 가운데 하나만 성립해도 평행사변형이에요.\n\n두 쌍의 대변의 길이가 같은 경우. 두 쌍의 대각의 크기가 같은 경우. 두 대각선이 서로를 이등분하는 경우. 한 쌍의 대변이 나란하면서 길이도 같은 경우예요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "parallelogram:example:v2",
+          "sectionId": "parallelogram:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "parallelogram:example:text:v2",
+              "blockId": "parallelogram:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1238,12 +1492,12 @@
           ]
         },
         {
-          "sectionId": "parallelogram:practice:v2",
+          "sectionId": "parallelogram:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "parallelogram:practice:problems:v2",
+              "blockId": "parallelogram:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1260,38 +1514,38 @@
           ]
         },
         {
-          "sectionId": "parallelogram:check:v2",
+          "sectionId": "parallelogram:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "parallelogram:check:problems:v2",
+              "blockId": "parallelogram:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "parallelogram:check",
-                "problemSetVersionId": "parallelogram:check:v1",
+                "problemSetVersionId": "parallelogram:check:v2",
                 "problemVersionIds": [
                   "parallelogram:check-1:v1",
-                  "parallelogram:check-2:v1"
+                  "parallelogram:check-2:v2"
                 ]
               }
             }
           ]
         },
         {
-          "sectionId": "parallelogram:summary:v2",
+          "sectionId": "parallelogram:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "parallelogram:summary:text:v2",
+              "blockId": "parallelogram:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "평행사변형은 두 쌍의 대변이 나란한 사각형이에요.\n\n대변끼리 길이가 같고, 대각끼리 크기가 같아요. 이웃한 두 각의 합은 $180°$고요.\n\n두 대각선은 서로 다른 것을 이등분해요. 다만 길이는 같지 않아도 돼요.\n\n가운데 점을 중심으로 반 바퀴 돌리면 제자리라는 한 문장이 이 모두를 담고 있어요.\n\n이 수업의 개념은 평행사변형이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "평행사변형은 두 쌍의 대변이 나란한 사각형이에요.\n\n대변끼리 길이가 같고, 대각끼리 크기가 같아요. 이웃한 두 각의 합은 $180°$고요.\n\n두 대각선은 서로를 이등분해요. 다만 길이는 같지 않아도 돼요.\n\n가운데 점을 중심으로 반 바퀴 돌리면 제자리라는 한 문장이 이 모두를 담고 있어요.\n\n이 수업의 개념은 평행사변형이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "parallelogram",
@@ -1316,7 +1570,7 @@
     {
       "public": {
         "lessonKey": "special-quad",
-        "versionId": "special-quad:v2",
+        "versionId": "special-quad:v3",
         "title": "여러 가지 사각형: 조건을 더할수록 좁아진다",
         "summary": "사다리꼴에서 정사각형까지, 조건을 하나씩 더하며 사각형들이 어떻게 이어지는지 봐요.",
         "estimatedMinutes": 12,
@@ -1330,17 +1584,17 @@
       },
       "sections": [
         {
-          "sectionId": "special-quad:explanation:v2",
+          "sectionId": "special-quad:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "special-quad:explanation:line:v2",
+              "blockId": "special-quad:explanation:line:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "사각형들은 따로 떨어진 이름이 아니에요. 조건을 더해 가며 좁아지는 한 줄이에요.\n\n한 쌍의 대변이 나란하면 사다리꼴이에요. 여기에 나머지 한 쌍도 나란하다는 조건을 더해 보세요. 그러면 평행사변형이에요.",
+                "text": "사각형들은 따로 떨어진 이름이 아니에요. 어떤 조건을 만족하는지에 따라 서로 포함하는 관계가 있어요.\n\n한 쌍의 대변이 나란하면 사다리꼴이에요. 여기에 나머지 한 쌍도 나란하다는 조건을 더해 보세요. 그러면 평행사변형이에요.",
                 "definitions": [
                   {
                     "conceptKey": "parallelogram",
@@ -1351,7 +1605,7 @@
               }
             },
             {
-              "blockId": "special-quad:explanation:rectangle:v2",
+              "blockId": "special-quad:explanation:rectangle:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1361,7 +1615,7 @@
               }
             },
             {
-              "blockId": "special-quad:explanation:rhombus:v2",
+              "blockId": "special-quad:explanation:rhombus:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1382,7 +1636,7 @@
               }
             },
             {
-              "blockId": "special-quad:explanation:drawing:v2",
+              "blockId": "special-quad:explanation:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1529,7 +1783,7 @@
               }
             },
             {
-              "blockId": "special-quad:explanation:square:v2",
+              "blockId": "special-quad:explanation:square:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1541,17 +1795,17 @@
           ]
         },
         {
-          "sectionId": "special-quad:example:v2",
+          "sectionId": "special-quad:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "special-quad:example:text:v2",
+              "blockId": "special-quad:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "두 대각선의 길이가 $6$과 $8$인 마름모의 넓이를 구해 볼게요.\n\n마름모의 두 대각선은 서로 수직이고 서로를 이등분해요. 그러니 마름모는 가로 $8$, 세로 $6$인 직사각형 안에 꼭 들어가요. 그 직사각형의 절반을 차지하고요.\n\n넓이는 $6 \\times 8 \\div 2 = 24$예요.\n\n성질을 비교하는 문제도 자주 나와요. 직사각형은 두 대각선의 길이가 같지만 수직은 아니에요. 마름모는 두 대각선이 수직이지만 길이는 다를 수 있고요.\n\n둘 다 가진 것이 정사각형이에요. 길이도 같고 수직이기도 해요.\n\n「대각선의 길이가 같다」를 물으면 각의 조건을 떠올리세요. 「대각선이 수직이다」를 물으면 변의 조건을 떠올리면 돼요.",
+                "text": "두 대각선의 길이가 $6$과 $8$인 마름모의 넓이를 구해 볼게요.\n\n마름모의 두 대각선은 서로 수직이고 서로를 이등분해요. 그러니 마름모는 가로 $8$, 세로 $6$인 직사각형 안에 꼭 들어가요. 그 직사각형의 절반을 차지하고요.\n\n넓이는 $6 \\times 8 \\div 2 = 24$예요.\n\n성질을 비교하는 문제도 자주 나와요. 직사각형은 두 대각선의 길이가 같지만 항상 수직인 것은 아니에요. 정사각형이면 두 대각선이 수직이에요. 마름모는 두 대각선이 수직이지만 길이는 다를 수 있고요.\n\n둘 다 가진 것이 정사각형이에요. 길이도 같고 수직이기도 해요.\n\n「대각선의 길이가 같다」를 물으면 각의 조건을 떠올리세요. 「대각선이 수직이다」를 물으면 변의 조건을 떠올리면 돼요.",
                 "definitions": [
                   {
                     "conceptKey": "special-quad",
@@ -1564,12 +1818,12 @@
           ]
         },
         {
-          "sectionId": "special-quad:practice:v2",
+          "sectionId": "special-quad:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "special-quad:practice:problems:v2",
+              "blockId": "special-quad:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1586,12 +1840,12 @@
           ]
         },
         {
-          "sectionId": "special-quad:check:v2",
+          "sectionId": "special-quad:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "special-quad:check:problems:v2",
+              "blockId": "special-quad:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1607,12 +1861,12 @@
           ]
         },
         {
-          "sectionId": "special-quad:summary:v2",
+          "sectionId": "special-quad:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "special-quad:summary:text:v2",
+              "blockId": "special-quad:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -3855,6 +4109,124 @@
               "required": true,
               "payload": {
                 "text": "변의 조건을 더한 것이에요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "parallelogram:check",
+      "courseKey": "triangle-quad",
+      "name": "평행사변형 확인",
+      "versionId": "parallelogram:check:v2",
+      "problems": [
+        {
+          "problemVersionId": "parallelogram:check-1:v1",
+          "conceptKeys": [
+            "parallelogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallelogram:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "평행사변형 $ABCD$에서 $\\overline{AB} = 7$일 때 $\\overline{CD}$의 길이를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallelogram:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "마주 보는 변이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "parallelogram:check-2:v2",
+          "conceptKeys": [
+            "parallelogram"
+          ],
+          "promptContent": [
+            {
+              "blockId": "parallelogram:check-2:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "다음 중 평행사변형이 되는 조건이 아닌 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "한 쌍의 대변만 나란하다"
+              },
+              {
+                "id": "b",
+                "text": "두 쌍의 대변이 각각 나란하다"
+              },
+              {
+                "id": "c",
+                "text": "두 쌍의 대변의 길이가 각각 같다"
+              },
+              {
+                "id": "d",
+                "text": "대각선이 서로를 이등분한다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "한 쌍의 대변만 나란하다"
+              },
+              {
+                "id": "b",
+                "text": "두 쌍의 대변이 각각 나란하다"
+              },
+              {
+                "id": "c",
+                "text": "두 쌍의 대변의 길이가 각각 같다"
+              },
+              {
+                "id": "d",
+                "text": "대각선이 서로를 이등분한다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "parallelogram:check-2:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "한 쌍만 나란한 것은 사다리꼴이에요."
               }
             }
           ],

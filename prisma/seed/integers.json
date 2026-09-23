@@ -51,7 +51,7 @@
     {
       "public": {
         "lessonKey": "negative-number",
-        "versionId": "negative-number:v1",
+        "versionId": "negative-number:v2",
         "title": "0보다 작은 수: 음수와 수직선",
         "summary": "수직선의 왼쪽에서 만나는 음수를 읽고, 부호가 무엇을 뜻하는지 알아봐요.",
         "estimatedMinutes": 10,
@@ -64,12 +64,12 @@
       },
       "sections": [
         {
-          "sectionId": "negative-number:explanation:v1",
+          "sectionId": "negative-number:explanation:v2",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "negative-number:explanation:text:v1",
+              "blockId": "negative-number:explanation:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -90,7 +90,7 @@
               }
             },
             {
-              "blockId": "negative-number:explanation:drawing:v1",
+              "blockId": "negative-number:explanation:drawing:v2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -301,12 +301,12 @@
           ]
         },
         {
-          "sectionId": "negative-number:example:v1",
+          "sectionId": "negative-number:example:v2",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "negative-number:example:text:v1",
+              "blockId": "negative-number:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -324,12 +324,12 @@
           ]
         },
         {
-          "sectionId": "negative-number:practice:v1",
+          "sectionId": "negative-number:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "negative-number:practice:problems:v1",
+              "blockId": "negative-number:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -346,12 +346,12 @@
           ]
         },
         {
-          "sectionId": "negative-number:check:v1",
+          "sectionId": "negative-number:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "negative-number:check:problems:v1",
+              "blockId": "negative-number:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -367,17 +367,17 @@
           ]
         },
         {
-          "sectionId": "negative-number:summary:v1",
+          "sectionId": "negative-number:summary:v2",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "negative-number:summary:text:v1",
+              "blockId": "negative-number:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "0의 왼쪽에 있는 수가 음수이고, 앞의 $-$는 빼기가 아니라 방향을 나타내는 부호예요. 음수와 0과 양수를 통틀어 정수라고 해요.\n\n이 수업의 개념은 음수·정수예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "0의 왼쪽에 있는 수가 음수이고, 앞의 $-$는 빼기가 아니라 방향을 나타내는 부호예요. $1,2,3,\\ldots$와 같은 양의 정수, $-1,-2,-3,\\ldots$와 같은 음의 정수, 그리고 $0$을 통틀어 정수라고 해요.\n\n이 수업의 개념은 음수·정수예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "negative-number",
@@ -407,7 +407,7 @@
     {
       "public": {
         "lessonKey": "absolute-value",
-        "versionId": "absolute-value:v2",
+        "versionId": "absolute-value:v3",
         "title": "크기 비교와 절댓값: 자리와 거리",
         "summary": "수직선의 자리로 크기를 견주고, 0에서 떨어진 거리를 절댓값으로 나타내요.",
         "estimatedMinutes": 10,
@@ -422,12 +422,12 @@
       },
       "sections": [
         {
-          "sectionId": "absolute-value:explanation:v2",
+          "sectionId": "absolute-value:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "absolute-value:explanation:text:v2",
+              "blockId": "absolute-value:explanation:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -450,17 +450,17 @@
           ]
         },
         {
-          "sectionId": "absolute-value:example:v2",
+          "sectionId": "absolute-value:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "absolute-value:example:text:v2",
+              "blockId": "absolute-value:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$-3$, $0$, $2$를 작은 것부터 늘어놓아 볼게요.\n\n수직선에 놓으면 왼쪽부터 $-3$, $0$, $2$예요. 왼쪽에 있을수록 작으니 이 순서가 그대로 답이에요.\n\n절댓값으로 견주면 헷갈려요. $|-3|=3$이고 $|2|=2$라 3이 더 크지만, 수 자체는 $-3$이 $2$보다 작아요.\n\n음수끼리는 절댓값이 클수록 작은 수예요. $-7$과 $-2$ 중에서는 $-7$이 더 작아요.",
+                "text": "$-3$, $0$, $2$를 작은 것부터 늘어놓아 볼게요.\n\n수직선에 놓으면 왼쪽부터 $-3$, $0$, $2$예요. 왼쪽에 있을수록 작으니 이 순서가 그대로 답이에요.\n\n두 수의 절댓값만 비교하면 원래 수의 대소 관계를 잘못 판단할 수 있어요. $|-3|=3$이고 $|2|=2$라 3이 더 크지만, 수 자체는 $-3$이 $2$보다 작아요.\n\n음수끼리는 절댓값이 클수록 작은 수예요. $-7$과 $-2$ 중에서는 $-7$이 더 작아요.",
                 "definitions": [
                   {
                     "conceptKey": "absolute-value",
@@ -471,7 +471,7 @@
               }
             },
             {
-              "blockId": "absolute-value:example:drawing:v2",
+              "blockId": "absolute-value:example:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -648,12 +648,12 @@
           ]
         },
         {
-          "sectionId": "absolute-value:practice:v2",
+          "sectionId": "absolute-value:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "absolute-value:practice:problems:v2",
+              "blockId": "absolute-value:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -670,12 +670,12 @@
           ]
         },
         {
-          "sectionId": "absolute-value:check:v2",
+          "sectionId": "absolute-value:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "absolute-value:check:problems:v2",
+              "blockId": "absolute-value:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -691,12 +691,12 @@
           ]
         },
         {
-          "sectionId": "absolute-value:summary:v2",
+          "sectionId": "absolute-value:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "absolute-value:summary:text:v2",
+              "blockId": "absolute-value:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
