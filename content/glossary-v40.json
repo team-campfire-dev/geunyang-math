@@ -31,6 +31,76 @@
       "key": "dispersion",
       "label": "범위와 표준편차",
       "assessable": true
+    },
+    {
+      "key": "numeracy-scope",
+      "label": "수리능력의 네 영역",
+      "assessable": true
+    },
+    {
+      "key": "calculation-order",
+      "label": "계산 순서와 법칙",
+      "assessable": true
+    },
+    {
+      "key": "verification",
+      "label": "검산",
+      "assessable": true
+    },
+    {
+      "key": "statistics-reading",
+      "label": "통계로 읽기",
+      "assessable": true
+    },
+    {
+      "key": "chart-types",
+      "label": "도표의 종류",
+      "assessable": true
+    },
+    {
+      "key": "chart-reading",
+      "label": "도표 읽기",
+      "assessable": true
+    },
+    {
+      "key": "chart-making",
+      "label": "도표 만들기",
+      "assessable": true
+    },
+    {
+      "key": "cost-price",
+      "label": "원가와 정가",
+      "assessable": true
+    },
+    {
+      "key": "discount-rate",
+      "label": "할인율",
+      "assessable": true
+    },
+    {
+      "key": "concentration",
+      "label": "농도",
+      "assessable": true
+    },
+    {
+      "key": "speed",
+      "label": "속력",
+      "assessable": true
+    },
+    {
+      "key": "growth-rate",
+      "label": "증감률",
+      "assessable": true
+    },
+    {
+      "key": "table-reading",
+      "label": "표 읽기",
+      "assessable": true
+    },
+    {
+      "key": "table-inference",
+      "label": "표가 말하는 것",
+      "assessable": true
     }
   ],
   "lessons": [],
@@ -156,6 +226,286 @@
         }
       ],
       "usageNote": "평균이 같은 두 자료를 구별할 때"
+    },
+    {
+      "conceptKey": "numeracy-scope",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "수리능력의 네 영역",
+      "summary": "기초연산·기초통계·도표분석·도표작성이에요.",
+      "blocks": [
+        {
+          "blockId": "global:numeracy-scope:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "채용 시험의 수리능력은 네 가지가 모인 이름이에요. 기초연산은 계산하는 문항, 기초통계는 여럿을 하나로 줄이는 문항, 도표분석은 표와 그래프에서 값을 읽는 문항, 도표작성은 자료에 맞는 도표를 고르는 문항이에요. 문항은 도표분석이 가장 많아요. 어느 영역인지 알아채면 무엇을 먼저 볼지가 정해져요 — 기초연산은 기준, 도표분석은 제목과 단위예요. 필요한 계산은 초등·중학 수준이에요. 틀리는 원인은 대개 계산이 아니라 기준을 잘못 잡거나 단위를 놓치는 것이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "문항이 어느 영역인지 가릴 때"
+    },
+    {
+      "conceptKey": "calculation-order",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "계산 순서와 법칙",
+      "summary": "괄호 먼저, 그다음 곱셈과 나눗셈이에요.",
+      "blocks": [
+        {
+          "blockId": "global:calculation-order:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "괄호를 먼저 풀고, 그다음 곱셈과 나눗셈, 마지막에 덧셈과 뺄셈을 해요. $120 - 4 \\times (15 - 7)$은 괄호가 $8$, 곱셈이 $32$, 그래서 $88$이에요. 순서보다 쓸모 있는 것은 차례를 바꿔도 된다는 사실이에요. 곱셈은 순서와 묶는 방법을 바꿔도 값이 같아요. 그래서 $25 \\times 32 \\times 4$는 $25$와 $4$를 먼저 묶어 $100 \\times 32 = 3{,}200$으로 끝나요. 어려운 수를 쉬운 수의 차로 바꾸는 것도 같은 도구예요 — $98 \\times 25 = (100 - 2) \\times 25 = 2{,}450$이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "계산을 쉬운 순서로 바꿀 때"
+    },
+    {
+      "conceptKey": "verification",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "검산",
+      "summary": "답이 맞았는지 되짚어 보는 것이에요.",
+      "blocks": [
+        {
+          "blockId": "global:verification:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "계산이 끝난 뒤 답이 맞았는지 확인하는 일이에요. 가장 확실한 것은 역연산이에요. 덧셈은 뺄셈으로, 곱셈은 나눗셈으로 되돌려 봐요 — $438 + 276 = 714$는 $714 - 276$이 $438$인지 보면 돼요. 다만 시간이 들어요. 빠른 쪽은 구거법이에요. 각 수의 자릿수를 모두 더해 $9$를 버리고 남긴 수끼리 맞춰 보는 방법이에요. 구거법은 틀린 것을 잡는 그물이지 맞았다는 증명은 아니에요. 검산 수가 다르면 반드시 틀린 것이지만, 같다고 맞은 것은 아니에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "답을 낸 뒤 확인할 때"
+    },
+    {
+      "conceptKey": "statistics-reading",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "통계로 읽기",
+      "summary": "여럿을 하나로 줄이고, 그 하나가 숨긴 것을 봐요.",
+      "blocks": [
+        {
+          "blockId": "global:statistics-reading:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "여러 값을 평균·합계·빈도로 줄여 자료의 특성을 읽는 일이에요. 평균과 합계는 서로 뒤집어 써요 — $\\text{합계} = \\text{평균} \\times \\text{개수}$예요. 인원이 다른 집단을 합칠 때는 합계끼리 더해 전체 인원으로 나눠요. 줄인 하나가 숨기는 것도 함께 봐요. 유난히 크거나 작은 값이 섞이면 평균 대신 중앙값을, 더할 수 없는 자료는 최빈값을 봐요. 평균이 같아도 흩어진 정도는 다를 수 있으니 범위와 표준편차도 함께 읽어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "자료를 하나의 수로 줄일 때"
+    },
+    {
+      "conceptKey": "chart-types",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "도표의 종류",
+      "summary": "무엇을 보여 주려는가가 종류를 정해요.",
+      "blocks": [
+        {
+          "blockId": "global:chart-types:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "추이는 꺾은선, 비교는 막대, 구성비는 원그래프예요. 이 셋만 확실히 해도 대부분 풀려요. 점그래프는 두 요소가 만나는 위치를, 방사형그래프는 여러 항목의 균형을 보여 줘요. 누적 막대는 부분과 합계를 한 번에 보여 주고요. 시험은 「이 자료에 알맞은 그래프는?」을 그대로 묻기도 하고, 잘못 고른 그래프를 짚게 하기도 해요. 시간의 흐름은 원그래프에 담을 수 없다는 것만 알아도 보기 하나는 지워져요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "자료에 맞는 도표를 고를 때"
+    },
+    {
+      "conceptKey": "chart-reading",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "도표 읽기",
+      "summary": "틀리는 원인은 거의 언제나 기준이에요.",
+      "blocks": [
+        {
+          "blockId": "global:chart-reading:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "표와 그래프에서 필요한 값을 찾아 뜻을 읽는 일이에요. 계산이 어려워 틀리는 경우는 드물고, 대부분 기준 때문에 틀려요. 증감률의 기준은 언제나 이전 값이에요. 기준이 다른 퍼센트는 더할 수 없어서, $40\\%$ 깎고 또 $40\\%$ 깎으면 $80\\%$가 아니라 $64\\%$ 할인이에요. 점유율이 $10\\%$에서 $12\\%$가 되면 $2$%p 오른 것이지 $2\\%$ 오른 것이 아니고요. 총량과 비율은 서로를 말해 주지 않아요. 표에 없는 것을 읽어 내지 않는 것도 같은 능력이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "표와 그래프에서 값을 읽을 때"
+    },
+    {
+      "conceptKey": "chart-making",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "도표 만들기",
+      "summary": "무엇을 전할지가 언제나 먼저예요.",
+      "blocks": [
+        {
+          "blockId": "global:chart-making:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "결과를 도표로 보여 주는 일이에요. 차례는 정해져 있어요 — 전할 내용을 정하고, 그에 맞는 도표를 고르고, 가로·세로축에 무엇을 둘지 정하고, 눈금을 정해 값을 표시한 뒤, 제목과 단위를 붙여요. 시간은 가로축에 두고 왼쪽에서 오른쪽으로 흐르게 하는 것이 관례예요. 눈금의 시작점은 인상을 바꿔요. 세로축을 $0$이 아니라 $90$에서 시작하면 $91$과 $93$의 차이가 세 배처럼 보이거든요. 채용 시험은 그리게 하기보다 「이 자료에 알맞은 도표는?」이나 「잘못된 곳은?」으로 물어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "도표를 만드는 차례를 떠올릴 때"
+    },
+    {
+      "conceptKey": "cost-price",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "원가와 정가",
+      "summary": "붙일 때의 기준은 원가예요.",
+      "blocks": [
+        {
+          "blockId": "global:cost-price:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "사 올 때 치른 값이 원가, 팔려고 내건 값이 정가예요. 정가는 보통 원가에 이익을 붙여 정해요. 원가 $15{,}000$원에 $20\\%$를 붙이면 붙는 돈이 $3{,}000$원이고 정가는 $18{,}000$원이에요. 이익률은 이익을 원가로 나눈 값이고요. 여기서 하나만 붙들면 돼요 — 붙일 때의 기준은 원가예요. 깎을 때의 기준은 정가라서, $20\\%$ 붙였다가 $10\\%$ 깎아도 원가로 돌아오지 않아요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "정가나 이익을 구할 때"
+    },
+    {
+      "conceptKey": "discount-rate",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "할인율",
+      "summary": "깎을 때의 기준은 정가예요.",
+      "blocks": [
+        {
+          "blockId": "global:discount-rate:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "정가에서 깎은 돈이 정가의 몇 %인지가 할인율이에요. 정가 $18{,}000$원을 $10\\%$ 깎으면 깎이는 돈이 $1{,}800$원, 판매가는 $16{,}200$원이에요. 기준이 원가가 아니라 정가라는 점이 가장 많이 틀리는 곳이에요. 할인을 두 번 하면 두 번째 기준이 또 달라져요. $40\\%$ 깎고 다시 $40\\%$를 깎아도 $80\\%$가 아니라 $64\\%$ 할인이에요. 깎은 뒤 남는 비율끼리 곱하면 한 번에 나와요 — $0.6 \\times 0.6 = 0.36$이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "할인된 판매가를 구할 때"
+    },
+    {
+      "conceptKey": "concentration",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "농도",
+      "summary": "나누는 수는 물이 아니라 소금물 전체예요.",
+      "blocks": [
+        {
+          "blockId": "global:concentration:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "소금물 전체에서 소금이 차지하는 비율이에요. 나누는 수가 물이 아니라 소금물 전체라는 점이 가장 많이 틀리는 곳이에요. 소금물 $200$g에 소금 $30$g이면 농도는 $\\frac{30}{200} = 15\\%$예요 — 물은 $170$g이지만 나눌 때 쓰는 수는 $200$이에요. 거꾸로 소금의 양은 $\\text{소금물} \\times \\text{농도}$로 구해요. 물을 더하든 끓여서 날리든 소금의 양은 그대로이고, 움직이는 것은 전체의 양뿐이에요. 그래서 소금을 먼저 구해 붙들어 두고, 전체가 얼마가 되는지만 따지면 돼요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "소금물 문제를 풀 때"
+    },
+    {
+      "conceptKey": "speed",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "속력",
+      "summary": "거리를 시간으로 나눈 값이에요.",
+      "blocks": [
+        {
+          "blockId": "global:speed:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "한 시간에 얼마나 가는지를 하나의 수로 나타낸 비율이에요. $\\text{속력} = \\frac{\\text{거리}}{\\text{시간}}$이고, 나머지 둘은 여기서 따라 나와요. 시험에서 실제로 틀리는 원인은 계산이 아니라 단위예요. $30$분은 $0.5$시간, $90$분은 $1.5$시간이에요. 시속을 초속으로 바꿀 때는 $1$시간이 $3{,}600$초, $1$km가 $1{,}000$m라는 것만 쓰면 돼요. 거리가 같은데 갈 때와 올 때의 속력이 다르면 두 속력의 평균은 답이 아니에요. 걸린 시간을 각각 구해 더하는 것이 언제나 맞는 길이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "속력·시간·거리를 오갈 때"
+    },
+    {
+      "conceptKey": "growth-rate",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "증감률",
+      "summary": "나누는 수는 언제나 이전 값이에요.",
+      "blocks": [
+        {
+          "blockId": "global:growth-rate:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "얼마나 늘거나 줄었는지를 비율로 적은 값이에요. $\\text{증감률} = \\frac{\\text{나중} - \\text{처음}}{\\text{처음}} \\times 100$이고 단위는 $\\%$예요. 늘어난 양 자체는 증감량이고 단위가 그대로 남아요. 가장 많이 틀리는 곳은 나누는 수예요 — 나중 값이 아니라 처음 값으로 나눠요. $40{,}000$명이 $50{,}000$명이 되면 $25\\%$이지 $20\\%$가 아니에요. 여러 해에 걸친 증가율은 더할 수 없어요. 해마다 기준이 달라지기 때문이에요. %와 %p도 다른 말이고요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "얼마나 늘었는지 비율로 구할 때"
+    },
+    {
+      "conceptKey": "table-reading",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "표 읽기",
+      "summary": "제목 → 단위 → 줄과 열 → 합계 차례로 봐요.",
+      "blocks": [
+        {
+          "blockId": "global:table-reading:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "표를 만나면 네 가지를 차례로 봐요. 첫째는 제목이에요 — 「지점별 분기 매출」과 「지점별 분기 이익」은 전혀 다른 표인데 숫자만 보면 구별되지 않아요. 둘째는 단위예요. $3{,}200$이 만 원인지 억 원인지에 따라 답이 백 배 달라져요. 셋째는 줄과 열이 각각 무엇인지예요. 이것이 어느 방향으로 읽을지를 정해요 — 「전체」를 물으면 열을 따라 내려가고, 「그 항목」을 물으면 줄을 따라 건너가요. 넷째는 합계가 있는지예요. 합계 줄이 있으면 비중 문제가 훨씬 빨라지고, 없으면 직접 더해야 해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "표에서 값을 찾을 때"
+    },
+    {
+      "conceptKey": "table-inference",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "표가 말하는 것",
+      "summary": "표에 없는 것은 읽어 내지 않아요.",
+      "blocks": [
+        {
+          "blockId": "global:table-inference:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "표에 적힌 수와 그 수들로 계산되는 것까지가 「알 수 있는 것」이에요. 두 열을 이으면 표에 없는 셋째 값도 나와요 — $\\text{전체} = \\frac{\\text{부분}}{\\text{비율}}$이라서 매출 $80$억과 점유율 $10\\%$로 시장 $800$억을 구할 수 있어요. 그 밖은 알 수 없어요. 매출이 줄었다는 것과 「영업을 잘하지 못했다」는 다른 말이에요. 비율의 변화는 총량의 변화를 말해 주지 않고, 총량의 변화도 비율의 변화를 말해 주지 않아요. 그래서 「알 수 없다」가 답인 보기는 함정처럼 보이지만 함정이 아니에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "표로 말할 수 있는 것과 없는 것을 가릴 때"
     }
   ]
 }

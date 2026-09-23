@@ -87,7 +87,7 @@
     {
       "public": {
         "lessonKey": "ncs-why",
-        "versionId": "ncs-why:v2",
+        "versionId": "ncs-why:v3",
         "title": "왜 수리능력을 보는가",
         "summary": "시험이 무엇을 재는지 알고, 수리능력을 이루는 네 영역을 구분해요.",
         "estimatedMinutes": 15,
@@ -95,26 +95,49 @@
           "numeracy-scope"
         ],
         "prerequisiteConceptKeys": [],
-        "sectionCount": 7
+        "sectionCount": 8
       },
       "sections": [
         {
-          "sectionId": "ncs-why:opening:v2",
+          "sectionId": "ncs-why:opening:v3",
           "role": "explanation",
-          "title": "시험지를 펴면 무엇이 있나",
+          "title": "시험이 재는 것은 수학 실력이 아니다",
           "contentBlocks": [
             {
-              "blockId": "ncs-why:opening:text:v2",
+              "blockId": "ncs-why:opening:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "채용 시험의 수리영역 앞에서 많은 사람이 「나는 수학을 못해서」라고 말해요. 그런데 이 시험이 재는 것은 수학 실력이 아니에요. 필요한 계산은 초등·중학 수준이고, 정작 갈리는 곳은 기준을 잘못 잡거나 단위를 놓치는 자리예요.\n\n시험지에 나오는 문항은 모두 네 갈래 중 하나예요. 계산하는 것, 요약하는 것, 표를 읽는 것, 그리고 도표를 고르는 것. 아래 그림의 네 칸이 그것이고, 이 과정의 남은 네 수업이 한 칸씩 맡아요.",
+                "text": "채용 시험의 수리영역 앞에서 많은 사람이 「나는 수학을 못해서」라고 말해요. 그런데 이 시험이 재는 것은 수학 실력이 아니에요.\n\n필요한 계산은 초등·중학 수준이에요. 정작 틀리는 원인은 기준을 잘못 잡거나 단위를 놓치는 것이에요.",
                 "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-why:areas:v3",
+          "role": "explanation",
+          "title": "문항은 네 종류로 나뉜다",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-why:areas:text:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "시험지에 나오는 문항은 모두 네 종류 중 하나예요. 이 넷을 묶어 수리능력의 네 영역이라고 해요.\n\n계산하는 것이 기초연산, 여럿을 하나로 줄이는 것이 기초통계예요. 표와 그래프를 읽는 것이 도표분석, 자료에 맞는 도표를 고르는 것이 도표작성이고요.\n\n아래 그림의 네 칸이 그것이에요. 이 과정의 남은 네 수업이 한 칸씩 맡아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "numeracy-scope",
+                    "surface": "수리능력의 네 영역",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             },
             {
-              "blockId": "ncs-why:areas:drawing:v2",
+              "blockId": "ncs-why:areas:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -366,29 +389,29 @@
           ]
         },
         {
-          "sectionId": "ncs-why:example:v2",
+          "sectionId": "ncs-why:example:v3",
           "role": "worked_example",
           "title": "문항 셋을 뜯어보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-why:example:text:v2",
+              "blockId": "ncs-why:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "영역을 알아채면 무엇을 먼저 볼지가 정해져요. 세 문항으로 해 볼게요.\n\n「다음 표는 연도별 매출액이다. 증가율이 가장 큰 지점을 고르시오.」 — 표에서 값을 읽어 견주니 도표분석이에요. 먼저 볼 것은 표의 제목과 단위예요.\n\n「원가 12,000원에 20% 이익을 붙인 정가는?」 — 계산 한 줄이니 기초연산이에요. 먼저 볼 것은 20%를 무엇에 붙이는가, 즉 기준이에요.\n\n「네 지점의 평균 판매량은?」 — 여럿을 하나로 줄이니 기초통계예요. 먼저 볼 것은 지점마다 크기가 같은지, 즉 단순 평균으로 되는지예요.",
+                "text": "영역을 알아채면 무엇을 먼저 볼지가 정해져요. 세 문항으로 해 볼게요.\n\n「다음 표는 연도별 매출액이다. 증가율이 가장 큰 지점을 고르시오.」 — 표에서 값을 읽어 비교하니 도표분석이에요. 먼저 볼 것은 표의 제목과 단위예요.\n\n「원가 12,000원에 20% 이익을 붙인 정가는?」 — 계산 한 줄이니 기초연산이에요. 먼저 볼 것은 20%를 무엇에 붙이는가, 즉 기준이에요.\n\n「네 지점의 평균 판매량은?」 — 여럿을 하나로 줄이니 기초통계예요. 먼저 볼 것은 지점마다 크기가 같은지, 즉 단순 평균으로 되는지예요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-why:try-sort:v2",
+          "sectionId": "ncs-why:try-sort:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-why:try-sort:problems:v2",
+              "blockId": "ncs-why:try-sort:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -404,27 +427,27 @@
           ]
         },
         {
-          "sectionId": "ncs-why:map:v2",
+          "sectionId": "ncs-why:map:v3",
           "role": "explanation",
-          "title": "영역마다 갈리는 자리가 따로 있다",
+          "title": "영역마다 틀리는 원인이 따로 있다",
           "contentBlocks": [
             {
-              "blockId": "ncs-why:map:text:v2",
+              "blockId": "ncs-why:map:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "네 영역은 묻는 것도 다르지만, 틀리는 자리도 각각 달라요. 남은 네 수업이 무엇을 다루는지 한눈에 보면 이렇습니다.\n\n이 표의 오른쪽 칸이 이 과정의 알맹이예요. 계산을 빨리 하는 훈련이 아니라, 저 네 자리에서 미끄러지지 않는 법을 익히는 것이 목표예요.",
+                "text": "네 영역은 묻는 것도 다르지만, 틀리는 원인도 각각 달라요. 남은 네 수업이 무엇을 다루는지 한눈에 보면 이렇습니다.\n\n이 표의 오른쪽 칸이 이 과정의 핵심이에요. 계산을 빨리 하는 훈련이 아니에요. 저 네 가지에서 미끄러지지 않는 법을 익히는 것이 목표예요.",
                 "definitions": []
               }
             },
             {
-              "blockId": "ncs-why:map:table:v2",
+              "blockId": "ncs-why:map:table:v3",
               "kind": "core.table",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "caption": "네 영역이 묻는 것과 갈리는 자리",
+                "caption": "네 영역이 묻는 것과 자주 틀리는 것",
                 "rowHeader": true,
                 "columns": [
                   {
@@ -436,7 +459,7 @@
                     "align": "start"
                   },
                   {
-                    "label": "자주 갈리는 곳",
+                    "label": "자주 틀리는 곳",
                     "align": "start"
                   }
                 ],
@@ -475,12 +498,12 @@
           ]
         },
         {
-          "sectionId": "ncs-why:try-more:v2",
+          "sectionId": "ncs-why:try-more:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-why:try-more:problems:v2",
+              "blockId": "ncs-why:try-more:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -495,12 +518,12 @@
           ]
         },
         {
-          "sectionId": "ncs-why:check:v2",
+          "sectionId": "ncs-why:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-why:check:problems:v2",
+              "blockId": "ncs-why:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -516,18 +539,24 @@
           ]
         },
         {
-          "sectionId": "ncs-why:summary:v2",
+          "sectionId": "ncs-why:summary:v3",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-why:summary:text:v2",
+              "blockId": "ncs-why:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "시험이 재는 것은 수학 실력이 아니라 업무에서 수를 다루는 힘이에요. 문항은 기초연산·기초통계·도표분석·도표작성 네 갈래 중 하나예요.\n\n문항을 만나면 먼저 어느 갈래인지 알아채고, 그 갈래에서 갈리는 자리를 떠올리세요. 남은 네 수업이 그 자리를 하나씩 다뤄요.",
-                "definitions": []
+                "text": "시험이 재는 것은 수학 실력이 아니라 업무에서 수를 다루는 힘이에요. 문항은 기초연산·기초통계·도표분석·도표작성 네 종류 중 하나예요.\n\n문항을 만나면 먼저 어느 영역인지 알아채세요. 그리고 그 영역에서 자주 틀리는 것을 떠올리세요. 남은 네 수업이 그것을 하나씩 다뤄요.\n\n이 수업의 개념은 수리능력의 네 영역이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "numeracy-scope",
+                    "surface": "수리능력의 네 영역",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -545,7 +574,7 @@
     {
       "public": {
         "lessonKey": "ncs-arithmetic",
-        "versionId": "ncs-arithmetic:v3",
+        "versionId": "ncs-arithmetic:v4",
         "title": "기초연산: 빠르게, 그리고 틀리지 않게",
         "summary": "계산을 쉽게 바꾸는 법칙, 계산보다 먼저 보는 단위, 답을 확인하는 검산을 익혀요.",
         "estimatedMinutes": 20,
@@ -559,43 +588,49 @@
           "addition",
           "decimal"
         ],
-        "sectionCount": 10
+        "sectionCount": 11
       },
       "sections": [
         {
-          "sectionId": "ncs-arithmetic:overview:v3",
+          "sectionId": "ncs-arithmetic:overview:v4",
           "role": "explanation",
           "title": "계산이 어려워서 틀리는 게 아니다",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:overview:text:v3",
+              "blockId": "ncs-arithmetic:overview:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "기초연산 문항의 계산은 초등 수준이에요. 그런데도 틀리는 이유는 단계가 서너 개이기 때문이에요. 예산을 항목별로 더하고 남은 돈을 구하기, 여러 업체의 단가를 견주기, 할인과 수수료가 섞인 금액 정산하기 — 한 곳만 어긋나면 답이 달라져요.\n\n그래서 이 수업은 계산법을 가르치지 않아요. 대신 빠르게 만드는 법 하나, 시작 전에 확인할 것 하나, 끝난 뒤에 확인할 것 하나를 다뤄요.",
+                "text": "기초연산 문항의 계산은 초등 수준이에요. 그런데도 틀리는 이유는 단계가 서너 개이기 때문이에요.\n\n예산을 항목별로 더하고 남은 돈을 구하기, 여러 업체의 단가를 비교하기, 할인과 수수료가 섞인 금액 정산하기. 한 곳만 어긋나면 답이 달라져요.\n\n그래서 이 수업은 계산법을 가르치지 않아요. 대신 빠르게 만드는 법 하나, 시작 전에 확인할 것 하나, 끝난 뒤에 확인할 것 하나를 다뤄요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:order:v3",
+          "sectionId": "ncs-arithmetic:order:v4",
           "role": "explanation",
           "title": "25 × 32 × 4를 어떻게 10초에 푸나",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:order:text:v3",
+              "blockId": "ncs-arithmetic:order:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "계산 순서는 괄호 먼저, 그다음 곱셈과 나눗셈, 마지막에 덧셈과 뺄셈이에요. $120 - 4 \\times (15 - 7)$은 괄호가 $8$, 곱셈이 $32$, 그래서 $88$이에요.\n\n순서보다 쓸모 있는 것은 차례를 바꿔도 된다는 사실이에요. 곱셈은 순서와 묶는 자리를 바꿔도 값이 같아요. 그래서 $25 \\times 32 \\times 4$는 앞에서부터 하지 않고 $25$와 $4$를 먼저 묶어 $100 \\times 32 = 3{,}200$으로 끝냅니다.\n\n$98 \\times 25$도 마찬가지예요. $(100 - 2) \\times 25 = 2{,}500 - 50 = 2{,}450$. 어려운 수를 쉬운 수의 차로 바꾸는 것이고, 시간이 모자란 시험에서 이것은 공식이 아니라 도구예요.",
-                "definitions": []
+                "text": "괄호를 먼저 풀고, 그다음 곱셈과 나눗셈, 마지막에 덧셈과 뺄셈을 해요. 이것이 계산 순서예요. $120 - 4 \\times (15 - 7)$은 괄호가 $8$, 곱셈이 $32$, 그래서 $88$이에요.\n\n순서보다 쓸모 있는 것은 차례를 바꿔도 된다는 사실이에요. 곱셈은 순서와 묶는 방법을 바꿔도 값이 같아요. 그래서 $25 \\times 32 \\times 4$는 앞에서부터 하지 않아요. $25$와 $4$를 먼저 묶어 $100 \\times 32 = 3{,}200$으로 끝냅니다.\n\n$98 \\times 25$도 마찬가지예요. $(100 - 2) \\times 25 = 2{,}500 - 50 = 2{,}450$. 어려운 수를 쉬운 수의 차로 바꾸는 것이고, 시간이 모자란 시험에서 이것은 공식이 아니라 도구예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "calculation-order",
+                    "surface": "계산 순서",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             },
             {
-              "blockId": "ncs-arithmetic:order:drawing:v3",
+              "blockId": "ncs-arithmetic:order:drawing:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -755,12 +790,12 @@
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:try-order:v3",
+          "sectionId": "ncs-arithmetic:try-order:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:try-order:problems:v3",
+              "blockId": "ncs-arithmetic:try-order:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -776,22 +811,28 @@
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:units:v3",
+          "sectionId": "ncs-arithmetic:units:v4",
           "role": "explanation",
           "title": "900이 미터인가 피트인가",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:units:text:v3",
+              "blockId": "ncs-arithmetic:units:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "1999년 대한항공 화물기는 관제탑의 $900$m 지시를 $900$ft로 잘못 알아듣고 추락했어요. 같은 해 화성 기후탐사선은 야드로 쓴 값을 미터로 읽어 폭발했고요. 단위는 계산보다 먼저 보는 것이에요.\n\n자주 쓰는 환산은 아래 표에 모아 두었어요. 외우기보다 필요할 때 여기로 돌아오면 돼요. 다만 한 가지는 기억해 두세요 — 길이가 $100$배면 넓이는 $100^2$배, 부피는 $100^3$배예요. 넓이와 부피에서 자릿수를 놓치는 일이 가장 잦아요.",
-                "definitions": []
+                "text": "1999년 대한항공 화물기는 관제탑의 $900$m 지시를 $900$ft로 잘못 알아듣고 추락했어요. 같은 해 화성 기후탐사선은 야드로 쓴 값을 미터로 읽어 폭발했고요.\n\n같은 양을 다른 단위로 고쳐 적는 일이 단위환산이에요. 단위는 계산보다 먼저 보는 것이에요.\n\n자주 쓰는 환산은 아래 표에 모아 두었어요. 외우기보다 필요할 때 여기로 돌아오면 돼요.\n\n다만 한 가지는 기억해 두세요. 길이가 $100$배면 넓이는 $100^2$배, 부피는 $100^3$배예요. 넓이와 부피에서 자릿수를 놓치는 일이 가장 잦아요.",
+                "definitions": [
+                  {
+                    "conceptKey": "unit-conversion",
+                    "surface": "단위환산",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             },
             {
-              "blockId": "ncs-arithmetic:units:table:v3",
+              "blockId": "ncs-arithmetic:units:table:v4",
               "kind": "core.table",
               "typeVersion": 1,
               "required": true,
@@ -852,12 +893,12 @@
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:try-units:v3",
+          "sectionId": "ncs-arithmetic:try-units:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:try-units:problems:v3",
+              "blockId": "ncs-arithmetic:try-units:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -872,22 +913,45 @@
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:verify:v3",
+          "sectionId": "ncs-arithmetic:verify:v4",
           "role": "explanation",
           "title": "답이 맞았는지 어떻게 아나",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:verify:text:v3",
+              "blockId": "ncs-arithmetic:verify:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "업무에서는 틀린 계산을 걸러 내는 일이 계산만큼 중요해요. 공식 기준이 기초연산의 목표 셋 중 하나를 통째로 검산에 쓰는 이유예요.\n\n가장 확실한 것은 역연산이에요. 되돌려 보는 거죠. $438 + 276 = 714$가 맞는지는 $714 - 276$이 $438$인지 보면 돼요. 덧셈은 뺄셈으로, 곱셈은 나눗셈으로. 다만 시간이 듭니다.\n\n빠른 쪽이 구거법이에요. 이름 그대로 「9를 버리는 법」이에요. 어떤 수든 9로 나눈 나머지만 남겨 놓고 그것끼리 맞춰 보는 거예요.\n\n9로 나눈 나머지는 나눗셈 없이 구해요. 자리 수를 모두 더하면 됩니다. 두 자리가 되면 또 더하고, 9가 나오면 버려서 $0$으로 둬요. $47$은 $4+7=11$, 다시 $1+1=2$. 이 $2$가 $47$을 9로 나눈 나머지이고, 구거법은 이 수를 검산 수라고 불러요.",
+                "text": "업무에서는 틀린 계산을 걸러 내는 일이 계산만큼 중요해요. 계산이 끝난 뒤 답이 맞았는지 확인하는 일을 검산이라고 해요. 공식 기준이 기초연산의 목표 셋 중 하나를 통째로 여기에 쓰는 이유예요.\n\n가장 확실한 것은 역연산이에요. 되돌려 보는 거죠. $438 + 276 = 714$가 맞는지는 $714 - 276$이 $438$인지 보면 돼요. 덧셈은 뺄셈으로, 곱셈은 나눗셈으로요. 다만 시간이 듭니다.",
+                "definitions": [
+                  {
+                    "conceptKey": "verification",
+                    "surface": "검산",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-arithmetic:casting:v4",
+          "role": "explanation",
+          "title": "9를 버리고 남은 수로 맞춰 본다",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-arithmetic:casting:text:v4",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "빠른 쪽이 구거법이에요. 이름 그대로 「9를 버리는 법」이에요. 어떤 수든 9로 나눈 나머지만 남겨 놓고 그것끼리 맞춰 보는 거예요.\n\n9로 나눈 나머지는 나눗셈 없이 구해요. 자릿수를 모두 더하면 됩니다. 두 자리가 되면 또 더하고, 9가 나오면 버려서 $0$으로 둬요. $47$은 $4+7=11$, 다시 $1+1=2$. 이 $2$가 $47$을 9로 나눈 나머지이고, 구거법은 이 수를 검산 수라고 불러요.",
                 "definitions": []
               }
             },
             {
-              "blockId": "ncs-arithmetic:verify:table:v3",
+              "blockId": "ncs-arithmetic:verify:table:v4",
               "kind": "core.table",
               "typeVersion": 1,
               "required": true,
@@ -905,7 +969,7 @@
                     "align": "end"
                   },
                   {
-                    "label": "자리 수의 합",
+                    "label": "자릿수의 합",
                     "align": "end"
                   },
                   {
@@ -950,24 +1014,24 @@
               }
             },
             {
-              "blockId": "ncs-arithmetic:verify:after:v3",
+              "blockId": "ncs-arithmetic:verify:after:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "definitions": [],
-                "text": "둘 다 $1$이니 통과예요. 만약 답을 $1{,}071$로 잘못 썼다면 $1+0+7+1 = 9$, 9는 버리니 검산 수가 $0$이에요. $1$과 다르니 그 자리에서 틀렸다는 것을 알 수 있어요.\n\n다만 구거법은 틀린 것을 잡는 그물이지 맞았다는 증명은 아니에요. 검산 수가 다르면 반드시 틀린 것이지만, 같다고 맞은 것은 아니에요. $1{,}801$처럼 자리를 바꿔 쓴 실수는 검산 수가 그대로 $1$이라 빠져나가요."
+                "text": "둘 다 $1$이니 통과예요. 만약 답을 $1{,}071$로 잘못 썼다면 $1+0+7+1 = 9$, 9는 버리니 검산 수가 $0$이에요. $1$과 다르니 바로 틀렸다는 것을 알 수 있어요.\n\n다만 구거법은 틀린 것을 잡는 그물이지 맞았다는 증명은 아니에요. 검산 수가 다르면 반드시 틀린 것이지만, 같다고 맞은 것은 아니에요. $1{,}801$처럼 자릿수를 뒤바꿔 쓴 실수는 검산 수가 그대로 $1$이라 빠져나가요.",
+                "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:try-verify:v3",
+          "sectionId": "ncs-arithmetic:try-verify:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:try-verify:problems:v3",
+              "blockId": "ncs-arithmetic:try-verify:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -982,12 +1046,12 @@
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:example:v3",
+          "sectionId": "ncs-arithmetic:example:v4",
           "role": "worked_example",
           "title": "셋을 한 문항에서 함께 쓰기",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:example:text:v3",
+              "blockId": "ncs-arithmetic:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -999,12 +1063,12 @@
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:check:v3",
+          "sectionId": "ncs-arithmetic:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:check:problems:v3",
+              "blockId": "ncs-arithmetic:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1021,18 +1085,34 @@
           ]
         },
         {
-          "sectionId": "ncs-arithmetic:summary:v3",
+          "sectionId": "ncs-arithmetic:summary:v4",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-arithmetic:summary:text:v3",
+              "blockId": "ncs-arithmetic:summary:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "계산 순서는 괄호·곱나눗·덧뺄이고, 곱셈은 차례를 바꿔 쉬운 짝을 먼저 묶을 수 있어요.\n\n단위는 계산보다 먼저 보고, 넓이와 부피는 제곱·세제곱으로 커진다는 것만 붙들어 두세요. 답을 낸 뒤에는 역연산이나 구거법으로 한 번 훑어요.",
-                "definitions": []
+                "text": "계산 순서는 괄호·곱나눗·덧뺄이고, 곱셈은 차례를 바꿔 쉬운 짝을 먼저 묶을 수 있어요.\n\n단위는 계산보다 먼저 봐요. 넓이와 부피는 제곱·세제곱으로 커진다는 것만 붙들어 두세요.\n\n답을 낸 뒤에는 역연산이나 구거법으로 한 번 훑어요.\n\n이 수업의 개념은 계산 순서와 법칙, 단위환산, 검산이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "calculation-order",
+                    "surface": "계산 순서",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "unit-conversion",
+                    "surface": "단위환산",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "verification",
+                    "surface": "검산",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -1050,7 +1130,7 @@
     {
       "public": {
         "lessonKey": "ncs-stat-basics",
-        "versionId": "ncs-stat-basics:v2",
+        "versionId": "ncs-stat-basics:v3",
         "title": "기초통계: 여럿을 하나로, 그리고 그 하나가 숨기는 것",
         "summary": "합계와 평균을 서로 뒤집어 쓰고, 대푯값이 숨기는 흩어짐까지 읽어요.",
         "estimatedMinutes": 15,
@@ -1062,43 +1142,55 @@
           "rate",
           "percentage"
         ],
-        "sectionCount": 7
+        "sectionCount": 8
       },
       "sections": [
         {
-          "sectionId": "ncs-stat-basics:overview:v2",
+          "sectionId": "ncs-stat-basics:overview:v3",
           "role": "explanation",
           "title": "이 영역은 혼자 나오지 않는다",
           "contentBlocks": [
             {
-              "blockId": "ncs-stat-basics:overview:text:v2",
+              "blockId": "ncs-stat-basics:overview:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "기초통계는 평균·합계·빈도로 자료의 특성을 읽는 영역이에요. 시험에서는 혼자 나오기보다 자료해석에 섞여 나와요 — 표에서 값을 읽은 다음 평균을 내거나, 두 집단을 견주는 식이에요.\n\n그래서 계산은 쉬운데 자료를 잘못 읽으면 통째로 틀려요. 여기서는 바탕이 되는 두 가지만 잡아요. 여럿을 하나로 줄이는 법과, 그 하나가 무엇을 숨기는지예요.",
-                "definitions": []
+                "text": "평균·합계·빈도로 자료의 특성을 읽는 일을 통계로 읽기라고 해요. 기초통계가 다루는 것이 이것이에요. 시험에서는 혼자 나오기보다 자료해석에 섞여 나와요 — 표에서 값을 읽은 다음 평균을 내거나, 두 집단을 비교하는 식이에요.\n\n그래서 계산은 쉬운데 자료를 잘못 읽으면 통째로 틀려요. 여기서는 바탕이 되는 두 가지만 잡아요. 여럿을 하나로 줄이는 법과, 그 하나가 무엇을 숨기는지예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "statistics-reading",
+                    "surface": "통계로 읽기",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-stat-basics:reduce:v2",
+          "sectionId": "ncs-stat-basics:reduce:v3",
           "role": "explanation",
           "title": "평균을 묻거든 합계로 바꿔 보세요",
           "contentBlocks": [
             {
-              "blockId": "ncs-stat-basics:reduce:text:v2",
+              "blockId": "ncs-stat-basics:reduce:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$\\text{평균} = \\frac{\\text{합계}}{\\text{개수}}$이고, 시험은 이 식을 뒤집은 쪽을 좋아해요. $\\text{합계} = \\text{평균} \\times \\text{개수}$예요.\n\n「네 달 평균이 $250$개인데 앞의 세 달이 $230$, $260$, $240$개였다면 남은 달은?」 — 평균을 합계 $1{,}000$개로 바꾸는 순간 뺄셈 하나로 끝나요.\n\n한 가지만 조심하세요. 인원이 다른 두 집단의 평균은 더해서 반으로 나눌 수 없어요. $20$명 평균 $80$점과 $30$명 평균 $70$점을 합치면 $75$점이 아니라 $\\frac{1{,}600 + 2{,}100}{50} = 74$점이에요. 값은 언제나 사람이 많은 쪽으로 끌려가요.",
-                "definitions": []
+                "text": "여러 값을 대표하는 하나의 수가 평균이에요. $\\text{평균} = \\frac{\\text{합계}}{\\text{개수}}$이고, 시험은 이 식을 뒤집은 쪽을 좋아해요. $\\text{합계} = \\text{평균} \\times \\text{개수}$예요.\n\n「네 달 평균이 $250$개인데 앞의 세 달이 $230$, $260$, $240$개였다면 남은 달은?」 — 평균을 합계 $1{,}000$개로 바꾸는 순간 뺄셈 하나로 끝나요.\n\n한 가지만 조심하세요. 인원이 다른 두 집단의 평균은 더해서 반으로 나눌 수 없어요. $20$명 평균 $80$점과 $30$명 평균 $70$점을 합치면 $75$점이 아니라 $\\frac{1{,}600 + 2{,}100}{50} = 74$점이에요. 값은 언제나 사람이 많은 쪽으로 끌려가요.",
+                "definitions": [
+                  {
+                    "conceptKey": "mean",
+                    "surface": "평균",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             },
             {
-              "blockId": "ncs-stat-basics:reduce:drawing:v2",
+              "blockId": "ncs-stat-basics:reduce:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1228,7 +1320,7 @@
                 ],
                 "frames": [
                   {
-                    "caption": "값이 여럿이면 한눈에 견주기 어려워요.",
+                    "caption": "값이 여럿이면 한눈에 비교하기 어려워요.",
                     "changes": [
                       {
                         "id": "avg",
@@ -1268,12 +1360,12 @@
           ]
         },
         {
-          "sectionId": "ncs-stat-basics:try-mean:v2",
+          "sectionId": "ncs-stat-basics:try-mean:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-stat-basics:try-mean:problems:v2",
+              "blockId": "ncs-stat-basics:try-mean:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1289,29 +1381,58 @@
           ]
         },
         {
-          "sectionId": "ncs-stat-basics:hidden:v2",
+          "sectionId": "ncs-stat-basics:hidden:v3",
           "role": "explanation",
           "title": "평균 300만 원을 받는 사람이 한 명도 없는 회사",
           "contentBlocks": [
             {
-              "blockId": "ncs-stat-basics:hidden:text:v2",
+              "blockId": "ncs-stat-basics:hidden:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "월 급여가 $150$만 원 $6$명, $200$만 원 $5$명, $1{,}000$만 원인 임원 $2$명인 회사가 있어요. 평균은 $300$만 원인데 그 돈을 받는 사람은 하나도 없어요. 임원 둘이 평균을 끌어올린 거예요.\n\n이럴 때는 크기 순의 한가운데인 중앙값 $200$만 원이 더 알맞아요. 유난히 크거나 작은 값이 섞이면 평균을 의심하세요. 가장 여러 번 나타난 최빈값이 답일 때도 있어요 — 가장 많이 팔린 치수처럼 더할 수 없는 자료가 그렇습니다.\n\n대푯값이 같아도 자료가 같지는 않아요. 평균 수심 $140$cm인 강을 평균 키 $165$cm인 부대가 건너다 사고를 당한 이야기가 그것을 말해 줘요. 그래서 흩어진 정도를 함께 봐요 — $\\text{범위} = \\text{최댓값} - \\text{최솟값}$이고, 표준편차는 평균에서 떨어진 정도예요.",
-                "definitions": []
+                "text": "월 급여가 $150$만 원 $6$명, $200$만 원 $5$명, $1{,}000$만 원인 임원 $2$명인 회사가 있어요. 평균은 $300$만 원인데 그 돈을 받는 사람은 하나도 없어요. 임원 둘이 평균을 끌어올린 거예요.\n\n이럴 때는 크기 순의 한가운데인 중앙값 $200$만 원이 더 알맞아요. 유난히 크거나 작은 값이 섞이면 평균을 의심하세요. 가장 여러 번 나타난 최빈값이 답일 때도 있어요 — 가장 많이 팔린 치수처럼 더할 수 없는 자료가 그렇습니다.",
+                "definitions": [
+                  {
+                    "conceptKey": "median-mode",
+                    "surface": "중앙값",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-stat-basics:try-centre:v2",
+          "sectionId": "ncs-stat-basics:spread:v3",
+          "role": "explanation",
+          "title": "대푯값이 같아도 자료가 같지는 않다",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-stat-basics:spread:text:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "평균 수심 $140$cm인 강을 평균 키 $165$cm인 부대가 건너다 사고를 당한 이야기가 있어요. 대푯값이 같아도 자료가 같지는 않다는 말이에요.\n\n그래서 흩어진 정도를 함께 봐요. $\\text{범위} = \\text{최댓값} - \\text{최솟값}$이고, 표준편차는 평균에서 떨어진 정도예요.",
+                "definitions": [
+                  {
+                    "conceptKey": "dispersion",
+                    "surface": "표준편차",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-stat-basics:try-centre:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-stat-basics:try-centre:problems:v2",
+              "blockId": "ncs-stat-basics:try-centre:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1326,12 +1447,12 @@
           ]
         },
         {
-          "sectionId": "ncs-stat-basics:check:v2",
+          "sectionId": "ncs-stat-basics:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-stat-basics:check:problems:v2",
+              "blockId": "ncs-stat-basics:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1347,18 +1468,24 @@
           ]
         },
         {
-          "sectionId": "ncs-stat-basics:summary:v2",
+          "sectionId": "ncs-stat-basics:summary:v3",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-stat-basics:summary:text:v2",
+              "blockId": "ncs-stat-basics:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "평균과 합계는 서로 뒤집어 쓰고, 인원이 다르면 합계끼리 더해 전체 인원으로 나눠요.\n\n유난한 값이 섞이면 중앙값을, 더할 수 없는 자료는 최빈값을 봐요. 범위와 표준편차는 평균이 숨긴 흩어짐을 보여 줘요. 계산을 손에 익히는 것은 기초통계 과정에서 이어서 해요.",
-                "definitions": []
+                "text": "평균과 합계는 서로 뒤집어 쓰고, 인원이 다르면 합계끼리 더해 전체 인원으로 나눠요.\n\n유난한 값이 섞이면 중앙값을, 더할 수 없는 자료는 최빈값을 봐요. 범위와 표준편차는 평균이 숨긴 흩어짐을 보여 줘요. 계산을 손에 익히는 것은 기초통계 과정에서 이어서 해요.\n\n이 수업의 개념은 통계로 읽기예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "statistics-reading",
+                    "surface": "통계로 읽기",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -1376,8 +1503,8 @@
     {
       "public": {
         "lessonKey": "ncs-chart-basics",
-        "versionId": "ncs-chart-basics:v3",
-        "title": "도표분석: 고르는 눈과, 읽을 때 갈리는 자리",
+        "versionId": "ncs-chart-basics:v4",
+        "title": "도표분석: 고르는 눈과, 읽을 때 틀리는 원인",
         "summary": "자료에 맞는 그래프를 고르고, 증감률·비중·%p에서 미끄러지지 않아요.",
         "estimatedMinutes": 20,
         "conceptKeys": [
@@ -1389,43 +1516,55 @@
           "percentage",
           "rate"
         ],
-        "sectionCount": 8
+        "sectionCount": 9
       },
       "sections": [
         {
-          "sectionId": "ncs-chart-basics:overview:v3",
+          "sectionId": "ncs-chart-basics:overview:v4",
           "role": "explanation",
-          "title": "문항이 가장 많은 자리",
+          "title": "문항이 가장 많은 영역",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-basics:overview:text:v3",
+              "blockId": "ncs-chart-basics:overview:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "도표분석은 표와 그래프에서 필요한 값을 찾아 뜻을 읽는 영역이고, 시험에서 문항이 가장 많습니다. 그런데 계산이 어려워 틀리는 경우는 드물어요.\n\n대부분은 표의 제목과 단위를 지나치거나, 총량과 비율을 섞거나, 표가 말하지 않은 것을 읽어 내서 틀려요. 여기서는 그래프를 고르는 눈과, 읽을 때 갈리는 자리를 다뤄요.",
-                "definitions": []
+                "text": "표와 그래프에서 필요한 값을 찾아 뜻을 읽는 일이 도표 읽기예요. 도표분석은 이것을 묻는 영역이고, 시험에서 문항이 가장 많습니다. 그런데 계산이 어려워 틀리는 경우는 드물어요.\n\n대부분은 표의 제목과 단위를 지나치거나, 총량과 비율을 섞거나, 표가 말하지 않은 것을 읽어 내서 틀려요. 여기서는 그래프를 고르는 눈과, 읽을 때 자주 틀리는 것을 다뤄요.",
+                "definitions": [
+                  {
+                    "conceptKey": "chart-reading",
+                    "surface": "도표 읽기",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-chart-basics:kinds:v3",
+          "sectionId": "ncs-chart-basics:kinds:v4",
           "role": "explanation",
           "title": "무엇을 보여 주려는가가 그래프를 고른다",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-basics:kinds:text:v3",
+              "blockId": "ncs-chart-basics:kinds:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "추이는 꺾은선, 비교는 막대, 구성비는 원그래프. 이 셋만 확실히 해도 대부분 풀려요. 점그래프는 두 요소의 자리를, 방사형그래프는 여러 항목의 균형을 보여 줘요.\n\n시험은 「이 자료에 알맞은 그래프는?」을 그대로 묻기도 하고, 반대로 잘못 고른 그래프를 짚게 하기도 해요. 시간의 흐름을 원그래프에 담을 수 없다는 것만 알아도 보기 하나는 지워집니다.",
-                "definitions": []
+                "text": "자료에 맞는 그래프를 고르려면 도표의 종류를 알아야 해요. 추이는 꺾은선, 비교는 막대, 구성비는 원그래프. 이 셋만 확실히 해도 대부분 풀려요. 점그래프는 두 요소가 만나는 위치를, 방사형그래프는 여러 항목의 균형을 보여 줘요.\n\n시험은 「이 자료에 알맞은 그래프는?」을 그대로 묻기도 하고, 반대로 잘못 고른 그래프를 짚게 하기도 해요. 시간의 흐름을 원그래프에 담을 수 없다는 것만 알아도 보기 하나는 지워집니다.",
+                "definitions": [
+                  {
+                    "conceptKey": "chart-types",
+                    "surface": "도표의 종류",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             },
             {
-              "blockId": "ncs-chart-basics:kinds:drawing:v3",
+              "blockId": "ncs-chart-basics:kinds:drawing:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1553,7 +1692,7 @@
                     "id": "bar-use",
                     "x": 158,
                     "y": 148,
-                    "text": "크기 견주기",
+                    "text": "크기 비교",
                     "size": 10,
                     "anchor": "middle",
                     "fill": "muted"
@@ -1602,7 +1741,7 @@
                     "id": "note",
                     "x": 160,
                     "y": 178,
-                    "text": "점그래프는 두 요소의 자리, 방사형은 여러 항목의 균형",
+                    "text": "점그래프는 두 요소의 위치, 방사형은 여러 항목의 균형",
                     "size": 10,
                     "anchor": "middle",
                     "fill": "muted"
@@ -1695,12 +1834,12 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-basics:try-kinds:v3",
+          "sectionId": "ncs-chart-basics:try-kinds:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-basics:try-kinds:problems:v3",
+              "blockId": "ncs-chart-basics:try-kinds:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1716,29 +1855,52 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-basics:pitfalls:v3",
+          "sectionId": "ncs-chart-basics:pitfalls:v4",
           "role": "explanation",
           "title": "40% 깎고 또 40% 깎으면 얼마나 깎인 걸까",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-basics:pitfalls:text:v3",
+              "blockId": "ncs-chart-basics:pitfalls:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$80\\%$가 아니에요. $10{,}000$원이 $6{,}000$원이 되고 다시 $3{,}600$원이 되니 전체로는 $64\\%$ 할인이에요. 두 번째 할인의 기준이 달라졌기 때문이에요. 같은 이유로 식사값 $15\\%$와 술값 $15\\%$가 할인돼도 회식비는 $30\\%$가 아니라 $15\\%$ 할인이에요.\n\n기준이 바뀐다는 이 한 가지가 도표 읽기에서 갈리는 자리 대부분을 설명해요. 증감률의 기준은 언제나 이전 값이고($250 \\rightarrow 300$은 $\\frac{50}{250} = 20\\%$), 점유율이 $10\\%$에서 $12\\%$가 되면 $2$%p 오른 것이지 $2\\%$ 오른 것이 아니에요.\n\n여기에 하나만 더하면 돼요. 총량이 늘어난 것과 비율이 늘어난 것은 다른 이야기예요. 시장이 줄어드는 중이라면 점유율이 올라도 매출은 줄 수 있어요.",
+                "text": "$80\\%$가 아니에요. $10{,}000$원이 $6{,}000$원이 되고 다시 $3{,}600$원이 되니 전체로는 $64\\%$ 할인이에요. 두 번째 할인의 기준이 달라졌기 때문이에요.\n\n같은 이유로 식사값 $15\\%$와 술값 $15\\%$가 할인돼도 회식비는 $30\\%$가 아니라 $15\\%$ 할인이에요. 기준이 다른 퍼센트는 더할 수 없어요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-chart-basics:try-rate:v3",
+          "sectionId": "ncs-chart-basics:base:v4",
+          "role": "explanation",
+          "title": "기준이 바뀌는 곳이 또 있다",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-chart-basics:base:text:v4",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "기준이 바뀐다는 이 한 가지가 도표를 읽을 때 틀리는 원인 대부분을 설명해요.\n\n늘거나 준 정도를 비율로 적은 값이 증감률이에요. 기준은 언제나 이전 값이라서 $250 \\rightarrow 300$은 $\\frac{50}{250} = 20\\%$예요.\n\n점유율이 $10\\%$에서 $12\\%$가 되면 $2$%p 오른 것이지 $2\\%$ 오른 것이 아니에요.\n\n여기에 하나만 더하면 돼요. 총량이 늘어난 것과 비율이 늘어난 것은 다른 이야기예요. 시장이 줄어드는 중이라면 점유율이 올라도 매출은 줄 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "growth-rate",
+                    "surface": "증감률",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-chart-basics:try-rate:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-basics:try-rate:problems:v3",
+              "blockId": "ncs-chart-basics:try-rate:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1753,12 +1915,12 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-basics:example:v3",
+          "sectionId": "ncs-chart-basics:example:v4",
           "role": "worked_example",
           "title": "표가 말하지 않은 것",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-basics:example:text:v3",
+              "blockId": "ncs-chart-basics:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1770,12 +1932,12 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-basics:check:v3",
+          "sectionId": "ncs-chart-basics:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-basics:check:problems:v3",
+              "blockId": "ncs-chart-basics:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1791,18 +1953,29 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-basics:summary:v3",
+          "sectionId": "ncs-chart-basics:summary:v4",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-basics:summary:text:v3",
+              "blockId": "ncs-chart-basics:summary:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "추이는 꺾은선, 비교는 막대, 구성비는 원그래프예요.\n\n읽을 때 갈리는 자리는 모두 기준의 문제예요. 증감률의 기준은 이전 값이고, 퍼센트는 기준이 다르면 더할 수 없고, %와 %p는 다른 말이에요. 총량과 비율은 서로를 말해 주지 않고, 표에 없는 것은 읽지 않아요.",
-                "definitions": []
+                "text": "추이는 꺾은선, 비교는 막대, 구성비는 원그래프예요.\n\n읽을 때 틀리는 원인은 모두 기준의 문제예요. 증감률의 기준은 이전 값이고, 퍼센트는 기준이 다르면 더할 수 없고, %와 %p는 다른 말이에요. 총량과 비율은 서로를 말해 주지 않고, 표에 없는 것은 읽지 않아요.\n\n이 수업의 개념은 도표의 종류와 도표 읽기예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "chart-types",
+                    "surface": "도표의 종류",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "chart-reading",
+                    "surface": "도표 읽기",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -1820,7 +1993,7 @@
     {
       "public": {
         "lessonKey": "ncs-chart-making",
-        "versionId": "ncs-chart-making:v2",
+        "versionId": "ncs-chart-making:v3",
         "title": "도표작성: 그리지는 않지만 고를 줄은 알아야 한다",
         "summary": "도표를 만드는 차례와 유의사항을 익혀, 자료에 알맞은 도표를 골라요.",
         "estimatedMinutes": 15,
@@ -1835,39 +2008,45 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-chart-making:overview:v2",
+          "sectionId": "ncs-chart-making:overview:v3",
           "role": "explanation",
           "title": "직접 그리게 하지는 않는다",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-making:overview:text:v2",
+              "blockId": "ncs-chart-making:overview:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "도표작성능력은 결과를 도표로 보여 주는 힘이에요. 공식 기준은 작성 절차와 유의사항, 그리고 직접 작성까지 요구하지만, 채용 시험에서 그리게 하는 문항은 없어요.\n\n대신 「이 자료에는 어떤 도표가 알맞은가」, 「이 도표에서 잘못된 곳은?」처럼 고르는 문항으로 나와요. 그리는 손보다 고르는 눈이 필요한 영역이에요.",
-                "definitions": []
+                "text": "자료를 도표로 옮겨 보여 주는 일이 도표 만들기예요. 도표작성능력은 이 힘을 말해요. 공식 기준은 작성 절차와 유의사항, 그리고 직접 작성까지 요구해요. 그런데 채용 시험에서 그리게 하는 문항은 없어요.\n\n대신 「이 자료에는 어떤 도표가 알맞은가」, 「이 도표에서 잘못된 곳은?」처럼 고르는 문항으로 나와요. 그리는 손보다 고르는 눈이 필요한 영역이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "chart-making",
+                    "surface": "도표 만들기",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-chart-making:steps:v2",
+          "sectionId": "ncs-chart-making:steps:v3",
           "role": "explanation",
           "title": "그리기 전에 정할 것이 넷",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-making:steps:text:v2",
+              "blockId": "ncs-chart-making:steps:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "첫째로 무엇을 전할지 정해요. 「지점끼리 견주고 싶다」인지 「해마다 어떻게 변했는지 보이고 싶다」인지가 나머지를 모두 결정해요.\n\n둘째로 그에 맞는 도표를 고르고, 셋째로 가로·세로축에 무엇을 둘지 정해요. 시간은 가로축에 두고 왼쪽에서 오른쪽으로 흐르게 하는 것이 관례예요.\n\n넷째로 눈금을 정하고 값을 표시한 뒤, 마지막에 제목과 단위를 붙여요. 제목이 없으면 무엇에 대한 도표인지 알 수 없고, 단위가 없으면 $900$이 미터인지 피트인지 알 수 없어요.",
+                "text": "첫째로 무엇을 전할지 정해요. 「지점끼리 비교하고 싶다」인지 「해마다 어떻게 변했는지 보이고 싶다」인지가 나머지를 모두 결정해요.\n\n둘째로 그에 맞는 도표를 고르고, 셋째로 가로·세로축에 무엇을 둘지 정해요. 시간은 가로축에 두고 왼쪽에서 오른쪽으로 흐르게 하는 것이 관례예요.\n\n넷째로 눈금을 정하고 값을 표시한 뒤, 마지막에 제목과 단위를 붙여요. 제목이 없으면 무엇에 대한 도표인지 알 수 없어요. 단위가 없으면 $900$이 미터인지 피트인지 알 수 없고요.",
                 "definitions": []
               }
             },
             {
-              "blockId": "ncs-chart-making:steps:drawing:v2",
+              "blockId": "ncs-chart-making:steps:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -2110,12 +2289,12 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-making:try-steps:v2",
+          "sectionId": "ncs-chart-making:try-steps:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-making:try-steps:problems:v2",
+              "blockId": "ncs-chart-making:try-steps:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -2131,12 +2310,12 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-making:scale:v2",
+          "sectionId": "ncs-chart-making:scale:v3",
           "role": "explanation",
           "title": "눈금을 어디서 시작하느냐가 인상을 바꾼다",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-making:scale:text:v2",
+              "blockId": "ncs-chart-making:scale:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -2148,12 +2327,12 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-making:try-scale:v2",
+          "sectionId": "ncs-chart-making:try-scale:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-making:try-scale:problems:v2",
+              "blockId": "ncs-chart-making:try-scale:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -2168,12 +2347,12 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-making:check:v2",
+          "sectionId": "ncs-chart-making:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-making:check:problems:v2",
+              "blockId": "ncs-chart-making:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -2189,18 +2368,24 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-making:summary:v2",
+          "sectionId": "ncs-chart-making:summary:v3",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-making:summary:text:v2",
+              "blockId": "ncs-chart-making:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "만드는 차례는 전할 내용 → 도표 고르기 → 축 정하기 → 눈금과 표시 → 제목과 단위예요. 무엇을 전할지가 언제나 먼저예요.\n\n눈금의 시작점은 인상을 바꾸고, 제목과 단위가 빠진 도표는 읽는 사람이 되묻게 해요.",
-                "definitions": []
+                "text": "만드는 차례는 전할 내용 → 도표 고르기 → 축 정하기 → 눈금과 표시 → 제목과 단위예요. 무엇을 전할지가 언제나 먼저예요.\n\n눈금의 시작점은 인상을 바꾸고, 제목과 단위가 빠진 도표는 읽는 사람이 되묻게 해요.\n\n이 수업의 개념은 도표 만들기예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "chart-making",
+                    "surface": "도표 만들기",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
@@ -2218,7 +2403,7 @@
     {
       "public": {
         "lessonKey": "ncs-chart-draw",
-        "versionId": "ncs-chart-draw:v1",
+        "versionId": "ncs-chart-draw:v2",
         "title": "도표작성 실습: 자료를 옮겨 그려 본다",
         "summary": "축의 꼭대기와 눈금을 정하는 이유를 보고, 표의 값을 막대그래프로 직접 옮겨 그려요.",
         "estimatedMinutes": 15,
@@ -2234,17 +2419,17 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-chart-draw:axis:v1",
+          "sectionId": "ncs-chart-draw:axis:v2",
           "role": "explanation",
           "title": "축을 먼저 정한다",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-draw:axis:text:v1",
+              "blockId": "ncs-chart-draw:axis:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "앞 수업에서 도표를 고르는 법을 봤어요. 이번에는 직접 옮겨 그려 볼 차례예요.\n\n그리기 전에 정할 것이 둘 있어요. 세로축의 꼭대기와 눈금 간격이에요.\n\n꼭대기는 가장 큰 값보다 커야 해요. 값이 $38$인데 꼭대기가 $30$이면 그 막대는 그릴 자리가 없거든요. 그렇다고 너무 높이 잡으면 막대들이 아래에 깔려 차이가 보이지 않아요. 가장 큰 값보다 조금 큰 눈금에서 끊는 것이 보통이에요.\n\n눈금 간격은 값들을 읽을 수 있게 정해요. $10$씩이면 $35$는 두 눈금 사이라 어림해 읽어야 하고, $5$씩이면 눈금에 딱 걸려요. 값들이 모두 걸리는 간격을 고르면 읽는 사람이 되묻지 않아요.\n\n간격이 촘촘할수록 정확하지만 눈금이 너무 많으면 세다가 지쳐요. 다섯에서 여덟 칸쯤이 읽기 좋아요.\n\n축을 정했으면 남은 일은 옮기는 것뿐이에요. 표에서 값을 읽고, 그 높이까지 막대를 올려요.",
+                "text": "이번에는 자료를 직접 옮겨 그려 볼 차례예요.\n\n그리기 전에 정할 것이 둘 있어요. 세로축의 꼭대기와 눈금 간격이에요.\n\n꼭대기는 가장 큰 값보다 커야 해요. 값이 $38$인데 꼭대기가 $30$이면 그 막대를 그릴 곳이 없거든요. 그렇다고 너무 높이 잡으면 막대들이 아래에 깔려 차이가 보이지 않아요. 가장 큰 값보다 조금 큰 눈금에서 끊는 것이 보통이에요.\n\n눈금 간격은 값들을 읽을 수 있게 정해요. $10$씩이면 $35$는 두 눈금 사이라 어림해 읽어야 하고, $5$씩이면 눈금에 딱 걸려요. 값들이 모두 걸리는 간격을 고르면 읽는 사람이 되묻지 않아요.\n\n간격이 촘촘할수록 정확하지만 눈금이 너무 많으면 세다가 지쳐요. 다섯에서 여덟 칸쯤이 읽기 좋아요.\n\n축을 정했으면 남은 일은 옮기는 것뿐이에요. 표에서 값을 읽고, 그 높이까지 막대를 올려요.",
                 "definitions": [
                   {
                     "conceptKey": "chart-drawing",
@@ -2255,7 +2440,7 @@
               }
             },
             {
-              "blockId": "ncs-chart-draw:axis:table:v1",
+              "blockId": "ncs-chart-draw:axis:table:v2",
               "kind": "core.table",
               "typeVersion": 1,
               "required": true,
@@ -2304,12 +2489,12 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-draw:draw:v1",
+          "sectionId": "ncs-chart-draw:draw:v2",
           "role": "explanation",
           "title": "직접 옮겨 그리기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-draw:draw:text:v1",
+              "blockId": "ncs-chart-draw:draw:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -2319,7 +2504,7 @@
               }
             },
             {
-              "blockId": "ncs-chart-draw:draw:chart:v1",
+              "blockId": "ncs-chart-draw:draw:chart:v2",
               "kind": "core.chart_build",
               "typeVersion": 1,
               "required": true,
@@ -2354,46 +2539,46 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-draw:finish:v1",
+          "sectionId": "ncs-chart-draw:finish:v2",
           "role": "explanation",
           "title": "그리고 나서 빠뜨리기 쉬운 것",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-draw:finish:text:v1",
+              "blockId": "ncs-chart-draw:finish:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "막대를 다 올렸다고 도표가 끝난 것은 아니에요. 읽는 사람이 되묻게 되는 자리가 셋 있어요.\n\n첫째는 제목이에요. 무엇에 대한 도표인지 없으면 숫자만 남아요.\n\n둘째는 단위예요. $30$이 건인지 만 원인지 천 명인지는 도표가 말해 주지 않으면 알 수 없어요. 자료해석에서 가장 자주 걸리는 자리가 여기인 것과 같은 이유예요.\n\n셋째는 출처와 기간이에요. 언제의 자료인지 적혀 있지 않으면 견줄 수가 없어요.\n\n하나 더. 눈금의 시작점이 $0$이 아니면 차이가 실제보다 커 보여요. 일부러 그렇게 그리는 일도 있는데, 읽는 쪽에서는 속는 것이고 그리는 쪽에서는 속이는 것이에요. $0$에서 시작하지 않을 이유가 있다면 그 사실을 적어 두는 것이 정직해요.",
+                "text": "막대를 다 올렸다고 도표가 끝난 것은 아니에요. 읽는 사람이 되묻게 되는 곳이 셋 있어요.\n\n첫째는 제목이에요. 무엇에 대한 도표인지 없으면 숫자만 남아요.\n\n둘째는 단위예요. $30$이 건인지 만 원인지 천 명인지는 도표가 말해 주지 않으면 알 수 없어요. 자료해석에서 가장 자주 걸리는 것이 여기인 것과 같은 이유예요.\n\n셋째는 출처와 기간이에요. 언제의 자료인지 적혀 있지 않으면 비교할 수가 없어요.\n\n하나 더. 눈금의 시작점이 $0$이 아니면 차이가 실제보다 커 보여요. 일부러 그렇게 그리는 일도 있는데, 읽는 쪽에서는 속는 것이고 그리는 쪽에서는 속이는 것이에요. $0$에서 시작하지 않을 이유가 있다면 그 사실을 적어 두는 것이 정직해요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-chart-draw:example:v1",
+          "sectionId": "ncs-chart-draw:example:v2",
           "role": "worked_example",
           "title": "축을 정해 보는 연습",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-draw:example:text:v1",
+              "blockId": "ncs-chart-draw:example:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "값이 $12$, $18$, $24$, $30$인 자료가 있어요. 세로축을 어떻게 잡을까요.\n\n가장 큰 값이 $30$이니 꼭대기는 $30$ 이상이어야 해요. $30$으로 끊으면 가장 큰 막대가 꼭대기에 닿아 답답하니 $36$이나 $40$쯤이 좋아요.\n\n눈금 간격은 값들이 모두 걸리는 수를 찾아요. $12$, $18$, $24$, $30$은 모두 $6$의 배수예요. 간격을 $6$으로 잡고 꼭대기를 $36$으로 하면 여섯 칸이고 값이 모두 눈금에 걸려요.\n\n$10$씩으로 잡으면 어떨까요. 꼭대기 $40$에 네 칸이라 세기는 쉽지만 $12$, $18$, $24$가 모두 눈금 사이라 어림해 읽어야 해요.\n\n둘 다 틀린 축은 아니에요. 다만 「값을 정확히 읽히게 할 것인가, 전체 모양을 보일 것인가」에 따라 고르는 것이 달라져요. 무엇을 전할지가 먼저라는 말이 여기서도 그대로예요.",
+                "text": "값이 $12$, $18$, $24$, $30$인 자료가 있어요. 세로축을 어떻게 잡을까요.\n\n가장 큰 값이 $30$이니 꼭대기는 $30$ 이상이어야 해요. $30$으로 끊으면 가장 큰 막대가 꼭대기에 닿아 답답하니 $36$이나 $40$쯤이 좋아요.\n\n눈금 간격은 값들이 모두 걸리는 수를 찾아요. $12$, $18$, $24$, $30$은 모두 $6$의 배수예요. 간격을 $6$으로 잡고 꼭대기를 $36$으로 하면 여섯 칸이고 값이 모두 눈금에 걸려요.\n\n$10$씩으로 잡으면 어떨까요. 꼭대기 $40$에 네 칸이라 세기는 쉬워요. 다만 $12$, $18$, $24$가 모두 눈금 사이라 어림해 읽어야 해요.\n\n둘 다 틀린 축은 아니에요. 다만 「값을 정확히 읽히게 할 것인가, 전체 모양을 보일 것인가」에 따라 고르는 것이 달라져요. 무엇을 전할지가 먼저라는 말이 여기서도 그대로예요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-chart-draw:practice:v1",
+          "sectionId": "ncs-chart-draw:practice:v2",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-draw:practice:problems:v1",
+              "blockId": "ncs-chart-draw:practice:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -2410,12 +2595,12 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-draw:check:v1",
+          "sectionId": "ncs-chart-draw:check:v2",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-draw:check:problems:v1",
+              "blockId": "ncs-chart-draw:check:problems:v2",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -2431,18 +2616,24 @@
           ]
         },
         {
-          "sectionId": "ncs-chart-draw:summary:v1",
+          "sectionId": "ncs-chart-draw:summary:v2",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-chart-draw:summary:text:v1",
+              "blockId": "ncs-chart-draw:summary:text:v2",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "그리기 전에 세로축의 꼭대기와 눈금 간격부터 정해요.\n\n꼭대기는 가장 큰 값보다 조금 크게, 눈금은 값들이 모두 걸리는 간격으로 잡아요. 다섯에서 여덟 칸이 읽기 좋아요.\n\n다 그렸으면 제목과 단위와 기간을 달아요. 없으면 읽는 사람이 되묻게 돼요.\n\n눈금이 $0$에서 시작하지 않으면 차이가 실제보다 커 보인다는 것도 기억하세요.",
-                "definitions": []
+                "text": "그리기 전에 세로축의 꼭대기와 눈금 간격부터 정해요.\n\n꼭대기는 가장 큰 값보다 조금 크게, 눈금은 값들이 모두 걸리는 간격으로 잡아요. 다섯에서 여덟 칸이 읽기 좋아요.\n\n다 그렸으면 제목과 단위와 기간을 달아요. 없으면 읽는 사람이 되묻게 돼요.\n\n눈금이 $0$에서 시작하지 않으면 차이가 실제보다 커 보인다는 것도 기억하세요.\n\n이 수업의 개념은 도표작성 실습이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "definitions": [
+                  {
+                    "conceptKey": "chart-drawing",
+                    "surface": "눈금 간격",
+                    "scopeKind": "global"
+                  }
+                ]
               }
             }
           ]
