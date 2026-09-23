@@ -657,7 +657,7 @@ describe('a course beside the line the catalogue is ordered along', () => {
     fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
     await until(() => expect(screen.getAllByText('응용계산').length).toBeGreaterThan(1));
   };
-  const headings = () => [...window.document.querySelectorAll('.track-heading h2, .catalog-banner h3')].map((node) => node.textContent);
+  const headings = () => [...window.document.querySelectorAll('.track-heading h2, .catalog-banner strong')].map((node) => node.textContent);
 
   it('is listed under its own line rather than after the last school course', async () => {
     server = twoTracks();
@@ -694,7 +694,7 @@ describe('a course beside the line the catalogue is ordered along', () => {
     fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
     await until(() => expect(screen.getAllByText('정수와 유리수').length).toBeGreaterThan(0));
     // 기초 과정 keeps no years, so its courses sit under the line itself; 중학교 과정 is cut in two.
-    expect([...window.document.querySelectorAll('.track-heading h2, .stage-heading, .catalog-banner h3')].map((node) => node.textContent))
+    expect([...window.document.querySelectorAll('.track-heading h2, .stage-heading, .catalog-banner strong')].map((node) => node.textContent))
       .toEqual(['기초 과정', '분수', '중학교 과정', '중1', '정수와 유리수', '중2', '일차함수']);
     expect([...window.document.querySelectorAll('.course-filter-line')].map((row) => [...row.children].map((node) => node.textContent)))
       .toEqual([['모든 코스'], ['분수'], ['중1', '정수와 유리수'], ['중2', '일차함수']]);
@@ -1048,5 +1048,106 @@ describe('the one thing the home screen offers', () => {
     // Folded, not removed: everything that used to compete with the offer is still reachable.
     expect(reasoning.textContent).toContain('다른 수업 직접 고르기');
     expect(reasoning.textContent).toContain('시작점 확인하기');
+  });
+});
+
+/**
+ * The catalogue, which is thirty-eight courses and a hundred and twenty-seven lessons.
+ *
+ * It used to draw all of it at once, every course open and every lesson card, with a row of
+ * thirty-eight chips above it as the only way to narrow anything. That is not a list somebody
+ * reads; it is a list somebody scrolls past.
+ */
+describe('the lessons screen and the size of the catalogue', () => {
+  const many: PublicCourse[] = [
+    { key: 'fractions', title: '분수', summary: '분수를 처음부터', track: 'basics' },
+    { key: 'integers', title: '정수와 유리수', summary: '음수부터', track: 'middle', stage: 'middle-1' },
+    { key: 'functions', title: '일차함수', summary: '직선으로', track: 'middle', stage: 'middle-2' },
+    { key: 'quadratics', title: '이차함수', summary: '포물선으로', track: 'middle', stage: 'middle-3' },
+  ];
+  const lesson = (lessonKey: string, title: string, courseKey: string, summary = '설명이에요'): PublicLesson =>
+    ({ lessonKey, versionId: `${lessonKey}:v1`, title, summary, estimatedMinutes: 10,
+      conceptKeys: [], prerequisiteConceptKeys: [], sectionCount: 2, courseKey });
+  const spread = [lesson('fraction-meaning', '분수의 의미', 'fractions'), lesson('negative', '음수와 수직선', 'integers'),
+    lesson('linear', '일차함수와 그래프', 'functions'), lesson('parabola', '이차함수와 그래프', 'quadratics')];
+  const open = async (over: Partial<LearningState> = {}) => {
+    server = serve({ courses: many, catalogue: spread, state: learningState({ lessons: spread, ...over }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: '수업' }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
+    await until(() => expect(screen.getByRole('heading', { level: 1, name: '배우고 싶은 코스부터.' })).toBeDefined());
+  };
+  const courseNames = () => [...window.document.querySelectorAll('.catalog-banner strong')].map((node) => node.textContent);
+  const cards = () => [...window.document.querySelectorAll('.page-lessons .class-grid .class-card h3')].map((node) => node.textContent);
+
+  it('opens on the courses this learner actually has, not on the whole catalogue', async () => {
+    await open({ user: { id: 'u1', displayName: '학습자', targetCourseKey: 'functions', dailyMinutes: 10 } });
+    expect(courseNames()).toEqual(['일차함수']);
+    expect(screen.getByRole('button', { name: '내 과정 1' })).toBeDefined();
+    expect(screen.getByText(/나머지 3개는 「전체」에서 볼 수 있어요/)).toBeDefined();
+  });
+
+  it('counts what somebody is in the middle of as theirs, alongside what they came for', async () => {
+    await open({
+      user: { id: 'u1', displayName: '학습자', targetCourseKey: 'quadratics', dailyMinutes: 10 },
+      enrollments: [{ id: 'e1', lessonKey: 'negative', lessonVersionId: 'negative:v1', completedSectionIds: [], status: 'active', attempts: [] }],
+    });
+    expect(courseNames()).toEqual(['정수와 유리수', '이차함수']);
+  });
+
+  it('shows a visitor the catalogue, because there is no 「내 과정」 to show them', async () => {
+    server = serve({ signedIn: false, courses: many, catalogue: spread });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByRole('button', { name: '수업' }).length).toBeGreaterThan(0));
+    fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
+    await until(() => expect(courseNames().length).toBe(4));
+    expect(screen.queryByRole('button', { name: /내 과정/ })).toBeNull();
+  });
+
+  it('names every course it is not drawing, and draws none of their lessons', async () => {
+    await open({ user: { id: 'u1', displayName: '학습자', targetCourseKey: 'functions', dailyMinutes: 10 } });
+    fireEvent.click(screen.getByRole('button', { name: '전체 4' }));
+    // Every course is named — nothing is hidden — but only the learner's own is opened, so the
+    // screen is four headings and one grid rather than four grids.
+    expect(courseNames()).toEqual(['분수', '정수와 유리수', '일차함수', '이차함수']);
+    expect(cards()).toEqual(['일차함수와 그래프']);
+    // And any of them opens when asked.
+    fireEvent.click(screen.getByRole('button', { name: /이차함수/, expanded: false }));
+    expect(cards()).toContain('이차함수와 그래프');
+  });
+
+  it('finds a lesson by name across the whole catalogue, whatever the scope is showing', async () => {
+    await open({ user: { id: 'u1', displayName: '학습자', targetCourseKey: 'fractions', dailyMinutes: 10 } });
+    expect(courseNames()).toEqual(['분수']);
+    fireEvent.change(screen.getByPlaceholderText('코스나 수업 이름으로 찾기'), { target: { value: '그래프' } });
+    // Two lessons in two courses neither of which is this learner's, found by their own names.
+    expect(courseNames()).toEqual(['일차함수', '이차함수']);
+    expect(cards()).toEqual(['일차함수와 그래프', '이차함수와 그래프']);
+    expect(screen.getByText(/찾기는 범위와 상관없이 카탈로그 전체를 봐요/)).toBeDefined();
+  });
+
+  it('says so when a name turns up nothing, rather than showing an empty page', async () => {
+    await open();
+    fireEvent.change(screen.getByPlaceholderText('코스나 수업 이름으로 찾기'), { target: { value: '미적분' } });
+    expect(courseNames()).toEqual([]);
+    expect(screen.getByRole('heading', { name: '찾는 이름이 없어요' })).toBeDefined();
+    fireEvent.click(screen.getAllByRole('button', { name: /찾기 지우기/ }).at(-1)!);
+    expect(courseNames().length).toBeGreaterThan(0);
+  });
+
+  it('draws how far through a course somebody is, and nothing where they have not begun', async () => {
+    await open({
+      user: { id: 'u1', displayName: '학습자', targetCourseKey: 'fractions', dailyMinutes: 10 },
+      enrollments: [{ id: 'e1', lessonKey: 'fraction-meaning', lessonVersionId: 'fraction-meaning:v1', completedSectionIds: [], status: 'completed', attempts: [] }],
+    });
+    const banner = window.document.querySelector('.catalog-banner')!;
+    expect(banner.textContent).toContain('1 / 1개 완료');
+    expect(banner.querySelector('.catalog-progress b')!.getAttribute('style')).toContain('width: 100%');
+    // An empty bar under every course of a catalogue nobody has started says 「you have done none of
+    // this」 thirty-eight times over. The count above it already says it once, quietly.
+    fireEvent.click(screen.getByRole('button', { name: '전체 4' }));
+    const untouched = [...window.document.querySelectorAll('.catalog-banner')]
+      .find((node) => node.textContent?.includes('이차함수'))!;
+    expect(untouched.querySelector('.catalog-progress b')).toBeNull();
   });
 });

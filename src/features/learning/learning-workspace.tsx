@@ -292,6 +292,16 @@ export function LearningWorkspace() {
   const [catalog, setCatalog] = useState<PublicLesson[]>([]);
   const [courses, setCourses] = useState<PublicCourse[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<string>('all');
+  /**
+   * Whether the lessons screen shows the courses this learner has a reason to look at or the whole
+   * catalogue. `null` until they say so, and then it is 「내 과정」 for anybody who has told us
+   * something and 「전체」 for a visitor who has not — browsing is what a visitor came to do.
+   */
+  const [lessonScope, setLessonScope] = useState<'mine' | 'all' | null>(null);
+  /** What a learner typed to find a lesson by name. A search always reaches the whole catalogue. */
+  const [lessonSearch, setLessonSearch] = useState('');
+  /** Courses the learner opened or shut by hand, over whatever the screen would have done itself. */
+  const [courseToggles, setCourseToggles] = useState<Record<string, boolean>>({});
   const [taughtConcepts, setTaughtConcepts] = useState<PublicConcept[]>([]);
   const [problemSets, setProblemSets] = useState<PublicProblemSet[]>([]);
   /**
@@ -389,6 +399,8 @@ export function LearningWorkspace() {
     lessonRequest.current += 1; setDocument(null); setLessonLoading(false);
     setSectionIndex(0); setFinishedLesson(false); setDisplayName('');
     setTarget(''); setMinutes(10); setModal(null); setPage('home');
+    // 「내 과정」 and the courses held open belong to an account, not to a tab.
+    setLessonScope(null); setLessonSearch(''); setCourseToggles({});
     if (authReturn.current) authReturn.current.returnTo = null;
     try { clearAuthReturn(window.sessionStorage); } catch { /* Browser storage may be restricted. */ }
   }
@@ -871,9 +883,58 @@ export function LearningWorkspace() {
     </>;
   }
 
+  /**
+   * The courses this learner has a reason to look at.
+   *
+   * What they said they came for, what they are in the middle of, and where the recommendation is
+   * pointing — that last one because it is often a course *below* the one they came for, and it
+   * would be strange for 내 학습 to offer a lesson that 수업 then hides. It is only counted once
+   * something else is in the set: on its own the recommendation is the catalogue's first course,
+   * which is not a thing anybody chose.
+   *
+   * Empty means empty. Somebody who has told us nothing is shown the catalogue, because there is
+   * no 「내 과정」 to show them and browsing is what they came to do.
+   */
+  function myCourseKeys() {
+    const keys = new Set<string>();
+    if (state?.user.targetCourseKey) keys.add(state.user.targetCourseKey);
+    for (const entry of state?.enrollments ?? []) {
+      const lesson = lessons.find((item) => item.lessonKey === entry.lessonKey);
+      if (lesson) keys.add(lesson.courseKey);
+    }
+    // Only a recommendation the server actually made. `recommended` falls back to the catalogue's
+    // first lesson when there is none, and that is nobody's course.
+    const suggested = lessons.find((item) => item.lessonKey === state?.recommendations[0]?.lessonKey);
+    if (keys.size && suggested) keys.add(suggested.courseKey);
+    return keys;
+  }
+
+  /**
+   * The catalogue, which is thirty-eight courses and a hundred and twenty-seven lessons.
+   *
+   * It used to draw all of it at once — every course open, every lesson card — with a row of
+   * thirty-eight chips above it as the only way to narrow anything. That is not a list somebody
+   * reads; it is a list somebody scrolls past. Three things changed. What opens by default is the
+   * handful of courses that are actually this learner's. A course that is not open says who it is
+   * and how far through it they are, in one line, and opens when asked. And a name can be typed,
+   * which is the case the chips were worst at — looking for 「이차함수」 among thirty-eight chips
+   * grouped by year is worse than reading the catalogue.
+   *
+   * Nothing is hidden: 「전체」 is one press away and a search always reaches everything.
+   */
   function renderLessons() {
     const available = courses.filter((course) => lessons.some((lesson) => lesson.courseKey === course.key));
-    const shown = available.filter((course) => selectedCourse === 'all' || selectedCourse === course.key || !available.some((item) => item.key === selectedCourse));
+    const mine = myCourseKeys();
+    const scope = lessonScope ?? (mine.size ? 'mine' : 'all');
+    const query = lessonSearch.trim().toLowerCase();
+    const found = (course: PublicCourse) => course.title.toLowerCase().includes(query)
+      || lessons.some((lesson) => lesson.courseKey === course.key
+        && (lesson.title.toLowerCase().includes(query) || lesson.summary.toLowerCase().includes(query)));
+    // A search reaches the whole catalogue whatever the scope says. Looking for something by name is
+    // exactly the case where it is not among the few courses you already have.
+    const shown = query ? available.filter(found)
+      : scope === 'mine' ? available.filter((course) => mine.has(course.key))
+      : available.filter((course) => selectedCourse === 'all' || selectedCourse === course.key || !available.some((item) => item.key === selectedCourse));
     // The catalogue is one ordered line, and anything beside it is said to be beside it rather than
     // left to look like what comes after 일차함수. With only the one line there is nothing to say.
     const lines = courseTracks.filter((track) => shown.some((course) => course.track === track));
@@ -883,8 +944,29 @@ export function LearningWorkspace() {
     const chipLines = courseTracks.filter((track) => available.some((course) => course.track === track));
     const chip = (key: string, label: string) => <button key={key} className={selectedCourse === key ? 'active' : ''}
       aria-pressed={selectedCourse === key} onClick={() => setSelectedCourse(key)}>{label}</button>;
+    // Few enough to read, this learner's own, or turned up by a search: those open by themselves.
+    const opensItself = (course: PublicCourse) => shown.length <= 3 || !!query || mine.has(course.key);
+    const held = (course: PublicCourse) => lessons.filter((lesson) => lesson.courseKey === course.key);
     return <><div className="page-heading"><div className="eyebrow">차근차근 이어지는 수업</div><h1>배우고 싶은 코스부터.</h1><p>코스의 순서를 따라가거나, 지금 필요한 수업을 골라 시작하세요.</p></div>
-      {available.length > 1 && <div className="course-filters" role="group" aria-label="코스 고르기">
+      <div className="lesson-tools">
+        {mine.size > 0 && <div className="scope-toggle" role="group" aria-label="보여 줄 범위">
+          <button className={scope === 'mine' && !query ? 'active' : ''} aria-pressed={scope === 'mine' && !query}
+            onClick={() => { setLessonScope('mine'); setLessonSearch(''); }}>내 과정 {mine.size}</button>
+          <button className={scope === 'all' || query ? 'active' : ''} aria-pressed={scope === 'all' || !!query}
+            onClick={() => { setLessonScope('all'); setLessonSearch(''); }}>전체 {available.length}</button>
+        </div>}
+        <label className="lesson-search"><span className="sr-only">코스나 수업 이름으로 찾기</span><Icon name="search" size={17} />
+          <input type="search" value={lessonSearch} placeholder="코스나 수업 이름으로 찾기"
+            onChange={(event) => setLessonSearch(event.target.value)} />
+          {lessonSearch && <button className="icon-button" aria-label="찾기 지우기" onClick={() => setLessonSearch('')}><Icon name="close" size={15} /></button>}
+        </label>
+      </div>
+      {query
+        ? <p className="muted small lesson-note">찾은 코스 {shown.length}개예요. 찾기는 범위와 상관없이 카탈로그 전체를 봐요.</p>
+        : scope === 'mine'
+        ? <p className="muted small lesson-note">배우려는 과정과 지금 배우고 있는 코스예요. 나머지 {available.length - shown.length}개는 「전체」에서 볼 수 있어요.</p>
+        : null}
+      {scope === 'all' && !query && available.length > 1 && <div className="course-filters" role="group" aria-label="코스 고르기">
         <div className="course-filter-line">{chip('all', '모든 코스')}{!split && available.map((course) => chip(course.key, course.title))}</div>
         {split && chipLines.map((track) => <div className="course-filter-track" key={track} role="group" aria-label={courseTrackLabels[track]}>
           <span className="course-filter-name" aria-hidden="true">{courseTrackLabels[track]}</span>
@@ -899,24 +981,42 @@ export function LearningWorkspace() {
       {byStage(shown, track).flatMap((year) => [
         ...(year.stage ? [<h3 className="stage-heading" key={`${track}:${year.stage}`}>{courseStageLabels[year.stage]}</h3>] : []),
         ...year.courses.map((course) => {
-        const held = lessons.filter((lesson) => lesson.courseKey === course.key);
-        const complete = held.filter((lesson) => state?.enrollments.some((entry) => entry.lessonKey === lesson.lessonKey && entry.status === 'completed')).length;
+        const lessonsHere = held(course);
+        const complete = lessonsHere.filter((lesson) => state?.enrollments.some((entry) => entry.lessonKey === lesson.lessonKey && entry.status === 'completed')).length;
+        const started = lessonsHere.some((lesson) => state?.enrollments.some((entry) => entry.lessonKey === lesson.lessonKey));
         // What this course keeps besides its lessons. Said here because this is where a learner
         // looks at a course; the shelf is where they go once they know there is something to go to.
         const sets = problemSets.filter((set) => set.courseKey === course.key);
-        return <section className="dashboard-section course-section" key={course.key}><div className="catalog-banner"><Icon name="book" size={24} /><div><h3>{course.title}</h3><p>{course.summary || '설명을 읽고, 직접 풀며 한 단계씩 이해해요.'}</p></div><span>{state ? `${complete} / ${held.length}개 완료` : `${held.length}개 수업`}</span></div>
-          <div className="class-grid">{held.map((item, index) => <div className="class-option" key={item.lessonKey}><LessonCard item={item} index={index} courseTitle={course.title} enrollment={state?.enrollments.find((entry) => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />{state && <button className="text-button course-preference" disabled={busy} onClick={() => { void dispatch({ action: 'recommendation.choose', lessonKey: item.lessonKey }).then(() => navigate('home')).catch(() => {}); }}>{state.plan.preferredLessonKey === item.lessonKey ? '내가 고른 수업 ✓' : '이 수업부터 배우기'}</button>}</div>)}
+        const open = courseToggles[course.key] ?? opensItself(course);
+        return <section className={open ? 'dashboard-section course-section is-open' : 'dashboard-section course-section'} key={course.key}>
+          {/* The heading wraps the control rather than sitting beside it, so the course is still a
+              heading to jump to and the thing that opens it is still one thing to press. */}
+          <h3 className="catalog-heading"><button className="catalog-banner" aria-expanded={open} aria-controls={`course-${course.key}`}
+            onClick={() => setCourseToggles((previous) => ({ ...previous, [course.key]: !open }))}>
+            <Icon name="book" size={24} />
+            <span className="catalog-text"><strong>{course.title}</strong><span>{course.summary || '설명을 읽고, 직접 풀며 한 단계씩 이해해요.'}</span></span>
+            <span className="catalog-progress">
+              <span>{state ? `${complete} / ${lessonsHere.length}개 완료` : `${lessonsHere.length}개 수업`}</span>
+              {/* Drawn only where there is something to draw: a bar sitting empty under every course
+                  of a catalogue nobody has started reads as 「you have done none of this」 thirty-eight
+                  times over. The number above it already says so once, quietly. */}
+              {state && (complete > 0 || started) && <i aria-hidden="true"><b style={{ width: `${Math.round((complete / lessonsHere.length) * 100)}%` }} /></i>}
+            </span>
+            <Icon name="chevron" size={18} />
+          </button></h3>
+          {open && <div className="class-grid" id={`course-${course.key}`}>{lessonsHere.map((item, index) => <div className="class-option" key={item.lessonKey}><LessonCard item={item} index={index} courseTitle={course.title} enrollment={state?.enrollments.find((entry) => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />{state && <button className="text-button course-preference" disabled={busy} onClick={() => { void dispatch({ action: 'recommendation.choose', lessonKey: item.lessonKey }).then(() => navigate('home')).catch(() => {}); }}>{state.plan.preferredLessonKey === item.lessonKey ? '내가 고른 수업 ✓' : '이 수업부터 배우기'}</button>}</div>)}
             {/* The door to this course's problem sets, drawn as a card because it stands among cards —
                 a line of text between them reads as a footnote rather than as a thing to open. */}
             {sets.length > 0 && <div className="class-option"><button className="class-card set-card" disabled={busy} onClick={() => openCourseSets(course.key)}>
-              <LessonArt lessonKey={held[0]?.lessonKey ?? course.key} />
+              <LessonArt lessonKey={lessonsHere[0]?.lessonKey ?? course.key} />
               <div className="class-card-content"><div className="class-card-meta"><span>{course.title} · 문제집</span></div>
                 <h3>문제집 {sets.length}개 풀기</h3><p>설명 없이 문제만 풀고 싶을 때. 수업에서 쓰는 문제집을 그대로 골라 풀 수 있어요.</p>
                 <div className="class-card-footer"><span><Icon name="pencil" size={14} />문제 {sets.reduce((sum, set) => sum + set.questionCount, 0)}개</span><Icon name="arrow" size={18} /></div>
               </div>
-            </button></div>}</div>
+            </button></div>}</div>}
         </section>;
       })])}</div>)}
+      {query && !shown.length && <EmptyState title="찾는 이름이 없어요" text="코스 이름이나 수업 이름의 일부만 적어도 괜찮아요. 「전체」에서 목록을 훑어봐도 좋아요." actionLabel="찾기 지우기" onAction={() => setLessonSearch('')} />}
       {!lessons.length && <EmptyState title="수업을 준비하고 있어요" text="잠시 후 다시 확인해 주세요." />}</>;
   }
 
