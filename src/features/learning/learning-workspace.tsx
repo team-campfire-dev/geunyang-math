@@ -2,13 +2,14 @@
 
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import Link from 'next/link';
-import { conceptStateLabels, courseStageLabels, courseTrackLabels, courseTracks, defaultCourseTrack, stagesOf, type ActionResponse, type AssignmentView, type AttemptView, type CourseTrack, type LessonDocument, type ContentBlock, type EnrollmentView, type LearningAction, type LearningState, type PublicLesson, type PublicProblem, type PublicProblemSet, type PublicConcept, type PublicCourse } from '@/shared/api';
+import { courseStageLabels, courseTrackLabels, courseTracks, defaultCourseTrack, stagesOf, type ActionResponse, type AssignmentView, type AttemptView, type CourseTrack, type LessonDocument, type ContentBlock, type EnrollmentView, type LearningAction, type LearningState, type PublicLesson, type PublicProblem, type PublicProblemSet, type PublicConcept, type PublicCourse } from '@/shared/api';
 import { ApiError, learningApi, supportsWebAuthentication, type Session } from './api-client';
 import { placeSearch, readPlace, sameWork, type Page, type Place } from './app-url';
 import { assertLearningResponseAccount, clearAuthReturn, GOOGLE_LOGIN_PATH, isNativeBrowser, LearningResponseError, parseAuthError, readAuthReturn, saveAuthReturn, type AuthReturn } from './auth-client';
 import { DiagnosticPanel } from './diagnostic-panel';
 import { FirstStep } from './first-step';
 import { ReadinessList } from './readiness-list';
+import { StandingByCourse, WayThere } from './standing';
 import { GoogleLoginButton } from './google-login-button';
 import { ServiceFooter } from './service-footer';
 import { ContentBlocks, unsupportedRequiredBlocks, type GlossaryContext } from './content-blocks';
@@ -863,6 +864,11 @@ export function LearningWorkspace() {
     return <>
       <div className="page-heading"><h1>{state ? `${state.user.displayName}님, 오늘도 한 걸음.` : '그냥, 다시 시작하는 수학.'}</h1><p>완벽하게 알지 못해도 괜찮아요. 작은 이해가 쌓이면 수학이 편해져요.</p></div>
       <section className="daily-hero"><div className="hero-copy"><span className="hero-eyebrow"><span />{step.eyebrow}</span><h2>{step.title}</h2><p>{step.reason}</p><button className="button hero-button" onClick={step.onAct} disabled={loading || busy}>{step.action}<Icon name="arrow" size={18} /></button><span className="hero-duration"><Icon name="clock" size={13} />{step.note}</span></div><div className="hero-art"><div className="hero-paper"><span className="paper-caption">{step.caption}</span><LessonArt lessonKey={step.art} large /><div className="paper-equation"><span>오늘은 하나만 이해해도 충분해요.</span></div></div><span className="hero-doodle">÷</span><span className="hero-dot" /></div></section>
+      {/* Where they are, which is a different question from what to do next and is answered in the
+          same breath. Orientation rather than an invitation: nothing here is a thing to press
+          except the way to read more of it. */}
+      {state && <WayThere courses={courses} lessons={lessons} readiness={state.plan.readiness} onTheWay={state.plan.onTheWay}
+        targetCourseKey={state.user.targetCourseKey} onChooseTarget={openProfile} onOpenHistory={() => navigate('history')} />}
       {/* The reasoning, and the ways to overrule it. Folded because it answers a question — 「왜 이걸
           추천했지?」 — that a learner only asks after the screen has already offered something. */}
       {state && <details className="personalization-details"><summary>이 추천은 이렇게 정했어요</summary>
@@ -1075,9 +1081,7 @@ export function LearningWorkspace() {
   }
 
   function renderHistory() {
-    // The same four states the report shows beside each concept, called by the same names.
-    const labels = conceptStateLabels;
-    return <><div className="page-heading"><h1>조금씩 쌓이는 나의 이해.</h1><p>빠르기보다, 어제보다 조금 더 이해하는 것. 여기까지 온 걸음을 확인해요.</p></div>{!state ? <EmptyState title="첫 걸음을 기록해 보세요" text="내 학습을 시작하면 수업 진도와 개념별 학습 기록이 여기에 모여요." actionLabel="내 학습 시작하기" onAction={() => setModal('login')} /> : <><div className="history-stats"><div><small>완료한 수업</small><strong>{completedCount}<span>개</span></strong></div><div><small>제출한 과제</small><strong>{state.assignments.filter((item) => item.status === 'submitted' && item.policy.kind !== 'practice').length}<span>개</span></strong></div><div><small>다 푼 문제집</small><strong>{state.assignments.filter((item) => item.status === 'submitted' && item.policy.kind === 'practice').length}<span>개</span></strong></div><div><small>풀어본 문제</small><strong>{state.enrollments.reduce((sum, item) => sum + new Set(item.attempts.map((attempt) => attempt.problemVersionId)).size, 0) + state.assignments.reduce((sum, item) => sum + item.items.filter((entry) => entry.attempt).length, 0)}<span>개</span></strong></div></div><section className="dashboard-section"><div className="section-heading"><h2>개념별 학습 상태</h2><span className="muted small">힌트 사용과 이후 복습까지 반영한 상태예요</span></div><p className="muted small">「스스로 해결」은 힌트 없이 푼 기록, 「꾸준히 기억」은 이후 복습에서도 확인한 기록이에요. 아직 확인 전이라고 해서 모른다는 뜻은 아니에요.</p><div className="concept-list">{state.concepts.map((concept) => <div key={concept.key}><span className={`concept-dot ${concept.state}`} /><strong>{concept.label}</strong><span className={`concept-state ${concept.state}`}>{labels[concept.state]}</span></div>)}</div></section>{state.misconceptions.length > 0 && <section className="dashboard-section"><div className="section-heading"><div><h2>자꾸 되풀이되는 것</h2></div><span className="muted small">서로 다른 문항에서 두 번 이상 나온 것만 모아요</span></div>
+    return <><div className="page-heading"><h1>조금씩 쌓이는 나의 이해.</h1><p>빠르기보다, 어제보다 조금 더 이해하는 것. 여기까지 온 걸음을 확인해요.</p></div>{!state ? <EmptyState title="첫 걸음을 기록해 보세요" text="내 학습을 시작하면 수업 진도와 개념별 학습 기록이 여기에 모여요." actionLabel="내 학습 시작하기" onAction={() => setModal('login')} /> : <><div className="history-stats"><div><small>완료한 수업</small><strong>{completedCount}<span>개</span></strong></div><div><small>제출한 과제</small><strong>{state.assignments.filter((item) => item.status === 'submitted' && item.policy.kind !== 'practice').length}<span>개</span></strong></div><div><small>다 푼 문제집</small><strong>{state.assignments.filter((item) => item.status === 'submitted' && item.policy.kind === 'practice').length}<span>개</span></strong></div><div><small>풀어본 문제</small><strong>{state.enrollments.reduce((sum, item) => sum + new Set(item.attempts.map((attempt) => attempt.problemVersionId)).size, 0) + state.assignments.reduce((sum, item) => sum + item.items.filter((entry) => entry.attempt).length, 0)}<span>개</span></strong></div></div><section className="dashboard-section"><div className="section-heading"><h2>코스별 학습 상태</h2><span className="muted small">힌트 사용과 이후 복습까지 반영한 상태예요</span></div><p className="muted small">「스스로 해결」은 힌트 없이 푼 기록, 「꾸준히 기억」은 이후 복습에서도 확인한 기록이에요. 아직 확인 전이라고 해서 모른다는 뜻은 아니에요. 코스를 열면 그 코스가 가르치는 개념이 하나씩 보여요.</p><StandingByCourse courses={courses} lessons={lessons} concepts={state.concepts} busy={busy} /></section>{state.misconceptions.length > 0 && <section className="dashboard-section"><div className="section-heading"><div><h2>자꾸 되풀이되는 것</h2></div><span className="muted small">서로 다른 문항에서 두 번 이상 나온 것만 모아요</span></div>
       <p className="muted small">답한 것에서 읽은 거예요. 한 번은 손이 미끄러진 것일 수 있어서, 두 문항에서 같은 것이 나왔을 때만 여기에 둡니다.</p>
       <div className="standing-slips">{state.misconceptions.map((slip) => <article key={slip.key}>
         <div><strong>{slip.label}<span>{slip.problems}문항</span></strong><p>{slip.note}</p></div>

@@ -206,6 +206,63 @@
   .privacy-page > .service-footer { padding-left: 20px; padding-right: 20px; }
 }
 
+/* 배우려는 과정까지 가는 길. 지나온 것은 세고, 남은 것은 차례로 이름을 부른다 — 개념 166개의
+   목록으로는 대답할 수 없던 「지금 어디쯤인가」에 대한 대답이다. 누를 것은 없고(자세히 보기
+   하나뿐) 읽을 것만 있다: 제안이 아니라 방향을 아는 자리다. */
+.way-there { margin: 0 0 24px; padding: 20px 24px 22px; background: #fcf9f1; border: 1px solid var(--line); border-radius: 14px; }
+.way-heading { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.way-heading strong { font-size: 14px; font-weight: 600; }
+.way-heading .text-button { margin-left: auto; }
+/* 줄어들 수 있어야 한다. 고정폭이면 다섯 칸이 한 줄에 들어가지 못하고, 스크롤 밖으로 밀려나는
+   것이 하필 배우려는 과정이다 — 끝이 보이지 않는 길은 길이 아니다. 좁은 화면에서는 아래에서
+   다시 고정폭으로 돌리고, 대신 옆으로 넘긴다. */
+.way-list { display: flex; gap: 10px; margin: 0; padding: 0; list-style: none; overflow-x: auto; scrollbar-width: thin; }
+.way-list li { flex: 1 1 104px; min-width: 0; display: flex; flex-direction: column; gap: 8px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--white); }
+.way-list li.is-target { border-color: var(--accent); background: #fffdf7; }
+.way-name { font-size: 13px; font-weight: 600; color: #4a433a; line-height: 1.5; word-break: keep-all; }
+.way-name em { display: block; font-style: normal; font-size: 12px; font-weight: 500; color: var(--accent); margin-top: 3px; }
+.way-bar { display: block; height: 4px; border-radius: 2px; background: #e6dece; overflow: hidden; }
+.way-bar i { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
+.way-count { font-size: 12px; color: var(--muted); }
+/* The courses between the fourth and the last, counted rather than named. */
+.way-gap { align-self: flex-start; font-size: 12px; color: var(--faint); }
+.way-there.is-unset, .way-there.is-arrived { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.way-there.is-unset strong, .way-there.is-arrived strong { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.way-there.is-unset p, .way-there.is-arrived p { font-size: 13px; line-height: 1.8; color: #837a68; word-break: keep-all; }
+.way-there.is-unset .button { flex: none; }
+@media (max-width: 740px) {
+  .way-there { padding: 18px 16px 19px; }
+  .way-list { margin: 0 -16px; padding: 0 16px; }
+  .way-list li { flex: 0 0 148px; }
+  .way-there.is-unset, .way-there.is-arrived { flex-direction: column; align-items: flex-start; gap: 14px; }
+}
+
+/* 학습 기록의 코스별 상태. 같은 개념 166개를, 그것을 가르치는 코스 안에 넣었을 뿐이다 —
+   줄은 서른여덟이 되고, 개념 하나하나는 열어서 읽는 것이 된다. */
+.standing-courses { border: 1px solid var(--line); border-radius: 9px; background: #fffdf7; overflow: hidden; }
+.standing-course + .standing-course { border-top: 1px solid var(--line); }
+.standing-course h3 { margin: 0; font-size: inherit; font-weight: inherit; }
+.standing-course h3 > button { display: flex; align-items: center; gap: 16px; width: 100%; text-align: left; padding: 18px 23px; }
+.standing-course h3 > button:hover { background: #f9f5ec; }
+.standing-name { flex: 1; min-width: 0; font-size: 13px; font-weight: 600; color: #4a433a; word-break: keep-all; }
+.standing-bar { display: flex; gap: 2px; width: 108px; flex: none; height: 6px; border-radius: 3px; overflow: hidden; background: #f0eadd; }
+.standing-bar i { display: block; height: 100%; }
+.standing-bar i.retained { background: var(--accent); }
+.standing-bar i.independent { background: #e0a084; }
+.standing-bar i.practicing { background: #e6c9ba; }
+.standing-bar i.unknown { background: #e6dece; }
+.standing-count { flex: none; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.standing-course h3 > button > svg { flex: none; color: var(--faint); transition: transform .18s ease; }
+.standing-course.is-open h3 > button > svg { transform: rotate(90deg); }
+.standing-course .concept-list { border: 0; border-top: 1px solid var(--line); border-radius: 0; background: #fcf9f1; }
+.standing-untouched { margin-top: 14px; font-size: 13px; }
+.standing-untouched summary { cursor: pointer; color: var(--ink); padding: 6px 0; }
+.standing-untouched .standing-courses { margin-top: 12px; }
+@media (max-width: 740px) {
+  .standing-course h3 > button { padding: 16px 15px; gap: 11px; }
+  .standing-bar { width: 72px; }
+}
+
 /* Why the screen offered what it offered, and the ways to overrule it. Folded, because it answers
    a question a learner only asks after something has been offered — standing it open beside the
    offer is what made the home screen read as eight suggestions of equal weight. */

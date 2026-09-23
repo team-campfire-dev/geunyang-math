@@ -49,7 +49,7 @@ const learningState = (overrides: Partial<LearningState> = {}): LearningState =>
   user: { id: 'u1', displayName: '학습자', targetCourseKey: null, dailyMinutes: 10 },
   lessons: catalogue, enrollments: [], assignments: [], recommendations: [],
   diagnostic: null, diagnosticOffering: null,
-  plan: { version: '1', readiness: [], review: null, sessionMinutes: 10, preferredLessonKey: null },
+  plan: { version: '1', readiness: [], review: null, sessionMinutes: 10, preferredLessonKey: null, onTheWay: [] },
   recommendationHistory: [], concepts: [], misconceptions: [], ...overrides,
 });
 const enrolled = (completedSectionIds: string[] = [], status: 'active' | 'completed' = 'active') =>
@@ -1018,7 +1018,7 @@ describe('the one thing the home screen offers', () => {
     const second = { ...assignment(), id: 'r2', recipientId: 'r2', title: '소수의 의미 복습', submissionId: 's2' };
     server = serve({ state: learningState({
       assignments: [assignment(), second],
-      plan: { version: '1', readiness: [], sessionMinutes: 10, preferredLessonKey: null,
+      plan: { version: '1', readiness: [], sessionMinutes: 10, preferredLessonKey: null, onTheWay: [],
         review: { recipientId: 'r1', reason: '권장 복습 시점이 되었어요.' } },
       recommendations: [{ lessonKey, reason: '여기부터요.', kind: 'start', suggestedMinutes: 10 }],
     }) });
