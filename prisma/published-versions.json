@@ -434,6 +434,7 @@
   "polyhedron:review:v1": "7c3f985ae07579f444ef5571bab40727",
   "polyhedron:v1": "5d8d35c0f7f49d2dc1c850d14c88d9ce",
   "polyhedron:v2": "8894622a44d3cb986923c99258e301e2",
+  "polyhedron:v3": "db409d94427a7f823ae7c83c74833771",
   "polynomial-arithmetic:check:v1": "2463cb384f81c008ad691c995b399604",
   "polynomial-arithmetic:practice:v1": "892792b5348f3086d4efabb0022291c9",
   "polynomial-arithmetic:review:v1": "97341d98a6a5b6302b0f468f591c27a9",
@@ -617,6 +618,7 @@
   "surface-area:review:v1": "3197f1b717db4ec2aec6c7fb72d6daec",
   "surface-area:v1": "adf6c30bb32fb68c9e2128f3d2240309",
   "surface-area:v2": "7660cc592a7d00c0ddabd651168edafc",
+  "surface-area:v3": "54ca9ec7be57f3c5beefc7e3f129e463",
   "systems:drill:v1": "464715c186295dcfcff5c5e0d873d287",
   "triangle-center:check:v1": "e927c24940ec5071f2acb09f591daca8",
   "triangle-center:practice:v1": "a2a2379f5304b6fd2f9ad7f2db24c512",
@@ -648,5 +650,6 @@
   "volume:practice:v1": "789233a9910404849f671bfc8d6834d8",
   "volume:review:v1": "da51699a44b20732f9e024d58c6959dd",
   "volume:v1": "3ca1ae3f20dfbfb76115725fe79108b9",
-  "volume:v2": "30c1183ff1041f41e1696469fb96cd01"
+  "volume:v2": "30c1183ff1041f41e1696469fb96cd01",
+  "volume:v3": "a28028655e1bb2d48f987734c50ee0f6"
 }
