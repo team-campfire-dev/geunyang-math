@@ -208,7 +208,7 @@ export type PersonalPlan = {
    *
    * The recommendation already works this out to decide which of several available lessons is
    * nearest to what somebody wants; it is sent because it is also the only honest answer to 「지금
-   * 어디쯤인가」. A concept list cannot answer that — a hundred and sixty-six of them is not a place.
+   * 어디쯤인가」. A concept list cannot answer that — a hundred and sixty-four of them is not a place.
    * Grouped into the courses that teach them it becomes a handful of names with an order, which is.
    *
    * With no course named there is nothing to be on the way to, so this is the whole catalogue and a

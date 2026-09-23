@@ -11,7 +11,7 @@ const shownAhead = 5;
 /**
  * How far along the way to what a learner came for they are, course by course.
  *
- * 「지금 어디쯤인가」 used to be answerable only by opening a fold and reading a hundred and sixty-six
+ * 「지금 어디쯤인가」 used to be answerable only by opening a fold and reading a hundred and sixty-four
  * concept chips, most of them saying 「아직 확인 전」. That is not an answer: a list that long is not
  * a place. The courses those concepts belong to are — four or five names, in an order the learner
  * already understands, ending at the one they said they wanted.
@@ -73,8 +73,8 @@ const order: ConceptState[] = ['retained', 'independent', 'practicing', 'unknown
 /**
  * What the record says, course by course.
  *
- * The same hundred and sixty-six concepts, in the courses that teach them: thirty-eight rows
- * instead of a hundred and sixty-six, each one a name the learner recognises. The concepts are
+ * The same hundred and sixty-four concepts, in the courses that teach them: thirty-eight rows
+ * instead of a hundred and sixty-four, each one a name the learner recognises. The concepts are
  * still here — a row opens onto exactly the chips that were there before — but they are something
  * to go and read rather than something to scroll past on the way to everything else.
  */

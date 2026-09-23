@@ -19,7 +19,7 @@ function homeCourse(lessons: PublicLesson[]) {
 /**
  * The concepts of a list, gathered into the courses that teach them.
  *
- * 「지금 어디쯤인가」 has no answer in a list of a hundred and sixty-six concepts: a list that long
+ * 「지금 어디쯤인가」 has no answer in a list of a hundred and sixty-four concepts: a list that long
  * is not a place, and reading it is work. The courses that teach them are a handful of names a
  * learner already recognises, in an order they already understand, and every count a screen wants
  * to draw is a count over one of these groups.
