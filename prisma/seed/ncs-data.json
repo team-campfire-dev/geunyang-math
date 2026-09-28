@@ -1134,7 +1134,7 @@
     {
       "public": {
         "lessonKey": "ncs-graph",
-        "versionId": "ncs-graph:v2",
+        "versionId": "ncs-graph:v3",
         "title": "그래프에서 값 읽기: 눈금부터 센다",
         "summary": "꺾은선과 막대와 누적 막대에서 값을 읽고, 눈금이 만드는 착시를 가려내요.",
         "estimatedMinutes": 20,
@@ -1150,12 +1150,12 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-graph:scale:v2",
+          "sectionId": "ncs-graph:scale:v3",
           "role": "explanation",
           "title": "눈금 한 칸이 얼마인가",
           "contentBlocks": [
             {
-              "blockId": "ncs-graph:scale:text:v2",
+              "blockId": "ncs-graph:scale:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1171,7 +1171,7 @@
               }
             },
             {
-              "blockId": "ncs-graph:scale:drawing:v2",
+              "blockId": "ncs-graph:scale:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1502,12 +1502,12 @@
           ]
         },
         {
-          "sectionId": "ncs-graph:kinds:v2",
+          "sectionId": "ncs-graph:kinds:v3",
           "role": "explanation",
           "title": "그래프마다 먼저 볼 곳이 다르다",
           "contentBlocks": [
             {
-              "blockId": "ncs-graph:kinds:text:v2",
+              "blockId": "ncs-graph:kinds:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1523,7 +1523,7 @@
               }
             },
             {
-              "blockId": "ncs-graph:kinds:table:v2",
+              "blockId": "ncs-graph:kinds:table:v3",
               "kind": "core.table",
               "typeVersion": 1,
               "required": true,
@@ -1579,12 +1579,12 @@
           ]
         },
         {
-          "sectionId": "ncs-graph:example:v2",
+          "sectionId": "ncs-graph:example:v3",
           "role": "worked_example",
           "title": "한 그래프로 세 가지 묻기",
           "contentBlocks": [
             {
-              "blockId": "ncs-graph:example:text:v2",
+              "blockId": "ncs-graph:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1596,12 +1596,12 @@
           ]
         },
         {
-          "sectionId": "ncs-graph:practice:v2",
+          "sectionId": "ncs-graph:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-graph:practice:problems:v2",
+              "blockId": "ncs-graph:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1618,33 +1618,33 @@
           ]
         },
         {
-          "sectionId": "ncs-graph:check:v2",
+          "sectionId": "ncs-graph:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-graph:check:problems:v2",
+              "blockId": "ncs-graph:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-graph:check",
-                "problemSetVersionId": "ncs-graph:check:v1",
+                "problemSetVersionId": "ncs-graph:check:v2",
                 "problemVersionIds": [
                   "ncs-graph:check-1:v1",
-                  "ncs-graph:check-2:v1"
+                  "ncs-graph:check-2:v2"
                 ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-graph:summary:v2",
+          "sectionId": "ncs-graph:summary:v3",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-graph:summary:text:v2",
+              "blockId": "ncs-graph:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1674,7 +1674,7 @@
     {
       "public": {
         "lessonKey": "ncs-condition",
-        "versionId": "ncs-condition:v3",
+        "versionId": "ncs-condition:v4",
         "title": "조건을 걸어 고르기: 지워 나가면 빨라진다",
         "summary": "표와 조건이 함께 주어진 문항에서 후보를 걸러 내고, 순위와 합계를 비교해 하나를 골라요.",
         "estimatedMinutes": 20,
@@ -1690,12 +1690,12 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-condition:sift:v3",
+          "sectionId": "ncs-condition:sift:v4",
           "role": "explanation",
           "title": "다 따지지 않고 지워 나간다",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:sift:text:v3",
+              "blockId": "ncs-condition:sift:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1711,7 +1711,7 @@
               }
             },
             {
-              "blockId": "ncs-condition:sift:drawing:v3",
+              "blockId": "ncs-condition:sift:drawing:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1951,12 +1951,12 @@
           ]
         },
         {
-          "sectionId": "ncs-condition:weight:v3",
+          "sectionId": "ncs-condition:weight:v4",
           "role": "explanation",
           "title": "점수를 매겨 고르는 문항",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:weight:text:v3",
+              "blockId": "ncs-condition:weight:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1966,7 +1966,7 @@
               }
             },
             {
-              "blockId": "ncs-condition:weight:table:v3",
+              "blockId": "ncs-condition:weight:table:v4",
               "kind": "core.table",
               "typeVersion": 1,
               "required": true,
@@ -2031,12 +2031,12 @@
           ]
         },
         {
-          "sectionId": "ncs-condition:example:v3",
+          "sectionId": "ncs-condition:example:v4",
           "role": "worked_example",
           "title": "표 하나로 끝까지 가 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:example:text:v3",
+              "blockId": "ncs-condition:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -2048,12 +2048,12 @@
           ]
         },
         {
-          "sectionId": "ncs-condition:practice:v3",
+          "sectionId": "ncs-condition:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:practice:problems:v3",
+              "blockId": "ncs-condition:practice:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -2070,20 +2070,20 @@
           ]
         },
         {
-          "sectionId": "ncs-condition:check:v3",
+          "sectionId": "ncs-condition:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:check:problems:v3",
+              "blockId": "ncs-condition:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-condition:check",
-                "problemSetVersionId": "ncs-condition:check:v1",
+                "problemSetVersionId": "ncs-condition:check:v2",
                 "problemVersionIds": [
-                  "ncs-condition:check-1:v1",
+                  "ncs-condition:check-1:v2",
                   "ncs-condition:check-2:v1"
                 ]
               }
@@ -2091,12 +2091,12 @@
           ]
         },
         {
-          "sectionId": "ncs-condition:summary:v3",
+          "sectionId": "ncs-condition:summary:v4",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:summary:text:v3",
+              "blockId": "ncs-condition:summary:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -7688,6 +7688,254 @@
               "required": true,
               "payload": {
                 "text": "계산할 후보가 적을수록 빨라요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-condition:check",
+      "courseKey": "ncs-data",
+      "name": "조건 걸어 고르기 확인",
+      "versionId": "ncs-condition:check:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-condition:check-1:v2",
+          "conceptKeys": [
+            "condition-pick"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-condition:check-1:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "품질 $85$점, 가격 $70$점, 납기 $90$점인 업체가 있어요. 가중치가 차례로 $0.5$, $0.3$, $0.2$일 때 가중 총점은 몇 점인가요? 소수로 써도 좋아요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 163,
+            "denominator": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-condition:check-1:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$42.5 + 21 + 18$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-condition:check-2:v1",
+          "conceptKeys": [
+            "condition-pick"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-condition:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "계산이 필요한 조건은 언제 적용하는 것이 좋은가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "후보를 줄인 뒤 마지막에"
+              },
+              {
+                "id": "b",
+                "text": "가장 먼저"
+              },
+              {
+                "id": "c",
+                "text": "모든 후보에 한꺼번에"
+              },
+              {
+                "id": "d",
+                "text": "적용하지 않는다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "후보를 줄인 뒤 마지막에"
+              },
+              {
+                "id": "b",
+                "text": "가장 먼저"
+              },
+              {
+                "id": "c",
+                "text": "모든 후보에 한꺼번에"
+              },
+              {
+                "id": "d",
+                "text": "적용하지 않는다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-condition:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "계산할 후보가 적을수록 빨라요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-graph:check",
+      "courseKey": "ncs-data",
+      "name": "그래프 읽기 확인",
+      "versionId": "ncs-graph:check:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-graph:check-1:v1",
+          "conceptKeys": [
+            "graph-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-graph:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "누적 막대에서 위쪽 칸의 값을 구하는 방법으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "꼭대기에서 아래 경계를 뺀다"
+              },
+              {
+                "id": "b",
+                "text": "꼭대기를 그대로 읽는다"
+              },
+              {
+                "id": "c",
+                "text": "아래 경계를 그대로 읽는다"
+              },
+              {
+                "id": "d",
+                "text": "구할 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "꼭대기에서 아래 경계를 뺀다"
+              },
+              {
+                "id": "b",
+                "text": "꼭대기를 그대로 읽는다"
+              },
+              {
+                "id": "c",
+                "text": "아래 경계를 그대로 읽는다"
+              },
+              {
+                "id": "d",
+                "text": "구할 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-graph:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "꼭대기는 여기까지의 합이에요."
+              }
+            }
+          ],
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "stacked-top-as-value"
+            },
+            {
+              "answer": "c",
+              "misconception": "stacked-top-as-value"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-graph:check-2:v2",
+          "conceptKeys": [
+            "graph-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-graph:check-2:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$월이 $14$, $5$월이 $35$일 때 $5$월은 $1$월의 몇 배인가요? 소수나 분수로 써도 좋아요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-graph:check-2:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$35 \\div 14$예요."
               }
             }
           ],
