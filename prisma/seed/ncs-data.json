@@ -495,7 +495,7 @@
     {
       "public": {
         "lessonKey": "ncs-data-change",
-        "versionId": "ncs-data-change:v4",
+        "versionId": "ncs-data-change:v5",
         "title": "증감과 증감률: 얼마나 늘었나",
         "summary": "늘어난 양과 늘어난 비율을 구분하고, 기준을 잡아 증감률을 구해요.",
         "estimatedMinutes": 20,
@@ -511,12 +511,12 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-data-change:amount:v4",
+          "sectionId": "ncs-data-change:amount:v5",
           "role": "explanation",
           "title": "늘어난 양",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:amount:text:v4",
+              "blockId": "ncs-data-change:amount:text:v5",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -528,17 +528,17 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:rate:v4",
+          "sectionId": "ncs-data-change:rate:v5",
           "role": "explanation",
           "title": "늘어난 비율",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:rate:text:v4",
+              "blockId": "ncs-data-change:rate:text:v5",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "다른 하나는 증감률이에요. 그 증감량을 처음 값으로 나눈 것이고요. $\\text{증감률} = \\frac{\\text{나중} - \\text{처음}}{\\text{처음}} \\times 100$이고 단위는 $\\%$예요.\n\n이 둘은 자주 어긋나요. 매출이 $1{,}500$에서 $2{,}200$으로 는 지점은 $700$ 늘었고 비율로는 $47\\%$예요. $3{,}200$에서 $3{,}600$으로 는 지점은 $400$ 늘었고 비율로는 $13\\%$예요.\n\n여기서는 늘어난 양도 비율도 앞쪽이 커요. 하지만 규모가 크게 다르면 「많이 늘었다」의 답이 둘 사이에서 달라져요. 문제가 「증가량」이라 했는지 「증가율」이라 했는지를 먼저 보세요.",
+                "text": "다른 하나는 증감률이에요. 그 증감량을 처음 값으로 나눈 것이고요. $\\text{증감률} = \\frac{\\text{나중} - \\text{처음}}{\\text{처음}} \\times 100$이고 단위는 $\\%$예요.\n\n이 둘은 순서가 뒤집힐 수 있어요. 가 지점은 매출이 $1{,}000$에서 $1{,}200$이 되어 $200$ 늘었고, 비율로는 $\\frac{200}{1{,}000} = 20\\%$예요. 나 지점은 $100$에서 $150$이 되어 $50$ 늘었지만, 비율로는 $\\frac{50}{100} = 50\\%$예요.\n\n늘어난 양은 가 지점이, 늘어난 비율은 나 지점이 커요. 처음 값이 작으면 조금만 늘어도 비율은 크게 나와요. 그래서 문제가 「증가량」이라 했는지 「증가율」이라 했는지를 먼저 보세요.",
                 "definitions": [
                   {
                     "conceptKey": "growth-rate",
@@ -547,103 +547,148 @@
                   }
                 ]
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "ncs-data-change:base:v4",
-          "role": "explanation",
-          "title": "기준은 언제나 이전 값",
-          "contentBlocks": [
-            {
-              "blockId": "ncs-data-change:base:text:v4",
-              "kind": "core.rich_text",
-              "typeVersion": 3,
-              "required": true,
-              "payload": {
-                "text": "증감률에서 가장 많이 틀리는 곳은 나누는 수예요. 나중 값이 아니라 처음 값으로 나눕니다.\n\n$40{,}000$명이 $50{,}000$명이 되었으면 늘어난 $10{,}000$을 $40{,}000$으로 나눠 $25\\%$예요. $50{,}000$으로 나눈 $20\\%$는 틀린 답인데, 기준을 나중 값으로 잘못 잡으면 이처럼 다른 결과가 나와요.\n\n여러 해에 걸친 증가율도 더할 수 없어요. $2022 \\rightarrow 2023$이 $25\\%$, $2023 \\rightarrow 2024$가 $30\\%$라고 해서 두 해 동안 $55\\%$가 아니에요. $40{,}000$이 $65{,}000$이 되었으니 $\\frac{25{,}000}{40{,}000} = 62.5\\%$예요. 기준이 해마다 달라지기 때문이에요.\n\n그리고 %와 %p가 있어요. 점유율이 $8\\%$에서 $10\\%$가 되면 $2$%p 오른 것이고, 비율로는 $\\frac{2}{8} = 25\\%$ 오른 것이에요. 같은 사실을 두 수로 말할 수 있으니, 문장이 어느 쪽을 묻는지 읽어야 해요.",
-                "definitions": []
-              }
             },
             {
-              "blockId": "ncs-data-change:growth:drawing:v4",
+              "blockId": "ncs-data-change:growth:drawing:v5",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "작은 막대와 큰 막대를 비교해 늘어난 양과 늘어난 비율을 나누어 보는 그림",
-                "caption": "늘어난 양이 같아도 늘어난 비율은 다를 수 있어요",
+                "alt": "매출이 1,000에서 1,200이 된 가 지점과 100에서 150이 된 나 지점의 이전·나중 막대를 같은 눈금으로 그려, 늘어난 양은 가 지점이 크고 늘어난 비율은 나 지점이 크다는 것을 보여 주는 그림",
+                "caption": "늘어난 양이 큰 쪽이 늘어난 비율도 큰 것은 아니에요",
                 "items": [
                   {
                     "kind": "line",
-                    "id": "base",
-                    "x1": 24,
-                    "y1": 150,
-                    "x2": 300,
-                    "y2": 150,
+                    "id": "axis",
+                    "x1": 20,
+                    "y1": 160,
+                    "x2": 220,
+                    "y2": 160,
                     "stroke": "line",
                     "strokeWidth": 2
                   },
                   {
                     "kind": "rect",
-                    "id": "was",
-                    "x": 46,
-                    "y": 110,
-                    "width": 46,
-                    "height": 40,
+                    "id": "ga-was",
+                    "x": 40,
+                    "y": 68,
+                    "width": 28,
+                    "height": 92,
                     "fill": "fill-soft",
                     "stroke": "ink",
                     "strokeWidth": 1
                   },
                   {
                     "kind": "rect",
-                    "id": "now",
-                    "x": 110,
-                    "y": 60,
-                    "width": 46,
-                    "height": 90,
+                    "id": "ga-now",
+                    "x": 72,
+                    "y": 50,
+                    "width": 28,
+                    "height": 110,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "na-was",
+                    "x": 150,
+                    "y": 151,
+                    "width": 28,
+                    "height": 9,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "na-now",
+                    "x": 182,
+                    "y": 146,
+                    "width": 28,
+                    "height": 14,
                     "fill": "fill",
                     "stroke": "ink",
                     "strokeWidth": 1
                   },
                   {
                     "kind": "text",
-                    "id": "was-name",
-                    "x": 69,
-                    "y": 166,
-                    "text": "C지점",
+                    "id": "ga-was-tag",
+                    "x": 54,
+                    "y": 172,
+                    "text": "이전",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "ga-now-tag",
+                    "x": 86,
+                    "y": 172,
+                    "text": "나중",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "na-was-tag",
+                    "x": 164,
+                    "y": 172,
+                    "text": "이전",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "na-now-tag",
+                    "x": 196,
+                    "y": 172,
+                    "text": "나중",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "ga-name",
+                    "x": 70,
+                    "y": 190,
+                    "text": "가 지점",
                     "size": 11,
                     "anchor": "middle",
                     "fill": "muted"
                   },
                   {
                     "kind": "text",
-                    "id": "now-name",
-                    "x": 133,
-                    "y": 166,
-                    "text": "A지점",
+                    "id": "na-name",
+                    "x": 180,
+                    "y": 190,
+                    "text": "나 지점",
                     "size": 11,
                     "anchor": "middle",
                     "fill": "muted"
                   },
                   {
                     "kind": "text",
-                    "id": "was-num",
-                    "x": 69,
-                    "y": 102,
-                    "text": "1,500 → 2,200",
+                    "id": "ga-num",
+                    "x": 70,
+                    "y": 40,
+                    "text": "1,000 → 1,200",
                     "size": 10,
                     "anchor": "middle",
                     "fill": "ink"
                   },
                   {
                     "kind": "text",
-                    "id": "now-num",
-                    "x": 133,
-                    "y": 52,
-                    "text": "3,200 → 3,600",
+                    "id": "na-num",
+                    "x": 180,
+                    "y": 134,
+                    "text": "100 → 150",
                     "size": 10,
                     "anchor": "middle",
                     "fill": "ink"
@@ -651,8 +696,8 @@
                   {
                     "kind": "text",
                     "id": "amount",
-                    "x": 236,
-                    "y": 92,
+                    "x": 266,
+                    "y": 70,
                     "text": "늘어난 양",
                     "size": 11,
                     "anchor": "middle",
@@ -661,19 +706,29 @@
                   {
                     "kind": "text",
                     "id": "amount-v",
-                    "x": 236,
-                    "y": 110,
-                    "text": "700 < 400?",
-                    "size": 11,
+                    "x": 266,
+                    "y": 90,
+                    "text": "$200 > 50$",
+                    "size": 13,
                     "anchor": "middle",
                     "fill": "ink"
                   },
                   {
                     "kind": "text",
                     "id": "rate",
-                    "x": 236,
-                    "y": 134,
-                    "text": "$47\\% > 13\\%$",
+                    "x": 266,
+                    "y": 120,
+                    "text": "늘어난 비율",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "rate-v",
+                    "x": 266,
+                    "y": 140,
+                    "text": "$20\\% < 50\\%$",
                     "size": 13,
                     "anchor": "middle",
                     "fill": "ink"
@@ -681,7 +736,7 @@
                 ],
                 "frames": [
                   {
-                    "caption": "두 지점 모두 매출이 늘었어요.",
+                    "caption": "두 지점 모두 매출이 늘었어요. 옅은 막대가 이전 값, 짙은 막대가 나중 값이에요.",
                     "changes": [
                       {
                         "id": "amount",
@@ -694,20 +749,28 @@
                       {
                         "id": "rate",
                         "hidden": true
-                      }
-                    ]
-                  },
-                  {
-                    "caption": "늘어난 양은 C가 700, A가 400이에요.",
-                    "changes": [
+                      },
                       {
-                        "id": "rate",
+                        "id": "rate-v",
                         "hidden": true
                       }
                     ]
                   },
                   {
-                    "caption": "늘어난 비율로 보면 C는 47%, A는 13%예요. 기준이 다르니까요.",
+                    "caption": "늘어난 양은 가 지점이 200, 나 지점이 50이에요.",
+                    "changes": [
+                      {
+                        "id": "rate",
+                        "hidden": true
+                      },
+                      {
+                        "id": "rate-v",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "늘어난 비율은 가 지점이 20%, 나 지점이 50%예요. 나누는 처음 값이 달라서 순서가 뒤집혀요.",
                     "changes": [
                       {
                         "id": "amount",
@@ -726,12 +789,29 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:example:v4",
+          "sectionId": "ncs-data-change:base:v5",
+          "role": "explanation",
+          "title": "기준은 언제나 이전 값",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-change:base:text:v5",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "증감률에서 가장 많이 틀리는 곳은 나누는 수예요. 나중 값이 아니라 처음 값으로 나눕니다.\n\n$40{,}000$명이 $50{,}000$명이 되었으면 늘어난 $10{,}000$을 $40{,}000$으로 나눠 $25\\%$예요. $50{,}000$으로 나눈 $20\\%$는 틀린 답인데, 기준을 나중 값으로 잘못 잡으면 이처럼 다른 결과가 나와요.\n\n여러 해에 걸친 증가율도 더할 수 없어요. $2022 \\rightarrow 2023$이 $25\\%$, $2023 \\rightarrow 2024$가 $30\\%$라고 해서 두 해 동안 $55\\%$가 아니에요. $40{,}000$이 $65{,}000$이 되었으니 $\\frac{25{,}000}{40{,}000} = 62.5\\%$예요. 기준이 해마다 달라지기 때문이에요.\n\n그리고 %와 %p가 있어요. 점유율이 $8\\%$에서 $10\\%$가 되면 $2$%p 오른 것이고, 비율로는 $\\frac{2}{8} = 25\\%$ 오른 것이에요. 같은 사실을 두 수로 말할 수 있으니, 문장이 어느 쪽을 묻는지 읽어야 해요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-change:example:v5",
           "role": "worked_example",
           "title": "증가율이 가장 큰 곳 찾기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:example:text:v4",
+              "blockId": "ncs-data-change:example:text:v5",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -743,12 +823,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:practice:v4",
+          "sectionId": "ncs-data-change:practice:v5",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:practice:problems:v4",
+              "blockId": "ncs-data-change:practice:problems:v5",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -765,12 +845,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:check:v4",
+          "sectionId": "ncs-data-change:check:v5",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:check:problems:v4",
+              "blockId": "ncs-data-change:check:problems:v5",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -786,12 +866,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:summary:v4",
+          "sectionId": "ncs-data-change:summary:v5",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:summary:text:v4",
+              "blockId": "ncs-data-change:summary:text:v5",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1134,7 +1214,7 @@
     {
       "public": {
         "lessonKey": "ncs-graph",
-        "versionId": "ncs-graph:v2",
+        "versionId": "ncs-graph:v3",
         "title": "그래프에서 값 읽기: 눈금부터 센다",
         "summary": "꺾은선과 막대와 누적 막대에서 값을 읽고, 눈금이 만드는 착시를 가려내요.",
         "estimatedMinutes": 20,
@@ -1150,12 +1230,12 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-graph:scale:v2",
+          "sectionId": "ncs-graph:scale:v3",
           "role": "explanation",
           "title": "눈금 한 칸이 얼마인가",
           "contentBlocks": [
             {
-              "blockId": "ncs-graph:scale:text:v2",
+              "blockId": "ncs-graph:scale:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1171,7 +1251,7 @@
               }
             },
             {
-              "blockId": "ncs-graph:scale:drawing:v2",
+              "blockId": "ncs-graph:scale:drawing:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1502,17 +1582,17 @@
           ]
         },
         {
-          "sectionId": "ncs-graph:kinds:v2",
+          "sectionId": "ncs-graph:kinds:v3",
           "role": "explanation",
           "title": "그래프마다 먼저 볼 곳이 다르다",
           "contentBlocks": [
             {
-              "blockId": "ncs-graph:kinds:text:v2",
+              "blockId": "ncs-graph:kinds:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "그래프의 종류에 따라 눈이 가야 할 곳이 달라요. 도표의 종류를 알면 무엇부터 볼지가 정해지거든요.\n\n꺾은선은 기울기를 봐요. 값 자체보다 오르내림과 그 가파름이 핵심이에요. 「가장 많이 늘어난 구간」을 물으면 값이 아니라 선이 가장 가파른 곳을 찾으면 돼요.\n\n막대는 높이를 비교해요. 어느 것이 큰지는 한눈에 보이지만, 몇 배인지는 눈금을 세어야 해요.\n\n누적 막대는 조심할 것이 하나 있어요. 각 칸의 값은 위 눈금에서 아래 눈금을 뺀 값이에요. 위쪽 칸의 꼭대기만 읽으면 그것은 그 칸의 값이 아니라 여기까지의 합이에요.\n\n원그래프는 전체에 대한 비율이에요. 두 원그래프에서 같은 비율이라도 전체가 다르면 실제 양은 달라요.",
+                "text": "그래프의 종류에 따라 눈이 가야 할 곳이 달라요. 도표의 종류를 알면 무엇부터 볼지가 정해지거든요.\n\n꺾은선은 오르내림을 봐요. 「가장 많이 늘어난 구간」을 물으면 값이 가장 큰 점이 아니라, 구간마다 나중 값에서 처음 값을 뺀 양을 비교해요.\n\n가로축이 한 달씩처럼 같은 간격이면 선이 가장 가파르게 올라간 구간이 가장 많이 늘어난 구간이라, 눈으로 먼저 고를 수 있어요. 가파르게 내려간 구간은 줄어든 곳이니 빼고요. 간격이 다르면 기울기와 늘어난 양이 어긋날 수 있어요. $1$월 $0$에서 $2$월 $10$으로 가는 선은 $1$월 사이에 $10$ 늘어 가파르지만, $2$월 $10$에서 $4$월 $25$로 가는 선은 덜 가팔라도 $15$ 늘었어요. 이럴 때는 값을 빼서 확인해요.\n\n막대는 높이를 비교해요. 어느 것이 큰지는 한눈에 보이지만, 몇 배인지는 눈금을 세어야 해요.\n\n누적 막대는 조심할 것이 하나 있어요. 각 칸의 값은 위 눈금에서 아래 눈금을 뺀 값이에요. 위쪽 칸의 꼭대기만 읽으면 그것은 그 칸의 값이 아니라 여기까지의 합이에요.\n\n원그래프는 전체에 대한 비율이에요. 두 원그래프에서 같은 비율이라도 전체가 다르면 실제 양은 달라요.",
                 "definitions": [
                   {
                     "conceptKey": "chart-types",
@@ -1523,7 +1603,7 @@
               }
             },
             {
-              "blockId": "ncs-graph:kinds:table:v2",
+              "blockId": "ncs-graph:kinds:table:v3",
               "kind": "core.table",
               "typeVersion": 1,
               "required": true,
@@ -1579,72 +1659,72 @@
           ]
         },
         {
-          "sectionId": "ncs-graph:example:v2",
+          "sectionId": "ncs-graph:example:v3",
           "role": "worked_example",
           "title": "한 그래프로 세 가지 묻기",
           "contentBlocks": [
             {
-              "blockId": "ncs-graph:example:text:v2",
+              "blockId": "ncs-graph:example:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "세로축이 $0$, $10$, $20$, $30$, $40$이고 월별 판매량이 찍힌 꺾은선이 있어요. 단위는 「천 개」예요.\n\n먼저 「$4$월의 판매량은?」이에요. 점이 $30$과 $40$ 사이 아래쪽에 있으니 어림해 $32$예요. 단위가 천 개이니 $32{,}000$개고요. 보기에 $32$와 $32{,}000$이 함께 있으면 여기서 답이 갈립니다.\n\n다음은 「가장 많이 늘어난 달은?」이에요. 값이 가장 큰 달이 아니라 선이 가장 가파르게 올라간 구간을 찾아요. $3$월에서 $4$월로 가는 구간이 가장 가팔라요.\n\n마지막은 「$5$월은 $1$월의 몇 배인가?」예요. $1$월이 $14$, $5$월이 $35$쯤이니 $35 \\div 14 = 2.5$배예요.\n\n세 물음 모두 눈금 한 칸이 $10$이라는 것에서 시작했어요. 그것부터 세는 습관이 반이에요.",
+                "text": "세로축이 $0$, $10$, $20$, $30$, $40$이고 월별 판매량이 찍힌 꺾은선이 있어요. 단위는 「천 개」예요.\n\n먼저 「$4$월의 판매량은?」이에요. 점이 $30$과 $40$ 사이 아래쪽에 있으니 어림해 $32$예요. 단위가 천 개이니 $32{,}000$개고요. 보기에 $32$와 $32{,}000$이 함께 있으면 여기서 답이 갈립니다.\n\n다음은 「가장 많이 늘어난 달은?」이에요. 값이 가장 큰 달이 아니라 가장 많이 늘어난 구간을 찾아요. 가로축이 한 달씩 같은 간격이니 선이 가장 가파르게 올라간 구간을 보면 돼요. $3$월에서 $4$월로 가는 구간이 가장 가팔라요.\n\n마지막은 「$5$월은 $1$월의 몇 배인가?」예요. $1$월이 $14$, $5$월이 $35$쯤이니 $35 \\div 14 = 2.5$배예요.\n\n세 물음 모두 눈금 한 칸이 $10$이라는 것에서 시작했어요. 그것부터 세는 습관이 반이에요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-graph:practice:v2",
+          "sectionId": "ncs-graph:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-graph:practice:problems:v2",
+              "blockId": "ncs-graph:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-graph:practice",
-                "problemSetVersionId": "ncs-graph:practice:v1",
+                "problemSetVersionId": "ncs-graph:practice:v2",
                 "problemVersionIds": [
                   "ncs-graph:practice-1:v1",
                   "ncs-graph:practice-2:v1",
-                  "ncs-graph:practice-3:v1"
+                  "ncs-graph:practice-3:v2"
                 ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-graph:check:v2",
+          "sectionId": "ncs-graph:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-graph:check:problems:v2",
+              "blockId": "ncs-graph:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-graph:check",
-                "problemSetVersionId": "ncs-graph:check:v1",
+                "problemSetVersionId": "ncs-graph:check:v2",
                 "problemVersionIds": [
                   "ncs-graph:check-1:v1",
-                  "ncs-graph:check-2:v1"
+                  "ncs-graph:check-2:v2"
                 ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-graph:summary:v2",
+          "sectionId": "ncs-graph:summary:v3",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-graph:summary:text:v2",
+              "blockId": "ncs-graph:summary:text:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1674,7 +1754,7 @@
     {
       "public": {
         "lessonKey": "ncs-condition",
-        "versionId": "ncs-condition:v3",
+        "versionId": "ncs-condition:v4",
         "title": "조건을 걸어 고르기: 지워 나가면 빨라진다",
         "summary": "표와 조건이 함께 주어진 문항에서 후보를 걸러 내고, 순위와 합계를 비교해 하나를 골라요.",
         "estimatedMinutes": 20,
@@ -1690,12 +1770,12 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-condition:sift:v3",
+          "sectionId": "ncs-condition:sift:v4",
           "role": "explanation",
           "title": "다 따지지 않고 지워 나간다",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:sift:text:v3",
+              "blockId": "ncs-condition:sift:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1711,7 +1791,7 @@
               }
             },
             {
-              "blockId": "ncs-condition:sift:drawing:v3",
+              "blockId": "ncs-condition:sift:drawing:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1951,12 +2031,12 @@
           ]
         },
         {
-          "sectionId": "ncs-condition:weight:v3",
+          "sectionId": "ncs-condition:weight:v4",
           "role": "explanation",
           "title": "점수를 매겨 고르는 문항",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:weight:text:v3",
+              "blockId": "ncs-condition:weight:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1966,7 +2046,7 @@
               }
             },
             {
-              "blockId": "ncs-condition:weight:table:v3",
+              "blockId": "ncs-condition:weight:table:v4",
               "kind": "core.table",
               "typeVersion": 1,
               "required": true,
@@ -2031,12 +2111,75 @@
           ]
         },
         {
-          "sectionId": "ncs-condition:example:v3",
+          "sectionId": "ncs-condition:example:v4",
           "role": "worked_example",
           "title": "표 하나로 끝까지 가 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:example:text:v3",
+              "blockId": "ncs-condition:example:table:v4",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "업체별 평가 점수",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "업체",
+                    "align": "start"
+                  },
+                  {
+                    "label": "품질 (0.5)",
+                    "align": "end"
+                  },
+                  {
+                    "label": "가격 (0.3)",
+                    "align": "end"
+                  },
+                  {
+                    "label": "납기 (0.2)",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "A",
+                      "80",
+                      "90",
+                      "70"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "B",
+                      "85",
+                      "70",
+                      "90"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "C",
+                      "90",
+                      "75",
+                      "80"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "D",
+                      "75",
+                      "95",
+                      "85"
+                    ]
+                  }
+                ],
+                "note": "괄호 안은 가중치"
+              }
+            },
+            {
+              "blockId": "ncs-condition:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -2048,21 +2191,21 @@
           ]
         },
         {
-          "sectionId": "ncs-condition:practice:v3",
+          "sectionId": "ncs-condition:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:practice:problems:v3",
+              "blockId": "ncs-condition:practice:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-condition:practice",
-                "problemSetVersionId": "ncs-condition:practice:v1",
+                "problemSetVersionId": "ncs-condition:practice:v2",
                 "problemVersionIds": [
                   "ncs-condition:practice-1:v1",
-                  "ncs-condition:practice-2:v1",
+                  "ncs-condition:practice-2:v2",
                   "ncs-condition:practice-3:v1"
                 ]
               }
@@ -2070,20 +2213,20 @@
           ]
         },
         {
-          "sectionId": "ncs-condition:check:v3",
+          "sectionId": "ncs-condition:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:check:problems:v3",
+              "blockId": "ncs-condition:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-condition:check",
-                "problemSetVersionId": "ncs-condition:check:v1",
+                "problemSetVersionId": "ncs-condition:check:v2",
                 "problemVersionIds": [
-                  "ncs-condition:check-1:v1",
+                  "ncs-condition:check-1:v2",
                   "ncs-condition:check-2:v1"
                 ]
               }
@@ -2091,12 +2234,12 @@
           ]
         },
         {
-          "sectionId": "ncs-condition:summary:v3",
+          "sectionId": "ncs-condition:summary:v4",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-condition:summary:text:v3",
+              "blockId": "ncs-condition:summary:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -7692,6 +7835,1764 @@
             }
           ],
           "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-condition:check",
+      "courseKey": "ncs-data",
+      "name": "조건 걸어 고르기 확인",
+      "versionId": "ncs-condition:check:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-condition:check-1:v2",
+          "conceptKeys": [
+            "condition-pick"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-condition:check-1:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "품질 $85$점, 가격 $70$점, 납기 $90$점인 업체가 있어요. 가중치가 차례로 $0.5$, $0.3$, $0.2$일 때 가중 총점은 몇 점인가요? 소수로 써도 좋아요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 163,
+            "denominator": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-condition:check-1:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$42.5 + 21 + 18$이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-condition:check-2:v1",
+          "conceptKeys": [
+            "condition-pick"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-condition:check-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "계산이 필요한 조건은 언제 적용하는 것이 좋은가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "후보를 줄인 뒤 마지막에"
+              },
+              {
+                "id": "b",
+                "text": "가장 먼저"
+              },
+              {
+                "id": "c",
+                "text": "모든 후보에 한꺼번에"
+              },
+              {
+                "id": "d",
+                "text": "적용하지 않는다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "후보를 줄인 뒤 마지막에"
+              },
+              {
+                "id": "b",
+                "text": "가장 먼저"
+              },
+              {
+                "id": "c",
+                "text": "모든 후보에 한꺼번에"
+              },
+              {
+                "id": "d",
+                "text": "적용하지 않는다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-condition:check-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "계산할 후보가 적을수록 빨라요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-graph:check",
+      "courseKey": "ncs-data",
+      "name": "그래프 읽기 확인",
+      "versionId": "ncs-graph:check:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-graph:check-1:v1",
+          "conceptKeys": [
+            "graph-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-graph:check-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "누적 막대에서 위쪽 칸의 값을 구하는 방법으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "꼭대기에서 아래 경계를 뺀다"
+              },
+              {
+                "id": "b",
+                "text": "꼭대기를 그대로 읽는다"
+              },
+              {
+                "id": "c",
+                "text": "아래 경계를 그대로 읽는다"
+              },
+              {
+                "id": "d",
+                "text": "구할 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "꼭대기에서 아래 경계를 뺀다"
+              },
+              {
+                "id": "b",
+                "text": "꼭대기를 그대로 읽는다"
+              },
+              {
+                "id": "c",
+                "text": "아래 경계를 그대로 읽는다"
+              },
+              {
+                "id": "d",
+                "text": "구할 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-graph:check-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "꼭대기는 여기까지의 합이에요."
+              }
+            }
+          ],
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "stacked-top-as-value"
+            },
+            {
+              "answer": "c",
+              "misconception": "stacked-top-as-value"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-graph:check-2:v2",
+          "conceptKeys": [
+            "graph-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-graph:check-2:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$월이 $14$, $5$월이 $35$일 때 $5$월은 $1$월의 몇 배인가요? 소수나 분수로 써도 좋아요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-graph:check-2:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$35 \\div 14$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-condition:practice",
+      "courseKey": "ncs-data",
+      "name": "조건 걸어 고르기 연습",
+      "versionId": "ncs-condition:practice:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-condition:practice-1:v1",
+          "conceptKeys": [
+            "condition-pick"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-condition:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "후보 넷에 조건 셋이 붙은 문항을 풀 때 먼저 걸어야 할 조건은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "가장 많이 걸러 내는 조건"
+              },
+              {
+                "id": "b",
+                "text": "계산이 필요한 조건"
+              },
+              {
+                "id": "c",
+                "text": "맨 앞에 적힌 조건"
+              },
+              {
+                "id": "d",
+                "text": "가장 쉬운 조건"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "가장 많이 걸러 내는 조건"
+              },
+              {
+                "id": "b",
+                "text": "계산이 필요한 조건"
+              },
+              {
+                "id": "c",
+                "text": "맨 앞에 적힌 조건"
+              },
+              {
+                "id": "d",
+                "text": "가장 쉬운 조건"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-condition:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "남는 후보가 적을수록 뒤가 가벼워요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-condition:practice-2:v2",
+          "conceptKeys": [
+            "condition-pick"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-condition:practice-2:v2:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "업체별 평가 점수",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "업체",
+                    "align": "start"
+                  },
+                  {
+                    "label": "품질 (0.5)",
+                    "align": "end"
+                  },
+                  {
+                    "label": "가격 (0.3)",
+                    "align": "end"
+                  },
+                  {
+                    "label": "납기 (0.2)",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "A",
+                      "80",
+                      "90",
+                      "70"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "B",
+                      "85",
+                      "70",
+                      "90"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "C",
+                      "90",
+                      "75",
+                      "80"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "D",
+                      "75",
+                      "95",
+                      "85"
+                    ]
+                  }
+                ],
+                "note": "괄호 안은 가중치"
+              }
+            },
+            {
+              "blockId": "ncs-condition:practice-2:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "표에서 $C$업체의 품질 점수에 품질의 가중치 $0.5$를 곱하면 몇 점인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 45
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-condition:practice-2:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$90 \\times 0.5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-condition:practice-3:v1",
+          "conceptKeys": [
+            "condition-pick"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-condition:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "네 후보 중 첫 조건으로 둘이 빠졌다면 다음 조건은 몇 곳에만 적용하면 되나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-condition:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "남은 곳만 봐요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-data:drill",
+      "courseKey": "ncs-data",
+      "name": "NCS 자료해석 모아 풀기",
+      "versionId": "ncs-data:drill:v3",
+      "problems": [
+        {
+          "problemVersionId": "ncs-data:drill2-1:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "표의 한 열을 모두 더한 값이 $1{,}200$이고 그중 한 칸이 $300$이라면 비중은 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부분을 전체로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-2:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "표를 읽을 때 값보다 먼저 보아야 할 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "제목과 단위"
+              },
+              {
+                "id": "b",
+                "text": "가장 큰 값"
+              },
+              {
+                "id": "c",
+                "text": "행의 개수"
+              },
+              {
+                "id": "d",
+                "text": "합계"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "제목과 단위"
+              },
+              {
+                "id": "b",
+                "text": "가장 큰 값"
+              },
+              {
+                "id": "c",
+                "text": "행의 개수"
+              },
+              {
+                "id": "d",
+                "text": "합계"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "단위를 놓치면 다 틀려요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-3:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "단위가 「천 원」인 표에서 값 $45$는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 45000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1000$을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-4:v1",
+          "conceptKeys": [
+            "table-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-4:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "네 지점의 값이 $3{,}200$, $2{,}800$, $1{,}500$, $2{,}500$일 때 합계를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-4:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "모두 더해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-5:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-5:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$200$에서 $250$으로 늘었다면 증가율은 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-5:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "늘어난 $50$을 $200$으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-6:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-6:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$400$에서 $360$으로 줄었다면 감소율은 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-6:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "줄어든 $40$을 $400$으로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-7:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-7:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "증감률을 구할 때 나누는 수는 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "이전 값"
+              },
+              {
+                "id": "b",
+                "text": "나중 값"
+              },
+              {
+                "id": "c",
+                "text": "두 값의 평균"
+              },
+              {
+                "id": "d",
+                "text": "전체 합계"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "이전 값"
+              },
+              {
+                "id": "b",
+                "text": "나중 값"
+              },
+              {
+                "id": "c",
+                "text": "두 값의 평균"
+              },
+              {
+                "id": "d",
+                "text": "전체 합계"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-7:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "기준은 언제나 이전 값이에요."
+              }
+            }
+          ],
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "change-over-later"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-8:v1",
+          "conceptKeys": [
+            "growth-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-8:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비중이 $20\\%$에서 $25\\%$로 올랐다면 몇 %p 오른 것인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-8:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "%와 %p는 달라요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-9:v1",
+          "conceptKeys": [
+            "table-inference"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-9:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부분이 $120$이고 비율이 $30\\%$일 때 전체를 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 400
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-9:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "부분을 비율로 나눠요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-10:v1",
+          "conceptKeys": [
+            "table-inference"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-10:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비율이 올랐다는 것만으로 알 수 있는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "총량은 알 수 없다"
+              },
+              {
+                "id": "b",
+                "text": "총량도 늘었다"
+              },
+              {
+                "id": "c",
+                "text": "총량이 줄었다"
+              },
+              {
+                "id": "d",
+                "text": "총량이 그대로다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "총량은 알 수 없다"
+              },
+              {
+                "id": "b",
+                "text": "총량도 늘었다"
+              },
+              {
+                "id": "c",
+                "text": "총량이 줄었다"
+              },
+              {
+                "id": "d",
+                "text": "총량이 그대로다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-10:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "비율과 총량은 서로를 말해 주지 않아요."
+              }
+            }
+          ],
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "reads-beyond-the-table"
+            },
+            {
+              "answer": "c",
+              "misconception": "reads-beyond-the-table"
+            },
+            {
+              "answer": "d",
+              "misconception": "reads-beyond-the-table"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-11:v1",
+          "conceptKeys": [
+            "table-inference"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-11:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체가 $500$이고 비율이 $18\\%$일 때 부분을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 90
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-11:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체에 비율을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-12:v2",
+          "conceptKeys": [
+            "table-inference"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-12:v2:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "A사의 매출과 시장점유율",
+                "note": "매출 단위: 억 원",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "연도",
+                    "align": "start"
+                  },
+                  {
+                    "label": "매출",
+                    "align": "end"
+                  },
+                  {
+                    "label": "점유율",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "2023년",
+                      "60",
+                      "10%"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "2024년",
+                      "72",
+                      "12%"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "ncs-data:drill2-12:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이 표만으로는 알 수 없는 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "A사의 직원 수"
+              },
+              {
+                "id": "b",
+                "text": "$2024$년 시장 전체 매출"
+              },
+              {
+                "id": "c",
+                "text": "A사 매출의 전년 대비 증가량"
+              },
+              {
+                "id": "d",
+                "text": "A사 점유율이 오른 폭"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "A사의 직원 수"
+              },
+              {
+                "id": "b",
+                "text": "$2024$년 시장 전체 매출"
+              },
+              {
+                "id": "c",
+                "text": "A사 매출의 전년 대비 증가량"
+              },
+              {
+                "id": "d",
+                "text": "A사 점유율이 오른 폭"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-12:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "표의 값끼리 계산해서 나오는 것은 표로 알 수 있어요. 시장 전체 매출은 매출을 점유율로 나누면 돼요."
+              }
+            }
+          ],
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "misses-what-the-table-holds"
+            },
+            {
+              "answer": "c",
+              "misconception": "misses-what-the-table-holds"
+            },
+            {
+              "answer": "d",
+              "misconception": "misses-what-the-table-holds"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-13:v1",
+          "conceptKeys": [
+            "graph-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-13:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세로축에 $0$, $20$, $40$, $60$이 차례로 적혀 있다면 눈금 한 칸은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-13:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "적힌 수의 간격이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-14:v1",
+          "conceptKeys": [
+            "graph-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-14:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "단위가 「천 개」인 그래프에서 눈금 $32$는 몇 개인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 32000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-14:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1000$을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-15:v1",
+          "conceptKeys": [
+            "graph-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-15:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "누적 막대에서 위쪽 칸의 값을 구하려면 어떻게 하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "꼭대기에서 아래 경계를 뺀다"
+              },
+              {
+                "id": "b",
+                "text": "꼭대기를 그대로 읽는다"
+              },
+              {
+                "id": "c",
+                "text": "전체를 둘로 나눈다"
+              },
+              {
+                "id": "d",
+                "text": "구할 수 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "꼭대기에서 아래 경계를 뺀다"
+              },
+              {
+                "id": "b",
+                "text": "꼭대기를 그대로 읽는다"
+              },
+              {
+                "id": "c",
+                "text": "전체를 둘로 나눈다"
+              },
+              {
+                "id": "d",
+                "text": "구할 수 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-15:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "꼭대기는 여기까지의 합이에요."
+              }
+            }
+          ],
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "stacked-top-as-value"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-16:v2",
+          "conceptKeys": [
+            "graph-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-16:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로축이 한 달씩 같은 간격인 꺾은선에서 「가장 많이 늘어난 구간」을 찾을 때 보아야 할 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "선이 가장 가파르게 올라간 곳"
+              },
+              {
+                "id": "b",
+                "text": "값이 가장 큰 점"
+              },
+              {
+                "id": "c",
+                "text": "값이 가장 작은 점"
+              },
+              {
+                "id": "d",
+                "text": "선이 가장 가파르게 내려간 곳"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "선이 가장 가파르게 올라간 곳"
+              },
+              {
+                "id": "b",
+                "text": "값이 가장 큰 점"
+              },
+              {
+                "id": "c",
+                "text": "값이 가장 작은 점"
+              },
+              {
+                "id": "d",
+                "text": "선이 가장 가파르게 내려간 곳"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-16:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "값이 아니라 늘어난 양이에요. 간격이 같으면 올라간 기울기가 곧 늘어난 양이에요."
+              }
+            }
+          ],
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "highest-for-fastest"
+            },
+            {
+              "answer": "c",
+              "misconception": "highest-for-fastest"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-17:v1",
+          "conceptKeys": [
+            "condition-pick"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-17:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "후보 넷에 조건 셋이 붙었을 때 먼저 걸어야 할 조건은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "가장 많이 걸러 내는 조건"
+              },
+              {
+                "id": "b",
+                "text": "계산이 필요한 조건"
+              },
+              {
+                "id": "c",
+                "text": "맨 앞의 조건"
+              },
+              {
+                "id": "d",
+                "text": "가장 쉬운 조건"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "가장 많이 걸러 내는 조건"
+              },
+              {
+                "id": "b",
+                "text": "계산이 필요한 조건"
+              },
+              {
+                "id": "c",
+                "text": "맨 앞의 조건"
+              },
+              {
+                "id": "d",
+                "text": "가장 쉬운 조건"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-17:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "남는 후보가 적을수록 뒤가 가벼워요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-18:v1",
+          "conceptKeys": [
+            "condition-pick"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-18:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "품질 $80$, 가격 $90$, 납기 $70$이고 가중치가 차례로 $0.5$, $0.3$, $0.2$일 때 총점을 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 81
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-18:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$40 + 27 + 14$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-19:v1",
+          "conceptKeys": [
+            "condition-pick"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-19:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "네 후보 중 첫 조건으로 셋이 빠졌다면 다음 조건은 몇 곳에 적용하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 1
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-19:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "남은 곳만 봐요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-data:drill2-20:v1",
+          "conceptKeys": [
+            "condition-pick"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-data:drill2-20:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "계산이 필요한 조건은 언제 적용하는 것이 좋은가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "후보를 줄인 뒤 마지막에"
+              },
+              {
+                "id": "b",
+                "text": "가장 먼저"
+              },
+              {
+                "id": "c",
+                "text": "한꺼번에"
+              },
+              {
+                "id": "d",
+                "text": "적용하지 않는다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "후보를 줄인 뒤 마지막에"
+              },
+              {
+                "id": "b",
+                "text": "가장 먼저"
+              },
+              {
+                "id": "c",
+                "text": "한꺼번에"
+              },
+              {
+                "id": "d",
+                "text": "적용하지 않는다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-data:drill2-20:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "계산할 후보가 적을수록 빨라요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-graph:practice",
+      "courseKey": "ncs-data",
+      "name": "그래프 읽기 연습",
+      "versionId": "ncs-graph:practice:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-graph:practice-1:v1",
+          "conceptKeys": [
+            "graph-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-graph:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세로축에 $0$, $10$, $20$, $30$이 차례로 적혀 있다면 눈금 한 칸은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-graph:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "적힌 수의 간격이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-graph:practice-2:v1",
+          "conceptKeys": [
+            "graph-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-graph:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "단위가 「천 명」인 그래프에서 눈금 $30$은 몇 명인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-graph:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1000$을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-graph:practice-3:v2",
+          "conceptKeys": [
+            "graph-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-graph:practice-3:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로축이 한 달씩 같은 간격인 꺾은선에서 「가장 많이 늘어난 구간」을 찾을 때 보아야 할 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "선이 가장 가파르게 올라간 곳"
+              },
+              {
+                "id": "b",
+                "text": "값이 가장 큰 점"
+              },
+              {
+                "id": "c",
+                "text": "값이 가장 작은 점"
+              },
+              {
+                "id": "d",
+                "text": "선이 가장 가파르게 내려간 곳"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "선이 가장 가파르게 올라간 곳"
+              },
+              {
+                "id": "b",
+                "text": "값이 가장 큰 점"
+              },
+              {
+                "id": "c",
+                "text": "값이 가장 작은 점"
+              },
+              {
+                "id": "d",
+                "text": "선이 가장 가파르게 내려간 곳"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-graph:practice-3:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "값이 아니라 늘어난 양이에요. 간격이 같으면 올라간 기울기가 곧 늘어난 양이에요."
+              }
+            }
+          ],
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "highest-for-fastest"
+            },
+            {
+              "answer": "c",
+              "misconception": "highest-for-fastest"
+            }
+          ]
         }
       ]
     }
