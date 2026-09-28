@@ -1592,7 +1592,7 @@
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "그래프의 종류에 따라 눈이 가야 할 곳이 달라요. 도표의 종류를 알면 무엇부터 볼지가 정해지거든요.\n\n꺾은선은 기울기를 봐요. 값 자체보다 오르내림과 그 가파름이 핵심이에요. 「가장 많이 늘어난 구간」을 물으면 값이 아니라 선이 가장 가파른 곳을 찾으면 돼요.\n\n막대는 높이를 비교해요. 어느 것이 큰지는 한눈에 보이지만, 몇 배인지는 눈금을 세어야 해요.\n\n누적 막대는 조심할 것이 하나 있어요. 각 칸의 값은 위 눈금에서 아래 눈금을 뺀 값이에요. 위쪽 칸의 꼭대기만 읽으면 그것은 그 칸의 값이 아니라 여기까지의 합이에요.\n\n원그래프는 전체에 대한 비율이에요. 두 원그래프에서 같은 비율이라도 전체가 다르면 실제 양은 달라요.",
+                "text": "그래프의 종류에 따라 눈이 가야 할 곳이 달라요. 도표의 종류를 알면 무엇부터 볼지가 정해지거든요.\n\n꺾은선은 오르내림을 봐요. 「가장 많이 늘어난 구간」을 물으면 값이 가장 큰 점이 아니라, 구간마다 나중 값에서 처음 값을 뺀 양을 비교해요.\n\n가로축이 한 달씩처럼 같은 간격이면 선이 가장 가파르게 올라간 구간이 가장 많이 늘어난 구간이라, 눈으로 먼저 고를 수 있어요. 가파르게 내려간 구간은 줄어든 곳이니 빼고요. 간격이 다르면 기울기와 늘어난 양이 어긋날 수 있어요. $1$월 $0$에서 $2$월 $10$으로 가는 선은 $1$월 사이에 $10$ 늘어 가파르지만, $2$월 $10$에서 $4$월 $25$로 가는 선은 덜 가팔라도 $15$ 늘었어요. 이럴 때는 값을 빼서 확인해요.\n\n막대는 높이를 비교해요. 어느 것이 큰지는 한눈에 보이지만, 몇 배인지는 눈금을 세어야 해요.\n\n누적 막대는 조심할 것이 하나 있어요. 각 칸의 값은 위 눈금에서 아래 눈금을 뺀 값이에요. 위쪽 칸의 꼭대기만 읽으면 그것은 그 칸의 값이 아니라 여기까지의 합이에요.\n\n원그래프는 전체에 대한 비율이에요. 두 원그래프에서 같은 비율이라도 전체가 다르면 실제 양은 달라요.",
                 "definitions": [
                   {
                     "conceptKey": "chart-types",
@@ -1669,7 +1669,7 @@
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "세로축이 $0$, $10$, $20$, $30$, $40$이고 월별 판매량이 찍힌 꺾은선이 있어요. 단위는 「천 개」예요.\n\n먼저 「$4$월의 판매량은?」이에요. 점이 $30$과 $40$ 사이 아래쪽에 있으니 어림해 $32$예요. 단위가 천 개이니 $32{,}000$개고요. 보기에 $32$와 $32{,}000$이 함께 있으면 여기서 답이 갈립니다.\n\n다음은 「가장 많이 늘어난 달은?」이에요. 값이 가장 큰 달이 아니라 선이 가장 가파르게 올라간 구간을 찾아요. $3$월에서 $4$월로 가는 구간이 가장 가팔라요.\n\n마지막은 「$5$월은 $1$월의 몇 배인가?」예요. $1$월이 $14$, $5$월이 $35$쯤이니 $35 \\div 14 = 2.5$배예요.\n\n세 물음 모두 눈금 한 칸이 $10$이라는 것에서 시작했어요. 그것부터 세는 습관이 반이에요.",
+                "text": "세로축이 $0$, $10$, $20$, $30$, $40$이고 월별 판매량이 찍힌 꺾은선이 있어요. 단위는 「천 개」예요.\n\n먼저 「$4$월의 판매량은?」이에요. 점이 $30$과 $40$ 사이 아래쪽에 있으니 어림해 $32$예요. 단위가 천 개이니 $32{,}000$개고요. 보기에 $32$와 $32{,}000$이 함께 있으면 여기서 답이 갈립니다.\n\n다음은 「가장 많이 늘어난 달은?」이에요. 값이 가장 큰 달이 아니라 가장 많이 늘어난 구간을 찾아요. 가로축이 한 달씩 같은 간격이니 선이 가장 가파르게 올라간 구간을 보면 돼요. $3$월에서 $4$월로 가는 구간이 가장 가팔라요.\n\n마지막은 「$5$월은 $1$월의 몇 배인가?」예요. $1$월이 $14$, $5$월이 $35$쯤이니 $35 \\div 14 = 2.5$배예요.\n\n세 물음 모두 눈금 한 칸이 $10$이라는 것에서 시작했어요. 그것부터 세는 습관이 반이에요.",
                 "definitions": []
               }
             }
@@ -1687,11 +1687,11 @@
               "required": true,
               "payload": {
                 "problemSetId": "ncs-graph:practice",
-                "problemSetVersionId": "ncs-graph:practice:v1",
+                "problemSetVersionId": "ncs-graph:practice:v2",
                 "problemVersionIds": [
                   "ncs-graph:practice-1:v1",
                   "ncs-graph:practice-2:v1",
-                  "ncs-graph:practice-3:v1"
+                  "ncs-graph:practice-3:v2"
                 ]
               }
             }
@@ -9127,18 +9127,18 @@
           ]
         },
         {
-          "problemVersionId": "ncs-data:drill2-16:v1",
+          "problemVersionId": "ncs-data:drill2-16:v2",
           "conceptKeys": [
             "graph-reading"
           ],
           "promptContent": [
             {
-              "blockId": "ncs-data:drill2-16:v1:prompt",
+              "blockId": "ncs-data:drill2-16:v2:prompt",
               "kind": "core.rich_text",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "text": "꺾은선에서 가장 많이 늘어난 구간을 찾을 때 보는 것은 무엇인가요?"
+                "text": "가로축이 한 달씩 같은 간격인 꺾은선에서 「가장 많이 늘어난 구간」을 찾을 때 보아야 할 것은 무엇인가요?"
               }
             }
           ],
@@ -9147,19 +9147,19 @@
             "options": [
               {
                 "id": "a",
-                "text": "선이 가장 가파른 곳"
+                "text": "선이 가장 가파르게 올라간 곳"
               },
               {
                 "id": "b",
-                "text": "가장 높은 점"
+                "text": "값이 가장 큰 점"
               },
               {
                 "id": "c",
-                "text": "가장 낮은 점"
+                "text": "값이 가장 작은 점"
               },
               {
                 "id": "d",
-                "text": "선이 가장 긴 곳"
+                "text": "선이 가장 가파르게 내려간 곳"
               }
             ]
           },
@@ -9168,19 +9168,19 @@
             "options": [
               {
                 "id": "a",
-                "text": "선이 가장 가파른 곳"
+                "text": "선이 가장 가파르게 올라간 곳"
               },
               {
                 "id": "b",
-                "text": "가장 높은 점"
+                "text": "값이 가장 큰 점"
               },
               {
                 "id": "c",
-                "text": "가장 낮은 점"
+                "text": "값이 가장 작은 점"
               },
               {
                 "id": "d",
-                "text": "선이 가장 긴 곳"
+                "text": "선이 가장 가파르게 내려간 곳"
               }
             ],
             "correct": "a"
@@ -9188,12 +9188,12 @@
           "hintAvailable": true,
           "hints": [
             {
-              "blockId": "ncs-data:drill2-16:v1:hint",
+              "blockId": "ncs-data:drill2-16:v2:hint",
               "kind": "core.rich_text",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "text": "값이 아니라 기울기예요."
+                "text": "값이 아니라 늘어난 양이에요. 간격이 같으면 올라간 기울기가 곧 늘어난 양이에요."
               }
             }
           ],
@@ -9428,6 +9428,171 @@
             }
           ],
           "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-graph:practice",
+      "courseKey": "ncs-data",
+      "name": "그래프 읽기 연습",
+      "versionId": "ncs-graph:practice:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-graph:practice-1:v1",
+          "conceptKeys": [
+            "graph-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-graph:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세로축에 $0$, $10$, $20$, $30$이 차례로 적혀 있다면 눈금 한 칸은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-graph:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "적힌 수의 간격이에요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-graph:practice-2:v1",
+          "conceptKeys": [
+            "graph-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-graph:practice-2:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "단위가 「천 명」인 그래프에서 눈금 $30$은 몇 명인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-graph:practice-2:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1000$을 곱해요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-graph:practice-3:v2",
+          "conceptKeys": [
+            "graph-reading"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-graph:practice-3:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가로축이 한 달씩 같은 간격인 꺾은선에서 「가장 많이 늘어난 구간」을 찾을 때 보아야 할 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "선이 가장 가파르게 올라간 곳"
+              },
+              {
+                "id": "b",
+                "text": "값이 가장 큰 점"
+              },
+              {
+                "id": "c",
+                "text": "값이 가장 작은 점"
+              },
+              {
+                "id": "d",
+                "text": "선이 가장 가파르게 내려간 곳"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "선이 가장 가파르게 올라간 곳"
+              },
+              {
+                "id": "b",
+                "text": "값이 가장 큰 점"
+              },
+              {
+                "id": "c",
+                "text": "값이 가장 작은 점"
+              },
+              {
+                "id": "d",
+                "text": "선이 가장 가파르게 내려간 곳"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-graph:practice-3:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "값이 아니라 늘어난 양이에요. 간격이 같으면 올라간 기울기가 곧 늘어난 양이에요."
+              }
+            }
+          ],
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "highest-for-fastest"
+            },
+            {
+              "answer": "c",
+              "misconception": "highest-for-fastest"
+            }
+          ]
         }
       ]
     }
