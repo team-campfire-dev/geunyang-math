@@ -495,7 +495,7 @@
     {
       "public": {
         "lessonKey": "ncs-data-change",
-        "versionId": "ncs-data-change:v4",
+        "versionId": "ncs-data-change:v5",
         "title": "증감과 증감률: 얼마나 늘었나",
         "summary": "늘어난 양과 늘어난 비율을 구분하고, 기준을 잡아 증감률을 구해요.",
         "estimatedMinutes": 20,
@@ -511,12 +511,12 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-data-change:amount:v4",
+          "sectionId": "ncs-data-change:amount:v5",
           "role": "explanation",
           "title": "늘어난 양",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:amount:text:v4",
+              "blockId": "ncs-data-change:amount:text:v5",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -528,17 +528,17 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:rate:v4",
+          "sectionId": "ncs-data-change:rate:v5",
           "role": "explanation",
           "title": "늘어난 비율",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:rate:text:v4",
+              "blockId": "ncs-data-change:rate:text:v5",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "다른 하나는 증감률이에요. 그 증감량을 처음 값으로 나눈 것이고요. $\\text{증감률} = \\frac{\\text{나중} - \\text{처음}}{\\text{처음}} \\times 100$이고 단위는 $\\%$예요.\n\n이 둘은 자주 어긋나요. 매출이 $1{,}500$에서 $2{,}200$으로 는 지점은 $700$ 늘었고 비율로는 $47\\%$예요. $3{,}200$에서 $3{,}600$으로 는 지점은 $400$ 늘었고 비율로는 $13\\%$예요.\n\n여기서는 늘어난 양도 비율도 앞쪽이 커요. 하지만 규모가 크게 다르면 「많이 늘었다」의 답이 둘 사이에서 달라져요. 문제가 「증가량」이라 했는지 「증가율」이라 했는지를 먼저 보세요.",
+                "text": "다른 하나는 증감률이에요. 그 증감량을 처음 값으로 나눈 것이고요. $\\text{증감률} = \\frac{\\text{나중} - \\text{처음}}{\\text{처음}} \\times 100$이고 단위는 $\\%$예요.\n\n이 둘은 순서가 뒤집힐 수 있어요. 가 지점은 매출이 $1{,}000$에서 $1{,}200$이 되어 $200$ 늘었고, 비율로는 $\\frac{200}{1{,}000} = 20\\%$예요. 나 지점은 $100$에서 $150$이 되어 $50$ 늘었지만, 비율로는 $\\frac{50}{100} = 50\\%$예요.\n\n늘어난 양은 가 지점이, 늘어난 비율은 나 지점이 커요. 처음 값이 작으면 조금만 늘어도 비율은 크게 나와요. 그래서 문제가 「증가량」이라 했는지 「증가율」이라 했는지를 먼저 보세요.",
                 "definitions": [
                   {
                     "conceptKey": "growth-rate",
@@ -547,103 +547,148 @@
                   }
                 ]
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "ncs-data-change:base:v4",
-          "role": "explanation",
-          "title": "기준은 언제나 이전 값",
-          "contentBlocks": [
-            {
-              "blockId": "ncs-data-change:base:text:v4",
-              "kind": "core.rich_text",
-              "typeVersion": 3,
-              "required": true,
-              "payload": {
-                "text": "증감률에서 가장 많이 틀리는 곳은 나누는 수예요. 나중 값이 아니라 처음 값으로 나눕니다.\n\n$40{,}000$명이 $50{,}000$명이 되었으면 늘어난 $10{,}000$을 $40{,}000$으로 나눠 $25\\%$예요. $50{,}000$으로 나눈 $20\\%$는 틀린 답인데, 기준을 나중 값으로 잘못 잡으면 이처럼 다른 결과가 나와요.\n\n여러 해에 걸친 증가율도 더할 수 없어요. $2022 \\rightarrow 2023$이 $25\\%$, $2023 \\rightarrow 2024$가 $30\\%$라고 해서 두 해 동안 $55\\%$가 아니에요. $40{,}000$이 $65{,}000$이 되었으니 $\\frac{25{,}000}{40{,}000} = 62.5\\%$예요. 기준이 해마다 달라지기 때문이에요.\n\n그리고 %와 %p가 있어요. 점유율이 $8\\%$에서 $10\\%$가 되면 $2$%p 오른 것이고, 비율로는 $\\frac{2}{8} = 25\\%$ 오른 것이에요. 같은 사실을 두 수로 말할 수 있으니, 문장이 어느 쪽을 묻는지 읽어야 해요.",
-                "definitions": []
-              }
             },
             {
-              "blockId": "ncs-data-change:growth:drawing:v4",
+              "blockId": "ncs-data-change:growth:drawing:v5",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "작은 막대와 큰 막대를 비교해 늘어난 양과 늘어난 비율을 나누어 보는 그림",
-                "caption": "늘어난 양이 같아도 늘어난 비율은 다를 수 있어요",
+                "alt": "매출이 1,000에서 1,200이 된 가 지점과 100에서 150이 된 나 지점의 이전·나중 막대를 같은 눈금으로 그려, 늘어난 양은 가 지점이 크고 늘어난 비율은 나 지점이 크다는 것을 보여 주는 그림",
+                "caption": "늘어난 양이 큰 쪽이 늘어난 비율도 큰 것은 아니에요",
                 "items": [
                   {
                     "kind": "line",
-                    "id": "base",
-                    "x1": 24,
-                    "y1": 150,
-                    "x2": 300,
-                    "y2": 150,
+                    "id": "axis",
+                    "x1": 20,
+                    "y1": 160,
+                    "x2": 220,
+                    "y2": 160,
                     "stroke": "line",
                     "strokeWidth": 2
                   },
                   {
                     "kind": "rect",
-                    "id": "was",
-                    "x": 46,
-                    "y": 110,
-                    "width": 46,
-                    "height": 40,
+                    "id": "ga-was",
+                    "x": 40,
+                    "y": 68,
+                    "width": 28,
+                    "height": 92,
                     "fill": "fill-soft",
                     "stroke": "ink",
                     "strokeWidth": 1
                   },
                   {
                     "kind": "rect",
-                    "id": "now",
-                    "x": 110,
-                    "y": 60,
-                    "width": 46,
-                    "height": 90,
+                    "id": "ga-now",
+                    "x": 72,
+                    "y": 50,
+                    "width": 28,
+                    "height": 110,
+                    "fill": "fill",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "na-was",
+                    "x": 150,
+                    "y": 151,
+                    "width": 28,
+                    "height": 9,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "na-now",
+                    "x": 182,
+                    "y": 146,
+                    "width": 28,
+                    "height": 14,
                     "fill": "fill",
                     "stroke": "ink",
                     "strokeWidth": 1
                   },
                   {
                     "kind": "text",
-                    "id": "was-name",
-                    "x": 69,
-                    "y": 166,
-                    "text": "C지점",
+                    "id": "ga-was-tag",
+                    "x": 54,
+                    "y": 172,
+                    "text": "이전",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "ga-now-tag",
+                    "x": 86,
+                    "y": 172,
+                    "text": "나중",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "na-was-tag",
+                    "x": 164,
+                    "y": 172,
+                    "text": "이전",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "na-now-tag",
+                    "x": 196,
+                    "y": 172,
+                    "text": "나중",
+                    "size": 9,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "ga-name",
+                    "x": 70,
+                    "y": 190,
+                    "text": "가 지점",
                     "size": 11,
                     "anchor": "middle",
                     "fill": "muted"
                   },
                   {
                     "kind": "text",
-                    "id": "now-name",
-                    "x": 133,
-                    "y": 166,
-                    "text": "A지점",
+                    "id": "na-name",
+                    "x": 180,
+                    "y": 190,
+                    "text": "나 지점",
                     "size": 11,
                     "anchor": "middle",
                     "fill": "muted"
                   },
                   {
                     "kind": "text",
-                    "id": "was-num",
-                    "x": 69,
-                    "y": 102,
-                    "text": "1,500 → 2,200",
+                    "id": "ga-num",
+                    "x": 70,
+                    "y": 40,
+                    "text": "1,000 → 1,200",
                     "size": 10,
                     "anchor": "middle",
                     "fill": "ink"
                   },
                   {
                     "kind": "text",
-                    "id": "now-num",
-                    "x": 133,
-                    "y": 52,
-                    "text": "3,200 → 3,600",
+                    "id": "na-num",
+                    "x": 180,
+                    "y": 134,
+                    "text": "100 → 150",
                     "size": 10,
                     "anchor": "middle",
                     "fill": "ink"
@@ -651,8 +696,8 @@
                   {
                     "kind": "text",
                     "id": "amount",
-                    "x": 236,
-                    "y": 92,
+                    "x": 266,
+                    "y": 70,
                     "text": "늘어난 양",
                     "size": 11,
                     "anchor": "middle",
@@ -661,19 +706,29 @@
                   {
                     "kind": "text",
                     "id": "amount-v",
-                    "x": 236,
-                    "y": 110,
-                    "text": "700 < 400?",
-                    "size": 11,
+                    "x": 266,
+                    "y": 90,
+                    "text": "$200 > 50$",
+                    "size": 13,
                     "anchor": "middle",
                     "fill": "ink"
                   },
                   {
                     "kind": "text",
                     "id": "rate",
-                    "x": 236,
-                    "y": 134,
-                    "text": "$47\\% > 13\\%$",
+                    "x": 266,
+                    "y": 120,
+                    "text": "늘어난 비율",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "rate-v",
+                    "x": 266,
+                    "y": 140,
+                    "text": "$20\\% < 50\\%$",
                     "size": 13,
                     "anchor": "middle",
                     "fill": "ink"
@@ -681,7 +736,7 @@
                 ],
                 "frames": [
                   {
-                    "caption": "두 지점 모두 매출이 늘었어요.",
+                    "caption": "두 지점 모두 매출이 늘었어요. 옅은 막대가 이전 값, 짙은 막대가 나중 값이에요.",
                     "changes": [
                       {
                         "id": "amount",
@@ -694,20 +749,28 @@
                       {
                         "id": "rate",
                         "hidden": true
-                      }
-                    ]
-                  },
-                  {
-                    "caption": "늘어난 양은 C가 700, A가 400이에요.",
-                    "changes": [
+                      },
                       {
-                        "id": "rate",
+                        "id": "rate-v",
                         "hidden": true
                       }
                     ]
                   },
                   {
-                    "caption": "늘어난 비율로 보면 C는 47%, A는 13%예요. 기준이 다르니까요.",
+                    "caption": "늘어난 양은 가 지점이 200, 나 지점이 50이에요.",
+                    "changes": [
+                      {
+                        "id": "rate",
+                        "hidden": true
+                      },
+                      {
+                        "id": "rate-v",
+                        "hidden": true
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "늘어난 비율은 가 지점이 20%, 나 지점이 50%예요. 나누는 처음 값이 달라서 순서가 뒤집혀요.",
                     "changes": [
                       {
                         "id": "amount",
@@ -726,12 +789,29 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:example:v4",
+          "sectionId": "ncs-data-change:base:v5",
+          "role": "explanation",
+          "title": "기준은 언제나 이전 값",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-data-change:base:text:v5",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "증감률에서 가장 많이 틀리는 곳은 나누는 수예요. 나중 값이 아니라 처음 값으로 나눕니다.\n\n$40{,}000$명이 $50{,}000$명이 되었으면 늘어난 $10{,}000$을 $40{,}000$으로 나눠 $25\\%$예요. $50{,}000$으로 나눈 $20\\%$는 틀린 답인데, 기준을 나중 값으로 잘못 잡으면 이처럼 다른 결과가 나와요.\n\n여러 해에 걸친 증가율도 더할 수 없어요. $2022 \\rightarrow 2023$이 $25\\%$, $2023 \\rightarrow 2024$가 $30\\%$라고 해서 두 해 동안 $55\\%$가 아니에요. $40{,}000$이 $65{,}000$이 되었으니 $\\frac{25{,}000}{40{,}000} = 62.5\\%$예요. 기준이 해마다 달라지기 때문이에요.\n\n그리고 %와 %p가 있어요. 점유율이 $8\\%$에서 $10\\%$가 되면 $2$%p 오른 것이고, 비율로는 $\\frac{2}{8} = 25\\%$ 오른 것이에요. 같은 사실을 두 수로 말할 수 있으니, 문장이 어느 쪽을 묻는지 읽어야 해요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-data-change:example:v5",
           "role": "worked_example",
           "title": "증가율이 가장 큰 곳 찾기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:example:text:v4",
+              "blockId": "ncs-data-change:example:text:v5",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -743,12 +823,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:practice:v4",
+          "sectionId": "ncs-data-change:practice:v5",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:practice:problems:v4",
+              "blockId": "ncs-data-change:practice:problems:v5",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -765,12 +845,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:check:v4",
+          "sectionId": "ncs-data-change:check:v5",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:check:problems:v4",
+              "blockId": "ncs-data-change:check:problems:v5",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -786,12 +866,12 @@
           ]
         },
         {
-          "sectionId": "ncs-data-change:summary:v4",
+          "sectionId": "ncs-data-change:summary:v5",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-data-change:summary:text:v4",
+              "blockId": "ncs-data-change:summary:text:v5",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
