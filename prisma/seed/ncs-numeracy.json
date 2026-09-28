@@ -87,7 +87,7 @@
     {
       "public": {
         "lessonKey": "ncs-why",
-        "versionId": "ncs-why:v4",
+        "versionId": "ncs-why:v5",
         "title": "왜 수리능력을 보는가",
         "summary": "시험이 무엇을 재는지 알고, 수리능력을 이루는 네 영역을 구분해요.",
         "estimatedMinutes": 15,
@@ -99,12 +99,12 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-why:opening:v4",
+          "sectionId": "ncs-why:opening:v5",
           "role": "explanation",
           "title": "시험이 재는 것은 수학 실력이 아니다",
           "contentBlocks": [
             {
-              "blockId": "ncs-why:opening:text:v4",
+              "blockId": "ncs-why:opening:text:v5",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -116,12 +116,12 @@
           ]
         },
         {
-          "sectionId": "ncs-why:areas:v4",
+          "sectionId": "ncs-why:areas:v5",
           "role": "explanation",
           "title": "문항은 네 종류로 나뉜다",
           "contentBlocks": [
             {
-              "blockId": "ncs-why:areas:text:v4",
+              "blockId": "ncs-why:areas:text:v5",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -137,7 +137,7 @@
               }
             },
             {
-              "blockId": "ncs-why:areas:drawing:v4",
+              "blockId": "ncs-why:areas:drawing:v5",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -389,29 +389,29 @@
           ]
         },
         {
-          "sectionId": "ncs-why:example:v4",
+          "sectionId": "ncs-why:example:v5",
           "role": "worked_example",
           "title": "문항 셋을 뜯어보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-why:example:text:v4",
+              "blockId": "ncs-why:example:text:v5",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "영역을 알아채면 무엇을 먼저 볼지가 정해져요. 세 문항으로 해 볼게요.\n\n「다음 표는 연도별 매출액이다. 증가율이 가장 큰 지점을 고르시오.」 — 표에서 값을 읽어 비교하니 도표분석이에요. 먼저 볼 것은 표의 제목과 단위예요.\n\n「원가 12,000원에 20% 이익을 붙인 정가는?」 — 계산 한 줄이니 기초연산이에요. 먼저 볼 것은 20%를 무엇에 붙이는가, 즉 기준이에요.\n\n「네 지점의 평균 판매량은?」 — 여럿을 하나로 줄이니 기초통계예요. 먼저 볼 것은 지점마다 크기가 같은지, 즉 단순 평균으로 되는지예요.",
+                "text": "영역을 알아채면 무엇을 먼저 볼지가 정해져요. 세 문항으로 해 볼게요.\n\n「다음 표는 연도별 매출액이다. 증가율이 가장 큰 지점을 고르시오.」 — 표에서 값을 읽어 비교하니 도표분석이에요. 먼저 볼 것은 표의 제목과 단위예요.\n\n「원가 12,000원에 20% 이익을 붙인 정가는?」 — 계산 한 줄이니 기초연산이에요. 먼저 볼 것은 20%를 무엇에 붙이는가, 즉 기준이에요.\n\n「네 지점의 평균 판매량은?」 — 여럿을 하나로 줄이니 기초통계예요. 먼저 볼 것은 무엇의 평균인지예요. 지점별 판매량의 평균이라면 지점이 크든 작든 네 값을 더해 $4$로 나눠요.\n\n크기를 따져야 하는 것은 평균끼리 합칠 때예요. 직원 $10$명인 지점과 $30$명인 지점의 「1인당 판매량」을 합쳐 전체 1인당 판매량을 구한다면, 두 평균을 그냥 더해 $2$로 나누면 안 돼요. 이것은 기초통계 수업에서 가중평균으로 배워요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-why:try-sort:v4",
+          "sectionId": "ncs-why:try-sort:v5",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-why:try-sort:problems:v4",
+              "blockId": "ncs-why:try-sort:problems:v5",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -427,12 +427,12 @@
           ]
         },
         {
-          "sectionId": "ncs-why:map:v4",
+          "sectionId": "ncs-why:map:v5",
           "role": "explanation",
           "title": "영역마다 틀리는 원인이 따로 있다",
           "contentBlocks": [
             {
-              "blockId": "ncs-why:map:text:v4",
+              "blockId": "ncs-why:map:text:v5",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -442,7 +442,7 @@
               }
             },
             {
-              "blockId": "ncs-why:map:table:v4",
+              "blockId": "ncs-why:map:table:v5",
               "kind": "core.table",
               "typeVersion": 1,
               "required": true,
@@ -498,12 +498,12 @@
           ]
         },
         {
-          "sectionId": "ncs-why:try-more:v4",
+          "sectionId": "ncs-why:try-more:v5",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-why:try-more:problems:v4",
+              "blockId": "ncs-why:try-more:problems:v5",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -518,12 +518,12 @@
           ]
         },
         {
-          "sectionId": "ncs-why:check:v4",
+          "sectionId": "ncs-why:check:v5",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-why:check:problems:v4",
+              "blockId": "ncs-why:check:problems:v5",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -539,12 +539,12 @@
           ]
         },
         {
-          "sectionId": "ncs-why:summary:v4",
+          "sectionId": "ncs-why:summary:v5",
           "role": "summary",
           "title": "배운 것 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-why:summary:text:v4",
+              "blockId": "ncs-why:summary:text:v5",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
