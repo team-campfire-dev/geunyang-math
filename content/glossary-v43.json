@@ -1,0 +1,736 @@
+{
+  "schemaVersion": 1,
+  "courses": [],
+  "concepts": [
+    {
+      "key": "frequency",
+      "label": "빈도",
+      "assessable": true
+    },
+    {
+      "key": "proportion",
+      "label": "비중",
+      "assessable": true
+    },
+    {
+      "key": "mean",
+      "label": "평균",
+      "assessable": true
+    },
+    {
+      "key": "weighted-mean",
+      "label": "가중평균",
+      "assessable": true
+    },
+    {
+      "key": "median-mode",
+      "label": "중앙값과 최빈값",
+      "assessable": true
+    },
+    {
+      "key": "dispersion",
+      "label": "범위와 표준편차",
+      "assessable": true
+    },
+    {
+      "key": "chance",
+      "label": "경우의 수와 확률",
+      "assessable": true
+    },
+    {
+      "key": "cost-price",
+      "label": "원가와 정가",
+      "assessable": true
+    },
+    {
+      "key": "discount-rate",
+      "label": "할인율",
+      "assessable": true
+    },
+    {
+      "key": "concentration",
+      "label": "농도",
+      "assessable": true
+    },
+    {
+      "key": "speed",
+      "label": "속력",
+      "assessable": true
+    },
+    {
+      "key": "work-rate",
+      "label": "일률",
+      "assessable": true
+    },
+    {
+      "key": "interest",
+      "label": "이자와 원리합계",
+      "assessable": true
+    },
+    {
+      "key": "exchange-rate",
+      "label": "환율",
+      "assessable": true
+    },
+    {
+      "key": "chart-reading",
+      "label": "도표 읽기",
+      "assessable": true
+    },
+    {
+      "key": "chart-types",
+      "label": "도표의 종류",
+      "assessable": true
+    },
+    {
+      "key": "growth-rate",
+      "label": "증감률",
+      "assessable": true
+    },
+    {
+      "key": "numeracy-scope",
+      "label": "수리능력의 네 영역",
+      "assessable": true
+    },
+    {
+      "key": "percentage",
+      "label": "백분율",
+      "assessable": true
+    },
+    {
+      "key": "table-inference",
+      "label": "표가 말하는 것",
+      "assessable": true
+    },
+    {
+      "key": "table-reading",
+      "label": "표 읽기",
+      "assessable": true
+    },
+    {
+      "key": "graph-reading",
+      "label": "그래프 읽기",
+      "assessable": true
+    },
+    {
+      "key": "condition-pick",
+      "label": "조건을 걸어 고르기",
+      "assessable": true
+    },
+    {
+      "key": "calculation-order",
+      "label": "계산 순서와 법칙",
+      "assessable": true
+    },
+    {
+      "key": "unit-conversion",
+      "label": "단위환산",
+      "assessable": true
+    },
+    {
+      "key": "verification",
+      "label": "검산",
+      "assessable": true
+    },
+    {
+      "key": "statistics-reading",
+      "label": "통계로 읽기",
+      "assessable": true
+    },
+    {
+      "key": "chart-making",
+      "label": "도표 만들기",
+      "assessable": true
+    },
+    {
+      "key": "chart-drawing",
+      "label": "도표작성 실습",
+      "assessable": true
+    }
+  ],
+  "lessons": [],
+  "problemSets": [],
+  "diagnostics": [],
+  "definitions": [
+    {
+      "conceptKey": "calculation-order",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "계산 순서와 법칙",
+      "summary": "괄호 안을 먼저 계산하고, 같은 순위의 계산은 왼쪽부터 해요.",
+      "blocks": [
+        {
+          "blockId": "global:calculation-order:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "괄호 안을 먼저 계산하고, 곱셈·나눗셈, 덧셈·뺄셈 순서로 계산해요. 곱셈과 나눗셈끼리 또는 덧셈과 뺄셈끼리는 왼쪽부터 계산해요. $24\\div6\\times2=4\\times2=8$이에요.\n\n곱셈만 이어진 식에서는 순서와 묶는 방법을 바꿔도 값이 같아요. $25\\times32\\times4$는 $25\\times4=100$을 먼저 구하면 $100\\times32=3{,}200$이에요. 뺄셈이나 나눗셈의 순서를 마음대로 바꾸면 안 돼요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "계산을 쉬운 순서로 바꿀 때"
+    },
+    {
+      "conceptKey": "chance",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "경우의 수와 확률",
+      "summary": "각 경우의 가능성이 같을 때, 구하려는 경우의 수를 전체 경우의 수로 나눠요.",
+      "blocks": [
+        {
+          "blockId": "global:chance:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "경우의 수는 가능한 결과가 몇 가지인지 센 수예요. 상의 2벌 중 하나와 하의 3벌 중 하나를 고르면 조합은 $2\\times3=6$가지예요. 서로 다른 경우를 더해 셀 때는 중복되는 경우가 없는지 확인해요.\n\n각 결과가 나올 가능성이 같을 때 확률은 ‘구하려는 경우의 수 ÷ 전체 경우의 수’예요. 부품 20개 중 불량품이 3개이고 각 부품을 뽑을 가능성이 같다면 불량 확률은 $3\\div20=0.15$, 즉 15%예요.\n\n두 사건이 서로 영향을 주지 않는 독립인 사건일 때 둘 다 일어날 확률은 두 확률의 곱이에요. 불량품이 하나뿐인 상자에서 돌려놓지 않고 두 개를 뽑는 경우에는 이 조건이 맞지 않아요. ‘적어도 하나’의 확률은 1에서 ‘하나도 없음’의 확률을 빼서 구할 수 있어요. 확률이 0보다 작거나 1보다 크면 계산과 조건을 다시 확인해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "가짓수와 가능성을 구할 때"
+    },
+    {
+      "conceptKey": "chart-drawing",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "도표작성 실습",
+      "summary": "주어진 축과 눈금을 읽고 표의 값을 막대 높이로 나타내요.",
+      "blocks": [
+        {
+          "blockId": "global:chart-drawing:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "이 실습에서는 축과 눈금이 주어져 있어요. 세로축이 0부터 50까지이고 한 칸이 10이면, 값 30은 세 칸 높이로 표시해요.\n\n직접 축을 정할 때는 최댓값을 표시할 수 있게 정해요. 눈금 간격은 값을 읽고 비교하기 편하게 고르며, 가능한 간격은 여러 가지일 수 있어요. 막대의 길이로 크기를 비교하려면 보통 0부터 시작해요. 제목·단위·기간도 확인해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "도표를 직접 그릴 때"
+    },
+    {
+      "conceptKey": "chart-making",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "도표 만들기",
+      "summary": "자료를 전달할 목적에 맞게 표나 그래프로 나타내는 일이에요.",
+      "blocks": [
+        {
+          "blockId": "global:chart-making:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "먼저 무엇을 보여 줄지 정해요. 항목별 크기 비교에는 막대그래프, 시간에 따른 변화에는 꺾은선그래프, 전체에 대한 구성비에는 원그래프를 사용할 수 있어요. 도표를 고른 뒤 축과 눈금 간격을 정하고 값을 표시해요. 제목·단위·자료의 기간과 출처도 적어요. 눈금의 시작점이나 간격이 차이를 과장하지 않는지 확인해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "도표를 만드는 차례를 떠올릴 때"
+    },
+    {
+      "conceptKey": "chart-reading",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "도표 읽기",
+      "summary": "표와 그래프에서 필요한 정보를 찾아 비교하거나 계산해 해석하는 일이에요.",
+      "blocks": [
+        {
+          "blockId": "global:chart-reading:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "표나 그래프의 제목과 단위를 확인한 뒤, 행과 열 또는 가로축과 세로축이 무엇을 나타내는지 살펴봐요. 필요한 값을 찾고, 문제에서 묻는 합계·차이·비율 등을 구해요. 비율을 비교할 때는 기준이 되는 전체의 양도 확인해요. 표에 매출만 있다면 이익이나 매출이 변한 원인까지 알 수는 없어요. 자료로 확인할 수 있는 사실과 추가 정보가 필요한 내용을 구별해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "표와 그래프에서 값을 읽을 때"
+    },
+    {
+      "conceptKey": "chart-types",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "도표의 종류",
+      "summary": "시간에 따른 변화, 항목별 크기, 전체에서 차지하는 비율에 맞게 그래프를 골라요.",
+      "blocks": [
+        {
+          "blockId": "global:chart-types:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "꺾은선그래프는 시간에 따른 값의 변화, 막대그래프는 항목별 크기, 원그래프는 전체에서 각 항목이 차지하는 비율을 나타내는 데 사용할 수 있어요. 시간에 따른 변화는 ‘추이’, 전체에 대한 비율은 ‘구성비’라고도 해요.\n\n점그래프(산점도)는 두 수치 사이의 관계를 살펴볼 때 써요. 가로축에 키, 세로축에 몸무게를 두고 사람마다 점 하나를 표시하는 것이 예예요. 누적 막대그래프는 여러 항목을 쌓아 부분의 값과 합계를 함께 나타내요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "자료에 맞는 도표를 고를 때"
+    },
+    {
+      "conceptKey": "concentration",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "농도",
+      "summary": "소금물 전체의 질량에 대한 소금의 질량의 비율이에요.",
+      "blocks": [
+        {
+          "blockId": "global:concentration:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "소금물의 농도를 백분율로 나타내려면 소금의 질량을 소금물 전체의 질량으로 나누고 $100$을 곱해요. 소금물 $200$g에 소금 $30$g이 들어 있으면 $30\\div200\\times100=15$이므로 농도는 $15\\%$예요. 물만 더하거나 물만 증발시키면 소금의 양은 변하지 않아요. 소금의 양을 바뀐 소금물 전체의 양으로 나누어 새 농도를 구해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "소금물 문제를 풀 때"
+    },
+    {
+      "conceptKey": "condition-pick",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "조건을 걸어 고르기",
+      "summary": "표의 조건에 맞는 후보를 남기고 필요한 점수를 계산해요.",
+      "blocks": [
+        {
+          "blockId": "global:condition-pick:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "가격이 100만 원 이하이고 납기가 7일 이내인 업체를 고른다고 해 볼게요. 납기는 주문 후 물품을 받기까지 걸리는 기간이에요. 먼저 가격 조건에 맞지 않는 업체를 제외하고, 남은 업체의 납기를 확인해요. 두 조건을 모두 만족해야 해요.\n\n표에서 바로 읽을 수 있는 조건으로 후보를 줄이면 총점을 계산할 횟수가 줄어들 수 있어요. 점수에 가중치를 적용한다면 각 점수에 정해진 가중치를 곱해 더해요. 가중치는 각 항목을 얼마나 반영할지 나타내는 수예요. 최종 선택은 문제에서 요구한 조건과 총점을 모두 확인해 결정해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "조건이 붙은 표 문항을 풀 때"
+    },
+    {
+      "conceptKey": "cost-price",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "원가와 정가",
+      "summary": "원가는 구입하거나 만드는 데 든 비용, 정가는 판매하려고 정한 가격이에요.",
+      "blocks": [
+        {
+          "blockId": "global:cost-price:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "원가 15,000원에 원가의 20%를 더해 정가를 정한다면, 더하는 금액은 $15{,}000\\times0.2=3{,}000$원이에요. 정가는 18,000원이에요. 실제로 받은 금액은 판매가라고 해요.\n\n다른 비용이 없다는 조건에서 이익은 판매가에서 원가를 뺀 금액이에요. 이 수업에서 ‘원가 기준 이익률’은 이익을 원가로 나누어 백분율로 나타낸 값이에요. 정가에서 할인한 경우에는 할인 후 판매가로 이익을 계산해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "정가나 이익을 구할 때"
+    },
+    {
+      "conceptKey": "discount-rate",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "할인율",
+      "summary": "정가에서 할인한 금액이 정가의 몇 %인지 나타낸 값이에요.",
+      "blocks": [
+        {
+          "blockId": "global:discount-rate:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "정가 18,000원에서 10% 할인하면 할인 금액은 $18{,}000\\times0.1=1{,}800$원이에요. 판매가는 $18{,}000-1{,}800=16{,}200$원이에요.\n\n두 번 연속 할인할 때는 두 번째 할인의 기준을 확인해요. 100원에서 40% 할인하면 60원이고, 이 60원에서 다시 40% 할인하면 36원이에요. 처음 가격에서 64원이 줄었으므로 총 할인율은 64%예요. 두 할인율을 더한 80%와는 달라요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "할인된 판매가를 구할 때"
+    },
+    {
+      "conceptKey": "dispersion",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "범위와 표준편차",
+      "summary": "범위·분산·표준편차는 자료가 얼마나 흩어져 있는지 살펴보는 값이에요.",
+      "blocks": [
+        {
+          "blockId": "global:dispersion:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "범위는 최댓값에서 최솟값을 뺀 값이에요. 자료 2, 2, 6, 6의 범위는 $6-2=4$예요.\n\n표준편차를 구할 때는 먼저 평균을 구해요. 이 자료의 평균은 4예요. 각 값에서 평균을 뺀 차이는 -2, -2, 2, 2예요. 차이를 제곱하면 모두 4이고, 그 평균인 분산은 $(4+4+4+4)\\div4=4$예요.\n\n분산의 제곱근이 표준편차예요. 제곱근은 제곱해서 그 수가 되는 수예요. $2\\times2=4$이므로 이 자료의 표준편차는 $\\sqrt4=2$예요. 여기서는 제시된 자료 전체를 대상으로 계산해요.\n\n범위는 양 끝의 값만 쓰고, 표준편차는 모든 값을 써요. 범위가 같아도 표준편차는 다를 수 있어요. 표준편차만으로 업무 성과가 더 좋다고 판단할 수는 없어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "평균이 같은 두 자료를 구별할 때"
+    },
+    {
+      "conceptKey": "exchange-rate",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "환율",
+      "summary": "서로 다른 두 나라의 돈을 바꾸는 비율이에요.",
+      "blocks": [
+        {
+          "blockId": "global:exchange-rate:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "환율은 두 나라 돈을 바꾸는 비율이에요. 예를 들어 $1$달러에 $1{,}300$원이라면 $20$달러는 $20\\times1{,}300=26{,}000$원이에요. 반대로 $65{,}000$원을 달러로 바꾸면 $65{,}000\\div1{,}300=50$달러예요. 곱하거나 나누기 전에 환율이 어떤 방향으로 주어졌는지 확인해요. 수수료가 있는 문제에서는 기준 금액과 수수료를 더하거나 빼는 조건도 확인해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "돈을 바꿀 때"
+    },
+    {
+      "conceptKey": "frequency",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "빈도",
+      "summary": "어떤 값이나 유형이 나온 횟수예요.",
+      "blocks": [
+        {
+          "blockId": "global:frequency:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "문의 유형이 A, B, A, A, C라면 A유형은 3번 나왔으므로 빈도는 3건이에요. 전체 문의는 5건이에요.\n\n빈도는 건수나 사람 수처럼 횟수를 센 값이에요. 전체에서 차지하는 비율을 비교하려면 빈도를 전체 개수로 나눠요. 이 예에서 A유형의 비중은 $3\\div5\\times100=60$%예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "몇 건인지 셀 때"
+    },
+    {
+      "conceptKey": "graph-reading",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "그래프 읽기",
+      "summary": "축과 단위, 눈금 간격을 확인한 뒤 필요한 값을 읽어요.",
+      "blocks": [
+        {
+          "blockId": "global:graph-reading:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "먼저 제목과 가로축·세로축이 나타내는 항목, 단위를 확인해요. 세로축에 0, 10, 20이 같은 간격으로 표시되어 있으면 눈금 한 칸은 10이에요. 단위가 천 개이고 표시값이 20이면 실제 값은 20,000개예요.\n\n꺾은선그래프에서 증가량은 끝값에서 시작값을 뺀 값이에요. 가로축의 시간 간격이 같을 때 위로 더 가파르게 올라가는 구간의 증가량이 더 커요. 누적 막대에서 한 항목의 값은 위 경계에서 아래 경계를 빼서 구해요. 구간이 40부터 100까지라면 그 항목의 값은 60이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "그래프에서 값을 읽을 때"
+    },
+    {
+      "conceptKey": "growth-rate",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "증감률",
+      "summary": "변한 양을 이전 값으로 나누어 백분율로 나타낸 값이에요.",
+      "blocks": [
+        {
+          "blockId": "global:growth-rate:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "이전 값이 40,000명이고 나중 값이 50,000명이면 증감량은 $50{,}000-40{,}000=10{,}000$명이에요. 증감률은 $10{,}000\\div40{,}000\\times100=25$%예요. 이전 값이 0이면 이 식으로 증감률을 구할 수 없어요.\n\n비율이 10%에서 12%로 바뀌었다면 차이는 2퍼센트포인트(%p)예요. 이전 비율 10%를 기준으로 한 증가율은 $2\\div10\\times100=20$%예요. 변한 양, 증가율, 퍼센트포인트를 구별해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "얼마나 늘었는지 비율로 구할 때"
+    },
+    {
+      "conceptKey": "interest",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "이자와 원리합계",
+      "summary": "단리는 원금에, 복리는 이전에 붙은 이자를 포함한 금액에 이자를 계산해요.",
+      "blocks": [
+        {
+          "blockId": "global:interest:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "원금은 처음 맡긴 돈, 이자는 돈을 맡긴 대가로 받는 돈이에요. 원금과 이자의 합은 원리합계예요. 원금 100만 원을 연 5% 단리로 맡기면 해마다 5만 원씩 이자가 붙어 2년 뒤 원리합계는 110만 원이에요.\n\n이자를 1년에 한 번 더하는 연 5% 복리라면 첫해 말에는 $100\\times1.05=105$만 원이에요. 둘째 해에는 105만 원을 기준으로 계산하므로 $105\\times1.05=110.25$만 원이 돼요. 입출금과 세금이 없다고 가정한 계산이에요.\n\n원금을 $a$, 연 이자율을 소수 $r$, 기간을 $n$년이라고 하면 이 조건에서 복리 원리합계는 $a(1+r)^n$이에요. 단리에서 연 이자율을 쓸 때 6개월은 $6\\div12=0.5$년으로 바꿔요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "맡긴 돈이 얼마가 되는지 구할 때"
+    },
+    {
+      "conceptKey": "mean",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "평균",
+      "summary": "여러 값의 합계를 값의 개수로 나눈 수예요.",
+      "blocks": [
+        {
+          "blockId": "global:mean:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "자료 3, 5, 7의 합계는 15이고 개수는 3이므로 평균은 $15\\div3=5$예요. 반대로 평균과 개수를 알면 둘을 곱해 합계를 구할 수 있어요.\n\n네 달 평균 판매량이 250개이면 합계는 $250\\times4=1{,}000$개예요. 앞 세 달이 230, 260, 240개라면 합계는 730개이므로 남은 달은 $1{,}000-730=270$개예요.\n\n유난히 크거나 작은 값이 평균에 영향을 줄 수 있어요. 자료를 대표할 값을 고를 때는 설명하려는 목적과 중앙값도 함께 살펴봐요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "여럿을 하나의 수로 줄일 때"
+    },
+    {
+      "conceptKey": "median-mode",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "중앙값과 최빈값",
+      "summary": "중앙값은 크기 순으로 가운데 오는 값, 최빈값은 가장 자주 나온 값이에요.",
+      "blocks": [
+        {
+          "blockId": "global:median-mode:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "자료를 크기 순으로 놓고 중앙값을 찾아요. 개수가 홀수이면 가운데 값 하나, 짝수이면 가운데 두 값의 평균이에요. 4, 6, 8, 10, 12, 14의 중앙값은 $(8+10)\\div2=9$예요.\n\n최빈값은 가장 많이 나온 값이에요. 1, 1, 2, 2, 3, 3, 3에서는 3이 세 번으로 가장 많이 나와 최빈값은 3뿐이에요. 가장 많은 횟수가 같은 값이 여러 개라면 최빈값도 여러 개예요. 모두 한 번씩 나온 자료는 이 수업에서 최빈값이 없다고 해요.\n\n급여처럼 일부 매우 큰 값이 있는 자료에서 보통 구성원의 수준을 설명하려면 중앙값이 유용할 수 있어요. 평균과 중앙값 중 무엇이 적절한지는 설명하려는 목적에 따라 달라요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "평균이 자료를 대표하지 못할 때"
+    },
+    {
+      "conceptKey": "numeracy-scope",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "수리능력의 네 영역",
+      "summary": "수리능력은 기초연산·기초통계·도표분석·도표작성의 네 영역으로 나누어 배워요.",
+      "blocks": [
+        {
+          "blockId": "global:numeracy-scope:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "기초연산에서는 업무에 필요한 계산과 단위환산, 검산을 배워요. 기초통계에서는 평균 같은 대표값과 자료가 흩어진 정도를 살펴봐요. 도표분석에서는 표와 그래프의 값을 읽고 비교하거나 해석해요. 도표작성에서는 전달할 내용에 맞는 도표를 고르고, 축·눈금·제목·단위를 정해 자료를 나타내요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "문항이 어느 영역인지 가릴 때"
+    },
+    {
+      "conceptKey": "percentage",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "백분율",
+      "summary": "기준이 되는 양을 100으로 보았을 때의 비율이며 기호 %로 써요.",
+      "blocks": [
+        {
+          "blockId": "global:percentage:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "전체 20개 중 5개의 비율은 $5\\div20=0.25$예요. 백분율로 바꾸면 $0.25\\times100=25$%예요. 분수 $\\frac14$, 소수 0.25, 백분율 25%는 같은 비율이에요.\n\n백분율만으로 실제 양을 알 수는 없어요. 100개의 20%는 20개이고, 200개의 20%는 40개예요. 계산할 때는 무엇을 기준으로 한 비율인지 확인해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "기준량을 100으로 맞춰 견주는 일"
+    },
+    {
+      "conceptKey": "proportion",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "비중",
+      "summary": "전체에서 한 부분이 차지하는 비율이에요.",
+      "blocks": [
+        {
+          "blockId": "global:proportion:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "문의 250건 중 배송 문의가 80건이면 배송 문의의 비중은 $80\\div250=0.32$, 즉 32%예요. 반대로 전체가 250건이고 비중이 32%이면 배송 문의는 $250\\times0.32=80$건이에요.\n\n항목들이 서로 겹치지 않고 전체를 빠짐없이 나눌 때 비중을 모두 더하면 100%예요. 한 사람이 여러 항목을 선택할 수 있는 설문처럼 항목이 겹치면 이 조건이 맞지 않아요. 서로 다른 전체에서 구한 비중도 그대로 더하지 않아요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "몇 %를 차지하는지 구할 때"
+    },
+    {
+      "conceptKey": "speed",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "속력",
+      "summary": "일정 시간 동안 이동한 거리를 그 시간으로 나눈 값이에요.",
+      "blocks": [
+        {
+          "blockId": "global:speed:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "속력은 거리÷시간, 거리는 속력×시간, 시간은 거리÷속력으로 구해요. 시속 60km로 30분 이동한다면 먼저 $30\\div60=0.5$시간으로 바꿔요. 거리는 $60\\times0.5=30$km예요.\n\n시속 72km는 1시간에 72,000m를 가는 속력이에요. 1시간은 3,600초이므로 초속은 $72{,}000\\div3{,}600=20$m예요.\n\n구간마다 속력이 다를 때 평균 속력은 전체 거리÷전체 시간으로 구해요. 두 속력만 더해 2로 나누면 구간별 이동 시간이 반영되지 않을 수 있어요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "속력·시간·거리를 오갈 때"
+    },
+    {
+      "conceptKey": "statistics-reading",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "통계로 읽기",
+      "summary": "대표값과 자료가 흩어진 정도 등을 구해 자료의 특성을 파악하는 일이에요.",
+      "blocks": [
+        {
+          "blockId": "global:statistics-reading:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "여러 값의 합계와 평균을 구하거나, 어떤 값이 몇 번 나오는지 세어 자료의 특성을 살펴봐요. 평균은 합계를 개수로 나눈 값이에요. 인원이 다른 집단을 합칠 때는 각 집단의 합계를 구해 더한 뒤 전체 인원으로 나눠요. 유난히 크거나 작은 값이 있으면 크기 순으로 가운데 있는 값인 중앙값도 확인해요. 평균이 같은 자료라도 값들이 흩어진 정도는 다를 수 있으므로 범위와 표준편차도 함께 살펴봐요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "자료를 하나의 수로 줄일 때"
+    },
+    {
+      "conceptKey": "table-inference",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "표가 말하는 것",
+      "summary": "표의 값으로 계산할 수 있는 것과 추가 정보가 필요한 것을 구별하는 일이에요.",
+      "blocks": [
+        {
+          "blockId": "global:table-inference:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "부분의 양과 전체에서 차지하는 비율을 알면, 부분의 양을 비율로 나누어 전체를 구할 수 있어요. 매출 $80$억 원이 시장 전체 매출의 $10\\%$이면 전체는 $80\\div0.1=800$억 원이에요. 반면 매출만으로 이익을 알 수는 없어요. 비용 정보가 더 필요하기 때문이에요. 표의 값과 계산으로 확인되는 내용까지만 판단해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "표로 말할 수 있는 것과 없는 것을 가릴 때"
+    },
+    {
+      "conceptKey": "table-reading",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "표 읽기",
+      "summary": "제목·단위·행과 열의 뜻을 확인하고 필요한 값을 찾아요.",
+      "blocks": [
+        {
+          "blockId": "global:table-reading:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "행은 가로줄, 열은 세로줄이에요. 행이 지점이고 열이 분기인 매출표라면, A지점 행과 2분기 열이 만나는 칸에서 A지점의 2분기 매출을 찾아요. 분기는 1년을 3개월씩 나눈 기간이에요.\n\n합계를 구할 때는 무엇을 더해야 하는지 먼저 확인해요. 이 표에서 A지점의 세 분기 합계는 A행의 세 값을 더하고, 모든 지점의 2분기 합계는 2분기 열의 값을 더해요. 다른 표에서는 행과 열의 배치가 다를 수 있어요.\n\n단위가 만 원이면 표시값 3,200은 3,200만 원이에요. 매출은 판매한 금액이고, 이익을 구하려면 비용 정보가 더 필요해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "표에서 값을 찾을 때"
+    },
+    {
+      "conceptKey": "unit-conversion",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "단위환산",
+      "summary": "같은 양을 다른 단위로 나타내는 일이에요.",
+      "blocks": [
+        {
+          "blockId": "global:unit-conversion:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "$2$km를 걷고 $500$m를 더 걸었다면, 걸은 거리를 $2+500=502$로 계산할 수는 없어요. 같은 길이 단위로 바꾸어야 더할 수 있어요.\n\n$2$km를 $2{,}000$m로 바꾸면 전체 거리는 $2{,}000+500=2{,}500$m예요. 이처럼 같은 양을 다른 단위로 나타내는 일을 단위환산이라고 해요.\n\n시간은 $1$시간 $=60$분, 무게는 $1$kg $=1{,}000$g처럼 바꿀 수 있어요.\n\n넓이와 부피의 단위도 구별해요. $1$m는 $100$cm이므로, $1$m²는 $100\\times100=10{,}000$cm²예요. $1$m³는 $100\\times100\\times100=1{,}000{,}000$cm³예요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "단위가 섞여 있을 때"
+    },
+    {
+      "conceptKey": "verification",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "검산",
+      "summary": "계산 결과가 맞는지 다른 계산이나 방법으로 확인하는 일이에요.",
+      "blocks": [
+        {
+          "blockId": "global:verification:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "덧셈을 뺄셈으로, 곱셈을 나눗셈으로 확인하는 방법을 역연산이라고 해요. $438+276=714$를 계산했다면 $714-276=438$인지 확인해요.\n\n구거법은 자릿수의 합을 한 자리까지 줄여 비교하는 추가 검산 방법이에요. $47\\times23=1{,}081$에서 47은 $4+7=11$, 다시 $1+1=2$로 줄이고, 23은 5로 줄여요. 둘을 곱한 10도 $1+0=1$로 줄여요. 답 1,081의 자릿수 합 10도 1로 줄어 같아요.\n\n검산 수가 다르면 계산이 틀렸지만, 같아도 맞다고 확정할 수는 없어요. 구거법으로 발견하지 못하는 오류도 있으므로 필요한 경우 원래 계산과 역연산을 다시 확인해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "답을 낸 뒤 확인할 때"
+    },
+    {
+      "conceptKey": "weighted-mean",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "가중평균",
+      "summary": "각 값에 가중치를 곱해 더한 뒤, 가중치의 합으로 나눈 평균이에요.",
+      "blocks": [
+        {
+          "blockId": "global:weighted-mean:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "A부서 $20$명의 평균 점수는 $80$점, B부서 $30$명의 평균 점수는 $70$점이에요. 두 부서를 합한 $50$명의 평균을 구해 볼게요.\n\n각 부서의 점수 합계를 먼저 구해요. A부서는 $20\\times80=1{,}600$점, B부서는 $30\\times70=2{,}100$점이에요.\n\n합계를 더한 뒤 전체 인원으로 나누면 $\\frac{1{,}600+2{,}100}{20+30}=74$점이에요. 두 평균만 더해 $2$로 나눈 $75$점과는 달라요. 인원이 많은 B부서의 평균이 더 많이 반영되기 때문이에요.\n\n이렇게 각 값에 정해진 비중을 반영해 구한 평균을 가중평균이라고 해요. 얼마나 반영할지를 나타내는 수를 가중치라고 해요. 여기서는 각 부서의 인원수 $20$과 $30$을 가중치로 썼어요.\n\n세 집단도 같은 방법으로 구해요. $10$명 평균 $85$점, $20$명 평균 $70$점, $20$명 평균 $65$점이라면 전체 평균은 $\\frac{10\\times85+20\\times70+20\\times65}{10+20+20}=71$점이에요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "인원이 다른 집단의 평균을 합칠 때"
+    },
+    {
+      "conceptKey": "work-rate",
+      "scopeKind": "global",
+      "scopeKey": "",
+      "label": "일률",
+      "summary": "이 수업에서는 일정 시간 동안 처리하는 작업량을 뜻해요.",
+      "blocks": [
+        {
+          "blockId": "global:work-rate:body",
+          "kind": "core.rich_text",
+          "typeVersion": 3,
+          "required": true,
+          "payload": {
+            "text": "매일 일정한 양을 처리한다고 가정해요. 전체 일을 1로 두고 혼자 6일에 끝낸다면 하루 작업량은 $1\\div6=\\frac16$이에요. 함께 일해도 각자의 작업 속도가 같다면 하루 작업량을 더해요.\n\n한 사람의 하루 작업량이 $\\frac16$, 다른 사람이 $\\frac1{12}$이면 합은 $\\frac14$예요. 전체 일을 끝내는 데 걸리는 시간은 $1\\div\\frac14=4$일이에요.\n\n중간에 작업자가 바뀌면 남은 작업량을 먼저 구해요. 남은 양이 $\\frac12$이고 하루 작업량이 $\\frac14$이면 $\\frac12\\div\\frac14=2$일이 더 걸려요. 항상 ‘남은 작업량÷하루 작업량’으로 생각해요.",
+            "definitions": []
+          }
+        }
+      ],
+      "usageNote": "함께 하면 며칠인지 구할 때"
+    }
+  ]
+}
