@@ -2036,6 +2036,69 @@
           "title": "표 하나로 끝까지 가 보기",
           "contentBlocks": [
             {
+              "blockId": "ncs-condition:example:table:v4",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "업체별 평가 점수",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "업체",
+                    "align": "start"
+                  },
+                  {
+                    "label": "품질 (0.5)",
+                    "align": "end"
+                  },
+                  {
+                    "label": "가격 (0.3)",
+                    "align": "end"
+                  },
+                  {
+                    "label": "납기 (0.2)",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "A",
+                      "80",
+                      "90",
+                      "70"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "B",
+                      "85",
+                      "70",
+                      "90"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "C",
+                      "90",
+                      "75",
+                      "80"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "D",
+                      "75",
+                      "95",
+                      "85"
+                    ]
+                  }
+                ],
+                "note": "괄호 안은 가중치"
+              }
+            },
+            {
               "blockId": "ncs-condition:example:text:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
@@ -2059,10 +2122,10 @@
               "required": true,
               "payload": {
                 "problemSetId": "ncs-condition:practice",
-                "problemSetVersionId": "ncs-condition:practice:v1",
+                "problemSetVersionId": "ncs-condition:practice:v2",
                 "problemVersionIds": [
                   "ncs-condition:practice-1:v1",
-                  "ncs-condition:practice-2:v1",
+                  "ncs-condition:practice-2:v2",
                   "ncs-condition:practice-3:v1"
                 ]
               }
@@ -7936,6 +7999,224 @@
               "required": true,
               "payload": {
                 "text": "$35 \\div 14$예요."
+              }
+            }
+          ],
+          "solution": []
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-condition:practice",
+      "courseKey": "ncs-data",
+      "name": "조건 걸어 고르기 연습",
+      "versionId": "ncs-condition:practice:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-condition:practice-1:v1",
+          "conceptKeys": [
+            "condition-pick"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-condition:practice-1:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "후보 넷에 조건 셋이 붙은 문항을 풀 때 먼저 걸어야 할 조건은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "가장 많이 걸러 내는 조건"
+              },
+              {
+                "id": "b",
+                "text": "계산이 필요한 조건"
+              },
+              {
+                "id": "c",
+                "text": "맨 앞에 적힌 조건"
+              },
+              {
+                "id": "d",
+                "text": "가장 쉬운 조건"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "가장 많이 걸러 내는 조건"
+              },
+              {
+                "id": "b",
+                "text": "계산이 필요한 조건"
+              },
+              {
+                "id": "c",
+                "text": "맨 앞에 적힌 조건"
+              },
+              {
+                "id": "d",
+                "text": "가장 쉬운 조건"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-condition:practice-1:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "남는 후보가 적을수록 뒤가 가벼워요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-condition:practice-2:v2",
+          "conceptKeys": [
+            "condition-pick"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-condition:practice-2:v2:table",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "업체별 평가 점수",
+                "rowHeader": true,
+                "columns": [
+                  {
+                    "label": "업체",
+                    "align": "start"
+                  },
+                  {
+                    "label": "품질 (0.5)",
+                    "align": "end"
+                  },
+                  {
+                    "label": "가격 (0.3)",
+                    "align": "end"
+                  },
+                  {
+                    "label": "납기 (0.2)",
+                    "align": "end"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "A",
+                      "80",
+                      "90",
+                      "70"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "B",
+                      "85",
+                      "70",
+                      "90"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "C",
+                      "90",
+                      "75",
+                      "80"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "D",
+                      "75",
+                      "95",
+                      "85"
+                    ]
+                  }
+                ],
+                "note": "괄호 안은 가중치"
+              }
+            },
+            {
+              "blockId": "ncs-condition:practice-2:v2:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "표에서 $C$업체의 품질 점수에 품질의 가중치 $0.5$를 곱하면 몇 점인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 45
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-condition:practice-2:v2:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$90 \\times 0.5$예요."
+              }
+            }
+          ],
+          "solution": []
+        },
+        {
+          "problemVersionId": "ncs-condition:practice-3:v1",
+          "conceptKeys": [
+            "condition-pick"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-condition:practice-3:v1:prompt",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "네 후보 중 첫 조건으로 둘이 빠졌다면 다음 조건은 몇 곳에만 적용하면 되나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-condition:practice-3:v1:hint",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "남은 곳만 봐요."
               }
             }
           ],
