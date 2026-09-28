@@ -1,5 +1,6 @@
 'use client';
 
+import { choiceOrder } from '@/shared/choice-order';
 import { RichText } from './content-blocks';
 
 /**
@@ -13,9 +14,14 @@ import { RichText } from './content-blocks';
  *
  * The option's id is the answer; its text is only what the learner reads. Two options may read
  * alike and still be different answers, so nothing here is compared by what it says.
+ *
+ * The options are drawn in an order mixed by the question's name (`choiceOrder`), not as written:
+ * authors write the answer first, and every place that asks goes through here.
  */
-export function AnswerChoices({ name, options, value, disabled, onPick }: {
+export function AnswerChoices({ name, question, options, value, disabled, onPick }: {
   name: string;
+  /** The question's version id, which fixes the order the options are drawn in. */
+  question: string;
   options: { id: string; text: string }[];
   /** The id of the picked option, or an empty string while nothing is picked. */
   value: string;
@@ -24,7 +30,7 @@ export function AnswerChoices({ name, options, value, disabled, onPick }: {
 }) {
   return <fieldset className="answer-choices" disabled={disabled}>
     <legend>답 고르기</legend>
-    {options.map((option) => <label key={option.id} className={value === option.id ? 'answer-choice is-picked' : 'answer-choice'}>
+    {choiceOrder(question, options).map((option) => <label key={option.id} className={value === option.id ? 'answer-choice is-picked' : 'answer-choice'}>
       <input type="radio" name={name} value={option.id} checked={value === option.id} onChange={() => onPick(option.id)} />
       <span><RichText text={option.text} /></span>
     </label>)}

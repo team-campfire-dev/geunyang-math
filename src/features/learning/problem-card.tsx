@@ -99,7 +99,7 @@ export function ProblemCard({ problem, attempt, actions, busy, disabled, ready =
     {problem.responseSpec.requiredForm && <p className="input-help answer-form-note">답안 형식: {problem.responseSpec.requiredForm === 'simplest' || problem.responseSpec.requiredForm === 'simplest_fraction' || problem.responseSpec.requiredForm === 'reduced_fraction' ? '기약분수' : problem.responseSpec.requiredForm}</p>}
     <form onSubmit={submit} className={options ? 'answer-form is-choice' : 'answer-form'}>
       {options
-        ? <AnswerChoices name={`answer-${problem.problemVersionId}`} options={options} value={answer}
+        ? <AnswerChoices name={`answer-${problem.problemVersionId}`} question={problem.problemVersionId} options={options} value={answer}
             disabled={busy || disabled || unsupported || !ready}
             onPick={(id) => { setAnswer(id); onDraftChange?.(problem.problemVersionId, id !== (attempt?.answer ?? '')); }} />
         : <MathAnswerField label="나의 답" value={answer} disabled={busy || disabled || unsupported || !ready}

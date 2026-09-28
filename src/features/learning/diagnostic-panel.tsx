@@ -62,7 +62,7 @@ export function DiagnosticPanel({ diagnostic, offering, dispatch, busy, onBack, 
           <ContentBlocks blocks={current.promptContent} />
           <form className={options ? 'answer-form is-choice' : 'answer-form'} onSubmit={(event: FormEvent) => { event.preventDefault(); if (answer.trim()) void save(answer.trim()); }}>
             {options
-              ? <AnswerChoices name={`placement-${current.problemVersionId}`} options={options} value={answer} disabled={busy} onPick={setAnswer} />
+              ? <AnswerChoices name={`placement-${current.problemVersionId}`} question={current.problemVersionId} options={options} value={answer} disabled={busy} onPick={setAnswer} />
               : <MathAnswerField label="나의 답" value={answer} disabled={busy}
                   integerOnly={current.responseSpec.kind === 'integer'}
                   placeholder={current.responseSpec.kind === 'integer' ? '정수를 입력해 주세요' : '예: 3/4'}
