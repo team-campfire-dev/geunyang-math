@@ -4,7 +4,7 @@
     {
       "key": "ncs-applied",
       "title": "응용계산",
-      "summary": "원가와 할인, 농도, 속력, 일률, 이자, 환율을 시험이 묻는 방식 그대로 계산해요.",
+      "summary": "원가·할인·농도·속력·작업량·이자·환율을 조건에 맞게 계산해요.",
       "order": 920,
       "track": "ncs",
       "lessons": [
@@ -77,9 +77,9 @@
     {
       "public": {
         "lessonKey": "ncs-price",
-        "versionId": "ncs-price:v3",
-        "title": "원가와 정가: 붙인 만큼과 깎은 만큼",
-        "summary": "원가에 이익을 붙여 정가를 정하고, 정가에서 깎아 판매가를 구해요.",
+        "versionId": "ncs-price:v4",
+        "title": "원가·정가·판매가와 할인",
+        "summary": "원가에 이익을 더해 정가를 구하고, 정가에서 할인해 판매가를 구해요.",
         "estimatedMinutes": 10,
         "conceptKeys": [
           "cost-price",
@@ -94,17 +94,17 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-price:cost:v3",
+          "sectionId": "ncs-price:cost:v4",
           "role": "explanation",
           "title": "붙일 때의 기준은 원가",
           "contentBlocks": [
             {
-              "blockId": "ncs-price:cost:text:v3",
+              "blockId": "ncs-price:cost:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "사 올 때 치른 값이 원가, 팔려고 내건 값이 정가예요. 정가는 보통 원가에 이익을 붙여 정해요.\n\n원가 $15{,}000$원에 $20\\%$의 이익을 붙여 볼게요. 붙는 돈은 $15{,}000 \\times 0.2 = 3{,}000$원이고, 정가는 $18{,}000$원이에요.\n\n이익률은 이익을 원가로 나눈 값이에요. 붙일 때의 기준은 언제나 원가고요.",
+                "text": "원가는 물건을 사 오는 데 든 금액이고, 정가는 판매하기 위해 정해 둔 가격이에요. 이 수업에서는 원가에 일정 비율의 이익을 더해 정가를 정하는 문제를 풀어요.\n\n원가가 15,000원이고 원가의 20%를 더한다면, 더할 금액은 $15{,}000\\times0.2=3{,}000$원이에요. 정가는 $15{,}000+3{,}000=18{,}000$원이에요.\n\n실제 이익은 판매가에서 원가를 뺀 금액으로 계산해요. 여기서는 다른 비용은 없다고 가정하고, 이익률은 원가를 기준으로 계산해요. 문제에서 이익률의 기준을 다르게 정하면 그 조건을 따라야 해요.",
                 "definitions": [
                   {
                     "conceptKey": "cost-price",
@@ -117,12 +117,12 @@
           ]
         },
         {
-          "sectionId": "ncs-price:discount:v3",
+          "sectionId": "ncs-price:discount:v4",
           "role": "explanation",
           "title": "깎을 때의 기준은 정가",
           "contentBlocks": [
             {
-              "blockId": "ncs-price:discount:text:v3",
+              "blockId": "ncs-price:discount:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -138,7 +138,7 @@
               }
             },
             {
-              "blockId": "ncs-price:explanation:drawing:v3",
+              "blockId": "ncs-price:discount:v4:block:2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -272,12 +272,12 @@
           ]
         },
         {
-          "sectionId": "ncs-price:example:v3",
+          "sectionId": "ncs-price:example:v4",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-price:example:text:v3",
+              "blockId": "ncs-price:example:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -289,60 +289,60 @@
           ]
         },
         {
-          "sectionId": "ncs-price:practice:v3",
+          "sectionId": "ncs-price:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-price:practice:problems:v3",
+              "blockId": "ncs-price:practice:v4:block:1",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-price:practice",
-                "problemSetVersionId": "ncs-price:practice:v1",
+                "problemSetVersionId": "ncs-price:practice:v2",
                 "problemVersionIds": [
-                  "ncs-price:practice-1:v1",
-                  "ncs-price:practice-2:v1",
-                  "ncs-price:practice-3:v1"
+                  "ncs-price:practice-1:v2",
+                  "ncs-price:practice-2:v2",
+                  "ncs-price:practice-3:v2"
                 ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-price:check:v3",
+          "sectionId": "ncs-price:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-price:check:problems:v3",
+              "blockId": "ncs-price:check:v4:block:1",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-price:check",
-                "problemSetVersionId": "ncs-price:check:v1",
+                "problemSetVersionId": "ncs-price:check:v2",
                 "problemVersionIds": [
-                  "ncs-price:check-1:v1",
-                  "ncs-price:check-2:v1"
+                  "ncs-price:check-1:v2",
+                  "ncs-price:check-2:v2"
                 ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-price:summary:v3",
+          "sectionId": "ncs-price:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-price:summary:text:v3",
+              "blockId": "ncs-price:summary:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "원가는 사 온 값, 정가는 원가에 이익을 붙인 값, 판매가는 정가에서 할인을 뺀 값이에요.\n\n이익률은 이익을 원가로 나눈 것이고, 할인율은 깎인 돈을 정가로 나눈 것이에요. 무엇을 무엇으로 나누는지가 이 수업의 전부예요.\n\n이 수업의 개념은 원가와 정가, 그리고 할인율이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "원가는 사 온 금액, 정가는 판매하려고 정한 가격, 판매가는 실제로 판 가격이에요. 원가와 정가를 구별하고, 할인했다면 판매가를 따로 구해요.\n\n이 수업의 이익률은 이익을 원가로 나누어 구해요. 할인율은 정가에서 할인한 금액을 정가로 나누어 구해요. 백분율로 나타낼 때는 각각 100을 곱해요.\n\n20% 이익을 더한 뒤 10% 할인할 때처럼 계산이 이어지면, 매 단계에서 기준 금액을 확인해요.",
                 "definitions": [
                   {
                     "conceptKey": "cost-price",
@@ -362,20 +362,20 @@
       ],
       "review": {
         "problemSetId": "ncs-price:review",
-        "problemSetVersionId": "ncs-price:review:v1",
+        "problemSetVersionId": "ncs-price:review:v2",
         "problemVersionIds": [
-          "ncs-price:homework-1:v1",
-          "ncs-price:homework-2:v1"
+          "ncs-price:homework-1:v2",
+          "ncs-price:homework-2:v2"
         ]
       }
     },
     {
       "public": {
         "lessonKey": "ncs-concentration",
-        "versionId": "ncs-concentration:v3",
-        "title": "소금물의 농도: 녹아 있는 양으로 따지기",
-        "summary": "소금물에서 소금이 차지하는 비율을 구하고, 물을 더하거나 날려 농도를 바꿔요.",
-        "estimatedMinutes": 10,
+        "versionId": "ncs-concentration:v4",
+        "title": "소금물의 농도: 소금 양과 전체 양 구하기",
+        "summary": "물을 넣거나 증발시키고 소금물을 섞을 때 농도를 계산해요.",
+        "estimatedMinutes": 15,
         "conceptKeys": [
           "concentration"
         ],
@@ -384,21 +384,21 @@
           "percentage-of",
           "linear-equation"
         ],
-        "sectionCount": 6
+        "sectionCount": 7
       },
       "sections": [
         {
-          "sectionId": "ncs-concentration:meaning:v3",
+          "sectionId": "ncs-concentration:meaning:v4",
           "role": "explanation",
           "title": "나누는 수는 소금물 전체",
           "contentBlocks": [
             {
-              "blockId": "ncs-concentration:meaning:text:v3",
+              "blockId": "ncs-concentration:meaning:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "소금물 전체에서 소금이 차지하는 비율이 농도예요. 나누는 수가 물이 아니라 소금물 전체라는 점이 이 수업에서 가장 많이 틀리는 곳이에요.\n\n소금물 $200$g에 소금 $30$g이 녹아 있다고 해 볼게요. 농도는 $\\frac{30}{200} = 0.15$, 즉 $15\\%$예요. 물은 $170$g이지만 나눌 때 쓰는 수는 $200$이에요.\n\n반대로 농도와 소금물의 양을 알면 소금의 양은 $\\text{소금물} \\times \\text{농도}$로 구해요. 농도 $8\\%$인 소금물 $250$g에는 소금이 $20$g 들어 있어요.",
+                "text": "소금물 전체에서 소금이 차지하는 질량의 비율을 농도라고 해요. 이 수업에서는 농도를 %로 나타내요. 소금의 양을 소금물 전체의 양으로 나눈 뒤 100을 곱해요.\n\n소금물 200g 안에 소금 30g이 들어 있다면 농도는 $30\\div200\\times100=15$%예요. 물의 양은 170g이지만, 농도의 기준은 물과 소금을 합한 200g이에요.\n\n반대로 소금의 양은 소금물의 양에 농도를 소수로 바꾼 수를 곱해 구해요. 농도 8%인 소금물 250g에는 $250\\times0.08=20$g의 소금이 있어요.",
                 "definitions": [
                   {
                     "conceptKey": "concentration",
@@ -409,7 +409,7 @@
               }
             },
             {
-              "blockId": "ncs-concentration:explanation:drawing:v3",
+              "blockId": "ncs-concentration:meaning:v4:block:2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -579,12 +579,12 @@
           ]
         },
         {
-          "sectionId": "ncs-concentration:change:v3",
+          "sectionId": "ncs-concentration:change:v4",
           "role": "explanation",
           "title": "물을 더해도 소금은 그대로",
           "contentBlocks": [
             {
-              "blockId": "ncs-concentration:change:text:v3",
+              "blockId": "ncs-concentration:change:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -596,72 +596,88 @@
           ]
         },
         {
-          "sectionId": "ncs-concentration:example:v3",
+          "sectionId": "ncs-concentration:example:v4",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-concentration:example:text:v3",
+              "blockId": "ncs-concentration:example:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "농도 $10\\%$인 소금물 $300$g에 물 $100$g을 더하면 농도가 어떻게 되는지 구해 볼게요.\n\n먼저 소금이에요. $300 \\times 0.1 = 30$g이에요. 물을 더해도 이 $30$g은 변하지 않아요.\n\n다음은 전체예요. $300 + 100 = 400$g이 되었어요.\n\n그러니 새 농도는 $\\frac{30}{400} = 0.075$, 즉 $7.5\\%$예요. 물을 $\\frac{1}{3}$만큼 더했는데 농도는 $10\\%$에서 $7.5\\%$로 내려갔어요.\n\n거꾸로 「농도를 $6\\%$로 만들려면 물을 얼마나 더할까」를 물으면 더할 물을 $x$로 둬요. $\\frac{30}{300+x} = 0.06$을 풀면 $300+x = 500$이니 $x = 200$g이에요.",
+                "text": "농도 10%인 소금물 300g에 물 100g을 넣으면 농도가 어떻게 될까요?\n\n소금의 양은 $300\\times0.1=30$g이에요. 물만 넣으므로 소금은 여전히 30g이에요. 소금물 전체의 양은 $300+100=400$g이에요. 새 농도는 $30\\div400\\times100=7.5$%예요.\n\n같은 소금물 300g의 농도를 6%로 만들려면 물을 얼마나 넣어야 할까요? 소금 30g이 전체의 6%가 되어야 하므로 새 소금물의 양은 $30\\div0.06=500$g이에요. 따라서 더 넣을 물은 $500-300=200$g이에요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-concentration:practice:v3",
+          "sectionId": "ncs-concentration:mix:v4",
+          "role": "worked_example",
+          "title": "농도가 다른 소금물 섞기",
+          "contentBlocks": [
+            {
+              "blockId": "ncs-concentration:mix:v4:block:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도 8%인 소금물 100g과 농도 4%인 소금물 300g을 섞어 볼게요.\n\n첫 소금물의 소금은 $100\\times0.08=8$g, 둘째는 $300\\times0.04=12$g이에요. 소금의 합은 20g이고, 소금물의 합은 400g이에요.\n\n새 농도는 $20\\div400\\times100=5$%예요. 두 소금물의 양이 다르므로 농도 8%와 4%의 단순 평균인 6%를 사용하지 않아요."
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "ncs-concentration:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-concentration:practice:problems:v3",
+              "blockId": "ncs-concentration:practice:v4:block:1",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-concentration:practice",
-                "problemSetVersionId": "ncs-concentration:practice:v1",
+                "problemSetVersionId": "ncs-concentration:practice:v2",
                 "problemVersionIds": [
-                  "ncs-concentration:practice-1:v1",
-                  "ncs-concentration:practice-2:v1",
-                  "ncs-concentration:practice-3:v1"
+                  "ncs-concentration:practice-1:v2",
+                  "ncs-concentration:practice-2:v2",
+                  "ncs-concentration:practice-3:v2"
                 ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-concentration:check:v3",
+          "sectionId": "ncs-concentration:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-concentration:check:problems:v3",
+              "blockId": "ncs-concentration:check:v4:block:1",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-concentration:check",
-                "problemSetVersionId": "ncs-concentration:check:v1",
+                "problemSetVersionId": "ncs-concentration:check:v2",
                 "problemVersionIds": [
-                  "ncs-concentration:check-1:v1",
-                  "ncs-concentration:check-2:v1"
+                  "ncs-concentration:check-1:v2",
+                  "ncs-concentration:check-2:v2"
                 ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-concentration:summary:v3",
+          "sectionId": "ncs-concentration:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-concentration:summary:text:v3",
+              "blockId": "ncs-concentration:summary:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -681,20 +697,20 @@
       ],
       "review": {
         "problemSetId": "ncs-concentration:review",
-        "problemSetVersionId": "ncs-concentration:review:v1",
+        "problemSetVersionId": "ncs-concentration:review:v2",
         "problemVersionIds": [
-          "ncs-concentration:homework-1:v1",
-          "ncs-concentration:homework-2:v1"
+          "ncs-concentration:homework-1:v2",
+          "ncs-concentration:homework-2:v2"
         ]
       }
     },
     {
       "public": {
         "lessonKey": "ncs-speed",
-        "versionId": "ncs-speed:v3",
-        "title": "속력·시간·거리: 셋 중 둘을 알면",
-        "summary": "거리와 시간으로 속력을 구하고, 단위를 맞춰 왕복과 환산 문제를 풀어요.",
-        "estimatedMinutes": 10,
+        "versionId": "ncs-speed:v4",
+        "title": "속력·시간·거리와 단위 환산",
+        "summary": "거리와 시간의 관계를 익히고, 단위를 맞춰 이동 시간을 구해요.",
+        "estimatedMinutes": 15,
         "conceptKeys": [
           "speed"
         ],
@@ -706,17 +722,17 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-speed:meaning:v3",
+          "sectionId": "ncs-speed:meaning:v4",
           "role": "explanation",
           "title": "셋 중 둘을 알면 나머지가 나온다",
           "contentBlocks": [
             {
-              "blockId": "ncs-speed:meaning:text:v3",
+              "blockId": "ncs-speed:meaning:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "단위 시간 동안 이동한 거리를 나타내는 값이 속력이에요. 시속은 한 시간에 가는 거리이고, 초속은 한 초에 가는 거리예요. $\\text{속력} = \\frac{\\text{거리}}{\\text{시간}}$이고, 여기서 $\\text{거리} = \\text{속력} \\times \\text{시간}$과 $\\text{시간} = \\frac{\\text{거리}}{\\text{속력}}$이 따라 나와요. 외울 것은 하나예요.\n\n$180$km를 $3$시간에 갔다면 속력은 시속 $60$km예요. 같은 속력으로 계속 간다면 두 시간에 $120$km, 네 시간에 $240$km처럼 시간에 비례해요.",
+                "text": "속력은 일정한 시간 동안 얼마나 이동하는지를 나타내는 값이에요. 시속은 1시간에 가는 거리, 초속은 1초에 가는 거리예요.\n\n180km를 3시간에 이동했다면 1시간당 거리는 $180\\div3=60$km이므로 평균 속력은 시속 60km예요. 거리를 시간으로 나누면 속력이 나와요.\n\n같은 속력으로 2시간 이동하면 거리는 $60\\times2=120$km예요. 180km를 시속 60km로 이동하는 시간은 $180\\div60=3$시간이에요. 구할 값이 거리인지 시간인지 확인하고 계산해요.",
                 "definitions": [
                   {
                     "conceptKey": "speed",
@@ -727,7 +743,7 @@
               }
             },
             {
-              "blockId": "ncs-speed:explanation:drawing:v3",
+              "blockId": "ncs-speed:meaning:v4:block:2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -889,35 +905,29 @@
           ]
         },
         {
-          "sectionId": "ncs-speed:units:v3",
+          "sectionId": "ncs-speed:units:v4",
           "role": "explanation",
-          "title": "틀리는 원인은 계산이 아니라 단위",
+          "title": "분을 시간으로, 시속을 초속으로 바꾸기",
           "contentBlocks": [
             {
-              "blockId": "ncs-speed:units:text:v3",
+              "blockId": "ncs-speed:units:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "속력과 시간의 단위가 서로 맞는지 먼저 확인해요. 시속을 사용할 때는 분을 시간으로 바꿔요. $30$분은 $0.5$시간, $90$분은 $1.5$시간이에요. 시속을 초속으로 바꿀 때는 $1$시간이 $3{,}600$초, $1$km가 $1{,}000$m라는 것만 쓰면 돼요.\n\n거리가 같은데 갈 때와 올 때의 속력이 다르면, 두 속력을 더해 반으로 나누지 않아요. 걸린 시간을 각각 구해 더하는 것이 언제나 맞는 길이에요.",
-                "definitions": [
-                  {
-                    "conceptKey": "unit-conversion",
-                    "surface": "단위",
-                    "scopeKind": "global"
-                  }
-                ]
+                "text": "시속은 1시간을 기준으로 하므로, 시간이 분으로 주어지면 60으로 나눠 시간으로 바꿔요. 30분은 $30\\div60=0.5$시간이고 90분은 $90\\div60=1.5$시간이에요.\n\n시속 72km를 초속으로 바꿔 볼게요. 72km는 72,000m, 1시간은 3,600초예요. 따라서 $72{,}000\\div3{,}600=20$이므로 초속 20m예요.\n\n왕복처럼 속력이 다른 구간이 있으면, 각 구간의 시간을 구해 더해요. 같은 거리를 천천히 가면 시간이 더 걸리므로 두 속력의 단순 평균으로 왕복 시간을 계산하지 않아요.",
+                "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-speed:example:v3",
+          "sectionId": "ncs-speed:example:v4",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-speed:example:text:v3",
+              "blockId": "ncs-speed:example:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -929,60 +939,60 @@
           ]
         },
         {
-          "sectionId": "ncs-speed:practice:v3",
+          "sectionId": "ncs-speed:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-speed:practice:problems:v3",
+              "blockId": "ncs-speed:practice:v4:block:1",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-speed:practice",
-                "problemSetVersionId": "ncs-speed:practice:v1",
+                "problemSetVersionId": "ncs-speed:practice:v2",
                 "problemVersionIds": [
-                  "ncs-speed:practice-1:v1",
-                  "ncs-speed:practice-2:v1",
-                  "ncs-speed:practice-3:v1"
+                  "ncs-speed:practice-1:v2",
+                  "ncs-speed:practice-2:v2",
+                  "ncs-speed:practice-3:v2"
                 ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-speed:check:v3",
+          "sectionId": "ncs-speed:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-speed:check:problems:v3",
+              "blockId": "ncs-speed:check:v4:block:1",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-speed:check",
-                "problemSetVersionId": "ncs-speed:check:v1",
+                "problemSetVersionId": "ncs-speed:check:v2",
                 "problemVersionIds": [
-                  "ncs-speed:check-1:v1",
-                  "ncs-speed:check-2:v1"
+                  "ncs-speed:check-1:v2",
+                  "ncs-speed:check-2:v2"
                 ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-speed:summary:v3",
+          "sectionId": "ncs-speed:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-speed:summary:text:v3",
+              "blockId": "ncs-speed:summary:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "속력은 거리를 시간으로 나눈 값이고, 나머지 둘은 여기서 따라 나와요.\n\n분은 시간으로, km는 m로 먼저 맞추고 계산해요. 왕복처럼 구간이 나뉘면 시간을 각각 구해 더하는 것이 안전해요.\n\n이 수업의 개념은 속력이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "속력은 거리÷시간, 거리는 속력×시간, 시간은 거리÷속력으로 구해요. 수를 넣기 전에 단위를 맞춰요. 시속과 함께 쓸 분 단위 시간은 60으로 나눠 시간으로 바꿔요.\n\n구간마다 속력이 다르면 각 구간의 시간을 구해 더해요. 전체 평균 속력을 구할 때는 전체 거리를 전체 시간으로 나눠요.",
                 "definitions": [
                   {
                     "conceptKey": "speed",
@@ -997,20 +1007,20 @@
       ],
       "review": {
         "problemSetId": "ncs-speed:review",
-        "problemSetVersionId": "ncs-speed:review:v1",
+        "problemSetVersionId": "ncs-speed:review:v2",
         "problemVersionIds": [
-          "ncs-speed:homework-1:v1",
-          "ncs-speed:homework-2:v1"
+          "ncs-speed:homework-1:v2",
+          "ncs-speed:homework-2:v2"
         ]
       }
     },
     {
       "public": {
         "lessonKey": "ncs-work",
-        "versionId": "ncs-work:v3",
-        "title": "일률: 전체를 1로 두면 하루치가 보인다",
-        "summary": "혼자 며칠 걸리는지를 하루치로 바꾸어 더하고, 함께 하면 며칠인지 구해요.",
-        "estimatedMinutes": 10,
+        "versionId": "ncs-work:v4",
+        "title": "작업량과 시간: 함께 일할 때 계산하기",
+        "summary": "하루 작업량을 더하고, 남은 작업량으로 걸리는 시간을 구해요.",
+        "estimatedMinutes": 15,
         "conceptKeys": [
           "work-rate"
         ],
@@ -1023,17 +1033,17 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-work:why:v3",
+          "sectionId": "ncs-work:why:v4",
           "role": "explanation",
-          "title": "날수는 더할 수 없다",
+          "title": "하루에 처리하는 일의 양 구하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-work:why:text:v3",
+              "blockId": "ncs-work:why:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "「$A$는 혼자 $6$일, $B$는 혼자 $12$일이 걸린다. 둘이 함께 하면 며칠인가」 — 시험에 자주 나오는 모양이에요.\n\n여기서 막히는 까닭은 더할 수 없는 것을 더하려 하기 때문이에요. $6$일과 $12$일을 더하거나 평균을 내면 답이 되지 않아요.\n\n더할 수 있는 것은 날수가 아니라 하루에 하는 양이에요. 이 양을 일률이라고 해요.",
+                "text": "A가 혼자 하면 6일, B가 혼자 하면 12일 걸리는 일을 둘이 함께 하면 며칠 걸릴까요?\n\n함께 일할 때는 각자 하루에 처리하는 양을 더할 수 있어요. 이 수업에서는 단위 시간에 처리하는 일의 양을 일률이라고 해요. 매일 일정한 양을 처리하고, 함께 일해도 서로의 작업 속도에 영향을 주지 않는다고 가정해요.",
                 "definitions": [
                   {
                     "conceptKey": "work-rate",
@@ -1046,30 +1056,30 @@
           ]
         },
         {
-          "sectionId": "ncs-work:one:v3",
+          "sectionId": "ncs-work:one:v4",
           "role": "explanation",
-          "title": "전체를 1로 두면 하루치가 보인다",
+          "title": "전체 일을 1로 나타내어 계산하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-work:one:text:v3",
+              "blockId": "ncs-work:one:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "각 사람이 매일 일정한 양의 일을 한다고 가정해요. 전체 일을 $1$로 두는 것이 시작이에요. 얼마짜리 일인지는 문제가 말해 주지 않고, 말해 줄 필요도 없거든요. $6$일이 걸리면 하루에 $\\dfrac{1}{6}$, $12$일이 걸리면 하루에 $\\dfrac{1}{12}$이에요.\n\n둘이 함께 하면 하루치가 더해져요. $\\dfrac{1}{6} + \\dfrac{1}{12} = \\dfrac{3}{12} = \\dfrac{1}{4}$이니 하루에 전체의 $\\dfrac{1}{4}$을 하고, $4$일이면 끝나요.\n\n걸리는 날수는 전체 일의 양 $1$을 하루에 하는 일의 양으로 나누어 구해요. 따라서 하루에 하는 일의 양의 역수와 같아요. 하루에 $\\dfrac{1}{4}$을 하면 $4$일, $\\dfrac{2}{5}$를 하면 $\\dfrac{5}{2}$일이에요. 마지막에 뒤집는 것을 잊기 쉬우니 조심해요.",
+                "text": "전체 작업을 똑같이 12칸으로 나누어 생각해 볼게요. A는 6일 동안 12칸을 끝내므로 하루에 2칸, B는 12일 동안 끝내므로 하루에 1칸을 처리해요. 함께 하면 하루에 3칸이므로 $12\\div3=4$일이 걸려요.\n\n전체 일을 1로 나타내어도 같은 계산을 할 수 있어요. A는 하루에 전체의 $1/6$, B는 $1/12$을 처리해요. 둘을 더하면 $1/6+1/12=2/12+1/12=1/4$이에요.\n\n하루에 전체의 1/4을 처리하므로 걸리는 시간은 $1\\div(1/4)=4$일이에요. 전체 작업량이 주어지지 않아도 전체에 대한 비율로 계산할 수 있어요.",
                 "definitions": []
               }
             },
             {
-              "blockId": "ncs-work:explanation:drawing:v3",
+              "blockId": "ncs-work:one:v4:block:2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
                 "width": 320,
                 "height": 200,
-                "alt": "6일과 12일이 걸리는 두 사람의 하루치를 합쳐 하루에 전체의 얼마를 하는지 세는 그림",
-                "caption": "전체를 $1$로 두면 하루치끼리 더할 수 있어요",
+                "alt": "6일과 12일이 걸리는 두 사람의 하루 작업량을 합쳐 하루에 전체의 얼마를 하는지 세는 그림",
+                "caption": "전체를 $1$로 두면 하루 작업량끼리 더할 수 있어요",
                 "items": [
                   {
                     "kind": "text",
@@ -1163,7 +1173,7 @@
                     ]
                   },
                   {
-                    "caption": "$A$의 하루치는 두 칸, $B$의 하루치는 한 칸이에요.",
+                    "caption": "$A$의 하루 작업량은 두 칸, $B$의 하루 작업량은 한 칸이에요.",
                     "changes": [
                       {
                         "id": "sum",
@@ -1176,7 +1186,7 @@
                     ]
                   },
                   {
-                    "caption": "둘이 함께면 하루에 세 칸이에요. 열두 칸 중 셋이니 $\\frac{1}{4}$, 나흘이면 끝나요.",
+                    "caption": "함께 일하면 하루에 3칸을 처리해요. 전체 12칸을 끝내는 데 $12\\div3=4$일이 걸려요.",
                     "changes": [
                       {
                         "id": "sum",
@@ -1195,94 +1205,94 @@
           ]
         },
         {
-          "sectionId": "ncs-work:variants:v3",
+          "sectionId": "ncs-work:variants:v4",
           "role": "explanation",
-          "title": "모양이 바뀌어도 방법은 같다",
+          "title": "남은 작업량으로 시간 구하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-work:variants:text:v3",
+              "blockId": "ncs-work:variants:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "물탱크에 물을 채우고 빼는 문제도 같은 방법이에요. 빼는 쪽은 하루치를 빼면 되고요.\n\n중간에 사람이 바뀌는 문제는 한 일을 세어 가며 풀어요. $A$가 혼자 $2$일 했다면 $\\dfrac{2}{6} = \\dfrac{1}{3}$을 한 것이니 남은 일은 $\\dfrac{2}{3}$예요.",
+                "text": "일부 작업을 끝낸 뒤 다른 사람이 이어받으면, 남은 일의 양부터 구해요.\n\nA가 하루에 전체의 1/6을 처리하고 2일 일했다면 끝낸 양은 $2\\times1/6=1/3$이에요. 남은 양은 $1-1/3=2/3$이에요. B가 이어서 일하는 시간은 이 남은 양을 B가 하루에 처리하는 양으로 나누어 구해요.\n\n물탱크 문제에서도 같은 방법을 쓸 수 있어요. 한 시간에 채우는 비율에서 한 시간에 빠지는 비율을 빼면 한 시간에 실제로 늘어나는 비율을 구할 수 있어요. 두 비율의 시간 단위를 맞춰야 해요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-work:example:v3",
+          "sectionId": "ncs-work:example:v4",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-work:example:text:v3",
+              "blockId": "ncs-work:example:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$A$는 혼자 $6$일, $B$는 혼자 $12$일이 걸리는 일이 있어요. 둘이 함께 하면 며칠 걸릴까요.\n\n전체를 $1$로 두면 $A$의 하루치는 $\\dfrac{1}{6}$, $B$의 하루치는 $\\dfrac{1}{12}$이에요.\n\n함께 하면 하루에 $\\dfrac{1}{6} + \\dfrac{1}{12} = \\dfrac{2}{12} + \\dfrac{1}{12} = \\dfrac{3}{12} = \\dfrac{1}{4}$이에요.\n\n하루에 $\\dfrac{1}{4}$이니 뒤집어 $4$일이에요.\n\n조금 더 어려운 모양도 해 볼게요. 같은 일을 $A$가 혼자 $2$일 한 뒤 $B$가 이어받았다면 $B$는 며칠이 더 필요할까요.\n\n$A$가 한 일은 $\\dfrac{2}{6} = \\dfrac{1}{3}$이니 남은 일은 $\\dfrac{2}{3}$이에요. $B$는 하루에 $\\dfrac{1}{12}$을 하니 $\\dfrac{2}{3} \\div \\dfrac{1}{12} = 8$, 곧 $8$일이에요.\n\n날수를 더하려 하지 말고 하루치로 바꾸는 것, 그리고 마지막에 뒤집는 것 — 이 둘만 지키면 돼요.",
+                "text": "A는 혼자 6일, B는 혼자 12일 걸리는 작업이 있어요. 하루 작업량은 각각 전체의 1/6, 1/12이에요.\n\n처음부터 함께 하면 하루 작업량은 $1/6+1/12=1/4$이에요. 전체 1을 하루 작업량으로 나누면 $1\\div(1/4)=4$일이에요.\n\n이번에는 A가 먼저 2일 일하고, B가 남은 일을 한다고 해 볼게요. A가 처리한 양은 $2\\times1/6=1/3$, 남은 양은 $1-1/3=2/3$이에요.\n\nB가 필요한 시간은 $(2/3)\\div(1/12)=(2/3)\\times12=8$일이에요. 남은 양이 1이 아닐 때는 하루 작업량의 역수만 구하면 안 돼요. ‘남은 일의 양÷하루 작업량’으로 계산해요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-work:practice:v3",
+          "sectionId": "ncs-work:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-work:practice:problems:v3",
+              "blockId": "ncs-work:practice:v4:block:1",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-work:practice",
-                "problemSetVersionId": "ncs-work:practice:v1",
+                "problemSetVersionId": "ncs-work:practice:v2",
                 "problemVersionIds": [
-                  "ncs-work:practice-1:v1",
-                  "ncs-work:practice-2:v1",
-                  "ncs-work:practice-3:v1"
+                  "ncs-work:practice-1:v2",
+                  "ncs-work:practice-2:v2",
+                  "ncs-work:practice-3:v2"
                 ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-work:check:v3",
+          "sectionId": "ncs-work:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-work:check:problems:v3",
+              "blockId": "ncs-work:check:v4:block:1",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-work:check",
-                "problemSetVersionId": "ncs-work:check:v1",
+                "problemSetVersionId": "ncs-work:check:v2",
                 "problemVersionIds": [
-                  "ncs-work:check-1:v1",
-                  "ncs-work:check-2:v1"
+                  "ncs-work:check-1:v2",
+                  "ncs-work:check-2:v2"
                 ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-work:summary:v3",
+          "sectionId": "ncs-work:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-work:summary:text:v3",
+              "blockId": "ncs-work:summary:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "날수는 더할 수 없지만 하루치는 더할 수 있어요. 그래서 전체를 $1$로 두고 하루치로 바꿔요.\n\n$n$일이 걸리면 하루치는 $\\dfrac{1}{n}$이고, 함께 하면 하루치를 더해요.\n\n전체 일을 $1$로 두었으므로, 걸리는 날수는 $1$을 두 사람이 하루에 하는 일의 양으로 나눈 값이에요.\n\n중간에 사람이 바뀌면 한 일을 세어 남은 일부터 구해요.\n\n이 수업의 개념은 일률이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "일률은 단위 시간에 처리하는 일의 양이에요. 전체 일을 1로 두면 혼자 n일 걸리는 사람은 하루에 전체의 $1/n$을 처리해요.\n\n작업 속도가 일정하고 서로 영향을 주지 않는다면 함께 하는 사람들의 하루 작업량을 더할 수 있어요. 걸리는 일수는 해야 할 일의 양을 하루 작업량으로 나누어 구해요.\n\n일부를 끝낸 뒤라면 전체 1에서 이미 처리한 양을 빼고, 남은 양으로 계산해요.",
                 "definitions": [
                   {
                     "conceptKey": "work-rate",
@@ -1297,20 +1307,20 @@
       ],
       "review": {
         "problemSetId": "ncs-work:review",
-        "problemSetVersionId": "ncs-work:review:v1",
+        "problemSetVersionId": "ncs-work:review:v2",
         "problemVersionIds": [
-          "ncs-work:homework-1:v1",
-          "ncs-work:homework-2:v1"
+          "ncs-work:homework-1:v2",
+          "ncs-work:homework-2:v2"
         ]
       }
     },
     {
       "public": {
         "lessonKey": "ncs-interest",
-        "versionId": "ncs-interest:v2",
-        "title": "이자: 단리는 원금에만, 복리는 이자에도",
-        "summary": "단리와 복리가 어디에 이자를 붙이는지 구분하고, 원리합계를 구해요.",
-        "estimatedMinutes": 10,
+        "versionId": "ncs-interest:v3",
+        "title": "단리와 복리: 이자와 원리합계 구하기",
+        "summary": "단리와 복리의 계산 기준을 구별하고, 이자와 원리합계를 계산해요.",
+        "estimatedMinutes": 15,
         "conceptKeys": [
           "interest"
         ],
@@ -1323,12 +1333,12 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-interest:simple:v2",
+          "sectionId": "ncs-interest:simple:v3",
           "role": "explanation",
           "title": "단리는 원금에만 붙는다",
           "contentBlocks": [
             {
-              "blockId": "ncs-interest:simple:text:v2",
+              "blockId": "ncs-interest:simple:v3:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1346,22 +1356,22 @@
           ]
         },
         {
-          "sectionId": "ncs-interest:compound:v2",
+          "sectionId": "ncs-interest:compound:v3",
           "role": "explanation",
           "title": "복리는 이자에도 붙는다",
           "contentBlocks": [
             {
-              "blockId": "ncs-interest:compound:text:v2",
+              "blockId": "ncs-interest:compound:v3:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "복리는 붙은 이자에도 다시 이자를 붙여요. 첫해에 $5$만 원이 붙으면 둘째 해에는 $105$만 원에 대해 $5\\%$가 붙어요.\n\n그래서 복리의 원리합계는 곱하기를 거듭해요. 원금을 $a$, 이자율을 $r$, 기간을 $n$년이라 하면 $a(1 + r)^n$이에요. $100$만 원을 연 $5\\%$ 복리로 $2$년 맡기면 $100 \\times 1.05 \\times 1.05 = 110.25$만 원이에요.\n\n첫해에는 둘이 같고, 해가 갈수록 벌어져요. 기간이 짧으면 차이가 크지 않다는 것도 함께 알아 두면 좋아요.",
+                "text": "복리는 이전에 붙은 이자까지 포함한 금액에 다음 이자를 계산하는 방식이에요. 원금 100만 원, 연 이자율 5%, 1년에 한 번 이자를 더하는 경우를 살펴볼게요.\n\n첫해 이자는 $100\\times0.05=5$만 원이고, 첫해 말 금액은 105만 원이에요. 둘째 해 이자는 $105\\times0.05=5.25$만 원이에요. 둘째 해 말 금액은 $105+5.25=110.25$만 원이에요.\n\n매년 이전 금액에 1.05를 곱한 것과 같아요. 원금을 a, 연 이자율을 소수로 나타낸 값을 r, 맡기는 기간을 n년이라고 하면 원리합계는 $a(1+r)^n$이에요. 이 수업에서는 이자율이 일정하고 중간에 입출금이나 세금이 없다고 가정해요.",
                 "definitions": []
               }
             },
             {
-              "blockId": "ncs-interest:explanation:drawing:v2",
+              "blockId": "ncs-interest:compound:v3:block:2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -1629,29 +1639,29 @@
           ]
         },
         {
-          "sectionId": "ncs-interest:care:v2",
+          "sectionId": "ncs-interest:care:v3",
           "role": "explanation",
-          "title": "자주 걸리는 것 둘",
+          "title": "기간의 단위와 구할 금액 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-interest:care:text:v2",
+              "blockId": "ncs-interest:care:v3:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "시험에서 자주 걸리는 것이 둘 있어요.\n\n하나는 기간의 단위예요. 연 이자율에 개월 수를 그대로 곱하면 안 돼요. 개월 수를 $12$로 나눠 연으로 바꿔야 해요.\n\n다른 하나는 묻는 것이 이자인지 원리합계인지예요. 「얼마를 받나」는 원리합계, 「이자는 얼마인가」는 원금을 뺀 값이에요.",
+                "text": "이자율의 기간과 돈을 맡기는 기간을 맞춰요. 연 이자율은 1년을 기준으로 해요. 단리로 6개월을 맡긴다면 기간은 $6/12=0.5$년이에요.\n\n또한 문제에서 이자만 묻는지, 원금과 이자를 합한 원리합계를 묻는지 확인해요. 원금 100만 원에 이자 5만 원이 붙었다면 이자는 5만 원이고 원리합계는 105만 원이에요.\n\n이 수업의 복리 문제는 1년에 한 번 이자를 원금에 더한다고 가정해요. 이자를 더하는 주기가 달라지면 그 주기에 맞는 조건을 확인해야 해요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-interest:example:v2",
+          "sectionId": "ncs-interest:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-interest:example:text:v2",
+              "blockId": "ncs-interest:example:v3:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
@@ -1663,60 +1673,62 @@
           ]
         },
         {
-          "sectionId": "ncs-interest:practice:v2",
+          "sectionId": "ncs-interest:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-interest:practice:problems:v2",
+              "blockId": "ncs-interest:practice:v3:block:1",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-interest:practice",
-                "problemSetVersionId": "ncs-interest:practice:v1",
+                "problemSetVersionId": "ncs-interest:practice:v2",
                 "problemVersionIds": [
-                  "ncs-interest:practice-1:v1",
-                  "ncs-interest:practice-2:v1",
-                  "ncs-interest:practice-3:v1"
+                  "ncs-interest:practice-1:v2",
+                  "ncs-interest:practice-2:v2",
+                  "ncs-interest:practice-3:v2",
+                  "ncs-interest:practice-4:v1"
                 ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-interest:check:v2",
+          "sectionId": "ncs-interest:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-interest:check:problems:v2",
+              "blockId": "ncs-interest:check:v3:block:1",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-interest:check",
-                "problemSetVersionId": "ncs-interest:check:v1",
+                "problemSetVersionId": "ncs-interest:check:v2",
                 "problemVersionIds": [
-                  "ncs-interest:check-1:v1",
-                  "ncs-interest:check-2:v1"
+                  "ncs-interest:check-1:v2",
+                  "ncs-interest:check-2:v2",
+                  "ncs-interest:check-3:v1"
                 ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-interest:summary:v2",
+          "sectionId": "ncs-interest:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-interest:summary:text:v2",
+              "blockId": "ncs-interest:summary:v3:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "단리는 원금에만 이자를 붙이니 이자가 「원금 × 이자율 × 기간」이에요.\n\n복리는 붙은 이자에도 이자를 붙이니 원리합계가 $a(1 + r)^n$이에요.\n\n첫해에는 둘이 같고 해가 갈수록 벌어져요.\n\n기간이 개월이면 $12$로 나눠 연으로 고치고, 묻는 것이 이자인지 원리합계인지 확인해요.\n\n이 수업의 개념은 이자와 원리합계예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "단리는 처음 원금에만 이자를 계산해요. 원금 100만 원을 연 5% 단리로 3년 맡기면 이자는 $100\\times0.05\\times3=15$만 원, 원리합계는 115만 원이에요.\n\n복리는 붙은 이자를 포함한 금액에 다음 이자를 계산해요. 1년에 한 번 연 5% 이자를 더한다면 해마다 이전 금액에 1.05를 곱해요.\n\n이자와 원리합계를 구별하고, 기간과 이자율의 단위를 확인해요. 단리 문제에서 개월 수는 12로 나누어 연 단위로 바꿔요.",
                 "definitions": [
                   {
                     "conceptKey": "interest",
@@ -1731,19 +1743,20 @@
       ],
       "review": {
         "problemSetId": "ncs-interest:review",
-        "problemSetVersionId": "ncs-interest:review:v1",
+        "problemSetVersionId": "ncs-interest:review:v2",
         "problemVersionIds": [
-          "ncs-interest:homework-1:v1",
-          "ncs-interest:homework-2:v1"
+          "ncs-interest:homework-1:v2",
+          "ncs-interest:homework-2:v2",
+          "ncs-interest:homework-3:v1"
         ]
       }
     },
     {
       "public": {
         "lessonKey": "ncs-exchange",
-        "versionId": "ncs-exchange:v3",
-        "title": "환율과 수수료: 어느 쪽으로 바꾸는가",
-        "summary": "환율로 두 돈을 오가는 방향을 구분하고, 수수료가 붙는 곳을 짚어요.",
+        "versionId": "ncs-exchange:v4",
+        "title": "환율과 수수료 계산하기",
+        "summary": "달러와 원화를 바꾸고, 문제의 조건에 맞게 수수료를 계산해요.",
         "estimatedMinutes": 10,
         "conceptKeys": [
           "exchange-rate"
@@ -1757,17 +1770,17 @@
       },
       "sections": [
         {
-          "sectionId": "ncs-exchange:meaning:v3",
+          "sectionId": "ncs-exchange:meaning:v4",
           "role": "explanation",
           "title": "어느 쪽으로 바꾸는가",
           "contentBlocks": [
             {
-              "blockId": "ncs-exchange:meaning:text:v3",
+              "blockId": "ncs-exchange:meaning:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "환율은 다른 나라 돈 하나가 우리 돈으로 얼마인지를 적은 값이에요. 「$1$달러 $=$ $1{,}300$원」이라면 환율이 $1{,}300$이에요.\n\n여기서 정할 것은 딱 하나, 어느 쪽으로 바꾸느냐예요.\n\n달러를 원으로 바꿀 때는 환율을 곱해요. $1{,}300$원짜리가 몇 개 있느냐를 묻는 것이니까요. $20$달러면 $20 \\times 1{,}300 = 26{,}000$원이에요.\n\n원을 달러로 바꿀 때는 나눠요. 가진 돈 안에 $1{,}300$원이 몇 번 들어가느냐를 묻는 것이거든요. $65{,}000$원이면 $65{,}000 \\div 1{,}300 = 50$달러예요.\n\n곱할지 나눌지 헷갈릴 때는 크기로 가늠해 보세요. 이 예에서는 $1$달러에 $1{,}300$원이므로, 달러로 나타낸 수는 원으로 나타낸 수의 $\\frac{1}{1{,}300}$이에요. 답이 원 금액보다 크게 나왔다면 뒤집힌 거예요.",
+                "text": "환율은 서로 다른 나라의 돈을 바꾸는 비율이에요. 이 수업에서는 ‘1달러를 바꾸는 데 필요한 원화 금액’으로 환율을 나타내요. 예를 들어 1달러=1,300원이에요.\n\n20달러를 원화로 바꾸면 1,300원짜리 20개에 해당하므로 $20\\times1{,}300=26{,}000$원이에요.\n\n65,000원을 달러로 바꾸면 1,300원씩 몇 개가 되는지 구하므로 $65{,}000\\div1{,}300=50$달러예요. 구할 돈의 단위를 먼저 적으면 곱셈과 나눗셈을 선택하는 데 도움이 돼요.",
                 "definitions": [
                   {
                     "conceptKey": "exchange-rate",
@@ -1778,7 +1791,7 @@
               }
             },
             {
-              "blockId": "ncs-exchange:explanation:drawing:v3",
+              "blockId": "ncs-exchange:meaning:v4:block:2",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
@@ -2003,94 +2016,94 @@
           ]
         },
         {
-          "sectionId": "ncs-exchange:fee:v3",
+          "sectionId": "ncs-exchange:fee:v4",
           "role": "explanation",
           "title": "수수료와 환율의 오르내림",
           "contentBlocks": [
             {
-              "blockId": "ncs-exchange:fee:text:v3",
+              "blockId": "ncs-exchange:fee:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "환전에는 수수료가 붙는 일이 많아요. 수수료는 대개 바꾸는 금액에 대한 비율로 매겨요. $1\\%$라면 $26{,}000$원을 바꿀 때 $260$원을 더 내는 식이에요.\n\n수수료를 「더 내는지」 「받을 돈에서 빼는지」는 문제가 정해요. 문제에 적힌 수수료의 기준 금액과 지급 방식을 확인해 계산해요.\n\n환율이 오르면 같은 달러를 사는 데 원이 더 들어요. 우리 돈의 값이 내려갔다는 뜻이고요.",
+                "text": "수수료는 환전 서비스를 이용할 때 드는 비용이에요. 이 수업에서는 문제에 적힌 금액에 수수료율을 곱해 계산해요.\n\n환전 금액이 26,000원이고 그 금액의 1%를 별도로 낸다면 수수료는 $26{,}000\\times0.01=260$원이에요. 총 지급액은 $26{,}000+260=26{,}260$원이에요. 받을 금액에서 수수료를 뺀다는 조건이면 계산 방향도 달라져요.\n\n1달러당 환율이 1,300원에서 1,400원으로 오르면 같은 1달러를 사는 데 100원이 더 필요해요. 환율의 방향과 수수료 계산 기준을 문제에서 확인해요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-exchange:example:v3",
+          "sectionId": "ncs-exchange:example:v4",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-exchange:example:text:v3",
+              "blockId": "ncs-exchange:example:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "환율이 $1$달러에 $1{,}300$원이에요. $20$달러는 우리 돈으로 얼마일까요.\n\n달러를 원으로 바꾸니 곱해요. $20 \\times 1{,}300 = 26{,}000$원이에요.\n\n거꾸로 $65{,}000$원은 몇 달러일까요. 원을 달러로 바꾸니 나눠요. $65{,}000 \\div 1{,}300 = 50$달러예요.\n\n수수료도 얹어 볼게요. $26{,}000$원어치를 살 때 수수료가 $1\\%$라면 $26{,}000 \\times 0.01 = 260$원을 더 내니 모두 $26{,}260$원이에요.\n\n환율이 바뀌면 어떻게 될까요. $1{,}300$원에서 $1{,}400$원으로 올랐다면 같은 $20$달러를 사는 데 $28{,}000$원이 들어요. $2{,}000$원을 더 내는 것이죠.\n\n환율이 오르면 달러가 비싸진 것이고, 우리 돈의 값은 그만큼 내려간 거예요. 수출하는 쪽에는 반가운 일이고 수입하는 쪽에는 부담이에요.",
+                "text": "1달러=1,300원일 때 20달러를 사려면 원화가 얼마 필요할까요? 수수료가 없으면 $20\\times1{,}300=26{,}000$원이에요.\n\n여기에 환전 금액의 1%를 수수료로 별도 지급한다면 수수료는 $26{,}000\\times0.01=260$원이에요. 따라서 모두 26,260원을 내요.\n\n환율이 1달러=1,400원으로 바뀌고 수수료가 없다면 20달러에 $20\\times1{,}400=28{,}000$원이 필요해요. 같은 달러 금액을 사는 데 $28{,}000-26{,}000=2{,}000$원이 더 들어요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-exchange:practice:v3",
+          "sectionId": "ncs-exchange:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-exchange:practice:problems:v3",
+              "blockId": "ncs-exchange:practice:v4:block:1",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-exchange:practice",
-                "problemSetVersionId": "ncs-exchange:practice:v1",
+                "problemSetVersionId": "ncs-exchange:practice:v2",
                 "problemVersionIds": [
-                  "ncs-exchange:practice-1:v1",
-                  "ncs-exchange:practice-2:v1",
-                  "ncs-exchange:practice-3:v1"
+                  "ncs-exchange:practice-1:v2",
+                  "ncs-exchange:practice-2:v2",
+                  "ncs-exchange:practice-3:v2"
                 ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-exchange:check:v3",
+          "sectionId": "ncs-exchange:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "ncs-exchange:check:problems:v3",
+              "blockId": "ncs-exchange:check:v4:block:1",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
               "payload": {
                 "problemSetId": "ncs-exchange:check",
-                "problemSetVersionId": "ncs-exchange:check:v1",
+                "problemSetVersionId": "ncs-exchange:check:v2",
                 "problemVersionIds": [
-                  "ncs-exchange:check-1:v1",
-                  "ncs-exchange:check-2:v1"
+                  "ncs-exchange:check-1:v2",
+                  "ncs-exchange:check-2:v2"
                 ]
               }
             }
           ]
         },
         {
-          "sectionId": "ncs-exchange:summary:v3",
+          "sectionId": "ncs-exchange:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "ncs-exchange:summary:text:v3",
+              "blockId": "ncs-exchange:summary:v4:block:1",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "달러를 원으로 바꿀 때는 환율을 곱하고, 원을 달러로 바꿀 때는 나눠요.\n\n이 수업의 환율은 $1$달러에 $1{,}300$원이므로 달러 수는 원 금액을 $1{,}300$으로 나눈 값이에요. 크기로 한 번 가늠해 보면 뒤집힌 것을 잡을 수 있어요.\n\n수수료는 대개 바꾸는 금액에 대한 비율이에요.\n\n환율이 오르면 같은 달러를 사는 데 원이 더 들고, 우리 돈의 값은 내려간 거예요.\n\n이 수업의 개념은 환율이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "이 수업처럼 환율을 1달러당 원화 금액으로 주면, 달러를 원으로 바꿀 때는 곱하고 원을 달러로 바꿀 때는 나눠요.\n\n수수료는 문제에서 정한 기준 금액에 수수료율을 곱해요. 별도로 내는지, 받을 금액에서 빼는지도 확인해요. 환율과 수수료 조건을 계산 단계마다 구별해요.",
                 "definitions": [
                   {
                     "conceptKey": "exchange-rate",
@@ -2105,10 +2118,10 @@
       ],
       "review": {
         "problemSetId": "ncs-exchange:review",
-        "problemSetVersionId": "ncs-exchange:review:v1",
+        "problemSetVersionId": "ncs-exchange:review:v2",
         "problemVersionIds": [
-          "ncs-exchange:homework-1:v1",
-          "ncs-exchange:homework-2:v1"
+          "ncs-exchange:homework-1:v2",
+          "ncs-exchange:homework-2:v2"
         ]
       }
     }
@@ -2155,7 +2168,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-price:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "더할 이익은 $12{,}000\\times0.25=3{,}000$원이에요. 정가는 $12{,}000+3{,}000=15{,}000$원이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "3000",
@@ -2202,7 +2225,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-price:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "할인액은 $20{,}000\\times0.3=6{,}000$원이에요. 판매가는 $20{,}000-6{,}000=14{,}000$원이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "6000",
@@ -2245,7 +2278,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-price:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이익 2,000원을 기준인 원가 8,000원으로 나눠요. $2{,}000\\div8{,}000\\times100=25$%이므로 25를 입력해요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "20",
@@ -2297,7 +2340,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-price:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가는 $30{,}000\\times1.2=36{,}000$원이에요. 할인액은 $36{,}000\\times0.1=3{,}600$원이에요. 판매가는 $36{,}000-3{,}600=32{,}400$원이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "33000",
@@ -2431,7 +2484,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-price:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$15{,}000\\times0.4=6{,}000$원을 더하므로 정가는 $15{,}000+6{,}000=21{,}000$원이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "6000",
@@ -2474,7 +2537,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-price:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$25{,}000\\times0.8=20{,}000$원이에요. 또는 할인액 5,000원을 정가에서 빼도 같아요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "5000",
@@ -2525,7 +2598,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-concentration:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금 30g을 소금물 200g으로 나누고 100을 곱해요. $30\\div200\\times100=15$%예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-concentration:practice-2:v1",
@@ -2562,7 +2645,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-concentration:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$250\\times0.08=20$g이에요. 소금물 전체 중 8%가 소금이므로 답은 20이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "2000",
@@ -2605,7 +2698,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-concentration:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금은 $300\\times0.05=15$g이에요. 농도 3%가 되려면 전체가 $15\\div0.03=500$g이어야 해요. 이미 300g이 있으므로 물은 $500-300=200$g 더 넣어요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2650,7 +2753,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-concentration:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금은 $200\\times0.1=20$g과 $100\\times0.04=4$g으로 합계 24g이에요. 전체는 300g이므로 농도는 $24\\div300\\times100=8$%예요. 양이 다르므로 농도 두 개의 단순 평균을 내지 않아요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "7",
@@ -2729,7 +2842,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-concentration:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금은 $150\\times0.06=9$g이에요. 증발 뒤 소금물은 $150-50=100$g이므로 농도는 $9\\div100\\times100=9$%예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2774,7 +2897,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-concentration:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$24\\div300=0.08$이므로 백분율로 8%예요. 답은 8이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-concentration:homework-2:v1",
@@ -2811,7 +2944,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-concentration:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금의 양은 $400\\times0.12=48$g이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "4800",
@@ -2862,7 +3005,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-speed:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$180\\div3=60$이므로 평균 속력은 시속 60km예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-speed:practice-2:v1",
@@ -2899,7 +3052,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-speed:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$30\\div60=0.5$시간이므로 이동 시간은 2.5시간이에요. 거리는 $80\\times2.5=200$km예요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "184",
@@ -2943,7 +3106,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-speed:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10\\div4=2.5$시간이에요. 기약분수로 $5/2$시간이며 두 표현은 같은 값이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2988,7 +3161,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-speed:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "2시간 30분은 2.5시간이에요. 거리 x에 대해 $x/4+x/6=2.5$예요. 양변에 12를 곱하면 $3x+2x=30$이므로 $x=6$km예요. 확인하면 $6/4+6/6=1.5+1=2.5$시간이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-speed:check-2:v1",
@@ -3061,7 +3244,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-speed:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "72km는 72,000m이고 1시간은 3,600초예요. $72{,}000\\div3{,}600=20$이므로 초속 20m예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -3106,7 +3299,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-speed:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$240\\div4=60$이므로 시속 60km예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-speed:homework-2:v1",
@@ -3143,7 +3346,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-speed:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$90\\div60=1.5$시간이에요. 거리는 $60\\times1.5=90$km예요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "5400",
@@ -4416,7 +4629,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-interest:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1년 이자는 $100\\times0.05=5$만 원이에요. 만 원 단위로 묻기 때문에 5를 입력해요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-interest:practice-2:v1",
@@ -4453,7 +4676,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-interest:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1년 이자는 $100\\times0.05=5$만 원이에요. 3년간 이자는 $5\\times3=15$만 원이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "5",
@@ -4496,7 +4729,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-interest:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "3년 단리 이자는 $100\\times0.05\\times3=15$만 원이에요. 원리합계는 $100+15=115$만 원이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "15",
@@ -4547,7 +4790,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-interest:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "단리 이자는 $200\\times0.04\\times2=16$만 원이에요. 원금을 더한 216만 원은 원리합계이므로 이 문제의 답과 달라요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "8",
@@ -4641,7 +4894,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-interest:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이자는 $500\\times0.03\\times2=30$만 원이에요. 원리합계는 $500+30=530$만 원이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "30",
@@ -4720,7 +4983,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-interest:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "단리는 처음 원금에만, 복리는 앞서 붙은 이자를 포함한 금액에 이자를 계산해요. 같은 원금과 양의 연 이자율로 연 1회 이자를 더하면 첫해는 같고 둘째 해부터 복리 금액이 더 커져요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -4765,7 +5038,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-exchange:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$20\\times1{,}300=26{,}000$원이에요. 달러를 원으로 바꾸므로 곱해요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-exchange:practice-2:v1",
@@ -4802,7 +5085,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-exchange:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$65{,}000\\div1{,}300=50$달러예요. 확인하면 $50\\times1{,}300=65{,}000$원이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-exchange:practice-3:v1",
@@ -4839,7 +5132,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-exchange:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$26{,}000\\times0.01=260$원이 수수료예요. 총 지급액이 아니라 수수료만 묻고 있어요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -4884,7 +5187,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-exchange:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$20\\times1{,}400=28{,}000$원이에요. 이전 환율을 사용하지 않도록 조건을 확인해요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-exchange:check-2:v1",
@@ -5002,7 +5315,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-exchange:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$36{,}000\\div1{,}200=30$달러예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-exchange:homework-2:v1",
@@ -5039,7 +5362,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-exchange:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$8\\times1{,}250=10{,}000$원이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -5084,7 +5417,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "더할 금액은 $12{,}000\\times0.2=2{,}400$원이에요. 정가는 $12{,}000+2{,}400=14{,}400$원이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-applied:drill2-2:v1",
@@ -5158,7 +5501,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이익은 $20{,}000\\times0.15=3{,}000$원이에요. 정가는 $20{,}000+3{,}000=23{,}000$원이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-applied:drill2-4:v1",
@@ -5195,7 +5548,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-4:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "판매가는 정가의 85%예요. $20{,}000\\times0.85=17{,}000$원이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-applied:drill2-5:v1",
@@ -5232,7 +5595,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-5:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "할인액은 $50{,}000-40{,}000=10{,}000$원이에요. 할인율은 $10{,}000\\div50{,}000\\times100=20$%예요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "25",
@@ -5275,7 +5648,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-6:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "할인액은 3,000원이에요. 판매가는 $30{,}000-3{,}000=27{,}000$원이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-applied:drill2-7:v1",
@@ -5312,7 +5695,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-7:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금의 양은 $200\\times0.1=20$g이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "2000",
@@ -5355,7 +5748,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-8:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도는 $30\\div300\\times100=10$%예요. 소금물이 아닌 물의 양을 분모로 쓰지 않아요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-applied:drill2-9:v1",
@@ -5392,7 +5795,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-9:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금의 양은 $250\\times0.08=20$g이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "2000",
@@ -5435,7 +5848,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-10:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "거리는 $60\\times3=180$km예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-applied:drill2-11:v1",
@@ -5472,7 +5895,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-11:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$240\\div4=60$이므로 시속 60km예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-applied:drill2-12:v1",
@@ -5509,7 +5942,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-12:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$180\\div80=2.25$시간이에요. 분으로 바꾸면 $2.25\\times60=135$분이에요. 0.25시간은 25분이 아니라 15분이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-applied:drill2-13:v1",
@@ -5676,7 +6119,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-16:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1년 이자는 $100\\times0.05=5$만 원이에요. 3년 이자는 15만 원이므로 원리합계는 $100+15=115$만 원이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "15",
@@ -5719,7 +6172,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-17:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$300\\times0.02=6$만 원씩 2년이므로 이자는 $6\\times2=12$만 원이에요. 원리합계를 묻지 않았으므로 원금은 더하지 않아요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "6",
@@ -5805,7 +6268,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-19:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$30\\times1{,}300=39{,}000$원이에요. 구할 단위가 원이므로 1달러당 원화 금액을 곱해요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "ncs-applied:drill2-20:v1",
@@ -5842,7 +6315,3617 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-20:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$60{,}000\\div1{,}200=50$달러예요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-price:practice",
+      "courseKey": "ncs-applied",
+      "name": "원가와 정가 연습",
+      "versionId": "ncs-price:practice:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-price:practice-1:v2",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-price:practice-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가가 $12{,}000$원인 물건에 원가의 $25\\%$를 이익으로 붙여 정가를 정했어요. 정가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-price:practice-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가의 25%를 구해 원가에 더해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-price:practice-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "더할 이익은 $12{,}000\\times0.25=3{,}000$원이에요. 정가는 $12{,}000+3{,}000=15{,}000$원이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "3000",
+              "misconception": "part-instead-of-total"
+            },
+            {
+              "answer": "300000",
+              "misconception": "percent-as-count"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-price:practice-2:v2",
+          "conceptKeys": [
+            "discount-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-price:practice-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가가 $20{,}000$원인 옷을 $30\\%$ 할인해서 팔아요. 판매가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 14000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-price:practice-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가에서 할인한 금액을 빼요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-price:practice-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "할인액은 $20{,}000\\times0.3=6{,}000$원이에요. 판매가는 $20{,}000-6{,}000=14{,}000$원이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "6000",
+              "misconception": "part-instead-of-total"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-price:practice-3:v2",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-price:practice-3:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가가 $8{,}000$원인 물건을 팔아 $2{,}000$원이 남았어요. 이익은 원가의 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 25
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-price:practice-3:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이익을 원가로 나눈 뒤 백분율로 바꿔요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-price:practice-3:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이익 2,000원을 기준인 원가 8,000원으로 나눠요. $2{,}000\\div8{,}000\\times100=25$%이므로 25를 입력해요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "20",
+              "misconception": "profit-over-price"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-price:check",
+      "courseKey": "ncs-applied",
+      "name": "원가와 정가 확인",
+      "versionId": "ncs-price:check:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-price:check-1:v2",
+          "conceptKeys": [
+            "cost-price",
+            "discount-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-price:check-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가 $30{,}000$원인 물건에 $20\\%$의 이익을 붙여 정가를 정한 뒤, 그 정가에서 다시 $10\\%$를 깎아 팔았어요. 판매가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 32400
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-price:check-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가를 먼저 구하고, 그 정가에서 10%를 할인해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-price:check-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가는 $30{,}000\\times1.2=36{,}000$원이에요. 할인액은 $36{,}000\\times0.1=3{,}600$원이에요. 판매가는 $36{,}000-3{,}600=32{,}400$원이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "33000",
+              "misconception": "combine-percents-additively"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-price:check-2:v2",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-price:check-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가가 10,000원인 물건을 13,000원에 팔았어요. 다른 비용은 없을 때 원가를 기준으로 한 이익률은 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$30\\%$"
+              },
+              {
+                "id": "b",
+                "text": "$23\\%$"
+              },
+              {
+                "id": "c",
+                "text": "$13\\%$"
+              },
+              {
+                "id": "d",
+                "text": "$3\\%$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$30\\%$"
+              },
+              {
+                "id": "b",
+                "text": "$23\\%$"
+              },
+              {
+                "id": "c",
+                "text": "$13\\%$"
+              },
+              {
+                "id": "d",
+                "text": "$3\\%$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-price:check-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "판매가에서 원가를 빼서 이익을 구해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-price:check-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이익은 $13{,}000-10{,}000=3{,}000$원이에요. 원가 기준 이익률은 $3{,}000\\div10{,}000\\times100=30$%예요. 판매가를 분모로 쓰지 않아요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "b",
+              "misconception": "profit-over-price"
+            },
+            {
+              "answer": "d",
+              "misconception": "percent-place-value"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-price:review",
+      "courseKey": "ncs-applied",
+      "name": "원가와 정가 복습",
+      "versionId": "ncs-price:review:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-price:homework-1:v2",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-price:homework-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가 $15{,}000$원에 $40\\%$의 이익을 붙인 정가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 21000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-price:homework-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가의 40%를 원가에 더해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-price:homework-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$15{,}000\\times0.4=6{,}000$원을 더하므로 정가는 $15{,}000+6{,}000=21{,}000$원이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "6000",
+              "misconception": "part-instead-of-total"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-price:homework-2:v2",
+          "conceptKeys": [
+            "discount-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-price:homework-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가 $25{,}000$원인 가방을 $20\\%$ 할인하면 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-price:homework-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "20%를 할인하면 정가의 80%를 내요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-price:homework-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$25{,}000\\times0.8=20{,}000$원이에요. 또는 할인액 5,000원을 정가에서 빼도 같아요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "5000",
+              "misconception": "part-instead-of-total"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-concentration:practice",
+      "courseKey": "ncs-applied",
+      "name": "농도 연습",
+      "versionId": "ncs-concentration:practice:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-concentration:practice-1:v2",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-concentration:practice-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금 $30$g을 물에 녹여 소금물 $200$g을 만들었어요. 이 소금물의 농도는 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-concentration:practice-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도의 기준은 물만의 양이 아니라 소금물 전체예요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-concentration:practice-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금 30g을 소금물 200g으로 나누고 100을 곱해요. $30\\div200\\times100=15$%예요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-concentration:practice-2:v2",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-concentration:practice-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도가 $8\\%$인 소금물 $250$g에 녹아 있는 소금은 몇 g인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-concentration:practice-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "8%를 소수로 바꾸어 소금물 양에 곱해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-concentration:practice-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$250\\times0.08=20$g이에요. 소금물 전체 중 8%가 소금이므로 답은 20이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "2000",
+              "misconception": "percent-as-count"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-concentration:practice-3:v2",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-concentration:practice-3:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도가 $5\\%$인 소금물 $300$g에 물을 더 넣어 농도를 $3\\%$로 낮추려고 해요. 물을 몇 g 더 넣어야 하나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 200
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-concentration:practice-3:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금의 양을 먼저 구한 뒤, 농도 3%일 때의 전체 양을 구해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-concentration:practice-3:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금은 $300\\times0.05=15$g이에요. 농도 3%가 되려면 전체가 $15\\div0.03=500$g이어야 해요. 이미 300g이 있으므로 물은 $500-300=200$g 더 넣어요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-concentration:check",
+      "courseKey": "ncs-applied",
+      "name": "농도 확인",
+      "versionId": "ncs-concentration:check:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-concentration:check-1:v2",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-concentration:check-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도 $10\\%$인 소금물 $200$g과 농도 $4\\%$인 소금물 $100$g을 섞었어요. 섞은 소금물의 농도는 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-concentration:check-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "각 소금물의 소금 양을 더하고, 전체 소금물 양으로 나눠요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-concentration:check-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금은 $200\\times0.1=20$g과 $100\\times0.04=4$g으로 합계 24g이에요. 전체는 300g이므로 농도는 $24\\div300\\times100=8$%예요. 양이 다르므로 농도 두 개의 단순 평균을 내지 않아요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "7",
+              "misconception": "average-of-rates"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-concentration:check-2:v2",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-concentration:check-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도 $6\\%$인 소금물 $150$g을 끓여 물 $50$g을 증발시켰어요. 남은 소금물의 농도는 얼마인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$9\\%$"
+              },
+              {
+                "id": "b",
+                "text": "$6\\%$"
+              },
+              {
+                "id": "c",
+                "text": "$12\\%$"
+              },
+              {
+                "id": "d",
+                "text": "$4\\%$"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "$9\\%$"
+              },
+              {
+                "id": "b",
+                "text": "$6\\%$"
+              },
+              {
+                "id": "c",
+                "text": "$12\\%$"
+              },
+              {
+                "id": "d",
+                "text": "$4\\%$"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-concentration:check-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "물만 증발하므로 소금 양은 변하지 않아요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-concentration:check-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금은 $150\\times0.06=9$g이에요. 증발 뒤 소금물은 $150-50=100$g이므로 농도는 $9\\div100\\times100=9$%예요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-concentration:review",
+      "courseKey": "ncs-applied",
+      "name": "농도 복습",
+      "versionId": "ncs-concentration:review:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-concentration:homework-1:v2",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-concentration:homework-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금 $24$g이 녹아 있는 소금물 $300$g의 농도는 몇 $\\%$인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 8
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-concentration:homework-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금 양을 소금물 전체 양으로 나눠요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-concentration:homework-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$24\\div300=0.08$이므로 백분율로 8%예요. 답은 8이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-concentration:homework-2:v2",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-concentration:homework-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도 $12\\%$인 소금물 $400$g에 녹아 있는 소금은 몇 g인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 48
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-concentration:homework-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "12%를 0.12로 바꾸어 계산해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-concentration:homework-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금의 양은 $400\\times0.12=48$g이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "4800",
+              "misconception": "percent-as-count"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-speed:practice",
+      "courseKey": "ncs-applied",
+      "name": "속력 연습",
+      "versionId": "ncs-speed:practice:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-speed:practice-1:v2",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-speed:practice-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$180$km를 $3$시간에 달린 자동차의 속력은 시속 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-speed:practice-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 거리를 전체 시간으로 나눠요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-speed:practice-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$180\\div3=60$이므로 평균 속력은 시속 60km예요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-speed:practice-2:v2",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-speed:practice-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시속 $80$km로 $2$시간 $30$분 동안 달린 거리는 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 200
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-speed:practice-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "30분을 시간으로 바꾼 뒤 전체 시간에 시속을 곱해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-speed:practice-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$30\\div60=0.5$시간이므로 이동 시간은 2.5시간이에요. 거리는 $80\\times2.5=200$km예요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "184",
+              "misconception": "minutes-as-decimal"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-speed:practice-3:v2",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-speed:practice-3:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시속 $4$km로 걷는 사람이 $10$km를 가려면 몇 시간이 걸리나요? 분수나 소수로 써도 좋아요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 5,
+            "denominator": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-speed:practice-3:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시간은 거리를 속력으로 나누어 구해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-speed:practice-3:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10\\div4=2.5$시간이에요. 기약분수로 $5/2$시간이며 두 표현은 같은 값이에요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-speed:check",
+      "courseKey": "ncs-applied",
+      "name": "속력 확인",
+      "versionId": "ncs-speed:check:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-speed:check-1:v2",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-speed:check-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "집에서 학교까지 갈 때는 시속 $4$km, 올 때는 시속 $6$km로 같은 길을 걸었더니 왕복에 $2$시간 $30$분이 걸렸어요. 집에서 학교까지의 거리는 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-speed:check-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "편도 거리를 x로 두고, 갈 때와 올 때 걸린 시간을 더해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-speed:check-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "2시간 30분은 2.5시간이에요. 거리 x에 대해 $x/4+x/6=2.5$예요. 양변에 12를 곱하면 $3x+2x=30$이므로 $x=6$km예요. 확인하면 $6/4+6/6=1.5+1=2.5$시간이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-speed:check-2:v2",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-speed:check-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시속 $72$km는 초속 몇 m인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "초속 $20$m"
+              },
+              {
+                "id": "b",
+                "text": "초속 $12$m"
+              },
+              {
+                "id": "c",
+                "text": "초속 $200$m"
+              },
+              {
+                "id": "d",
+                "text": "초속 $7.2$m"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "초속 $20$m"
+              },
+              {
+                "id": "b",
+                "text": "초속 $12$m"
+              },
+              {
+                "id": "c",
+                "text": "초속 $200$m"
+              },
+              {
+                "id": "d",
+                "text": "초속 $7.2$m"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-speed:check-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "km를 m로, 1시간을 초로 바꿔요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-speed:check-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "72km는 72,000m이고 1시간은 3,600초예요. $72{,}000\\div3{,}600=20$이므로 초속 20m예요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-speed:review",
+      "courseKey": "ncs-applied",
+      "name": "속력 복습",
+      "versionId": "ncs-speed:review:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-speed:homework-1:v2",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-speed:homework-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$240$km를 $4$시간에 달린 기차의 속력은 시속 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-speed:homework-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "거리를 시간으로 나누어 1시간당 거리를 구해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-speed:homework-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$240\\div4=60$이므로 시속 60km예요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-speed:homework-2:v2",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-speed:homework-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시속 $60$km로 $90$분 동안 달린 거리는 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 90
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-speed:homework-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "90분은 몇 시간인지 먼저 구해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-speed:homework-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$90\\div60=1.5$시간이에요. 거리는 $60\\times1.5=90$km예요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "5400",
+              "misconception": "minutes-as-hours"
+            },
+            {
+              "answer": "78",
+              "misconception": "minutes-as-decimal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-applied:drill",
+      "courseKey": "ncs-applied",
+      "name": "NCS 응용계산 모아 풀기",
+      "versionId": "ncs-applied:drill:v3",
+      "problems": [
+        {
+          "problemVersionId": "ncs-applied:drill2-1:v2",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가가 $12{,}000$원인 물건에 $20\\%$ 이익을 붙인 정가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 14400
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가에 원가의 20%를 더해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "더할 금액은 $12{,}000\\times0.2=2{,}400$원이에요. 정가는 $12{,}000+2{,}400=14{,}400$원이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-2:v2",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가가 8,000원인 물건을 정가 10,000원에 판매했어요. 다른 비용은 없을 때 이익은 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "실제 판매가에서 원가를 빼요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가 10,000원에 판매했으므로 이익은 $10{,}000-8{,}000=2{,}000$원이에요. 다른 비용은 없다는 조건에서 계산해요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-3:v2",
+          "conceptKeys": [
+            "cost-price"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-3:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가가 $20{,}000$원인 물건에 $15\\%$ 이익을 붙인 정가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 23000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-3:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원가의 15%를 구해 원가에 더해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-3:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이익은 $20{,}000\\times0.15=3{,}000$원이에요. 정가는 $20{,}000+3{,}000=23{,}000$원이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-4:v2",
+          "conceptKeys": [
+            "discount-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-4:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가가 $20{,}000$원인 물건을 $15\\%$ 할인하면 판매가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 17000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-4:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "15% 할인 뒤 남은 가격 비율을 이용해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-4:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "판매가는 정가의 85%예요. $20{,}000\\times0.85=17{,}000$원이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-5:v2",
+          "conceptKeys": [
+            "discount-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-5:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가가 $50{,}000$원인 물건을 $40{,}000$원에 팔았다면 할인율은 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-5:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "할인액을 정가로 나누어 백분율로 나타내요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-5:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "할인액은 $50{,}000-40{,}000=10{,}000$원이에요. 할인율은 $10{,}000\\div50{,}000\\times100=20$%예요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "25",
+              "misconception": "discount-on-selling-price"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-6:v2",
+          "conceptKeys": [
+            "discount-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-6:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가가 $30{,}000$원인 물건을 $10\\%$ 할인하면 판매가는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 27000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-6:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정가의 10%를 빼거나, 정가의 90%를 구해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-6:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "할인액은 3,000원이에요. 판매가는 $30{,}000-3{,}000=27{,}000$원이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-7:v2",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-7:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$10\\%$ 소금물 $200$g에 들어 있는 소금은 몇 g인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-7:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금물 양에 농도를 소수로 바꿔 곱해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-7:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금의 양은 $200\\times0.1=20$g이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "2000",
+              "misconception": "percent-as-count"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-8:v2",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-8:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금 $30$g이 녹아 있는 소금물 $300$g의 농도는 몇 %인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-8:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금 양을 소금물 전체 양으로 나눠요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-8:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "농도는 $30\\div300\\times100=10$%예요. 소금물이 아닌 물의 양을 분모로 쓰지 않아요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-9:v2",
+          "conceptKeys": [
+            "concentration"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-9:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$8\\%$ 소금물 $250$g에 들어 있는 소금은 몇 g인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 20
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-9:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "8%는 소수로 0.08이에요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-9:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "소금의 양은 $250\\times0.08=20$g이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "2000",
+              "misconception": "percent-as-count"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-10:v2",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-10:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시속 $60$km로 $3$시간 달리면 몇 km를 가나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 180
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-10:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1시간에 가는 거리를 시간 수만큼 곱해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-10:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "거리는 $60\\times3=180$km예요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-11:v2",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-11:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$240$km를 $4$시간에 갔다면 시속은 몇 km인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 60
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-11:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이동 거리에서 1시간당 거리를 구해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-11:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$240\\div4=60$이므로 시속 60km예요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-12:v2",
+          "conceptKeys": [
+            "speed"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-12:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "시속 $80$km로 $180$km를 가려면 몇 분이 걸리나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 135
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-12:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "거리÷속력으로 시간을 구한 뒤 분으로 바꿔요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-12:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$180\\div80=2.25$시간이에요. 분으로 바꾸면 $2.25\\times60=135$분이에요. 0.25시간은 25분이 아니라 15분이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-13:v2",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-13:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A$는 혼자 $6$일, $B$는 혼자 $12$일이 걸리는 일을 둘이 함께 하면 며칠 걸리나요?\n\n매일 일정한 양을 처리하며, 함께 일해도 각자의 작업 속도는 같다고 가정해요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-13:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 사람이 하루에 처리하는 비율을 더해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-13:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "A는 하루에 전체의 1/6, B는 1/12을 처리해요. 합은 $1/6+1/12=1/4$이므로 $1\\div(1/4)=4$일이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "18",
+              "misconception": "add-days-together"
+            },
+            {
+              "answer": "9",
+              "misconception": "add-days-together"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-14:v2",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-14:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A$는 혼자 $10$일, $B$는 혼자 $15$일이 걸리는 일을 둘이 함께 하면 며칠 걸리나요?\n\n매일 일정한 양을 처리하며, 함께 일해도 각자의 작업 속도는 같다고 가정해요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-14:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체를 1로 두고 하루 작업량의 합을 구해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-14:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "하루 작업량은 $1/10+1/15=3/30+2/30=1/6$이에요. 따라서 $1\\div(1/6)=6$일이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "25",
+              "misconception": "add-days-together"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-15:v2",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-15:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "혼자 하면 $9$일이 걸리는 일의 하루 작업량을 기약분수로 써 주세요.\n\n매일 일정한 양을 처리하며, 함께 일해도 각자의 작업 속도는 같다고 가정해요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 9,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-15:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 작업 1을 9일에 똑같이 나누어 처리해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-15:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "하루 작업량은 $1\\div9=1/9$이에요. 분자와 분모의 공약수가 1뿐이므로 이미 기약분수예요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-16:v2",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-16:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금 $100$만 원을 연 $5\\%$ 단리로 $3$년 맡길 때 원리합계는 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 115
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-16:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "단리 이자를 구한 뒤 원금에 더해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-16:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1년 이자는 $100\\times0.05=5$만 원이에요. 3년 이자는 15만 원이므로 원리합계는 $100+15=115$만 원이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "15",
+              "misconception": "part-instead-of-total"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-17:v2",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-17:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금 $300$만 원을 연 $2\\%$ 단리로 $2$년 맡길 때 이자는 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 12
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-17:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1년 이자를 구하고 2년치로 계산해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-17:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$300\\times0.02=6$만 원씩 2년이므로 이자는 $6\\times2=12$만 원이에요. 원리합계를 묻지 않았으므로 원금은 더하지 않아요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "6",
+              "misconception": "single-period-interest"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-18:v2",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-18:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "연 8% 단리로 3개월 동안 돈을 맡겨요. 이 기간에 받는 이자는 원금의 몇 %인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 2
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-18:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "3개월을 1년의 몇 분의 몇인지 나타내요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-18:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "3개월은 $3/12$년이에요. 이 기간의 이자는 원금의 $8\\times3/12=2$%예요. 연 이자율 자체가 바뀐 것은 아니에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "8",
+              "misconception": "annual-rate-for-period"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-19:v2",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-19:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$달러가 $1{,}300$원일 때 $30$달러는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 39000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-19:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1달러당 원화 금액을 달러 수만큼 곱해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-19:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$30\\times1{,}300=39{,}000$원이에요. 구할 단위가 원이므로 1달러당 원화 금액을 곱해요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-applied:drill2-20:v2",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-applied:drill2-20:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$달러가 $1{,}200$원일 때 $60{,}000$원은 몇 달러인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 50
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-applied:drill2-20:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원화 금액에 1,200원이 몇 번 들어가는지 구해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-applied:drill2-20:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$60{,}000\\div1{,}200=50$달러예요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-work:practice",
+      "courseKey": "ncs-applied",
+      "name": "일률 연습",
+      "versionId": "ncs-work:practice:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-work:practice-1:v2",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-work:practice-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "혼자 하면 $6$일이 걸리는 일의 하루 작업량을 기약분수로 써 주세요.\n\n매일 일정한 양을 처리하며, 함께 일해도 각자의 작업 속도는 같다고 가정해요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 1,
+            "denominator": 6,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-work:practice-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 일 1을 6일로 나누어 생각해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-work:practice-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "하루에 처리하는 비율은 $1\\div6=1/6$이에요. 전체 작업의 6분의 1을 매일 끝내면 6일 만에 마쳐요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-work:practice-2:v2",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-work:practice-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A$는 혼자 $6$일, $B$는 혼자 $12$일이 걸리는 일을 둘이 함께 하면 며칠 걸리나요?\n\n매일 일정한 양을 처리하며, 함께 일해도 각자의 작업 속도는 같다고 가정해요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-work:practice-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "각자의 하루 작업량을 구해 더해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-work:practice-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1/6+1/12=1/4$이므로 하루에 전체의 1/4을 처리해요. 걸리는 시간은 $1\\div(1/4)=4$일이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "18",
+              "misconception": "add-days-together"
+            },
+            {
+              "answer": "9",
+              "misconception": "add-days-together"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-work:practice-3:v2",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-work:practice-3:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A$는 혼자 $4$일, $B$는 혼자 $12$일이 걸리는 일을 둘이 함께 하면 며칠 걸리나요?\n\n매일 일정한 양을 처리하며, 함께 일해도 각자의 작업 속도는 같다고 가정해요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-work:practice-3:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "분모를 12로 맞춰 하루 작업량을 더해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-work:practice-3:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1/4+1/12=3/12+1/12=1/3$이에요. 전체 작업에 걸리는 시간은 $1\\div(1/3)=3$일이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "16",
+              "misconception": "add-days-together"
+            },
+            {
+              "answer": "8",
+              "misconception": "add-days-together"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-work:check",
+      "courseKey": "ncs-applied",
+      "name": "일률 확인",
+      "versionId": "ncs-work:check:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-work:check-1:v2",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-work:check-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A$는 혼자 $10$일, $B$는 혼자 $15$일이 걸리는 일을 둘이 함께 하면 며칠 걸리나요?\n\n매일 일정한 양을 처리하며, 함께 일해도 각자의 작업 속도는 같다고 가정해요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 6
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-work:check-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "하루 작업량을 통분해서 더해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-work:check-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1/10+1/15=3/30+2/30=1/6$이에요. 전체 1을 하루 작업량 1/6으로 나누면 6일이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "25",
+              "misconception": "add-days-together"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-work:check-2:v2",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-work:check-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "혼자 $6$일 걸리는 일을 $2$일 한 뒤 남은 일의 양을 기약분수로 써 주세요.\n\n매일 일정한 양을 처리하며, 함께 일해도 각자의 작업 속도는 같다고 가정해요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "rational",
+            "requiredForm": "reduced_fraction"
+          },
+          "gradingSpec": {
+            "kind": "rational",
+            "numerator": 2,
+            "denominator": 3,
+            "requiredForm": "reduced_fraction"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-work:check-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "2일 동안 한 양을 구해 전체 1에서 빼요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-work:check-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "하루에 1/6씩 처리하므로 2일 동안 $2/6=1/3$을 끝냈어요. 남은 양은 $1-1/3=2/3$이에요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-work:review",
+      "courseKey": "ncs-applied",
+      "name": "일률 복습",
+      "versionId": "ncs-work:review:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-work:homework-1:v2",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-work:homework-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$A$는 혼자 $8$일, $B$는 혼자 $8$일이 걸리는 일을 둘이 함께 하면 며칠 걸리나요?\n\n매일 일정한 양을 처리하며, 함께 일해도 각자의 작업 속도는 같다고 가정해요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 4
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-work:homework-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "하루에 처리하는 비율 1/8을 두 번 더해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-work:homework-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1/8+1/8=1/4$이므로 둘이 하루에 전체의 1/4을 처리해요. $1\\div(1/4)=4$일이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "16",
+              "misconception": "add-days-together"
+            },
+            {
+              "answer": "8",
+              "misconception": "add-days-together"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-work:homework-2:v2",
+          "conceptKeys": [
+            "work-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-work:homework-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "하루에 전체의 $\\frac{1}{7}$을 하면 일을 마치는 데 며칠 걸리나요?\n\n매일 일정한 양을 처리하며, 함께 일해도 각자의 작업 속도는 같다고 가정해요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 7
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-work:homework-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 1을 하루에 하는 양으로 나눠요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-work:homework-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1\\div(1/7)=7$일이에요. 1/7씩 7일 처리하면 전체 1을 마쳐요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-interest:practice",
+      "courseKey": "ncs-applied",
+      "name": "이자 연습",
+      "versionId": "ncs-interest:practice:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-interest:practice-1:v2",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-interest:practice-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금 $100$만 원을 연 $5\\%$ 단리로 맡길 때 $1$년 이자는 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 5
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-interest:practice-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금에 연 이자율을 소수로 바꾸어 곱해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-interest:practice-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1년 이자는 $100\\times0.05=5$만 원이에요. 만 원 단위로 묻기 때문에 5를 입력해요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-interest:practice-2:v2",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-interest:practice-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금 $100$만 원을 연 $5\\%$ 단리로 $3$년 맡길 때 이자는 모두 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 15
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-interest:practice-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "단리는 해마다 처음 원금에 같은 이자율을 적용해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-interest:practice-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1년 이자는 $100\\times0.05=5$만 원이에요. 3년간 이자는 $5\\times3=15$만 원이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "5",
+              "misconception": "single-period-interest"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-interest:practice-3:v2",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-interest:practice-3:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금 $100$만 원을 연 $5\\%$ 단리로 $3$년 맡길 때 원리합계는 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 115
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-interest:practice-3:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금과 3년 동안의 이자를 더해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-interest:practice-3:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "3년 단리 이자는 $100\\times0.05\\times3=15$만 원이에요. 원리합계는 $100+15=115$만 원이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "15",
+              "misconception": "part-instead-of-total"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-interest:practice-4:v1",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-interest:practice-4:v1:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금 100만 원에 연 5% 복리 이자를 1년에 한 번 더해요. 1년 뒤 원리합계는 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 105
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-interest:practice-4:v1:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금에 첫해 이자를 더해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-interest:practice-4:v1:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "첫해 이자는 $100\\times0.05=5$만 원이에요. 원리합계는 $100+5=105$만 원이에요. 이 금액이 둘째 해 이자 계산의 기준이 돼요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-interest:check",
+      "courseKey": "ncs-applied",
+      "name": "이자 확인",
+      "versionId": "ncs-interest:check:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-interest:check-1:v2",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-interest:check-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금 $200$만 원을 연 $4\\%$ 단리로 $2$년 맡길 때 이자는 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 16
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-interest:check-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이자만 묻는지 원리합계를 묻는지 확인해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-interest:check-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "단리 이자는 $200\\times0.04\\times2=16$만 원이에요. 원금을 더한 216만 원은 원리합계이므로 이 문제의 답과 달라요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "8",
+              "misconception": "single-period-interest"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-interest:check-2:v2",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-interest:check-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "연 6% 단리로 6개월 동안 돈을 맡겨요. 이 기간에 받는 이자는 원금의 몇 %인가요? 숫자만 써 주세요."
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 3
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-interest:check-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "6개월을 연 단위로 바꾸어 연 이자율에 곱해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-interest:check-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "6개월은 $6/12=1/2$년이에요. 이 기간의 이자는 원금의 $6\\times1/2=3$%예요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "6",
+              "misconception": "annual-rate-for-period"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-interest:check-3:v1",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-interest:check-3:v1:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금 100만 원에 연 10% 복리 이자를 1년에 한 번 더해요. 입출금과 세금이 없다면 2년 뒤 원리합계는 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 121
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-interest:check-3:v1:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "둘째 해에는 첫해 이자를 포함한 금액에 이자를 계산해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-interest:check-3:v1:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "첫해 말에는 $100\\times1.1=110$만 원이에요. 둘째 해 말에는 $110\\times1.1=121$만 원이에요. 단리로 계산한 120만 원과 달라요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-interest:review",
+      "courseKey": "ncs-applied",
+      "name": "이자 복습",
+      "versionId": "ncs-interest:review:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-interest:homework-1:v2",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-interest:homework-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금 $500$만 원을 연 $3\\%$ 단리로 $2$년 맡길 때 원리합계는 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 530
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-interest:homework-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "2년 단리 이자를 원금에 더해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-interest:homework-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이자는 $500\\times0.03\\times2=30$만 원이에요. 원리합계는 $500+30=530$만 원이에요."
+              }
+            }
+          ],
+          "misreadings": [
+            {
+              "answer": "30",
+              "misconception": "part-instead-of-total"
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-interest:homework-2:v2",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-interest:homework-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "단리와 복리에 대한 설명으로 옳은 것은 무엇인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "복리는 붙은 이자에도 이자가 붙는다"
+              },
+              {
+                "id": "b",
+                "text": "단리가 언제나 더 많다"
+              },
+              {
+                "id": "c",
+                "text": "첫해부터 복리가 더 많다"
+              },
+              {
+                "id": "d",
+                "text": "둘은 늘 같다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "복리는 붙은 이자에도 이자가 붙는다"
+              },
+              {
+                "id": "b",
+                "text": "단리가 언제나 더 많다"
+              },
+              {
+                "id": "c",
+                "text": "첫해부터 복리가 더 많다"
+              },
+              {
+                "id": "d",
+                "text": "둘은 늘 같다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-interest:homework-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 번째 해에 이자를 계산하는 기준 금액을 생각해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-interest:homework-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "단리는 처음 원금에만, 복리는 앞서 붙은 이자를 포함한 금액에 이자를 계산해요. 같은 원금과 양의 연 이자율로 연 1회 이자를 더하면 첫해는 같고 둘째 해부터 복리 금액이 더 커져요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-interest:homework-3:v1",
+          "conceptKeys": [
+            "interest"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-interest:homework-3:v1:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원금 200만 원에 연 10% 복리 이자를 1년에 한 번 더해요. 입출금과 세금이 없다면 2년 동안 붙은 이자는 몇만 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 42
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-interest:homework-3:v1:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "2년 뒤 원리합계에서 처음 원금을 빼요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-interest:homework-3:v1:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "2년 뒤 원리합계는 $200\\times1.1\\times1.1=242$만 원이에요. 이자는 $242-200=42$만 원이에요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-exchange:practice",
+      "courseKey": "ncs-applied",
+      "name": "환율 연습",
+      "versionId": "ncs-exchange:practice:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-exchange:practice-1:v2",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-exchange:practice-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$달러가 $1{,}300$원일 때 $20$달러는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 26000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-exchange:practice-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1달러를 원으로 바꾼 금액을 20배 해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-exchange:practice-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$20\\times1{,}300=26{,}000$원이에요. 달러를 원으로 바꾸므로 곱해요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-exchange:practice-2:v2",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-exchange:practice-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$달러가 $1{,}300$원일 때 $65{,}000$원은 몇 달러인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 50
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-exchange:practice-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1달러당 1,300원이 필요해요. 가진 원화를 그 금액으로 나눠요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-exchange:practice-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$65{,}000\\div1{,}300=50$달러예요. 확인하면 $50\\times1{,}300=65{,}000$원이에요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-exchange:practice-3:v2",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-exchange:practice-3:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$26{,}000$원을 환전할 때 수수료가 $1\\%$라면 수수료는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 260
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-exchange:practice-3:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "수수료의 기준 금액은 26,000원이에요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-exchange:practice-3:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$26{,}000\\times0.01=260$원이 수수료예요. 총 지급액이 아니라 수수료만 묻고 있어요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-exchange:check",
+      "courseKey": "ncs-applied",
+      "name": "환율 확인",
+      "versionId": "ncs-exchange:check:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-exchange:check-1:v2",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-exchange:check-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$달러가 $1{,}400$원일 때 $20$달러는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 28000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-exchange:check-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "바뀐 환율인 1달러당 1,400원을 사용해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-exchange:check-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$20\\times1{,}400=28{,}000$원이에요. 이전 환율을 사용하지 않도록 조건을 확인해요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-exchange:check-2:v2",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-exchange:check-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "환율을 1달러당 원화 금액으로 나타낼 때, 환율이 오르면 어떤 일이 생기나요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "같은 달러를 사는 데 원이 더 든다"
+              },
+              {
+                "id": "b",
+                "text": "달러가 싸진다"
+              },
+              {
+                "id": "c",
+                "text": "우리 돈의 값이 오른다"
+              },
+              {
+                "id": "d",
+                "text": "아무 변화가 없다"
+              }
+            ]
+          },
+          "gradingSpec": {
+            "kind": "choice",
+            "options": [
+              {
+                "id": "a",
+                "text": "같은 달러를 사는 데 원이 더 든다"
+              },
+              {
+                "id": "b",
+                "text": "달러가 싸진다"
+              },
+              {
+                "id": "c",
+                "text": "우리 돈의 값이 오른다"
+              },
+              {
+                "id": "d",
+                "text": "아무 변화가 없다"
+              }
+            ],
+            "correct": "a"
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-exchange:check-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "여기서 환율은 1달러를 사는 데 필요한 원화 금액이에요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-exchange:check-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "환율이 높아지면 1달러당 필요한 원화가 늘어요. 따라서 같은 달러 금액을 사려면 더 많은 원화가 필요해요."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "problemSetId": "ncs-exchange:review",
+      "courseKey": "ncs-applied",
+      "name": "환율 복습",
+      "versionId": "ncs-exchange:review:v2",
+      "problems": [
+        {
+          "problemVersionId": "ncs-exchange:homework-1:v2",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-exchange:homework-1:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$달러가 $1{,}200$원일 때 $36{,}000$원은 몇 달러인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 30
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-exchange:homework-1:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "36,000원을 1달러당 원화 금액으로 나눠요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-exchange:homework-1:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$36{,}000\\div1{,}200=30$달러예요."
+              }
+            }
+          ]
+        },
+        {
+          "problemVersionId": "ncs-exchange:homework-2:v2",
+          "conceptKeys": [
+            "exchange-rate"
+          ],
+          "promptContent": [
+            {
+              "blockId": "ncs-exchange:homework-2:v2:promptContent:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$달러가 $1{,}250$원일 때 $8$달러는 몇 원인가요?"
+              }
+            }
+          ],
+          "responseSpec": {
+            "kind": "integer"
+          },
+          "gradingSpec": {
+            "kind": "integer",
+            "value": 10000
+          },
+          "hintAvailable": true,
+          "hints": [
+            {
+              "blockId": "ncs-exchange:homework-2:v2:hints:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "1,250원짜리 8개에 해당하는 원화 금액을 구해요."
+              }
+            }
+          ],
+          "solution": [
+            {
+              "blockId": "ncs-exchange:homework-2:v2:solution:1",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$8\\times1{,}250=10{,}000$원이에요."
+              }
+            }
+          ]
         }
       ]
     }
