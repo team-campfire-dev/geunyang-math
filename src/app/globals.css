@@ -774,3 +774,10 @@ html[data-answer-dock=open] .mobile-nav{visibility:hidden}
 .math-form-note{margin:0}
 @media(any-pointer:coarse){.math-edit-tools button{min-height:44px}}
 @media(min-width:700px) and (orientation:landscape){.math-dock .math-edit-tools{grid-column:1;grid-row:2}.math-dock .math-structures{grid-row:3}.math-dock .math-keypad{grid-row:2/5}.math-dock .math-pad-send{grid-row:4}}
+
+/* Keep the next learning step alongside the explanation, ahead of the optional evidence. */
+.confusion-next{display:grid;justify-items:start;gap:8px;margin:16px 0}
+.confusion-next p{margin:0}
+.confusion-card[tabindex]{scroll-margin-top:24px}
+.confusion-card[tabindex]:focus-visible,.confusion-summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.confusion-answer>.rich-text{max-width:100%;overflow-x:auto}

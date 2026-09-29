@@ -46,6 +46,8 @@ describe.skipIf(!url)('targeted practice lifecycle on MySQL', () => {
     const opened = await service.act(who.userId, { action: 'practice.gather', misconception });
     const assignment = opened.state.assignments.find(item => item.recipientId === opened.recipientId)!;
     expect(assignment.items.map(item => item.problem.problemVersionId)).toEqual(pool);
+    expect(assignment.misconception).toBe(misconception);
+    expect((await service.state(who.userId)).assignments.find(item => item.recipientId === opened.recipientId)?.misconception).toBe(misconception);
     expect(opened.state.plan.targetedPractice?.recipientId).toBe(opened.recipientId);
     expect((await service.act(who.userId, { action: 'practice.gather', misconception })).recipientId).toBe(opened.recipientId);
     expect(opened.state.recommendationHistory[0].targetedPractice).toMatchObject({ misconception, recipientId: opened.recipientId });
@@ -72,6 +74,7 @@ describe.skipIf(!url)('targeted practice lifecycle on MySQL', () => {
     const submitted = await service.act(who.userId, { action: 'assignment.submit', recipientId: assignment.recipientId, requestId: randomUUID() });
     expect(submitted.state.confusion.repeated.find(item => item.key === misconception)?.status).toBe('repeated');
     expect(submitted.state.plan.targetedPractice).toBeNull();
+    expect(submitted.state.assignments.find(item => item.recipientId === opened.recipientId)?.misconception).toBe(misconception);
     expect(submitted.state.recommendationHistory[0].targetedPractice).toBeNull();
     const sitting = await db.submission.findUniqueOrThrow({ where: { id: assignment.submissionId } });
     await answer(who, 0, false, new Date(sitting.finalizedAt!.getTime() + 1));
