@@ -13,7 +13,7 @@ function Field({ integerOnly = false, fractionRequired = false, onSend, initial 
     fractionRequired={fractionRequired} onSend={onSend} sendLabel="답안 저장" sendDisabled={!value.trim()} />;
 }
 const box = () => screen.getByRole('textbox', { name: '나의 답' }) as HTMLInputElement;
-const button = (name: string) => screen.getByRole('button', { name });
+const button = (name: string | RegExp) => screen.getByRole('button', { name });
 function touch() {
   const original = window.matchMedia;
   vi.spyOn(window, 'matchMedia').mockImplementation(query => ({ ...original(query), matches: query === '(any-pointer: coarse)' }));
@@ -67,15 +67,73 @@ describe('adaptive answer input', () => {
     open();
     for (const key of ['음수 부호', '3', '분수 입력', '4']) fireEvent.click(button(key));
     expect(box().value).toBe('-3/4');
-    fireEvent.click(button('분모 수정'));
+    fireEvent.click(button(/^분모:/));
     fireEvent.click(button('8'));
     expect(box().value).toBe('-3/8');
-    fireEvent.click(button('분자 수정'));
+    fireEvent.click(button(/^분자:/));
     fireEvent.click(button('1'));
     expect(box().value).toBe('1/8');
     fireEvent.click(button('커서 오른쪽으로'));
     fireEvent.click(button('한 글자 지우기'));
-    expect(box().value).toBe('18');
+    expect(box().value).toBe('1/8');
+    expect(box().selectionStart).toBe(1);
+  });
+  it('fills the two empty boxes directly and marks the current input slot', () => {
+    touch();
+    render(<Field />);
+    fireEvent.click(button('분수 입력'));
+    expect(button('분자: 빈 칸').getAttribute('aria-pressed')).toBe('true');
+    expect(button('분모: 빈 칸').getAttribute('aria-pressed')).toBe('false');
+    expect(screen.queryByText('분자 수정')).toBeNull();
+    expect(screen.queryByText('분모 수정')).toBeNull();
+    fireEvent.click(button('분모: 빈 칸'));
+    for (const digit of ['2', '4']) fireEvent.click(button(digit));
+    expect(box().value).toBe('/24');
+    expect(button('분모: 24').getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(button('분자: 빈 칸'));
+    for (const digit of ['1', '2']) fireEvent.click(button(digit));
+    expect(box().value).toBe('12/24');
+    expect(button('분자: 12').getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(button('분모: 24'));
+    for (const digit of ['3', '6']) fireEvent.click(button(digit));
+    expect(box().value).toBe('12/36');
+    expect(button('분자: 12').getAttribute('aria-pressed')).toBe('false');
+  });
+  it('keeps empty fraction slots when deleting a part, without erasing the other part', () => {
+    touch();
+    render(<Field initial="-3/40" />);
+    open();
+    fireEvent.click(button('분모: 40'));
+    fireEvent.click(button('한 글자 지우기'));
+    expect(box().value).toBe('-3/');
+    expect(button('분모: 빈 칸')).toBeTruthy();
+    fireEvent.click(button('한 글자 지우기'));
+    expect(box().value).toBe('-3/');
+    expect(button('분자: -3').getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(button('분자: -3'));
+    fireEvent.click(button('한 글자 지우기'));
+    expect(box().value).toBe('/');
+    expect(button('분자: 빈 칸')).toBeTruthy();
+  });
+  it('opens the touch dock when tapping a slot in the inline fraction', () => {
+    touch();
+    render(<Field initial="1/2" />);
+    expect(screen.queryByRole('region', { name: '수식 키보드' })).toBeNull();
+    fireEvent.click(button('분자: 1'));
+    expect(screen.getByRole('region', { name: '수식 키보드' })).toBeTruthy();
+    expect(box().inputMode).toBe('none');
+    expect([box().selectionStart, box().selectionEnd]).toEqual([0, 1]);
+    expect(screen.getAllByRole('button', { name: /^분자:/ })).toHaveLength(1);
+  });
+  it('lets a desktop slot select the same written answer for hardware typing', () => {
+    render(<Field initial="12/34" />);
+    fireEvent.click(button('분모: 34'));
+    expect(screen.queryByRole('region', { name: '수식 키보드' })).toBeNull();
+    expect(document.activeElement).toBe(box());
+    expect([box().selectionStart, box().selectionEnd]).toEqual([3, 5]);
+    expect(button('분모: 34').getAttribute('aria-pressed')).toBe('true');
+    fireEvent.blur(box());
+    expect(button('분모: 34').getAttribute('aria-pressed')).toBe('false');
   });
   it('inserts and deletes at the caret instead of always changing the end', () => {
     touch();
@@ -92,7 +150,7 @@ describe('adaptive answer input', () => {
     touch();
     render(<Field initial="12/34" />);
     open();
-    fireEvent.click(button('분모 수정'));
+    fireEvent.click(button(/^분모:/));
     fireEvent.click(button('기본 키보드'));
     expect(box().inputMode).toBe('decimal');
     expect(box().value).toBe('12/34');
@@ -145,7 +203,9 @@ describe('adaptive answer input', () => {
   it('keeps drafts as written and renders a fraction preview', () => {
     const { container } = render(<Field />);
     fireEvent.change(box(), { target: { value: '3/4' } });
-    expect(container.querySelector('.math-answer-preview .katex')).not.toBeNull();
+    expect(container.querySelector('.math-answer-preview .fraction-slots')).not.toBeNull();
+    expect(button('분자: 3')).toBeTruthy();
+    expect(button('분모: 4')).toBeTruthy();
     expect(box().value).toBe('3/4');
     expect(box().getAttribute('aria-describedby')).toBe(container.querySelector('.math-answer-preview')!.id);
   });

@@ -5,6 +5,7 @@ import { createPortal, flushSync } from 'react-dom';
 import { answerLatex } from '@/shared/answer';
 import { fractionSelection, replaceAnswerSelection, type AnswerSelection } from './answer-editing';
 import { RichText } from './content-blocks';
+import { FractionAnswerSlots } from './fraction-answer-slots';
 import { useAnswerDock, useTouchAnswerInput } from './use-answer-dock';
 
 const names: Record<string, string> = { '-': '음수 부호', '.': '소수점', '/': '분수 입력' };
@@ -25,25 +26,34 @@ export function MathAnswerField({ value, onChange, disabled, label, placeholder,
   const container = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const selection = useRef<AnswerSelection>({ start: value.length, end: value.length });
+  const [visibleSelection, setVisibleSelection] = useState(selection.current);
   const pendingSelection = useRef<AnswerSelection | null>(null);
   const previewId = useId();
   const panelId = useId();
   const usingMath = touch && (writing === 'math' || (writing === 'auto' && !!fractionRequired));
   const showDock = usingMath && inUse && !disabled;
   const drawn = answerLatex(value);
-  const incompleteFraction = /^([+-]?\d*)\/([+-]?\d*)$/.exec(value);
-  const draft = drawn ?? (incompleteFraction ? `\\frac{${incompleteFraction[1] || '\\square'}}{${incompleteFraction[2] || '\\square'}}` : null);
+  const hasFractionSlots = !integerOnly && /^\s*[+-]?\d*\s*\/\s*[+-]?\d*\s*$/.test(value);
   const hold = (event: { preventDefault: () => void }) => event.preventDefault();
+  const updateSelection = (range: AnswerSelection) => {
+    selection.current = range;
+    setVisibleSelection(previous => previous.start === range.start && previous.end === range.end ? previous : range);
+  };
   const remember = () => {
-    if (field.current) selection.current = { start: field.current.selectionStart ?? value.length, end: field.current.selectionEnd ?? value.length };
+    if (field.current) updateSelection({ start: field.current.selectionStart ?? value.length, end: field.current.selectionEnd ?? value.length });
   };
   const select = (range: AnswerSelection) => {
-    selection.current = range;
     field.current?.focus({ preventScroll: true });
     field.current?.setSelectionRange(range.start, range.end);
+    updateSelection(range);
   };
   const edit = (inserted: string, remove = false) => {
     const range = selection.current;
+    // At the start of the denominator, go back to the numerator without removing the bar.
+    if (remove && hasFractionSlots && range.start === range.end && value[range.start - 1] === '/') {
+      select({ start: range.start - 1, end: range.start - 1 });
+      return;
+    }
     const result = replaceAnswerSelection(value, remove && range.start === range.end ? { start: Math.max(0, range.start - 1), end: range.end } : range, inserted);
     pendingSelection.current = result.value === value ? null : { start: result.start, end: result.end };
     onChange(result.value);
@@ -84,10 +94,11 @@ export function MathAnswerField({ value, onChange, disabled, label, placeholder,
   };
   const close = () => { setInUse(false); field.current?.blur(); };
   const send = () => { close(); if (!disabled && !sendDisabled) onSend?.(); };
-  const fractionParts = !integerOnly && value.includes('/') && <div className="math-parts" role="group" aria-label="분수 수정">
-    <button type="button" onClick={() => select(fractionSelection(value, 'numerator')!)}>분자 수정</button>
-    <button type="button" onClick={() => select(fractionSelection(value, 'denominator')!)}>분모 수정</button>
-  </div>;
+  const fractionSlots = hasFractionSlots && <FractionAnswerSlots value={value} selection={visibleSelection}
+    active={inUse && !disabled} disabled={disabled} onSelect={part => {
+      if (touch && !usingMath) switchWriting('math');
+      select(fractionSelection(value, part)!);
+    }} />;
   const dock = showDock && <div ref={panel} id={panelId} className="math-dock" role="region" aria-label="수식 키보드"
     onBlur={event => { if (!panel.current?.contains(event.relatedTarget) && event.relatedTarget !== field.current) setInUse(false); }}
     onPointerDown={hold} onMouseDown={hold} onKeyDown={event => { if (event.key === 'Escape') { event.preventDefault(); close(); } }}>
@@ -97,7 +108,7 @@ export function MathAnswerField({ value, onChange, disabled, label, placeholder,
         <button type="button" onClick={close}>입력기 닫기</button>
       </div></div>
       <div className="math-dock-draft"><span className="sr-only">입력한 답: {value || '비어 있음'}</span>
-        {draft ? <RichText text={`$${draft}$`} /> : <span>{value || '답을 입력해 주세요'}</span>}{fractionParts}</div>
+        {fractionSlots || (drawn ? <RichText text={`$${drawn}$`} /> : <span>{value || '답을 입력해 주세요'}</span>)}</div>
       <div className="math-keypad" role="group" aria-label="숫자 키패드">
         {['1', '2', '3', 'back', '4', '5', '6', '-', '7', '8', '9', '/', 'left', '0', 'right', '.'].map(key => {
           if (integerOnly && (key === '/' || key === '.')) return <span key={key} />;
@@ -124,7 +135,7 @@ export function MathAnswerField({ value, onChange, disabled, label, placeholder,
     <label><span className="sr-only">{label}</span><input ref={field} aria-label={label} type="text" maxLength={80}
       inputMode={usingMath ? 'none' : integerOnly ? 'numeric' : 'decimal'} enterKeyHint="done"
       placeholder={placeholder} value={value} disabled={disabled} autoComplete="off" spellCheck={false}
-      aria-describedby={drawn ? previewId : undefined} aria-controls={showDock ? panelId : undefined}
+      aria-describedby={!showDock && (drawn || fractionSlots) ? previewId : undefined} aria-controls={showDock ? panelId : undefined}
       onPointerDown={event => { if (event.pointerType === 'touch' || event.pointerType === 'pen') setTouch(true); else if (event.pointerType === 'mouse') setTouch(false); }}
       onSelect={remember} onChange={event => { onChange(event.target.value); remember(); }}
       onFocus={() => setInUse(true)} onBlur={event => { if (!panel.current?.contains(event.relatedTarget)) setInUse(false); }}
@@ -134,12 +145,11 @@ export function MathAnswerField({ value, onChange, disabled, label, placeholder,
         // With the software keyboard suppressed, a printable key came from a physical keyboard.
         if (usingMath && (event.key.length === 1 || event.key === 'Backspace' || event.key === 'Delete')) setWriting('native');
       }} /></label>
-    {drawn && <div className="math-answer-preview" id={previewId}><span className="sr-only">입력한 답: </span><RichText text={`$${drawn}$`} /></div>}
+    {!showDock && (drawn || fractionSlots) && <div className="math-answer-preview" id={previewId} onPointerDown={hold} onMouseDown={hold}><span className="sr-only">입력한 답: </span>{fractionSlots || <RichText text={`$${drawn}$`} />}</div>}
     {!disabled && !showDock && <div className="math-input-tools" onPointerDown={hold} onMouseDown={hold}>
       {/* Some native numeric keyboards omit minus, so it must remain available outside them. */}
       <button type="button" aria-label="음수 부호" onClick={() => edit('-')}>−</button>
       {!integerOnly && <button type="button" aria-label="분수 입력" onClick={fraction}>분수 a/b</button>}
-      {fractionParts}
       {touch && !integerOnly && <button type="button" className="text-button" onClick={() => switchWriting('math')}>수식 키보드 열기</button>}
     </div>}
   </div>
