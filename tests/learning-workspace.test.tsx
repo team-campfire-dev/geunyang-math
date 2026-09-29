@@ -384,6 +384,40 @@ describe('a set too long to hold on one screen', () => {
   });
 });
 
+describe('targeted practice on the home screen', () => {
+  const targeted = { misconception: 'add-denominators', label: '분모끼리 더하기', reason: '서로 다른 2문제에서 반복되어 짧게 연습해요.', problemCount: 3, evidenceIds: ['p1', 'p2'], recipientId: null as string | null };
+  const planned = (overrides: Partial<LearningState> = {}) => learningState({ ...overrides, plan: { ...learningState().plan, targetedPractice: targeted, ...overrides.plan } });
+  it('offers focused practice before a lesson, including for a learner who only used problem sets', async () => {
+    server = serve({ state: planned({ diagnosticOffering: { version: 'v1', title: '시작점 확인', description: '', scope: 10, estimatedMinutes: 5 } }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByText('오늘의 맞춤 연습')).toBeDefined());
+    expect(document_text('.hero-copy')).toContain('3문제');
+    fireEvent.click(screen.getByRole('button', { name: '이 실수만 모아 풀기' }));
+    await until(() => expect(server.of('practice.gather')).toEqual([{ action: 'practice.gather', misconception: 'add-denominators' }]));
+  });
+  it('opens an existing gathered set without creating another', async () => {
+    const own = assignment({ policy: { kind: 'practice', hints: true, results: 'per-item', solutions: 'after-submission' }, problemSetId: null, title: '분모끼리 더하기 모아 풀기' });
+    server = serve({ state: planned({ assignments: [own], plan: { ...learningState().plan, targetedPractice: { ...targeted, recipientId: own.recipientId } } }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByRole('button', { name: '모아 풀기 이어서' })).toBeDefined());
+    fireEvent.click(screen.getByRole('button', { name: '모아 풀기 이어서' }));
+    await until(() => expect(screen.getByRole('heading', { level: 1, name: own.title })).toBeDefined());
+    expect(server.of('practice.gather')).toHaveLength(0);
+  });
+  it('keeps a due review first and exposes the practice reasoning and history', async () => {
+    const review = assignment();
+    server = serve({ state: planned({ assignments: [review], plan: { ...learningState().plan, targetedPractice: targeted, review: { recipientId: review.recipientId, reason: '복습할 때예요.' } },
+      recommendationHistory: [{ id: 'history', createdAt: '2026-09-29T01:00:00.000Z', trigger: 'attempt.submit', recommendations: [], targetedPractice: targeted }] }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByRole('button', { name: '복습부터 시작하기' })).toBeDefined());
+    expect(screen.queryByRole('button', { name: '이 실수만 모아 풀기' })).toBeNull();
+    fireEvent.click(screen.getByText('이 추천은 이렇게 정했어요'));
+    fireEvent.click(screen.getByRole('button', { name: '추천의 오답 근거 보기' }));
+    await until(() => expect(screen.getByText('추천이 바뀐 기록')).toBeDefined());
+    expect(screen.getByText('「분모끼리 더하기」 모아 풀기')).toBeDefined();
+  });
+});
+
 describe('a mistake the record keeps showing', () => {
   const standing = { key: 'add-denominators', label: '분모끼리 더하기', problems: 3,
     note: '분모가 조각의 크기라는 것을 지나치고 위아래를 따로 더해요.' };

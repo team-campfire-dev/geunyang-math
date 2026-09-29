@@ -829,8 +829,8 @@ export function LearningWorkspace() {
    * record yet they read as eight equally good ideas, which is the same as no idea at all.
    *
    * So the screen picks. The order is the order the rules themselves use: work that was issued and
-   * is due, then finishing what was started, then finding out where somebody is, then the lesson
-   * the recommendation landed on. Everything else is still here, further down or folded away —
+   * is due, then an active placement, then focused practice for a repeated mistake, then finding
+   * a starting point or opening the recommended lesson. Everything else is still here, further down or folded away —
    * choosing for somebody is not the same as deciding for them.
    */
   function nextStep() {
@@ -846,6 +846,15 @@ export function LearningWorkspace() {
       reason: `개념 ${state.diagnostic.scope}개 중 ${state.diagnostic.settled}개의 자리를 찾았어요. 남은 것만 마저 물어볼게요.`,
       caption: '지금 어디쯤인지', art: recommended?.lessonKey, action: '이어서 확인하기',
       note: '언제든 그만두고 나중에 이어서 할 수 있어요', onAct: () => navigate('diagnostic') };
+    const targeted = state.plan.targetedPractice;
+    if (targeted) {
+      const open = state.assignments.find(item => item.recipientId === targeted.recipientId && item.status === 'assigned');
+      const evidence = state.confusion.evidence.find(item => targeted.evidenceIds.includes(item.problemVersionId));
+      return { eyebrow: '오늘의 맞춤 연습', title: `「${targeted.label}」\n모아 풀기`, reason: targeted.reason,
+        caption: '반복된 실수부터 한 번 더', art: evidence?.first.source.lessonKey ?? recommended?.lessonKey,
+        action: open ? '모아 풀기 이어서' : '이 실수만 모아 풀기', note: `${targeted.problemCount}문제 · 오늘도 나의 속도로`,
+        onAct: () => open ? openAssignment(open) : void gatherPractice(targeted.misconception) };
+    }
     // Nobody who has opened a lesson is asked this: their own work says more than a placement would.
     if (!state.diagnostic && !state.enrollments.length && state.diagnosticOffering) {
       const wanted = courses.find((course) => course.key === state.user.targetCourseKey)?.title;
@@ -872,11 +881,11 @@ export function LearningWorkspace() {
     // The lessons nearest to where this person is, with the one the hero already offers left out.
     const nearby = nearbyLessons({
       lessons, enrollments: state?.enrollments ?? [], readiness: state?.plan.readiness ?? [],
-      exclude: recommended?.lessonKey ?? null,
+      exclude: state?.plan.targetedPractice ? null : recommended?.lessonKey ?? null,
     });
     // The review the hero may already be offering is left out here, so it is not offered twice.
     const nextAssignments = nearbyAssignments({
-      assignments: pendingAssignments, now: new Date(), exclude: state?.plan.review?.recipientId ?? null,
+      assignments: pendingAssignments, now: new Date(), exclude: state?.plan.review?.recipientId ?? (state?.diagnostic?.status !== 'active' ? state?.plan.targetedPractice?.recipientId ?? null : null),
     });
     // The heading says what the first card actually is, not what the hero above it is doing.
     const shelfTitle = state?.enrollments.some((entry) => entry.lessonKey === nearby[0]?.lessonKey && entry.status === 'active')
@@ -896,6 +905,7 @@ export function LearningWorkspace() {
       {state && <details className="personalization-details"><summary>이 추천은 이렇게 정했어요</summary>
         <div className="personalization-body">
           <p className="muted">시작점 확인 없이 바로 시작해도 괜찮아요. 실제 풀이와 제출한 복습을 반영해 추천이 달라져요.</p>
+          {state.plan.targetedPractice && <><p>{state.plan.targetedPractice.reason}</p><button className="text-button" disabled={busy} onClick={() => navigate('history')}>추천의 오답 근거 보기<Icon name="arrow" size={15} /></button></>}
           <div className="recommendation-choice">
             <button className="button secondary" disabled={busy} onClick={() => navigate('diagnostic')}>{state.diagnostic?.status === 'completed' ? '진단 결과 보기' : state.diagnostic ? `개념 ${state.diagnostic.settled}/${state.diagnostic.scope} · 이어서 확인` : state.diagnosticOffering ? '시작점 확인하기' : '시작점 확인 안내'}</button>
             <button className="text-button" disabled={busy} onClick={() => navigate('lessons')}>다른 수업 직접 고르기 →</button>
@@ -1103,7 +1113,7 @@ export function LearningWorkspace() {
   }
 
   function renderHistory() {
-    return <><div className="page-heading"><h1>조금씩 쌓이는 나의 이해.</h1><p>빠르기보다, 어제보다 조금 더 이해하는 것. 여기까지 온 걸음을 확인해요.</p></div>{!state ? <EmptyState title="첫 걸음을 기록해 보세요" text="내 학습을 시작하면 수업 진도와 개념별 학습 기록이 여기에 모여요." actionLabel="내 학습 시작하기" onAction={() => setModal('login')} /> : <><div className="history-stats"><div><small>완료한 수업</small><strong>{completedCount}<span>개</span></strong></div><div><small>제출한 과제</small><strong>{state.assignments.filter((item) => item.status === 'submitted' && item.policy.kind !== 'practice').length}<span>개</span></strong></div><div><small>다 푼 문제집</small><strong>{state.assignments.filter((item) => item.status === 'submitted' && item.policy.kind === 'practice').length}<span>개</span></strong></div><div><small>풀어본 문제</small><strong>{state.enrollments.reduce((sum, item) => sum + new Set(item.attempts.map((attempt) => attempt.problemVersionId)).size, 0) + state.assignments.reduce((sum, item) => sum + item.items.filter((entry) => entry.attempt).length, 0)}<span>개</span></strong></div></div><ConfusionSummary summary={state.confusion} busy={busy} onOpenLesson={key => void openLesson(key)} onGather={key => void gatherPractice(key)} /><section className="dashboard-section"><div className="section-heading"><h2>코스별 학습 상태</h2><span className="muted small">힌트 사용과 이후 복습까지 반영한 상태예요</span></div><p className="muted small">「스스로 해결」은 힌트 없이 푼 기록, 「꾸준히 기억」은 이후 복습에서도 확인한 기록이에요. 아직 확인 전이라고 해서 모른다는 뜻은 아니에요. 코스를 열면 그 코스가 가르치는 개념이 하나씩 보여요.</p><StandingByCourse courses={courses} lessons={lessons} concepts={state.concepts} busy={busy} /></section><section className="dashboard-section"><div className="section-heading"><h2>추천이 바뀐 기록</h2></div><p className="muted small">학습과 설정을 저장할 때 달라진 추천을 최근 10개까지 보여줘요.</p><div className="recommendation-history">{state.recommendationHistory.map(entry => <article key={entry.id}><small>{formatDate(entry.createdAt)}</small>{entry.recommendations.map(item => <div key={item.lessonKey}><strong>{lessons.find(c => c.lessonKey === item.lessonKey)?.title ?? '이전 수업'}</strong><p>{item.reason}</p><small>하루 계획 {item.suggestedMinutes}분</small></div>)}</article>)}</div>{!state.recommendationHistory.length && <p className="empty-inline">아직 추천이 바뀐 기록이 없어요.</p>}</section>{(['active', 'completed'] as const).map((status) => <section key={status} className="dashboard-section"><div className="section-heading"><h2>{status === 'active' ? '이어서 배울 수업' : '완료한 수업'}</h2></div><div className="class-grid">{lessons.filter((item) => state.enrollments.some((enrollment) => enrollment.lessonKey === item.lessonKey && enrollment.status === status)).map((item) => <LessonCard key={item.lessonKey} item={item} index={courseIndex(item)} courseTitle={courseTitle(item)} enrollment={state.enrollments.find((entry) => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />)}</div>{!state.enrollments.some((item) => item.status === status) && <p className="empty-inline">{status === 'active' ? '현재 이어서 배울 수업이 없어요.' : '완료한 수업이 여기에 모여요.'}</p>}</section>)}</>}</>;
+    return <><div className="page-heading"><h1>조금씩 쌓이는 나의 이해.</h1><p>빠르기보다, 어제보다 조금 더 이해하는 것. 여기까지 온 걸음을 확인해요.</p></div>{!state ? <EmptyState title="첫 걸음을 기록해 보세요" text="내 학습을 시작하면 수업 진도와 개념별 학습 기록이 여기에 모여요." actionLabel="내 학습 시작하기" onAction={() => setModal('login')} /> : <><div className="history-stats"><div><small>완료한 수업</small><strong>{completedCount}<span>개</span></strong></div><div><small>제출한 과제</small><strong>{state.assignments.filter((item) => item.status === 'submitted' && item.policy.kind !== 'practice').length}<span>개</span></strong></div><div><small>다 푼 문제집</small><strong>{state.assignments.filter((item) => item.status === 'submitted' && item.policy.kind === 'practice').length}<span>개</span></strong></div><div><small>풀어본 문제</small><strong>{state.enrollments.reduce((sum, item) => sum + new Set(item.attempts.map((attempt) => attempt.problemVersionId)).size, 0) + state.assignments.reduce((sum, item) => sum + item.items.filter((entry) => entry.attempt).length, 0)}<span>개</span></strong></div></div><ConfusionSummary summary={state.confusion} busy={busy} onOpenLesson={key => void openLesson(key)} onGather={key => void gatherPractice(key)} /><section className="dashboard-section"><div className="section-heading"><h2>코스별 학습 상태</h2><span className="muted small">힌트 사용과 이후 복습까지 반영한 상태예요</span></div><p className="muted small">「스스로 해결」은 힌트 없이 푼 기록, 「꾸준히 기억」은 이후 복습에서도 확인한 기록이에요. 아직 확인 전이라고 해서 모른다는 뜻은 아니에요. 코스를 열면 그 코스가 가르치는 개념이 하나씩 보여요.</p><StandingByCourse courses={courses} lessons={lessons} concepts={state.concepts} busy={busy} /></section><section className="dashboard-section"><div className="section-heading"><h2>추천이 바뀐 기록</h2></div><p className="muted small">학습과 설정을 저장할 때 달라진 추천을 최근 10개까지 보여줘요.</p><div className="recommendation-history">{state.recommendationHistory.map(entry => <article key={entry.id}><small>{formatDate(entry.createdAt)}</small>{entry.targetedPractice && <div><strong>「{entry.targetedPractice.label}」 모아 풀기</strong><p>{entry.targetedPractice.reason}</p><small>{entry.targetedPractice.problemCount}문제</small></div>}{entry.recommendations.map(item => <div key={item.lessonKey}><strong>{lessons.find(c => c.lessonKey === item.lessonKey)?.title ?? '이전 수업'}</strong><p>{item.reason}</p><small>하루 계획 {item.suggestedMinutes}분</small></div>)}</article>)}</div>{!state.recommendationHistory.length && <p className="empty-inline">아직 추천이 바뀐 기록이 없어요.</p>}</section>{(['active', 'completed'] as const).map((status) => <section key={status} className="dashboard-section"><div className="section-heading"><h2>{status === 'active' ? '이어서 배울 수업' : '완료한 수업'}</h2></div><div className="class-grid">{lessons.filter((item) => state.enrollments.some((enrollment) => enrollment.lessonKey === item.lessonKey && enrollment.status === status)).map((item) => <LessonCard key={item.lessonKey} item={item} index={courseIndex(item)} courseTitle={courseTitle(item)} enrollment={state.enrollments.find((entry) => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />)}</div>{!state.enrollments.some((item) => item.status === status) && <p className="empty-inline">{status === 'active' ? '현재 이어서 배울 수업이 없어요.' : '완료한 수업이 여기에 모여요.'}</p>}</section>)}</>}</>;
   }
 
   function renderLesson() {

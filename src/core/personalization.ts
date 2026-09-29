@@ -1,9 +1,26 @@
-import type { AssignmentView, GradeResult, PersonalPlan, PublicLesson, Recommendation, ConceptReadiness } from '@/shared/api';
+import type { AssignmentView, GradeResult, PersonalPlan, PublicLesson, Recommendation, ConceptReadiness, TargetedPracticeRecommendation } from '@/shared/api';
+import type { ConfusionSummary } from '@/shared/confusion';
 import type { PlacementState } from './placement';
 import { conceptGraph, placementScope } from './concept-graph';
 
-export const personalizationVersion = 'rules-v1';
+export const personalizationVersion = 'rules-v2';
 export type Evidence = { problemVersionId: string; conceptKeys: string[]; result: GradeResult; date: Date; responseKind?: string; check: boolean; assessmentId?: string };
+
+export type TargetedPracticeOption = { key: string; problemCount: number; recipientId: string | null; completedAt: string | null };
+
+/** A completed focused round gets room to work: suggest it again only after a new occurrence. */
+export function recommendTargetedPractice(summary: ConfusionSummary, options: TargetedPracticeOption[]): TargetedPracticeRecommendation | null {
+  const repeated = summary.repeated.filter(item => item.kind === 'misconception' && item.status === 'repeated' && item.evidenceIds.length >= 2)
+    .slice().sort((a, b) => b.lastSeenAt.localeCompare(a.lastSeenAt) || b.evidenceIds.length - a.evidenceIds.length || a.key.localeCompare(b.key));
+  for (const item of repeated) {
+    const option = options.find(option => option.key === item.key);
+    if (!option || !option.problemCount || (!option.recipientId && option.completedAt && option.completedAt >= item.lastSeenAt)) continue;
+    return { misconception: item.key, label: item.label, evidenceIds: [...item.evidenceIds],
+      problemCount: option.problemCount, recipientId: option.recipientId,
+      reason: `서로 다른 ${item.evidenceIds.length}문제의 첫 답에서 「${item.label}」가 반복됐어요. ${option.recipientId ? '시작한 모아 풀기를 이어가 보세요.' : '수업 설명으로 돌아가기 전에, 이 실수를 다루는 문제부터 짧게 풀어 봐요.'}` };
+  }
+  return null;
+}
 
 /**
  * Where a learner stands on each concept: what their own work shows, and where the placement put
@@ -32,6 +49,7 @@ export function recommend(input: {
   lessons: PublicLesson[]; enrollments: { lessonKey: string; status: string }[];
   assignments: Pick<AssignmentView, 'recipientId' | 'recommendedAt' | 'status' | 'policy'>[];
   readiness: ConceptReadiness[]; dailyMinutes: number; targetCourseKey: string | null; now: Date; preferredLessonKey?: string | null;
+  targetedPractice?: TargetedPracticeRecommendation | null;
 }): { recommendations: Recommendation[]; plan: PersonalPlan } {
   const { lessons, enrollments, readiness, dailyMinutes, targetCourseKey } = input;
   const ready = (key: string) => readiness.some(s => s.key === key && s.readiness === 'ready');
@@ -78,6 +96,7 @@ export function recommend(input: {
   const due = [...input.assignments].filter(a => a.status === 'assigned' && a.policy.kind !== 'practice' && new Date(a.recommendedAt) <= input.now)
     .sort((a, b) => a.recommendedAt.localeCompare(b.recommendedAt))[0];
   return { recommendations, plan: { version: personalizationVersion, readiness, sessionMinutes: dailyMinutes, preferredLessonKey: chosen?.lessonKey ?? null,
+    targetedPractice: chosen ? null : input.targetedPractice ?? null,
     // What the sorting above just used, said out loud: a screen asking 「지금 어디쯤인가」 needs the
     // same set, and working it out twice in two places is how the two answers drift apart.
     onTheWay: [...onTheWay],
