@@ -7,6 +7,7 @@ import { AnswerChoices } from './answer-choices';
 import { ContentBlocks, RichText, unsupportedRequiredBlocks, type GlossaryContext } from './content-blocks';
 import { Icon } from './icons';
 import { MathAnswerField } from './math-answer-field';
+import { ConceptHelp } from './concept-help';
 
 const messageOf = (error: unknown) => (error instanceof Error ? error.message : '문제가 생겼어요. 다시 시도해 주세요.');
 
@@ -113,6 +114,7 @@ export function ProblemCard({ problem, attempt, actions, busy, disabled, ready =
     {/* The marker's word is prose, and a named mistake says things like 「$-x^2$」 in it, so it is
         read the way the question above it is read rather than printed as characters. */}
     {attempt && <div className={`answer-feedback ${changed ? 'draft-feedback' : attempt.result.status}`} role="status"><Icon name={attempt.result.status === 'correct' && !changed ? 'check' : 'pencil'} size={18} /><span>{changed ? recordsLearning ? '답안을 수정했어요. 다시 저장하면 학습 기록에 반영돼요.' : '답안을 수정했어요. 다시 확인해 보세요.' : <RichText text={attempt.result.message} />}{!changed && attempt.result.assisted && <small>{recordsLearning ? '도움받은 풀이로 기록했어요.' : '힌트를 사용한 풀이예요. 학습 기록에는 남지 않아요.'}</small>}</span></div>}
+    {recordsLearning && attempt?.result.status === 'incorrect' && <ConceptHelp key={attempt.id} attemptId={attempt.id} busy={busy} />}
     {localError && <p className="field-error" role="alert">{localError}</p>}
     {problem.hintAvailable && <div className="hint-area"><button className="text-button hint-button" onPointerDown={hold} onMouseDown={hold} disabled={busy || disabled || unsupported} onClick={openHint}><Icon name="lightbulb" size={16} />{hint ? '힌트 다시 보기' : '조금만 도움받기'}</button>{hint && <div className="hint-content"><ContentBlocks blocks={hint} glossary={glossary} /></div>}</div>}
     {solvable && <div className="solution-area">

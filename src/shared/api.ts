@@ -1,6 +1,7 @@
 // Public HTTP DTOs. Never import server content or grading answers into this module.
 import type { ConceptScope, DefinitionRef } from './rich-text';
 import type { Misreading } from './misreading';
+import type { ConfusionSummary } from './confusion';
 /**
  * What the marker decided, and — when it could read one — what kind of slip the answer looks like.
  * `misreading` is the part a report can add up: the message is written for the one moment after an
@@ -77,6 +78,13 @@ export type GlossaryEntry = {
   lessonKey: string | null;
 };
 export type DefinitionRequest = { lessonKey: string; lessonVersionId: string; path: DefinitionRef[] };
+/** Read-only help for an owned, visible incorrect attempt. No answers or assessment activity. */
+export type ConceptHelp = {
+  concepts: {
+    key: string; label: string; definition: GlossaryEntry | null;
+    lesson: { lessonKey: string; title: string; sections: Pick<LessonSection, 'sectionId' | 'title' | 'contentBlocks'>[] } | null;
+  }[];
+};
 export type LessonDocument = PublicLesson & { sections: LessonSection[]; problems: PublicProblem[]; glossary: GlossaryEntry[] };
 // Display-only concept names for the signed-out catalogue. Never carries answers or grading rules.
 export type PublicConcept = { key: string; label: string };
@@ -240,6 +248,7 @@ export type LearningState = {
   recommendationHistory: RecommendationHistoryView[];
   concepts: { key: string; label: string; state: ConceptState }[];
   misconceptions: StandingMisconception[];
+  confusion: ConfusionSummary;
 };
 export type LearningAction =
   | { action: 'recommendation.choose'; lessonKey: string | null }

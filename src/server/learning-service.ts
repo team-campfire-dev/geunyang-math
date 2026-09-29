@@ -12,9 +12,11 @@ import { Prisma, type PrismaClient, type Attempt } from '@prisma/client';
 import { z } from 'zod';
 import { blockDefinitionRefs, getActivityProblemIds, definitionReferences, toPublicLesson, type LessonMetadata, type LessonRecord, type StoredProblem } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
+import { summarizeConfusion, type ConfusionObservation } from '@/core/confusion';
 import { misconceptionOf } from '@/shared/misconception';
 import { defaultCourseTrack, isSchoolTrack, type ActionResponse, type AssignmentView, type AttemptView, type CourseStage, type CourseTrack, type GradeResult, type LearningState, type PublicCatalog, type PublicLesson, type PublicProblem, type PublicProblemSet, type DiagnosticAnswer, type Recommendation, type StandingMisconception } from '@/shared/api';
 import { AppError } from './errors';
+import { loadConceptHelp } from './concept-help';
 
 /**
  * A placement as a run keeps it: what it has to settle, what it has settled, and **the shape of the
@@ -302,6 +304,11 @@ export class LearningService {
     return glossaryEntries([selected], await this.catalog(), lesson.course.key)[0];
   }
 
+  async conceptHelp(userId: string, input: unknown) {
+    const { attemptId } = z.object({ attemptId: id }).strict().parse(input);
+    return loadConceptHelp(this.db, userId, attemptId, () => this.catalog());
+  }
+
   async state(userId: string, db: Tx = this.db): Promise<LearningState> {
     const [user, lessons, enrollments, recipients, diagnostic, history, assessable, offering] = await Promise.all([
       db.user.findUnique({ where: { id: userId } }), this.catalog(db),
@@ -322,8 +329,8 @@ export class LearningService {
     const conceptRows = orderConcepts(assessable.filter(row => taughtKeys.has(row.key)), lessons);
     const conceptLabels = Object.fromEntries(conceptRows.map(s => [s.key, s.label]));
     const concepts: LearningState['concepts'] = Object.entries(conceptLabels).map(([key, label]) => ({ key, label, state: 'unknown' }));
-    const firstEvidence = new Map<string, { result: GradeResult; date: Date; conceptKeys: string[]; delayed: boolean }>();
     const evidence: Evidence[] = [];
+    const confusionObservations: ConfusionObservation[] = [];
     const observedIds = new Set<string>();
     const records = await lessonRecords(db, enrollments.map(e => e.lessonVersionId));
     for (const e of enrollments) {
@@ -335,12 +342,13 @@ export class LearningService {
         if (result.status === 'invalid') continue;
         const p = record.problems.find(p => p.problemVersionId === a.problemVersionId);
         if (!p) continue;
+        confusionObservations.push({ ...a, result, problem: p, check: checks.has(p.problemVersionId), delayed: false,
+          source: { kind: 'lesson', id: e.id, title: record.public.title, lessonKey: e.lessonVersion.lessonKey } });
         if (!observedIds.has(p.problemVersionId)) {
           observedIds.add(p.problemVersionId);
           evidence.push({ problemVersionId: p.problemVersionId, conceptKeys: p.conceptKeys, result, date: a.createdAt, check: checks.has(p.problemVersionId), assessmentId: e.id });
         }
         for (const concept of concepts.filter(s => p.conceptKeys.includes(s.key))) if (concept.state === 'unknown') concept.state = 'practicing';
-        if (checks.has(p.problemVersionId) && !firstEvidence.has(p.problemVersionId)) firstEvidence.set(p.problemVersionId, { result, date: a.createdAt, conceptKeys: p.conceptKeys, delayed: false });
       }
     }
     // An item names a question in the assignment's frozen problem set version, so the content is read there.
@@ -352,6 +360,18 @@ export class LearningService {
       const lessonKey = enrollments.find(e => e.id === r.sourceEnrollmentId)?.lessonVersion.lessonKey ?? null;
       const policy = parseAssignmentPolicy(r.assignment.policy);
       const window = assignmentWindow(parseAssignmentSchedule(r.assignment.schedule), r);
+      // All submitted sittings belong in the history. Draft work cannot reveal results through
+      // the summary, even when the caller asks for it from a different screen.
+      for (const sitting of r.submissions.filter(item => item.status === 'submitted')) {
+        for (const attempt of sitting.attempts) {
+          if (!r.assignment.items.some(item => item.id === attempt.assignmentItemId && item.problemVersionId === attempt.problemVersionId)) continue;
+          const problem = assignmentProblems.get(attempt.problemVersionId);
+          if (!problem) continue;
+          confusionObservations.push({ ...attempt, result: attempt.result as GradeResult, problem, check: true,
+            delayed: policy.kind === 'review' && attempt.createdAt >= r.recommendedAt,
+            source: { kind: policy.kind, id: r.id, title: r.assignment.title, lessonKey } });
+        }
+      }
       const items = r.assignment.items.map(item => {
         const p = assignmentProblems.get(item.problemVersionId);
         if (!p) throw new Error(`Missing published problem ${item.problemVersionId}`);
@@ -366,10 +386,6 @@ export class LearningService {
             observedIds.add(p.problemVersionId);
             evidence.push({ problemVersionId: p.problemVersionId, conceptKeys: p.conceptKeys, result: first.result as GradeResult, date: first.createdAt, check: true, assessmentId: r.id });
           }
-          if (first && !firstEvidence.has(p.problemVersionId)) firstEvidence.set(p.problemVersionId, {
-            result: first.result as GradeResult, date: first.createdAt, conceptKeys: p.conceptKeys,
-            delayed: first.createdAt >= r.recommendedAt,
-          });
         }
         const visibleAttempt = submission.status === 'submitted'
           ? submission.items.find(selected => selected.assignmentItemId === item.id)?.selectedAttempt
@@ -392,10 +408,11 @@ export class LearningService {
         glossary: leafGlossary(glossaryEntries(assignmentTerms, lessons)),
         reason: typeof (r.assignment.policySnapshot as { reviewReason?: string }).reviewReason === 'string' ? (r.assignment.policySnapshot as { reviewReason: string }).reviewReason : undefined };
     });
+    const confusion = summarizeConfusion(confusionObservations, conceptRows, lessons);
+    // The course overview and the detailed summary must agree about earned understanding.
     for (const concept of concepts) {
-      const correct = [...firstEvidence.values()].filter(e => e.conceptKeys.includes(concept.key) && e.result.status === 'correct' && !e.result.assisted);
-      if (correct.length >= 2) concept.state = 'independent';
-      if (correct.some(e => e.delayed) && correct.some(e => !e.delayed)) concept.state = 'retained';
+      const state = confusion.concepts.find(item => item.key === concept.key)!.state;
+      if (state === 'independent' || state === 'retained') concept.state = state;
     }
     /**
      * The mistakes this learner keeps making, counted over different questions.
@@ -423,6 +440,7 @@ export class LearningService {
     return {
       user: { id: user.id, displayName: user.displayName, targetCourseKey: user.targetCourseKey, dailyMinutes: user.dailyMinutes },
       lessons, assignments, recommendations, concepts, misconceptions, plan,
+      confusion,
       diagnosticOffering: offering ? { version: offering.versionId, title: offering.title, description: offering.description,
         scope: placementScope(conceptGraph(lessons), await this.placementTargets(db, lessons, user.targetCourseKey)).length,
         estimatedMinutes: offering.estimatedMinutes } : null,

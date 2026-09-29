@@ -1438,7 +1438,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "2",
+              "misconception": "divisor-count-without-one"
+            },
+            {
+              "answer": "5",
+              "misconception": "add-divisor-counts"
+            }
+          ]
         }
       ]
     },
@@ -1763,7 +1773,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "6",
+              "misconception": "divisor-count-without-one"
+            },
+            {
+              "answer": "7",
+              "misconception": "add-divisor-counts"
+            }
+          ]
         }
       ]
     },
@@ -1845,7 +1865,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "4",
+              "misconception": "divisor-count-without-one"
+            },
+            {
+              "answer": "6",
+              "misconception": "add-divisor-counts"
+            }
+          ]
         }
       ]
     },
@@ -1972,7 +2002,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "36",
+              "misconception": "gcd-lcm-swapped"
+            }
+          ]
         },
         {
           "problemVersionId": "gcd-lcm:practice-2:v1",
@@ -2009,7 +2045,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "6",
+              "misconception": "gcd-lcm-swapped"
+            },
+            {
+              "answer": "216",
+              "misconception": "product-as-lcm"
+            }
+          ]
         },
         {
           "problemVersionId": "gcd-lcm:practice-3:v1",
@@ -2046,7 +2092,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "72",
+              "misconception": "gcd-lcm-swapped"
+            }
+          ]
         }
       ]
     },
@@ -2091,7 +2143,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "12",
+              "misconception": "gcd-lcm-swapped"
+            },
+            {
+              "answer": "864",
+              "misconception": "product-as-lcm"
+            }
+          ]
         },
         {
           "problemVersionId": "gcd-lcm:check-2:v1",
@@ -2173,7 +2235,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "4",
+              "misconception": "gcd-lcm-swapped"
+            },
+            {
+              "answer": "160",
+              "misconception": "product-as-lcm"
+            }
+          ]
         },
         {
           "problemVersionId": "gcd-lcm:homework-2:v1",
@@ -2379,7 +2451,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "2",
+              "misconception": "divisor-count-without-one"
+            },
+            {
+              "answer": "5",
+              "misconception": "add-divisor-counts"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-4:v1",
@@ -2680,7 +2762,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "4",
+              "misconception": "divisor-count-without-one"
+            },
+            {
+              "answer": "6",
+              "misconception": "add-divisor-counts"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-11:v1",
@@ -2717,7 +2809,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "6",
+              "misconception": "divisor-count-without-one"
+            },
+            {
+              "answer": "7",
+              "misconception": "add-divisor-counts"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-12:v1",
@@ -2828,7 +2930,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "6",
+              "misconception": "divisor-count-without-one"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-15:v1",
@@ -2865,7 +2973,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "48",
+              "misconception": "gcd-lcm-swapped"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-16:v1",
@@ -2902,7 +3016,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "8",
+              "misconception": "gcd-lcm-swapped"
+            },
+            {
+              "answer": "384",
+              "misconception": "product-as-lcm"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-17:v1",
@@ -2939,7 +3063,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "45",
+              "misconception": "gcd-lcm-swapped"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-18:v1",
@@ -2976,7 +3106,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "2",
+              "misconception": "gcd-lcm-swapped"
+            },
+            {
+              "answer": "60",
+              "misconception": "product-as-lcm"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-19:v1",
@@ -3050,7 +3190,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "10",
+              "misconception": "common-denominator-as-sum"
+            }
+          ]
         }
       ]
     },
@@ -3095,7 +3241,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "36",
+              "misconception": "gcd-lcm-swapped"
+            }
+          ]
         },
         {
           "problemVersionId": "gcd-lcm:practice-2:v2",
@@ -3132,7 +3284,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "6",
+              "misconception": "gcd-lcm-swapped"
+            },
+            {
+              "answer": "216",
+              "misconception": "product-as-lcm"
+            }
+          ]
         },
         {
           "problemVersionId": "gcd-lcm:practice-3:v1",
@@ -3169,7 +3331,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "72",
+              "misconception": "gcd-lcm-swapped"
+            }
+          ]
         }
       ]
     },
@@ -3338,7 +3506,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "2",
+              "misconception": "divisor-count-without-one"
+            },
+            {
+              "answer": "5",
+              "misconception": "add-divisor-counts"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-4:v1",
@@ -3639,7 +3817,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "4",
+              "misconception": "divisor-count-without-one"
+            },
+            {
+              "answer": "6",
+              "misconception": "add-divisor-counts"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-11:v1",
@@ -3676,7 +3864,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "6",
+              "misconception": "divisor-count-without-one"
+            },
+            {
+              "answer": "7",
+              "misconception": "add-divisor-counts"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-12:v1",
@@ -3787,7 +3985,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "6",
+              "misconception": "divisor-count-without-one"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-15:v2",
@@ -3824,7 +4028,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "48",
+              "misconception": "gcd-lcm-swapped"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-16:v1",
@@ -3861,7 +4071,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "8",
+              "misconception": "gcd-lcm-swapped"
+            },
+            {
+              "answer": "384",
+              "misconception": "product-as-lcm"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-17:v1",
@@ -3898,7 +4118,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "45",
+              "misconception": "gcd-lcm-swapped"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-18:v1",
@@ -3935,7 +4161,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "2",
+              "misconception": "gcd-lcm-swapped"
+            },
+            {
+              "answer": "60",
+              "misconception": "product-as-lcm"
+            }
+          ]
         },
         {
           "problemVersionId": "factors:drill-19:v1",
@@ -4009,7 +4245,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "10",
+              "misconception": "common-denominator-as-sum"
+            }
+          ]
         }
       ]
     }

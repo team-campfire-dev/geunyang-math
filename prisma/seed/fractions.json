@@ -1448,6 +1448,10 @@
             {
               "answer": "7",
               "misconception": "add-instead-of-scale"
+            },
+            {
+              "answer": "1",
+              "misconception": "scale-one-part"
             }
           ]
         },
@@ -1549,6 +1553,10 @@
             {
               "answer": "14",
               "misconception": "add-instead-of-scale"
+            },
+            {
+              "answer": "5",
+              "misconception": "scale-one-part"
             }
           ]
         }
@@ -1638,6 +1646,10 @@
             {
               "answer": "16",
               "misconception": "add-instead-of-scale"
+            },
+            {
+              "answer": "2",
+              "misconception": "scale-one-part"
             }
           ]
         }
@@ -1699,6 +1711,10 @@
             {
               "answer": "10",
               "misconception": "add-instead-of-scale"
+            },
+            {
+              "answer": "1",
+              "misconception": "scale-one-part"
             }
           ]
         },
@@ -1857,6 +1873,12 @@
                 "text": "분모 $3$에 $5$를 곱해 $15$가 됐어요. 크기가 변하지 않으려면 분자에도 $5$를 곱해야 하니 $1\\times5=5$예요."
               }
             }
+          ],
+          "misreadings": [
+            {
+              "answer": "1",
+              "misconception": "keep-numerators-on-common"
+            }
           ]
         },
         {
@@ -1911,6 +1933,10 @@
             {
               "answer": "2/8",
               "misconception": "add-denominators"
+            },
+            {
+              "answer": "2/6",
+              "misconception": "keep-numerators-on-common"
             }
           ]
         }
@@ -2008,6 +2034,10 @@
             {
               "answer": "2/10",
               "misconception": "add-denominators"
+            },
+            {
+              "answer": "2/12",
+              "misconception": "keep-numerators-on-common"
             }
           ]
         }
@@ -2125,6 +2155,10 @@
             {
               "answer": "2/7",
               "misconception": "add-denominators"
+            },
+            {
+              "answer": "2/12",
+              "misconception": "keep-numerators-on-common"
             }
           ]
         }
@@ -3065,6 +3099,10 @@
             {
               "answer": "12",
               "misconception": "add-instead-of-scale"
+            },
+            {
+              "answer": "2",
+              "misconception": "scale-one-part"
             }
           ]
         },
@@ -3557,6 +3595,10 @@
             {
               "answer": "2/5",
               "misconception": "add-denominators"
+            },
+            {
+              "answer": "2/6",
+              "misconception": "keep-numerators-on-common"
             }
           ]
         },
@@ -3612,6 +3654,10 @@
             {
               "answer": "2/10",
               "misconception": "add-denominators"
+            },
+            {
+              "answer": "2/12",
+              "misconception": "keep-numerators-on-common"
             }
           ]
         },
@@ -3916,6 +3962,10 @@
             {
               "answer": "10",
               "misconception": "add-instead-of-scale"
+            },
+            {
+              "answer": "4",
+              "misconception": "scale-one-part"
             }
           ]
         }

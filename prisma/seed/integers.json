@@ -1500,7 +1500,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "-2",
+              "misconception": "compare-by-absolute"
+            }
+          ]
         },
         {
           "problemVersionId": "absolute-value:practice-3:v1",
@@ -1599,7 +1605,13 @@
           },
           "hintAvailable": false,
           "hints": [],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "3",
+              "misconception": "compare-by-absolute"
+            }
+          ]
         }
       ]
     },
@@ -1681,7 +1693,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "-4",
+              "misconception": "compare-by-absolute"
+            }
+          ]
         }
       ]
     },
@@ -1945,7 +1963,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "0",
+              "misconception": "add-denominators"
+            }
+          ]
         }
       ]
     },
@@ -2672,7 +2696,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "-3/6",
+              "misconception": "stop-reducing-early"
+            }
+          ]
         },
         {
           "problemVersionId": "integers:drill-17:v1",
@@ -2712,7 +2742,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "-5/10",
+              "misconception": "stop-reducing-early"
+            }
+          ]
         },
         {
           "problemVersionId": "integers:drill-18:v1",
@@ -2825,7 +2861,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "2/8",
+              "misconception": "add-denominators"
+            },
+            {
+              "answer": "2/4",
+              "misconception": "stop-reducing-early"
+            }
+          ]
         },
         {
           "problemVersionId": "integers:drill-20:v1",

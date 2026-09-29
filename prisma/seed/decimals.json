@@ -1663,7 +1663,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "1.37",
+              "misconception": "decimal-place-shift"
+            }
+          ]
         },
         {
           "problemVersionId": "decimal-addition:practice-3:v1",
@@ -1701,7 +1707,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "-0.17",
+              "misconception": "decimal-place-shift"
+            }
+          ]
         }
       ]
     },
@@ -1737,7 +1749,13 @@
           },
           "hintAvailable": false,
           "hints": [],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "0.30",
+              "misconception": "decimal-place-shift"
+            }
+          ]
         },
         {
           "problemVersionId": "decimal-addition:check-2:v1",
@@ -1765,7 +1783,13 @@
           },
           "hintAvailable": false,
           "hints": [],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "0.89",
+              "misconception": "decimal-place-shift"
+            }
+          ]
         }
       ]
     },
@@ -1811,7 +1835,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "0.31",
+              "misconception": "decimal-place-shift"
+            }
+          ]
         },
         {
           "problemVersionId": "decimal-addition:homework-2:v1",
@@ -1849,7 +1879,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "0.30",
+              "misconception": "decimal-place-shift"
+            }
+          ]
         }
       ]
     },
@@ -2211,7 +2247,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "25/100",
+              "misconception": "stop-reducing-early"
+            }
+          ]
         },
         {
           "problemVersionId": "decimals:drill-8:v1",
@@ -2251,7 +2293,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "6/10",
+              "misconception": "stop-reducing-early"
+            }
+          ]
         },
         {
           "problemVersionId": "decimals:drill-9:v1",
@@ -2563,7 +2611,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "1.89",
+              "misconception": "decimal-place-shift"
+            }
+          ]
         },
         {
           "problemVersionId": "decimals:drill-16:v1",
