@@ -710,9 +710,17 @@
 .confusion-evidence { margin: 12px 0; }
 .confusion-evidence summary { cursor: pointer; font-size: 13px; padding: 8px 0; }
 .confusion-evidence summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-.confusion-evidence article { padding: 14px 0; border-top: 1px solid var(--line); }
+.confusion-evidence > div > article { padding: 14px 0; border-top: 1px solid var(--line); }
 .confusion-attempts { list-style: none; padding: 0; margin: 12px 0 0; }
 .confusion-attempts li { padding: 10px 0; }
 .confusion-answer { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; font-size: 13px; }
 .confusion-written { overflow-wrap: anywhere; white-space: pre-wrap; }
 .confusion-attempts p { margin: 6px 0 0; overflow-wrap: anywhere; }
+.concept-help { margin-top: 12px; }
+.concept-help-body { margin-top: 12px; padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); overflow-wrap: anywhere; }
+.concept-help-entry + .concept-help-entry { border-top: 1px solid var(--line); margin-top: 20px; padding-top: 16px; }
+.concept-help-entry h4 { font-size: 16px; margin: 0 0 10px; }
+.concept-help-lesson { margin-top: 12px; }
+.concept-help-lesson summary { cursor: pointer; line-height: 1.6; }
+.concept-help-lesson section { margin-top: 16px; }
+.concept-help-lesson h5 { font-size: 15px; margin: 0 0 10px; }

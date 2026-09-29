@@ -78,6 +78,13 @@ export type GlossaryEntry = {
   lessonKey: string | null;
 };
 export type DefinitionRequest = { lessonKey: string; lessonVersionId: string; path: DefinitionRef[] };
+/** Read-only help for an owned, visible incorrect attempt. No answers or assessment activity. */
+export type ConceptHelp = {
+  concepts: {
+    key: string; label: string; definition: GlossaryEntry | null;
+    lesson: { lessonKey: string; title: string; sections: Pick<LessonSection, 'sectionId' | 'title' | 'contentBlocks'>[] } | null;
+  }[];
+};
 export type LessonDocument = PublicLesson & { sections: LessonSection[]; problems: PublicProblem[]; glossary: GlossaryEntry[] };
 // Display-only concept names for the signed-out catalogue. Never carries answers or grading rules.
 export type PublicConcept = { key: string; label: string };

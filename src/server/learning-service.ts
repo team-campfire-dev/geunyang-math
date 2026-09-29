@@ -16,6 +16,7 @@ import { summarizeConfusion, type ConfusionObservation } from '@/core/confusion'
 import { misconceptionOf } from '@/shared/misconception';
 import { defaultCourseTrack, isSchoolTrack, type ActionResponse, type AssignmentView, type AttemptView, type CourseStage, type CourseTrack, type GradeResult, type LearningState, type PublicCatalog, type PublicLesson, type PublicProblem, type PublicProblemSet, type DiagnosticAnswer, type Recommendation, type StandingMisconception } from '@/shared/api';
 import { AppError } from './errors';
+import { loadConceptHelp } from './concept-help';
 
 /**
  * A placement as a run keeps it: what it has to settle, what it has settled, and **the shape of the
@@ -301,6 +302,11 @@ export class LearningService {
     }
     const selected = entries.get(definitionRefId(refs.at(-1)!))!;
     return glossaryEntries([selected], await this.catalog(), lesson.course.key)[0];
+  }
+
+  async conceptHelp(userId: string, input: unknown) {
+    const { attemptId } = z.object({ attemptId: id }).strict().parse(input);
+    return loadConceptHelp(this.db, userId, attemptId, () => this.catalog());
   }
 
   async state(userId: string, db: Tx = this.db): Promise<LearningState> {

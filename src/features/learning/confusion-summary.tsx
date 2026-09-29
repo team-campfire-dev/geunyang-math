@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { confusionStateLabels, type ConfusionAttempt, type ConfusionEvidence, type ConfusionSummary as Summary } from '@/shared/confusion';
 import { ContentBlocks, RichText } from './content-blocks';
+import { ConceptHelp } from './concept-help';
 
 const sourceLabels = { lesson: '수업', homework: '과제', exam: '시험', review: '복습', practice: '연습' };
 const date = (value: string) => new Date(value).toLocaleString('ko-KR', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -16,6 +17,7 @@ function Answer({ attempt, problem, first }: { attempt: ConfusionAttempt; proble
     </div>
     <p className="muted small">{sourceLabels[attempt.source.kind]} · {attempt.source.title} · <time dateTime={attempt.createdAt}>{date(attempt.createdAt)}</time></p>
     {attempt.signal && <p className="small">답에서 읽은 단서: {attempt.signal.label}</p>}
+    {attempt.status === 'incorrect' && <ConceptHelp key={attempt.id} attemptId={attempt.id} />}
   </li>;
 }
 

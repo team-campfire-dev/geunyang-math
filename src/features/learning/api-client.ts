@@ -1,4 +1,4 @@
-import type { ActionResponse, DefinitionRequest, GlossaryEntry, LessonDocument, LearningAction, LearningState, PublicCatalog } from '@/shared/api';
+import type { ActionResponse, ConceptHelp, DefinitionRequest, GlossaryEntry, LessonDocument, LearningAction, LearningState, PublicCatalog } from '@/shared/api';
 import { apiOrigin, apiRequest as request } from '../api-client';
 import { canUseWebAuthentication } from './auth-client';
 
@@ -15,6 +15,7 @@ export const learningApi = {
   state: () => request<LearningState>('learning'),
   lesson: (key: string) => request<LessonDocument>(`learning?lessonKey=${encodeURIComponent(key)}`),
   definition: (input: DefinitionRequest) => request<GlossaryEntry>('definitions', { method: 'POST', body: JSON.stringify(input) }),
+  conceptHelp: (attemptId: string) => request<ConceptHelp>('concept-help', { method: 'POST', body: JSON.stringify({ attemptId }) }),
   login: (displayName: string) => request<Session>('dev-session', { method: 'POST', body: JSON.stringify({ displayName }) }),
   logout: () => request<unknown>('session', { method: 'DELETE' }),
   /** Removes the account and everything kept about it. There is no undo and no id to point elsewhere. */
