@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import type { ContentBlock } from '@/shared/api';
 import { displayedAnswer, type AnswerInput } from '@/shared/authoring-checks';
-import { answerSpec, answerText, choiceIssue, choiceLimits, matchMisreading, misreadingsIssue, type AnswerOption, type AnswerSpec, type ExpectedMisreading } from '@/shared/answer';
+import { readMathExpression, rationalMathValue } from '@/shared/math-expression';
+import { answerSpec, answerText, normalizeAnswer, choiceIssue, choiceLimits, matchMisreading, misreadingsIssue, type AnswerOption, type AnswerSpec, type ExpectedMisreading } from '@/shared/answer';
 import { misconceptionKeys, misconceptions } from '@/shared/misconception';
 import {
   copyProblem, insertAfter, moveBlock, newProblem, nextProblemBlockId, nextProblemVersionId, problemBlockForms,
@@ -63,7 +64,7 @@ function AnswerField({ spec, input, onInput, onChange }: { spec: AnswerSpec; inp
   const requiredForm = spec.kind === 'rational' ? spec.requiredForm : undefined;
   const write = (next: string, form: 'reduced_fraction' | null) => {
     const read = answerSpec(next, form);
-    const parsed: AnswerSpec | null = spec.kind === 'rational' && read?.kind === 'integer' ? { kind: 'rational', numerator: read.value, denominator: 1, ...(form ? { requiredForm: form } : {}) } : read;
+    const parsed: AnswerSpec | null = spec.kind === 'expression' && read && read.kind !== 'choice' ? { kind: 'expression', expression: normalizeAnswer(next)! } : spec.kind === 'rational' && read?.kind === 'integer' ? { kind: 'rational', numerator: read.value, denominator: 1, ...(form ? { requiredForm: form } : {}) } : read;
     onInput({ text: next, spec: JSON.stringify(parsed ?? spec) });
     if (parsed) onChange(parsed);
   };
@@ -71,12 +72,15 @@ function AnswerField({ spec, input, onInput, onChange }: { spec: AnswerSpec; inp
   const parsed = answerSpec(written, requiredForm ?? null);
   // Said in the summary so the fold can stay shut: what a question accepts is worth knowing at a
   // glance, while changing it is rare enough not to hold a place on the screen.
-  const range = spec.kind === 'integer' ? '정수만 인정'
+  const evaluated = readMathExpression(answerText(spec));
+  const numeric = evaluated.value ? rationalMathValue(evaluated.value) : null;
+  const convertible = numeric && Number.isSafeInteger(Number(numeric.numerator)) && Number.isSafeInteger(Number(numeric.denominator));
+  const range = spec.kind === 'expression' ? '분수·거듭제곱·제곱근을 포함해 값이 같은 수식 인정' : spec.kind === 'integer' ? '정수만 인정'
     : requiredForm ? '기약분수로 쓴 답만 인정' : '값이 같으면 정수·소수·분수 모두 인정';
   return <div className="editor-answer">
     <label className="editor-field">
       <span className="editor-label">정답 · 숫자</span>
-      <input value={written} aria-invalid={!parsed} onChange={event => write(event.target.value, requiredForm ?? null)} placeholder="예: -3, 2.5, 1/4" />
+      <input value={written} aria-invalid={!parsed} onChange={event => write(event.target.value, requiredForm ?? null)} placeholder="예: -3, 1/4, 2^3, sqrt(2)" />
       {parsed ? <small>{range}</small>
         : <small className="editor-warn" role="alert">숫자 정답을 확인해 주세요. 이 입력을 고치기 전에는 저장하거나 발행할 수 없어요.</small>}
     </label>
@@ -85,18 +89,23 @@ function AnswerField({ spec, input, onInput, onChange }: { spec: AnswerSpec; inp
       <label className="editor-field"><span className="editor-label">답안 형식</span>
         <select value={spec.kind} disabled={!parsed} onChange={event => {
           if (event.target.value === 'choice') { onChange(blankChoices()); return; }
+          if (event.target.value === 'expression') {
+            const next: AnswerSpec = { kind: 'expression', expression: answerText(spec) };
+            onInput({ text: next.expression, spec: JSON.stringify(next) }); onChange(next); return;
+          }
+          if (!convertible || !numeric) return;
           const next: AnswerSpec = event.target.value === 'rational'
-            ? spec.kind === 'integer' ? { kind: 'rational', numerator: spec.value, denominator: 1 } : spec
-            : { kind: 'integer', value: spec.kind === 'integer' ? spec.value : spec.numerator / spec.denominator };
+            ? { kind: 'rational', numerator: Number(numeric.numerator), denominator: Number(numeric.denominator) }
+            : { kind: 'integer', value: Number(numeric.numerator) };
           onInput({ text: answerText(next), spec: JSON.stringify(next) }); onChange(next);
-        }}><option value="rational">숫자 · 정수, 소수, 분수</option><option value="integer" disabled={spec.kind === 'rational' && spec.numerator % spec.denominator !== 0}>정수만</option><option value="choice">객관식 · 보기에서 고르기</option></select>
+        }}><option value="rational" disabled={!convertible}>숫자 · 정수, 소수, 분수</option><option value="integer" disabled={!convertible || numeric?.denominator !== 1n}>정수만</option><option value="expression">수식 · 거듭제곱, 제곱근 포함</option><option value="choice">객관식 · 보기에서 고르기</option></select>
       </label>
       {spec.kind === 'rational' && <label className="editor-check">
         <input type="checkbox" checked={!!requiredForm} disabled={!parsed} onChange={event => {
           const next: AnswerSpec = { kind: 'rational', numerator: spec.numerator, denominator: spec.denominator, ...(event.target.checked ? {requiredForm: 'reduced_fraction' as const} : {}) };
           onInput({text:written,spec:JSON.stringify(next)}); onChange(next);
         }} /><span>기약분수로 쓴 답만 인정</span></label>}
-      <p className="editor-note">자동 채점은 숫자 답안과 객관식을 지원해요. 문자식·좌표쌍·증명은 설명이나 예시로 작성해 주세요.</p>
+      <p className="editor-note">자동 채점은 숫자·수식 답안과 객관식을 지원해요. 지수는 정수, 근호 안은 0 이상인 유리수 값까지 지원해요. 문자식·좌표쌍·증명은 설명이나 예시로 작성해 주세요.</p>
     </details>
   </div>;
 }

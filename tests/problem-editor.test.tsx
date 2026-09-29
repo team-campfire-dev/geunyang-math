@@ -17,7 +17,7 @@ const problem = (problemVersionId: string, gradingSpec: AnswerSpec): DraftProble
 const panel = (open: DraftProblem, extra: Partial<Parameters<typeof ProblemPanel>[0]> = {}) => <ProblemPanel
   problem={open} number={1} total={2} concepts={concepts} taken={[]} definitionChoices={[]}
   onAnswerInput={() => {}} onChange={() => {}} onMove={() => {}} onCopy={() => {}} onRemove={() => {}} {...extra} />;
-const answerBox = () => screen.getByPlaceholderText('예: -3, 2.5, 1/4') as HTMLInputElement;
+const answerBox = () => screen.getByPlaceholderText('예: -3, 1/4, 2^3, sqrt(2)') as HTMLInputElement;
 
 describe('the answer a question accepts', () => {
   /** The panel showed the answer of whichever question was opened first; a second question kept the
@@ -58,6 +58,16 @@ describe('the answer a question accepts', () => {
     expect(answerBox().value).toBe('abc');
     expect(answerBox().getAttribute('aria-invalid')).toBe('true');
     expect(screen.getByRole('alert').textContent).toContain('저장하거나 발행할 수 없어요');
+  });
+
+  it('writes an irrational answer as an expression and preserves that answer mode', () => {
+    const onChange = vi.fn(), onAnswerInput = vi.fn();
+    const view = render(panel(problem('p1', { kind: 'integer', value: 3 }), { onChange, onAnswerInput }));
+    fireEvent.change(answerBox(), { target: { value: 'sqrt(2)' } });
+    expect(onChange.mock.calls.at(-1)![0].gradingSpec).toEqual({ kind: 'expression', expression: 'sqrt(2)' });
+    view.rerender(panel(problem('p1', { kind: 'expression', expression: 'sqrt(2)' }), { onChange, onAnswerInput }));
+    fireEvent.change(answerBox(), { target: { value: '4' } });
+    expect(onChange.mock.calls.at(-1)![0].gradingSpec).toEqual({ kind: 'expression', expression: '4' });
   });
 
   it('says what a question accepts without the fold being opened', () => {

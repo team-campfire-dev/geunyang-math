@@ -35,7 +35,7 @@ export type PublicProblem = {
   promptContent: ContentBlock[];
   // What answering looks like. A written answer says how it is read; a picked one carries the
   // options to pick from — and never which of them is right, which stays with the question.
-  responseSpec: { kind: 'integer' | 'rational' | 'choice'; requiredForm?: string; options?: { id: string; text: string }[] };
+  responseSpec: { kind: 'integer' | 'rational' | 'expression' | 'choice'; requiredForm?: string; options?: { id: string; text: string }[] };
   hintAvailable: boolean;
   /**
    * Whether this question has a worked solution to ask for. A hint is for while you are stuck; a

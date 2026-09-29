@@ -55,7 +55,7 @@ export function writtenAnswer(problem: { gradingSpec: AnswerSpec }): string {
   const spec = problem.gradingSpec;
   if (spec.kind === 'choice') return spec.correct;
   if (spec.kind === 'integer') return String(spec.value);
-  return `${spec.numerator}/${spec.denominator}`;
+  return spec.kind === 'expression' ? spec.expression : `${spec.numerator}/${spec.denominator}`;
 }
 export const seedProblemSets = deepFreeze(bundle.problemSets);
 export const seedLessons = deepFreeze(bundle.lessons.map((lesson) => assembleLesson(lesson, bundle.problemSets)));
