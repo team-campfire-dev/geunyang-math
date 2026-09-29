@@ -416,6 +416,10 @@ describe('targeted practice on the home screen', () => {
     fireEvent.click(screen.getByText('이 추천은 이렇게 정했어요'));
     fireEvent.click(screen.getByRole('button', { name: '추천의 오답 근거 보기' }));
     await until(() => expect(screen.getByText('추천이 바뀐 기록')).toBeDefined());
+    const history = screen.getByText('추천이 바뀐 기록').closest('details')!;
+    expect(history.open).toBe(false);
+    fireEvent.click(history.querySelector('summary')!);
+    expect(history.open).toBe(true);
     expect(screen.getByText('「분모끼리 더하기」 모아 풀기')).toBeDefined();
   });
 });
