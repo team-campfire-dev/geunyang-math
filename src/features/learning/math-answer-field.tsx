@@ -32,9 +32,8 @@ export function MathAnswerField({ value, onChange, disabled, label, placeholder,
   value: string; onChange: (next: string) => void; disabled?: boolean;
   label: string; placeholder: string; integerOnly?: boolean;
   /**
-   * What the pad's own send key does, where the box stands in something that takes an answer. A
-   * keyboard ends with a return key for the same reason: the writing and the sending are one
-   * motion, and the button below the box is behind the pad and off the bottom of a phone.
+   * Owns the numeric submit control: inside the open pad, beside the field otherwise. Callers
+   * supplying this callback must not render another submit button for the same numeric answer.
    */
   onSend?: () => void; sendLabel?: string; sendDisabled?: boolean;
 }) {
@@ -60,7 +59,7 @@ export function MathAnswerField({ value, onChange, disabled, label, placeholder,
    * it takes to show the whole pad, and by nothing at all when it already shows.
    */
   useEffect(() => { if (showPad) pane.current?.scrollIntoView({ block: 'nearest' }); }, [showPad]);
-  return <div className="math-answer">
+  return <><div className="math-answer">
     {/* The question asks for the answer and the box stands right under it, so the caption is kept
         for readers who meet the box without seeing where it stands. */}
     <label><span className="sr-only">{label}</span><input ref={field} aria-label={label} type="text" maxLength={100}
@@ -94,5 +93,8 @@ export function MathAnswerField({ value, onChange, disabled, label, placeholder,
     </div>}
     {!usingPad && !disabled && <button type="button" className="text-button math-keypad-switch"
       onClick={() => { setWriting('pad'); field.current?.focus(); }}>숫자 키패드 쓰기</button>}
-  </div>;
+  </div>
+    {onSend && !showPad && <button type="button" className="button primary" onPointerDown={hold} onMouseDown={hold}
+      disabled={disabled || sendDisabled} onClick={onSend}>{sendLabel ?? '답안 저장'}</button>}
+  </>;
 }

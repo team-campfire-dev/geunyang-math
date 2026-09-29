@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, cleanup, fireEvent, render, screen } from './render';
+import { act, cleanup, fireEvent, render, screen, within } from './render';
 import { LearningWorkspace } from '@/features/learning/learning-workspace';
 import type { AssignmentView, AttemptView, ContentBlock, LearningAction, LearningState, LessonDocument, PublicCourse, PublicLesson, PublicProblemSet } from '@/shared/api';
 
@@ -338,7 +338,7 @@ describe('a set too long to hold on one screen', () => {
     // The button stands under the box, and pressing it is what puts the pad away: if the press took
     // the focus, everything below the box would jump up between press and release and the answer
     // would never be sent. So it holds the focus and the first press is the one that counts.
-    const save = box(0).closest('form')!.querySelector('button[type=submit]') as HTMLButtonElement;
+    const save = within(box(0).closest('form')!).getByRole('button', { name: '답안 저장' });
     expect(fireEvent.mouseDown(save), '저장 버튼이 포커스를 가져간다').toBe(false);
     fireEvent.click(save);
     await tick();
