@@ -18,7 +18,7 @@ import { canExploreDefinitions } from '@/shared/definition-exploration';
 import { nearbyAssignments, nearbyLessons } from '@/shared/nearby';
 import { ProblemCard, type ProblemActions } from './problem-card';
 import { AnswerReport, type ReportItem } from './answer-report';
-import { ConfusionSummary } from './confusion-summary';
+import { ConfusionSummary, confusionCardId } from './confusion-summary';
 import { Icon, type IconName } from './icons';
 
 type Dispatch = (action: LearningAction) => Promise<ActionResponse>;
@@ -331,6 +331,7 @@ export function LearningWorkspace() {
   const lessonRequest = useRef(0);
   const [sectionIndex, setSectionIndex] = useState(0);
   const [selectedAssignment, setSelectedAssignment] = useState<string | null>(null);
+  const [confusionFocus, setConfusionFocus] = useState<{ key?: string } | null>(null);
   const [finishedLesson, setFinishedLesson] = useState(false);
   const [modal, setModal] = useState<'login' | 'profile' | 'welcome' | null>(null);
   const [displayName, setDisplayName] = useState('');
@@ -361,6 +362,15 @@ export function LearningWorkspace() {
     setProblemToShow(null);
     showProblem(problemToShow);
   }, [problemToShow]);
+
+  useEffect(() => {
+    if (page !== 'history' || !confusionFocus) return;
+    const target = (confusionFocus.key ? window.document.getElementById(confusionCardId(confusionFocus.key)) : null)
+      ?? window.document.getElementById('confusion-summary');
+    if (!target) return;
+    target.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    target.focus({ preventScroll: true }); setConfusionFocus(null);
+  }, [page, confusionFocus, state]);
 
   // Landing on the shelf, once the course asked for has been drawn open. The group takes the
   // cursor as well as the screen, so a learner reading with the keyboard arrives where the eye does.
@@ -397,7 +407,7 @@ export function LearningWorkspace() {
     welcomeOffered.current = false;
     setState(null);
     setSession((previous) => previous ? { ...previous, user: null } : null);
-    setSelectedAssignment(null); setDirtyProblems([]); setOpenShelves([]); submissionRequests.current.clear();
+    setSelectedAssignment(null); setConfusionFocus(null); setDirtyProblems([]); setOpenShelves([]); submissionRequests.current.clear();
     lessonRequest.current += 1; setDocument(null); setLessonLoading(false);
     setSectionIndex(0); setFinishedLesson(false); setDisplayName('');
     setTarget(''); setMinutes(10); setModal(null); setPage('home');
@@ -673,17 +683,18 @@ export function LearningWorkspace() {
     } catch { /* Completion only advances after the server accepted the action. */ }
   }
   function openAssignment(item: AssignmentView) { setDirtyProblems([]); setSelectedAssignment(item.recipientId); navigate('assignment'); }
+  function returnToConfusion(key?: string) { setConfusionFocus({ key }); navigate('history'); }
   /**
    * Gathers the questions built to catch one mistake and opens them. Like starting a set: the run
    * that comes back may be one already open, because coming back means 「이어서」.
    */
-  async function gatherPractice(misconception: string) {
+  async function gatherPractice(misconception: string, localError = false) {
     if (!state) { setModal('login'); return; }
     try {
       const response = await dispatch({ action: 'practice.gather', misconception });
       if (!response.recipientId) return;
       setDirtyProblems([]); setSelectedAssignment(response.recipientId); navigate('assignment');
-    } catch { /* dispatch has already said what went wrong. */ }
+    } catch (reason) { if (localError) throw reason; /* Other entry points use the shared error banner. */ }
   }
   /** Opens a problem set on its own. The run that comes back may be one already in progress. */
   async function startProblemSet(problemSetId: string) {
@@ -905,7 +916,7 @@ export function LearningWorkspace() {
       {state && <details className="personalization-details"><summary>이 추천은 이렇게 정했어요</summary>
         <div className="personalization-body">
           <p className="muted">시작점 확인 없이 바로 시작해도 괜찮아요. 실제 풀이와 제출한 복습을 반영해 추천이 달라져요.</p>
-          {state.plan.targetedPractice && <><p>{state.plan.targetedPractice.reason}</p><button className="text-button" disabled={busy} onClick={() => navigate('history')}>추천의 오답 근거 보기<Icon name="arrow" size={15} /></button></>}
+          {state.plan.targetedPractice && <><p>{state.plan.targetedPractice.reason}</p><button className="text-button" disabled={busy} onClick={() => returnToConfusion(state.plan.targetedPractice?.misconception)}>추천의 오답 근거 보기<Icon name="arrow" size={15} /></button></>}
           <div className="recommendation-choice">
             <button className="button secondary" disabled={busy} onClick={() => navigate('diagnostic')}>{state.diagnostic?.status === 'completed' ? '진단 결과 보기' : state.diagnostic ? `개념 ${state.diagnostic.settled}/${state.diagnostic.scope} · 이어서 확인` : state.diagnosticOffering ? '시작점 확인하기' : '시작점 확인 안내'}</button>
             <button className="text-button" disabled={busy} onClick={() => navigate('lessons')}>다른 수업 직접 고르기 →</button>
@@ -1113,7 +1124,48 @@ export function LearningWorkspace() {
   }
 
   function renderHistory() {
-    return <><div className="page-heading"><h1>조금씩 쌓이는 나의 이해.</h1><p>빠르기보다, 어제보다 조금 더 이해하는 것. 여기까지 온 걸음을 확인해요.</p></div>{!state ? <EmptyState title="첫 걸음을 기록해 보세요" text="내 학습을 시작하면 수업 진도와 개념별 학습 기록이 여기에 모여요." actionLabel="내 학습 시작하기" onAction={() => setModal('login')} /> : <><div className="history-stats"><div><small>완료한 수업</small><strong>{completedCount}<span>개</span></strong></div><div><small>제출한 과제</small><strong>{state.assignments.filter((item) => item.status === 'submitted' && item.policy.kind !== 'practice').length}<span>개</span></strong></div><div><small>다 푼 문제집</small><strong>{state.assignments.filter((item) => item.status === 'submitted' && item.policy.kind === 'practice').length}<span>개</span></strong></div><div><small>풀어본 문제</small><strong>{state.enrollments.reduce((sum, item) => sum + new Set(item.attempts.map((attempt) => attempt.problemVersionId)).size, 0) + state.assignments.reduce((sum, item) => sum + item.items.filter((entry) => entry.attempt).length, 0)}<span>개</span></strong></div></div><ConfusionSummary summary={state.confusion} busy={busy} onOpenLesson={key => void openLesson(key)} onGather={key => void gatherPractice(key)} /><section className="dashboard-section"><div className="section-heading"><h2>코스별 학습 상태</h2><span className="muted small">힌트 사용과 이후 복습까지 반영한 상태예요</span></div><p className="muted small">「스스로 해결」은 힌트 없이 푼 기록, 「꾸준히 기억」은 이후 복습에서도 확인한 기록이에요. 아직 확인 전이라고 해서 모른다는 뜻은 아니에요. 코스를 열면 그 코스가 가르치는 개념이 하나씩 보여요.</p><StandingByCourse courses={courses} lessons={lessons} concepts={state.concepts} busy={busy} /></section><section className="dashboard-section"><div className="section-heading"><h2>추천이 바뀐 기록</h2></div><p className="muted small">학습과 설정을 저장할 때 달라진 추천을 최근 10개까지 보여줘요.</p><div className="recommendation-history">{state.recommendationHistory.map(entry => <article key={entry.id}><small>{formatDate(entry.createdAt)}</small>{entry.targetedPractice && <div><strong>「{entry.targetedPractice.label}」 모아 풀기</strong><p>{entry.targetedPractice.reason}</p><small>{entry.targetedPractice.problemCount}문제</small></div>}{entry.recommendations.map(item => <div key={item.lessonKey}><strong>{lessons.find(c => c.lessonKey === item.lessonKey)?.title ?? '이전 수업'}</strong><p>{item.reason}</p><small>하루 계획 {item.suggestedMinutes}분</small></div>)}</article>)}</div>{!state.recommendationHistory.length && <p className="empty-inline">아직 추천이 바뀐 기록이 없어요.</p>}</section>{(['active', 'completed'] as const).map((status) => <section key={status} className="dashboard-section"><div className="section-heading"><h2>{status === 'active' ? '이어서 배울 수업' : '완료한 수업'}</h2></div><div className="class-grid">{lessons.filter((item) => state.enrollments.some((enrollment) => enrollment.lessonKey === item.lessonKey && enrollment.status === status)).map((item) => <LessonCard key={item.lessonKey} item={item} index={courseIndex(item)} courseTitle={courseTitle(item)} enrollment={state.enrollments.find((entry) => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />)}</div>{!state.enrollments.some((item) => item.status === status) && <p className="empty-inline">{status === 'active' ? '현재 이어서 배울 수업이 없어요.' : '완료한 수업이 여기에 모여요.'}</p>}</section>)}</>}</>;
+    const stats = state ? [
+      { label: '완료한 수업', value: completedCount },
+      { label: '제출한 과제', value: state.assignments.filter(item => item.status === 'submitted' && item.policy.kind !== 'practice').length },
+      { label: '다 푼 문제집', value: state.assignments.filter(item => item.status === 'submitted' && item.policy.kind === 'practice').length },
+      { label: '풀어본 문제', value: state.enrollments.reduce((sum, item) => sum + new Set(item.attempts.map(attempt => attempt.problemVersionId)).size, 0)
+        + state.assignments.reduce((sum, item) => sum + item.items.filter(entry => entry.attempt).length, 0) },
+    ] : [];
+    return <div className="history-page">
+      <div className="page-heading"><span className="eyebrow">나의 학습 노트</span><h1>조금씩 쌓이는 나의 이해.</h1><p>헷갈렸던 부분을 돌아보고, 다음 이해로 이어가요.</p></div>
+      {!state ? <EmptyState title="첫 걸음을 기록해 보세요" text="내 학습을 시작하면 수업 진도와 개념별 학습 기록이 여기에 모여요." actionLabel="내 학습 시작하기" onAction={() => setModal('login')} /> : <>
+        <dl className="history-totals" aria-label="지금까지의 학습">{stats.map(item => <div key={item.label}><dt>{item.label}</dt><dd>{item.value}<span>개</span></dd></div>)}</dl>
+        <ConfusionSummary summary={state.confusion} busy={busy} onOpenLesson={key => void openLesson(key)} onGather={key => gatherPractice(key, true)}
+          continuingKeys={state.assignments.filter(item => item.status === 'assigned' && item.misconception).map(item => item.misconception!)} />
+        <section className="dashboard-section history-courses" aria-labelledby="history-courses-title">
+          <div className="section-heading"><div><span className="eyebrow">배움의 흐름</span><h2 id="history-courses-title">코스별 학습 상태</h2></div></div>
+          <p className="history-description">코스를 펼치면 직접 풀어서 쌓인 개념별 기록을 볼 수 있어요.</p>
+          <details className="history-guide"><summary>학습 상태를 읽는 기준</summary><p>「스스로 해결」은 힌트 없이 푼 기록, 「꾸준히 기억」은 이후 복습에서도 확인한 기록이에요. 아직 확인 전이라고 해서 모른다는 뜻은 아니에요.</p></details>
+          <StandingByCourse courses={courses} lessons={lessons} concepts={state.concepts} busy={busy} />
+        </section>
+        <section className="dashboard-section history-library" aria-labelledby="history-library-title">
+          <div className="section-heading"><div><span className="eyebrow">지나온 페이지</span><h2 id="history-library-title">나의 수업</h2></div></div>
+          {(['active', 'completed'] as const).map(status => {
+            const held = lessons.filter(item => state.enrollments.some(enrollment => enrollment.lessonKey === item.lessonKey && enrollment.status === status));
+            return <details key={status} className="history-fold" open={status === 'active' && held.length > 0}>
+              <summary><span>{status === 'active' ? '이어서 배울 수업' : '완료한 수업'}</span><span className="history-count">{held.length}개</span><Icon name="chevron" size={16} /></summary>
+              {held.length ? <div className="class-grid">{held.map(item => <LessonCard key={item.lessonKey} item={item} index={courseIndex(item)} courseTitle={courseTitle(item)}
+                enrollment={state.enrollments.find(entry => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />)}</div>
+                : <p className="empty-inline">{status === 'active' ? '현재 이어서 배울 수업이 없어요.' : '완료한 수업이 여기에 모여요.'}</p>}
+            </details>;
+          })}
+        </section>
+        <details className="history-fold history-recommendations">
+          <summary><span>추천이 바뀐 기록</span><span className="history-count">{state.recommendationHistory.length}건</span><Icon name="chevron" size={16} /></summary>
+          <p className="history-description">학습과 설정을 저장할 때 달라진 추천을 최근 10개까지 보여줘요.</p>
+          {state.recommendationHistory.length ? <div className="recommendation-history">{state.recommendationHistory.map(entry => <article key={entry.id}>
+            <time dateTime={entry.createdAt}>{formatDate(entry.createdAt)}</time>
+            <div>{entry.targetedPractice && <div><strong>「{entry.targetedPractice.label}」 모아 풀기</strong><p>{entry.targetedPractice.reason}</p><small>{entry.targetedPractice.problemCount}문제</small></div>}
+              {entry.recommendations.map(item => <div key={item.lessonKey}><strong>{lessons.find(c => c.lessonKey === item.lessonKey)?.title ?? '이전 수업'}</strong><p>{item.reason}</p><small>하루 계획 {item.suggestedMinutes}분</small></div>)}</div>
+          </article>)}</div> : <p className="empty-inline">아직 추천이 바뀐 기록이 없어요.</p>}
+        </details>
+      </>}
+    </div>;
   }
 
   function renderLesson() {
@@ -1207,17 +1259,17 @@ export function LearningWorkspace() {
       misconception: item.firstResult?.misconception,
     }));
     // Where to go next when this was a set they chose: the one after it in the same course. A set
-    // gathered across the catalogue came from no course, so it has no next and says nothing.
+    // gathered across the catalogue returns to the confusion summary instead of a next set.
     const shelf = assignment.problemSetId
       ? problemSets.filter((set) => set.courseKey === problemSets.find((entry) => entry.problemSetId === assignment.problemSetId)?.courseKey) : [];
     const next = shelf.length ? shelf[shelf.findIndex((set) => set.problemSetId === assignment.problemSetId) + 1] ?? null : null;
     const gathered = own && !assignment.problemSetId;
-    return <><button className="back-button" onClick={() => navigate('practice')}><Icon name="back" size={17} />연습장으로</button><div className="page-heading"><h1>{assignment.title}</h1><p>{assignmentTiming(assignment)} · {assignment.items.length}문제 · {assignmentKindLabel[assignment.policy.kind]}{assignment.policy.hints ? '' : ' · 힌트 없이'}</p></div><div className={`assignment-instruction ${submitted ? 'is-submitted' : ''}`}><Icon name={submitted ? 'check' : 'pencil'} size={23} /><div><strong>{submitted ? own ? '이 문제집을 다 풀었어요.' : '과제 제출을 완료했어요.' : own ? '문제마다 답안을 저장하고, 다 풀면 마무리해 주세요.' : '문제마다 답안을 저장하고, 마지막에 제출해 주세요.'}</strong><p>{submitted ? '저장한 답안과 풀이 결과를 아래에서 다시 확인할 수 있어요.' : assignment.policy.hints ? '막히면 힌트를 확인하고 다시 생각해 보세요. 저장한 답안은 마무리 전까지 바꿀 수 있어요.' : '이 과제는 힌트 없이 풀어요. 저장한 답안은 제출 전까지 바꿀 수 있어요.'}</p></div>{submitted && <span>{own ? '풀이 완료' : '제출 완료'}</span>}</div>{assignment.reason && <p className="session-guidance">{assignment.reason}</p>}{!submitted && assignment.items.length > 2 && <div className="solve-progress">{/* Two questions fit on a screen together; a set that does not needs to carry its count and its way out along with it. */}
+    return <><button className="back-button" onClick={() => gathered ? returnToConfusion(assignment.misconception) : navigate('practice')}><Icon name="back" size={17} />{gathered ? '헷갈림 요약으로' : '연습장으로'}</button><div className="page-heading"><h1>{assignment.title}</h1><p>{assignmentTiming(assignment)} · {assignment.items.length}문제 · {assignmentKindLabel[assignment.policy.kind]}{assignment.policy.hints ? '' : ' · 힌트 없이'}</p></div><div className={`assignment-instruction ${submitted ? 'is-submitted' : ''}`}><Icon name={submitted ? 'check' : 'pencil'} size={23} /><div><strong>{submitted ? own ? '이 문제집을 다 풀었어요.' : '과제 제출을 완료했어요.' : own ? '문제마다 답안을 저장하고, 다 풀면 마무리해 주세요.' : '문제마다 답안을 저장하고, 마지막에 제출해 주세요.'}</strong><p>{submitted ? '저장한 답안과 풀이 결과를 아래에서 다시 확인할 수 있어요.' : assignment.policy.hints ? '막히면 힌트를 확인하고 다시 생각해 보세요. 저장한 답안은 마무리 전까지 바꿀 수 있어요.' : '이 과제는 힌트 없이 풀어요. 저장한 답안은 제출 전까지 바꿀 수 있어요.'}</p></div>{submitted && <span>{own ? '풀이 완료' : '제출 완료'}</span>}</div>{assignment.reason && <p className="session-guidance">{assignment.reason}</p>}{!submitted && assignment.items.length > 2 && <div className="solve-progress">{/* Two questions fit on a screen together; a set that does not needs to carry its count and its way out along with it. */}
       <span className="solve-count"><strong>{answered} / {assignment.items.length}</strong> 저장<span className="solve-meter" aria-hidden="true"><i style={{ width: `${Math.round(answered / assignment.items.length * 100)}%` }} /></span></span>
       {remaining >= 0
         ? <button className="text-button" onClick={() => setProblemToShow(remaining)}>남은 문제로<Icon name="arrow" size={15} /></button>
         : <button className="button primary" disabled={busy || unsupported} onClick={() => void submitAssignment()}>{busy ? (own ? '저장 중…' : '제출 중…') : own ? '다 풀었어요' : '과제 제출하기'}<Icon name="check" size={16} /></button>}
-    </div>}{submitted && <AnswerReport items={report} concepts={taughtConcepts} lessons={lessons} standings={state?.concepts} busy={busy} onOpenLesson={(key) => void openLesson(key)} />}<div className="assignment-problems">{assignment.items.map((item, index) => <section key={item.id} id={`problem-${index + 1}`}><ProblemCard label={`문제 ${String(index + 1).padStart(2, '0')}`} problem={{ ...item.problem, hintAvailable: item.problem.hintAvailable && assignment.policy.hints }} attempt={item.attempt} actions={assignmentActions(item.problem.problemVersionId)} ready={!!assignment.recipientId} submitLabel="답안 저장" solutionReady={submitted} glossary={{ entries: assignment.glossary, reviewConceptKeys, onOpenLesson: (key) => void openLesson(key) }} busy={busy} disabled={submitted} onReady={() => setModal('login')} readyNote="수업을 시작하면 풀이와 진도가 저장돼요." onDraftChange={(id, dirty) => setDirtyProblems((previous) => dirty ? previous.includes(id) ? previous : [...previous, id] : previous.filter((item) => item !== id))} /></section>)}</div>{!submitted && <div className="assignment-submit"><div><strong>{own ? '이 문제집을 마무리해 볼까요?' : '연습을 마무리해 볼까요?'}</strong><p>{dirtyProblems.length ? `아직 저장하지 않은 답안이 ${dirtyProblems.length}개 있어요. 먼저 답안을 저장해 주세요.` : own ? '모든 문제의 답안을 저장하면 마무리할 수 있어요.' : '모든 문제의 답안을 저장하면 제출할 수 있어요.'}</p>{remaining >= 0 && <button className="text-button" onClick={() => setProblemToShow(remaining)}>남은 문제로<Icon name="arrow" size={15} /></button>}</div><button className="button primary" disabled={busy || unsupported || dirtyProblems.length > 0 || answered !== assignment.items.length || !assignment.items.length} onClick={() => void submitAssignment()}>{busy ? (own ? '저장 중…' : '제출 중…') : own ? '다 풀었어요' : '과제 제출하기'}<Icon name="check" size={18} /></button></div>}{submitted && own && <div className="assignment-submit"><div><strong>{next ? '한 문제집 더 풀어 볼까요?' : gathered ? '이만큼 해 뒀어요.' : '이 과정의 문제집을 모두 풀었어요.'}</strong><p>{next ? `다음은 「${next.name}」이에요. ${next.questionCount}문제예요.` : gathered ? '같은 것이 또 나오면 학습 기록에 다시 모아 둘게요. 오늘은 여기까지도 좋아요.' : '다른 과정의 문제집을 골라 이어가도 좋아요.'}</p></div><button className="button primary" disabled={busy} onClick={() => next ? void startProblemSet(next.problemSetId) : navigate(gathered ? 'history' : 'practice')}>{next ? '이어서 풀기' : gathered ? '학습 기록 보기' : '문제집 고르기'}<Icon name="arrow" size={18} /></button></div>}</>;
+    </div>}{submitted && <AnswerReport items={report} concepts={taughtConcepts} lessons={lessons} standings={state?.concepts} busy={busy} onOpenLesson={(key) => void openLesson(key)} />}<div className="assignment-problems">{assignment.items.map((item, index) => <section key={item.id} id={`problem-${index + 1}`}><ProblemCard label={`문제 ${String(index + 1).padStart(2, '0')}`} problem={{ ...item.problem, hintAvailable: item.problem.hintAvailable && assignment.policy.hints }} attempt={item.attempt} actions={assignmentActions(item.problem.problemVersionId)} ready={!!assignment.recipientId} submitLabel="답안 저장" solutionReady={submitted} glossary={{ entries: assignment.glossary, reviewConceptKeys, onOpenLesson: (key) => void openLesson(key) }} busy={busy} disabled={submitted} onReady={() => setModal('login')} readyNote="수업을 시작하면 풀이와 진도가 저장돼요." onDraftChange={(id, dirty) => setDirtyProblems((previous) => dirty ? previous.includes(id) ? previous : [...previous, id] : previous.filter((item) => item !== id))} /></section>)}</div>{!submitted && <div className="assignment-submit"><div><strong>{own ? '이 문제집을 마무리해 볼까요?' : '연습을 마무리해 볼까요?'}</strong><p>{dirtyProblems.length ? `아직 저장하지 않은 답안이 ${dirtyProblems.length}개 있어요. 먼저 답안을 저장해 주세요.` : own ? '모든 문제의 답안을 저장하면 마무리할 수 있어요.' : '모든 문제의 답안을 저장하면 제출할 수 있어요.'}</p>{remaining >= 0 && <button className="text-button" onClick={() => setProblemToShow(remaining)}>남은 문제로<Icon name="arrow" size={15} /></button>}</div><button className="button primary" disabled={busy || unsupported || dirtyProblems.length > 0 || answered !== assignment.items.length || !assignment.items.length} onClick={() => void submitAssignment()}>{busy ? (own ? '저장 중…' : '제출 중…') : own ? '다 풀었어요' : '과제 제출하기'}<Icon name="check" size={18} /></button></div>}{submitted && own && <div className="assignment-submit"><div><strong>{next ? '한 문제집 더 풀어 볼까요?' : gathered ? '이만큼 해 뒀어요.' : '이 과정의 문제집을 모두 풀었어요.'}</strong><p>{next ? `다음은 「${next.name}」이에요. ${next.questionCount}문제예요.` : gathered ? '방금 제출한 풀이를 반영했어요. 헷갈림 요약에서 첫 답과 이후의 변화를 함께 확인해 보세요.' : '다른 과정의 문제집을 골라 이어가도 좋아요.'}</p></div><button className="button primary" disabled={busy} onClick={() => next ? void startProblemSet(next.problemSetId) : gathered ? returnToConfusion(assignment.misconception) : navigate('practice')}>{next ? '이어서 풀기' : gathered ? '헷갈림 요약 다시 보기' : '문제집 고르기'}<Icon name="arrow" size={18} /></button></div>}</>;
   }
 
   return <div className="app-shell"><a href="#main-content" className="skip-link">본문으로 이동</a><aside className="sidebar"><button className="brand-button" aria-label="그냥수학 홈" onClick={() => navigate('home')}><Brand /></button><div className="sidebar-caption">그냥, 나의 속도로.</div><nav aria-label="주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'nav-item active' : 'nav-item'} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={19} /><span>{item.label}</span>{item.page === 'practice' && pendingAssignments.length > 0 && <span className="nav-badge">{pendingAssignments.length}</span>}</button>)}</nav><div className="sidebar-bottom"><button className="learning-goal" onClick={openProfile}><span className="goal-overline"><Icon name="spark" size={14} />배우려는 과정</span><strong>{courses.find((course) => course.key === state?.user.targetCourseKey)?.title ?? '아직 고르지 않음'}</strong><span>하루 {state?.user.dailyMinutes ?? 10}분, 꾸준히<Icon name="chevron" size={14} /></span><div className="goal-line"><i /><i /><i /><i /><i /><i /><i /></div></button><div className="sidebar-signature">수학을 이해하는 즐거움<span>그냥수학 © 2026</span></div></div></aside><div className="workspace"><header className="topbar"><div className="mobile-brand"><button className="brand-button" onClick={() => navigate('home')} aria-label="홈으로"><Brand /></button></div><div className="breadcrumb"><span>나의 학습 공간</span><Icon name="chevron" size={13} /><strong>{navItems.find((item) => item.page === activeNav)?.label}</strong></div><div className="account-controls">{session?.developmentLogin && <span className="dev-label">개발 미리보기</span>}{state ? <><button className="account-button" onClick={openProfile}><span className="avatar">{state.user.displayName.slice(0, 1)}</span><span>{state.user.displayName}</span></button><button className="icon-button logout" onClick={() => void logout()} disabled={busy || loading} aria-label="로그아웃" title="로그아웃"><Icon name="logout" size={17} /></button></> : <button className="login-link" onClick={() => setModal('login')} disabled={loading}>내 학습 시작<Icon name="arrow" size={15} /></button>}</div></header><nav className="mobile-nav" aria-label="모바일 주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'active' : ''} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={18} />{item.label}</button>)}</nav><main id="main-content" className={`main-content page-${page}`} tabIndex={-1}>{authError && <div className="auth-error-banner" role="alert"><Icon name="lightbulb" size={18} /><span>{authError}</span><button className="text-button" disabled={loading || busy} onClick={() => setModal('login')}>로그인 다시 하기</button><button className="icon-button" aria-label="로그인 안내 닫기" onClick={() => setAuthError('')}><Icon name="close" size={16} /></button></div>}{error && <div className="error-banner" role="alert"><span>{error}</span><button className="text-button" disabled={busy || loading} onClick={() => void refresh()}>다시 불러오기</button><button className="icon-button" aria-label="오류 알림 닫기" onClick={() => setError('')}><Icon name="close" size={16} /></button></div>}{notice && <div className="notice-banner" role="status"><Icon name="check" size={18} /><span>{notice}</span><button className="icon-button" aria-label="알림 닫기" onClick={() => setNotice('')}><Icon name="close" size={16} /></button></div>}{loading ? <div className="loading-panel" role="status"><span className="loader" />나의 학습 공간을 준비하고 있어요…</div> : page === 'home' ? renderHome() : page === 'lessons' ? renderLessons() : page === 'practice' ? renderPractice() : page === 'history' ? renderHistory() : page === 'lesson' ? renderLesson() : page === 'diagnostic' ? state ? <DiagnosticPanel key={`${state.user.id}:${state.diagnostic?.currentProblem?.problemVersionId ?? state.diagnostic?.status ?? 'new'}`} diagnostic={state.diagnostic} offering={state.diagnosticOffering} nextLesson={recommended} readiness={state.plan.readiness} onOpenLesson={(key) => void openLesson(key)} dispatch={dispatch} busy={busy} onBack={() => navigate('home')} targetTitle={courses.find((course) => course.key === state.user.targetCourseKey)?.title ?? null} onChooseTarget={openProfile} /> : null : renderAssignment()}</main><ServiceFooter /></div>{modal && <div className="modal-backdrop" onClick={(event) => { if (event.target === event.currentTarget && !busy) setModal(null); }}><div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" ref={modalRef}><button className="icon-button modal-close" aria-label="닫기" disabled={busy} onClick={() => setModal(null)}><Icon name="close" /></button>{modal === 'welcome' && state ? <FirstStep courses={courses} displayName={state.user.displayName} busy={busy} error={error} onSave={(choice) => void saveFirstStep(choice)} onLater={() => setModal(null)} /> : modal === 'login' ? <>

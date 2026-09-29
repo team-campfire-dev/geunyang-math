@@ -166,6 +166,8 @@ export type AssignmentView = {
    * gathered across the catalogue for one learner, which came from no single set.
    */
   problemSetId: string | null;
+  /** The learning record to return to after a focused, self-chosen practice round. */
+  misconception?: string;
   recommendedAt: string; opensAt: string | null; dueAt: string | null;
   policy: AssignmentPolicy; status: 'assigned' | 'submitted';
   /**

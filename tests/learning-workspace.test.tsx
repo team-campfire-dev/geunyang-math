@@ -83,6 +83,7 @@ function serve(options: { signedIn?: boolean; state?: LearningState; lesson?: Le
     }
     if (url.includes('/api/v1/learning?catalog=1')) return reply({ courses: state.courses, lessons: state.catalogue, concepts: [{ key: 'term.denominator', label: '분모' }], problemSets: shelf });
     if (url.includes('/api/v1/learning?lessonKey=')) return reply(state.lesson);
+    if (url.endsWith('/api/v1/concept-help')) return reply({ concepts: [{ key: 'term.denominator', label: '분모', definition: null, lesson: null }] });
     if (url.endsWith('/api/v1/account') && init?.method === 'DELETE') {
       if (state.refuseDelete) return reply({ error: state.refuseDelete }, 409);
       state.deletes += 1;
@@ -101,6 +102,7 @@ function serve(options: { signedIn?: boolean; state?: LearningState; lesson?: Le
         return reply({ error: { code, message } }, status ?? 400);
       }
       if (state.after) state.learning = state.after(action);
+      if (action.action === 'practice.gather') return reply({ state: state.learning, recipientId: state.learning.assignments.find(item => item.misconception === action.misconception && item.status === 'assigned')?.recipientId });
       if (action.action === 'solution.open') return reply({ state: state.learning, solution: [text('sol1', '넷으로 나눈 한 조각이니 분모는 4예요.')] });
       return reply({ state: state.learning });
     }
@@ -414,6 +416,10 @@ describe('targeted practice on the home screen', () => {
     fireEvent.click(screen.getByText('이 추천은 이렇게 정했어요'));
     fireEvent.click(screen.getByRole('button', { name: '추천의 오답 근거 보기' }));
     await until(() => expect(screen.getByText('추천이 바뀐 기록')).toBeDefined());
+    const history = screen.getByText('추천이 바뀐 기록').closest('details')!;
+    expect(history.open).toBe(false);
+    fireEvent.click(history.querySelector('summary')!);
+    expect(history.open).toBe(true);
     expect(screen.getByText('「분모끼리 더하기」 모아 풀기')).toBeDefined();
   });
 });
@@ -1231,5 +1237,65 @@ describe('what saving the profile says about the placement', () => {
     await openProfile(learningState({ diagnostic: run() }));
     await save(learningState({ diagnostic: run() }));
     expect(screen.getByText(/배우려는 과정과 시간을 반영했어요/)).toBeDefined();
+  });
+});
+
+describe('returning from focused practice to its confusion record', () => {
+  const key = 'add-denominators';
+  const reviewState = () => learningState({ confusion: { version: 1, latestAt: '2026-09-29T00:00:00Z', concepts: [], evidence: [{
+    problemVersionId: problemId, conceptKeys: ['term.denominator'], promptContent: [text('review', '분모를 확인해요.')], responseSpec: { kind: 'integer' },
+    first: { id: 'old-wrong', answer: '5', status: 'incorrect', hintUsed: false, createdAt: '2026-09-29T00:00:00Z', source: { id: 'e1', kind: 'lesson', title: '분수', lessonKey },
+      signal: { kind: 'misconception', key, label: '분모끼리 더하기', note: '분모를 맞춰요.' } }, corrections: [],
+  }], repeated: [{ kind: 'misconception', key, label: '분모끼리 더하기', note: '분모를 맞춰요.', status: 'repeated', description: '서로 다른 문제에서 반복했어요.', evidenceIds: [problemId], improvementEvidenceIds: [], lastSeenAt: '2026-09-29T00:00:00Z' }] } });
+  const own = () => assignment({ problemSetId: null, lessonKey: null, misconception: key, title: '분모끼리 더하기 모아 풀기', policy: { kind: 'practice', hints: true, results: 'per-item', solutions: 'after-submission' } });
+  it('reads, gathers, saves, submits and returns focus to the same record without claiming mastery', async () => {
+    window.history.replaceState({}, '', '/?page=history');
+    server = serve({ state: reviewState() });
+    const round = own();
+    server.state.after = action => {
+      const next = structuredClone(server.state.learning);
+      if (action.action === 'practice.gather') next.assignments = [round];
+      if (action.action === 'attempt.submit') {
+        const result = { status: 'correct' as const, message: '맞았어요.', assisted: false };
+        next.assignments[0].items[0].attempt = { id: 'new', problemVersionId: problemId, answer: action.answer, result, hintUsed: false };
+        next.assignments[0].items[0].firstResult = result;
+      }
+      if (action.action === 'assignment.submit') next.assignments[0].status = 'submitted';
+      return next;
+    };
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByRole('button', { name: '관련 개념 설명' })).toBeDefined());
+    fireEvent.click(screen.getByRole('button', { name: '관련 개념 설명' }));
+    await until(() => expect(screen.getByText('아직 이 개념에 연결된 설명이 없어요.')).toBeDefined());
+    expect(server.sent).toHaveLength(0);
+    fireEvent.click(screen.getByRole('button', { name: '이것만 모아 풀기' }));
+    await until(() => expect(screen.getByRole('heading', { level: 1, name: round.title })).toBeDefined());
+    fireEvent.change(screen.getByRole('textbox', { name: '나의 답' }), { target: { value: '4' } });
+    fireEvent.click(screen.getByRole('button', { name: '답안 저장' }));
+    await until(() => expect(screen.getByRole('button', { name: '다 풀었어요' }).hasAttribute('disabled')).toBe(false));
+    fireEvent.click(screen.getByRole('button', { name: '다 풀었어요' }));
+    await until(() => expect(screen.getByRole('button', { name: '헷갈림 요약 다시 보기' })).toBeDefined());
+    fireEvent.click(screen.getByRole('button', { name: '헷갈림 요약 다시 보기' }));
+    await until(() => expect(window.document.activeElement?.id).toBe(`confusion-misconception-${key}`));
+    expect(server.sent.map(action => action.action)).toEqual(['practice.gather', 'attempt.submit', 'assignment.submit']);
+    expect(screen.queryByText('최근에는 스스로 해결')).toBeNull();
+  });
+  it('restores a focused round from its URL and returns to the record with a continuation button', async () => {
+    const round = own(); window.history.replaceState({}, '', `/?set=${round.recipientId}`);
+    server = serve({ state: { ...reviewState(), assignments: [round] } });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByRole('button', { name: '헷갈림 요약으로' })).toBeDefined());
+    fireEvent.click(screen.getByRole('button', { name: '헷갈림 요약으로' }));
+    await until(() => expect(window.document.activeElement?.id).toBe(`confusion-misconception-${key}`));
+    expect(screen.getByRole('button', { name: '모아 풀기 이어서' })).toBeDefined();
+    expect(server.sent).toHaveLength(0);
+  });
+  it('falls back to the summary when an older round has no focus metadata', async () => {
+    const round = own(); delete round.misconception; window.history.replaceState({}, '', `/?set=${round.recipientId}`);
+    server = serve({ state: { ...reviewState(), assignments: [round] } });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByRole('button', { name: '헷갈림 요약으로' })).toBeDefined());
+    fireEvent.click(screen.getByRole('button', { name: '헷갈림 요약으로' }));
+    await until(() => expect(window.document.activeElement?.id).toBe('confusion-summary'));
   });
 });

@@ -401,7 +401,10 @@ export class LearningService {
           attempt: visibleAttempt ? { ...attemptView(visibleAttempt), result: shown(visibleAttempt.result as GradeResult, hold) } : null,
           tries: real.length, firstResult: real.length ? shown(real[0].result as GradeResult, hold) : null };
       });
-      return { id: r.assignmentId, recipientId: r.id, title: r.assignment.title, lessonKey, problemSetId: r.assignment.problemSetId,
+      const focus = (r.assignment.policySnapshot as { misconception?: unknown } | null)?.misconception;
+      const misconception = r.assignment.issuerType === 'self' && policy.kind === 'practice' && !r.assignment.problemSetId
+        && typeof focus === 'string' && misconceptionOf(focus) ? focus : undefined;
+      return { id: r.assignmentId, recipientId: r.id, title: r.assignment.title, lessonKey, problemSetId: r.assignment.problemSetId, misconception,
         recommendedAt: r.recommendedAt.toISOString(), opensAt: window.opensAt?.toISOString() ?? null, dueAt: window.dueAt?.toISOString() ?? null,
         policy, status: r.status as 'assigned' | 'submitted', items, submissionId: submission.id,
         glossary: leafGlossary(glossaryEntries(assignmentTerms, lessons)),
