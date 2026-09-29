@@ -1735,7 +1735,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "9",
+              "misconception": "forgets-to-divide-inside"
+            }
+          ]
         },
         {
           "problemVersionId": "common-factor:practice-2:v1",
@@ -1809,7 +1815,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "6",
+              "misconception": "forgets-to-divide-inside"
+            }
+          ]
         }
       ]
     },
@@ -1854,7 +1866,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "10",
+              "misconception": "forgets-to-divide-inside"
+            }
+          ]
         },
         {
           "problemVersionId": "common-factor:check-2:v1",
@@ -1986,7 +2004,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "8",
+              "misconception": "forgets-to-divide-inside"
+            }
+          ]
         },
         {
           "problemVersionId": "common-factor:homework-2:v1",
@@ -2628,7 +2652,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "0",
+              "misconception": "square-termwise"
+            }
+          ]
         },
         {
           "problemVersionId": "factorization:drill-7:v1",
@@ -2855,7 +2885,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "12",
+              "misconception": "forgets-to-divide-inside"
+            }
+          ]
         },
         {
           "problemVersionId": "factorization:drill-12:v1",
@@ -2929,7 +2965,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "6",
+              "misconception": "forgets-to-divide-inside"
+            }
+          ]
         },
         {
           "problemVersionId": "factorization:drill-14:v1",
@@ -3045,7 +3087,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "15",
+              "misconception": "forgets-to-divide-inside"
+            }
+          ]
         },
         {
           "problemVersionId": "factorization:drill-16:v1",

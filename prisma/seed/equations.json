@@ -1217,7 +1217,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "16",
+              "misconception": "move-without-sign"
+            }
+          ]
         },
         {
           "problemVersionId": "equation-meaning:practice-2:v1",
@@ -1254,7 +1260,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "-8",
+              "misconception": "move-without-sign"
+            }
+          ]
         },
         {
           "problemVersionId": "equation-meaning:practice-3:v1",
@@ -1291,7 +1303,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "12",
+              "misconception": "move-a-factor"
+            }
+          ]
         }
       ]
     },
@@ -1336,7 +1354,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "6",
+              "misconception": "move-a-factor"
+            }
+          ]
         },
         {
           "problemVersionId": "equation-meaning:check-2:v1",
@@ -1373,7 +1397,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "5",
+              "misconception": "move-without-sign"
+            }
+          ]
         }
       ]
     },
@@ -1418,7 +1448,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "-14",
+              "misconception": "move-without-sign"
+            }
+          ]
         },
         {
           "problemVersionId": "equation-meaning:homework-2:v1",
@@ -1537,7 +1573,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "2",
+              "misconception": "move-without-sign"
+            }
+          ]
         },
         {
           "problemVersionId": "equality-property:practice-3:v1",
@@ -1574,7 +1616,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "30",
+              "misconception": "move-a-factor"
+            }
+          ]
         }
       ]
     },
@@ -1619,7 +1667,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "4",
+              "misconception": "move-without-sign"
+            }
+          ]
         },
         {
           "problemVersionId": "equality-property:check-2:v1",
@@ -1656,7 +1710,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "12",
+              "misconception": "move-a-factor"
+            }
+          ]
         }
       ]
     },
@@ -1701,7 +1761,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "6",
+              "misconception": "move-without-sign"
+            }
+          ]
         },
         {
           "problemVersionId": "equality-property:homework-2:v1",
@@ -1783,7 +1849,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "12",
+              "misconception": "move-a-factor"
+            }
+          ]
         },
         {
           "problemVersionId": "linear-equation:practice-2:v1",
@@ -1820,7 +1892,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "8",
+              "misconception": "move-without-sign"
+            }
+          ]
         },
         {
           "problemVersionId": "linear-equation:practice-3:v1",
@@ -1857,7 +1935,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "3",
+              "misconception": "move-without-sign"
+            },
+            {
+              "answer": "8",
+              "misconception": "move-a-factor"
+            }
+          ]
         }
       ]
     },
@@ -1902,7 +1990,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "10",
+              "misconception": "move-without-sign"
+            }
+          ]
         },
         {
           "problemVersionId": "linear-equation:check-2:v1",
@@ -1939,7 +2033,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "-13",
+              "misconception": "move-without-sign"
+            }
+          ]
         }
       ]
     },
@@ -1984,7 +2084,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "1",
+              "misconception": "distribute-first-term-only"
+            }
+          ]
         },
         {
           "problemVersionId": "linear-equation:homework-2:v1",
@@ -2022,7 +2128,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "3/4",
+              "misconception": "move-without-sign"
+            },
+            {
+              "answer": "-3",
+              "misconception": "move-a-factor"
+            }
+          ]
         }
       ]
     },
@@ -2067,7 +2183,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "24",
+              "misconception": "move-a-factor"
+            }
+          ]
         },
         {
           "problemVersionId": "equations:drill-2:v1",
@@ -2104,7 +2226,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "15",
+              "misconception": "move-without-sign"
+            }
+          ]
         },
         {
           "problemVersionId": "equations:drill-3:v1",
@@ -2214,7 +2342,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "15",
+              "misconception": "move-a-factor"
+            }
+          ]
         },
         {
           "problemVersionId": "equations:drill-5:v1",
@@ -2251,7 +2385,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "-22",
+              "misconception": "move-without-sign"
+            }
+          ]
         },
         {
           "problemVersionId": "equations:drill-6:v1",
@@ -2361,7 +2501,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "28",
+              "misconception": "move-a-factor"
+            }
+          ]
         },
         {
           "problemVersionId": "equations:drill-8:v1",
@@ -2435,7 +2581,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "-6",
+              "misconception": "move-without-sign"
+            }
+          ]
         },
         {
           "problemVersionId": "equations:drill-10:v1",
@@ -2582,7 +2734,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "11",
+              "misconception": "move-without-sign"
+            }
+          ]
         },
         {
           "problemVersionId": "equations:drill-13:v1",
@@ -2706,7 +2864,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "24",
+              "misconception": "move-a-factor"
+            }
+          ]
         },
         {
           "problemVersionId": "equations:drill-15:v1",
@@ -2743,7 +2907,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "1",
+              "misconception": "move-without-sign"
+            }
+          ]
         },
         {
           "problemVersionId": "equations:drill-16:v1",
@@ -2780,7 +2950,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "3",
+              "misconception": "move-without-sign"
+            },
+            {
+              "answer": "12",
+              "misconception": "move-a-factor"
+            }
+          ]
         },
         {
           "problemVersionId": "equations:drill-17:v1",
@@ -2817,7 +2997,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "-3",
+              "misconception": "move-without-sign"
+            }
+          ]
         },
         {
           "problemVersionId": "equations:drill-18:v1",
@@ -2854,7 +3040,13 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "-16",
+              "misconception": "move-without-sign"
+            }
+          ]
         },
         {
           "problemVersionId": "equations:drill-19:v1",
@@ -2892,7 +3084,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [],
+          "misreadings": [
+            {
+              "answer": "5/2",
+              "misconception": "move-without-sign"
+            },
+            {
+              "answer": "1",
+              "misconception": "move-a-factor"
+            }
+          ]
         },
         {
           "problemVersionId": "equations:drill-20:v1",
