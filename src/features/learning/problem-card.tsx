@@ -104,7 +104,7 @@ export function ProblemCard({ problem, attempt, actions, busy, disabled, ready =
             disabled={busy || disabled || unsupported || !ready}
             onPick={(id) => { setAnswer(id); onDraftChange?.(problem.problemVersionId, id !== (attempt?.answer ?? '')); }} />
         : <MathAnswerField label="나의 답" value={answer} disabled={busy || disabled || unsupported || !ready}
-            integerOnly={problem.responseSpec.kind === 'integer'}
+            integerOnly={problem.responseSpec.kind === 'integer'} fractionRequired={!!problem.responseSpec.requiredForm}
             placeholder={problem.responseSpec.kind === 'rational' ? '예: 3/4 또는 0.75' : '정수를 입력해 주세요'}
             onSend={() => void send()} sendLabel={busy ? '저장 중…' : submitLabel} sendDisabled={busy || !answer.trim()}
             onChange={(next) => { setAnswer(next); onDraftChange?.(problem.problemVersionId, next.trim() !== (attempt?.answer ?? '')); }} />}

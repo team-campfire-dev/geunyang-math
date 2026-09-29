@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from './render';
 import { DiagnosticPanel } from '@/features/learning/diagnostic-panel';
 import type { ConceptReadiness, DiagnosticOffering, DiagnosticView, PublicProblem } from '@/shared/api';
@@ -21,6 +21,8 @@ const run = (over: Partial<DiagnosticView> = {}): DiagnosticView => ({
 const panel = (props: Partial<Parameters<typeof DiagnosticPanel>[0]> = {}) => render(
   <DiagnosticPanel diagnostic={run()} offering={offering} busy={false} readiness={[]}
     dispatch={vi.fn(async () => ({}) as never)} onBack={vi.fn()} onOpenLesson={vi.fn()} {...props} />);
+
+afterEach(() => vi.restoreAllMocks());
 
 describe('the placement screen', () => {
   it('measures progress in concepts settled, not in questions of a length it cannot know', () => {
@@ -101,6 +103,20 @@ describe('the placement screen', () => {
     fireEvent.click(screen.getByRole('button', { name: '저장하고 다음으로' }));
     // The option's id is the answer; what it reads is only what the learner reads.
     expect(dispatch).toHaveBeenCalledWith({ action: 'diagnostic.answer', diagnosticId: 'run', problemVersionId: 'q9', answer: 'b' });
+  });
+
+  it('offers one submit control in the touch fraction dock and saves once', () => {
+    const original = window.matchMedia;
+    vi.spyOn(window, 'matchMedia').mockImplementation(query => ({ ...original(query), matches: query === '(any-pointer: coarse)' }));
+    const dispatch = vi.fn(async () => ({}) as never);
+    panel({ dispatch, diagnostic: run({ currentProblem: { ...problem, responseSpec: { kind: 'rational', requiredForm: 'reduced_fraction' } } }) });
+    fireEvent.focus(screen.getByLabelText('나의 답'));
+    expect(screen.getByRole('region', { name: '수식 키보드' })).toBeTruthy();
+    expect(screen.getAllByRole('button', { name: '저장하고 다음으로' })).toHaveLength(1);
+    fireEvent.click(screen.getByRole('button', { name: '3' }));
+    fireEvent.click(screen.getByRole('button', { name: '저장하고 다음으로' }));
+    expect(dispatch).toHaveBeenCalledExactlyOnceWith({ action: 'diagnostic.answer', diagnosticId: 'run', problemVersionId: 'q1', answer: '3' });
+    expect(screen.queryByRole('region', { name: '수식 키보드' })).toBeNull();
   });
 
   it('offers a way to stop that is said in words, not only an arrow at the top', () => {
