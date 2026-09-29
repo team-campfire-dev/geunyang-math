@@ -32,6 +32,7 @@ function canCheck(row: ConfusionObservation, signal: ConfusionSignal): boolean {
   if (signal.kind === 'misconception') return row.problem.misreadings?.some(item => item.misconception === signal.key) ?? false;
   const spec = row.problem.gradingSpec;
   if (spec.kind === 'choice') return false;
+  if (spec.kind === 'expression') return false;
   if (signal.key === 'unreduced') return spec.kind === 'rational' && spec.requiredForm === 'reduced_fraction';
   if (signal.key === 'reciprocal') return spec.kind === 'rational' && spec.denominator !== 1 && spec.numerator !== 0;
   if (signal.key === 'off-by-one') return spec.kind === 'integer' || spec.numerator % spec.denominator === 0;

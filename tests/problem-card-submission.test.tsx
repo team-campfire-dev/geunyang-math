@@ -9,6 +9,7 @@ const problem: PublicProblem = { problemVersionId: 'submission:p1', conceptKeys:
   responseSpec: { kind: 'rational' }, hintAvailable: false, solutionAvailable: false };
 
 beforeEach(() => {
+  sessionStorage.clear();
   const original = window.matchMedia;
   vi.spyOn(window, 'matchMedia').mockImplementation(query => ({ ...original(query), matches: query === '(any-pointer: coarse)' }));
 });
@@ -19,7 +20,6 @@ describe('one submission control per problem', () => {
     render(<ProblemCard problem={problem} actions={{ submit: vi.fn().mockResolvedValue(undefined), openHint: vi.fn() }} busy={false} submitLabel={submitLabel} />);
     expect(screen.getAllByRole('button', { name: submitLabel })).toHaveLength(1);
     fireEvent.focus(screen.getByRole('textbox', { name: '나의 답' }));
-    fireEvent.click(screen.getByRole('button', { name: '수식 키보드 열기' }));
     expect(screen.getByRole('group', { name: '숫자 키패드' })).toBeTruthy();
     expect(screen.getAllByRole('button', { name: submitLabel })).toHaveLength(1);
     fireEvent.blur(screen.getByRole('textbox', { name: '나의 답' }));
@@ -30,7 +30,6 @@ describe('one submission control per problem', () => {
     render(<ProblemCard problem={problem} actions={{ submit, openHint: vi.fn() }} busy={false} />);
     const box = screen.getByRole('textbox', { name: '나의 답' });
     fireEvent.focus(box);
-    fireEvent.click(screen.getByRole('button', { name: '수식 키보드 열기' }));
     expect((screen.getByRole('button', { name: '정답 확인' }) as HTMLButtonElement).disabled).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: '3' }));
     const button = screen.getByRole('button', { name: '정답 확인' });
@@ -46,7 +45,6 @@ describe('one submission control per problem', () => {
     const view = render(<ProblemCard problem={problem} actions={actions} busy={false} />);
     const box = screen.getByRole('textbox', { name: '나의 답' });
     fireEvent.focus(box);
-    fireEvent.click(screen.getByRole('button', { name: '수식 키보드 열기' }));
     fireEvent.click(screen.getByRole('button', { name: '기본 키보드' }));
     fireEvent.change(box, { target: { value: '1/2' } });
     expect(screen.getAllByRole('button', { name: '정답 확인' })).toHaveLength(1);

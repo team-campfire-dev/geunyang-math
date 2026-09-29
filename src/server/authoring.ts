@@ -1,3 +1,4 @@
+import { mathValueKey, readMathExpression } from '@/shared/math-expression';
 import 'server-only';
 import { unfinishedIssues } from '@/shared/authoring-checks';
 import { z } from 'zod';
@@ -7,7 +8,7 @@ import { maxProblemsPerSet, problemSetRefs, storedLessonOf, validateLesson, vali
 import { gradeAnswer } from '@/core/grading';
 import { frozenProblemSet, lessonRecord, importContent, problemSetRecords, lessonRecords, publishedProblemRecords, definitionRecords, currentDefinitions } from './content-store';
 import { AppError } from './errors';
-import { choiceLimits, misreadingLimits, parseAnswer, type AnswerSpec } from '@/shared/answer';
+import { choiceLimits, misreadingLimits, normalizeAnswer, type AnswerSpec } from '@/shared/answer';
 import type { ContentBlock, GradeResult, LessonSection, ProblemSetRef } from '@/shared/api';
 import {
   lessonKeyPattern, mayEditEveryDraft, mayGrantRoles, mayPublish, newProblem, nextBlockId, nextProblemVersionId,
@@ -53,6 +54,7 @@ const problemEditSchema = z.object({
   conceptKeys: z.array(id).max(50),
   promptContent: blockList,
   gradingSpec: z.discriminatedUnion('kind', [
+    z.object({ kind: z.literal('expression'), expression: z.string().min(1).max(80).refine(value => !!readMathExpression(value).value, 'Invalid numeric expression') }).strict(),
     z.object({ kind: z.literal('integer'), value: answerNumber }).strict(),
     z.object({ kind: z.literal('rational'), numerator: answerNumber, denominator: answerNumber,
       requiredForm: z.literal('reduced_fraction').optional() }).strict(),
@@ -708,9 +710,9 @@ export class AuthoringService {
       // A typo is not a wrong answer, and a right answer is not one either.
       if ((row.result as GradeResult).status !== 'incorrect') continue;
       const written = row.answer.trim();
-      const parsed = parseAnswer(written);
+      const parsed = problem?.gradingSpec.kind === 'choice' ? null : readMathExpression(normalizeAnswer(written) ?? '');
       // By value where there is one, so three spellings of the same mistake are one row.
-      const key = parsed ? `${parsed.numerator}/${parsed.denominator}` : written;
+      const key = parsed?.value ? mathValueKey(parsed.value) : written;
       const group = groups.get(key) ?? { answer: written, spellings: new Map(), learners: new Set(), count: 0 };
       group.count += 1;
       group.learners.add(row.userId);

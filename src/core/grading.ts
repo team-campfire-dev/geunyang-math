@@ -1,11 +1,12 @@
 import 'server-only';
+import { readMathExpression, rationalMathValue, sameMathValue } from '@/shared/math-expression';
 import type { GradeResult } from '@/shared/api';
 import type { Misreading } from '@/shared/misreading';
-import { matchMisreading, parseAnswer, writtenAsInteger, type ExpectedMisreading } from '@/shared/answer';
+import { matchMisreading, normalizeAnswer, parseAnswer, writtenAsInteger, type ExpectedMisreading } from '@/shared/answer';
 import { misconceptionOf } from '@/shared/misconception';
 import type { StoredProblem } from './content';
 
-type NumericSpec = Exclude<StoredProblem['gradingSpec'], { kind: 'choice' }>;
+type NumericSpec = Exclude<StoredProblem['gradingSpec'], { kind: 'choice' | 'expression' }>;
 function expectedValue(spec: NumericSpec): { numerator: bigint; denominator: bigint } {
   if (spec.kind === 'integer') {
     if (!Number.isSafeInteger(spec.value)) throw new Error('Invalid integer grading specification');
@@ -76,7 +77,7 @@ function named(answer: string, spec: StoredProblem['gradingSpec'], expected: Exp
   return { status: 'incorrect', message: record.note, misconception: key, assisted };
 }
 
-/** Exact arithmetic only: no floating point equality, dynamic execution, or expressions. */
+/** Exact bounded arithmetic only; no floating point equality or dynamic execution. */
 export function gradeAnswer(answer: string, spec: StoredProblem['gradingSpec'], assisted = false, expected?: ExpectedMisreading[]): GradeResult {
   // A picked answer is compared by name, never by what the name says: two options may read the same
   // and still be different options, and the text a learner saw is the published question's.
@@ -87,22 +88,29 @@ export function gradeAnswer(answer: string, spec: StoredProblem['gradingSpec'], 
       ?? { status: 'incorrect', message: '아직 답이 맞지 않아요. 보기를 하나씩 다시 견주어 보세요.', assisted };
     return { status: 'correct', message: assisted ? '맞았어요. 다음에는 힌트 없이도 한 번 골라 봐요.' : '맞았어요. 잘 골랐어요!', assisted };
   }
+  const read = readMathExpression(normalizeAnswer(answer) ?? '');
+  if (!read.value) return { status: 'invalid', message: read.issue, assisted };
+  if (spec.kind === 'expression') {
+    const expectedValue = readMathExpression(spec.expression);
+    if (!expectedValue.value) throw new Error('Invalid expression grading specification');
+    return sameMathValue(read.value, expectedValue.value)
+      ? { status: 'correct', message: assisted ? '맞았어요. 다음에는 힌트 없이도 풀어 봐요.' : '맞았어요!', assisted }
+      : named(answer, spec, expected, assisted) ?? { status: 'incorrect', message: '아직 답이 맞지 않아요. 풀이를 한 번 더 확인해 보세요.', assisted };
+  }
   const value = expectedValue(spec);
   const parsed = parseAnswer(answer);
-  if (!parsed) {
-    return { status: 'invalid', message: '숫자 또는 1/2처럼 분수를 입력해 주세요. 분모에는 0을 쓸 수 없어요.', assisted };
-  }
+  const computed = rationalMathValue(read.value);
   if (spec.kind === 'integer' && !writtenAsInteger(answer)) {
     return { status: 'invalid', message: '이 문제는 정수로 답해 주세요. 예: 3', assisted };
   }
-  const equivalent = parsed.numerator * value.denominator === value.numerator * parsed.denominator;
+  const equivalent = computed && computed.numerator * value.denominator === value.numerator * computed.denominator;
   // The catalogue is no longer only fractions, so what to reconsider is the question's to say.
   if (!equivalent) {
-    const read = misreadingOf({ numerator: parsed.numerator, denominator: parsed.denominator }, value);
+    const read = computed ? misreadingOf(computed, value) : null;
     return named(answer, spec, expected, assisted)
       ?? { status: 'incorrect', assisted, ...(read ? { misreading: read, message: misreadingMessages[read] } : { message: '아직 답이 맞지 않아요. 풀이를 한 번 더 확인해 보세요.' }) };
   }
-  if (spec.kind === 'rational' && spec.requiredForm === 'reduced_fraction' && (!parsed.fraction || !parsed.reduced)) {
+  if (spec.kind === 'rational' && spec.requiredForm === 'reduced_fraction' && (!parsed?.fraction || !parsed.reduced)) {
     // The right value in a form this question refuses is still a wrong answer, and often a named
     // one: `6/9` against `2/3` is 「약분을 도중에 멈추기」, not a general remark about reducing.
     return named(answer, spec, expected, assisted)

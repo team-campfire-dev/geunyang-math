@@ -1,3 +1,4 @@
+import { readMathExpression } from '@/shared/math-expression';
 import 'server-only';
 
 import { z } from 'zod';
@@ -302,7 +303,7 @@ export const definitionBlockSchema = blockSchema.refine(
 /** An option of a multiple-choice question: a stable name and the prose a learner reads. */
 const choiceOption = z.object({ id: id.max(40), text: z.string().trim().min(1).max(choiceLimits.maxText) }).strict();
 const responseSchema = z.object({
-  kind: z.enum(['integer', 'rational', 'choice']),
+  kind: z.enum(['integer', 'rational', 'expression', 'choice']),
   requiredForm: z.literal('reduced_fraction').optional(),
   // The options a picked answer picks from — everything the grading specification holds except
   // which one is right. They are here because a learner cannot answer without seeing them.
@@ -324,6 +325,7 @@ const problemShape = {
   responseSpec: responseSchema,
   hintAvailable: z.boolean(),
   gradingSpec: z.discriminatedUnion('kind', [
+    z.object({ kind: z.literal('expression'), expression: z.string().min(1).max(80).refine(value => !!readMathExpression(value).value, 'Invalid numeric expression') }).strict(),
     z.object({ kind: z.literal('integer'), value: integer }).strict(),
     z.object({ kind: z.literal('rational'), numerator: integer, denominator: integer.refine((value) => value > 0), requiredForm: z.literal('reduced_fraction').optional() }).strict(),
     z.object({ kind: z.literal('choice'), options: z.array(choiceOption).min(2).max(choiceLimits.maxOptions), correct: id.max(40) }).strict(),

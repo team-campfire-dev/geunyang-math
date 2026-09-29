@@ -23,7 +23,7 @@ describe('reading the answer an author wrote', () => {
   });
 
   it('refuses what it cannot read rather than guessing', () => {
-    for (const input of ['', ' ', '1/0', 'x', '1 + 1', '\\frac{1+1}{2}', '1/2/3']) {
+    for (const input of ['', ' ', '1/0', 'x', '\\frac{1+1}{2}']) {
       expect(answerSpec(input), input).toBeNull();
     }
   });

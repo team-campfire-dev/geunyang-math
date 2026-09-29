@@ -141,7 +141,7 @@ describe('a save the server refused', () => {
 });
 
 describe('an answer the editor cannot read', () => {
-  const answerBox = () => screen.getByPlaceholderText('예: -3, 2.5, 1/4') as HTMLInputElement;
+  const answerBox = () => screen.getByPlaceholderText('예: -3, 1/4, 2^3, sqrt(2)') as HTMLInputElement;
   const openProblem = async () => {
     await openEditor();
     fireEvent.click(screen.getByRole('button', { name: /직접 해보기/ }));

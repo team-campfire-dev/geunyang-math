@@ -1,3 +1,4 @@
+import { LearningService } from '@/server/learning-service';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
@@ -699,6 +700,44 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     // A question with no hints says so, and its response format restates the answer that was written.
     expect(stored.hintAvailable).toBe(false);
     expect(stored.responseSpec).toEqual({ kind: 'integer' });
+  });
+
+  it('publishes an expression answer without leaking it and grades it through learning submissions', async () => {
+    const admin = await account('admin');
+    const own = await ownLesson();
+    const created = await service.createDraft(admin.id, own);
+    const edit = structuredClone(created.draft!.edit);
+    const written = newProblem(nextProblemVersionId(own, 'practice', created.draft!.versionId,
+      edit.problems.map(problem => problem.problemVersionId)), edit.problems[0].conceptKeys);
+    written.promptContent[0].payload.text = '제곱근을 간단히 써 보세요.';
+    written.gradingSpec = { kind: 'expression', expression: 'sqrt(8)' };
+    edit.problems.push(written);
+    const activity = edit.sections.flatMap(section => section.contentBlocks).find(block => block.kind === 'core.problem_set')!;
+    (activity.payload.problemVersionIds as string[]).push(written.problemVersionId);
+    const saved = await service.act(admin.id, { action: 'draft.save', draftId: created.draft!.id, edit });
+    expect(saved.draft!.issues).toEqual([]);
+    await service.publishDraft(admin.id, created.draft!.id);
+    const record = (await lessonRecord(db, created.draft!.versionId))!;
+    const stored = record.problems.find(problem => problem.problemVersionId === written.problemVersionId)!;
+    expect(stored.responseSpec).toEqual({ kind: 'expression' });
+    expect(stored.gradingSpec).toEqual({ kind: 'expression', expression: 'sqrt(8)' });
+    const learner = await account();
+    const learning = new LearningService(db);
+    const started = await learning.act(learner.id, { action: 'enrollment.start', lessonKey: own });
+    const enrollment = started.state.enrollments.find(item => item.lessonKey === own)!;
+    const publicDoc = await learning.lessonDocument(own, learner.id);
+    const visible = publicDoc.problems.find(problem => problem.problemVersionId === written.problemVersionId)!;
+    expect(visible).not.toHaveProperty('gradingSpec');
+    expect(visible.responseSpec).toEqual({ kind: 'expression' });
+    // Complete preceding explanations so the normal progress gates still apply.
+    const section = record.sections.findIndex(section => section.contentBlocks.some(block => block.blockId === activity.blockId));
+    for (const previous of record.sections.slice(0, section)) {
+      await learning.act(learner.id, { action: 'section.complete', enrollmentId: enrollment.id, sectionId: previous.sectionId });
+    }
+    const action = { action: 'attempt.submit' as const, context: 'lesson' as const, contextId: enrollment.id,
+      problemVersionId: written.problemVersionId, requestId: randomUUID(), answer: '2sqrt(2)' };
+    expect((await learning.act(learner.id, action)).result?.status).toBe('correct');
+    expect((await learning.act(learner.id, { ...action, requestId: randomUUID(), answer: 'sqrt(-1)' })).result?.status).toBe('invalid');
   });
 
   it('hands content work to another account without touching the deployment', async () => {

@@ -1,3 +1,4 @@
+import { mathLatex, parseMathExpression, readMathExpression, sameMathValue, type MathNode } from './math-expression';
 /**
  * Answer syntax, shared by grading and the editor. An author writes a question's answer the way a
  * learner will type it, so one parser decides both what is stored and what is accepted. Nothing
@@ -7,6 +8,7 @@
 export type AnswerOption = { id: string; text: string };
 export type AnswerSpec =
   | { kind: 'integer'; value: number }
+  | { kind: 'expression'; expression: string }
   | { kind: 'rational'; numerator: number; denominator: number; requiredForm?: 'reduced_fraction' }
   /**
    * A question answered by picking. The options are kept with the answer because they are what the
@@ -26,7 +28,7 @@ function gcd(a: bigint, b: bigint): bigint {
 /**
  * Accepts a fixed LaTeX subset so an equation editor can post its own output unchanged.
  * Purely syntactic rewriting: `\frac{1+1}{2}` keeps its backslashes, fails the checks below,
- * and is reported as invalid. No expression is ever evaluated.
+ * and is reported as invalid. This conversion does not evaluate expressions.
  */
 function stripLatex(input: string): string {
   let text = input;
@@ -46,11 +48,30 @@ export function normalizeAnswer(answer: string): string | null {
   return stripLatex(answer.trim()).replaceAll('−', '-').replaceAll('⁄', '/');
 }
 
+/** Parentheses inserted by the structured editor are notation, not arithmetic. */
+function writtenForm(answer: string): string | null {
+  const text = normalizeAnswer(answer); if (text === null) return null;
+  const tree = parseMathExpression(text); if (!tree) return text;
+  const ungroup = (node: MathNode): MathNode => node.kind === 'group' ? ungroup(node.child) : node;
+  const literal = (node: MathNode): string | null => {
+    node = ungroup(node);
+    if (node.kind === 'number') return node.text;
+    if (node.kind === 'negate' || node.kind === 'positive') { const child = literal(node.child); return child === null ? null : `${node.kind === 'negate' ? '-' : '+'}${child}`; }
+    return null;
+  };
+  const root = ungroup(tree);
+  if (root.kind === 'binary' && root.op === '/') {
+    const a = literal(root.left), b = literal(root.right);
+    if (a !== null && b !== null) return `${a}/${b}`;
+  }
+  return literal(root) ?? text;
+}
+
 /** True when the writer chose a whole number rather than a fraction or a decimal. */
-export const writtenAsInteger = (answer: string) => /^[+-]?\d+$/.test(normalizeAnswer(answer) ?? '');
+export const writtenAsInteger = (answer: string) => /^[+-]?\d+$/.test(writtenForm(answer) ?? '');
 
 export function parseAnswer(answer: string): ParsedAnswer | null {
-  const input = normalizeAnswer(answer);
+  const input = writtenForm(answer);
   if (input === null) return null;
   const fraction = /^([+-]?\d+)\s*\/\s*([+-]?\d+)$/.exec(input);
   if (fraction) {
@@ -80,16 +101,21 @@ const safe = (value: bigint) => Number.isSafeInteger(Number(value));
  */
 export function answerSpec(input: string, requiredForm?: 'reduced_fraction' | null): AnswerSpec | null {
   const parsed = parseAnswer(input);
-  if (!parsed || !safe(parsed.numerator) || !safe(parsed.denominator)) return null;
+  if (!parsed) {
+    const read = readMathExpression(normalizeAnswer(input) ?? '');
+    return read.value && !requiredForm ? { kind: 'expression', expression: normalizeAnswer(input)! } : null;
+  }
+  if (!safe(parsed.numerator) || !safe(parsed.denominator)) return null;
   if (writtenAsInteger(input)) return { kind: 'integer', value: Number(parsed.numerator) };
   return { kind: 'rational', numerator: Number(parsed.numerator), denominator: Number(parsed.denominator),
     ...(requiredForm ? { requiredForm } : {}) };
 }
 
 /** The written form of a stored expectation, so opening a question shows what was answered. */
-export function answerText(spec: { kind: string; value?: number; numerator?: number; denominator?: number }): string {
+export function answerText(spec: { kind: string; value?: number; numerator?: number; denominator?: number; expression?: string }): string {
   // A picked answer is not written, so there is nothing to put in a box that takes writing.
   if (spec.kind === 'choice') return '';
+  if (spec.kind === 'expression') return spec.expression ?? '';
   if (spec.kind === 'integer') return Number.isFinite(spec.value) ? String(spec.value) : '';
   return Number.isFinite(spec.numerator) && Number.isFinite(spec.denominator) ? `${spec.numerator}/${spec.denominator}` : '';
 }
@@ -123,13 +149,13 @@ export const misreadingLimits = { maxPerProblem: 8 } as const;
 
 /** Whether two written answers mean the same number — `2/8`, `1/4` and `0.25` are one answer. */
 function sameNumber(left: string, right: string): boolean {
-  const a = parseAnswer(left), b = parseAnswer(right);
-  return !!a && !!b && a.numerator * b.denominator === b.numerator * a.denominator;
+  const a = readMathExpression(normalizeAnswer(left) ?? ''), b = readMathExpression(normalizeAnswer(right) ?? '');
+  return !!a.value && !!b.value && sameMathValue(a.value, b.value);
 }
 
 /** The value an answer specification expects, written the way a learner would type it. */
 const expectedText = (spec: AnswerSpec): string | null =>
-  spec.kind === 'choice' ? spec.correct : spec.kind === 'integer' ? String(spec.value) : `${spec.numerator}/${spec.denominator}`;
+  spec.kind === 'choice' ? spec.correct : spec.kind === 'expression' ? spec.expression : spec.kind === 'integer' ? String(spec.value) : `${spec.numerator}/${spec.denominator}`;
 
 /**
  * Why a question's expected wrong answers cannot be published, or null when they can.
@@ -153,13 +179,13 @@ export function misreadingsIssue(spec: AnswerSpec, entries: ExpectedMisreading[]
       continue;
     }
     const parsed = parseAnswer(written);
-    if (!parsed) return `답으로 읽을 수 없는 예상 오답이에요: ${written}`;
+    if (!readMathExpression(normalizeAnswer(written) ?? '').value) return `답으로 읽을 수 없는 예상 오답이에요: ${written}`;
     if (spec.kind === 'integer' && !writtenAsInteger(written)) return `이 문항은 정수로 답하므로 예상 오답도 정수여야 해요: ${written}`;
     // What may not be named is an answer that would be **marked right**, not one that merely has
     // the right value: a question that wants a reduced fraction marks `6/9` wrong, and 「약분을
     // 도중에 멈추기」 is exactly what that answer means.
     const form = 'requiredForm' in spec ? spec.requiredForm : undefined;
-    const wouldPass = sameNumber(written, expectedText(spec)!) && (form !== 'reduced_fraction' || (parsed.fraction && parsed.reduced));
+    const wouldPass = sameNumber(written, expectedText(spec)!) && (form !== 'reduced_fraction' || (parsed?.fraction && parsed.reduced));
     if (wouldPass) return `맞는 답으로 채점될 값에는 오답의 뜻을 달 수 없어요: ${written}`;
     if (seen.some((other) => sameNumber(other, written))) return `같은 값에 뜻이 둘 달렸어요: ${written}`;
     seen.push(written);
@@ -191,11 +217,16 @@ export function matchMisreading(answer: string, spec: AnswerSpec, entries: Expec
 export function answerLatex(written: string): string | null {
   // Only what the marker can read gets a picture: `3/0` drawn as a fraction would promise a reading
   // that is refused a moment later.
-  if (!parseAnswer(written)) return null;
+  if (!parseAnswer(written)) {
+    const expression = readMathExpression(normalizeAnswer(written) ?? '');
+    return expression.node ? mathLatex(expression.node) : null;
+  }
   const input = normalizeAnswer(written);
   if (!input) return null;
   const fraction = /^([+-]?)(\d+)\s*\/\s*([+-]?\d+)$/.exec(input);
   // The sign goes in front of the fraction, where it is read, rather than inside the numerator.
   if (fraction) return `${fraction[1] === '-' ? '-' : ''}\\frac{${fraction[2]}}{${fraction[3]}}`;
-  return /^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(input) ? input : null;
+  if (/^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(input)) return input;
+  const node = parseMathExpression(input);
+  return node ? mathLatex(node) : null;
 }

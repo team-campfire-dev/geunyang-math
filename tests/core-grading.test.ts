@@ -13,7 +13,7 @@ describe('exact arithmetic grading', () => {
     expect(gradeAnswer(answer, half).status).toBe('correct');
   });
 
-  it('treats LaTeX as notation only and never evaluates an expression', () => {
+  it('keeps the legacy LaTeX subset limited to number notation', () => {
     for (const answer of ['\\frac{1+1}{4}', '\\frac{2}{2+2}', '\\frac{1}{2}+\\frac{0}{2}', '\\frac{\\frac{1}{2}}{1}', '\\sqrt{4}/4', '\\frac{a}{b}', '\\frac{1}{0}', '\\frac{1}{2}x']) {
       expect(gradeAnswer(answer, half).status, answer).toBe('invalid');
     }
@@ -54,7 +54,7 @@ describe('exact arithmetic grading', () => {
     expect(gradeAnswer('-0', { kind: 'integer', value: 0 }).status).toBe('correct');
   });
 
-  it.each(['', '   ', '1/0', '0/0', '1/-0', '1//2', '1/2/3', '1e3', 'Infinity', 'NaN', 'Math.random()', '1 + 1', '1 1/2', '0,5', 'hello', '1'.repeat(81)])('rejects malformed input without counting it as an incorrect mathematical answer: %s', (answer) => {
+  it.each(['', '   ', '1/0', '0/0', '1/-0', '1//2', '1e3', 'Infinity', 'NaN', 'Math.random()', '1 1/2', '0,5', 'hello', '1'.repeat(81)])('rejects malformed input without counting it as an incorrect mathematical answer: %s', (answer) => {
     expect(gradeAnswer(answer, half).status).toBe('invalid');
   });
 

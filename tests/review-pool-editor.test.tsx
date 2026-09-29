@@ -54,7 +54,7 @@ describe('the review pool on the lesson-information page', () => {
   it('opens one to be written, and writes back to the question the draft holds', () => {
     const onEdit = settings();
     fireEvent.click(screen.getByText('복습 둘째 문항'));
-    const answer = screen.getByPlaceholderText('예: -3, 2.5, 1/4') as HTMLInputElement;
+    const answer = screen.getByPlaceholderText('예: -3, 1/4, 2^3, sqrt(2)') as HTMLInputElement;
     expect(answer.value).toBe('3');
     fireEvent.change(answer, { target: { value: '8' } });
     const next = onEdit.mock.calls.at(-1)![0] as DraftEdit;
