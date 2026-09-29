@@ -248,6 +248,38 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
       note: '분모가 조각의 크기라는 것을 지나치고 위아래를 따로 더해요.', problems: 2 }]);
   });
 
+  it('reinterprets historical answers with current annotations while preserving grades and corrections', async () => {
+    const learner = await newLearner();
+    const { enrollmentId } = await openPractice(learner.userId);
+    const problems = record.problems.slice(0, 2);
+    const ids = problems.map(problem => problem.problemVersionId);
+    const original = await db.publishedProblem.findMany({ where: { problemVersionId: { in: ids } } });
+    try {
+      for (const [index, problem] of problems.entries()) {
+        await db.attempt.create({ data: { userId: learner.userId, scopeId: learner.scopeId, enrollmentId,
+          problemVersionId: problem.problemVersionId, answer: '99999', requestId: requestId(), createdAt: new Date(2026, 8, index + 1),
+          result: { status: 'incorrect', message: 'original feedback', assisted: false } } });
+      }
+      const before = await service.state(learner.userId);
+      expect(before.confusion.repeated.some(item => item.key === 'add-denominators')).toBe(false);
+      for (const problemVersionId of ids) await db.publishedProblem.updateMany({ where: { problemVersionId },
+        data: { misreadings: [{ answer: '99999', misconception: 'add-denominators' }] } });
+      await db.attempt.create({ data: { userId: learner.userId, scopeId: learner.scopeId, enrollmentId,
+        problemVersionId: ids[0], answer: fixtureAnswer(problems[0]), requestId: requestId(), createdAt: new Date(2026, 8, 3),
+        hintUsed: true, result: { status: 'correct', message: 'corrected', assisted: true } } });
+      const after = await service.state(learner.userId);
+      expect(after.confusion.repeated).toMatchObject([{ key: 'add-denominators', evidenceIds: ids }]);
+      expect(after.confusion.evidence[0].corrections).toMatchObject([{ hintUsed: true, status: 'correct' }]);
+      expect(after.confusion.concepts.filter(item => item.state === 'independent' || item.state === 'retained')).toEqual([]);
+      const attempts = await db.attempt.findMany({ where: { userId: learner.userId, answer: '99999' } });
+      expect(attempts.every(item => (item.result as { message: string }).message === 'original feedback')).toBe(true);
+      expect(attempts.every(item => !('misconception' in (item.result as object)))).toBe(true);
+    } finally {
+      for (const problem of original) await db.publishedProblem.updateMany({ where: { problemVersionId: problem.problemVersionId, ownerVersionId: problem.ownerVersionId },
+        data: { misreadings: problem.misreadings === null ? Prisma.DbNull : problem.misreadings as Prisma.InputJsonValue } });
+    }
+  });
+
   it('hands out a worked solution only once the work is done, and records nothing for it', async () => {
     const learner = await newLearner();
     const { enrollmentId, problem } = await openPractice(learner.userId);
@@ -309,6 +341,8 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     expect(view.items[0].attempt!.result.status).toBe('withheld');
     expect(view.items[0].firstResult!.status).toBe('withheld');
     expect(JSON.stringify(view)).not.toContain('misconception');
+    expect(sent.state.confusion.evidence).toEqual([]);
+    expect((await service.state(learner.userId)).confusion.evidence).toEqual([]);
 
     // An answer that cannot be read is still said out loud: a typo is about the writing.
     const typo = await service.act(learner.userId, { action: 'attempt.submit', context: 'assignment', contextId: recipient.id,
@@ -324,6 +358,12 @@ describe.skipIf(!testDatabaseUrl)('MySQL learning lifecycle and isolation', () =
     view = (await service.state(learner.userId)).assignments.find((item) => item.recipientId === recipient.id)!;
     expect(view.items[0].attempt!.result.status).toBe('correct');
     expect(view.items[0].firstResult!.status).toBe('correct');
+    const summary = (await service.state(learner.userId)).confusion;
+    expect(summary.evidence.map(item => item.problemVersionId)).toContain(problemVersionId);
+    expect(summary.evidence.find(item => item.problemVersionId === problemVersionId)?.first.source.kind).toBe('exam');
+    expect(summary.evidence.find(item => item.problemVersionId === problemVersionId)?.corrections).toHaveLength(1);
+    const other = await newLearner();
+    expect((await service.state(other.userId)).confusion.evidence).toEqual([]);
   });
 
   it('keeps hints back when the assignment policy says so, and shows a recipient their own due date over the rule', async () => {

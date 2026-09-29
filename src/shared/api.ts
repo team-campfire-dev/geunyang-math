@@ -1,6 +1,7 @@
 // Public HTTP DTOs. Never import server content or grading answers into this module.
 import type { ConceptScope, DefinitionRef } from './rich-text';
 import type { Misreading } from './misreading';
+import type { ConfusionSummary } from './confusion';
 /**
  * What the marker decided, and — when it could read one — what kind of slip the answer looks like.
  * `misreading` is the part a report can add up: the message is written for the one moment after an
@@ -240,6 +241,7 @@ export type LearningState = {
   recommendationHistory: RecommendationHistoryView[];
   concepts: { key: string; label: string; state: ConceptState }[];
   misconceptions: StandingMisconception[];
+  confusion: ConfusionSummary;
 };
 export type LearningAction =
   | { action: 'recommendation.choose'; lessonKey: string | null }

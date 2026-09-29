@@ -50,7 +50,7 @@ const learningState = (overrides: Partial<LearningState> = {}): LearningState =>
   lessons: catalogue, enrollments: [], assignments: [], recommendations: [],
   diagnostic: null, diagnosticOffering: null,
   plan: { version: '1', readiness: [], review: null, sessionMinutes: 10, preferredLessonKey: null, onTheWay: [] },
-  recommendationHistory: [], concepts: [], misconceptions: [], ...overrides,
+  recommendationHistory: [], concepts: [], misconceptions: [], confusion: { version: 1, latestAt: null, concepts: [], repeated: [], evidence: [] }, ...overrides,
 });
 const enrolled = (completedSectionIds: string[] = [], status: 'active' | 'completed' = 'active') =>
   learningState({ enrollments: [{ id: 'e1', lessonKey, lessonVersionId: 'fraction-meaning:v2', completedSectionIds, status, attempts: [] }] });
@@ -397,15 +397,15 @@ describe('a mistake the record keeps showing', () => {
     serve({ state: learningState() });
     await openHistory();
     await until(() => expect(screen.getByText('추천이 바뀐 기록')).toBeDefined());
-    expect(screen.queryByText('자꾸 되풀이되는 것')).toBeNull();
+    expect(screen.queryByText('되풀이된 실수와 최근 변화')).toBeNull();
   });
 
   it('names it, says how many questions showed it, and gathers those questions on request', async () => {
-    const server = serve({ state: learningState({ misconceptions: [standing] }) });
+    const server = serve({ state: learningState({ confusion: { version: 1, latestAt: null, concepts: [], evidence: [], repeated: [{ ...standing, kind: 'misconception', status: 'repeated', description: '서로 다른 세 문제의 첫 답에서 나왔어요.', evidenceIds: ['p1', 'p2', 'p3'], improvementEvidenceIds: [], lastSeenAt: '2026-09-29T00:00:00.000Z' }] } }) });
     await openHistory();
-    await until(() => expect(screen.getByText('자꾸 되풀이되는 것')).toBeDefined());
+    await until(() => expect(screen.getByText('되풀이된 실수와 최근 변화')).toBeDefined());
     expect(screen.getByText('분모끼리 더하기')).toBeDefined();
-    expect(screen.getByText('3문항')).toBeDefined();
+    expect(screen.getByText('3문제에서 반복')).toBeDefined();
     // The note says what the learner did, which is what a set gathered for it would practise.
     expect(screen.getByText(standing.note)).toBeDefined();
     fireEvent.click(screen.getByRole('button', { name: /이것만 모아 풀기/ }));
