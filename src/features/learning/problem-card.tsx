@@ -97,13 +97,12 @@ export function ProblemCard({ problem, attempt, actions, busy, disabled, ready =
   return <article className="problem-card">
     <div className="problem-kicker"><Icon name="pencil" size={15} />{label}{attempt?.hintUsed && <span>힌트와 함께 푼 문제</span>}</div>
     <ContentBlocks blocks={problem.promptContent} glossary={glossary} />
-    {problem.responseSpec.requiredForm && <p className="input-help answer-form-note">답안 형식: {problem.responseSpec.requiredForm === 'simplest' || problem.responseSpec.requiredForm === 'simplest_fraction' || problem.responseSpec.requiredForm === 'reduced_fraction' ? '기약분수' : problem.responseSpec.requiredForm}</p>}
     <form onSubmit={submit} className={options ? 'answer-form is-choice' : 'answer-form'}>
       {options
         ? <AnswerChoices name={`answer-${problem.problemVersionId}`} question={problem.problemVersionId} options={options} value={answer}
             disabled={busy || disabled || unsupported || !ready}
             onPick={(id) => { setAnswer(id); onDraftChange?.(problem.problemVersionId, id !== (attempt?.answer ?? '')); }} />
-        : <MathAnswerField label="나의 답" value={answer} disabled={busy || disabled || unsupported || !ready}
+        : <MathAnswerField label="나의 답" responseSpec={problem.responseSpec} value={answer} disabled={busy || disabled || unsupported || !ready}
             placeholder="답 또는 수식을 입력해 주세요"
             onSend={() => void send()} sendLabel={busy ? '저장 중…' : submitLabel} sendDisabled={busy || !answer.trim()}
             onChange={(next) => { setAnswer(next); onDraftChange?.(problem.problemVersionId, next.trim() !== (attempt?.answer ?? '')); }} />}

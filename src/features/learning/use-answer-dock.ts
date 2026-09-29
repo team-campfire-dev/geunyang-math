@@ -41,7 +41,8 @@ export function useAnswerDock(open: boolean, panel: RefObject<HTMLDivElement | n
       const card = input.closest('.problem-card, .lesson-sheet');
       const area = (card ?? input).getBoundingClientRect();
       // Keep the question too when it fits; long questions remain scrollable above the dock.
-      const inputRect = input.getBoundingClientRect();
+      // Include the format note and local error so the keyboard cannot cover the way to fix it.
+      const inputRect = (input.closest('.math-answer') ?? input).getBoundingClientRect();
       const target = inputRect.bottom - area.top < bottom - top - 32 ? area : inputRect;
       if (target.top < top + 12) window.scrollBy({ top: target.top - top - 12, behavior: 'instant' });
       else if (inputRect.bottom > bottom - 12) window.scrollBy({ top: inputRect.bottom - bottom + 12, behavior: 'instant' });
@@ -49,6 +50,7 @@ export function useAnswerDock(open: boolean, panel: RefObject<HTMLDivElement | n
     const resize = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(reveal); };
     const observer = new ResizeObserver(resize);
     observer.observe(panel.current);
+    if (field.current) observer.observe(field.current.closest('.math-answer') ?? field.current);
     window.visualViewport?.addEventListener('resize', resize);
     window.visualViewport?.addEventListener('scroll', update);
     window.addEventListener('resize', resize);

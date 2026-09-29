@@ -578,7 +578,6 @@
 
 /* Native numbers, compact desktop tools, and a bottom dock for touch fraction input. */
 .math-answer{display:flex;flex-direction:column;gap:8px;flex:1;min-width:0}
-.math-answer-preview{margin:0;padding:7px 12px;display:flex;align-items:center;border:1px dashed #e0d9c9;border-radius:6px;background:#fffdf7;font-size:15px;color:var(--ink);align-self:flex-start;min-width:64px;text-align:center;max-width:100%;overflow-x:auto}
 .math-input-tools{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
 .math-input-tools button{min-height:36px;padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:var(--white);font-size:13px;color:var(--ink)}
 .math-input-tools button:hover{background:var(--accent-soft)}
@@ -588,9 +587,6 @@
 .math-dock-heading{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);gap:8px}
 .math-dock-heading>div{display:flex;gap:8px}
 .math-dock-heading button{min-height:36px;padding:6px;color:var(--ink);font-size:12px}
-.math-dock-draft{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:42px;max-height:128px;overflow:auto;padding:6px 10px;background:var(--white);border:1px solid var(--line);border-radius:6px}
-.math-dock-draft>.rich-text{font-size:18px;min-width:0;overflow-x:auto;white-space:nowrap;line-height:1.5}
-.math-dock-draft>span{font-size:13px;color:var(--muted)}
 /* Clickable boxes are the numerator and denominator themselves, not separate edit commands. */
 .fraction-slots{display:grid;grid-template-rows:1fr 1fr;gap:10px;position:relative;min-width:60px;max-width:100%;width:max-content;padding:0 4px;margin:2px auto}
 .fraction-slots:before{content:"";position:absolute;inset:50% 0 auto;height:2px;background:var(--ink);transform:translateY(-50%)}
@@ -610,7 +606,7 @@ html[data-answer-dock=open] body{padding-bottom:var(--answer-dock-height,340px)}
 html[data-answer-dock=open] .mobile-nav{visibility:hidden}
 @media(any-pointer:coarse){.answer-form .math-answer input{font-size:16px}.math-input-tools button{min-height:44px}}
 /* Tablets keep comfortable key widths; landscape uses two columns to leave room for the question. */
-@media(min-width:700px) and (orientation:landscape){.math-dock-inner{max-width:800px;display:grid;grid-template-columns:minmax(200px,1fr) 360px;column-gap:20px}.math-dock-heading{grid-column:1/-1}.math-dock-draft{grid-column:1;align-self:start;flex-wrap:wrap;max-height:120px}.math-keypad{grid-column:2;grid-row:2/4}.math-pad-send{grid-column:1;align-self:end}}
+@media(min-width:700px) and (orientation:landscape){.math-dock-inner{max-width:800px;display:grid;grid-template-columns:minmax(200px,1fr) 360px;column-gap:20px}.math-dock-heading{grid-column:1/-1}.math-keypad{grid-column:2;grid-row:2/4}.math-pad-send{grid-column:1;align-self:end}}
 
 /* A set of twenty questions is ten screens on a phone, and the two things a learner keeps wanting
    — how far along they are, and the way out — used to sit at the two far ends of that scroll. The
@@ -755,3 +751,26 @@ html[data-answer-dock=open] .mobile-nav{visibility:hidden}
 .math-dock .math-structures{display:grid;grid-template-columns:repeat(4,1fr)}
 .math-key.is-clear{grid-column:span 2;font-size:13px}
 @media(min-width:700px) and (orientation:landscape){.math-dock .math-structures{grid-column:1;grid-row:3}.math-dock .math-keypad{grid-row:2/5}.math-dock .math-pad-send{grid-row:4}}
+
+/* The answer is rendered once, in the field, while the native input handles text and IME. */
+.math-editor{position:relative;min-height:64px;border:1px solid var(--line);border-radius:8px;background:var(--white);min-width:0}
+.math-editor.is-active{outline:2px solid var(--accent);outline-offset:2px}
+.math-editor.has-issue{border-color:#a54b30}
+.answer-form .math-editor .math-source-input{width:100%;min-height:62px;border:0;margin:0;box-shadow:none;outline:0;background:transparent}
+.answer-form .math-editor.is-structured .math-source-input{position:absolute;inset:0;height:100%;opacity:0;pointer-events:none}
+.math-editor-canvas{position:relative;min-height:62px;display:flex;align-items:center;gap:8px;padding:8px;cursor:text}
+.math-editor-canvas .math-expression-slots{margin:0;flex:0 1 auto;max-height:240px}
+.math-editor-placeholder{font-size:14px;color:var(--muted)}
+.math-node-boundary{display:inline-flex;align-items:center;min-width:0}
+.math-caret{display:inline-block;align-self:center;flex-shrink:0;width:2px;height:1.3em;background:var(--accent);vertical-align:middle;margin:0 -1px;pointer-events:none}
+.math-selected-text{background:var(--accent-soft)}
+.fraction-slot.has-issue{border-color:#a54b30;border-style:dashed}
+.math-edit-tools{display:flex;gap:6px;flex-wrap:wrap}
+.math-edit-tools button{min-height:38px;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--white);font-size:12px;color:var(--ink)}
+.math-edit-tools button:disabled{opacity:.45;cursor:default}
+.math-keep-part{display:flex;align-items:center;gap:6px;flex-wrap:wrap;width:100%;padding:6px 0;font-size:12px}
+.math-input-issue{display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:#914329;font-size:13px;line-height:1.5}
+.math-input-issue button{min-height:36px;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.math-form-note{margin:0}
+@media(any-pointer:coarse){.math-edit-tools button{min-height:44px}}
+@media(min-width:700px) and (orientation:landscape){.math-dock .math-edit-tools{grid-column:1;grid-row:2}.math-dock .math-structures{grid-row:3}.math-dock .math-keypad{grid-row:2/5}.math-dock .math-pad-send{grid-row:4}}

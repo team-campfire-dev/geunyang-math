@@ -7,10 +7,10 @@ import { ProblemCard } from '@/features/learning/problem-card';
 import { answerLatex } from '@/shared/answer';
 import { gradeAnswer } from '@/core/grading';
 
-function Field({ onSend, initial = '' }: { onSend?: () => void; initial?: string }) {
+function Field({ onSend, initial = '', integerOnly = false }: { onSend?: () => void; initial?: string; integerOnly?: boolean }) {
   const [value, setValue] = useState(initial);
   return <MathAnswerField label="나의 답" placeholder="답 또는 수식" value={value} onChange={setValue}
-    onSend={onSend} sendLabel="답안 저장" sendDisabled={!value.trim()} />;
+    responseSpec={integerOnly ? { kind: 'integer' } : undefined} onSend={onSend} sendLabel="답안 저장" sendDisabled={!value.trim()} />;
 }
 const box = () => screen.getByRole('textbox', { name: '나의 답' }) as HTMLInputElement;
 const button = (name: string | RegExp) => screen.getByRole('button', { name });
@@ -135,5 +135,61 @@ describe('an answer as TeX', () => {
     expect(answerLatex('sqrt(2)')).toBe('\\sqrt{2}');
     expect(answerLatex('2^3')).toBe('{2}^{3}');
     for (const written of ['', '3/', 'abc', '3/0', '--2']) expect(answerLatex(written), written).toBeNull();
+  });
+});
+
+describe('editing the visible answer itself', () => {
+  it('renders a single math canvas in the field even while the keyboard is open', () => {
+    touch(); render(<Field initial="sqrt(8)/2" />); open();
+    expect(screen.getAllByRole('group', { name: '수식 입력 칸' })).toHaveLength(1);
+    expect(box().closest('.math-editor')?.classList.contains('is-structured')).toBe(true);
+    expect(screen.getByRole('region', { name: '수식 키보드' }).querySelector('.math-expression-slots')).toBeNull();
+    expect(document.querySelector('.math-answer-preview')).toBeNull();
+  });
+  it('undoes and redoes slot edits, including clearing the entire answer', () => {
+    touch(); render(<Field />); open(); tap('분수 입력'); tap('2'); tap(/분모: 빈 칸/); tap('4');
+    tap('전체 지우기'); expect(box().value).toBe('');
+    tap('실행 취소'); expect(box().value).toBe('(2)/(4)');
+    tap('실행 취소'); expect(box().value).toBe('(2)/(□)');
+    tap('다시 실행'); expect(box().value).toBe('(2)/(4)');
+    tap(/분모: 4/); tap('3');
+    expect((button('다시 실행') as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.keyDown(box(), { key: 'z', ctrlKey: true }); expect(box().value).toBe('(2)/(4)');
+    fireEvent.keyDown(box(), { key: 'z', metaKey: true, shiftKey: true }); expect(box().value).toBe('(2)/(3)');
+  });
+  it('removes wrappers and lets the learner explicitly choose which fraction value to retain', () => {
+    touch(); render(<Field initial="(sqrt(9))/(2)" />); open(); tap(/근호 안: 9/); tap('구조 없애기');
+    expect(box().value).toBe('(9)/(2)');
+    tap('구조 없애기'); tap('분모만 남기기'); expect(box().value).toBe('2');
+    tap('실행 취소'); expect(box().value).toBe('(9)/(2)');
+    tap('실행 취소'); expect(box().value).toBe('(sqrt(9))/(2)');
+  });
+  it('blocks incomplete answers, selects the error, and sends the corrected answer once', () => {
+    touch(); const send = vi.fn(); render(<Field initial="(2)/(□)" onSend={send} />); open();
+    expect(button(/분모: 빈 칸/).getAttribute('aria-invalid')).toBe('true');
+    tap('답안 저장'); expect(send).not.toHaveBeenCalled();
+    expect(box().value.slice(box().selectionStart!, box().selectionEnd!)).toBe('□');
+    tap('0'); expect(screen.getByText('분모는 0이 될 수 없어요.')).toBeTruthy();
+    fireEvent.keyDown(box(), { key: 'Enter' }); expect(send).not.toHaveBeenCalled();
+    tap('수정할 칸으로'); tap('3'); tap('답안 저장'); expect(send).toHaveBeenCalledTimes(1);
+    expect(box().value).toBe('(2)/(3)');
+  });
+  it('retains all tools but announces and checks an integer answer requirement', () => {
+    touch(); const send = vi.fn(); render(<Field initial="2^3" integerOnly onSend={send} />); open();
+    expect(screen.getByText('답안 형식: 정수')).toBeTruthy();
+    expect(button('제곱근 입력')).toBeTruthy();
+    tap('답안 저장'); expect(send).not.toHaveBeenCalled();
+    tap('8'); tap('답안 저장'); expect(send).toHaveBeenCalledTimes(1);
+  });
+  it('validates native form submission as well as the submit button', () => {
+    const send = vi.fn(); render(<form onSubmit={send}><Field initial="sqrt(-1)" onSend={send} /></form>);
+    fireEvent.submit(box().form!); expect(send).not.toHaveBeenCalled();
+    expect(box().selectionStart).toBe(5); expect(box().selectionEnd).toBe(7);
+  });
+  it('keeps IME composition intact and undoes it as one edit', () => {
+    render(<Field initial="2" />); open();
+    fireEvent.compositionStart(box()); fireEvent.change(box(), { target: { value: '2ㄱ' } });
+    fireEvent.change(box(), { target: { value: '2가' } }); fireEvent.compositionEnd(box());
+    tap('실행 취소'); expect(box().value).toBe('2');
   });
 });
