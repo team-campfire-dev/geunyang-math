@@ -207,6 +207,10 @@ export const conceptStateLabels: Record<ConceptState, string> = {
   unknown: '아직 확인 전', practicing: '연습하는 중', independent: '스스로 해결', retained: '꾸준히 기억',
 };
 export type Recommendation = { lessonKey: string; reason: string; kind: 'start' | 'continue' | 'revisit'; suggestedMinutes: number };
+export type TargetedPracticeRecommendation = {
+  misconception: string; label: string; reason: string;
+  problemCount: number; evidenceIds: string[]; recipientId: string | null;
+};
 export type PersonalPlan = {
   version: string;
   readiness: ConceptReadiness[];
@@ -224,10 +228,12 @@ export type PersonalPlan = {
    */
   onTheWay: string[];
   review: { recipientId: string; reason: string } | null;
+  /** Absent in older clients/snapshots. Offered before automatic lesson remediation. */
+  targetedPractice?: TargetedPracticeRecommendation | null;
   sessionMinutes: number;
   preferredLessonKey: string | null;
 };
-export type RecommendationHistoryView = { id: string; createdAt: string; trigger: string; recommendations: Recommendation[] };
+export type RecommendationHistoryView = { id: string; createdAt: string; trigger: string; recommendations: Recommendation[]; targetedPractice?: TargetedPracticeRecommendation | null };
 /**
  * A mistake this learner keeps making, across everything they have answered.
  *

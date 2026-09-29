@@ -1,7 +1,7 @@
 import 'server-only';
 import { createHash } from 'node:crypto';
 import { lessonRecord, lessonRecords, currentDiagnostic, currentDefinitions, publishedProblemRecords } from './content-store';
-import { recommend, reviewSelection, conceptReadiness, type Evidence } from '@/core/personalization';
+import { recommend, recommendTargetedPractice, reviewSelection, conceptReadiness, type Evidence } from '@/core/personalization';
 import { assignmentWindow, parseAssignmentPolicy, parseAssignmentSchedule, practicePolicy, recipientDates, reviewPolicy } from '@/core/assignment';
 import { glossaryEntries } from '@/core/glossary';
 import { conceptGraph, placementScope } from '@/core/concept-graph';
@@ -17,6 +17,7 @@ import { misconceptionOf } from '@/shared/misconception';
 import { defaultCourseTrack, isSchoolTrack, type ActionResponse, type AssignmentView, type AttemptView, type CourseStage, type CourseTrack, type GradeResult, type LearningState, type PublicCatalog, type PublicLesson, type PublicProblem, type PublicProblemSet, type DiagnosticAnswer, type Recommendation, type StandingMisconception } from '@/shared/api';
 import { AppError } from './errors';
 import { loadConceptHelp } from './concept-help';
+import { gatheredPracticePools } from './gathered-practice';
 
 /**
  * A placement as a run keeps it: what it has to settle, what it has settled, and **the shape of the
@@ -71,8 +72,6 @@ const conflict = (message: string) => new AppError(409, 'conflict', message);
  * the bar readiness already uses in the other direction: one answer is never evidence either way.
  */
 const standingMisconception = 2;
-/** How long a set gathered for one learner is. Short enough to finish in one sitting. */
-const gatheredQuestions = 6;
 function publicProblem(p: StoredProblem): PublicProblem {
   return { problemVersionId: p.problemVersionId, conceptKeys: p.conceptKeys, promptContent: p.promptContent, responseSpec: p.responseSpec,
     hintAvailable: p.hintAvailable, solutionAvailable: p.solution.length > 0 };
@@ -435,8 +434,18 @@ export class LearningService {
     const stored = (diagnostic?.placement ?? null) as StoredPlacement | null;
     const asking = stored && diagnosticBank ? placement(conceptGraph(stored.lessons), stretchesOf(stored), diagnosticBank, diagnosticAnswers) : null;
     const readiness = conceptReadiness(conceptLabels, completedDiagnostic ? stored : null, evidence);
+    const repeatedKeys = confusion.repeated.filter(item => item.kind === 'misconception' && item.status === 'repeated').map(item => item.key);
+    const pools = await gatheredPracticePools(db, userId, lessons.some(lesson => lesson.lessonKey === user.preferredLessonKey) ? [] : repeatedKeys);
+    const targetedPractice = recommendTargetedPractice(confusion, repeatedKeys.map(key => {
+      const gathered = recipients.filter(recipient => recipient.assignment.issuerType === 'self' && !recipient.assignment.problemSetVersionId
+        && (recipient.assignment.policySnapshot as { misconception?: string }).misconception === key);
+      const open = gathered.slice().reverse().find(recipient => recipient.status === 'assigned' && recipient.submissions[0]?.status === 'draft');
+      const completedAt = gathered.flatMap(recipient => recipient.submissions.filter(sitting => sitting.status === 'submitted' && sitting.finalizedAt)
+        .map(sitting => sitting.finalizedAt!.toISOString())).sort().at(-1) ?? null;
+      return { key, recipientId: open?.id ?? null, problemCount: open?.assignment.items.length ?? pools.get(key)?.length ?? 0, completedAt };
+    }));
     const { recommendations, plan } = recommend({ lessons, enrollments: enrollments.map(e => ({ lessonKey: e.lessonVersion.lessonKey, status: e.status })),
-      assignments, readiness, dailyMinutes: user.dailyMinutes, targetCourseKey: user.targetCourseKey, now: new Date(), preferredLessonKey: user.preferredLessonKey });
+      assignments, readiness, targetedPractice, dailyMinutes: user.dailyMinutes, targetCourseKey: user.targetCourseKey, now: new Date(), preferredLessonKey: user.preferredLessonKey });
     return {
       user: { id: user.id, displayName: user.displayName, targetCourseKey: user.targetCourseKey, dailyMinutes: user.dailyMinutes },
       lessons, assignments, recommendations, concepts, misconceptions, plan,
@@ -450,7 +459,8 @@ export class LearningService {
         currentProblem: !completedDiagnostic && asking?.next ? publicProblem(diagnosticBank.find(p => p.problemVersionId === asking.next!.problemVersionId)!) : null,
         results: completedDiagnostic ? diagnosticAnswers : [] } : null,
       recommendationHistory: history.map(h => ({ id: h.id, createdAt: h.createdAt.toISOString(), trigger: h.trigger,
-        recommendations: (h.snapshot as unknown as { recommendations: Recommendation[] }).recommendations })),
+        recommendations: (h.snapshot as unknown as { recommendations: Recommendation[] }).recommendations,
+        targetedPractice: (h.snapshot as unknown as { plan?: LearningState['plan'] }).plan?.targetedPractice ?? null })),
       enrollments: enrollments.map(e => ({ id: e.id, lessonKey: e.lessonVersion.lessonKey, lessonVersionId: e.lessonVersionId,
         completedSectionIds: e.completedSectionIds as string[], status: e.status as 'active' | 'completed', attempts: e.attempts.map(attemptView) })),
     };
@@ -757,31 +767,7 @@ export class LearningService {
       orderBy: { recommendedAt: 'desc' },
     });
     if (open) return open.id;
-    // Few rows carry any names at all, so they are read whole and matched here rather than by
-    // asking MySQL to look inside the JSON.
-    const [named, asked, mine] = await Promise.all([
-      tx.publishedProblem.findMany({ where: { ownerKind: 'problem_set', misreadings: { not: Prisma.DbNull } },
-        orderBy: [{ ownerVersionId: 'asc' }, { order: 'asc' }], select: { ownerVersionId: true, problemVersionId: true, misreadings: true } }),
-      tx.diagnosticVersion.findMany({ select: { problemSetVersionId: true } }),
-      tx.attempt.findMany({ where: { userId }, orderBy: [{ createdAt: 'asc' }, { id: 'asc' }], select: { problemVersionId: true, result: true } }),
-    ]);
-    const banks = new Set(asked.map(row => row.problemSetVersionId));
-    // The first real answer to each question, which is the one the record counts.
-    const answered = new Map<string, GradeResult>();
-    for (const attempt of mine) {
-      const result = attempt.result as GradeResult;
-      if (result.status !== 'invalid' && !answered.has(attempt.problemVersionId)) answered.set(attempt.problemVersionId, result);
-    }
-    const settled = (id: string) => { const was = answered.get(id); return was?.status === 'correct' && !was.assisted; };
-    const chosen: string[] = [];
-    for (const row of named) {
-      if (banks.has(row.ownerVersionId) || chosen.includes(row.problemVersionId) || settled(row.problemVersionId)) continue;
-      if (!(row.misreadings as { misconception?: unknown }[] | null)?.some(entry => entry.misconception === misconception)) continue;
-      chosen.push(row.problemVersionId);
-    }
-    // Where they went wrong before comes first: it is the question that showed the habit.
-    const order = (id: string) => (answered.get(id) ? 0 : 1);
-    const items = chosen.sort((a, b) => order(a) - order(b)).slice(0, gatheredQuestions);
+    const items = (await gatheredPracticePools(tx, userId, [misconception])).get(misconception)!;
     if (!items.length) throw conflict('이 착각을 다루는 문항이 아직 없어요.');
     const now = new Date();
     const recipient = await tx.assignment.create({ data: {

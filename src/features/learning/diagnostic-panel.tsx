@@ -64,10 +64,11 @@ export function DiagnosticPanel({ diagnostic, offering, dispatch, busy, onBack, 
             {options
               ? <AnswerChoices name={`placement-${current.problemVersionId}`} question={current.problemVersionId} options={options} value={answer} disabled={busy} onPick={setAnswer} />
               : <MathAnswerField label="나의 답" value={answer} disabled={busy}
-                  integerOnly={current.responseSpec.kind === 'integer'}
+                  integerOnly={current.responseSpec.kind === 'integer'} fractionRequired={!!current.responseSpec.requiredForm}
                   placeholder={current.responseSpec.kind === 'integer' ? '정수를 입력해 주세요' : '예: 3/4'}
-                  onChange={setAnswer} />}
-            <button className="button primary" disabled={busy || !answer.trim()}>{busy ? '저장 중…' : '저장하고 다음으로'}</button>
+                  onChange={setAnswer} onSend={() => { if (answer.trim()) void save(answer.trim()); }}
+                  sendLabel={busy ? '저장 중…' : '저장하고 다음으로'} sendDisabled={busy || !answer.trim()} />}
+            {options && <button className="button primary" disabled={busy || !answer.trim()}>{busy ? '저장 중…' : '저장하고 다음으로'}</button>}
           </form>
           {error && <p className="field-error" role="alert">{error}</p>}
           <button className="text-button" disabled={busy} onClick={() => void save(null)}>아직 모르겠어요 · 건너뛰기</button>

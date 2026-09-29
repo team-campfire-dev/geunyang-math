@@ -1,123 +1,153 @@
 // @vitest-environment jsdom
 import { useState } from 'react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen } from './render';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { act, fireEvent, render, screen } from './render';
 import { MathAnswerField } from '@/features/learning/math-answer-field';
 import { answerLatex } from '@/shared/answer';
 
-/**
- * Writing a number on a phone. The answers are fractions and negative numbers, and a phone's
- * keyboard hides the page to offer either — so the page offers them itself, and shows back what it
- * understood before anything is saved.
- */
-function Field({ integerOnly = false, onSend }: { integerOnly?: boolean; onSend?: () => void }) {
-  const [value, setValue] = useState('');
+function Field({ integerOnly = false, fractionRequired = false, onSend, initial = '' }: {
+  integerOnly?: boolean; fractionRequired?: boolean; onSend?: () => void; initial?: string;
+}) {
+  const [value, setValue] = useState(initial);
   return <MathAnswerField label="나의 답" placeholder="예: 3/4" value={value} onChange={setValue} integerOnly={integerOnly}
-    onSend={onSend} sendLabel="답안 저장" sendDisabled={!value.trim()} />;
+    fractionRequired={fractionRequired} onSend={onSend} sendLabel="답안 저장" sendDisabled={!value.trim()} />;
 }
-const box = () => screen.getByLabelText('나의 답') as HTMLInputElement;
+const box = () => screen.getByRole('textbox', { name: '나의 답' }) as HTMLInputElement;
+const button = (name: string) => screen.getByRole('button', { name });
+function touch() {
+  const original = window.matchMedia;
+  vi.spyOn(window, 'matchMedia').mockImplementation(query => ({ ...original(query), matches: query === '(any-pointer: coarse)' }));
+}
+const open = () => { fireEvent.focus(box()); fireEvent.click(button('수식 키보드 열기')); };
+afterEach(() => vi.restoreAllMocks());
 
-/**
- * React reports invalid markup — a block drawn inside a paragraph, say — through console.error, and
- * says nothing else there. Watching it is how a rendering mistake fails a test rather than shipping.
- */
-let complaints: unknown[][] = [];
-beforeEach(() => { complaints = []; vi.spyOn(console, 'error').mockImplementation((...args) => { complaints.push(args); }); });
-afterEach(() => { vi.restoreAllMocks(); expect(complaints.map(String), '렌더러가 경고를 남겼다').toEqual([]); });
-
-describe('writing a number', () => {
-  it('stays a box somebody can type into, pad or no pad', () => {
-    render(<Field />);
-    // The pad is an offer, not the way in: nothing is disabled and nothing has to be tapped first.
-    expect(screen.queryByRole('group', { name: '숫자 키패드' })).toBeNull();
-    fireEvent.change(box(), { target: { value: '\\frac{3}{4}' } });
-    expect(box().value).toBe('\\frac{3}{4}');
-  });
-
-  it('offers the keys a phone keyboard hides, and only while the box is in use', () => {
-    render(<Field />);
+describe('adaptive answer input', () => {
+  it.each([true, false])('starts with a native numeric keyboard (integer: %s)', integerOnly => {
+    touch();
+    render(<Field integerOnly={integerOnly} />);
     fireEvent.focus(box());
-    for (const name of ['1', '음수 부호', '소수점', '분수 선', '한 글자 지우기']) {
-      expect(screen.getByRole('button', { name }), name).toBeDefined();
-    }
-    fireEvent.click(screen.getByRole('button', { name: '음수 부호' }));
-    fireEvent.click(screen.getByRole('button', { name: '3' }));
-    fireEvent.click(screen.getByRole('button', { name: '분수 선' }));
-    fireEvent.click(screen.getByRole('button', { name: '4' }));
+    expect(box().inputMode).toBe(integerOnly ? 'numeric' : 'decimal');
+    expect(screen.queryByRole('region', { name: '수식 키보드' })).toBeNull();
+    expect(screen.queryByRole('button', { name: '1' })).toBeNull();
+    fireEvent.click(button('음수 부호'));
+    expect(box().value).toBe('-');
+  });
+  it('uses compact tools on desktop, including for a required fraction', () => {
+    render(<Field fractionRequired />);
+    fireEvent.focus(box());
+    fireEvent.click(button('분수 입력'));
+    expect(screen.queryByRole('region', { name: '수식 키보드' })).toBeNull();
+    expect(box().value).toBe('/');
+    expect(box().selectionStart).toBe(0);
+    expect(screen.queryByRole('button', { name: '1' })).toBeNull();
+  });
+  it('keeps a selected number when making it the numerator', () => {
+    render(<Field initial="12" />);
+    fireEvent.focus(box());
+    box().setSelectionRange(0, 2);
+    fireEvent.select(box());
+    fireEvent.click(button('분수 입력'));
+    expect(box().value).toBe('12/');
+    expect(box().selectionStart).toBe(3);
+  });
+  it('opens required fractions in a touch dock without a second software keyboard', () => {
+    touch();
+    render(<Field fractionRequired />);
+    fireEvent.focus(box());
+    expect(box().inputMode).toBe('none');
+    expect(screen.getByRole('region', { name: '수식 키보드' }).parentElement).toBe(document.body);
+    expect(document.documentElement.getAttribute('data-answer-dock')).toBe('open');
+    fireEvent.click(button('입력기 닫기'));
+    expect(screen.queryByRole('region', { name: '수식 키보드' })).toBeNull();
+    expect(document.documentElement.hasAttribute('data-answer-dock')).toBe(false);
+  });
+  it('writes a fraction and replaces only the selected denominator', () => {
+    touch();
+    render(<Field />);
+    open();
+    for (const key of ['음수 부호', '3', '분수 입력', '4']) fireEvent.click(button(key));
     expect(box().value).toBe('-3/4');
-    fireEvent.click(screen.getByRole('button', { name: '한 글자 지우기' }));
-    expect(box().value).toBe('-3/');
-    // Leaving the box puts the pad away, so a page of questions is not a page of keypads.
-    fireEvent.blur(box());
-    expect(screen.queryByRole('group', { name: '숫자 키패드' })).toBeNull();
+    fireEvent.click(button('분모 수정'));
+    fireEvent.click(button('8'));
+    expect(box().value).toBe('-3/8');
+    fireEvent.click(button('분자 수정'));
+    fireEvent.click(button('1'));
+    expect(box().value).toBe('1/8');
+    fireEvent.click(button('커서 오른쪽으로'));
+    fireEvent.click(button('한 글자 지우기'));
+    expect(box().value).toBe('18');
   });
-
-  it('keeps the focus in the box while anything under it is pressed', () => {
-    render(<Field />);
-    fireEvent.focus(box());
-    // A control that took the focus would count as leaving the box: the pad would come down
-    // between the press and the release, and the press would never arrive. That is how the
-    // switch to the system keyboard stopped working the first time.
-    for (const name of ['7', '한 글자 지우기', '키보드로 쓸게요']) {
-      expect(fireEvent.mouseDown(screen.getByRole('button', { name })), `${name}가 포커스를 가져간다`).toBe(false);
-    }
+  it('inserts and deletes at the caret instead of always changing the end', () => {
+    touch();
+    render(<Field initial="123" />);
+    open();
+    box().setSelectionRange(1, 2);
+    fireEvent.select(box());
+    fireEvent.click(button('9'));
+    expect(box().value).toBe('193');
+    fireEvent.click(button('한 글자 지우기'));
+    expect(box().value).toBe('13');
   });
-
-  it('sends from the pad, where a keyboard keeps its return key', () => {
-    const sent = vi.fn();
-    render(<Field onSend={sent} />);
-    fireEvent.focus(box());
-    // Nothing to send yet, so the key is there and refuses rather than sending an empty answer.
-    expect((screen.getByRole('button', { name: '답안 저장' }) as HTMLButtonElement).disabled).toBe(true);
-    fireEvent.click(screen.getByRole('button', { name: '3' }));
-    // The send key is under the box like every other key, so it must not take the focus either.
-    expect(fireEvent.mouseDown(screen.getByRole('button', { name: '답안 저장' })), '보내는 키가 포커스를 가져간다').toBe(false);
-    fireEvent.click(screen.getByRole('button', { name: '답안 저장' }));
-    expect(sent).toHaveBeenCalledTimes(1);
-    // And it puts the pad away, because what the marker says back stands under the box.
-    expect(screen.queryByRole('group', { name: '숫자 키패드' })).toBeNull();
+  it('keeps the draft and selection when switching back to the native keyboard', () => {
+    touch();
+    render(<Field initial="12/34" />);
+    open();
+    fireEvent.click(button('분모 수정'));
+    fireEvent.click(button('기본 키보드'));
+    expect(box().inputMode).toBe('decimal');
+    expect(box().value).toBe('12/34');
+    expect([box().selectionStart, box().selectionEnd]).toEqual([3, 5]);
+    expect(screen.queryByRole('region', { name: '수식 키보드' })).toBeNull();
   });
-
-  it('keeps to the keys where nothing is waiting to be sent', () => {
-    render(<Field />);
+  it('gets out of the way of an attached physical keyboard', () => {
+    touch();
+    render(<Field fractionRequired initial="1/2" />);
     fireEvent.focus(box());
-    expect(screen.queryByRole('button', { name: '답안 저장' })).toBeNull();
+    fireEvent.keyDown(box(), { key: '3', code: 'Digit3' });
+    expect(screen.queryByRole('region', { name: '수식 키보드' })).toBeNull();
+    expect(box().inputMode).toBe('decimal');
+    fireEvent.focus(box());
+    expect(screen.queryByRole('region', { name: '수식 키보드' })).toBeNull();
+    fireEvent.click(button('수식 키보드 열기'));
+    expect(screen.getByRole('region', { name: '수식 키보드' })).toBeTruthy();
   });
-
-  it('asks for no phone keyboard of its own while the pad is up, and gives it back on request', () => {
-    render(<Field />);
-    // Two keyboards at once is the thing to avoid: while the pad is up the box wants no other.
-    expect(box().getAttribute('inputmode')).toBe('none');
+  it('submits exactly once and closes the dock for either click or Enter', () => {
+    touch();
+    const submit = vi.fn();
+    render(<Field onSend={submit} />);
+    open();
+    expect((button('답안 저장') as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.click(button('3'));
+    expect(fireEvent.pointerDown(button('답안 저장'))).toBe(false);
+    fireEvent.click(button('답안 저장'));
+    expect(submit).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole('region', { name: '수식 키보드' })).toBeNull();
+    expect(screen.getAllByRole('button', { name: '답안 저장' })).toHaveLength(1);
     fireEvent.focus(box());
-    fireEvent.click(screen.getByRole('button', { name: '키보드로 쓸게요' }));
-    expect(screen.queryByRole('group', { name: '숫자 키패드' })).toBeNull();
-    expect(box().getAttribute('inputmode')).toBe('text');
-    // And it stays away until asked back, rather than returning the next time the box is touched.
-    fireEvent.focus(box());
-    expect(screen.queryByRole('group', { name: '숫자 키패드' })).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: '숫자 키패드 쓰기' }));
-    expect(box().getAttribute('inputmode')).toBe('none');
-    expect(screen.getByRole('group', { name: '숫자 키패드' })).toBeDefined();
+    fireEvent.keyDown(box(), { key: 'Enter' });
+    expect(submit).toHaveBeenCalledTimes(2);
+    expect(screen.queryByRole('region', { name: '수식 키보드' })).toBeNull();
   });
-
-  it('does not offer a fraction bar where only a whole number is accepted', () => {
-    render(<Field integerOnly />);
+  it('closes on outside interaction or Escape and cleans up on unmount', () => {
+    touch();
+    const view = render(<Field />);
+    open();
+    fireEvent.pointerDown(document.body);
+    expect(screen.queryByRole('region', { name: '수식 키보드' })).toBeNull();
     fireEvent.focus(box());
-    expect(screen.queryByRole('button', { name: '분수 선' })).toBeNull();
-    expect(screen.queryByRole('button', { name: '소수점' })).toBeNull();
-    expect(screen.getByRole('button', { name: '음수 부호' })).toBeDefined();
+    fireEvent.keyDown(box(), { key: 'Escape' });
+    expect(screen.queryByRole('region', { name: '수식 키보드' })).toBeNull();
+    act(() => box().focus());
+    view.unmount();
+    expect(document.documentElement.hasAttribute('data-answer-dock')).toBe(false);
+    expect(document.documentElement.style.getPropertyValue('--answer-dock-height')).toBe('');
   });
-
-  it('shows back what it understood, and nothing while it understands nothing', () => {
+  it('keeps drafts as written and renders a fraction preview', () => {
     const { container } = render(<Field />);
-    fireEvent.change(box(), { target: { value: '3/' } });
-    expect(container.querySelector('.math-answer-preview'), '반쯤 쓴 답에 그림을 붙인다').toBeNull();
     fireEvent.change(box(), { target: { value: '3/4' } });
-    const preview = container.querySelector('.math-answer-preview')!;
-    expect(preview.querySelector('.katex'), '분수를 수식으로 그리지 않는다').not.toBeNull();
-    // What is drawn is the same answer, printed: the box keeps the writing, the picture shows it.
+    expect(container.querySelector('.math-answer-preview .katex')).not.toBeNull();
     expect(box().value).toBe('3/4');
-    expect(box().getAttribute('aria-describedby')).toBe(preview.id);
+    expect(box().getAttribute('aria-describedby')).toBe(container.querySelector('.math-answer-preview')!.id);
   });
 });
 
