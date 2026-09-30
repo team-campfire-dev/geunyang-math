@@ -326,7 +326,17 @@ Published lesson is immutable: linear-expression:v1. Use a new version ID.
 
 지우기 전에 사용자별로 기록을 세어 보였다. 운영자 계정 외에 세 학습자의 기록(답 6개와 시작점 확인, 수업 2개와 시작점 확인, 시작점 확인 하나)이 있었고, 그것까지 지우기로 확정한 뒤 한 트랜잭션으로 FK 자식부터 비웠다: `AssessmentRevision`(0) → `SubmissionItem`(0) → `Attempt`(11) → `Submission`(2) → `AssignmentRecipient`(2) → `AssignmentItem`(4) → `Assignment`(2) → `Enrollment`(4) → `HintUse`(0) → `DiagnosticRun`(4) → `RecommendationHistory`(16), 모두 45행. 지운 수가 직전에 센 수와 같았으므로 그 사이에 새로 쌓인 기록은 없었다.
 
-**되돌릴 백업은 없다.** 아래 후속 작업의 백업 절차가 여전히 비어 있고, 배포가 만드는 `shared/deploy-backups`는 env 파일과 이미지일 뿐 DB가 아니다. 기록이 비었으므로 옛 판본은 `content:retire`로 내릴 수 있는 상태다(아직 내리지 않았다).
+**되돌릴 백업은 없다.** 아래 후속 작업의 백업 절차가 여전히 비어 있고, 배포가 만드는 `shared/deploy-backups`는 env 파일과 이미지일 뿐 DB가 아니다. 기록이 비었으므로 같은 날 옛 판본을 내렸다(아래).
+
+### 2026-09-30 옛 수업 판본 내리기
+
+`content:retire`는 씨앗에 없는 판본을 모두 옛 판본으로 본다. 그래서 편집 화면에서만 발행한 판본이나 시작점 확인이 쓰는 문제집 판본도 섞일 수 있어, `--apply` 전에 migrator 이미지에서 읽기 전용 검사를 먼저 돌렸다 — 대상 각각이 (1) 기록에 붙들려 있는지, (2) 같은 수업·문제집에 남는 판본이 있는지, (3) `DiagnosticVersion`이 쓰는지. 셋 다 비어 있었다(로컬 개발 DB에서 같은 검사로 먼저 확인했다).
+
+`--apply`는 **수업 판본 176개**를 한 트랜잭션으로 지웠다 — 단계 993개, 블록 1,253개. 문제집 판본·문항은 0개다(씨앗에 없는 문제집 판본이 없었다). 한 수업에서 여러 판본이 함께 내려간 것도 있다(`ncs-chance` v1~v4 등). `prisma/published-versions.json`은 그대로 두어 지운 ID가 다른 내용으로 돌아오지 못한다.
+
+확인: 공개 카탈로그가 코스 38·수업 127·문제집 419 그대로이고, 수업 127개를 모두 열어 카탈로그의 `versionId`와 같은 판본이 단계와 함께 내려오는 것을 봤다. `/api/health`는 `ready`.
+
+**다음에 판본을 올린 뒤에도** 같은 순서다 — 학습 기록이 옛 판본을 붙들고 있으면 `content:retire`는 통째로 거절하므로, 기록을 지우지 않는 한 옛 판본은 쌓인다. 쌓여도 카탈로그에서는 닿지 않으며 `content:verify`의 판본 수만 늘어난다.
 
 ## 운영 후속 작업
 
