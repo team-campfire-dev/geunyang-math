@@ -721,28 +721,52 @@ html[data-answer-dock=open] .mobile-nav{visibility:hidden}
 .history-guide>p{max-width:70ch;margin:8px 0 0;padding:12px 16px;border-left:2px solid var(--line-strong);color:var(--ink-2);font-size:13px}
 .history-page summary:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:3px}
 .confusion-summary h3{font-size:15px;font-weight:600;margin:0;line-height:1.7}
-.confusion-patterns{display:grid;gap:16px;margin-top:24px}
 .confusion-card{min-width:0}
-.confusion-pattern{border:1px solid var(--line);border-radius:9px;padding:24px;background:var(--white);background-image:radial-gradient(rgba(70,58,36,.045) .5px,transparent .5px);background-size:4px 4px}
+.confusion-lead{border:1px solid var(--line);border-radius:9px;padding:24px;background:var(--white);background-image:radial-gradient(rgba(70,58,36,.045) .5px,transparent .5px);background-size:4px 4px}
 .confusion-card-heading{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px 16px}
-.confusion-card h4{font-size:16px;font-weight:600;line-height:1.6;margin:0}
+.confusion-lead h3{font-size:17px;font-weight:600;line-height:1.6;margin:0}
 .confusion-badge{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-2);line-height:1.6}
 .confusion-badge:before{content:"";width:5px;height:5px;flex:none;border-radius:50%;background:var(--line-strong)}
 .is-repeated>.confusion-card-heading .confusion-badge:before,.is-missed>.confusion-card-heading .confusion-badge:before{background:var(--accent)}
 .confusion-card>p{font-size:14px;line-height:1.9;margin:8px 0;color:var(--ink-2)}
 .confusion-card>p.small{font-size:12px;color:var(--muted)}
 .confusion-note{margin:12px 0;padding-left:12px;border-left:2px solid var(--line-strong)}
+/* One mistake is asked about at a time; the rest are a list of names that open. Clay marks only the
+   one asked about now — a dot on every row would be emphasis on nothing. */
+.confusion-lead{margin-top:8px}
+.confusion-meta{display:inline-flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);line-height:1.6}
+.confusion-tools{display:flex;align-items:center;gap:8px 20px;flex-wrap:wrap;margin-top:16px}
+.confusion-tools>.concept-help{margin:0;min-width:0}
+.confusion-tools>.concept-help:has([aria-expanded=true]){flex-basis:100%}
+.confusion-more{margin-top:32px}
+.confusion-more>h3{margin-bottom:8px}
+.confusion-list{list-style:none;padding:0;margin:0;border-block:1px solid var(--line)}
+.confusion-list>li+li{border-top:1px solid var(--line)}
+.confusion-list summary{display:flex;align-items:center;gap:12px;cursor:pointer;list-style:none;padding:16px 0}
+.confusion-list summary::-webkit-details-marker{display:none}
+.confusion-list summary:hover .confusion-name{text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--line-strong)}
+.confusion-name{flex:1;min-width:0;font-size:14px;font-weight:500;word-break:keep-all}
+.confusion-list summary>svg{flex:none;color:var(--faint);transition:transform .18s}
+.confusion-list details[open]>summary>svg{transform:rotate(90deg)}
+.confusion-fold{padding:0 0 20px}
+.confusion-fold>.confusion-note{margin-top:0}
+.confusion-list details{scroll-margin-top:24px}
+.confusion-list details:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.confusion-pointer{margin-top:20px;font-size:13px;line-height:1.8;color:var(--ink-2);word-break:keep-all}
+.standing-missed{margin-left:10px;font-style:normal;font-size:12px;font-weight:500;color:var(--ink-2);white-space:nowrap}
+.concept-list>*+*{border-top:1px solid var(--line)}
+.concept-missed>summary{display:flex;align-items:center;gap:14px;padding:21px 23px;cursor:pointer;list-style:none}
+.concept-missed>summary::-webkit-details-marker{display:none}
+.concept-missed>summary:hover{background:#f9f5ec}
+.concept-missed>summary>svg{flex:none;color:var(--faint);transition:transform .18s}
+.concept-missed[open]>summary>svg{transform:rotate(90deg)}
+.concept-missed .concept-state{margin-left:auto}
+.concept-dot.missed{background:transparent;box-shadow:inset 0 0 0 1.5px var(--ink-2)}
+.concept-state.missed{color:var(--ink-2);font-weight:500}
+.missed-concept{padding:0 23px 16px 44px}
+.missed-concept>.confusion-tools{margin-top:0}
+@media(max-width:600px){.concept-missed>summary{padding:19px 16px;gap:10px}.missed-concept{padding:0 16px 16px}}
 .confusion-note .rich-text{font-size:14px;line-height:1.9}
-.confusion-concept-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:32px 0 12px}
-.confusion-concept-heading label{font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center;min-height:32px;cursor:pointer}
-.confusion-concept-heading input{width:16px;height:16px;accent-color:var(--ink)}
-.confusion-concepts{border-block:1px solid var(--line)}
-.confusion-concepts:empty{border:0}
-.confusion-concept{padding:20px 0}
-.confusion-concept+.confusion-concept{border-top:1px solid var(--line)}
-.confusion-concept-tools{display:flex;align-items:flex-start;gap:8px 24px;flex-wrap:wrap;margin-top:8px}
-.confusion-concept-tools>.concept-help{margin:0;min-width:0}
-.confusion-concept-tools>.concept-help:has([aria-expanded=true]){flex-basis:100%}
 .confusion-evidence{margin:12px 0 0;border-top:1px solid var(--line)}
 .confusion-evidence summary{cursor:pointer;font-size:12px;color:var(--muted);padding:12px 0;line-height:1.7}
 .confusion-evidence summary:hover{color:var(--ink)}
@@ -776,13 +800,12 @@ html[data-answer-dock=open] .mobile-nav{visibility:hidden}
   .history-totals>div:nth-child(odd){padding-left:0;border-left:0}
   .history-page .dashboard-section{margin-top:32px}
   .history-page .section-heading{gap:8px}
-  .confusion-pattern{padding:18px}
-  .confusion-concept-heading{align-items:flex-start;flex-direction:column;gap:4px}
+  .confusion-lead{padding:18px}
   .confusion-summary .concept-help-body{padding:14px}
   .history-page .recommendation-history article{grid-template-columns:minmax(0,1fr);gap:8px}
 }
 @media(any-pointer:coarse){
-  .history-page .text-button,.history-guide>summary,.confusion-evidence>summary,.confusion-concept-heading label{min-height:44px}
+  .history-page .text-button,.history-guide>summary,.confusion-evidence>summary,.confusion-list summary,.concept-missed>summary{min-height:44px}
 }
 .concept-help { margin-top: 12px; }
 .concept-help-body { margin-top: 12px; padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); overflow-wrap: anywhere; }
@@ -834,8 +857,6 @@ html[data-answer-dock=open] .mobile-nav{visibility:hidden}
 @media(min-width:700px) and (orientation:landscape){.math-dock .math-edit-tools{grid-column:1;grid-row:2}.math-dock .math-structures{grid-row:3}.math-dock .math-keypad{grid-row:2/5}.math-dock .math-pad-send{grid-row:4}}
 
 /* Keep the next learning step alongside the explanation, ahead of the optional evidence. */
-.confusion-next{display:grid;justify-items:start;gap:8px;margin:16px 0}
-.confusion-next p{margin:0}
 .confusion-card[tabindex]{scroll-margin-top:24px}
 .confusion-card[tabindex]:focus-visible,.confusion-summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
 .confusion-answer>.rich-text{max-width:100%;overflow-x:auto}

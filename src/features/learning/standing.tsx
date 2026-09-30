@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { conceptStateLabels, type ConceptReadiness, type ConceptState, type PublicCourse, type PublicLesson } from '@/shared/api';
 import { conceptsByCourse } from '@/shared/standing';
 import { Icon } from './icons';
@@ -78,28 +78,32 @@ const order: ConceptState[] = ['retained', 'independent', 'practicing', 'unknown
  * still here — a row opens onto exactly the chips that were there before — but they are something
  * to go and read rather than something to scroll past on the way to everything else.
  */
-export function StandingByCourse({ courses, lessons, concepts, busy = false }: {
+export function StandingByCourse({ courses, lessons, concepts, busy = false, missed = new Map(), renderMissed }: {
   courses: PublicCourse[]; lessons: PublicLesson[];
   concepts: { key: string; label: string; state: ConceptState }[]; busy?: boolean;
+  /** Concepts whose first answer was missed on different questions, with how many. */
+  missed?: Map<string, number>; renderMissed?: (key: string) => ReactNode;
 }) {
   const [open, setOpen] = useState<string | null>(null);
   const state = new Map(concepts.map((concept) => [concept.key, concept]));
   const rows = conceptsByCourse({ lessons, courses, conceptKeys: concepts.map((concept) => concept.key) }).map((entry) => {
     const held = entry.conceptKeys.flatMap((key) => state.get(key) ?? []);
     const count = (name: ConceptState) => held.filter((concept) => concept.state === name).length;
-    return { course: entry.course, held, counts: Object.fromEntries(order.map((name) => [name, count(name)])) as Record<ConceptState, number> };
+    return { course: entry.course, held, missed: held.filter((concept) => missed.has(concept.key)).length,
+      counts: Object.fromEntries(order.map((name) => [name, count(name)])) as Record<ConceptState, number> };
   });
   if (!rows.length) return <p className="empty-inline">아직 학습 상태를 말할 개념이 없어요.</p>;
   // A course where nothing has been touched says the same thing as every other untouched course, so
   // they are counted together at the end rather than filling the list with the same sentence.
-  const touched = rows.filter((row) => row.counts.unknown < row.held.length);
-  const untouched = rows.filter((row) => row.counts.unknown === row.held.length);
+  const started = (row: typeof rows[number]) => row.counts.unknown < row.held.length || row.missed > 0;
+  const touched = rows.filter(started);
+  const untouched = rows.filter((row) => !started(row));
   const row = (entry: typeof rows[number]) => {
     const shown = open === entry.course.key;
     return <div className={shown ? 'standing-course is-open' : 'standing-course'} key={entry.course.key}>
       <h3><button aria-expanded={shown} aria-controls={`standing-${entry.course.key}`} disabled={busy}
         onClick={() => setOpen(shown ? null : entry.course.key)}>
-        <span className="standing-name">{entry.course.title}</span>
+        <span className="standing-name">{entry.course.title}{entry.missed > 0 && <em className="standing-missed">놓친 개념 {entry.missed}</em>}</span>
         <span className="standing-bar" aria-hidden="true">
           {order.map((name) => entry.counts[name] > 0
             && <i key={name} className={name} style={{ flexGrow: entry.counts[name] }} />)}
@@ -107,10 +111,19 @@ export function StandingByCourse({ courses, lessons, concepts, busy = false }: {
         <span className="standing-count">{entry.held.length - entry.counts.unknown} / {entry.held.length}</span>
         <Icon name="chevron" size={16} />
       </button></h3>
-      {shown && <div className="concept-list" id={`standing-${entry.course.key}`}>{entry.held.map((concept) => <div key={concept.key}>
-        <span className={`concept-dot ${concept.state}`} /><strong>{concept.label}</strong>
-        <span className={`concept-state ${concept.state}`}>{conceptStateLabels[concept.state]}</span>
-      </div>)}</div>}
+      {shown && <div className="concept-list" id={`standing-${entry.course.key}`}>{entry.held.map((concept) => {
+        const times = missed.get(concept.key);
+        // A missed concept opens onto the answers that missed it, which is where it can be read.
+        if (times && renderMissed) return <details key={concept.key} className="concept-missed">
+          <summary><span className="concept-dot missed" /><strong>{concept.label}</strong>
+            <span className="concept-state missed">놓침 · {times}문제</span><Icon name="chevron" size={14} /></summary>
+          {renderMissed(concept.key)}
+        </details>;
+        return <div key={concept.key}>
+          <span className={`concept-dot ${concept.state}`} /><strong>{concept.label}</strong>
+          <span className={`concept-state ${concept.state}`}>{conceptStateLabels[concept.state]}</span>
+        </div>;
+      })}</div>}
     </div>;
   };
   return <>

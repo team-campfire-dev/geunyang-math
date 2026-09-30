@@ -18,7 +18,7 @@ import { canExploreDefinitions } from '@/shared/definition-exploration';
 import { nearbyAssignments, nearbyLessons } from '@/shared/nearby';
 import { ProblemCard, type ProblemActions } from './problem-card';
 import { AnswerReport, type ReportItem } from './answer-report';
-import { ConfusionSummary, confusionCardId } from './confusion-summary';
+import { ConfusionSummary, MissedConcept, confusionCardId, confusionRecords } from './confusion-summary';
 import { Icon, type IconName } from './icons';
 
 type Dispatch = (action: LearningAction) => Promise<ActionResponse>;
@@ -368,6 +368,8 @@ export function LearningWorkspace() {
     const target = (confusionFocus.key ? window.document.getElementById(confusionCardId(confusionFocus.key)) : null)
       ?? window.document.getElementById('confusion-summary');
     if (!target) return;
+    // A mistake after the first waits folded; arriving for it is asking to read it.
+    if (target instanceof HTMLDetailsElement) target.open = true;
     target.scrollIntoView({ block: 'start', behavior: 'smooth' });
     target.focus({ preventScroll: true }); setConfusionFocus(null);
   }, [page, confusionFocus, state]);
@@ -1131,6 +1133,10 @@ export function LearningWorkspace() {
       { label: '풀어본 문제', value: state.enrollments.reduce((sum, item) => sum + new Set(item.attempts.map(attempt => attempt.problemVersionId)).size, 0)
         + state.assignments.reduce((sum, item) => sum + item.items.filter(entry => entry.attempt).length, 0) },
     ] : [];
+    const records = state ? confusionRecords(state.confusion) : new Map();
+    const library = state ? (['active', 'completed'] as const).map(status => ({ status,
+      held: lessons.filter(item => state.enrollments.some(enrollment => enrollment.lessonKey === item.lessonKey && enrollment.status === status)) }))
+      .filter(entry => entry.held.length) : [];
     return <div className="history-page">
       <div className="page-heading"><span className="eyebrow">나의 학습 노트</span><h1>조금씩 쌓이는 나의 이해.</h1><p>헷갈렸던 부분을 돌아보고, 다음 이해로 이어가요.</p></div>
       {!state ? <EmptyState title="첫 걸음을 기록해 보세요" text="내 학습을 시작하면 수업 진도와 개념별 학습 기록이 여기에 모여요." actionLabel="내 학습 시작하기" onAction={() => setModal('login')} /> : <>
@@ -1139,21 +1145,22 @@ export function LearningWorkspace() {
           continuingKeys={state.assignments.filter(item => item.status === 'assigned' && item.misconception).map(item => item.misconception!)} />
         <section className="dashboard-section history-courses" aria-labelledby="history-courses-title">
           <div className="section-heading"><div><span className="eyebrow">배움의 흐름</span><h2 id="history-courses-title">코스별 학습 상태</h2></div></div>
-          <p className="history-description">코스를 펼치면 직접 풀어서 쌓인 개념별 기록을 볼 수 있어요.</p>
-          <details className="history-guide"><summary>학습 상태를 읽는 기준</summary><p>「스스로 해결」은 힌트 없이 푼 기록, 「꾸준히 기억」은 이후 복습에서도 확인한 기록이에요. 아직 확인 전이라고 해서 모른다는 뜻은 아니에요.</p></details>
-          <StandingByCourse courses={courses} lessons={lessons} concepts={state.concepts} busy={busy} />
+          <p className="history-description">코스를 펼치면 직접 풀어서 쌓인 개념별 기록을 볼 수 있어요. 놓친 개념은 눌러서 그때의 풀이와 설명을 봐요.</p>
+          <details className="history-guide"><summary>학습 상태를 읽는 기준</summary><p>「스스로 해결」은 힌트 없이 푼 기록, 「꾸준히 기억」은 이후 복습에서도 확인한 기록이에요. 「놓침」은 서로 다른 두 문제 이상에서 첫 답을 놓친 기록이에요. 아직 확인 전이라고 해서 모른다는 뜻은 아니에요.</p></details>
+          <StandingByCourse courses={courses} lessons={lessons} concepts={state.concepts} busy={busy}
+            missed={new Map(state.confusion.concepts.filter(item => item.state === 'missed').map(item => [item.key, item.evidenceIds.filter(id => records.get(id)?.first.status === 'incorrect').length]))}
+            renderMissed={key => { const concept = state.confusion.concepts.find(item => item.key === key); return concept && <MissedConcept concept={concept} records={records} busy={busy} onOpenLesson={lesson => void openLesson(lesson)} />; }} />
         </section>
         <section className="dashboard-section history-library" aria-labelledby="history-library-title">
           <div className="section-heading"><div><span className="eyebrow">지나온 페이지</span><h2 id="history-library-title">나의 수업</h2></div></div>
-          {(['active', 'completed'] as const).map(status => {
-            const held = lessons.filter(item => state.enrollments.some(enrollment => enrollment.lessonKey === item.lessonKey && enrollment.status === status));
-            return <details key={status} className="history-fold" open={status === 'active' && held.length > 0}>
+          {/* A fold that opens onto nothing is a line that says 0; only the ones holding a lesson are drawn. */}
+          {library.length ? library.map(({ status, held }) =>
+            <details key={status} className="history-fold" open={status === 'active'}>
               <summary><span>{status === 'active' ? '이어서 배울 수업' : '완료한 수업'}</span><span className="history-count">{held.length}개</span><Icon name="chevron" size={16} /></summary>
-              {held.length ? <div className="class-grid">{held.map(item => <LessonCard key={item.lessonKey} item={item} index={courseIndex(item)} courseTitle={courseTitle(item)}
+              <div className="class-grid">{held.map(item => <LessonCard key={item.lessonKey} item={item} index={courseIndex(item)} courseTitle={courseTitle(item)}
                 enrollment={state.enrollments.find(entry => entry.lessonKey === item.lessonKey)} onOpen={() => void openLesson(item.lessonKey)} />)}</div>
-                : <p className="empty-inline">{status === 'active' ? '현재 이어서 배울 수업이 없어요.' : '완료한 수업이 여기에 모여요.'}</p>}
-            </details>;
-          })}
+            </details>)
+            : <p className="empty-inline">아직 시작한 수업이 없어요. 수업을 시작하면 이어서 배울 수업과 완료한 수업이 여기에 모여요.</p>}
         </section>
         <details className="history-fold history-recommendations">
           <summary><span>추천이 바뀐 기록</span><span className="history-count">{state.recommendationHistory.length}건</span><Icon name="chevron" size={16} /></summary>
