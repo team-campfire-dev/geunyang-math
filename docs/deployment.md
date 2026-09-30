@@ -1,6 +1,6 @@
 # Oracle 운영 배포
 
-2026-09-23 확인 기준 최근 릴리스는 `4308a83` (#134)다 — 같은 날 공개 `/api/version`이 이 commit을, `/api/health`가 `ready`를 돌려주었다. 그 앞의 `551dc41`(#130)·`0062330`(#129)·`e4ca467`(#128)까지도 같은 방식으로 main이 검증하고 배포했다. 아래 「릴리스별 검증 기록」은 **모든 릴리스의 목록이 아니라 배운 것이 있는 릴리스의 기록**이다 — 저장 구조를 옮긴 묶음, migration이 권한에 막힌 날, 발행된 판본을 고쳐 배포가 멈춘 날처럼. 나머지 릴리스의 검증은 PR과 GitHub Actions에 그대로 남아 있고, 지금 무엇이 떠 있는지는 언제나 `/api/version`이 답한다.
+2026-09-30 확인 기준 최근 릴리스는 `dcc3ae5` (#148)다 — 같은 날 공개 `/api/version`이 이 commit을, `/api/health`가 `ready`를 돌려주었고, VM의 `current`도 같은 commit을 가리켰다. 그 앞의 #134~#147도 같은 방식으로 main이 검증하고 배포했다. 아래 「릴리스별 검증 기록」은 **모든 릴리스의 목록이 아니라 배운 것이 있는 릴리스의 기록**이다 — 저장 구조를 옮긴 묶음, migration이 권한에 막힌 날, 발행된 판본을 고쳐 배포가 멈춘 날처럼. 나머지 릴리스의 검증은 PR과 GitHub Actions에 그대로 남아 있고, 지금 무엇이 떠 있는지는 언제나 `/api/version`이 답한다.
 
 ## 대상과 범위
 
@@ -319,6 +319,14 @@ Published lesson is immutable: linear-expression:v1. Use a new version ID.
 - 고친 장면을 **새 판본**(`:v2`)으로 낸다. 옛 판본은 씨앗에서 빠지지만 운영 DB에는 그대로 남는다 — `decimal-fraction`이 이미 그렇게 v2가 됐다.
 - `prisma/published-versions.json`이 **발행한 모든 판본의 지문**을 들고, `tests/published-immutability.test.ts`가 매번 확인한다. 발행된 판본을 고치면 배포가 아니라 저장소에서 걸린다. 새 판본은 `npm run content:lock`이 적고, **이미 적힌 판본의 지문은 덮어쓰지 않는다** — 고쳤다면 답은 새 판본 ID뿐이다.
 - 사라진 v1 여섯 개의 지문도 릴리스된 내용에서 계산해 함께 적어 뒀다. 운영에는 남아 있는 판본이기 때문이다.
+
+### 2026-09-30 학습 기록 초기화
+
+콘텐츠 판본이 여러 번 바뀐 뒤(#136~#147) 옛 판본을 붙들고 있던 학습 기록을 지웠다. 2026-09-22·23에도 같은 일을 했다. 지운 것은 학습 기록 표 11개뿐이고 계정 10개·세션·Google 연결·설정·콘텐츠·권한·초안은 남겼다 — 다시 로그인하지 않아도 빈 학습 공간으로 시작한다.
+
+지우기 전에 사용자별로 기록을 세어 보였다. 운영자 계정 외에 세 학습자의 기록(답 6개와 시작점 확인, 수업 2개와 시작점 확인, 시작점 확인 하나)이 있었고, 그것까지 지우기로 확정한 뒤 한 트랜잭션으로 FK 자식부터 비웠다: `AssessmentRevision`(0) → `SubmissionItem`(0) → `Attempt`(11) → `Submission`(2) → `AssignmentRecipient`(2) → `AssignmentItem`(4) → `Assignment`(2) → `Enrollment`(4) → `HintUse`(0) → `DiagnosticRun`(4) → `RecommendationHistory`(16), 모두 45행. 지운 수가 직전에 센 수와 같았으므로 그 사이에 새로 쌓인 기록은 없었다.
+
+**되돌릴 백업은 없다.** 아래 후속 작업의 백업 절차가 여전히 비어 있고, 배포가 만드는 `shared/deploy-backups`는 env 파일과 이미지일 뿐 DB가 아니다. 기록이 비었으므로 옛 판본은 `content:retire`로 내릴 수 있는 상태다(아직 내리지 않았다).
 
 ## 운영 후속 작업
 
