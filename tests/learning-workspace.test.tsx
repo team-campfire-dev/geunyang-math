@@ -443,8 +443,7 @@ describe('a mistake the record keeps showing', () => {
   it('names it, says how many questions showed it, and gathers those questions on request', async () => {
     const server = serve({ state: learningState({ confusion: { version: 1, latestAt: null, concepts: [], evidence: [], repeated: [{ ...standing, kind: 'misconception', status: 'repeated', description: '서로 다른 세 문제의 첫 답에서 나왔어요.', evidenceIds: ['p1', 'p2', 'p3'], improvementEvidenceIds: [], lastSeenAt: '2026-09-29T00:00:00.000Z' }] } }) });
     await openHistory();
-    await until(() => expect(screen.getByText('되풀이된 실수와 최근 변화')).toBeDefined());
-    expect(screen.getByText('분모끼리 더하기')).toBeDefined();
+    await until(() => expect(screen.getByRole('heading', { name: '분모끼리 더하기' })).toBeDefined());
     expect(screen.getByText('3문제에서 반복')).toBeDefined();
     // The note says what the learner did, which is what a set gathered for it would practise.
     expect(screen.getByText(standing.note)).toBeDefined();

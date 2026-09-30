@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, waitFor, within } from './render';
-import { ConfusionSummary, reviewAttempt } from '@/features/learning/confusion-summary';
+import { ConfusionSummary, MissedConcept, confusionRecords, reviewAttempt } from '@/features/learning/confusion-summary';
 import { learningApi } from '@/features/learning/api-client';
 import type { ConfusionSummary as Summary } from '@/shared/confusion';
 
@@ -18,11 +18,13 @@ const fixture = (): Summary => ({
   }],
 });
 const props = () => ({ onOpenLesson: vi.fn(), onGather: vi.fn() });
+const missed = (summary = fixture(), onOpenLesson = vi.fn()) =>
+  render(<MissedConcept concept={summary.concepts[0]} records={confusionRecords(summary)} onOpenLesson={onOpenLesson} />);
 
 describe('learner confusion summary', () => {
   it('opens the actual question and choice text with first/corrected answers and their context', async () => {
-    const actions = props();
-    render(<ConfusionSummary summary={fixture()} {...actions} />);
+    const onOpenLesson = vi.fn();
+    missed(fixture(), onOpenLesson);
     expect(screen.queryByText('분수의 덧셈을 골라 보세요.')).toBeNull();
     const details = screen.getByText('풀이 근거 보기 · 1문제').closest('details')!;
     details.open = true;
@@ -37,15 +39,32 @@ describe('learner confusion summary', () => {
     expect(screen.getByText(/처음 배우는 분수/)).toBeDefined();
     expect(screen.getByText(/분수 문제집/)).toBeDefined();
     fireEvent.click(screen.getByRole('button', { name: '이 개념의 수업 보기' }));
-    expect(actions.onOpenLesson).toHaveBeenCalledWith('fractions-lesson');
+    expect(onOpenLesson).toHaveBeenCalledWith('fractions-lesson');
   });
 
-  it('keeps unanswered concepts out until requested', () => {
+  it('points to missed concepts in their courses instead of listing every concept again', () => {
     render(<ConfusionSummary summary={fixture()} {...props()} />);
+    expect(screen.queryByText('분수')).toBeNull();
     expect(screen.queryByText('정수')).toBeNull();
-    fireEvent.click(screen.getByRole('checkbox', { name: '아직 풀지 않은 개념도 보기' }));
-    expect(screen.getByText('정수')).toBeDefined();
-    expect(screen.getByText('확인 전')).toBeDefined();
+    expect(screen.getByText(/첫 답을 놓친 개념 1개는 아래 「코스별 학습 상태」/)).toBeDefined();
+  });
+
+  it('asks about one mistake at a time and folds the rest into a list of names', () => {
+    const summary = fixture();
+    const pattern = (key: string, label: string, lastSeenAt: string) => ({ kind: 'misconception' as const, key, label, note: `${label}를 확인해요.`,
+      status: 'repeated' as const, description: '서로 다른 두 문제의 첫 답에서 비슷한 실수가 나왔어요.', evidenceIds: ['p1'], improvementEvidenceIds: [], lastSeenAt });
+    summary.repeated = [pattern('newest', '가장 최근 실수', '2026-09-29T00:00:00Z'), pattern('older', '지난 실수', '2026-09-28T00:00:00Z'), pattern('oldest', '오래된 실수', '2026-09-27T00:00:00Z')];
+    render(<ConfusionSummary summary={summary} {...props()} />);
+    expect(screen.getByRole('heading', { name: '가장 최근 실수' })).toBeDefined();
+    const rest = screen.getByText('지난 실수').closest('details')!;
+    expect(rest.open).toBe(false);
+    expect(screen.getByText('오래된 실수').closest('details')!.open).toBe(false);
+    // One ink button on the page; the folded ones ask more quietly.
+    const buttons = screen.getAllByRole('button', { name: '이것만 모아 풀기' });
+    expect(buttons.map(button => button.className)).toEqual(['button primary', 'button secondary', 'button secondary']);
+    // The server's sentence about how it counts is said once, in the guide, not on every card.
+    expect(screen.queryByText(/비슷한 실수가 나왔어요/)).toBeNull();
+    expect(screen.getByText(/답에서 읽은 단서라 이유를 단정하지는 않아요/).closest('details')!.className).toBe('history-guide');
   });
 
   it('offers existing gathered practice only for active named patterns', () => {
@@ -115,7 +134,7 @@ describe('from a summary to explanation and practice', () => {
       { key: 'fractions', label: '설명 속 분수', definition: null, lesson: null },
       { key: 'unrelated', label: '다른 개념', definition: null, lesson: null },
     ] });
-    render(<ConfusionSummary summary={fixture()} {...props()} />);
+    missed();
     fireEvent.click(screen.getByRole('button', { name: '이 개념 설명' }));
     expect(await screen.findByText('설명 속 분수')).toBeTruthy();
     expect(screen.queryByText('다른 개념')).toBeNull();
@@ -123,7 +142,7 @@ describe('from a summary to explanation and practice', () => {
   it('draws recorded numeric answers as math while retaining the first and corrected distinction', async () => {
     const summary = fixture(); summary.evidence[0].responseSpec = { kind: 'expression' };
     summary.evidence[0].first.answer = 'sqrt(8)/2';
-    render(<ConfusionSummary summary={summary} {...props()} />);
+    missed(summary);
     const details = screen.getByText('풀이 근거 보기 · 1문제').closest('details')!;
     details.open = true; fireEvent(details, new Event('toggle'));
     await waitFor(() => expect(details.querySelector('.katex')).not.toBeNull());

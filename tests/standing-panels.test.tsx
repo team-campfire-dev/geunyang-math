@@ -113,4 +113,17 @@ describe('the standing a learner has, course by course', () => {
     // One bar segment per state that has anything in it, weighted by how many.
     expect([...row.querySelectorAll('.standing-bar i')].map((node) => node.className)).toEqual(['independent', 'unknown']);
   });
+
+  it('marks the courses holding a missed concept, and opens that concept onto what was missed', () => {
+    render(<StandingByCourse courses={courses} lessons={lessons} concepts={concepts()}
+      missed={new Map([['equations-b', 3]])} renderMissed={(key) => <p>{key}의 풀이</p>} />);
+    // Missed is not untouched: the course stands with the ones started, and says how many it holds.
+    expect(rowNames()).toEqual(['일차방정식놓친 개념 1']);
+    fireEvent.click(screen.getByRole('button', { name: /일차방정식/, expanded: false }));
+    const row = screen.getByText('놓침 · 3문제').closest('details')!;
+    expect(row.open).toBe(false);
+    expect(row.textContent).toContain('equations-b의 풀이');
+    // Only the missed concept opens; the others stay a line with their state.
+    expect(document.querySelectorAll('.concept-missed')).toHaveLength(1);
+  });
 });
