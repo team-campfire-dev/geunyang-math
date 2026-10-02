@@ -30,9 +30,14 @@ export type IssueCode =
   | 'answer-mismatch' | 'answer-unaccepted'
   | 'choice-invalid' | 'choice-no-match' | 'choice-ambiguous' | 'choice-wrong-key' | 'option-unreadable'
   | 'misreading-invalid' | 'misreading-correct' | 'misreading-unrecordable' | 'misreading-shadowed' | 'misreading-derivation' | 'misreading-unchecked'
-  | 'prompt-numbers' | 'claim-note';
+  | 'independent-disagrees' | 'prompt-numbers' | 'claim-note';
 export type Issue = { code: IssueCode; level: IssueLevel; message: string; option?: string; answer?: string };
-export type Report = { verdict: 'verified' | 'rejected' | 'unverified'; strength?: Strength; computed?: string; issues: Issue[] };
+export type Report = {
+  verdict: 'verified' | 'rejected' | 'unverified'; strength?: Strength; computed?: string;
+  /** Whether an answer reached from the prompt alone is one the key accepts, when one was given. */
+  independent?: 'agrees' | 'disagrees';
+  issues: Issue[];
+};
 
 export type CheckInput = {
   /** The prompt as shown, prose with `$…$`. Used only to warn when the claim's numbers are not in it. */
@@ -42,6 +47,12 @@ export type CheckInput = {
   misreadings?: (ExpectedMisreading & { expression?: string })[];
   /** The claim, as received: it is validated here. */
   solves: unknown;
+  /**
+   * An answer reached by solving from the prompt alone, without the claim or the key — by another
+   * request or another model. It is what closes the gap the claim cannot: a claim can compute
+   * something the prompt never asked, and a solver who only read the prompt will not land on it.
+   */
+  independent?: string;
 };
 
 /** The value a written answer key holds, read the way the grader reads it. */
@@ -120,9 +131,18 @@ function optionMatches(result: ClaimResult, options: { id: string; text: string 
 
 export function verifyProblem(input: CheckInput): Report {
   const issues: Issue[] = [];
+  let independent: Report['independent'];
+  if (input.independent !== undefined) {
+    // Graded by the grader, so a solver who reached the right value in a form the question refuses
+    // (6/9 where a reduced fraction is asked) disagrees, exactly as a learner would be marked.
+    const graded = gradeAnswer(input.independent, input.answer);
+    independent = graded.status === 'correct' ? 'agrees' : 'disagrees';
+    if (independent === 'disagrees') issues.push({ code: 'independent-disagrees', level: 'unverified', answer: input.independent,
+      message: `Solving from the prompt alone gave "${input.independent}", which the key marks ${graded.status}. Either the prompt does not ask what the claim computes, or the solver slipped.` });
+  }
   const report = (computed?: string, strength?: Strength): Report => {
     const verdict = issues.some((i) => i.level === 'error') ? 'rejected' : issues.some((i) => i.level === 'unverified') ? 'unverified' : 'verified';
-    return { verdict, ...(verdict === 'verified' ? { strength } : {}), ...(computed !== undefined ? { computed } : {}), issues };
+    return { verdict, ...(verdict === 'verified' ? { strength } : {}), ...(computed !== undefined ? { computed } : {}), ...(independent ? { independent } : {}), issues };
   };
   const parsed = claimSchema.safeParse(input.solves);
   if (!parsed.success) {

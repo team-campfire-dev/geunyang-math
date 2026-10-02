@@ -351,6 +351,20 @@ describe('checking generated problems', () => {
     expect(check({ answer, solves: { kind: 'expression', expression: '3(x - 2)', variables: ['x'] } })).toMatchObject({ verdict: 'verified', strength: 'sampled' });
   });
 
+  it('holds the key to an answer reached from the prompt alone', () => {
+    const problem = {
+      prompt: '케이크 $\\frac{5}{6}$ 중에서 $\\frac{1}{3}$을 먹었어요. 남은 양을 써 주세요.',
+      answer: { kind: 'rational' as const, numerator: 1, denominator: 2 },
+      solves: { kind: 'value', expression: '5/6 - 1/3' },
+    };
+    expect(check({ ...problem, independent: '3/6' })).toMatchObject({ verdict: 'verified', independent: 'agrees' });
+    // A claim that adds where the prompt subtracts agrees with its own key; only a solver who read
+    // the prompt alone notices.
+    const added = { ...problem, answer: { kind: 'rational' as const, numerator: 7, denominator: 6 }, solves: { kind: 'value', expression: '5/6 + 1/3' } };
+    expect(check(added).verdict).toBe('verified');
+    expect(check({ ...added, independent: '1/2' })).toMatchObject({ verdict: 'unverified', independent: 'disagrees', issues: [{ code: 'independent-disagrees' }] });
+  });
+
   it('warns when the claim computes with numbers the prompt never mentions', () => {
     const result = check({
       prompt: '리본 $\\frac{1}{3}$m와 $\\frac{3}{5}$m를 이어 붙였어요. 모두 몇 m인가요?',
