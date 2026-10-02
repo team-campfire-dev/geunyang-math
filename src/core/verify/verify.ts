@@ -9,7 +9,7 @@ import { literals, parseExpression } from './expr';
 import { latexToClaim } from './latex';
 import { approx, CheckFailure, exact, int, q, same, show, weakest, type Num, type Strength } from './numbers';
 import { sameSet, showSet } from './solve';
-import { forAll, readOption, sameValues, statementForm, statementSet, statementTruth, statementValues } from './statement';
+import { forAll, readOption, readOptionDetailed, sameValues, statementForm, statementSet, statementTruth, statementValues } from './statement';
 
 /**
  * Checks one problem against the computation it declares (its claim).
@@ -30,7 +30,7 @@ export type IssueCode =
   | 'answer-mismatch' | 'answer-unaccepted'
   | 'choice-invalid' | 'choice-no-match' | 'choice-ambiguous' | 'choice-wrong-key' | 'option-unreadable'
   | 'misreading-invalid' | 'misreading-correct' | 'misreading-unrecordable' | 'misreading-shadowed' | 'misreading-derivation' | 'misreading-unchecked'
-  | 'independent-disagrees' | 'prompt-numbers' | 'claim-note';
+  | 'option-units' | 'independent-disagrees' | 'prompt-numbers' | 'claim-trivial' | 'claim-note';
 export type Issue = { code: IssueCode; level: IssueLevel; message: string; option?: string; answer?: string };
 export type Report = {
   verdict: 'verified' | 'rejected' | 'unverified'; strength?: Strength; computed?: string;
@@ -96,12 +96,14 @@ function claimLiterals(raw: unknown): Num[] {
 }
 
 /** Which options agree with what the claim computed, as decided per option, or null for one that cannot be read. */
-function optionMatches(result: ClaimResult, options: { id: string; text: string }[], functionNames: Set<string>, variable: string): Map<string, { match: boolean; strength: Strength } | null> {
+function optionMatches(result: ClaimResult, options: { id: string; text: string }[], functionNames: Set<string>, variable: string, units: Map<string, string>): Map<string, { match: boolean; strength: Strength } | null> {
   const out = new Map<string, { match: boolean; strength: Strength } | null>();
   const scope = result.type === 'choose' || result.type === 'form' ? result.scope : { vars: new Map(), functions: new Map() };
   for (const option of options) {
-    const statement = readOption(option.text, { functions: functionNames });
-    if (!statement) { out.set(option.id, null); continue; }
+    const read = readOptionDetailed(option.text, { functions: functionNames });
+    if (!read) { out.set(option.id, null); continue; }
+    units.set(option.id, read.unit);
+    const statement = read.statement;
     const meter = newMeter();
     if (result.type === 'choose') {
       const truth = statementTruth(statement, scope, meter);
@@ -160,6 +162,10 @@ export function verifyProblem(input: CheckInput): Report {
     return report();
   }
   result.notes.forEach((message) => issues.push({ code: 'claim-note', level: 'warning', message }));
+  // A claim that is only a number restates the answer instead of computing it; nothing is checked.
+  if (claim.kind === 'value' && /^\s*[+-]?\s*\d+(\.\d+)?\s*$/.test(claim.expression)) {
+    issues.push({ code: 'claim-trivial', level: 'warning', message: 'The claim is a bare number, so it does not compute anything the key could disagree with. Only an independent solution checks this problem.' });
+  }
   const computed = result.type === 'value' ? show(result.value) : result.type === 'values' ? result.values.map(show).join(', ')
     : result.type === 'set' ? showSet(result.set) : result.type === 'form' ? (input.solves as { expression: string }).expression : `the ${result.which} statement`;
   let strength: Strength = result.type === 'choose' ? 'exact' : result.strength;
@@ -169,13 +175,18 @@ export function verifyProblem(input: CheckInput): Report {
     const structural = choiceIssue(spec);
     if (structural) issues.push({ code: 'choice-invalid', level: 'error', message: structural });
     const functionNames = new Set(Object.keys(claim.define ?? {}).map((k) => k[0]));
-    const matches = optionMatches(result, spec.options, functionNames, claim.kind === 'inequality' ? claim.variable : 'x');
+    const units = new Map<string, string>();
+    const matches = optionMatches(result, spec.options, functionNames, claim.kind === 'inequality' ? claim.variable : 'x', units);
     const matching = [...matches].filter(([, m]) => m?.match).map(([id]) => id);
     const unreadable = [...matches].filter(([, m]) => !m).map(([id]) => id);
     unreadable.forEach((id) => issues.push({ code: 'option-unreadable', level: 'unverified', option: id, message: `Option ${id} could not be read, so it cannot be ruled out.` }));
-    if (matching.length > 1) issues.push({ code: 'choice-ambiguous', level: 'error', message: `More than one option agrees with ${computed}: ${matching.join(', ')}.` });
+    // Values are compared without their units, which is only sound when every option uses the same one.
+    const written = new Set(units.values());
+    if (written.size > 1) issues.push({ code: 'option-units', level: 'unverified', message: `The options are written in different units (${[...written].map((u) => u || 'none').join(', ')}), so their values are not compared.` });
+    else if (matching.length > 1) issues.push({ code: 'choice-ambiguous', level: 'error', message: `More than one option agrees with ${computed}: ${matching.join(', ')}.` });
     else if (matching.length === 1 && matching[0] !== spec.correct) issues.push({ code: 'choice-wrong-key', level: 'error', option: matching[0], message: `Option ${matching[0]} agrees with ${computed}, but the key is ${spec.correct}.` });
     else if (matching.length === 0 && !unreadable.length) issues.push({ code: 'choice-no-match', level: 'error', message: `No option agrees with ${computed}.` });
+    if (written.size > 1) issues.splice(0, issues.length, ...issues.filter((i) => !['choice-ambiguous', 'choice-wrong-key', 'choice-no-match'].includes(i.code)));
     for (const [, m] of matches) if (m) strength = weakest(strength, m.strength);
   } else {
     if (result.type !== 'value') {

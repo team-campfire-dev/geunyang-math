@@ -142,6 +142,11 @@ export function pow(base: Num, exponent: Num): Num {
     }
   }
   if (isReal(base) && isReal(exponent) && base.re > 0) return approx(Math.pow(base.re, exponent.re));
+  // The same convention for a base that is only known as a float: ∛(2−√5) is −0.618…, not complex.
+  if (isReal(base) && base.re < 0 && e && e.d % 2n === 1n) {
+    const magnitude = Math.pow(-base.re, qToNumber(e));
+    return approx(e.n % 2n === 0n ? magnitude : -magnitude);
+  }
   const ln = cLog(base);
   const re = exponent.re * ln.re - exponent.im * ln.im, im = exponent.re * ln.im + exponent.im * ln.re;
   return cExp(re, im);
@@ -191,7 +196,7 @@ export function log(base: Num, x: Num): Num {
 }
 
 /** The simplest fraction with denominator at most `limit` within 1e-12 of x, by continued fractions. */
-export function nearRational(x: number, limit: number): Q | null {
+export function nearRational(x: number, limit: number, tolerance = 1e-12): Q | null {
   if (!Number.isFinite(x)) return null;
   let h0 = 0, h1 = 1, k0 = 1, k1 = 0, value = x;
   for (let step = 0; step < 40; step++) {
@@ -199,7 +204,7 @@ export function nearRational(x: number, limit: number): Q | null {
     const h2 = a * h1 + h0, k2 = a * k1 + k0;
     if (k2 > limit) break;
     [h0, h1, k0, k1] = [h1, h2, k1, k2];
-    if (Math.abs(x - h1 / k1) <= 1e-12 * Math.max(1, Math.abs(x))) return q(BigInt(h1), BigInt(k1));
+    if (Math.abs(x - h1 / k1) <= tolerance * Math.max(1, Math.abs(x))) return q(BigInt(h1), BigInt(k1));
     const rest = value - a;
     if (rest < 1e-15) break;
     value = 1 / rest;
@@ -217,9 +222,11 @@ export const weakest = (...all: (Strength | undefined)[]): Strength =>
  * billion, which no two distinct answers a learner could be asked for ever are. An estimated value
  * (an integral or a limit computed numerically) is held to one part in a million instead.
  */
-export function same(a: Num, b: Num, estimated = false): { equal: boolean; strength: Strength } {
+export function same(a: Num, b: Num, estimated = false, magnitude = 0): { equal: boolean; strength: Strength } {
   if (a.q && b.q) return { equal: a.q.n === b.q.n && a.q.d === b.q.d, strength: 'exact' };
-  const tolerance = (estimated ? 1e-6 : 1e-9) * Math.max(1, Math.hypot(a.re, a.im), Math.hypot(b.re, b.im));
+  // `magnitude` is how large the terms were that produced a and b: x² − 2·10⁸ is near zero at its
+  // root, but it was computed from numbers of size 10⁸ and carries their rounding.
+  const tolerance = (estimated ? 1e-6 : 1e-9) * Math.max(1, Math.hypot(a.re, a.im), Math.hypot(b.re, b.im), magnitude);
   return { equal: Math.hypot(a.re - b.re, a.im - b.im) <= tolerance, strength: estimated ? 'estimated' : 'numeric' };
 }
 

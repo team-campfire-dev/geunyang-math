@@ -160,30 +160,54 @@ function aberth(p: Poly): Num[] {
   });
 }
 
-/** Roots of a square-free factor, exact when they are rational (or when a quadratic's discriminant is a square). */
-function simpleRoots(p: Poly): Num[] {
-  const t = trim(p), n = t.length - 1;
-  if (n < 1) return [];
-  if (n === 1) return [div(neg(t[0]), t[1])];
-  if (n === 2) {
-    const [c, b, a] = t, disc = sqrt(sub(mul(b, b), mul(exact(q(4n)), mul(a, c))));
-    const twoA = mul(exact(q(2n)), a);
-    return [div(add(neg(b), disc), twoA), div(sub(neg(b), disc), twoA)];
+/** Roots of a quadratic, exact when the discriminant is a square, and without cancellation otherwise. */
+function quadraticRoots(t: Poly): Num[] {
+  const [c, b, a] = t;
+  const disc = sub(mul(b, b), mul(exact(q(4n)), mul(a, c)));
+  const root = sqrt(disc);
+  const twoA = mul(exact(q(2n)), a);
+  if (root.q || !isReal(a) || !isReal(b) || !isReal(c) || !isReal(disc) || disc.re < 0) {
+    return [div(add(neg(b), root), twoA), div(sub(neg(b), root), twoA)];
   }
-  const roots = aberth(t);
-  if (!exactPoly(t)) return roots;
-  // A floating root that is a small fraction is tried exactly, and deflated out so the rest stay accurate.
+  // −b ± √D loses most of its digits when b² ≫ 4ac; the product of the roots gives the small one back.
+  const sign = b.re < 0 ? -1 : 1;
+  const big = -0.5 * (b.re + sign * root.re);
+  if (big === 0) return [approx(0), approx(0)];
+  return [approx(big / a.re), approx(c.re / big)];
+}
+
+const nearlyReal = (r: Num) => Math.abs(r.im) <= 1e-6 * Math.max(1, Math.abs(r.re));
+
+/**
+ * Roots of a square-free factor with exact coefficients. Rational roots are found exactly: a
+ * floating root that is near a fraction is tried exactly, and when it is a root it is divided out
+ * and the rest is solved again, so a product like (x−1)(x−2)…(x−11), whose roots a floating
+ * iteration only finds to a few digits, still comes out exact.
+ */
+function simpleRoots(p: Poly): Num[] {
+  let rest = trim(p);
   const found: Num[] = [];
-  let rest = t;
-  for (const r of roots) {
-    if (!isReal(r)) continue;
-    const candidate = nearRational(r.re, 1_000_000);
-    if (candidate && isZero(peval(rest, exact(candidate))) && peval(rest, exact(candidate)).q) {
+  while (degree(rest) >= 1) {
+    const n = degree(rest);
+    if (n === 1) { found.push(div(neg(rest[0]), rest[1])); break; }
+    if (n === 2) { found.push(...quadraticRoots(rest)); break; }
+    const estimates = aberth(rest);
+    if (!exactPoly(rest)) { found.push(...estimates); break; }
+    let divided = false;
+    for (const r of estimates) {
+      if (!nearlyReal(r)) continue;
+      const candidate = nearRational(r.re, 1_000_000, 1e-6);
+      if (!candidate) continue;
+      const at = peval(rest, exact(candidate));
+      if (!at.q || at.q.n !== 0n) continue;
       found.push(exact(candidate));
       rest = pdivmod(rest, [exact(q(-candidate.n, candidate.d)), ONE]).quotient;
+      divided = true;
+      break;
     }
+    if (!divided) { found.push(...estimates); break; }
   }
-  return found.length ? [...found, ...(degree(rest) > 0 ? aberth(rest) : [])] : roots;
+  return found;
 }
 
 export type Root = { value: Num; multiplicity: number };
@@ -192,13 +216,28 @@ export function roots(p: Poly): Root[] {
   const t = trim(p);
   if (degree(t) < 1) return [];
   if (exactPoly(t)) return squareFree(t).flatMap((factor, i) => simpleRoots(factor).map((value) => ({ value, multiplicity: i + 1 })));
-  // Floating coefficients: no exact gcd, so equal roots are grouped by distance instead.
-  const out: Root[] = [];
-  for (const value of aberth(t)) {
-    const twin = out.find((r) => Math.hypot(r.value.re - value.re, r.value.im - value.im) <= 1e-6 * Math.max(1, Math.hypot(value.re, value.im)));
-    if (twin) twin.multiplicity++; else out.push({ value, multiplicity: 1 });
+  // Floating coefficients (√3, π) leave no exact gcd. A double root then comes out of the iteration
+  // as a pair split by about √ε — sometimes as two complex conjugates — so roots are grouped, and
+  // each group is refined by Newton's method on the derivative that has it as a simple root.
+  const estimates = degree(t) === 2 ? quadraticRoots(t) : aberth(t);
+  const groups: Num[][] = [];
+  for (const value of estimates) {
+    const group = groups.find((g) => g.some((m) => Math.hypot(m.re - value.re, m.im - value.im) <= 1e-5 * Math.max(1, Math.hypot(value.re, value.im))));
+    if (group) group.push(value); else groups.push([value]);
   }
-  return out;
+  return groups.map((group) => {
+    let x = approx(group.reduce((s, m) => s + m.re, 0) / group.length, group.reduce((s, m) => s + m.im, 0) / group.length);
+    let d = t;
+    for (let k = 1; k < group.length; k++) d = pderiv(d);
+    const slope = pderiv(d);
+    for (let k = 0; k < 8; k++) {
+      const fx = peval(d, x), fp = peval(slope, x);
+      if (Math.hypot(fp.re, fp.im) === 0) break;
+      const step = div(fx, fp);
+      x = approx(x.re - step.re, x.im - step.im);
+    }
+    return { value: Math.abs(x.im) <= 1e-9 * Math.max(1, Math.abs(x.re)) ? approx(x.re) : x, multiplicity: group.length };
+  });
 }
 
 /** The real zeros of p/q that are in its domain, with multiplicity. */

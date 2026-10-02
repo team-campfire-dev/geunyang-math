@@ -118,7 +118,7 @@ export function evaluateClaim(claim: Claim): ClaimResult {
       const ask: Node = claim.ask ? parse(claim.ask) : { k: 'sym', name: claim.unknowns[0] };
       const entries = solved.solutions.map((s) => {
         const vars = new Map(scope.vars); s.values.forEach((value, name) => vars.set(name, value));
-        return { value: evaluate(ask, { vars, functions: scope.functions }, meter), multiplicity: s.multiplicity };
+        return { value: evaluate(ask, { ...scope, vars }, meter), multiplicity: s.multiplicity };
       });
       const distinct = entries.filter((e, i) => entries.findIndex((f) => same(e.value, f.value).equal) === i);
       const strength = weakest(solved.strength, ...entries.map((e) => strengthOf(e.value, meter)));
@@ -162,7 +162,7 @@ export function evaluateClaim(claim: Claim): ClaimResult {
       const variable = claim.variable;
       const f = parse(claim.integrand), a = evaluate(parse(claim.from), scope, meter), b = evaluate(parse(claim.to), scope, meter);
       if (!isReal(a) || !isReal(b)) fail('domain', 'Integral bounds must be real.');
-      const at = (body: Node, x: Num) => { const vars = new Map(scope.vars); vars.set(variable, x); return evaluate(body, { vars, functions: scope.functions }, meter); };
+      const at = (body: Node, x: Num) => { const vars = new Map(scope.vars); vars.set(variable, x); return evaluate(body, { ...scope, vars }, meter); };
       const numeric = approx(integrate((x) => { const v = at(f, approx(x)); return isReal(v) ? v.re : fail('domain', 'The integrand is not real here.'); }, a.re, b.re));
       if (!claim.antiderivative) return { type: 'value', value: numeric, strength: 'estimated', notes: [] };
       // The antiderivative is believed only if it differentiates back to the integrand, and only if

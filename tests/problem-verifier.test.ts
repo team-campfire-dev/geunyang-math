@@ -432,3 +432,137 @@ describe('published questions verify against their claims', () => {
     expect(result.verdict).toBe('verified');
   });
 });
+
+/**
+ * Each case below was found by an adversarial review of this checker (2026-10-02): four reviewers
+ * looking for wrong passes, solver mistakes, misreadings and numerical traps, each finding reproduced
+ * and then re-checked by an independent skeptic. The expected results are worked by hand.
+ */
+describe('cases found by adversarial review', () => {
+  const check = (input: Partial<CheckInput> & Pick<CheckInput, 'answer' | 'solves'>) => verifyProblem(input as CheckInput);
+  const choice = (correct: string, texts: string[]) => ({ kind: 'choice' as const, correct, options: texts.map((text, i) => ({ id: 'abcdef'[i], text })) });
+  const solved = (claim: object) => shown(run(claim));
+
+  it('reads a mixed number as a whole number plus a fraction', () => {
+    expect(check({ answer: choice('b', ['$\\frac{1}{6}$', '$2\\frac{1}{3}$', '$1\\frac{1}{3}$', '$\\frac{3}{2}$']), solves: { kind: 'value', expression: '1/3 * 2' } }).verdict).toBe('rejected');
+    expect(check({ answer: choice('b', ['$\\frac{1}{3}$', '$2\\frac{1}{3}$', '$\\frac{4}{3}$', '$\\frac{5}{3}$']), solves: { kind: 'value', expression: '1 + 4/3' } }).verdict).toBe('verified');
+    expect(check({ answer: choice('a', ['$2\\frac{1}{2} \\times 2 = 5$', '$\\frac12+\\frac13=\\frac56$']), solves: { kind: 'choose', which: 'false' } }).verdict).toBe('rejected');
+  });
+
+  it('counts a root that two branches of |u| share once', () => {
+    expect(solved({ kind: 'solve', equation: '|x| = |2x - 3|', unknown: 'x', select: 'sum' })).toBe('4');
+    expect(solved({ kind: 'solve', equation: '|x| = |2x - 3|', unknown: 'x', select: 'product' })).toBe('3');
+    expect(solved({ kind: 'solve', equation: '|x - 1| = |2x + 1|', unknown: 'x', select: 'sum' })).toBe('-2');
+    expect(solved({ kind: 'solve', equation: '|x^2 - 1| = x + 1', unknown: 'x', select: 'sum' })).toBe('1');
+    expect(solved({ kind: 'solve', equation: '|x - 2| = 0', unknown: 'x', select: 'sum' })).toBe('2');
+  });
+
+  it('decides "for every x" of an inequality exactly, and does not decide it by sampling', () => {
+    expect(check({ answer: choice('a', ['$x^2-2x+1>0$', '$x^2-4>0$', '$x^2+x>0$', '$-x^2+1>0$']), solves: { kind: 'choose', which: 'true' } }).verdict).toBe('rejected');
+    expect(check({ answer: choice('a', ['$x^2+1>0$', '$x^2-1>0$', '$x^2>0$']), solves: { kind: 'choose', which: 'true' } }).verdict).toBe('verified');
+    expect(check({ answer: choice('a', ['$a^2+b^2>2ab$', '$(a+b)^2=a^2+b^2$']), solves: { kind: 'choose', which: 'true' } }).verdict).toBe('unverified');
+  });
+
+  it('meets the case where two variables are both negative', () => {
+    const answer = choice('b', ['$\\sqrt{a}\\sqrt{b}=\\sqrt{ab}$', '$(a+b)^2=a^2+b^2$', '$(a-b)^2=a^2-2ab+b^2$', '$(a+b)(a-b)=a^2-b^2$']);
+    expect(check({ answer, solves: { kind: 'choose', which: 'false' } }).issues.map((i) => i.code)).toContain('choice-ambiguous');
+  });
+
+  it('reads ⇒ as a proposition when one solution set lies inside the other, and leaves that undecided', () => {
+    const answer = choice('a', ['$x=3 \\Rightarrow x^2=9$', '$2x=6 \\Rightarrow x=3$', '$x+2=5 \\Rightarrow x=3$', '$x-1=0 \\Rightarrow x=1$']);
+    expect(check({ answer, solves: { kind: 'choose', which: 'false' } }).verdict).toBe('unverified');
+  });
+
+  it('finds roots that sit on a closed end of the interval', () => {
+    expect(solved({ kind: 'solve', equation: 'sin(x) = 0', unknown: 'x', where: '0 <= x <= 2pi', select: 'count' })).toBe('3');
+    expect(solved({ kind: 'solve', equation: 'sin(2x) = sin(x)', unknown: 'x', where: '0 <= x <= pi', select: 'count' })).toBe('3');
+    expect(run({ kind: 'solve', equation: 'cos(x) = 0', unknown: 'x', where: '0 <= x <= pi/2' })).toMatchObject({ value: { re: expect.closeTo(Math.PI / 2, 9) } });
+  });
+
+  it('keeps units: a value is read without its unit, a statement with units is not read at all', () => {
+    const lengths = choice('a', ['$2.5$ cm', '$25$ m', '$0.25$ m', '$2500$ m']);
+    expect(check({ answer: lengths, solves: { kind: 'value', expression: '250/100' } })).toMatchObject({ verdict: 'unverified', issues: [{ code: 'option-units' }] });
+    expect(readOption('$1$ m $= 100$ cm')).toBeNull();
+    const areas = choice('c', ['$4$ cm$^2$', '$8$ cm$^2$', '$16$ cm$^2$']);
+    expect(check({ answer: areas, solves: { kind: 'value', expression: '4*4' } }).verdict).toBe('verified');
+    expect(check({ answer: choice('a', ['$4$ cm$^2$', '$8$ cm$^2$']), solves: { kind: 'value', expression: '4*4' } }).verdict).toBe('rejected');
+  });
+
+  it('treats a negative power as a pole when solving an inequality', () => {
+    expect(shown(run({ kind: 'inequality', inequality: 'x^(-2) > 1/4', variable: 'x' }))).toBe('(-2, 0) ∪ (0, 2)');
+    expect(shown(run({ kind: 'inequality', inequality: 'x^(-1) > 2', variable: 'x' }))).toBe('(0, 1/2)');
+    expect(shown(run({ kind: 'inequality', inequality: '(x - 1)^(-1) < 1', variable: 'x' }))).toBe('(-inf, 1) ∪ (2, inf)');
+  });
+
+  it('finds a double root of a polynomial with irrational coefficients', () => {
+    expect(solved({ kind: 'solve', equation: 'x^2 - 2sqrt(3)x + 3 = 0', unknown: 'x', select: 'count' })).toBe('1');
+    expect(run({ kind: 'solve', equation: '(x - sqrt(2))^2 = 0', unknown: 'x' })).toMatchObject({ value: { re: expect.closeTo(Math.SQRT2, 12) } });
+    expect(shown(run({ kind: 'inequality', inequality: 'x^2 - 2sqrt(3)x + 3 > 0', variable: 'x' }))).toBe('(-inf, 1.732050808) ∪ (1.732050808, inf)');
+    expect(solved({ kind: 'solve', equation: 'sqrt(x - 3)*sqrt(x + 1) = sqrt(5)', unknown: 'x' })).toBe('4');
+  });
+
+  it('solves over the reals in real arithmetic, and refuses |z| over the complex numbers', () => {
+    expect(solved({ kind: 'solve', equation: 'sqrt(x) * sqrt(x - 5) = -6', unknown: 'x', select: 'count' })).toBe('0');
+    expect(failure({ kind: 'solve', equation: '(sqrt(x - 5))^2 = 2x', unknown: 'x' })).toBe('ill-posed');
+    expect(failure({ kind: 'solve', equation: 'z^2 + |z| = 0', unknown: 'z', domain: 'complex', select: 'count' })).toBe('unsupported');
+  });
+
+  it('keeps roots of polynomials with large or many terms', () => {
+    expect(solved({ kind: 'solve', equation: 'x^2 - 200000000 = 0', unknown: 'x', select: 'count' })).toBe('2');
+    expect(solved({ kind: 'solve', equation: 'x^3 - 30000x + 1 = 0', unknown: 'x', select: 'count' })).toBe('3');
+    expect(solved({ kind: 'solve', equation: '(x-1)(x-2)(x-3)(x-4)(x-5)(x-6)(x-7)(x-8)(x-9)(x-10)(x-11) = 0', unknown: 'x', select: 'count' })).toBe('11');
+    expect(run({ kind: 'solve', equation: 'x^2 - 20000x + 1 = 0', unknown: 'x', select: 'sum' })).toMatchObject({ value: { re: expect.closeTo(20000, 6) } });
+  });
+
+  it('reads LaTeX the way it is meant: 3!=6, d/dx, a_{n+1}, 1,000, sec⁻¹', () => {
+    expect(statementTruth(readOption('$3!=6$')!, emptyScope)?.truth).toBe(true);
+    expect(statementTruth(readOption('$4!=12$')!, emptyScope)?.truth).toBe(false);
+    expect(readOption('$\\frac{d}{dx}x^2 = 2x$')).toBeNull();
+    expect(readOption('$a_{n+1}-a_n=1$')).toBeNull();
+    expect(statementValues(readOption('$1,000$')!, emptyScope)?.map(show)).toEqual(['1000']);
+    expect(readOption('$\\sec^{-1} 2$')).toBeNull();
+    expect(statementTruth(readOption('$\\sin^{-1}\\frac{1}{2} = 30^\\circ$')!, emptyScope)?.truth).toBe(true);
+  });
+
+  it('counts angles in degrees where no trigonometry takes them', () => {
+    expect(show(value('180° - 50° - 60°').value)).toBe('70');
+    expect(check({ answer: choice('b', ['$60^\\circ$', '$70^\\circ$', '$80^\\circ$']), solves: { kind: 'value', expression: '180° - 50° - 60°' } }).verdict).toBe('verified');
+  });
+
+  it('does not take a limit from samples that only look settled', () => {
+    expect(failure({ kind: 'value', expression: 'limit(sin(pi/x), x, 0)' })).toBe('diverges');
+    expect(failure({ kind: 'value', expression: 'limit(cos(n*pi), n, inf)' })).toBe('diverges');
+    const quartic = (() => { try { return value('limit((1 - cos(x^2))/x^4, x, 0)').value.re; } catch { return null; } })();
+    expect(quartic === null || Math.abs(quartic - 0.5) < 1e-6).toBe(true);
+  });
+
+  it('keeps the odd-root convention for numbers known only as floats', () => {
+    expect(value('cbrt(2 + sqrt(5)) + cbrt(2 - sqrt(5))').value.re).toBeCloseTo(1, 12);
+  });
+
+  it('stays bounded: recursive derivatives, deep compositions and large counts fail cleanly and quickly', () => {
+    expect(failure({ kind: 'value', expression: 'diff(f(x), x, 1)', define: { 'f(x)': 'x * f(x - 1)' } })).toBe('bounded');
+    const nested = 'sin('.repeat(40) + 'x' + ')'.repeat(40);
+    const started = performance.now();
+    expect(failure({ kind: 'value', expression: `diff(${nested}, x, 1, 6)` })).toBe('bounded');
+    // nPr is a falling product now, two multiplications here, so this sum is simply computed.
+    expect(show(value('sum(nPr(100000, 2), k, 1, 100000)').value)).toBe('999990000000000');
+    expect(failure({ kind: 'value', expression: 'nPr(1000, 1000)' })).toBe('bounded');
+    expect(performance.now() - started).toBeLessThan(10_000);
+  });
+
+  it('does not call a float zero positive, nor tan 90° a number', () => {
+    expect(failure({ kind: 'value', expression: 'sign(cos(90°))' })).toBe('unstable');
+    expect(failure({ kind: 'value', expression: 'tan(90°)' })).toBe('domain');
+  });
+
+  it('takes higher derivatives at zero', () => {
+    expect(show(value('diff(x^2, x, 0, 2)').value)).toBe('2');
+    expect(show(value('diff(x^3 - 3x, x, 0, 3)').value)).toBe('6');
+    expect(value('diff(x^2*exp(x), x, 0, 2)').value.re).toBeCloseTo(2, 12);
+  });
+
+  it('warns when the claim only restates the answer', () => {
+    expect(check({ answer: { kind: 'integer', value: 8 }, solves: { kind: 'value', expression: '8' } })).toMatchObject({ verdict: 'verified', issues: [{ code: 'claim-trivial', level: 'warning' }] });
+  });
+});

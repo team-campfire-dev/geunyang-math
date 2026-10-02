@@ -17,9 +17,18 @@ const functions: Record<string, string> = {
 const inverse: Record<string, string> = { sin: 'asin', cos: 'acos', tan: 'atan' };
 /** A piece of words inside math that cannot be translated, so whatever contains it is unreadable. */
 export const UNREADABLE = '\u0001';
+/** A unit, kept apart from the value it follows: `\u0002cm\u0002`. */
+export const UNIT = '\u0002';
+
+/** 1,000 and 12,345 are numbers, not lists. */
+export const joinThousands = (text: string) => text.replace(/\b\d{1,3}(?:,\d{3})+(?![\d.])/g, (m) => m.replace(/,/g, ''));
 
 export function latexToClaim(source: string): string {
-  const s = source;
+  const s = source
+    // LaTeX writes ≠ as \ne, never as !=, so `3!=6` is a factorial and an equals sign.
+    .replace(/!=/g, '! =')
+    // A whole number written against a fraction is a mixed number: 2\frac{1}{3} is 2 + 1/3, not 2·1/3.
+    .replace(/(^|[^\d.^_}])(\d+)\s*\\[dt]?frac\s*\{\s*(\d+)\s*\}\s*\{\s*(\d+)\s*\}/g, '$1(\\frac{$2}{1}+\\frac{$3}{$4})');
   let i = 0;
   const space = () => { while (i < s.length && /\s/.test(s[i])) i++; };
   const name = () => {
@@ -118,7 +127,13 @@ export function latexToClaim(source: string): string {
   const command = (): string => {
     const c = name();
     switch (c) {
-      case 'frac': case 'dfrac': case 'tfrac': { const a = argument(), b = argument(); return `((${a})/(${b}))`; }
+      case 'frac': case 'dfrac': case 'tfrac': {
+        const a = argument(), b = argument();
+        // d/dx and dy/dx are operators, not a quotient of the variables d and x.
+        const compact = (x: string) => x.replace(/\s/g, '');
+        if (/^d(\^\(\d+\))?[A-Za-z\u03b1-\u03c9]?$/.test(compact(a)) && /^d[A-Za-z\u03b1-\u03c9]/.test(compact(b))) return UNREADABLE;
+        return `((${a})/(${b}))`;
+      }
       case 'sqrt': {
         space();
         let index = '';
@@ -133,7 +148,7 @@ export function latexToClaim(source: string): string {
       case 'mp': return '∓';
       case 'le': case 'leq': case 'leqslant': return '<=';
       case 'ge': case 'geq': case 'geqslant': return '>=';
-      case 'ne': case 'neq': return '!=';
+      case 'ne': case 'neq': return '≠';
       case 'lt': return '<';
       case 'gt': return '>';
       case 'Rightarrow': case 'implies': case 'Longrightarrow': return ' => ';
@@ -156,7 +171,8 @@ export function latexToClaim(source: string): string {
       if (s[i] === '^') {
         i++;
         const p = argument();
-        if (p.trim() === '-1' && inverse[c]) fn = inverse[c]; else power = p;
+        // sin⁻¹ is arcsin; sec⁻¹ and the like are not read rather than read as a reciprocal.
+        if (p.trim() === '-1') { if (!inverse[c]) return UNREADABLE; fn = inverse[c]; } else power = p;
         space();
       }
       const arg = applied();
@@ -178,7 +194,12 @@ export function latexToClaim(source: string): string {
       if (s.startsWith('{\\circ}', i)) { i += 7; return '°'; }
       return `^(${argument()})`;
     }
-    if (c === '_') { i++; return `_${argument().replace(/[()\s]/g, '')}`; }
+    if (c === '_') {
+      i++;
+      // A subscript is a name: a_{n+1} is its own symbol, and writing it as a_n + 1 would change the meaning.
+      const sub = argument().replace(/[()\s]/g, '');
+      return /^[A-Za-z0-9]+$/.test(sub) ? `_${sub}` : UNREADABLE;
+    }
     if (c === '~' || c === '&') { i++; return ' '; }
     i++;
     return c;
@@ -195,6 +216,6 @@ export function words(text: string): string {
   if (/^(또는|혹은|or)$/i.test(t)) return ' or ';
   if (/^(그리고|이고|and)$/i.test(t)) return ' and ';
   if (/^[,，]$/.test(t)) return ',';
-  if (t.split(/\s+/).every((w) => units.test(w))) return ' ';
+  if (t.split(/\s+/).every((w) => units.test(w))) return `${UNIT}${t}${UNIT}`;
   return UNREADABLE;
 }

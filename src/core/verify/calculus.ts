@@ -1,30 +1,67 @@
 import { mentions, substitute, type Node } from './expr';
-import { fail, q } from './numbers';
+import { fail, q, type Q } from './numbers';
 
 /**
  * Calculus for checking, not for solving. A derivative is computed symbolically because it is
  * mechanical and exact; an integral and a limit are computed numerically, and a claim that needs an
  * exact one brings an antiderivative to be differentiated back — checking is the easy direction.
  */
+/**
+ * How many nodes one derivative may build. The chain rule shares subtrees, but repeated
+ * differentiation of a deep composition still multiplies them; past this it is refused rather than
+ * left to exhaust memory.
+ */
+const maxBuilt = 50_000;
+let built: { nodes: number } | null = null;
+const make = (n: Node): Node => {
+  if (built && ++built.nodes > maxBuilt) fail('bounded', 'The derivative grows too large to compute.');
+  return n;
+};
 const num = (v: bigint): Node => ({ k: 'num', q: q(v) });
+const rational = (v: Q): Node => ({ k: 'num', q: v });
 const isNum = (n: Node, v: bigint) => n.k === 'num' && n.q.d === 1n && n.q.n === v;
-const Neg = (a: Node): Node => (isNum(a, 0n) ? a : a.k === 'neg' ? a.a : { k: 'neg', a });
-const Add = (a: Node, b: Node): Node => (isNum(a, 0n) ? b : isNum(b, 0n) ? a : { k: 'add', a, b });
-const Sub = (a: Node, b: Node): Node => (isNum(b, 0n) ? a : isNum(a, 0n) ? Neg(b) : { k: 'sub', a, b });
-const Mul = (a: Node, b: Node): Node =>
-  isNum(a, 0n) || isNum(b, 0n) ? num(0n) : isNum(a, 1n) ? b : isNum(b, 1n) ? a : { k: 'mul', a, b };
-const Div = (a: Node, b: Node): Node => (isNum(a, 0n) ? num(0n) : isNum(b, 1n) ? a : { k: 'div', a, b });
-const Pow = (a: Node, b: Node): Node => (isNum(b, 1n) ? a : isNum(b, 0n) ? num(1n) : { k: 'pow', a, b });
-const Call = (name: string, ...args: Node[]): Node => ({ k: 'call', name, args });
+const both = (a: Node, b: Node): [Q, Q] | null => (a.k === 'num' && b.k === 'num' ? [a.q, b.q] : null);
+// Two numbers combine into one, so the power rule's exponent (2 − 1) − 1 folds to 0 and x⁰ to 1,
+// rather than leaving 0^((2−1)−1) to be evaluated at x = 0.
+const Neg = (a: Node): Node => (isNum(a, 0n) ? a : a.k === 'num' ? rational(q(-a.q.n, a.q.d)) : a.k === 'neg' ? a.a : make({ k: 'neg', a }));
+const Add = (a: Node, b: Node): Node => {
+  const n = both(a, b);
+  if (n) return rational(q(n[0].n * n[1].d + n[1].n * n[0].d, n[0].d * n[1].d));
+  return isNum(a, 0n) ? b : isNum(b, 0n) ? a : make({ k: 'add', a, b });
+};
+const Sub = (a: Node, b: Node): Node => {
+  const n = both(a, b);
+  if (n) return rational(q(n[0].n * n[1].d - n[1].n * n[0].d, n[0].d * n[1].d));
+  return isNum(b, 0n) ? a : isNum(a, 0n) ? Neg(b) : make({ k: 'sub', a, b });
+};
+const Mul = (a: Node, b: Node): Node => {
+  const n = both(a, b);
+  if (n) return rational(q(n[0].n * n[1].n, n[0].d * n[1].d));
+  return isNum(a, 0n) || isNum(b, 0n) ? num(0n) : isNum(a, 1n) ? b : isNum(b, 1n) ? a : make({ k: 'mul', a, b });
+};
+const Div = (a: Node, b: Node): Node => {
+  const n = both(a, b);
+  if (n && n[1].n !== 0n) return rational(q(n[0].n * n[1].d, n[0].d * n[1].n));
+  return isNum(a, 0n) ? num(0n) : isNum(b, 1n) ? a : make({ k: 'div', a, b });
+};
+const Pow = (a: Node, b: Node): Node => (isNum(b, 1n) ? a : isNum(b, 0n) ? num(1n) : make({ k: 'pow', a, b }));
+const Call = (name: string, ...args: Node[]): Node => make({ k: 'call', name, args });
 const two = num(2n);
-/** Node builders that fold the obvious zeros and ones, so derived expressions stay small. */
+/** Node builders that fold numbers together and drop the obvious zeros and ones, so derived expressions stay small. */
 export const build = { num, Neg, Add, Sub, Mul, Div, Pow, Call };
 
 export type FunctionDef = { params: string[]; body: Node };
 
 /** d/dv of an expression, as an expression. User-defined functions are expanded where they are called. */
 export function derivative(n: Node, v: string, functions: ReadonlyMap<string, FunctionDef> = new Map()): Node {
-  const d = (m: Node) => derivative(m, v, functions);
+  const outer = built;
+  if (!outer) built = { nodes: 0 };
+  try { return differentiate(n, v, functions, 0); }
+  finally { if (!outer) built = null; }
+}
+
+function differentiate(n: Node, v: string, functions: ReadonlyMap<string, FunctionDef>, depth: number): Node {
+  const d = (m: Node) => differentiate(m, v, functions, depth);
   if (!mentions(n, v)) return num(0n);
   switch (n.k) {
     case 'num': return num(0n);
@@ -45,7 +82,9 @@ export function derivative(n: Node, v: string, functions: ReadonlyMap<string, Fu
       const user = functions.get(n.name);
       if (user) {
         if (user.params.length !== n.args.length) fail('syntax', `${n.name} takes ${user.params.length} argument(s).`);
-        return d(substitute(user.body, new Map(user.params.map((p, i) => [p, n.args[i]]))));
+        // A function that calls itself has no closed form to differentiate; stop as evaluation does.
+        if (depth >= 20) fail('bounded', 'Functions call each other too deeply to differentiate.');
+        return differentiate(substitute(user.body, new Map(user.params.map((p, i) => [p, n.args[i]]))), v, functions, depth + 1);
       }
       const [u] = n.args, du = d(u);
       switch (n.name) {
@@ -130,34 +169,54 @@ export function integrate(f: (x: number) => number, a: number, b: number): numbe
 }
 
 /**
- * The value g(h) approaches as h → 0⁺, by Richardson extrapolation over h = 1/8, 1/16, …. The
- * estimate kept is the one where successive extrapolations agree best; if they never agree to one
- * part in ten million, the limit is reported as not settling rather than guessed.
+ * The value g(h) approaches as h → 0⁺, by Richardson extrapolation over a geometric grid of h.
+ *
+ * Two things fool a naive version, and both were found by trying: a grid of powers of two lands
+ * exactly on the zeros of sin(π/x), so an oscillation reads as a limit; and floating cancellation
+ * eventually turns g into a constant (cos x² is exactly 1.0 once x² < 1e-8), so the last rows agree
+ * perfectly about a wrong value. So the grid is scaled by an irrational factor, rows computed from
+ * samples that stopped changing are not trusted, and an estimate must hold over three consecutive
+ * rows.
  */
-function towardZero(g: (h: number) => number): number {
+function towardZero(g: (h: number) => number, scale: number): number {
   const rows: number[][] = [];
-  let best = NaN, spread = Infinity;
-  for (let k = 0; k < 24; k++) {
-    const value = g(0.125 / 2 ** k);
+  const estimates: number[] = [];
+  let previous = NaN, repeats = 0;
+  for (let k = 0; k < 26; k++) {
+    const value = g((0.125 * scale) / 2 ** k);
     if (!Number.isFinite(value)) fail('diverges', 'The function grows without bound near the limit point.');
+    repeats = value === previous ? repeats + 1 : 0;
+    previous = value;
+    // Samples that no longer change at all mean the function is now rounding to a constant; the
+    // extrapolation has nothing more to learn, unless it has been that constant from the start.
+    if (repeats >= 2 && k > 3 && rows[0][0] !== value) break;
     const row = [value];
     for (let j = 1; j <= Math.min(k, 8); j++) row[j] = row[j - 1] + (row[j - 1] - rows[k - 1][j - 1]) / (2 ** j - 1);
-    if (k > 1) {
-      const previous = rows[k - 1][rows[k - 1].length - 1], current = row[row.length - 1];
-      const gap = Math.abs(current - previous);
-      if (gap < spread) { spread = gap; best = current; }
-    }
     rows.push(row);
+    estimates.push(row[row.length - 1]);
+  }
+  let best = NaN, spread = Infinity;
+  for (let k = 3; k < estimates.length; k++) {
+    const window = estimates.slice(k - 2, k + 1);
+    const gap = Math.max(...window) - Math.min(...window);
+    if (gap < spread) { spread = gap; best = estimates[k]; }
   }
   if (!(spread <= 1e-7 * Math.max(1, Math.abs(best)))) fail('diverges', 'The limit does not settle to a number.');
   return Math.abs(best) < 1e-11 ? 0 : best;
 }
 
+/** The limit along two unrelated irrational grids, which must agree: no oscillation lines up with both. */
+function settled(g: (h: number) => number): number {
+  const a = towardZero(g, Math.SQRT1_2), b = towardZero(g, 1 / Math.sqrt(3));
+  if (Math.abs(a - b) > 1e-6 * Math.max(1, Math.abs(a), Math.abs(b))) fail('diverges', 'The limit does not settle to a number.');
+  return (a + b) / 2;
+}
+
 /** lim f(x) as x → at, from the right (side 1), the left (−1) or both (0); `at` may be ±Infinity. */
 export function limit(f: (x: number) => number, at: number, side: -1 | 0 | 1): number {
-  if (!Number.isFinite(at)) return towardZero((h) => f((at > 0 ? 1 : -1) / h));
-  if (side !== 0) return towardZero((h) => f(at + side * h));
-  const right = towardZero((h) => f(at + h)), left = towardZero((h) => f(at - h));
+  if (!Number.isFinite(at)) return settled((h) => f((at > 0 ? 1 : -1) / h));
+  if (side !== 0) return settled((h) => f(at + side * h));
+  const right = settled((h) => f(at + h)), left = settled((h) => f(at - h));
   if (Math.abs(right - left) > 1e-6 * Math.max(1, Math.abs(right), Math.abs(left))) fail('diverges', 'The left and right limits differ.');
   return (right + left) / 2;
 }

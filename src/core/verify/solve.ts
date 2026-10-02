@@ -5,7 +5,7 @@ import {
   add, approx, asInteger, CheckFailure, compare, div, exact, fail, int, isReal, isZero, q, realPart, same, sub, weakest,
   type Num, type Strength,
 } from './numbers';
-import { linearForm, rationalFunction, rationalZeros, solveLinear, type Root } from './polynomial';
+import { linearForm, peval, rationalFunction, rationalZeros, solveLinear, type RationalFunction, type Root } from './polynomial';
 
 /**
  * Solving, done so that nothing is lost: every method here produces a set of candidates that holds
@@ -82,23 +82,34 @@ function polynomialIn(n: Node, s: string, scope: Scope, meter: Meter): Node[] | 
 }
 
 /**
- * A set of numbers that contains every zero of h, or null when no method here applies. Multiplicity
- * is kept only where it means something — the roots of a polynomial.
+ * A set of numbers that contains every zero of h, or null when no method here applies.
+ *
+ * `rational` is the p/q the zeros came from, when they did: then multiplicity means something (a
+ * repeated root of a polynomial) and the size of its terms says how much rounding to expect. Zeros
+ * gathered from the branches of |u| or from squaring a root are a list of distinct values, each
+ * counted once — a root two branches share is still one root.
  */
-export function zeroCandidates(h: Node, v: string, scope: Scope, meter: Meter, depth = 0): Root[] | null {
+export type Candidates = { roots: Root[]; rational: RationalFunction | null; exact: boolean };
+const distinct = (roots: Root[]): Root[] =>
+  roots.filter((r, i) => roots.findIndex((o) => same(o.value, r.value).equal) === i).map((r) => ({ value: r.value, multiplicity: 1 }));
+
+export function zeroCandidates(h: Node, v: string, scope: Scope, meter: Meter, domain: 'real' | 'complex' = 'real', depth = 0): Candidates | null {
   if (depth > 6) return null;
   const rational = rationalFunction(h, v, scope, meter);
-  if (rational) return rationalZeros(rational);
-  // |u| = u or −u, and every zero of h is a zero of one of the two branches.
+  if (rational) return { roots: rationalZeros(rational), rational, exact: [...rational.num, ...rational.den].every((c) => !!c.q) };
+  // |u| = u or −u, and every zero of h is a zero of one of the two branches — when u is real.
   const absolute = find(h, (m) => m.k === 'call' && m.name === 'abs' && mentions(m, v));
   if (absolute && absolute.k === 'call') {
+    if (domain === 'complex') return fail('unsupported', 'An absolute value of a complex unknown cannot be split into ±; its solutions are not checked here.');
     const out: Root[] = [];
+    let exactly = true;
     for (const branch of [absolute.args[0], Neg(absolute.args[0])]) {
-      const zeros = zeroCandidates(replace(h, absolute, branch), v, scope, meter, depth + 1);
+      const zeros = zeroCandidates(replace(h, absolute, branch), v, scope, meter, domain, depth + 1);
       if (!zeros) return null;
-      out.push(...zeros.map((z) => ({ value: z.value, multiplicity: 1 })));
+      out.push(...zeros.roots);
+      exactly &&= zeros.exact;
     }
-    return out;
+    return { roots: distinct(out), rational: null, exact: exactly };
   }
   // With s = √u, h is A + B·s once s² is written as u, and every zero satisfies A² = B²·u.
   const root = find(h, (m) => isSquareRoot(m) && mentions(m, v));
@@ -111,8 +122,8 @@ export function zeroCandidates(h: Node, v: string, scope: Scope, meter: Meter, d
       const term = Mul(c, Pow(u, num(BigInt(Math.floor(k / 2)))));
       if (k % 2) b = Add(b, term); else a = Add(a, term);
     });
-    const zeros = zeroCandidates(Sub(Pow(a, num(2n)), Mul(Pow(b, num(2n)), u)), v, scope, meter, depth + 1);
-    return zeros && zeros.map((z) => ({ value: z.value, multiplicity: 1 }));
+    const zeros = zeroCandidates(Sub(Pow(a, num(2n)), Mul(Pow(b, num(2n)), u)), v, scope, meter, domain, depth + 1);
+    return zeros && { roots: distinct(zeros.roots), rational: null, exact: zeros.exact };
   }
   return null;
 }
@@ -139,6 +150,10 @@ function scanZeros(f: (x: number) => number | null, lo: number, hi: number): num
     }
     return (a + b) / 2;
   };
+  // An end of the interval is a candidate whatever its sign: sin(2π) is −2.4e-16, not 0, and there is
+  // no sample beyond it to change sign against. The equation itself decides whether it is a root.
+  if (ys[0] !== null) found.push(lo);
+  if (ys[count] !== null) found.push(hi);
   for (let i = 0; i <= count; i++) {
     const y = ys[i];
     if (y === null) continue;
@@ -182,7 +197,7 @@ export function bounds(where: Relation | undefined, v: string, scope: Scope, met
 export function holds(relation: Relation, values: Solution, scope: Scope, meter: Meter): boolean {
   const vars = new Map(scope.vars);
   values.forEach((v, k) => vars.set(k, v));
-  const inner = { vars, functions: scope.functions };
+  const inner = { ...scope, vars };
   try {
     const sides = relation.terms.map((t) => evaluate(t, inner, meter));
     return relation.ops.every((op, i) => compareOp(sides[i], op, sides[i + 1]));
@@ -198,16 +213,27 @@ function compareOp(a: Num, op: RelOp, b: Num): boolean {
   return op === '<' ? c < 0 : op === '<=' ? c <= 0 : op === '>' ? c > 0 : c >= 0;
 }
 
+/** Σ|cᵢ||x|ⁱ over the numerator, divided by |q(x)|: the size of the terms whose rounding the residual carries. */
+function magnitude(r: RationalFunction, x: Num): number {
+  const size = Math.hypot(x.re, x.im);
+  const terms = r.num.reduce((sum, c, i) => sum + Math.hypot(c.re, c.im) * size ** i, 0);
+  const den = peval(r.den, x);
+  return terms / Math.max(1e-300, Math.hypot(den.re, den.im));
+}
+
 /** Every solution of one equation in one unknown, kept to the domain and the `where` condition. */
 function solveOne(left: Node, right: Node, v: string, domain: 'real' | 'complex', where: Bounds, scope: Scope, meter: Meter): SolveResult {
   const h = Sub(left, right);
-  let candidates: Root[] | null;
-  try { candidates = zeroCandidates(h, v, scope, meter); }
+  // Over the reals every step must be real: √x·√(x−5) = −6 is not solved by x = −4, although 2i·3i is −6.
+  const inScope: Scope = domain === 'real' ? { ...scope, real: true } : scope;
+  let candidates: Candidates | null;
+  try { candidates = zeroCandidates(h, v, scope, meter, domain); }
   catch (reason) {
     if (reason instanceof CheckFailure && reason.message.startsWith('The equation holds for every value')) return fail('ill-posed', 'The equation holds for every value of the unknown.');
     throw reason;
   }
   let strength: Strength = 'exact';
+  let scanned = false;
   if (!candidates) {
     // Nothing exact applies — a sine, an exponential, a logarithm of the unknown. Search a stated interval.
     if (!where.lo || !where.hi) return fail('unsupported', `Solving this equation needs a bounded "where" interval for ${v}, like "0 <= ${v} < 2pi".`);
@@ -215,37 +241,45 @@ function solveOne(left: Node, right: Node, v: string, domain: 'real' | 'complex'
     const f = (x: number) => {
       try {
         const vars = new Map(scope.vars); vars.set(v, approx(x));
-        const value = evaluate(h, { vars, functions: scope.functions }, meter);
+        const value = evaluate(h, { ...inScope, vars }, meter);
         return isReal(value) ? value.re : null;
       } catch (reason) { if (reason instanceof CheckFailure && reason.code !== 'bounded') return null; throw reason; }
     };
-    candidates = scanZeros(f, lo, hi).map((x) => ({ value: approx(x), multiplicity: 1 }));
+    candidates = { roots: scanZeros(f, lo, hi).map((x) => ({ value: approx(x), multiplicity: 1 })), rational: null, exact: false };
     strength = 'estimated';
+    scanned = true;
   }
+  if (!candidates.exact) strength = weakest(strength, 'numeric');
   const kept: { values: Solution; multiplicity: number }[] = [];
-  for (const candidate of candidates) {
+  for (const candidate of candidates.roots) {
     const value = isReal(candidate.value) ? realPart(candidate.value) : candidate.value;
     if (domain === 'real' && !isReal(value)) continue;
     if (!where.test(value)) continue;
-    const check = satisfies([[left, right]], new Map([[v, value]]), scope, meter, strength === 'estimated');
-    if (!check) continue;
+    const slack = candidates.rational ? magnitude(candidates.rational, value) : 0;
+    const check = satisfies([[left, right]], new Map([[v, value]]), inScope, meter, false, slack);
+    if (!check) {
+      // A zero of the numerator that is not a zero of the denominator is a root; if it does not
+      // check, the arithmetic is what failed, and dropping it would shrink the solution set unseen.
+      if (candidates.rational) return fail('unstable', `A root near ${value.re} could not be confirmed numerically.`);
+      continue;
+    }
     strength = weakest(strength, check, value.q ? 'exact' : 'numeric');
     const twin = kept.find((k) => same(k.values.get(v)!, value).equal);
-    if (twin) twin.multiplicity += candidate.multiplicity;
+    if (twin) twin.multiplicity = Math.max(twin.multiplicity, candidate.multiplicity);
     else kept.push({ values: new Map([[v, value]]), multiplicity: candidate.multiplicity });
   }
-  return { solutions: kept, strength };
+  return { solutions: kept, strength: scanned ? 'estimated' : strength };
 }
 
 /** The strength with which every equation holds at the values, or null when one does not. */
-export function satisfies(equations: [Node, Node][], values: Solution, scope: Scope, meter: Meter, estimated = false): Strength | null {
+export function satisfies(equations: [Node, Node][], values: Solution, scope: Scope, meter: Meter, estimated = false, slack = 0): Strength | null {
   const vars = new Map(scope.vars);
   values.forEach((v, k) => vars.set(k, v));
   let strength: Strength = 'exact';
   for (const [left, right] of equations) {
     try {
-      const a = evaluate(left, { vars, functions: scope.functions }, meter), b = evaluate(right, { vars, functions: scope.functions }, meter);
-      const result = same(a, b, estimated);
+      const a = evaluate(left, { ...scope, vars }, meter), b = evaluate(right, { ...scope, vars }, meter);
+      const result = same(a, b, estimated, slack);
       if (!result.equal) return null;
       strength = weakest(strength, result.strength);
     } catch (reason) {
@@ -301,7 +335,7 @@ export function solveSystem(equations: [Node, Node][], unknowns: string[], domai
       let strength = reduced.strength;
       for (const s of reduced.solutions) {
         const vars = new Map(scope.vars); s.values.forEach((value, k) => vars.set(k, value));
-        const value = evaluate(solvedFor, { vars, functions: scope.functions }, meter);
+        const value = evaluate(solvedFor, { ...scope, vars }, meter);
         if (domain === 'real' && !isReal(value)) continue;
         const full = new Map(s.values); full.set(u, isReal(value) ? realPart(value) : value);
         const check = satisfies(equations, full, scope, meter, strength === 'estimated');
@@ -320,8 +354,10 @@ export type End = { value: Num | null; closed: boolean };
 export type Interval = { lo: End; hi: End };
 
 /** The set of real values satisfying an inequality chain in one variable. */
-export function solveInequality(relation: Relation, v: string, scope: Scope, meter: Meter): { set: Interval[]; strength: Strength } {
+export function solveInequality(relation: Relation, v: string, outer: Scope, meter: Meter): { set: Interval[]; strength: Strength } {
   if (relation.ops.some((op) => op === '=' || op === '!=')) return fail('unsupported', 'An inequality claim may use only <, <=, > and >=.');
+  // An inequality compares real numbers, so every step must be real.
+  const scope: Scope = { ...outer, real: true };
   let set: Interval[] = [{ lo: { value: null, closed: false }, hi: { value: null, closed: false } }];
   let strength: Strength = 'exact';
   for (let i = 0; i < relation.ops.length; i++) {
@@ -338,13 +374,18 @@ function solvePair(left: Node, op: RelOp, right: Node, v: string, scope: Scope, 
   const addZeros = (m: Node) => {
     const zeros = zeroCandidates(m, v, scope, meter);
     if (!zeros) return fail('unsupported', 'This inequality cannot be solved here yet.');
-    zeros.forEach((z) => { if (isReal(z.value)) breaks.push(realPart(z.value)); });
+    zeros.roots.forEach((z) => { if (isReal(z.value)) breaks.push(realPart(z.value)); });
   };
   addZeros(h);
   // Where h is undefined or its formula changes, the sign may change without passing through zero.
   const visit = (m: Node) => {
     if (!mentions(m, v)) return;
     if (m.k === 'div') addZeros(m.b);
+    // x⁻² is 1/x² — a pole as much as a written denominator; a fractional power has a domain edge.
+    if (m.k === 'pow' && !mentions(m.b, v)) {
+      const exponent = evaluate(m.b, scope, meter);
+      if (!exponent.q || exponent.q.d !== 1n || exponent.q.n < 0n) addZeros(m.a);
+    }
     if (isSquareRoot(m) || (m.k === 'call' && (m.name === 'ln' || m.name === 'log'))) addZeros(m.k === 'call' ? m.args[m.args.length - 1] : (m as { a: Node }).a);
     switch (m.k) {
       case 'num': case 'sym': return;

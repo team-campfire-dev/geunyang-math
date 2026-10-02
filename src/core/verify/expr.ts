@@ -172,7 +172,29 @@ export function parseRelation(source: string, options: ParseOptions = {}): Relat
     terms.push(sum(0));
   }
   if (at < tokens.length) fail('syntax', `Unexpected "${peek().text}" at ${peek().at}.`);
+  // A degree sign is an angle only where there is trigonometry to take it: sin(30°), asin(1/2) = 30°.
+  // Anywhere else it is the unit an angle is counted in — 180° − 50° − 60° is 70, as the options say.
+  if (!terms.some(hasTrig)) return { terms: terms.map(degreesAsNumbers), ops };
   return { terms, ops };
+}
+
+const trig = new Set(['sin', 'cos', 'tan', 'sec', 'csc', 'cot', 'asin', 'acos', 'atan', 'arcsin', 'arccos', 'arctan']);
+function hasTrig(n: Node): boolean {
+  switch (n.k) {
+    case 'num': case 'sym': return false;
+    case 'neg': case 'fact': case 'deg': return hasTrig(n.a);
+    case 'call': return trig.has(n.name) || n.args.some(hasTrig);
+    default: return hasTrig(n.a) || hasTrig(n.b);
+  }
+}
+function degreesAsNumbers(n: Node): Node {
+  switch (n.k) {
+    case 'num': case 'sym': return n;
+    case 'deg': return degreesAsNumbers(n.a);
+    case 'neg': case 'fact': return { ...n, a: degreesAsNumbers(n.a) };
+    case 'call': return { ...n, args: n.args.map(degreesAsNumbers) };
+    default: return { ...n, a: degreesAsNumbers(n.a), b: degreesAsNumbers(n.b) };
+  }
 }
 
 /** Parses an expression with no relation in it. */
@@ -189,26 +211,40 @@ export function parseEquation(source: string, options: ParseOptions = {}): [Node
   return [relation.terms[0], relation.terms[1]];
 }
 
-/** Every symbol the expression mentions, apart from the variables a sum, derivative, integral or limit binds. */
-export function freeSymbols(n: Node, out = new Set<string>(), bound = new Set<string>()): Set<string> {
+const binders = new Set(['sum', 'prod', 'diff', 'integral', 'limit']);
+/**
+ * The symbols an expression depends on, apart from the variable a sum, derivative, integral or limit
+ * binds. Remembered per node: a derivative shares subtrees, and walking each shared subtree again
+ * would make one question cost exponentially many visits.
+ */
+const remembered = new WeakMap<Node, ReadonlySet<string>>();
+function symbolsOf(n: Node): ReadonlySet<string> {
+  const known = remembered.get(n);
+  if (known) return known;
+  let out: ReadonlySet<string>;
   switch (n.k) {
-    case 'num': return out;
-    case 'sym': if (!bound.has(n.name)) out.add(n.name); return out;
-    case 'neg': case 'fact': case 'deg': return freeSymbols(n.a, out, bound);
+    case 'num': out = new Set(); break;
+    case 'sym': out = new Set([n.name]); break;
+    case 'neg': case 'fact': case 'deg': out = symbolsOf(n.a); break;
     case 'call': {
-      const binder = ['sum', 'prod', 'diff', 'integral', 'limit'].includes(n.name) && n.args[1]?.k === 'sym';
+      const bound = binders.has(n.name) && n.args[1]?.k === 'sym' ? (n.args[1] as { name: string }).name : null;
+      const collected = new Set<string>();
       n.args.forEach((arg, index) => {
-        if (binder && index === 1) return;
-        freeSymbols(arg, out, binder && index === 0 ? new Set([...bound, (n.args[1] as { name: string }).name]) : bound);
+        if (bound !== null && index === 1) return;
+        for (const name of symbolsOf(arg)) if (!(bound !== null && index === 0 && name === bound)) collected.add(name);
       });
-      return out;
+      out = collected;
+      break;
     }
-    default: freeSymbols(n.a, out, bound); return freeSymbols(n.b, out, bound);
+    default: out = new Set([...symbolsOf(n.a), ...symbolsOf(n.b)]);
   }
+  remembered.set(n, out);
+  return out;
 }
-
+/** Every symbol the expression mentions, apart from the variables a sum, derivative, integral or limit binds. */
+export const freeSymbols = (n: Node): Set<string> => new Set(symbolsOf(n));
 /** Whether the expression depends on `name`. */
-export const mentions = (n: Node, name: string) => freeSymbols(n).has(name);
+export const mentions = (n: Node, name: string) => symbolsOf(n).has(name);
 
 /** Replaces symbols by expressions, leaving variables bound inside a sum or an integral alone. */
 export function substitute(n: Node, map: ReadonlyMap<string, Node>): Node {
@@ -217,7 +253,7 @@ export function substitute(n: Node, map: ReadonlyMap<string, Node>): Node {
     case 'sym': return map.get(n.name) ?? n;
     case 'neg': case 'fact': case 'deg': return { ...n, a: substitute(n.a, map) };
     case 'call': {
-      if (['sum', 'prod', 'diff', 'integral', 'limit'].includes(n.name) && n.args[1]?.k === 'sym') {
+      if (binders.has(n.name) && n.args[1]?.k === 'sym') {
         const inner = new Map(map); inner.delete((n.args[1] as { name: string }).name);
         return { ...n, args: n.args.map((arg, index) => (index === 1 ? arg : substitute(arg, index === 0 ? inner : map))) };
       }

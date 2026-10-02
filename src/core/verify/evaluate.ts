@@ -5,7 +5,12 @@ import {
   realPart, requireReal, sqrt, sub, ZERO, type Num,
 } from './numbers';
 
-export type Scope = { vars: ReadonlyMap<string, Num>; functions: ReadonlyMap<string, FunctionDef> };
+/**
+ * `real` asks for real arithmetic throughout: a square root of a negative number is then undefined
+ * rather than imaginary. Solving over the reals uses it, so √x·√(x−5) = −6 has no solution at x = −4
+ * even though 2i·3i is −6.
+ */
+export type Scope = { vars: ReadonlyMap<string, Num>; functions: ReadonlyMap<string, FunctionDef>; real?: boolean };
 /** How much work a claim may cost, and whether anything in it was only estimated. */
 export type Meter = { work: number; depth: number; estimated: boolean };
 export const newMeter = (): Meter => ({ work: 0, depth: 0, estimated: false });
@@ -19,17 +24,32 @@ function wholeNumber(n: Num, what: string, max = 100_000n): bigint {
   if (value > max) return fail('bounded', `${what} is too large.`);
   return value;
 }
-const factorial = (n: bigint) => { let r = 1n; for (let k = 2n; k <= n; k++) r *= k; return r; };
-function choose(n: bigint, r: bigint): bigint {
+/** n(n−1)…(n−count+1), charged to the meter one multiplication at a time. */
+function falling(n: bigint, count: bigint, meter: Meter): bigint {
+  let r = 1n;
+  for (let k = 0n; k < count; k++) {
+    if (++meter.work > maxWork) fail('bounded', 'The claim takes too much work to compute.');
+    r *= n - k;
+    if (r.toString(2).length > 4096) fail('bounded', 'A number in the claim grew too large to compute exactly.');
+  }
+  return r;
+}
+const factorial = (n: bigint, meter: Meter) => falling(n, n, meter);
+function choose(n: bigint, r: bigint, meter: Meter): bigint {
   if (r < 0n || r > n) return 0n;
   if (r > n - r) r = n - r;
   let result = 1n;
-  for (let k = 1n; k <= r; k++) result = (result * (n - r + k)) / k;
+  for (let k = 1n; k <= r; k++) {
+    if (++meter.work > maxWork) fail('bounded', 'The claim takes too much work to compute.');
+    result = (result * (n - r + k)) / k;
+    if (result.toString(2).length > 4096) fail('bounded', 'A number in the claim grew too large to compute exactly.');
+  }
   return result;
 }
 
 const complexSin = (a: Num) => approx(Math.sin(a.re) * Math.cosh(a.im), Math.cos(a.re) * Math.sinh(a.im));
 const complexCos = (a: Num) => approx(Math.cos(a.re) * Math.cosh(a.im), -Math.sin(a.re) * Math.sinh(a.im));
+const nonzero = (v: Num, name: string) => (Math.hypot(v.re, v.im) < 1e-12 ? fail('domain', `${name} is undefined here.`) : v);
 
 /** A float that is about to be rounded to an integer must not be sitting on the boundary. */
 function settled(v: number, what: string) {
@@ -48,7 +68,7 @@ function limitPoint(n: Node, scope: Scope, meter: Meter): number {
 function realFunction(body: Node, variable: string, scope: Scope, meter: Meter) {
   return (x: number) => {
     const vars = new Map(scope.vars); vars.set(variable, approx(x));
-    const value = evaluate(body, { vars, functions: scope.functions }, meter);
+    const value = evaluate(body, { ...scope, vars }, meter);
     return realNumber(value, 'An integrand or a limit');
   };
 }
@@ -80,6 +100,12 @@ function statistic(name: string, values: Num[]): Num {
  * after, so a sum may run over i or a problem may name a length e without either being misread.
  */
 export function evaluate(n: Node, scope: Scope, meter: Meter = newMeter()): Num {
+  const value = compute(n, scope, meter);
+  if (scope.real && !isReal(value)) fail('domain', 'The value is not a real number here.');
+  return value;
+}
+
+function compute(n: Node, scope: Scope, meter: Meter): Num {
   if (++meter.work > maxWork) fail('bounded', 'The claim takes too much work to compute.');
   const ev = (m: Node) => evaluate(m, scope, meter);
   switch (n.k) {
@@ -99,7 +125,7 @@ export function evaluate(n: Node, scope: Scope, meter: Meter = newMeter()): Num 
     case 'mul': return mul(ev(n.a), ev(n.b));
     case 'div': return div(ev(n.a), ev(n.b));
     case 'pow': return pow(ev(n.a), ev(n.b));
-    case 'fact': return exact(q(factorial(wholeNumber(ev(n.a), 'A factorial', 1000n))));
+    case 'fact': return exact(q(factorial(wholeNumber(ev(n.a), 'A factorial', 1000n), meter)));
     case 'deg': return mul(ev(n.a), approx(Math.PI / 180));
     case 'call': return call(n.name, n.args, scope, meter);
   }
@@ -117,7 +143,7 @@ function call(name: string, args: Node[], scope: Scope, meter: Meter): Num {
     if (++meter.depth > 20) fail('bounded', 'Functions call each other too deeply.');
     const vars = new Map(scope.vars);
     user.params.forEach((p, i) => vars.set(p, ev(args[i])));
-    const value = evaluate(user.body, { vars, functions: scope.functions }, meter);
+    const value = evaluate(user.body, { ...scope, vars }, meter);
     meter.depth--;
     return value;
   }
@@ -131,7 +157,7 @@ function call(name: string, args: Node[], scope: Scope, meter: Meter): Num {
       let total = name === 'sum' ? ZERO : ONE;
       for (let k = from; k <= to; k++) {
         const vars = new Map(scope.vars); vars.set(variable, exact(q(k)));
-        const term = evaluate(args[0], { vars, functions: scope.functions }, meter);
+        const term = evaluate(args[0], { ...scope, vars }, meter);
         total = name === 'sum' ? add(total, term) : mul(total, term);
       }
       return total;
@@ -144,7 +170,7 @@ function call(name: string, args: Node[], scope: Scope, meter: Meter): Num {
       let d = args[0];
       for (let k = 0n; k < order; k++) d = derivative(d, variable, scope.functions);
       const vars = new Map(scope.vars); vars.set(variable, ev(args[2]));
-      return evaluate(d, { vars, functions: scope.functions }, meter);
+      return evaluate(d, { ...scope, vars }, meter);
     }
     case 'integral': {
       arity(4);
@@ -180,13 +206,13 @@ function call(name: string, args: Node[], scope: Scope, meter: Meter): Num {
       if (a === null || m === null || m <= 0n) return fail('domain', 'mod needs a whole number and a positive modulus.');
       return exact(q(((a % m) + m) % m));
     }
-    case 'factorial': arity(1); return exact(q(factorial(wholeNumber(ev(args[0]), 'A factorial', 1000n))));
+    case 'factorial': arity(1); return exact(q(factorial(wholeNumber(ev(args[0]), 'A factorial', 1000n), meter)));
     case 'nCr': case 'nPr': case 'nHr': {
       arity(2);
       const n = wholeNumber(ev(args[0]), name), r = wholeNumber(ev(args[1]), name);
-      if (name === 'nCr') return exact(q(choose(n, r)));
-      if (name === 'nHr') return exact(q(n === 0n && r === 0n ? 1n : choose(n + r - 1n, r)));
-      return exact(q(r > n ? 0n : factorial(n) / factorial(n - r)));
+      if (name === 'nCr') return exact(q(choose(n, r, meter)));
+      if (name === 'nHr') return exact(q(n === 0n && r === 0n ? 1n : choose(n + r - 1n, r, meter)));
+      return exact(q(r > n ? 0n : falling(n, r, meter)));
     }
   }
   // The rest take one value, except log and root which may take two.
@@ -211,10 +237,12 @@ function call(name: string, args: Node[], scope: Scope, meter: Meter): Num {
     case 'ln': return ln(x);
     case 'sin': return zero ? ZERO : complexSin(x);
     case 'cos': return zero ? ONE : complexCos(x);
-    case 'tan': return zero ? ZERO : div(complexSin(x), complexCos(x));
-    case 'sec': return div(ONE, complexCos(x));
-    case 'csc': return div(ONE, complexSin(x));
-    case 'cot': return div(complexCos(x), complexSin(x));
+    // Where the denominator is zero in exact arithmetic it comes out as about 1e-17 in floating
+    // point, so tan 90° would be a large number instead of undefined.
+    case 'tan': return zero ? ZERO : div(complexSin(x), nonzero(complexCos(x), name));
+    case 'sec': return div(ONE, nonzero(complexCos(x), name));
+    case 'csc': return div(ONE, nonzero(complexSin(x), name));
+    case 'cot': return div(complexCos(x), nonzero(complexSin(x), name));
     case 'asin': case 'arcsin': case 'acos': case 'arccos': {
       const v = realNumber(x, name);
       if (Math.abs(v) > 1 + 1e-12) fail('domain', `${name} needs a value between -1 and 1.`);
@@ -238,7 +266,11 @@ function call(name: string, args: Node[], scope: Scope, meter: Meter): Num {
         const twice = (2n * (top < 0n ? -top : top) + bottom) / (2n * bottom);
         return int(top < 0n ? -twice : twice);
       }
-      if (name === 'sign') return int(Math.sign(real.re) || 0);
+      if (name === 'sign') {
+        // A float within rounding of zero may be exactly zero, and then its sign is 0, not ±1.
+        if (Math.abs(real.re) < 1e-12) fail('unstable', 'The sign of a value this close to zero cannot be decided numerically.');
+        return approx(Math.sign(real.re));
+      }
       const v = name === 'round' ? settled(real.re + 0.5, 'Rounding') - 0.5 : settled(real.re, name);
       return int(name === 'ceil' ? Math.ceil(v) : name === 'floor' ? Math.floor(v) : real.re < 0 ? -Math.round(-real.re) : Math.round(real.re));
     }
