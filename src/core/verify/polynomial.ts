@@ -216,28 +216,64 @@ export function roots(p: Poly): Root[] {
   const t = trim(p);
   if (degree(t) < 1) return [];
   if (exactPoly(t)) return squareFree(t).flatMap((factor, i) => simpleRoots(factor).map((value) => ({ value, multiplicity: i + 1 })));
-  // Floating coefficients (√3, π) leave no exact gcd. A double root then comes out of the iteration
-  // as a pair split by about √ε — sometimes as two complex conjugates — so roots are grouped, and
-  // each group is refined by Newton's method on the derivative that has it as a simple root.
+  // √2·(x−1)⁵ has floating coefficients only because of the factor √2: divided by its leading
+  // coefficient it is (x−1)⁵ to the last digit, and then it is solved exactly. The denominators are
+  // kept small: with denominators up to a million, 6√3 already passes for 3650401/351260 to 13 digits.
+  const lead = t[t.length - 1];
+  const scaled = t.map((c) => div(c, lead));
+  const recognised = scaled.map((c) => (isReal(c) ? nearRational(c.re, 10_000, 1e-13) : null));
+  if (recognised.every((c) => c !== null)) return roots(recognised.map((c) => exact(c!)));
+  // Floating coefficients (√3, π) leave no exact gcd. A root of multiplicity m comes out of the
+  // iteration as m estimates spread over about ε^(1/m) of it — 1e-8 for a double root, 1e-5 for a
+  // triple, 1e-4 for a quadruple — sometimes as complex conjugates. Around each estimate, the largest
+  // set of its nearest neighbours whose spread is what rounding does to a root of that multiplicity
+  // is taken as one repeated root; two genuinely distinct roots a millionth apart stay two. A
+  // repeated root is refined by Newton's method on the derivative that has it as a simple root, a
+  // simple one on p itself.
   const estimates = degree(t) === 2 ? quadraticRoots(t) : aberth(t);
-  const groups: Num[][] = [];
-  for (const value of estimates) {
-    const group = groups.find((g) => g.some((m) => Math.hypot(m.re - value.re, m.im - value.im) <= 1e-5 * Math.max(1, Math.hypot(value.re, value.im))));
-    if (group) group.push(value); else groups.push([value]);
+  // Near a root of high multiplicity the iteration wanders inside the haze rounding leaves, and
+  // where it stopped can be visibly off: (x − √3)⁶ once came back with an estimate 0.06 away, at
+  // which p is 1e-8 — a count built on that is a guess.
+  const haze = (x: Num) => 1e-12 * t.reduce((sum, c, i) => sum + Math.hypot(c.re, c.im) * Math.hypot(x.re, x.im) ** i, 0);
+  for (const e of estimates) {
+    const at = peval(t, e);
+    if (Math.hypot(at.re, at.im) > haze(e)) return fail('unstable', 'A repeated root could not be located accurately enough.');
   }
-  return groups.map((group) => {
-    let x = approx(group.reduce((s, m) => s + m.re, 0) / group.length, group.reduce((s, m) => s + m.im, 0) / group.length);
-    let d = t;
-    for (let k = 1; k < group.length; k++) d = pderiv(d);
-    const slope = pderiv(d);
-    for (let k = 0; k < 8; k++) {
-      const fx = peval(d, x), fp = peval(slope, x);
+  const distance = (a: Num, b: Num) => Math.hypot(a.re - b.re, a.im - b.im) / Math.max(1, Math.hypot(a.re, a.im));
+  const refine = (start: Num, poly: Poly) => {
+    const slope = pderiv(poly);
+    let x = start;
+    for (let k = 0; k < 12; k++) {
+      const fx = peval(poly, x), fp = peval(slope, x);
       if (Math.hypot(fp.re, fp.im) === 0) break;
       const step = div(fx, fp);
       x = approx(x.re - step.re, x.im - step.im);
     }
-    return { value: Math.abs(x.im) <= 1e-9 * Math.max(1, Math.abs(x.re)) ? approx(x.re) : x, multiplicity: group.length };
-  });
+    return Math.abs(x.im) <= 1e-9 * Math.max(1, Math.abs(x.re)) ? approx(x.re) : x;
+  };
+  const remaining = estimates.slice();
+  const out: Root[] = [];
+  while (remaining.length) {
+    const seed = remaining[0];
+    const nearest = remaining.map((v) => ({ v, d: distance(v, seed) })).sort((a, b) => a.d - b.d).map((x) => x.v);
+    let size = 1, centre = seed;
+    for (let m = 2; m <= nearest.length; m++) {
+      const members = nearest.slice(0, m);
+      const mean = approx(members.reduce((s, v) => s + v.re, 0) / m, members.reduce((s, v) => s + v.im, 0) / m);
+      if (Math.max(...members.map((v) => distance(v, mean))) <= 10 * 1e-16 ** (1 / m)) { size = m; centre = mean; }
+    }
+    for (const v of nearest.slice(0, size)) remaining.splice(remaining.indexOf(v), 1);
+    let d = t;
+    for (let k = 1; k < size; k++) d = pderiv(d);
+    out.push({ value: refine(centre, d), multiplicity: size });
+  }
+  // Two roots closer than the haze of a root with their combined multiplicity cannot be told from one.
+  for (const [i, a] of out.entries()) {
+    for (const b of out.slice(i + 1)) {
+      if (distance(a.value, b.value) <= 10 * 1e-16 ** (1 / (a.multiplicity + b.multiplicity))) return fail('unstable', 'A repeated root could not be located accurately enough.');
+    }
+  }
+  return out;
 }
 
 /** The real zeros of p/q that are in its domain, with multiplicity. */

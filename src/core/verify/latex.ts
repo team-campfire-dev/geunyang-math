@@ -27,8 +27,12 @@ export function latexToClaim(source: string): string {
   const s = source
     // LaTeX writes ≠ as \ne, never as !=, so `3!=6` is a factorial and an equals sign.
     .replace(/!=/g, '! =')
-    // A whole number written against a fraction is a mixed number: 2\frac{1}{3} is 2 + 1/3, not 2·1/3.
-    .replace(/(^|[^\d.^_}])(\d+)\s*\\[dt]?frac\s*\{\s*(\d+)\s*\}\s*\{\s*(\d+)\s*\}/g, '$1(\\frac{$2}{1}+\\frac{$3}{$4})');
+    // \frac12 is \frac{1}{2}: without braces each argument is one character.
+    .replace(/\\([dt]?frac)\s*(\d)\s*(\d)/g, '\\$1{$2}{$3}')
+    // A whole number written against a fraction is a mixed number: 2\frac{1}{3} is 2 + 1/3, not 2·1/3 —
+    // however it is spaced (\, ~ \ ) or braced ({2}\frac…, 2{\frac…}).
+    // Not inside a superscript or subscript: in \sin^{-1}\frac{1}{2} the −1 is an exponent.
+    .replace(/(?<![\d.}^_])(?<![\^_]\{)(?<![\^_]\{-)(?<![\^_]-)\{?(\d+)\}?(?:\s|\\[,;:! ]|~)*\{?\s*\\[dt]?frac\s*\{\s*(\d+)\s*\}\s*\{\s*(\d+)\s*\}\}?/g, '(\\frac{$1}{1}+\\frac{$2}{$3})');
   let i = 0;
   const space = () => { while (i < s.length && /\s/.test(s[i])) i++; };
   const name = () => {
@@ -107,8 +111,9 @@ export function latexToClaim(source: string): string {
     while (i < s.length) {
       const match = /^(\d+(?:\.\d+)?|[A-Za-z])/.exec(s.slice(i));
       if (match) { out += match[0]; i += match[0].length; }
-      // A power or a degree sign stays with the argument: `\sin 30^\circ`, `\ln x^2`.
+      // A power or a degree sign stays with the argument: `\sin 30^\circ`, `\sin 30°`, `\ln x^2`.
       else if (s[i] === '^') out += token();
+      else if (s[i] === '°') { out += '°'; i++; }
       else if (s[i] === '\\') {
         const save = i, c = name();
         if (c === 'pi') out += 'pi';

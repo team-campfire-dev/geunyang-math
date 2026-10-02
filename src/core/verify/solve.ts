@@ -93,18 +93,30 @@ export type Candidates = { roots: Root[]; rational: RationalFunction | null; exa
 const distinct = (roots: Root[]): Root[] =>
   roots.filter((r, i) => roots.findIndex((o) => same(o.value, r.value).equal) === i).map((r) => ({ value: r.value, multiplicity: 1 }));
 
-export function zeroCandidates(h: Node, v: string, scope: Scope, meter: Meter, domain: 'real' | 'complex' = 'real', depth = 0): Candidates | null {
+type Branch = { u: Node; sign: 1 | -1 };
+export function zeroCandidates(h: Node, v: string, scope: Scope, meter: Meter, domain: 'real' | 'complex' = 'real', depth = 0, branches: Branch[] = []): Candidates | null {
   if (depth > 6) return null;
   const rational = rationalFunction(h, v, scope, meter);
-  if (rational) return { roots: rationalZeros(rational), rational, exact: [...rational.num, ...rational.den].every((c) => !!c.q) };
+  if (rational) {
+    try { return { roots: rationalZeros(rational), rational, exact: [...rational.num, ...rational.den].every((c) => !!c.q) }; }
+    catch (reason) {
+      // A branch of |u| that is zero for every x only matters where its signs hold: for |x−1| − |x+1| = 2x
+      // the branch x−1 ≥ 0, x+1 ≤ 0 is empty, so it contributes nothing rather than every number.
+      if (!(reason instanceof CheckFailure && reason.message.startsWith('The equation holds for every value') && branches.length)) throw reason;
+      let region: Interval[] = [{ lo: { value: null, closed: false }, hi: { value: null, closed: false } }];
+      for (const b of branches) region = intersect(region, solveInequality({ terms: [b.sign > 0 ? b.u : Neg(b.u), num(0n)], ops: ['>='] }, v, scope, meter).set);
+      if (region.length) throw reason;
+      return { roots: [], rational: null, exact: true };
+    }
+  }
   // |u| = u or −u, and every zero of h is a zero of one of the two branches — when u is real.
   const absolute = find(h, (m) => m.k === 'call' && m.name === 'abs' && mentions(m, v));
   if (absolute && absolute.k === 'call') {
     if (domain === 'complex') return fail('unsupported', 'An absolute value of a complex unknown cannot be split into ±; its solutions are not checked here.');
     const out: Root[] = [];
     let exactly = true;
-    for (const branch of [absolute.args[0], Neg(absolute.args[0])]) {
-      const zeros = zeroCandidates(replace(h, absolute, branch), v, scope, meter, domain, depth + 1);
+    for (const [branch, sign] of [[absolute.args[0], 1], [Neg(absolute.args[0]), -1]] as const) {
+      const zeros = zeroCandidates(replace(h, absolute, branch), v, scope, meter, domain, depth + 1, [...branches, { u: absolute.args[0], sign }]);
       if (!zeros) return null;
       out.push(...zeros.roots);
       exactly &&= zeros.exact;
@@ -122,7 +134,7 @@ export function zeroCandidates(h: Node, v: string, scope: Scope, meter: Meter, d
       const term = Mul(c, Pow(u, num(BigInt(Math.floor(k / 2)))));
       if (k % 2) b = Add(b, term); else a = Add(a, term);
     });
-    const zeros = zeroCandidates(Sub(Pow(a, num(2n)), Mul(Pow(b, num(2n)), u)), v, scope, meter, domain, depth + 1);
+    const zeros = zeroCandidates(Sub(Pow(a, num(2n)), Mul(Pow(b, num(2n)), u)), v, scope, meter, domain, depth + 1, branches);
     return zeros && { roots: distinct(zeros.roots), rational: null, exact: zeros.exact };
   }
   return null;
@@ -132,6 +144,11 @@ export function zeroCandidates(h: Node, v: string, scope: Scope, meter: Meter, d
 function scanZeros(f: (x: number) => number | null, lo: number, hi: number): number[] {
   const count = 4000, xs: number[] = [], ys: (number | null)[] = [];
   for (let i = 0; i <= count; i++) { const x = lo + ((hi - lo) * i) / count; xs.push(x); ys.push(f(x)); }
+  // An equation that holds along a stretch (floor(2x) = 3, or an identity) has no list of roots to find.
+  const flat = Math.max(1, ...ys.map((y) => Math.abs(y ?? 0))) * 1e-12;
+  for (let i = 2; i <= count; i++) {
+    if ([ys[i - 2], ys[i - 1], ys[i]].every((y) => y !== null && Math.abs(y) <= flat)) return fail('unsupported', 'The equation holds along a whole stretch of the interval, so its solutions are not a list.');
+  }
   const found: number[] = [];
   const bisect = (a: number, b: number, fa: number) => {
     for (let k = 0; k < 200; k++) {
@@ -202,7 +219,7 @@ export function holds(relation: Relation, values: Solution, scope: Scope, meter:
     const sides = relation.terms.map((t) => evaluate(t, inner, meter));
     return relation.ops.every((op, i) => compareOp(sides[i], op, sides[i + 1]));
   } catch (reason) {
-    if (reason instanceof CheckFailure && (reason.code === 'domain' || reason.code === 'unstable')) return false;
+    if (reason instanceof CheckFailure && reason.code === 'domain') return false;
     throw reason;
   }
 }
@@ -226,6 +243,8 @@ function solveOne(left: Node, right: Node, v: string, domain: 'real' | 'complex'
   const h = Sub(left, right);
   // Over the reals every step must be real: √x·√(x−5) = −6 is not solved by x = −4, although 2i·3i is −6.
   const inScope: Scope = domain === 'real' ? { ...scope, real: true } : scope;
+  // A candidate is checked at the point it stands for: a radicand that is zero there counts as zero.
+  const checkScope: Scope = { ...inScope, snap: true };
   let candidates: Candidates | null;
   try { candidates = zeroCandidates(h, v, scope, meter, domain); }
   catch (reason) {
@@ -243,7 +262,12 @@ function solveOne(left: Node, right: Node, v: string, domain: 'real' | 'complex'
         const vars = new Map(scope.vars); vars.set(v, approx(x));
         const value = evaluate(h, { ...inScope, vars }, meter);
         return isReal(value) ? value.re : null;
-      } catch (reason) { if (reason instanceof CheckFailure && reason.code !== 'bounded') return null; throw reason; }
+      } catch (reason) {
+        // Undefined here is simply not a root; undecidable (a floor at an integer) means a root could be
+        // hiding there, so the search cannot answer.
+        if (reason instanceof CheckFailure && reason.code === 'domain') return null;
+        throw reason;
+      }
     };
     candidates = { roots: scanZeros(f, lo, hi).map((x) => ({ value: approx(x), multiplicity: 1 })), rational: null, exact: false };
     strength = 'estimated';
@@ -253,10 +277,14 @@ function solveOne(left: Node, right: Node, v: string, domain: 'real' | 'complex'
   const kept: { values: Solution; multiplicity: number }[] = [];
   for (const candidate of candidates.roots) {
     const value = isReal(candidate.value) ? realPart(candidate.value) : candidate.value;
+    // A root of a floating polynomial with an imaginary part this small is a real root the iteration
+    // did not settle (a high-multiplicity root); dropping it would lose a solution unseen.
+    if (domain === 'real' && !isReal(value) && candidates.rational && !candidates.exact
+      && Math.abs(value.im) <= 1e-3 * Math.max(1, Math.abs(value.re))) return fail('unstable', 'A repeated root could not be located accurately enough.');
     if (domain === 'real' && !isReal(value)) continue;
     if (!where.test(value)) continue;
     const slack = candidates.rational ? magnitude(candidates.rational, value) : 0;
-    const check = satisfies([[left, right]], new Map([[v, value]]), inScope, meter, false, slack);
+    const check = satisfies([[left, right]], new Map([[v, value]]), checkScope, meter, false, slack);
     if (!check) {
       // A zero of the numerator that is not a zero of the denominator is a root; if it does not
       // check, the arithmetic is what failed, and dropping it would shrink the solution set unseen.
@@ -283,7 +311,7 @@ export function satisfies(equations: [Node, Node][], values: Solution, scope: Sc
       if (!result.equal) return null;
       strength = weakest(strength, result.strength);
     } catch (reason) {
-      if (reason instanceof CheckFailure && (reason.code === 'domain' || reason.code === 'unstable')) return null;
+      if (reason instanceof CheckFailure && reason.code === 'domain') return null;
       throw reason;
     }
   }
@@ -300,7 +328,8 @@ export function solveSystem(equations: [Node, Node][], unknowns: string[], domai
     const [first, ...rest] = equations;
     const result = solveOne(first[0], first[1], unknowns[0], domain, where, scope, meter);
     if (!rest.length) return result;
-    const kept = result.solutions.filter((s) => satisfies(rest, s.values, scope, meter, result.strength === 'estimated'));
+    const restScope: Scope = { ...(domain === 'real' ? { ...scope, real: true } : scope), snap: true };
+    const kept = result.solutions.filter((s) => satisfies(rest, s.values, restScope, meter, result.strength === 'estimated'));
     return { solutions: kept, strength: result.strength };
   }
   const forms = equations.map(([l, r]) => linearForm(Sub(l, r), unknowns, scope, meter));
@@ -338,7 +367,7 @@ export function solveSystem(equations: [Node, Node][], unknowns: string[], domai
         const value = evaluate(solvedFor, { ...scope, vars }, meter);
         if (domain === 'real' && !isReal(value)) continue;
         const full = new Map(s.values); full.set(u, isReal(value) ? realPart(value) : value);
-        const check = satisfies(equations, full, scope, meter, strength === 'estimated');
+        const check = satisfies(equations, full, { ...(domain === 'real' ? { ...scope, real: true } : scope), snap: true }, meter, strength === 'estimated');
         if (!check) continue;
         strength = weakest(strength, check);
         solutions.push({ values: full, multiplicity: 1 });
@@ -370,23 +399,28 @@ export function solveInequality(relation: Relation, v: string, outer: Scope, met
 
 function solvePair(left: Node, op: RelOp, right: Node, v: string, scope: Scope, meter: Meter): { set: Interval[]; strength: Strength } {
   const h = Sub(left, right);
-  const breaks: Num[] = [];
-  const addZeros = (m: Node) => {
+  // Each break point remembers what it is. A pole is never in the set, however its float evaluates
+  // (1/(x²−3) at x ≈ √3 is a huge number, not an error); a domain edge is judged at the exact point.
+  type Kind = 'zero' | 'pole' | 'edge';
+  const breaks: { value: Num; kind: Kind }[] = [];
+  const addZeros = (m: Node, kind: Kind) => {
     const zeros = zeroCandidates(m, v, scope, meter);
     if (!zeros) return fail('unsupported', 'This inequality cannot be solved here yet.');
-    zeros.roots.forEach((z) => { if (isReal(z.value)) breaks.push(realPart(z.value)); });
+    zeros.roots.forEach((z) => { if (isReal(z.value)) breaks.push({ value: realPart(z.value), kind }); });
   };
-  addZeros(h);
+  addZeros(h, 'zero');
   // Where h is undefined or its formula changes, the sign may change without passing through zero.
   const visit = (m: Node) => {
     if (!mentions(m, v)) return;
-    if (m.k === 'div') addZeros(m.b);
+    if (m.k === 'div') addZeros(m.b, 'pole');
     // x⁻² is 1/x² — a pole as much as a written denominator; a fractional power has a domain edge.
     if (m.k === 'pow' && !mentions(m.b, v)) {
       const exponent = evaluate(m.b, scope, meter);
-      if (!exponent.q || exponent.q.d !== 1n || exponent.q.n < 0n) addZeros(m.a);
+      if (!exponent.q || exponent.q.n < 0n) addZeros(m.a, 'pole');
+      else if (exponent.q.d !== 1n) addZeros(m.a, 'edge');
     }
-    if (isSquareRoot(m) || (m.k === 'call' && (m.name === 'ln' || m.name === 'log'))) addZeros(m.k === 'call' ? m.args[m.args.length - 1] : (m as { a: Node }).a);
+    if (isSquareRoot(m)) addZeros(m.k === 'call' ? m.args[0] : (m as { a: Node }).a, 'edge');
+    if (m.k === 'call' && (m.name === 'ln' || m.name === 'log')) addZeros(m.args[m.args.length - 1], 'pole');
     switch (m.k) {
       case 'num': case 'sym': return;
       case 'neg': case 'fact': case 'deg': visit(m.a); return;
@@ -395,9 +429,17 @@ function solvePair(left: Node, op: RelOp, right: Node, v: string, scope: Scope, 
     }
   };
   visit(h);
-  const points = breaks.sort(compare).filter((p, i, all) => i === 0 || compare(p, all[i - 1]) !== 0);
+  breaks.sort((a, b) => compare(a.value, b.value));
+  const merged: { value: Num; kinds: Set<Kind> }[] = [];
+  for (const b of breaks) {
+    const last = merged[merged.length - 1];
+    if (last && compare(last.value, b.value) === 0) { last.kinds.add(b.kind); if (b.value.q && !last.value.q) last.value = b.value; }
+    else merged.push({ value: b.value, kinds: new Set([b.kind]) });
+  }
+  const points = merged.map((m) => m.value);
   const relation: Relation = { terms: [left, right], ops: [op] };
   const member = (x: Num) => holds(relation, new Map([[v, x]]), scope, meter);
+  const atPoint = (i: number) => !merged[i].kinds.has('pole') && holds(relation, new Map([[v, merged[i].value]]), { ...scope, snap: true }, meter);
   const two = exact(q(2n));
   const sample = (i: number): Num => {
     if (!points.length) return int(0);
@@ -406,7 +448,7 @@ function solvePair(left: Node, op: RelOp, right: Node, v: string, scope: Scope, 
     return div(add(points[i - 1], points[i]), two);
   };
   const regions = Array.from({ length: points.length + 1 }, (_, i) => member(sample(i)));
-  const atPoints = points.map(member);
+  const atPoints = points.map((_, i) => atPoint(i));
   const set: Interval[] = [];
   let open: Interval | null = null;
   const close = (hi: End) => { if (open) { open.hi = hi; set.push(open); open = null; } };

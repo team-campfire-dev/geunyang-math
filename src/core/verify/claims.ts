@@ -166,8 +166,10 @@ export function evaluateClaim(claim: Claim): ClaimResult {
       const numeric = approx(integrate((x) => { const v = at(f, approx(x)); return isReal(v) ? v.re : fail('domain', 'The integrand is not real here.'); }, a.re, b.re));
       if (!claim.antiderivative) return { type: 'value', value: numeric, strength: 'estimated', notes: [] };
       // The antiderivative is believed only if it differentiates back to the integrand, and only if
-      // its difference agrees with the numerical integral — which catches an antiderivative used
-      // across a point where the integrand is undefined.
+      // its difference agrees with the numerical integral. The integral itself has already been
+      // computed, so a disagreement is the antiderivative's fault — one that jumps inside the
+      // interval, like the atan(tan(x/2)) form of ∫1/(2+cos x) across x = π — and the numerical
+      // value stands.
       const F = parse(claim.antiderivative), dF = derivative(F, variable, scope.functions);
       for (let k = 1; k <= 7; k++) {
         const x = approx(a.re + ((b.re - a.re) * k) / 8);
@@ -176,7 +178,9 @@ export function evaluateClaim(claim: Claim): ClaimResult {
         }
       }
       const value = sub(at(F, b), at(F, a));
-      if (!same(value, numeric, true).equal) fail('ill-posed', 'The antiderivative differs from the numerical integral; the integrand may be undefined inside the interval.');
+      if (!same(value, numeric, true).equal) {
+        return { type: 'value', value: numeric, strength: 'estimated', notes: ['F(b) − F(a) differs from the numerical integral, so the antiderivative jumps inside the interval; the numerical value was used instead.'] };
+      }
       return { type: 'value', value, strength: value.q ? 'exact' : 'numeric', notes: [] };
     }
   }

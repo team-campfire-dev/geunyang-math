@@ -5,9 +5,9 @@ import { readMathExpression } from '@/shared/math-expression';
 import { misconceptionOf } from '@/shared/misconception';
 import { claimSchema, claimScope, evaluateClaim, type ClaimResult } from './claims';
 import { evaluate, newMeter } from './evaluate';
-import { literals, parseExpression } from './expr';
+import { literals, parseExpression, type Node } from './expr';
 import { latexToClaim } from './latex';
-import { approx, CheckFailure, exact, int, q, same, show, weakest, type Num, type Strength } from './numbers';
+import { approx, CheckFailure, exact, gcd, int, q, same, show, weakest, type Num, type Strength } from './numbers';
 import { sameSet, showSet } from './solve';
 import { forAll, readOption, readOptionDetailed, sameValues, statementForm, statementSet, statementTruth, statementValues } from './statement';
 
@@ -30,7 +30,7 @@ export type IssueCode =
   | 'answer-mismatch' | 'answer-unaccepted'
   | 'choice-invalid' | 'choice-no-match' | 'choice-ambiguous' | 'choice-wrong-key' | 'option-unreadable'
   | 'misreading-invalid' | 'misreading-correct' | 'misreading-unrecordable' | 'misreading-shadowed' | 'misreading-derivation' | 'misreading-unchecked'
-  | 'option-units' | 'independent-disagrees' | 'prompt-numbers' | 'claim-trivial' | 'claim-note';
+  | 'option-units' | 'claim-degrees' | 'independent-disagrees' | 'prompt-numbers' | 'claim-trivial' | 'claim-note';
 export type Issue = { code: IssueCode; level: IssueLevel; message: string; option?: string; answer?: string };
 export type Report = {
   verdict: 'verified' | 'rejected' | 'unverified'; strength?: Strength; computed?: string;
@@ -95,8 +95,18 @@ function claimLiterals(raw: unknown): Num[] {
   });
 }
 
+/** A number written out, `8`, `-(8)`, `29/36`: no computation at all. */
+function isLiteral(n: Node): boolean {
+  if (n.k === 'num') return true;
+  if (n.k === 'neg') return isLiteral(n.a);
+  // A fraction in lowest terms is a value written down; 250/100 is a computation (a conversion).
+  return n.k === 'div' && n.a.k === 'num' && n.b.k === 'num' && n.a.q.d === 1n && n.b.q.d === 1n && gcd(n.a.q.n, n.b.q.n) === 1n;
+}
+/** Whether any expression in the claim uses a degree sign. */
+const usesDegrees = (claim: { [key: string]: unknown }) => JSON.stringify(claim).includes('°');
+
 /** Which options agree with what the claim computed, as decided per option, or null for one that cannot be read. */
-function optionMatches(result: ClaimResult, options: { id: string; text: string }[], functionNames: Set<string>, variable: string, units: Map<string, string>): Map<string, { match: boolean; strength: Strength } | null> {
+function optionMatches(result: ClaimResult, options: { id: string; text: string }[], functionNames: Set<string>, variable: string, units: Map<string, string>, symbol: string | null): Map<string, { match: boolean; strength: Strength } | null> {
   const out = new Map<string, { match: boolean; strength: Strength } | null>();
   const scope = result.type === 'choose' || result.type === 'form' ? result.scope : { vars: new Map(), functions: new Map() };
   for (const option of options) {
@@ -116,13 +126,13 @@ function optionMatches(result: ClaimResult, options: { id: string; text: string 
         out.set(option.id, { match: identical.truth, strength: identical.strength });
       } catch (reason) { if (!(reason instanceof CheckFailure)) throw reason; out.set(option.id, null); }
     } else if (result.type === 'value') {
-      const values = statementValues(statement, scope, meter);
+      const values = statementValues(statement, scope, meter, symbol);
       if (!values) { out.set(option.id, null); continue; }
       const each = values.map((v) => same(v, result.value, result.strength === 'estimated'));
       out.set(option.id, { match: values.length === 1 && each[0].equal, strength: weakest(...each.map((e) => e.strength)) });
     } else if (result.type === 'values') {
-      const values = statementValues(statement, scope, meter);
-      out.set(option.id, values && { match: sameValues(values, result.values), strength: result.strength });
+      const values = statementValues(statement, scope, meter, symbol);
+      out.set(option.id, values && { match: sameValues(values, result.values, result.strength === 'estimated'), strength: result.strength });
     } else {
       const set = statementSet(statement, variable, scope, meter);
       out.set(option.id, set && { match: sameSet(set, result.set), strength: result.strength });
@@ -163,7 +173,7 @@ export function verifyProblem(input: CheckInput): Report {
   }
   result.notes.forEach((message) => issues.push({ code: 'claim-note', level: 'warning', message }));
   // A claim that is only a number restates the answer instead of computing it; nothing is checked.
-  if (claim.kind === 'value' && /^\s*[+-]?\s*\d+(\.\d+)?\s*$/.test(claim.expression)) {
+  if (claim.kind === 'value' && isLiteral(parseExpression(claim.expression, { functions: new Set(Object.keys(claim.define ?? {}).map((k) => k[0])) }))) {
     issues.push({ code: 'claim-trivial', level: 'warning', message: 'The claim is a bare number, so it does not compute anything the key could disagree with. Only an independent solution checks this problem.' });
   }
   const computed = result.type === 'value' ? show(result.value) : result.type === 'values' ? result.values.map(show).join(', ')
@@ -176,7 +186,9 @@ export function verifyProblem(input: CheckInput): Report {
     if (structural) issues.push({ code: 'choice-invalid', level: 'error', message: structural });
     const functionNames = new Set(Object.keys(claim.define ?? {}).map((k) => k[0]));
     const units = new Map<string, string>();
-    const matches = optionMatches(result, spec.options, functionNames, claim.kind === 'inequality' ? claim.variable : 'x', units);
+    // The unknown the question is about, when an option may name it: `x = -3` answers a question about x.
+    const symbol = claim.kind === 'solve' ? (claim.ask ? (/^[A-Za-z\u03b1-\u03c9](_[A-Za-z0-9]+)?$/.test(claim.ask.trim()) ? claim.ask.trim() : '\u0000') : claim.unknowns[0]) : null;
+    const matches = optionMatches(result, spec.options, functionNames, claim.kind === 'inequality' ? claim.variable : 'x', units, symbol);
     const matching = [...matches].filter(([, m]) => m?.match).map(([id]) => id);
     const unreadable = [...matches].filter(([, m]) => !m).map(([id]) => id);
     unreadable.forEach((id) => issues.push({ code: 'option-unreadable', level: 'unverified', option: id, message: `Option ${id} could not be read, so it cannot be ruled out.` }));
@@ -196,7 +208,11 @@ export function verifyProblem(input: CheckInput): Report {
     const key = keyValue(spec);
     const comparison = key && same(key, result.value, result.strength === 'estimated');
     if (!key || !comparison) issues.push({ code: 'answer-unaccepted', level: 'error', message: 'The answer key cannot be read.' });
-    else if (!comparison.equal) issues.push({ code: 'answer-mismatch', level: 'error', message: `The answer key is ${show(key)}, but the claim computes ${computed}.` });
+    else if (!comparison.equal && usesDegrees(claim) && same(key, approx(result.value.re * 180 / Math.PI), result.strength === 'estimated').equal) {
+      // ° makes an angle in radians. A key of 70 against a claim of 180° − 50° − 60° is the same angle
+      // counted in degrees; it is not wrong, but the claim should be written as 180 − 50 − 60.
+      issues.push({ code: 'claim-degrees', level: 'unverified', message: `The key ${show(key)} is the claim's angle counted in degrees. Write the claim without ° when the answer is a number of degrees.` });
+    } else if (!comparison.equal) issues.push({ code: 'answer-mismatch', level: 'error', message: `The answer key is ${show(key)}, but the claim computes ${computed}.` });
     else strength = weakest(strength, comparison.strength);
     const graded = gradeAnswer(answerText(spec), spec);
     if (graded.status !== 'correct') issues.push({ code: 'answer-unaccepted', level: 'error', message: `The grader does not accept the key as written (${graded.status}): ${graded.message}` });

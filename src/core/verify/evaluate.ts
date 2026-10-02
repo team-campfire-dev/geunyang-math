@@ -10,7 +10,16 @@ import {
  * rather than imaginary. Solving over the reals uses it, so √x·√(x−5) = −6 has no solution at x = −4
  * even though 2i·3i is −6.
  */
-export type Scope = { vars: ReadonlyMap<string, Num>; functions: ReadonlyMap<string, FunctionDef>; real?: boolean };
+export type Scope = {
+  vars: ReadonlyMap<string, Num>; functions: ReadonlyMap<string, FunctionDef>; real?: boolean;
+  /**
+   * `snap` reads a radicand within rounding of zero as zero. At x = √2 the radicand x² − 2 comes out
+   * as ±4e-16, whose root is 2e-8 or undefined; checking a candidate root or the end of a domain asks
+   * about the exact point, where it is 0.
+   */
+  snap?: boolean;
+};
+const snapped = (x: Num, scope: Scope) => (scope.snap && !x.q && isReal(x) && Math.abs(x.re) <= 1e-12 ? ZERO : x);
 /** How much work a claim may cost, and whether anything in it was only estimated. */
 export type Meter = { work: number; depth: number; estimated: boolean };
 export const newMeter = (): Meter => ({ work: 0, depth: 0, estimated: false });
@@ -124,7 +133,11 @@ function compute(n: Node, scope: Scope, meter: Meter): Num {
     case 'sub': return sub(ev(n.a), ev(n.b));
     case 'mul': return mul(ev(n.a), ev(n.b));
     case 'div': return div(ev(n.a), ev(n.b));
-    case 'pow': return pow(ev(n.a), ev(n.b));
+    case 'pow': {
+      const exponent = ev(n.b);
+      const base = exponent.q && exponent.q.d !== 1n ? snapped(ev(n.a), scope) : ev(n.a);
+      return pow(base, exponent);
+    }
     case 'fact': return exact(q(factorial(wholeNumber(ev(n.a), 'A factorial', 1000n), meter)));
     case 'deg': return mul(ev(n.a), approx(Math.PI / 180));
     case 'call': return call(n.name, n.args, scope, meter);
@@ -224,10 +237,19 @@ function call(name: string, args: Node[], scope: Scope, meter: Meter): Num {
     arity(2);
     const index = asInteger(ev(args[1]));
     if (index === null || index < 2n) return fail('domain', 'A root index must be a whole number of at least 2.');
-    return pow(ev(args[0]), exact(q(1n, index)));
+    return pow(snapped(ev(args[0]), scope), exact(q(1n, index)));
+  }
+  if (name === 'dpow') {
+    // c·u^(c−1), the power rule's own term: it is 0 when c is 0 and 1 when u is 0 and c is 1, even
+    // though 0⁰ and 0⁻¹ are undefined, because the derivative of x⁰ and of x at 0 are 0 and 1.
+    arity(2);
+    const u = ev(args[0]), c = ev(args[1]);
+    if (isZero(c)) return ZERO;
+    if (isZero(u) && c.q && c.q.n === c.q.d) return ONE;
+    return mul(c, pow(u, sub(c, ONE)));
   }
   arity(1);
-  const x = ev(args[0]);
+  const x = name === 'sqrt' ? snapped(ev(args[0]), scope) : ev(args[0]);
   const zero = isZero(x);
   switch (name) {
     case 'sqrt': return sqrt(x);

@@ -340,7 +340,7 @@ describe('checking generated problems', () => {
     expect(check({ answer: { kind: 'integer', value: 2 }, solves: { kind: 'solve', equation: 'sin(x) = 1', unknown: 'x' } }).verdict).toBe('unverified');
     const unreadable = check({
       answer: { kind: 'choice', correct: 'a', options: [{ id: 'a', text: '$\\frac{1}{2}$' }, { id: 'b', text: '절반보다 크다' }] },
-      solves: { kind: 'value', expression: '1/2' },
+      solves: { kind: 'value', expression: '1 - 1/2' },
     });
     expect(unreadable).toMatchObject({ verdict: 'unverified', issues: [{ code: 'option-unreadable', option: 'b' }] });
   });
@@ -524,9 +524,13 @@ describe('cases found by adversarial review', () => {
     expect(statementTruth(readOption('$\\sin^{-1}\\frac{1}{2} = 30^\\circ$')!, emptyScope)?.truth).toBe(true);
   });
 
-  it('counts angles in degrees where no trigonometry takes them', () => {
-    expect(show(value('180° - 50° - 60°').value)).toBe('70');
+  it('treats a degree sign as an angle everywhere, so degrees and radians compare', () => {
+    // 70° is the angle 7π/18; an option written 70° is the same angle.
+    expect(value('180° - 50° - 60°').value.re).toBeCloseTo((7 * Math.PI) / 18, 12);
     expect(check({ answer: choice('b', ['$60^\\circ$', '$70^\\circ$', '$80^\\circ$']), solves: { kind: 'value', expression: '180° - 50° - 60°' } }).verdict).toBe('verified');
+    // A key of 70 is that angle counted in degrees: not wrong, but the claim should say 180 - 50 - 60.
+    expect(check({ answer: { kind: 'integer', value: 70 }, solves: { kind: 'value', expression: '180° - 50° - 60°' } })).toMatchObject({ verdict: 'unverified', issues: [{ code: 'claim-degrees' }] });
+    expect(check({ answer: { kind: 'integer', value: 70 }, solves: { kind: 'value', expression: '180 - 50 - 60' } }).verdict).toBe('verified');
   });
 
   it('does not take a limit from samples that only look settled', () => {
@@ -564,5 +568,151 @@ describe('cases found by adversarial review', () => {
 
   it('warns when the claim only restates the answer', () => {
     expect(check({ answer: { kind: 'integer', value: 8 }, solves: { kind: 'value', expression: '8' } })).toMatchObject({ verdict: 'verified', issues: [{ code: 'claim-trivial', level: 'warning' }] });
+  });
+
+  // The second round, against the fixes of the first.
+  it('keeps a degree sign through given values, defined functions, where bounds and asked expressions', () => {
+    expect(value('sin(A)', { given: { A: '30°' } }).value.re).toBeCloseTo(0.5, 12);
+    expect(value('f(30°)', { define: { 'f(x)': '2sin(x)' } }).value.re).toBeCloseTo(1, 12);
+    expect(value('1/2*6*8*sin(C)', { given: { C: '30°' } }).value.re).toBeCloseTo(12, 12);
+    expect(solved({ kind: 'solve', equation: '2sin(x) = 1', unknown: 'x', where: '0° <= x < 360°', select: 'count' })).toBe('2');
+    expect(run({ kind: 'solve', equations: ['A + B = 180°', 'A = 2B'], unknowns: ['A', 'B'], ask: 'sin(A)' })).toMatchObject({ value: { re: expect.closeTo(Math.sqrt(3) / 2, 9) } });
+    expect(check({ answer: choice('b', ['$\\sqrt{2}$', '$2\\sqrt{2}$', '$\\sqrt{6}$']), solves: { kind: 'value', expression: 'a*sin(B)/sin(A)', given: { a: '2', A: '30°', B: '45°' } } }).verdict).toBe('verified');
+  });
+
+  it('reads a mixed number however it is spaced or braced', () => {
+    for (const mixed of ['$2\\,\\frac{1}{3}$', '$2~\\frac{1}{3}$', '$2\\ \\frac{1}{3}$', '${2}\\frac{1}{3}$']) {
+      expect(statementValues(readOption(mixed)!, emptyScope)?.map(show)).toEqual(['7/3']);
+    }
+    expect(statementValues(readOption('$2\\frac12$')!, emptyScope)?.map(show)).toEqual(['5/2']);
+    expect(check({ answer: choice('b', ['$\\frac{1}{6}$', '$2\\,\\frac{1}{3}$', '$1\\,\\frac{1}{3}$']), solves: { kind: 'value', expression: '1/3 * 2' } }).verdict).toBe('rejected');
+    expect(check({ answer: choice('a', ['$2\\,\\frac12 \\times 2 = 5$', '$\\frac12+\\frac13=\\frac56$']), solves: { kind: 'choose', which: 'false' } }).verdict).toBe('rejected');
+  });
+
+  it('reads 180° = π as true, and flags an angle offered both in degrees and in radians', () => {
+    expect(statementTruth(readOption('$180^\\circ = \\pi$')!, emptyScope)?.truth).toBe(true);
+    const facts = choice('a', ['$180^\\circ = \\pi$', '$\\sin 90^\\circ = 1$', '$\\cos 180^\\circ = -1$', '$\\tan 0 = 0$']);
+    expect(check({ answer: facts, solves: { kind: 'choose', which: 'false' } }).verdict).not.toBe('verified');
+    expect(check({ answer: choice('b', ['$\\frac{\\pi}{6}$', '$\\frac{\\pi}{3}$', '$60^\\circ$', '$\\frac{\\pi}{2}$']), solves: { kind: 'value', expression: 'acos(1/2)' } }).verdict).not.toBe('verified');
+    expect(check({ answer: choice('a', ['$30^\\circ$', '$\\frac{\\pi}{6}$', '$60^\\circ$', '$45^\\circ$']), solves: { kind: 'value', expression: '30°' } }).verdict).not.toBe('verified');
+  });
+
+  it('reads 「해가 없다」 and 「모든 실수」 only as the whole option', () => {
+    expect(readOption('해가 없다.')).toEqual({ kind: 'empty' });
+    expect(readOption('모든 실수')).toEqual({ kind: 'everything' });
+    expect(readOption('모든 실수 (단, $x \\neq 3$)')).toBeNull();
+    expect(readOption('모든 실수가 아니다')).toBeNull();
+    expect(readOption('$x=3$ 이외에는 해가 없다')).toBeNull();
+    const slip = choice('c', ['해가 없다', '$x=3$', '모든 실수 (단, $x \\neq 3$)', '$x > 3$']);
+    expect(check({ answer: slip, solves: { kind: 'inequality', inequality: 'x^2 - 6x + 9 >= 0', variable: 'x' } }).verdict).not.toBe('verified');
+  });
+
+  it('does not read units written as math letters as variables', () => {
+    expect(readOption('$1m = 100cm$')).toBeNull();
+    const conversions = choice('b', ['$\\frac{1}{2} = 0.5$', '$1m = 100cm$', '$\\frac{3}{4} = 0.75$', '$0.2 = \\frac{1}{5}$']);
+    expect(check({ answer: conversions, solves: { kind: 'choose', which: 'false' } }).verdict).toBe('unverified');
+  });
+
+  it('reads x = 1, y = 2 as a pair, not as two values of x', () => {
+    const pairs = (correct: string) => choice(correct, ['$x=1, y=2$', '$x=2, y=1$', '$x=1, y=1$', '$x=2, y=2$']);
+    const system = (select: string) => ({ kind: 'solve', equations: ['x + y = 3', 'x - y = -1'], unknowns: ['x', 'y'], ask: 'x', select });
+    expect(check({ answer: pairs('a'), solves: system('unique') }).verdict).not.toBe('rejected');
+    expect(check({ answer: pairs('c'), solves: system('all') }).verdict).not.toBe('verified');
+  });
+
+  it('places roots of high multiplicity with irrational coefficients, or says it cannot', () => {
+    expect(run({ kind: 'solve', equation: '(x - sqrt(2))^3 = 0', unknown: 'x' })).toMatchObject({ value: { re: expect.closeTo(Math.SQRT2, 9) } });
+    expect(run({ kind: 'solve', equation: '(x - sqrt(2))^3 = 0', unknown: 'x', select: 'sum' })).toMatchObject({ value: { re: expect.closeTo(3 * Math.SQRT2, 9) } });
+    expect(solved({ kind: 'solve', equation: '(x - sqrt(2))^4 = 0', unknown: 'x', select: 'count' })).toBe('1');
+    expect(solved({ kind: 'solve', equation: 'sqrt(2)*(x - 1)^5 = 0', unknown: 'x' })).toBe('1');
+    expect(run({ kind: 'solve', equation: 'x^3 - 3*sqrt(2)*x^2 + 6*x - 2*sqrt(2) = 0', unknown: 'x' })).toMatchObject({ value: { re: expect.closeTo(Math.SQRT2, 9) } });
+    expect(shown(run({ kind: 'inequality', inequality: '(x - sqrt(2))^4 > 0', variable: 'x' }))).toBe('(-inf, 1.414213562) ∪ (1.414213562, inf)');
+    expect(shown(run({ kind: 'inequality', inequality: '(x - sqrt(2))^3 > 0', variable: 'x' }))).toBe('(1.414213562, inf)');
+    expect(check({ answer: choice('a', ['$(x-\\sqrt{2})^4 > 0$', '$x^2-2>0$', '$x^3>0$', '$-x^2+1>0$']), solves: { kind: 'choose', which: 'true' } }).verdict).not.toBe('verified');
+    // Where the haze of a six-fold root hides how many roots there are, the count is refused, not guessed.
+    for (const equation of ['(x - sqrt(2))^4*(x - 1) = 0', '(x - sqrt(3))^6 = 0']) {
+      const answer = { kind: 'integer' as const, value: 3 };
+      expect(check({ answer, solves: { kind: 'solve', equation, unknown: 'x', select: 'count' } }).verdict).not.toBe('verified');
+      const count = (() => { try { return solved({ kind: 'solve', equation, unknown: 'x', select: 'count' }); } catch { return null; } })();
+      expect(count === null || count === (equation.includes('(x - 1)') ? '2' : '1')).toBe(true);
+    }
+  });
+
+  it('keeps two roots a millionth apart as two', () => {
+    expect(check({ answer: { kind: 'integer', value: 2 }, solves: { kind: 'solve', equation: '(x - 100)*(x - 100.0001)*(x + sqrt(2)) = 0', unknown: 'x', select: 'count' } }).verdict).toBe('rejected');
+    expect(solved({ kind: 'solve', equation: '(x - 1.000001)*(x - 1.000002)*(x - pi) = 0', unknown: 'x', select: 'count' })).toBe('3');
+  });
+
+  it('never puts a pole in an inequality solution set, and closes a square root at its edge', () => {
+    expect(shown(run({ kind: 'inequality', inequality: '(x-1)/(x^2-3) >= 0', variable: 'x' }))).toBe('(-1.732050808, 1] ∪ (1.732050808, inf)');
+    expect(shown(run({ kind: 'inequality', inequality: '1/(x^2-2) > 0', variable: 'x' }))).toBe('(-inf, -1.414213562) ∪ (1.414213562, inf)');
+    expect(shown(run({ kind: 'inequality', inequality: 'sqrt(3-x^2) >= 0', variable: 'x' }))).toBe('[-1.732050808, 1.732050808]');
+    const answer = choice('a', ['$-\\sqrt{3} < x \\le 1$ 또는 $x > \\sqrt{3}$', '$-\\sqrt{3} \\le x \\le 1$ 또는 $x \\ge \\sqrt{3}$']);
+    expect(check({ answer, solves: { kind: 'inequality', inequality: '(x-1)/(x^2-3) >= 0', variable: 'x' } }).verdict).toBe('verified');
+  });
+
+  it('keeps a root where a radicand vanishes at an irrational point', () => {
+    expect(solved({ kind: 'solve', equation: 'sqrt(x^2-2)*(x-1) = 0', unknown: 'x', select: 'count' })).toBe('2');
+    expect(solved({ kind: 'solve', equation: '(x-2)*sqrt(x^2-3) = 0', unknown: 'x', select: 'count' })).toBe('3');
+  });
+
+  it('drops a branch of |u| whose signs cannot hold together', () => {
+    expect(check({ answer: { kind: 'integer', value: 0 }, solves: { kind: 'solve', equation: 'abs(x-1) - abs(x+1) = 2*x', unknown: 'x' } }).verdict).toBe('verified');
+  });
+
+  it('does not count a step function by scanning', () => {
+    expect(check({ answer: { kind: 'integer', value: 0 }, solves: { kind: 'solve', equation: 'floor(x) = x', unknown: 'x', where: '0 <= x <= 3', select: 'count' } }).verdict).toBe('unverified');
+    expect(check({ answer: { kind: 'integer', value: 666 }, solves: { kind: 'solve', equation: 'floor(2x) = 3', unknown: 'x', where: '0 <= x <= 3', select: 'count' } }).verdict).toBe('unverified');
+  });
+
+  it('checks the other equations of a system over the reals too', () => {
+    expect(solved({ kind: 'solve', equations: ['x^2 = 16', 'sqrt(x)*sqrt(x-20) = -4*sqrt(6)'], unknowns: ['x'], select: 'count' })).toBe('0');
+  });
+
+  it('keeps a degree sign inside an unparenthesised function', () => {
+    expect(statementTruth(readOption('$\\sin 30° = \\frac{1}{2}$')!, emptyScope)?.truth).toBe(true);
+    expect(statementValues(readOption('$2\\sin 30°$')!, emptyScope)?.[0].re).toBeCloseTo(1, 12);
+  });
+
+  it('takes a point where only one side is defined as a counterexample to an identity', () => {
+    expect(statementTruth(readOption('$\\log_2 x^2 = 2\\log_2 x$')!, emptyScope)?.truth).not.toBe(true);
+    const logs = choice('a', ['$\\log_2 x^2 = 2\\log_2 x$', '$\\log_2 (x+y) = \\log_2 x + \\log_2 y$', '$(\\log_2 x)^2 = 2\\log_2 x$', '$\\log_2 \\frac{x}{2} = \\frac{\\log_2 x}{2}$']);
+    expect(check({ answer: logs, solves: { kind: 'choose', which: 'true' } }).verdict).not.toBe('verified');
+  });
+
+  it('joins thousands only in a number standing alone', () => {
+    expect(statementValues(readOption('$x=-100,100$')!, emptyScope)?.map(show).sort()).toEqual(['-100', '100']);
+    expect(readOption('$(0,100)$')).toBeNull();
+    expect(check({ answer: choice('a', ['$x=-100,100$', '$x=100$', '$x=-100$', '$x=10000$']), solves: { kind: 'solve', equation: 'x^2 = 10000', unknown: 'x', select: 'all' } }).verdict).toBe('verified');
+  });
+
+  it('integrates a long interval without missing where the integrand lives', () => {
+    expect(check({ answer: { kind: 'integer', value: 0 }, solves: { kind: 'integral', integrand: 'exp(-x)', variable: 'x', from: '0', to: '10000' } }).verdict).toBe('rejected');
+    expect(check({ answer: { kind: 'integer', value: 1 }, solves: { kind: 'integral', integrand: 'exp(-x)', variable: 'x', from: '0', to: '10000' } }).verdict).toBe('verified');
+    expect(value('integral(exp(-x^2), x, -100, 200)').value.re).toBeCloseTo(Math.sqrt(Math.PI), 6);
+  });
+
+  it('compares the roots a scan found as loosely as one estimated root', () => {
+    const answer = choice('a', ['$x=\\frac{\\pi}{4}$', '$x=\\frac{\\pi}{2}$', '$x=\\pi$', '$x=\\frac{3\\pi}{2}$']);
+    expect(check({ answer, solves: { kind: 'solve', equation: 'sin(x) + cos(x) = sqrt(2)', unknown: 'x', where: '0 <= x < 2pi', select: 'all' } }).verdict).toBe('verified');
+  });
+
+  it('uses the numerical integral when an antiderivative jumps inside the interval', () => {
+    const answer = choice('a', ['$\\frac{5\\pi}{3\\sqrt{3}}$', '$\\frac{\\pi}{\\sqrt{3}}$', '$\\frac{2\\pi}{\\sqrt{3}}$', '$\\frac{\\pi}{3\\sqrt{3}}$']);
+    const report = check({ answer, solves: { kind: 'integral', integrand: '1/(2+cos(x))', variable: 'x', from: '0', to: '3pi/2', antiderivative: '2/sqrt(3)*atan(tan(x/2)/sqrt(3))' } });
+    expect(report.verdict).toBe('verified');
+    expect(report.issues.map((i) => i.code)).toContain('claim-note');
+  });
+
+  it('takes derivatives at zero of powers whose exponent is not written as a number', () => {
+    expect(show(value('diff(x^n, x, 0)', { given: { n: '1' } }).value)).toBe('1');
+    expect(show(value('diff(x^(1+1), x, 0, 2)').value)).toBe('2');
+    expect(show(value('diff(sum(x^k, k, 1, 5), x, 0)').value)).toBe('1');
+  });
+
+  it('warns when the claim restates the answer as a fraction or in brackets', () => {
+    for (const expression of ['(8)', '8/1', '-(-8)']) {
+      expect(check({ answer: { kind: 'integer', value: 8 }, solves: { kind: 'value', expression } }).issues.map((i) => i.code)).toContain('claim-trivial');
+    }
   });
 });

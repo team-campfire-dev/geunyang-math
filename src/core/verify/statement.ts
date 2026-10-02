@@ -72,22 +72,24 @@ function onlyValues(st: Statement): boolean {
  * changes the meaning — `1 m = 100 cm` is true and 1 = 100 is not — so such an option is unreadable.
  */
 export function readOptionDetailed(text: string, options: ParseOptions = {}): { statement: Statement; unit: string } | null {
-  const t = joinThousands(text.trim());
-  if (/해(가|는)\s*없/.test(t)) return { statement: { kind: 'empty' }, unit: '' };
-  if (/^모든\s*실수/.test(t)) return { statement: { kind: 'everything' }, unit: '' };
+  const t = text.trim();
+  // Only the phrase itself: 「$x=3$ 외에는 해가 없다」 and 「모든 실수 (단, $x \ne 0$)」 say something else.
+  if (/^해(가|는)\s*없(다|음|어요|습니다)?\.?$/.test(t)) return { statement: { kind: 'empty' }, unit: '' };
+  if (/^(해는\s*)?모든\s*실수(이다|다|예요|입니다)?\.?$/.test(t)) return { statement: { kind: 'everything' }, unit: '' };
+  // A comma joins thousands only in a number standing alone; in `x = -100,100` or `(0,100)` it separates.
+  const lone = /^\s*\$?\s*[+\-−]?\d{1,3}(?:,\d{3})+(?:\.\d+)?\s*\$?\s*[^\d$,()=]*$/.test(t);
   try {
     let ascii: string;
     if (t.includes('$')) {
-      const pieces = t.split('$');
+      const pieces = (lone ? joinThousands(t) : t).split('$');
       if (pieces.length % 2 === 0) return null;
       ascii = pieces.map((piece, k) => (k % 2 ? latexToClaim(piece) : words(piece))).join(' ');
     } else {
-      const plain = counter.exec(t);
+      const plain = counter.exec(lone ? joinThousands(t) : t);
       if (plain && !words(plain[2] || ' ').includes(UNREADABLE)) ascii = `${plain[1]} ${words(plain[2] || ' ')}`;
       else if (/[가-힣]/.test(t)) return null;
       else ascii = latexToClaim(t);
     }
-    ascii = joinThousands(ascii);
     // A unit carries the power written after it, even across a $: `$4$ cm$^2$` is 4 with unit cm².
     const units: string[] = [];
     ascii = ascii.replace(new RegExp(`${UNIT}([^${UNIT}]*)${UNIT}(\\s*\\^\\s*(\\(\\s*\\d+\\s*\\)|\\d))?`, 'g'), (_, unit: string, power?: string) => {
@@ -97,6 +99,9 @@ export function readOptionDetailed(text: string, options: ParseOptions = {}): { 
     if (ascii.includes('%')) { units.push('%'); ascii = ascii.replace(/%/g, ' '); }
     const statement = parseStatement(ascii, options);
     if (units.length && !onlyValues(statement)) return null;
+    // A unit typed as math letters (`$1m = 100cm$`) reads as variables; in a relation that changes the
+    // meaning, so it is not read.
+    if (!onlyValues(statement) && /\d\s*(cm|mm|km|kg|mg|mL|ml|m|g|L)\b/.test(ascii)) return null;
     return { statement, unit: [...new Set(units)].join(' ') };
   } catch (reason) {
     if (reason instanceof CheckFailure) return null;
@@ -114,20 +119,22 @@ const unbound = (terms: Node[], scope: Scope) =>
   [...new Set(terms.flatMap((t) => [...freeSymbols(t)]))].filter((s) => !scope.vars.has(s) && !['pi', 'e', 'i'].includes(s));
 
 /** The numbers an option names, or null when it is not a list of values. */
-export function statementValues(st: Statement, scope: Scope, meter: Meter = newMeter()): Num[] | null {
+export function statementValues(st: Statement, scope: Scope, meter: Meter = newMeter(), symbol: string | null = null): Num[] | null {
   if (st.kind === 'any') {
-    const all = st.parts.map((p) => statementValues(p, scope, meter));
+    const all = st.parts.map((p) => statementValues(p, scope, meter, symbol));
     return all.every((v) => v) ? all.flat() as Num[] : null;
   }
   if (st.kind !== 'relation') return null;
   const { terms, ops } = st.relation;
   try {
     if (!ops.length) return unbound(terms, scope).length ? null : [evaluate(terms[0], scope, meter)];
-    // `x = 3` names 3; so does `3 = x`.
+    // `x = 3` names 3; so does `3 = x`. When the question asks about one unknown, an option that names
+    // another (`y = 2` against x, or the pair `x = 1, y = 2`) is not a value of it.
     if (ops.length === 1 && ops[0] === '=') {
       const [left, right] = terms;
-      if (left.k === 'sym' && !scope.vars.has(left.name)) return [evaluate(right, scope, meter)];
-      if (right.k === 'sym' && !scope.vars.has(right.name)) return [evaluate(left, scope, meter)];
+      const named = (n: Node) => n.k === 'sym' && !scope.vars.has(n.name) && (symbol === null || n.name === symbol);
+      if (named(left)) return [evaluate(right, scope, meter)];
+      if (named(right)) return [evaluate(left, scope, meter)];
     }
   } catch (reason) {
     if (reason instanceof CheckFailure) return null;
@@ -218,11 +225,17 @@ export function forAll(relation: Relation, free: string[], scope: Scope, meter: 
   for (const point of samplePoints(free.length)) {
     const values = new Map(free.map((name, j) => [name, exact(q(point[j][0], point[j][1]))] as const));
     const vars = new Map(scope.vars); values.forEach((v, k) => vars.set(k, v));
-    let sides: Num[];
-    try { sides = relation.terms.map((term) => evaluate(term, { ...scope, vars }, meter)); }
-    catch (reason) { if (reason instanceof CheckFailure && (reason.code === 'domain' || reason.code === 'unstable')) continue; throw reason; }
+    // Each side on its own: where one is defined and the other is not (log x² and 2 log x at x = −1),
+    // the two are not the same expression, and that point is the counterexample.
+    const sides = relation.terms.map((term) => {
+      try { return evaluate(term, { ...scope, vars }, meter); }
+      catch (reason) { if (reason instanceof CheckFailure && (reason.code === 'domain' || reason.code === 'unstable')) return reason.code; throw reason; }
+    });
+    if (sides.every((side) => typeof side === 'string')) continue;
+    if (sides.some((side) => side === 'unstable')) continue;
+    if (sides.some((side) => typeof side === 'string')) return { truth: false, strength: 'sampled' };
     tried++;
-    if (!holds(relation, values, scope, meter)) return { truth: false, strength: sides.every((s) => s.q) ? 'exact' : 'numeric' };
+    if (!holds(relation, values, scope, meter)) return { truth: false, strength: (sides as Num[]).every((s) => s.q) ? 'exact' : 'numeric' };
   }
   if (tried < 6) fail('unsupported', 'Too few sample points are in the domain to check this for every value.');
   return { truth: true, strength: 'sampled' };
@@ -319,8 +332,8 @@ export function statementForm(st: Statement, variables: string[]): Node | null {
 }
 
 /** Two lists of values are the same set of numbers. */
-export function sameValues(a: Num[], b: Num[]): boolean {
-  const distinct = (list: Num[]) => list.filter((x, i) => list.findIndex((y) => same(x, y).equal) === i);
+export function sameValues(a: Num[], b: Num[], estimated = false): boolean {
+  const distinct = (list: Num[]) => list.filter((x, i) => list.findIndex((y) => same(x, y, estimated).equal) === i);
   const x = distinct(a), y = distinct(b);
-  return x.length === y.length && x.every((v) => y.some((w) => same(v, w).equal));
+  return x.length === y.length && x.every((v) => y.some((w) => same(v, w, estimated).equal));
 }

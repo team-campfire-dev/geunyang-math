@@ -72,7 +72,12 @@ function differentiate(n: Node, v: string, functions: ReadonlyMap<string, Functi
     case 'mul': return Add(Mul(d(n.a), n.b), Mul(n.a, d(n.b)));
     case 'div': return Div(Sub(Mul(d(n.a), n.b), Mul(n.a, d(n.b))), Pow(n.b, two));
     case 'pow': {
-      if (!mentions(n.b, v)) return Mul(Mul(n.b, Pow(n.a, Sub(n.b, num(1n)))), d(n.a));
+      if (!mentions(n.b, v)) {
+        // A numeric exponent folds now: x³ → 3x², x¹ → 1. A symbolic one (xⁿ with a given n) is left to
+        // dpow, which knows that the derivative of x⁰ is 0 and of x¹ at 0 is 1.
+        if (n.b.k === 'num') return Mul(Mul(n.b, Pow(n.a, Sub(n.b, num(1n)))), d(n.a));
+        return Mul(Call('dpow', n.a, n.b), d(n.a));
+      }
       if (!mentions(n.a, v)) return Mul(Mul(n, Call('ln', n.a)), d(n.b));
       return Mul(n, Add(Mul(d(n.b), Call('ln', n.a)), Div(Mul(n.b, d(n.a)), n.a)));
     }
@@ -114,6 +119,10 @@ function differentiate(n: Node, v: string, functions: ReadonlyMap<string, Functi
           return Div(Mul(n, du), Mul(n.args[1], u));
         }
         case 'abs': return Mul(Div(u, n), du);
+        case 'dpow': {
+          if (mentions(n.args[1], v)) break;
+          return Mul(Mul(n.args[1], Call('dpow', u, Sub(n.args[1], num(1n)))), du);
+        }
         case 'sum': {
           const [body, index, from, to] = n.args;
           if (index?.k !== 'sym' || index.name === v || mentions(from, v) || mentions(to, v)) break;
@@ -155,7 +164,9 @@ function kronrod(f: (x: number) => number, a: number, b: number) {
 export function integrate(f: (x: number) => number, a: number, b: number): number {
   if (!Number.isFinite(a) || !Number.isFinite(b)) fail('unsupported', 'Integrals over an infinite interval are not supported yet.');
   if (a === b) return 0;
-  const pieces = [kronrod(f, a, b)];
+  // Sixteen panels before any is trusted: one rule over [0, 10000] puts its nearest node at 42 and
+  // sees e^(−x) as zero everywhere, with an error estimate of zero to match.
+  const pieces = Array.from({ length: 16 }, (_, k) => kronrod(f, a + ((b - a) * k) / 16, a + ((b - a) * (k + 1)) / 16));
   for (let step = 0; step < 2000; step++) {
     const total = pieces.reduce((s, p) => s + p.value, 0), error = pieces.reduce((s, p) => s + p.error, 0);
     if (error <= Math.max(1e-13, 1e-10 * Math.abs(total))) return total;

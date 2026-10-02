@@ -172,29 +172,7 @@ export function parseRelation(source: string, options: ParseOptions = {}): Relat
     terms.push(sum(0));
   }
   if (at < tokens.length) fail('syntax', `Unexpected "${peek().text}" at ${peek().at}.`);
-  // A degree sign is an angle only where there is trigonometry to take it: sin(30°), asin(1/2) = 30°.
-  // Anywhere else it is the unit an angle is counted in — 180° − 50° − 60° is 70, as the options say.
-  if (!terms.some(hasTrig)) return { terms: terms.map(degreesAsNumbers), ops };
   return { terms, ops };
-}
-
-const trig = new Set(['sin', 'cos', 'tan', 'sec', 'csc', 'cot', 'asin', 'acos', 'atan', 'arcsin', 'arccos', 'arctan']);
-function hasTrig(n: Node): boolean {
-  switch (n.k) {
-    case 'num': case 'sym': return false;
-    case 'neg': case 'fact': case 'deg': return hasTrig(n.a);
-    case 'call': return trig.has(n.name) || n.args.some(hasTrig);
-    default: return hasTrig(n.a) || hasTrig(n.b);
-  }
-}
-function degreesAsNumbers(n: Node): Node {
-  switch (n.k) {
-    case 'num': case 'sym': return n;
-    case 'deg': return degreesAsNumbers(n.a);
-    case 'neg': case 'fact': return { ...n, a: degreesAsNumbers(n.a) };
-    case 'call': return { ...n, args: n.args.map(degreesAsNumbers) };
-    default: return { ...n, a: degreesAsNumbers(n.a), b: degreesAsNumbers(n.b) };
-  }
 }
 
 /** Parses an expression with no relation in it. */
