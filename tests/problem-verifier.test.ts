@@ -309,12 +309,15 @@ describe('checking generated problems', () => {
   });
 
   it('checks a step of working the way 「이항을 바르게 한 것」 means it', () => {
-    expect(check({
+    const result = check({
       answer: { kind: 'choice', correct: 'b', options: [
         { id: 'a', text: '$x+3=7 \\Rightarrow x=7+3$' }, { id: 'b', text: '$x+3=7 \\Rightarrow x=7-3$' },
         { id: 'c', text: '$x-4=10 \\Rightarrow x=10-4$' }, { id: 'd', text: '$3x=x+6 \\Rightarrow 3x+x=6$' }] },
+      // A wrong option that is a statement has no value, so its computation is noted, not compared.
+      misreadings: [{ answer: 'a', misconception: 'move-without-sign', expression: '7 + 3' }],
       solves: { kind: 'choose', which: 'true' },
-    })).toMatchObject({ verdict: 'verified' });
+    });
+    expect(result).toMatchObject({ verdict: 'verified', issues: [{ code: 'misreading-unchecked', level: 'warning' }] });
   });
 
   it('rejects a key that is not what the claim computes, and a key the grader would not accept', () => {

@@ -186,9 +186,20 @@ export function verifyProblem(input: CheckInput): Report {
       // The wrong computation, done: it has to land on the wrong answer it is said to produce.
       try {
         const wrong = evaluate(parseExpression(m.expression, { functions: functionNames }), scope);
-        const stated = spec.kind === 'choice'
-          ? (() => { const option = spec.options.find((o) => o.id === m.answer); const st = option && readOption(option.text, { functions: functionNames }); const values = st && statementValues(st, scope); return values?.length === 1 ? values[0] : null; })()
-          : (() => { const read = readMathExpression(normalizeAnswer(m.answer) ?? ''); return read.value ? keyValue({ kind: 'expression', expression: normalizeAnswer(m.answer)! }) : null; })();
+        let stated: Num | null = null;
+        if (spec.kind === 'choice') {
+          const option = spec.options.find((o) => o.id === m.answer);
+          const statement = option && readOption(option.text, { functions: functionNames });
+          const values = statement && statementValues(statement, scope);
+          // An option that is a statement — a step of working, an equation — has no value to compare.
+          if (statement && !values) {
+            issues.push({ code: 'misreading-unchecked', level: 'warning', answer: m.answer, message: `Option ${m.answer} is a statement, not a value, so its wrong computation is not compared.` });
+            continue;
+          }
+          stated = values?.length === 1 ? values[0] : null;
+        } else if (readMathExpression(normalizeAnswer(m.answer) ?? '').value) {
+          stated = keyValue({ kind: 'expression', expression: normalizeAnswer(m.answer)! });
+        }
         if (!stated) issues.push({ code: 'misreading-unchecked', level: 'unverified', answer: m.answer, message: `"${m.answer}" could not be read as a value to compare with its computation.` });
         else if (!same(stated, wrong).equal) issues.push({ code: 'misreading-derivation', level: 'error', answer: m.answer, message: `The stated wrong computation gives ${show(wrong)}, not ${m.answer}.` });
       } catch (reason) {
