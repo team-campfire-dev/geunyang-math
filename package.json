@@ -23,7 +23,8 @@
     "content:verify": "node --conditions=react-server --import tsx scripts/content.ts verify",
     "content:retire": "node --conditions=react-server --import tsx scripts/content.ts retire",
     "content:lock": "node --import tsx scripts/content-lock.ts",
-    "pilot:report": "node --conditions=react-server --import tsx scripts/pilot.ts"
+    "pilot:report": "node --conditions=react-server --import tsx scripts/pilot.ts",
+    "problems:check": "node --conditions=react-server --import tsx scripts/check-problems.ts"
   },
   "dependencies": {
     "@prisma/adapter-mariadb": "7.10.0",
