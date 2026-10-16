@@ -166,7 +166,7 @@ AI가 만든 문제를 발행하기 전에, **정답 키·보기·예상 오답�
 - **아무것도 저장하지 않는다.** 결과는 작성자가 고르는 목록이다. `검증됨`은 「활동에 넣기」, `확인 필요`는 이유를 보여 주고 「읽어 봤어요, 넣기」, `틀림`은 넣을 수 없다. 넣은 문항은 손으로 쓴 문항과 같다 — 고치고, 저장하고, 발행할 때 판본으로 얼린다.
 - **편집기가 담을 수 없는 모양**(주관식인데 답 칸이 읽지 못하는 정답, 보기 이름이 a~f가 아님, 길이 초과)은 버리지 않고 `output-invalid`(틀림)로 보여 준다.
 - 두 요청 모두 server-side fallback(`fallbacks: "default"`)을 켠다. 거절이 남으면 화면에 그렇게 말한다. 한 계정은 한 번에 한 생성만 돌린다.
-- `ANTHROPIC_API_KEY`가 없는 배포에서는 이 기능이 화면에 나오지 않는다(작업 공간의 `problemWriter`).
+- `ANTHROPIC_API_KEY`가 없는 배포에서는 이 기능이 화면에 나오지 않는다(작업 공간의 `problemWriter`). 운영에서는 배포 job이 같은 이름의 저장소 secret을 `ENV_FILE`과 따로 읽어 VM의 `app.env`에 한 줄로 더한다. secret을 지우고 다시 배포하면 꺼진다.
 - 요청마다 토큰 사용량을 `{"event":"problem_generation"}` 한 줄로 남긴다. 계정별 한도와 비용 집계는 아직 없다.
 
 **작성 지침이 곧 프롬프트다.** 지침을 고치면 `npm run guide:sync`로 `src/server/writing-guide.ts`를 다시 만든다. 둘이 다르면 검사(`tests/problem-generation.test.ts`)가 실패한다. 배포된 서버는 `docs/`를 읽을 수 없어서 사본을 둔다.
