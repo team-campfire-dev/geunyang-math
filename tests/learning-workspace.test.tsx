@@ -50,7 +50,8 @@ const learningState = (overrides: Partial<LearningState> = {}): LearningState =>
   lessons: catalogue, enrollments: [], assignments: [], recommendations: [],
   diagnostic: null, diagnosticOffering: null,
   plan: { version: '1', readiness: [], review: null, sessionMinutes: 10, preferredLessonKey: null, onTheWay: [] },
-  recommendationHistory: [], concepts: [], misconceptions: [], confusion: { version: 1, latestAt: null, concepts: [], repeated: [], evidence: [] }, ...overrides,
+  recommendationHistory: [], concepts: [], misconceptions: [], confusion: { version: 1, latestAt: null, concepts: [], repeated: [], evidence: [] },
+  aiPractice: { available: false, remaining: 3, runs: [] }, ...overrides,
 });
 const enrolled = (completedSectionIds: string[] = [], status: 'active' | 'completed' = 'active') =>
   learningState({ enrollments: [{ id: 'e1', lessonKey, lessonVersionId: 'fraction-meaning:v2', completedSectionIds, status, attempts: [] }] });
@@ -1304,5 +1305,58 @@ describe('returning from focused practice to its confusion record', () => {
     await until(() => expect(screen.getByRole('button', { name: '헷갈림 요약으로' })).toBeDefined());
     fireEvent.click(screen.getByRole('button', { name: '헷갈림 요약으로' }));
     await until(() => expect(window.document.activeElement?.id).toBe('confusion-summary'));
+  });
+});
+
+describe('AI 맞춤 연습', () => {
+  const answered = (id: string, status: 'correct' | 'incorrect') => ({ problemVersionId: id, conceptKeys: ['term.denominator'],
+    promptContent: [text(`${id}-p`, '분모는?')], responseSpec: { kind: 'integer' as const },
+    first: { id: `a-${id}`, answer: '3', status, hintUsed: false, createdAt: '2026-10-16T00:00:00.000Z',
+      source: { kind: 'lesson' as const, id: 'e1', title: '분수의 의미', lessonKey }, signal: null }, corrections: [] });
+  const withRecord = (overrides: Partial<LearningState> = {}) => learningState({
+    confusion: { version: 1, latestAt: null, concepts: [], repeated: [], evidence: [answered('q1', 'incorrect'), answered('q2', 'incorrect'), answered('q3', 'correct')] },
+    aiPractice: { available: true, remaining: 3, runs: [] }, ...overrides });
+  const written = (): AssignmentView => ({ ...assignment({ id: 'ai1', recipientId: 'r-ai', title: 'AI 맞춤 연습 · 전체 기록', problemSetId: null,
+    policy: { kind: 'practice', hints: true, results: 'per-item', solutions: 'after-submission' } }),
+    ai: { scope: 'all', scopeLabel: '전체 기록', diagnosis: '분모를 고를 때 조각 수 대신 전체 수를 쓴 답이 두 번 있었어요.' },
+    items: [{ ...assignment().items[0], reason: '분모가 무엇을 세는지 다시 확인해요.' }] });
+
+  it('is offered on the home screen and asked for over the whole record', async () => {
+    server = serve({ state: withRecord() });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByText('AI 맞춤 연습').length).toBeGreaterThan(0));
+    expect(screen.getByText('오늘 3번 더 만들 수 있어요')).toBeDefined();
+    fireEvent.click(screen.getByRole('button', { name: /AI에게 문제 받기/ }));
+    await until(() => expect(server.of('practice.ai')).toEqual([{ action: 'practice.ai', scope: { kind: 'all' } }]));
+  });
+
+  it('says there is not enough to read yet, and is absent where the deployment has no model', async () => {
+    server = serve({ state: withRecord({ confusion: { version: 1, latestAt: null, concepts: [], repeated: [], evidence: [answered('q1', 'incorrect')] } }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByText(/문제를 3개 이상 풀면 만들 수 있어요\. 지금 1개예요\./)).toBeDefined());
+    expect((screen.getByRole('button', { name: /AI에게 문제 받기/ }) as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it('shows what it is doing while it writes, and opens the set when it arrives', async () => {
+    server = serve({ state: withRecord() });
+    server.state.after = (action) => action.action === 'practice.ai'
+      ? withRecord({ aiPractice: { available: true, remaining: 2, runs: [{ scope: 'all', status: 'pending', startedAt: new Date().toISOString() }] } })
+      : server.state.learning;
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByRole('button', { name: /AI에게 문제 받기/ })).toBeDefined());
+    fireEvent.click(screen.getByRole('button', { name: /AI에게 문제 받기/ }));
+    await until(() => expect(screen.getAllByText(/기록을 읽고, 무엇을 연습하면 좋을지 정하고 있어요/).length).toBeGreaterThan(0));
+    // The server finishes; the next look at the state carries the set, and it opens.
+    server.state.learning = withRecord({ assignments: [written()], aiPractice: { available: true, remaining: 2, runs: [] } });
+    await tick(4500);
+    await until(() => expect(screen.getByRole('heading', { level: 1, name: 'AI 맞춤 연습 · 전체 기록' })).toBeDefined());
+    expect(screen.getByText('분모를 고를 때 조각 수 대신 전체 수를 쓴 답이 두 번 있었어요.')).toBeDefined();
+    expect(screen.getByText('분모가 무엇을 세는지 다시 확인해요.')).toBeDefined();
+  });
+
+  it('says why it failed, where it was asked', async () => {
+    server = serve({ state: withRecord({ aiPractice: { available: true, remaining: 2, runs: [{ scope: 'all', status: 'failed', startedAt: new Date().toISOString(), message: '검증을 통과한 문제가 없었어요. 다시 해 보세요.' }] } }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getAllByText('검증을 통과한 문제가 없었어요. 다시 해 보세요.').length).toBeGreaterThan(0));
   });
 });

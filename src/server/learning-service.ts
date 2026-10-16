@@ -19,6 +19,9 @@ import { AppError } from './errors';
 import { loadConceptHelp } from './concept-help';
 import { gatheredPracticePools, gatheredQuestions } from './gathered-practice';
 import { dailyGenerations, generateForLearner, type LearnerGeneration } from './learner-generation';
+import { buildProfile, newSetId, openPracticeSet, planSchema, plannerRequest, settlePlan, writeForPlan, type LearnerRecord, type Profile } from './ai-practice';
+import { plannerSystem } from './problem-prompts';
+import { aiPracticeLimits, scopeKey, type AiPracticeRun, type AiPracticeState, type PracticeScope } from '@/shared/ai-practice';
 import type { ProblemModel } from './problem-generation';
 import { claudeProblemModel, problemWriterAvailable } from './problem-writer';
 
@@ -65,6 +68,11 @@ export const actionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('problemSet.start'), problemSetId: id }).strict(),
   z.object({ action: z.literal('solution.open'), context, contextId: id, problemVersionId: id }).strict(),
   z.object({ action: z.literal('practice.gather'), misconception: id.max(60) }).strict(),
+  z.object({ action: z.literal('practice.ai'), scope: z.discriminatedUnion('kind', [
+    z.object({ kind: z.literal('all') }).strict(),
+    z.object({ kind: z.literal('course'), key: id.max(100) }).strict(),
+    z.object({ kind: z.literal('lesson'), key: id.max(100) }).strict(),
+  ]) }).strict(),
 ]);
 type Tx = Prisma.TransactionClient;
 /** How many of a set's questions a model wrote for this learner. */
@@ -112,11 +120,104 @@ function orderConcepts<T extends { key: string; label: string }>(rows: T[], less
 
 /** Learners with questions being written for them. One at a time each: a second press would pay twice. */
 const filling = new Set<string>();
+/** Learners with an AI practice set being written. */
+const writing = new Set<string>();
+const dayAgo = () => new Date(Date.now() - 24 * 60 * 60 * 1000);
+/** The AI practice note an assignment carries, read defensively: it is JSON the database hands back. */
+function aiNoteOf(snapshot: unknown): { scope: string; scopeLabel: string; diagnosis: string; reasons: Record<string, string> } | null {
+  const ai = (snapshot as { ai?: unknown } | null)?.ai as { scope?: unknown; scopeLabel?: unknown; diagnosis?: unknown; reasons?: unknown } | undefined;
+  if (!ai || typeof ai.scope !== 'string' || typeof ai.diagnosis !== 'string') return null;
+  const reasons = ai.reasons && typeof ai.reasons === 'object' ? Object.fromEntries(Object.entries(ai.reasons).filter(([, v]) => typeof v === 'string')) as Record<string, string> : {};
+  return { scope: ai.scope, scopeLabel: typeof ai.scopeLabel === 'string' ? ai.scopeLabel : '', diagnosis: ai.diagnosis, reasons };
+}
 
 export class LearningService {
   /** `writer` writes questions a gathered set lacks, or null where this deployment has no model. */
   constructor(private readonly db: PrismaClient,
     private readonly writer: () => ProblemModel | null = () => (problemWriterAvailable() ? claudeProblemModel() : null)) {}
+
+  /** AI practice runs still writing, so a test (or a shutdown) can wait for them. */
+  private readonly running = new Set<Promise<void>>();
+  async settled() { await Promise.all([...this.running]); }
+
+  /**
+   * AI 맞춤 연습, asked for. Writing takes up to a minute — longer than a proxy will hold a request —
+   * so this checks what can be checked at once, records the request as pending, starts the work and
+   * returns. The screen watches the learning state until the set is there. A set for the same range
+   * that is still open is opened instead: coming back means 「이어서」.
+   */
+  private async startAiPractice(userId: string, scope: PracticeScope): Promise<string | undefined> {
+    const model = this.writer();
+    if (!model?.plan) throw new AppError(503, 'generation_unavailable', '지금은 AI 맞춤 연습을 쓸 수 없어요.');
+    const key = scopeKey(scope);
+    const open = await this.db.assignmentRecipient.findFirst({ where: { learnerUserId: userId, status: 'assigned',
+      assignment: { issuerType: 'self', policySnapshot: { path: '$.ai.scope', equals: key } } }, orderBy: { recommendedAt: 'desc' } });
+    if (open) return open.id;
+    await this.expireStaleRuns(userId);
+    if (writing.has(userId) || await this.db.generatedProblemSet.findFirst({ where: { userId, status: 'pending' } })) {
+      throw conflict('AI가 문제를 만들고 있어요. 끝나면 바로 열 수 있어요.');
+    }
+    const used = await this.db.generatedProblemSet.count({ where: { userId, scope: { not: null }, createdAt: { gte: dayAgo() } } });
+    if (used >= aiPracticeLimits.daily) throw conflict('오늘은 AI 맞춤 연습을 더 만들 수 없어요. 내일 다시 해 보세요.');
+    writing.add(userId);
+    try {
+      const state = await this.state(userId);
+      if (scope.kind === 'lesson' && !state.lessons.some(lesson => lesson.lessonKey === scope.key)) throw notFound();
+      const courses = await this.db.course.findMany({ select: { key: true, title: true } });
+      if (scope.kind === 'course' && !courses.some(course => course.key === scope.key)) throw notFound();
+      const record: LearnerRecord = { summary: state.confusion, concepts: state.concepts, lessons: state.lessons, courses };
+      const profile = await buildProfile(this.db, record, scope);
+      if (!profile) throw conflict('이 범위에는 아직 기록이 부족해요. 문제를 몇 개 더 풀면 만들 수 있어요.');
+      const setId = newSetId();
+      await this.db.generatedProblemSet.create({ data: { id: setId, userId, scope: key, model: model.name,
+        requested: aiPracticeLimits.questions, kept: 0, status: 'pending' } });
+      const run = this.writeAiPractice(model, userId, setId, scope, profile, record).finally(() => { writing.delete(userId); this.running.delete(run); });
+      this.running.add(run);
+      return undefined;
+    } catch (reason) { writing.delete(userId); throw reason; }
+  }
+
+  /** The work itself, after the request has returned. Whatever happens, the set ends done or failed. */
+  private async writeAiPractice(model: ProblemModel, userId: string, setId: string, scope: PracticeScope, profile: Profile, record: LearnerRecord) {
+    try {
+      const plan = settlePlan(planSchema.parse(await model.plan!(plannerSystem, plannerRequest(profile))), profile);
+      const written = await writeForPlan(model, plan, profile, record, setId);
+      if (!written.problems.length) throw new AppError(502, 'generation_empty', '검증을 통과한 문제가 없었어요. 다시 해 보세요.');
+      await openPracticeSet(this.db, userId, setId, scope, profile.scopeLabel, plan, written);
+      console.info(JSON.stringify({ event: 'ai_practice', scope: scope.kind, targets: plan.targets.length, kept: written.problems.length }));
+    } catch (reason) {
+      const message = reason instanceof AppError ? reason.message : 'AI 맞춤 연습을 만들지 못했어요. 잠시 뒤에 다시 해 보세요.';
+      console.warn(JSON.stringify({ event: 'ai_practice_failed', reason: reason instanceof Error ? reason.message : String(reason) }));
+      await this.db.generatedProblemSet.update({ where: { id: setId }, data: { status: 'failed', plan: { error: message } } }).catch(() => undefined);
+    }
+  }
+
+  /** A run left pending by a restart never finishes; after a while it is said to have failed. */
+  private async expireStaleRuns(userId: string) {
+    await this.db.generatedProblemSet.updateMany({ where: { userId, status: 'pending',
+      createdAt: { lt: new Date(Date.now() - aiPracticeLimits.staleMinutes * 60_000) } },
+      data: { status: 'failed', plan: { error: '시간이 너무 오래 걸려 멈췄어요. 다시 해 보세요.' } } });
+  }
+
+  /** What the screen needs to offer AI practice: whether it can, how often more today, and what is under way. */
+  private async aiPracticeState(db: Tx, userId: string): Promise<AiPracticeState> {
+    const sets = await db.generatedProblemSet.findMany({ where: { userId, scope: { not: null }, createdAt: { gte: dayAgo() } },
+      orderBy: { createdAt: 'desc' }, select: { scope: true, status: true, plan: true, createdAt: true } });
+    const latest = new Map<string, (typeof sets)[number]>();
+    for (const set of sets) if (!latest.has(set.scope!)) latest.set(set.scope!, set);
+    const stale = Date.now() - aiPracticeLimits.staleMinutes * 60_000;
+    const runs: AiPracticeRun[] = [...latest.values()].flatMap((set): AiPracticeRun[] => {
+      const startedAt = set.createdAt.toISOString();
+      if (set.status === 'pending' && set.createdAt.getTime() >= stale) return [{ scope: set.scope!, status: 'pending', startedAt }];
+      // A failure is said until the learner asks again; half an hour later it is old news.
+      if ((set.status === 'failed' || set.status === 'pending') && set.createdAt.getTime() >= Date.now() - 30 * 60_000) {
+        const message = (set.plan as { error?: unknown } | null)?.error;
+        return [{ scope: set.scope!, status: 'failed', startedAt, message: typeof message === 'string' ? message : '시간이 너무 오래 걸려 멈췄어요. 다시 해 보세요.' }];
+      }
+      return [];
+    });
+    return { available: !!this.writer()?.plan, remaining: Math.max(0, aiPracticeLimits.daily - sets.length), runs };
+  }
 
   /**
    * Before a set is gathered for one mistake: when the catalogue holds fewer questions for it than a
@@ -401,6 +502,7 @@ export class LearningService {
             source: { kind: policy.kind, id: r.id, title: r.assignment.title, lessonKey } });
         }
       }
+      const ai = aiNoteOf(r.assignment.policySnapshot);
       const items = r.assignment.items.map(item => {
         const p = assignmentProblems.get(item.problemVersionId);
         if (!p) throw new Error(`Missing published problem ${item.problemVersionId}`);
@@ -429,7 +531,8 @@ export class LearningService {
         return { id: item.id, problem: { ...publicProblem(p), hintAvailable: policy.hints && p.hintAvailable,
           solutionAvailable: policy.solutions !== 'never' && p.solution.length > 0 },
           attempt: visibleAttempt ? { ...attemptView(visibleAttempt), result: shown(visibleAttempt.result as GradeResult, hold) } : null,
-          tries: real.length, firstResult: real.length ? shown(real[0].result as GradeResult, hold) : null };
+          tries: real.length, firstResult: real.length ? shown(real[0].result as GradeResult, hold) : null,
+          ...(ai?.reasons[item.problemVersionId] ? { reason: ai.reasons[item.problemVersionId] } : {}) };
       });
       const focus = (r.assignment.policySnapshot as { misconception?: unknown } | null)?.misconception;
       const misconception = r.assignment.issuerType === 'self' && policy.kind === 'practice' && !r.assignment.problemSetId
@@ -439,7 +542,8 @@ export class LearningService {
         policy, status: r.status as 'assigned' | 'submitted', items, submissionId: submission.id,
         glossary: leafGlossary(glossaryEntries(assignmentTerms, lessons)),
         reason: typeof (r.assignment.policySnapshot as { reviewReason?: string }).reviewReason === 'string' ? (r.assignment.policySnapshot as { reviewReason: string }).reviewReason : undefined,
-        ...(written(r.assignment.items) ? { generated: written(r.assignment.items) } : {}) };
+        ...(written(r.assignment.items) ? { generated: written(r.assignment.items) } : {}),
+        ...(ai ? { ai: { scope: ai.scope, scopeLabel: ai.scopeLabel, diagnosis: ai.diagnosis } } : {}) };
     });
     const confusion = summarizeConfusion(confusionObservations, conceptRows, lessons);
     // The course overview and the detailed summary must agree about earned understanding.
@@ -486,7 +590,7 @@ export class LearningService {
     return {
       user: { id: user.id, displayName: user.displayName, targetCourseKey: user.targetCourseKey, dailyMinutes: user.dailyMinutes },
       lessons, assignments, recommendations, concepts, misconceptions, plan,
-      confusion,
+      confusion, aiPractice: await this.aiPracticeState(db, userId),
       diagnosticOffering: offering ? { version: offering.versionId, title: offering.title, description: offering.description,
         scope: placementScope(conceptGraph(lessons), await this.placementTargets(db, lessons, user.targetCourseKey)).length,
         estimatedMinutes: offering.estimatedMinutes } : null,
@@ -570,6 +674,10 @@ export class LearningService {
 
   async act(userId: string, input: unknown): Promise<ActionResponse> {
     const action = actionSchema.parse(input);
+    if (action.action === 'practice.ai') {
+      const recipientId = await this.startAiPractice(userId, action.scope);
+      return { state: await this.state(userId), ...(recipientId ? { recipientId } : {}) };
+    }
     const filled = action.action === 'practice.gather' ? await this.fillGathering(userId, action.misconception) : undefined;
     let extra: Omit<ActionResponse, 'state'> = {};
     for (let retry = 0; retry < 4; retry++) {

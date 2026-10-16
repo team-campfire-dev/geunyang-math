@@ -2,6 +2,7 @@ import 'server-only';
 import Anthropic from '@anthropic-ai/sdk';
 import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
 import { AppError } from './errors';
+import { planSchema } from './ai-practice';
 import { solvedSchema, writtenSchema, type ProblemModel, type WrittenProblem } from './problem-generation';
 
 /**
@@ -48,6 +49,17 @@ export function claudeProblemModel(client = new Anthropic()): ProblemModel {
       finished(response, 'write');
       if (!response.parsed_output) throw new AppError(502, 'generation_unreadable', '모델의 답을 문제로 읽지 못했어요. 다시 해 보세요.');
       return response.parsed_output.problems;
+    },
+    async plan(system, user): Promise<unknown> {
+      const response = await client.beta.messages.parse({
+        model, max_tokens: 8000, ...fallback(),
+        system: [{ type: 'text', text: system, cache_control: { type: 'ephemeral' } }],
+        messages: [{ role: 'user', content: user }],
+        output_config: { effort: 'medium', format: betaZodOutputFormat(planSchema) },
+      });
+      finished(response, 'plan');
+      if (!response.parsed_output) throw new AppError(502, 'generation_unreadable', '기록을 읽은 결과를 받지 못했어요. 다시 해 보세요.');
+      return response.parsed_output;
     },
     async solve(system, user): Promise<string> {
       const response = await client.beta.messages.parse({

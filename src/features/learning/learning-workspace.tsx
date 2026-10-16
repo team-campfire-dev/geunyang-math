@@ -20,6 +20,8 @@ import { ProblemCard, type ProblemActions } from './problem-card';
 import { AnswerReport, type ReportItem } from './answer-report';
 import { ConfusionSummary, MissedConcept, confusionCardId, confusionRecords } from './confusion-summary';
 import { Icon, type IconName } from './icons';
+import { AiPracticeNote, AiPracticePanel } from './ai-practice';
+import { scopeKey, type PracticeScope } from '@/shared/ai-practice';
 
 type Dispatch = (action: LearningAction) => Promise<ActionResponse>;
 const roleLabels = { explanation: '개념 이해', worked_example: '함께 풀기', practice: '직접 연습', check: '확인 퀴즈', summary: '마무리' };
@@ -353,6 +355,11 @@ export function LearningWorkspace() {
   /** Whether this account has already been asked what it came for. See the effect that sets it. */
   const welcomeOffered = useRef(false);
   const [notice, setNotice] = useState('');
+  /** The page on screen, for work that finishes after the render that started it. */
+  const pageRef = useRef(page);
+  pageRef.current = page;
+  /** The AI practice this screen asked for and is waiting on, and the sets that existed before it. */
+  const aiWaiting = useRef<{ scope: string; page: Page; known: Set<string> } | null>(null);
   const submissionRequests = useRef(new Map<string, string>());
   const modalRef = useRef<HTMLDivElement>(null);
   const modalReturnFocus = useRef<HTMLElement | null>(null);
@@ -619,6 +626,31 @@ export function LearningWorkspace() {
   const recommended = lessons.find((item) => item.lessonKey === state?.recommendations[0]?.lessonKey) ?? lessons.find((item) => !state?.enrollments.some((entry) => entry.lessonKey === item.lessonKey && entry.status === 'completed')) ?? lessons[0];
   const activeNav = page === 'lesson' ? 'lessons' : page === 'assignment' ? 'practice' : page === 'diagnostic' ? 'home' : page;
 
+  /**
+   * While an AI practice set is being written, the learning state is read again every few seconds.
+   * When the one this screen asked for arrives it is opened if the learner is still where they asked;
+   * otherwise they are told where it is. Nothing is polled when nothing is pending.
+   */
+  const aiPending = !!state?.aiPractice.runs.some((run) => run.status === 'pending');
+  useEffect(() => {
+    if (!aiPending) return;
+    const timer = window.setInterval(() => {
+      if (busyRef.current) return;
+      void learningApi.state().then((next) => {
+        if (next.user.id !== authenticatedUserId.current || busyRef.current) return;
+        setState(next);
+        const waiting = aiWaiting.current;
+        if (!waiting || next.aiPractice.runs.some((run) => run.scope === waiting.scope && run.status === 'pending')) return;
+        aiWaiting.current = null;
+        const made = next.assignments.find((item) => item.ai?.scope === waiting.scope && !waiting.known.has(item.recipientId));
+        if (!made) return;
+        if (pageRef.current === waiting.page) { setDirtyProblems([]); setSelectedAssignment(made.recipientId); navigate('assignment'); }
+        else setNotice('AI 맞춤 연습이 준비됐어요. 연습장에서 열 수 있어요.');
+      }).catch(() => { /* The next tick tries again. */ });
+    }, 4000);
+    return () => window.clearInterval(timer);
+  }, [aiPending]);
+
   const dispatch: Dispatch = async (action) => {
     if (busyRef.current) throw new Error('앞선 요청을 저장하고 있어요. 잠시 기다려 주세요.');
     if (loading) throw new Error('학습 공간을 새로 불러오고 있어요. 잠시 기다려 주세요.');
@@ -697,6 +729,19 @@ export function LearningWorkspace() {
       if (!response.recipientId) return;
       setDirtyProblems([]); setSelectedAssignment(response.recipientId); navigate('assignment');
     } catch (reason) { if (localError) throw reason; /* Other entry points use the shared error banner. */ }
+  }
+  /**
+   * Asks for AI 맞춤 연습 over a range. An open set for the same range comes straight back and is
+   * opened; otherwise the request returns at once and the set is written on the server, which the
+   * watch below waits for. A refusal (too little record, none left today) is the panel's to say.
+   */
+  async function startAiPractice(scope: PracticeScope) {
+    if (!state) { setModal('login'); return; }
+    let response: ActionResponse;
+    try { response = await dispatch({ action: 'practice.ai', scope }); }
+    catch (reason) { setError(''); throw reason; }
+    if (response.recipientId) { setDirtyProblems([]); setSelectedAssignment(response.recipientId); navigate('assignment'); return; }
+    aiWaiting.current = { scope: scopeKey(scope), page: pageRef.current, known: new Set(response.state.assignments.map((item) => item.recipientId)) };
   }
   /** Opens a problem set on its own. The run that comes back may be one already in progress. */
   async function startProblemSet(problemSetId: string) {
@@ -908,6 +953,8 @@ export function LearningWorkspace() {
     return <>
       <div className="page-heading"><h1>{state ? `${state.user.displayName}님, 오늘도 한 걸음.` : '그냥, 다시 시작하는 수학.'}</h1><p>완벽하게 알지 못해도 괜찮아요. 작은 이해가 쌓이면 수학이 편해져요.</p></div>
       <section className="daily-hero"><div className="hero-copy"><span className="hero-eyebrow"><span />{step.eyebrow}</span><h2>{step.title}</h2><p>{step.reason}</p><button className="button hero-button" onClick={step.onAct} disabled={loading || busy}>{step.action}<Icon name="arrow" size={18} /></button><span className="hero-duration"><Icon name="clock" size={13} />{step.note}</span></div><div className="hero-art"><div className="hero-paper"><span className="paper-caption">{step.caption}</span><LessonArt lessonKey={step.art} large /><div className="paper-equation"><span>오늘은 하나만 이해해도 충분해요.</span></div></div><span className="hero-doodle">÷</span><span className="hero-dot" /></div></section>
+      {state && <AiPracticePanel variant="banner" scope={{ kind: 'all' }} label="전체 기록" state={state} lessons={lessons} busy={busy}
+        onStart={startAiPractice} onOpen={openAssignment} />}
       {/* Where they are, which is a different question from what to do next and is answered in the
           same breath. Orientation rather than an invitation: nothing here is a thing to press
           except the way to read more of it. */}
@@ -1064,7 +1111,9 @@ export function LearningWorkspace() {
                 <h3>문제집 {sets.length}개 풀기</h3><p>설명 없이 문제만 풀고 싶을 때. 수업에서 쓰는 문제집을 그대로 골라 풀 수 있어요.</p>
                 <div className="class-card-footer"><span><Icon name="pencil" size={14} />문제 {sets.reduce((sum, set) => sum + set.questionCount, 0)}개</span><Icon name="arrow" size={18} /></div>
               </div>
-            </button></div>}</div>}
+            </button></div>}
+            {state?.aiPractice.available && <div className="class-option"><AiPracticePanel variant="card" scope={{ kind: 'course', key: course.key }} label={course.title}
+              state={state} lessons={lessons} busy={busy} onStart={startAiPractice} onOpen={openAssignment} /></div>}</div>}
         </section>;
       })])}</div>)}
       {query && !shown.length && <EmptyState title="찾는 이름이 없어요" text="코스 이름이나 수업 이름의 일부만 적어도 괜찮아요. 「전체」에서 목록을 훑어봐도 좋아요." actionLabel="찾기 지우기" onAction={() => setLessonSearch('')} />}
@@ -1140,6 +1189,8 @@ export function LearningWorkspace() {
     return <div className="history-page">
       <div className="page-heading"><span className="eyebrow">나의 학습 노트</span><h1>조금씩 쌓이는 나의 이해.</h1><p>헷갈렸던 부분을 돌아보고, 다음 이해로 이어가요.</p></div>
       {!state ? <EmptyState title="첫 걸음을 기록해 보세요" text="내 학습을 시작하면 수업 진도와 개념별 학습 기록이 여기에 모여요." actionLabel="내 학습 시작하기" onAction={() => setModal('login')} /> : <>
+        <AiPracticePanel variant="banner" scope={{ kind: 'all' }} label="전체 기록" state={state} lessons={lessons} busy={busy}
+          onStart={startAiPractice} onOpen={openAssignment} />
         <dl className="history-totals" aria-label="지금까지의 학습">{stats.map(item => <div key={item.label}><dt>{item.label}</dt><dd>{item.value}<span>개</span></dd></div>)}</dl>
         <ConfusionSummary summary={state.confusion} busy={busy} onOpenLesson={key => void openLesson(key)} onGather={key => gatherPractice(key, true)}
           continuingKeys={state.assignments.filter(item => item.status === 'assigned' && item.misconception).map(item => item.misconception!)} />
@@ -1194,7 +1245,7 @@ export function LearningWorkspace() {
         firstCorrect: tries[0]?.result.status === 'correct', assisted: !!tries[0]?.result.assisted,
         misreading: tries[0]?.result.misreading, misconception: tries[0]?.result.misconception };
     }).filter((item, index) => (currentEnrollment?.attempts ?? []).some((attempt) => attempt.problemVersionId === document.problems[index].problemVersionId));
-    if (finishedLesson) return <div className="completion-panel"><span className="completion-mark"><Icon name="check" size={38} /></span><h1>오늘의 이해가 하나 더 쌓였어요.</h1><p>「{document.title}」 수업을 완료했어요.<br />{review ? '배운 내용을 다시 떠올릴 복습 과제가 있어요.' : '다음 수업을 살펴보거나, 오늘 배운 내용을 다시 펼쳐보세요.'}</p><div className="completion-actions"><button className="button primary" onClick={() => review ? openAssignment(review) : navigate('lessons')}>{review ? '복습 과제 확인' : '다음 수업 둘러보기'}<Icon name="arrow" size={18} /></button><button className="button secondary" onClick={() => navigate('home')}>내 학습으로</button></div>{lessonSets.length > 0 && <button className="text-button completion-sets" disabled={busy} onClick={() => openCourseSets(document.courseKey, document.lessonKey)}>이 수업의 문제집 {lessonSets.length}개 다시 풀기<Icon name="arrow" size={15} /></button>}<AnswerReport items={lessonReport} concepts={taughtConcepts} lessons={lessons} standings={state?.concepts} busy={busy} onOpenLesson={(key) => void openLesson(key)} /><div className="completion-bottom">잘 모르겠는 부분은 언제든 다시 펼쳐보세요.</div></div>;
+    if (finishedLesson) return <div className="completion-panel"><span className="completion-mark"><Icon name="check" size={38} /></span><h1>오늘의 이해가 하나 더 쌓였어요.</h1><p>「{document.title}」 수업을 완료했어요.<br />{review ? '배운 내용을 다시 떠올릴 복습 과제가 있어요.' : '다음 수업을 살펴보거나, 오늘 배운 내용을 다시 펼쳐보세요.'}</p><div className="completion-actions"><button className="button primary" onClick={() => review ? openAssignment(review) : navigate('lessons')}>{review ? '복습 과제 확인' : '다음 수업 둘러보기'}<Icon name="arrow" size={18} /></button><button className="button secondary" onClick={() => navigate('home')}>내 학습으로</button></div>{state && <AiPracticePanel variant="banner" scope={{ kind: 'lesson', key: document.lessonKey }} label={document.title} state={state} lessons={lessons} busy={busy} onStart={startAiPractice} onOpen={openAssignment} />}{lessonSets.length > 0 && <button className="text-button completion-sets" disabled={busy} onClick={() => openCourseSets(document.courseKey, document.lessonKey)}>이 수업의 문제집 {lessonSets.length}개 다시 풀기<Icon name="arrow" size={15} /></button>}<AnswerReport items={lessonReport} concepts={taughtConcepts} lessons={lessons} standings={state?.concepts} busy={busy} onOpenLesson={(key) => void openLesson(key)} /><div className="completion-bottom">잘 모르겠는 부분은 언제든 다시 펼쳐보세요.</div></div>;
     const section = document.sections[sectionIndex];
     if (!section) return <EmptyState title="수업 내용을 준비하고 있어요" text="아직 공개된 학습 단계가 없어요." />;
     const unsupported = unsupportedRequiredBlocks(section.contentBlocks, document.problems) || document.problems.some((problem) => unsupportedRequiredBlocks(problem.promptContent));
@@ -1270,13 +1321,15 @@ export function LearningWorkspace() {
     const shelf = assignment.problemSetId
       ? problemSets.filter((set) => set.courseKey === problemSets.find((entry) => entry.problemSetId === assignment.problemSetId)?.courseKey) : [];
     const next = shelf.length ? shelf[shelf.findIndex((set) => set.problemSetId === assignment.problemSetId) + 1] ?? null : null;
-    const gathered = own && !assignment.problemSetId;
-    return <><button className="back-button" onClick={() => gathered ? returnToConfusion(assignment.misconception) : navigate('practice')}><Icon name="back" size={17} />{gathered ? '헷갈림 요약으로' : '연습장으로'}</button><div className="page-heading"><h1>{assignment.title}</h1><p>{assignmentTiming(assignment)} · {assignment.items.length}문제 · {assignmentKindLabel[assignment.policy.kind]}{assignment.policy.hints ? '' : ' · 힌트 없이'}</p></div><div className={`assignment-instruction ${submitted ? 'is-submitted' : ''}`}><Icon name={submitted ? 'check' : 'pencil'} size={23} /><div><strong>{submitted ? own ? '이 문제집을 다 풀었어요.' : '과제 제출을 완료했어요.' : own ? '문제마다 답안을 저장하고, 다 풀면 마무리해 주세요.' : '문제마다 답안을 저장하고, 마지막에 제출해 주세요.'}</strong><p>{submitted ? '저장한 답안과 풀이 결과를 아래에서 다시 확인할 수 있어요.' : assignment.policy.hints ? '막히면 힌트를 확인하고 다시 생각해 보세요. 저장한 답안은 마무리 전까지 바꿀 수 있어요.' : '이 과제는 힌트 없이 풀어요. 저장한 답안은 제출 전까지 바꿀 수 있어요.'}</p></div>{submitted && <span>{own ? '풀이 완료' : '제출 완료'}</span>}</div>{assignment.reason && <p className="session-guidance">{assignment.reason}</p>}{!!assignment.generated && <p className="session-guidance">{assignment.generated === assignment.items.length ? '이 문제들은' : `이 중 ${assignment.generated}문제는`} AI가 내 오답을 보고 새로 만든 문제예요. 서버가 정답을 직접 계산하고, 문제만 보고 따로 푼 답과도 맞춰 본 것만 넣었어요.</p>}{!submitted && assignment.items.length > 2 && <div className="solve-progress">{/* Two questions fit on a screen together; a set that does not needs to carry its count and its way out along with it. */}
+    // An AI practice set also names no set, but it was asked for from the record as a whole, not
+    // from one mistake in the confusion summary, so it goes back to where practice is kept.
+    const gathered = own && !assignment.problemSetId && !assignment.ai;
+    return <><button className="back-button" onClick={() => gathered ? returnToConfusion(assignment.misconception) : navigate('practice')}><Icon name="back" size={17} />{gathered ? '헷갈림 요약으로' : '연습장으로'}</button><div className="page-heading"><h1>{assignment.title}</h1><p>{assignmentTiming(assignment)} · {assignment.items.length}문제 · {assignmentKindLabel[assignment.policy.kind]}{assignment.policy.hints ? '' : ' · 힌트 없이'}</p></div><div className={`assignment-instruction ${submitted ? 'is-submitted' : ''}`}><Icon name={submitted ? 'check' : 'pencil'} size={23} /><div><strong>{submitted ? own ? '이 문제집을 다 풀었어요.' : '과제 제출을 완료했어요.' : own ? '문제마다 답안을 저장하고, 다 풀면 마무리해 주세요.' : '문제마다 답안을 저장하고, 마지막에 제출해 주세요.'}</strong><p>{submitted ? '저장한 답안과 풀이 결과를 아래에서 다시 확인할 수 있어요.' : assignment.policy.hints ? '막히면 힌트를 확인하고 다시 생각해 보세요. 저장한 답안은 마무리 전까지 바꿀 수 있어요.' : '이 과제는 힌트 없이 풀어요. 저장한 답안은 제출 전까지 바꿀 수 있어요.'}</p></div>{submitted && <span>{own ? '풀이 완료' : '제출 완료'}</span>}</div>{assignment.reason && <p className="session-guidance">{assignment.reason}</p>}<AiPracticeNote assignment={assignment} />{!!assignment.generated && !assignment.ai && <p className="session-guidance">{assignment.generated === assignment.items.length ? '이 문제들은' : `이 중 ${assignment.generated}문제는`} AI가 내 오답을 보고 새로 만든 문제예요. 서버가 정답을 직접 계산하고, 문제만 보고 따로 푼 답과도 맞춰 본 것만 넣었어요.</p>}{!submitted && assignment.items.length > 2 && <div className="solve-progress">{/* Two questions fit on a screen together; a set that does not needs to carry its count and its way out along with it. */}
       <span className="solve-count"><strong>{answered} / {assignment.items.length}</strong> 저장<span className="solve-meter" aria-hidden="true"><i style={{ width: `${Math.round(answered / assignment.items.length * 100)}%` }} /></span></span>
       {remaining >= 0
         ? <button className="text-button" onClick={() => setProblemToShow(remaining)}>남은 문제로<Icon name="arrow" size={15} /></button>
         : <button className="button primary" disabled={busy || unsupported} onClick={() => void submitAssignment()}>{busy ? (own ? '저장 중…' : '제출 중…') : own ? '다 풀었어요' : '과제 제출하기'}<Icon name="check" size={16} /></button>}
-    </div>}{submitted && <AnswerReport items={report} concepts={taughtConcepts} lessons={lessons} standings={state?.concepts} busy={busy} onOpenLesson={(key) => void openLesson(key)} />}<div className="assignment-problems">{assignment.items.map((item, index) => <section key={item.id} id={`problem-${index + 1}`}><ProblemCard label={`문제 ${String(index + 1).padStart(2, '0')}`} problem={{ ...item.problem, hintAvailable: item.problem.hintAvailable && assignment.policy.hints }} attempt={item.attempt} actions={assignmentActions(item.problem.problemVersionId)} ready={!!assignment.recipientId} submitLabel="답안 저장" solutionReady={submitted} glossary={{ entries: assignment.glossary, reviewConceptKeys, onOpenLesson: (key) => void openLesson(key) }} busy={busy} disabled={submitted} onReady={() => setModal('login')} readyNote="수업을 시작하면 풀이와 진도가 저장돼요." onDraftChange={(id, dirty) => setDirtyProblems((previous) => dirty ? previous.includes(id) ? previous : [...previous, id] : previous.filter((item) => item !== id))} /></section>)}</div>{!submitted && <div className="assignment-submit"><div><strong>{own ? '이 문제집을 마무리해 볼까요?' : '연습을 마무리해 볼까요?'}</strong><p>{dirtyProblems.length ? `아직 저장하지 않은 답안이 ${dirtyProblems.length}개 있어요. 먼저 답안을 저장해 주세요.` : own ? '모든 문제의 답안을 저장하면 마무리할 수 있어요.' : '모든 문제의 답안을 저장하면 제출할 수 있어요.'}</p>{remaining >= 0 && <button className="text-button" onClick={() => setProblemToShow(remaining)}>남은 문제로<Icon name="arrow" size={15} /></button>}</div><button className="button primary" disabled={busy || unsupported || dirtyProblems.length > 0 || answered !== assignment.items.length || !assignment.items.length} onClick={() => void submitAssignment()}>{busy ? (own ? '저장 중…' : '제출 중…') : own ? '다 풀었어요' : '과제 제출하기'}<Icon name="check" size={18} /></button></div>}{submitted && own && <div className="assignment-submit"><div><strong>{next ? '한 문제집 더 풀어 볼까요?' : gathered ? '이만큼 해 뒀어요.' : '이 과정의 문제집을 모두 풀었어요.'}</strong><p>{next ? `다음은 「${next.name}」이에요. ${next.questionCount}문제예요.` : gathered ? '방금 제출한 풀이를 반영했어요. 헷갈림 요약에서 첫 답과 이후의 변화를 함께 확인해 보세요.' : '다른 과정의 문제집을 골라 이어가도 좋아요.'}</p></div><button className="button primary" disabled={busy} onClick={() => next ? void startProblemSet(next.problemSetId) : gathered ? returnToConfusion(assignment.misconception) : navigate('practice')}>{next ? '이어서 풀기' : gathered ? '헷갈림 요약 다시 보기' : '문제집 고르기'}<Icon name="arrow" size={18} /></button></div>}</>;
+    </div>}{submitted && <AnswerReport items={report} concepts={taughtConcepts} lessons={lessons} standings={state?.concepts} busy={busy} onOpenLesson={(key) => void openLesson(key)} />}<div className="assignment-problems">{assignment.items.map((item, index) => <section key={item.id} id={`problem-${index + 1}`}>{item.reason && item.reason !== assignment.items[index - 1]?.reason && <p className="ai-reason"><Icon name="spark" size={13} />{item.reason}</p>}<ProblemCard label={`문제 ${String(index + 1).padStart(2, '0')}`} problem={{ ...item.problem, hintAvailable: item.problem.hintAvailable && assignment.policy.hints }} attempt={item.attempt} actions={assignmentActions(item.problem.problemVersionId)} ready={!!assignment.recipientId} submitLabel="답안 저장" solutionReady={submitted} glossary={{ entries: assignment.glossary, reviewConceptKeys, onOpenLesson: (key) => void openLesson(key) }} busy={busy} disabled={submitted} onReady={() => setModal('login')} readyNote="수업을 시작하면 풀이와 진도가 저장돼요." onDraftChange={(id, dirty) => setDirtyProblems((previous) => dirty ? previous.includes(id) ? previous : [...previous, id] : previous.filter((item) => item !== id))} /></section>)}</div>{!submitted && <div className="assignment-submit"><div><strong>{own ? '이 문제집을 마무리해 볼까요?' : '연습을 마무리해 볼까요?'}</strong><p>{dirtyProblems.length ? `아직 저장하지 않은 답안이 ${dirtyProblems.length}개 있어요. 먼저 답안을 저장해 주세요.` : own ? '모든 문제의 답안을 저장하면 마무리할 수 있어요.' : '모든 문제의 답안을 저장하면 제출할 수 있어요.'}</p>{remaining >= 0 && <button className="text-button" onClick={() => setProblemToShow(remaining)}>남은 문제로<Icon name="arrow" size={15} /></button>}</div><button className="button primary" disabled={busy || unsupported || dirtyProblems.length > 0 || answered !== assignment.items.length || !assignment.items.length} onClick={() => void submitAssignment()}>{busy ? (own ? '저장 중…' : '제출 중…') : own ? '다 풀었어요' : '과제 제출하기'}<Icon name="check" size={18} /></button></div>}{submitted && own && <div className="assignment-submit"><div><strong>{next ? '한 문제집 더 풀어 볼까요?' : gathered ? '이만큼 해 뒀어요.' : '이 과정의 문제집을 모두 풀었어요.'}</strong><p>{next ? `다음은 「${next.name}」이에요. ${next.questionCount}문제예요.` : gathered ? '방금 제출한 풀이를 반영했어요. 헷갈림 요약에서 첫 답과 이후의 변화를 함께 확인해 보세요.' : '다른 과정의 문제집을 골라 이어가도 좋아요.'}</p></div><button className="button primary" disabled={busy} onClick={() => next ? void startProblemSet(next.problemSetId) : gathered ? returnToConfusion(assignment.misconception) : navigate('practice')}>{next ? '이어서 풀기' : gathered ? '헷갈림 요약 다시 보기' : '문제집 고르기'}<Icon name="arrow" size={18} /></button></div>}</>;
   }
 
   return <div className="app-shell"><a href="#main-content" className="skip-link">본문으로 이동</a><aside className="sidebar"><button className="brand-button" aria-label="그냥수학 홈" onClick={() => navigate('home')}><Brand /></button><div className="sidebar-caption">그냥, 나의 속도로.</div><nav aria-label="주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'nav-item active' : 'nav-item'} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={19} /><span>{item.label}</span>{item.page === 'practice' && pendingAssignments.length > 0 && <span className="nav-badge">{pendingAssignments.length}</span>}</button>)}</nav><div className="sidebar-bottom"><button className="learning-goal" onClick={openProfile}><span className="goal-overline"><Icon name="spark" size={14} />배우려는 과정</span><strong>{courses.find((course) => course.key === state?.user.targetCourseKey)?.title ?? '아직 고르지 않음'}</strong><span>하루 {state?.user.dailyMinutes ?? 10}분, 꾸준히<Icon name="chevron" size={14} /></span><div className="goal-line"><i /><i /><i /><i /><i /><i /><i /></div></button><div className="sidebar-signature">수학을 이해하는 즐거움<span>그냥수학 © 2026</span></div></div></aside><div className="workspace"><header className="topbar"><div className="mobile-brand"><button className="brand-button" onClick={() => navigate('home')} aria-label="홈으로"><Brand /></button></div><div className="breadcrumb"><span>나의 학습 공간</span><Icon name="chevron" size={13} /><strong>{navItems.find((item) => item.page === activeNav)?.label}</strong></div><div className="account-controls">{session?.developmentLogin && <span className="dev-label">개발 미리보기</span>}{state ? <><button className="account-button" onClick={openProfile}><span className="avatar">{state.user.displayName.slice(0, 1)}</span><span>{state.user.displayName}</span></button><button className="icon-button logout" onClick={() => void logout()} disabled={busy || loading} aria-label="로그아웃" title="로그아웃"><Icon name="logout" size={17} /></button></> : <button className="login-link" onClick={() => setModal('login')} disabled={loading}>내 학습 시작<Icon name="arrow" size={15} /></button>}</div></header><nav className="mobile-nav" aria-label="모바일 주 메뉴">{navItems.map((item) => <button key={item.page} className={activeNav === item.page ? 'active' : ''} aria-current={activeNav === item.page ? 'page' : undefined} onClick={() => navigate(item.page)}><Icon name={item.icon} size={18} />{item.label}</button>)}</nav><main id="main-content" className={`main-content page-${page}`} tabIndex={-1}>{authError && <div className="auth-error-banner" role="alert"><Icon name="lightbulb" size={18} /><span>{authError}</span><button className="text-button" disabled={loading || busy} onClick={() => setModal('login')}>로그인 다시 하기</button><button className="icon-button" aria-label="로그인 안내 닫기" onClick={() => setAuthError('')}><Icon name="close" size={16} /></button></div>}{error && <div className="error-banner" role="alert"><span>{error}</span><button className="text-button" disabled={busy || loading} onClick={() => void refresh()}>다시 불러오기</button><button className="icon-button" aria-label="오류 알림 닫기" onClick={() => setError('')}><Icon name="close" size={16} /></button></div>}{notice && <div className="notice-banner" role="status"><Icon name="check" size={18} /><span>{notice}</span><button className="icon-button" aria-label="알림 닫기" onClick={() => setNotice('')}><Icon name="close" size={16} /></button></div>}{loading ? <div className="loading-panel" role="status"><span className="loader" />나의 학습 공간을 준비하고 있어요…</div> : page === 'home' ? renderHome() : page === 'lessons' ? renderLessons() : page === 'practice' ? renderPractice() : page === 'history' ? renderHistory() : page === 'lesson' ? renderLesson() : page === 'diagnostic' ? state ? <DiagnosticPanel key={`${state.user.id}:${state.diagnostic?.currentProblem?.problemVersionId ?? state.diagnostic?.status ?? 'new'}`} diagnostic={state.diagnostic} offering={state.diagnosticOffering} nextLesson={recommended} readiness={state.plan.readiness} onOpenLesson={(key) => void openLesson(key)} dispatch={dispatch} busy={busy} onBack={() => navigate('home')} targetTitle={courses.find((course) => course.key === state.user.targetCourseKey)?.title ?? null} onChooseTarget={openProfile} /> : null : renderAssignment()}</main><ServiceFooter /></div>{modal && <div className="modal-backdrop" onClick={(event) => { if (event.target === event.currentTarget && !busy) setModal(null); }}><div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" ref={modalRef}><button className="icon-button modal-close" aria-label="닫기" disabled={busy} onClick={() => setModal(null)}><Icon name="close" /></button>{modal === 'welcome' && state ? <FirstStep courses={courses} displayName={state.user.displayName} busy={busy} error={error} onSave={(choice) => void saveFirstStep(choice)} onLater={() => setModal(null)} /> : modal === 'login' ? <>

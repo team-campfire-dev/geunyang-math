@@ -2,6 +2,7 @@
 import type { ConceptScope, DefinitionRef } from './rich-text';
 import type { Misreading } from './misreading';
 import type { ConfusionSummary } from './confusion';
+import type { AiPracticeNote, AiPracticeState, PracticeScope } from './ai-practice';
 /**
  * What the marker decided, and — when it could read one — what kind of slip the answer looks like.
  * `misreading` is the part a report can add up: the message is written for the one moment after an
@@ -175,11 +176,13 @@ export type AssignmentView = {
    * counts the answers they sent and `firstResult` is the first one that was a real answer. A
    * report about a finished set is about the working, so the last answer alone would not do.
    */
-  items: { id: string; problem: PublicProblem; attempt: AttemptView | null; tries: number; firstResult: GradeResult | null }[];
+  items: { id: string; problem: PublicProblem; attempt: AttemptView | null; tries: number; firstResult: GradeResult | null; reason?: string }[];
   submissionId: string;
   reason?: string;
   /** How many of the questions a model wrote for this learner from their own wrong answers. */
   generated?: number;
+  /** For AI 맞춤 연습: the range it read and what it saw there. Each item says why it is there. */
+  ai?: AiPracticeNote;
   glossary: GlossaryEntry[];
 };
 export type DiagnosticAnswer = { problemVersionId: string; answer: string | null; status: 'correct' | 'incorrect' | 'skipped' };
@@ -259,6 +262,7 @@ export type LearningState = {
   concepts: { key: string; label: string; state: ConceptState }[];
   misconceptions: StandingMisconception[];
   confusion: ConfusionSummary;
+  aiPractice: AiPracticeState;
 };
 export type LearningAction =
   | { action: 'recommendation.choose'; lessonKey: string | null }
@@ -274,5 +278,7 @@ export type LearningAction =
   | { action: 'problemSet.start'; problemSetId: string }
   | { action: 'solution.open'; context: 'lesson' | 'assignment'; contextId: string; problemVersionId: string }
   /** Gathers the questions built to catch one mistake into a set of this learner's own. */
-  | { action: 'practice.gather'; misconception: string };
+  | { action: 'practice.gather'; misconception: string }
+  /** AI 맞춤 연습 over a range. Returns at once; the set appears in the state when it is written. */
+  | { action: 'practice.ai'; scope: PracticeScope };
 export type ActionResponse = { state: LearningState; result?: GradeResult; hint?: ContentBlock[]; solution?: ContentBlock[]; enrollmentId?: string; recipientId?: string };

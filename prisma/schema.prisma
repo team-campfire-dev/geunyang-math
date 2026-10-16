@@ -93,7 +93,15 @@ model GeneratedProblemSet {
   id            String @id @db.VarChar(191)
   userId        String @db.VarChar(191)
   user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  misconception String @db.VarChar(60)
+  /// The mistake a gathered set was filled for. Null for an AI practice set, which has a scope instead.
+  misconception String? @db.VarChar(60)
+  /// An AI practice set's range of the record: `all`, `course:<key>` or `lesson:<key>`.
+  scope         String? @db.VarChar(120)
+  /// What the model read the record as and asked for: the learner's diagnosis, the targets with their
+  /// reasons, and — once done — the assignment it became or why it failed.
+  plan          Json?
+  /// `pending` while it is being written after the request returned, then `done` or `failed`.
+  status        String @default("done") @db.VarChar(20)
   /// The course the mistakes were made in, so explanations stay at that level of mathematics.
   courseKey     String? @db.VarChar(100)
   model         String @db.VarChar(60)
