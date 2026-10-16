@@ -43,6 +43,8 @@ export type ProblemModel = {
   name: string;
   write(system: string, user: string): Promise<WrittenProblem[]>;
   solve(system: string, user: string): Promise<string>;
+  /** Reads a learner's record and says what to practise (AI 맞춤 연습). Its shape is `planSchema`. */
+  plan?(system: string, user: string): Promise<unknown>;
 };
 
 /** What the writer is told about the lesson, beyond what the author asked. */

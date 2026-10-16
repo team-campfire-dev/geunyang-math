@@ -34,13 +34,13 @@ const shownMistakes = 4;
 type Db = PrismaClient;
 export type LearnerGeneration = { problemVersionIds: string[]; reason?: 'limit' | 'no-evidence' | 'failed' };
 
-const plain = (problem: StoredProblem) => problem.promptContent.map((block) => String(block.payload.text ?? '')).join(' ').trim();
+export const plain = (problem: StoredProblem) => problem.promptContent.map((block) => String(block.payload.text ?? '')).join(' ').trim();
 /** An answer as words a model can read: a picked option is its text, not its name. */
-function said(problem: StoredProblem, answer: string): string {
+export function said(problem: StoredProblem, answer: string): string {
   const spec = problem.gradingSpec;
   return spec.kind === 'choice' ? spec.options.find((option) => option.id === answer)?.text ?? answer : answer;
 }
-const keyOf = (problem: StoredProblem) => {
+export const keyOf = (problem: StoredProblem) => {
   const spec = problem.gradingSpec;
   return spec.kind === 'choice' ? spec.options.find((option) => option.id === spec.correct)?.text ?? spec.correct : answerText(spec);
 };
@@ -71,7 +71,7 @@ async function mistakesOf(db: Db, userId: string, misconception: string) {
 }
 
 /** The course a question was published in, so what is written stays at that level. */
-async function courseOf(db: Db, problemVersionId: string) {
+export async function courseOf(db: Db, problemVersionId: string) {
   const owner = await db.publishedProblem.findFirst({ where: { problemVersionId, ownerKind: 'problem_set' }, orderBy: { ownerVersionId: 'asc' }, select: { ownerVersionId: true } });
   if (!owner) return null;
   const version = await db.problemSetVersion.findUnique({ where: { id: owner.ownerVersionId },
@@ -80,7 +80,7 @@ async function courseOf(db: Db, problemVersionId: string) {
 }
 
 /** A checked question as it is frozen: the editor's shape with the half a learner sees worked out. */
-const stored = (problem: DraftProblem): StoredProblem => ({
+export const stored = (problem: DraftProblem): StoredProblem => ({
   problemVersionId: problem.problemVersionId, conceptKeys: problem.conceptKeys, promptContent: problem.promptContent,
   responseSpec: responseSpecOf(problem.gradingSpec), hintAvailable: problem.hints.length > 0,
   gradingSpec: problem.gradingSpec, hints: problem.hints, solution: problem.solution,

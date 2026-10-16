@@ -860,3 +860,29 @@ html[data-answer-dock=open] .mobile-nav{visibility:hidden}
 .confusion-card[tabindex]{scroll-margin-top:24px}
 .confusion-card[tabindex]:focus-visible,.confusion-summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
 .confusion-answer>.rich-text{max-width:100%;overflow-x:auto}
+
+/* AI 맞춤 연습. One panel wherever it is offered: a quiet band under the day's hero, at the top of the
+   record and at the end of a lesson, and a card among a course's cards. The clay accent marks it as
+   the thing to press, the way the hero's own button is marked. */
+.ai-practice{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 24px;border:1px solid var(--line-strong);border-radius:10px;background:var(--white)}
+.ai-practice-banner{margin:18px 0 6px}
+.completion-panel .ai-practice{max-width:640px;margin:30px auto 0;text-align:left}
+.history-page>.ai-practice{margin-bottom:24px}
+.ai-practice-copy{min-width:0}
+.ai-practice-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--accent-deep)}
+.ai-practice-copy>p{font-size:13px;line-height:1.85;color:var(--ink-2);margin-top:6px;word-break:keep-all}
+.ai-practice-status{display:flex;align-items:center;gap:9px;font-size:12px;line-height:1.8;color:var(--muted);margin-top:8px}
+.ai-practice-status .loader{width:15px;height:15px;flex-shrink:0}
+.ai-practice-status.is-failed{color:#986648}
+.ai-practice-action{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex-shrink:0}
+.ai-practice-action .button{white-space:nowrap;font-size:13px}
+.ai-practice-action small{font-size:12px;color:var(--muted);white-space:nowrap}
+.ai-practice-card{flex-direction:column;align-items:stretch;height:100%;padding:20px 19px}
+.ai-practice-card .ai-practice-action{align-items:stretch;margin-top:auto}
+.ai-practice-card .ai-practice-action small{text-align:center}
+.ai-diagnosis{max-width:760px;margin:0 auto 26px;padding:18px 22px;border:1px solid var(--line-strong);border-left:3px solid var(--accent);border-radius:8px;background:var(--white)}
+.ai-diagnosis>p{font-size:13px;line-height:1.95;color:var(--ink-2);margin-top:8px;word-break:keep-all}
+.ai-diagnosis>small{display:block;font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7}
+.ai-reason{display:flex;align-items:flex-start;gap:6px;font-size:12px;line-height:1.8;color:var(--accent-deep);margin:0 0 9px 3px;word-break:keep-all}
+.ai-reason svg{margin-top:4px;flex-shrink:0}
+@media(max-width:740px){.ai-practice{flex-direction:column;align-items:stretch;padding:18px}.ai-practice-action{align-items:stretch}.ai-practice-action small{text-align:center}}
