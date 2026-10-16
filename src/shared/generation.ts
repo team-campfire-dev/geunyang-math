@@ -21,6 +21,11 @@ export type GenerationRequest = {
   note: string;
   /** The questions already beside these, so the new ones neither repeat them nor share their answers. */
   existing: { prompt: string; answer: string }[];
+  /**
+   * Wrong answers a learner actually wrote, when the questions are for them: what was asked, what
+   * they wrote, and what the answer was. The editor never sends these; the learning service does.
+   */
+  mistakes?: { prompt: string; wrote: string; answer: string }[];
 };
 
 export type GenerationVerdict = 'verified' | 'unverified' | 'rejected';

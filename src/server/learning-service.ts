@@ -1,6 +1,6 @@
 import 'server-only';
 import { createHash } from 'node:crypto';
-import { lessonRecord, lessonRecords, currentDiagnostic, currentDefinitions, publishedProblemRecords } from './content-store';
+import { lessonRecord, lessonRecords, currentDiagnostic, currentDefinitions, generatedPrefix, publishedProblemRecords } from './content-store';
 import { recommend, recommendTargetedPractice, reviewSelection, conceptReadiness, type Evidence } from '@/core/personalization';
 import { assignmentWindow, parseAssignmentPolicy, parseAssignmentSchedule, practicePolicy, recipientDates, reviewPolicy } from '@/core/assignment';
 import { glossaryEntries } from '@/core/glossary';
@@ -17,7 +17,10 @@ import { misconceptionOf } from '@/shared/misconception';
 import { defaultCourseTrack, isSchoolTrack, type ActionResponse, type AssignmentView, type AttemptView, type CourseStage, type CourseTrack, type GradeResult, type LearningState, type PublicCatalog, type PublicLesson, type PublicProblem, type PublicProblemSet, type DiagnosticAnswer, type Recommendation, type StandingMisconception } from '@/shared/api';
 import { AppError } from './errors';
 import { loadConceptHelp } from './concept-help';
-import { gatheredPracticePools } from './gathered-practice';
+import { gatheredPracticePools, gatheredQuestions } from './gathered-practice';
+import { dailyGenerations, generateForLearner, type LearnerGeneration } from './learner-generation';
+import type { ProblemModel } from './problem-generation';
+import { claudeProblemModel, problemWriterAvailable } from './problem-writer';
 
 /**
  * A placement as a run keeps it: what it has to settle, what it has settled, and **the shape of the
@@ -64,6 +67,8 @@ export const actionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('practice.gather'), misconception: id.max(60) }).strict(),
 ]);
 type Tx = Prisma.TransactionClient;
+/** How many of a set's questions a model wrote for this learner. */
+const written = (items: { problemVersionId: string }[]) => items.filter(item => item.problemVersionId.startsWith(generatedPrefix)).length;
 const asJson = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 const notFound = () => new AppError(404, 'not_found', '학습 기록을 찾을 수 없어요.');
 const conflict = (message: string) => new AppError(409, 'conflict', message);
@@ -105,8 +110,33 @@ function orderConcepts<T extends { key: string; label: string }>(rows: T[], less
     || a.label.localeCompare(b.label, 'ko') || a.key.localeCompare(b.key));
 }
 
+/** Learners with questions being written for them. One at a time each: a second press would pay twice. */
+const filling = new Set<string>();
+
 export class LearningService {
-  constructor(private readonly db: PrismaClient) {}
+  /** `writer` writes questions a gathered set lacks, or null where this deployment has no model. */
+  constructor(private readonly db: PrismaClient,
+    private readonly writer: () => ProblemModel | null = () => (problemWriterAvailable() ? claudeProblemModel() : null)) {}
+
+  /**
+   * Before a set is gathered for one mistake: when the catalogue holds fewer questions for it than a
+   * set does, a model writes the rest from this learner's own wrong answers. It runs outside the
+   * gathering transaction — writing and checking takes half a minute — and what it keeps is frozen
+   * as this learner's own questions, which the gathering then finds like any other.
+   */
+  private async fillGathering(userId: string, misconception: string): Promise<LearnerGeneration['reason']> {
+    const model = this.writer();
+    if (!model || !misconceptionOf(misconception) || filling.has(userId)) return undefined;
+    const open = await this.db.assignmentRecipient.findFirst({ where: { learnerUserId: userId, status: 'assigned',
+      assignment: { issuerType: 'self', problemSetVersionId: null, policySnapshot: { path: '$.misconception', equals: misconception } } } });
+    if (open) return undefined;
+    const pool = (await gatheredPracticePools(this.db, userId, [misconception])).get(misconception)!;
+    if (pool.length >= gatheredQuestions) return undefined;
+    filling.add(userId);
+    try {
+      return (await generateForLearner(this.db, model, userId, misconception, gatheredQuestions - pool.length, pool)).reason;
+    } finally { filling.delete(userId); }
+  }
 
   /**
    * The concepts a placement should cover for one learner: what the course they came for stands on,
@@ -408,7 +438,8 @@ export class LearningService {
         recommendedAt: r.recommendedAt.toISOString(), opensAt: window.opensAt?.toISOString() ?? null, dueAt: window.dueAt?.toISOString() ?? null,
         policy, status: r.status as 'assigned' | 'submitted', items, submissionId: submission.id,
         glossary: leafGlossary(glossaryEntries(assignmentTerms, lessons)),
-        reason: typeof (r.assignment.policySnapshot as { reviewReason?: string }).reviewReason === 'string' ? (r.assignment.policySnapshot as { reviewReason: string }).reviewReason : undefined };
+        reason: typeof (r.assignment.policySnapshot as { reviewReason?: string }).reviewReason === 'string' ? (r.assignment.policySnapshot as { reviewReason: string }).reviewReason : undefined,
+        ...(written(r.assignment.items) ? { generated: written(r.assignment.items) } : {}) };
     });
     const confusion = summarizeConfusion(confusionObservations, conceptRows, lessons);
     // The course overview and the detailed summary must agree about earned understanding.
@@ -439,13 +470,16 @@ export class LearningService {
     const readiness = conceptReadiness(conceptLabels, completedDiagnostic ? stored : null, evidence);
     const repeatedKeys = confusion.repeated.filter(item => item.kind === 'misconception' && item.status === 'repeated').map(item => item.key);
     const pools = await gatheredPracticePools(db, userId, lessons.some(lesson => lesson.lessonKey === user.preferredLessonKey) ? [] : repeatedKeys);
+    const mayWrite = repeatedKeys.length > 0 && this.writer() !== null
+      && await db.generatedProblemSet.count({ where: { userId, createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } } }) < dailyGenerations;
     const targetedPractice = recommendTargetedPractice(confusion, repeatedKeys.map(key => {
       const gathered = recipients.filter(recipient => recipient.assignment.issuerType === 'self' && !recipient.assignment.problemSetVersionId
         && (recipient.assignment.policySnapshot as { misconception?: string }).misconception === key);
       const open = gathered.slice().reverse().find(recipient => recipient.status === 'assigned' && recipient.submissions[0]?.status === 'draft');
       const completedAt = gathered.flatMap(recipient => recipient.submissions.filter(sitting => sitting.status === 'submitted' && sitting.finalizedAt)
         .map(sitting => sitting.finalizedAt!.toISOString())).sort().at(-1) ?? null;
-      return { key, recipientId: open?.id ?? null, problemCount: open?.assignment.items.length ?? pools.get(key)?.length ?? 0, completedAt };
+      // Where a model may write what the catalogue lacks, a set comes to its full size.
+      return { key, recipientId: open?.id ?? null, problemCount: open?.assignment.items.length ?? (mayWrite ? gatheredQuestions : pools.get(key)?.length ?? 0), completedAt };
     }));
     const { recommendations, plan } = recommend({ lessons, enrollments: enrollments.map(e => ({ lessonKey: e.lessonVersion.lessonKey, status: e.status })),
       assignments, readiness, targetedPractice, dailyMinutes: user.dailyMinutes, targetCourseKey: user.targetCourseKey, now: new Date(), preferredLessonKey: user.preferredLessonKey });
@@ -536,6 +570,7 @@ export class LearningService {
 
   async act(userId: string, input: unknown): Promise<ActionResponse> {
     const action = actionSchema.parse(input);
+    const filled = action.action === 'practice.gather' ? await this.fillGathering(userId, action.misconception) : undefined;
     let extra: Omit<ActionResponse, 'state'> = {};
     for (let retry = 0; retry < 4; retry++) {
       try {
@@ -692,7 +727,7 @@ export class LearningService {
               await tx.assignmentRecipient.update({ where: { id: recipient.id }, data: { status: 'submitted' } }); return {};
             }
             case 'problemSet.start': return { recipientId: await this.startProblemSet(tx, userId, scope.id, action.problemSetId) };
-            case 'practice.gather': return { recipientId: await this.gatherPractice(tx, userId, scope.id, action.misconception) };
+            case 'practice.gather': return { recipientId: await this.gatherPractice(tx, userId, scope.id, action.misconception, filled) };
           }
           })();
           const nextState = await this.state(userId, tx);
@@ -760,7 +795,7 @@ export class LearningService {
    * this learner has already answered right, first time and unaided, does not either; they have
    * shown that one. And it is short, because a set that is not finished says nothing.
    */
-  async gatherPractice(tx: Tx, userId: string, scopeId: string, misconception: string) {
+  async gatherPractice(tx: Tx, userId: string, scopeId: string, misconception: string, filled?: LearnerGeneration['reason']) {
     const record = misconceptionOf(misconception);
     if (!record) throw notFound();
     const open = await tx.assignmentRecipient.findFirst({
@@ -771,7 +806,8 @@ export class LearningService {
     });
     if (open) return open.id;
     const items = (await gatheredPracticePools(tx, userId, [misconception])).get(misconception)!;
-    if (!items.length) throw conflict('이 착각을 다루는 문항이 아직 없어요.');
+    if (!items.length) throw conflict(filled === 'limit' ? '오늘은 새 문제를 더 만들 수 없어요. 내일 다시 해 보세요.'
+      : filled === 'failed' ? '이 착각을 다루는 문항을 만들지 못했어요. 잠시 뒤에 다시 해 보세요.' : '이 착각을 다루는 문항이 아직 없어요.');
     const now = new Date();
     const recipient = await tx.assignment.create({ data: {
       ownerScopeId: scopeId, title: `「${record.label}」 모아 풀기`, issuerType: 'self',

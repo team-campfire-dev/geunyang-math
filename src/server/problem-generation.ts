@@ -68,6 +68,10 @@ export function writerRequest(request: GenerationRequest, context: GenerationCon
   if (request.misconceptions.length) {
     lines.push(`겨냥할 실수(오답 보기와 예상 오답을 이 실수에서 만든다): ${request.misconceptions.map((key) => `${key}(${misconceptionLabel(key)})`).join(', ')}`);
   }
+  if (request.mistakes?.length) {
+    lines.push('', '한 학습자가 실제로 이렇게 틀렸다. 이 학습자가 다시 풀 문제를 쓴다 — 같은 개념, 같은 수준에서, 이 실수를 하면 바로 드러나는 새 문제다. 틀린 문제의 수만 바꾸지 말고 상황이나 배치를 바꾼다. 학습자를 지문에 등장시키거나 이 오답을 언급하지 않는다.');
+    request.mistakes.forEach((item, index) => lines.push(`${index + 1}. ${item.prompt} → 학습자의 답: ${item.wrote} (정답: ${item.answer})`));
+  }
   if (request.note.trim()) lines.push('', '작성자의 요청:', request.note.trim());
   if (request.existing.length) {
     lines.push('', '이 활동에 이미 있는 문제다. 같은 문제를 다시 쓰지 말고, 정답도 이 문제들과 겹치지 않게 한다.');

@@ -19,8 +19,12 @@ import { solvedSchema, writtenSchema, type ProblemModel, type WrittenProblem } f
 const model = 'claude-sonnet-5-5';
 const fallback = (): { betas: Anthropic.Beta.AnthropicBeta[]; fallbacks: 'default' } => ({ betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default' });
 
-/** Whether this deployment can write questions. Without a key the editor does not offer it. */
-export const problemWriterAvailable = () => !!process.env.ANTHROPIC_API_KEY;
+/**
+ * Whether this deployment can write questions. Without a key neither the editor nor a learner's
+ * gathered set reaches for a model. Tests never do: a suite run from a shell that holds a key would
+ * otherwise pay for every gathering it exercises, so a test hands in its own writer.
+ */
+export const problemWriterAvailable = () => !!process.env.ANTHROPIC_API_KEY && process.env.VITEST !== 'true';
 
 function finished(response: { stop_reason: string | null; usage: { input_tokens: number; output_tokens: number; cache_read_input_tokens?: number | null; cache_creation_input_tokens?: number | null } }, step: string) {
   console.info(JSON.stringify({ event: 'problem_generation', step, model, stop: response.stop_reason,

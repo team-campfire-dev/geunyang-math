@@ -90,7 +90,7 @@ function PatternBody({ item, records, onGather, busy, continuing, onOpenLesson, 
     <div className="confusion-tools">
       {item.kind === 'misconception' && item.status === 'repeated'
         && <button className={lead ? 'button primary' : 'button secondary'} disabled={busy || starting} onClick={() => void gather()}>
-          {starting ? '문제 준비 중…' : continuing ? '모아 풀기 이어서' : '이것만 모아 풀기'}</button>}
+          {starting ? '문제 준비 중… (새로 만들면 30초쯤)' : continuing ? '모아 풀기 이어서' : '이것만 모아 풀기'}</button>}
       {attempt && <ConceptHelp key={attempt.id} attemptId={attempt.id} context="history" busy={busy || starting} />}
       {!(item.kind === 'misconception' && item.status === 'repeated') && lessonKey
         && <button className="text-button" disabled={busy} onClick={() => onOpenLesson(lessonKey)}>관련 수업 다시 보기</button>}

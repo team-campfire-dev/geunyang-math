@@ -31,6 +31,7 @@ model User {
   hints        HintUse[]
   diagnostics  DiagnosticRun[]
   recommendationHistory RecommendationHistory[]
+  generatedProblemSets GeneratedProblemSet[]
   contentAuthor ContentAuthor?
   contentDrafts ContentDraft[]
 }
@@ -82,6 +83,25 @@ model DiagnosticRun {
   createdAt   DateTime @default(now())
   completedAt DateTime?
   @@unique([userId, version])
+}
+
+/// Questions a model wrote for one learner, to make up a set gathered for one mistake when the
+/// catalogue had too few. Its questions are PublishedProblem rows of kind 'generated' and their
+/// blocks ContentBlock rows, both hanging off this id — which starts `generated:` so it can never be
+/// taken for a version. They are this learner's only: nothing gathers them for anyone else.
+model GeneratedProblemSet {
+  id            String @id @db.VarChar(191)
+  userId        String @db.VarChar(191)
+  user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  misconception String @db.VarChar(60)
+  /// The course the mistakes were made in, so explanations stay at that level of mathematics.
+  courseKey     String? @db.VarChar(100)
+  model         String @db.VarChar(60)
+  /// How many were asked for and how many passed every check. Every request counts against the day.
+  requested     Int
+  kept          Int
+  createdAt     DateTime @default(now())
+  @@index([userId, createdAt])
 }
 
 model RecommendationHistory {
@@ -208,7 +228,8 @@ model LessonVersion {
  * reason to read every published document. With its blocks it is also the whole of the question.
  */
 model PublishedProblem {
-  /// Always 'problem_set': every published question belongs to a problem set version.
+  /// 'problem_set' for a question of a problem set version; 'generated' for one a model wrote for a
+  /// single learner (GeneratedProblemSet), which no catalogue, editor or other learner reads.
   ownerKind        String @db.VarChar(20)
   ownerVersionId   String @db.VarChar(191)
   problemVersionId String @db.VarChar(191)

@@ -42,8 +42,9 @@ async function assertDeletable(db: Tx, userId: string) {
 /**
  * Deletes one person's account and everything the service learned about them, in one transaction.
  * The order is the foreign keys' own: a row is removed only after everything pointing at it is
- * gone. Six tables ride along on the account itself (`onDelete: Cascade`) — sessions, the Google
- * identity, diagnostic runs, recommendation history, and the content rows the check above rules out.
+ * gone. Seven tables ride along on the account itself (`onDelete: Cascade`) — sessions, the Google
+ * identity, diagnostic runs, recommendation history, the question sets a model wrote for them, and
+ * the content rows the check above rules out.
  */
 export async function deleteAccount(db: PrismaClient, userId: string): Promise<DeletionReport> {
   return db.$transaction(async (tx) => {
@@ -73,6 +74,11 @@ export async function deleteAccount(db: PrismaClient, userId: string): Promise<D
     const removedHints = await tx.hintUse.deleteMany({ where: { userId } });
     const diagnostics = await tx.diagnosticRun.count({ where: { userId } });
     const recommendations = await tx.recommendationHistory.count({ where: { userId } });
+    // Questions a model wrote from this person's wrong answers go with them. Their sets ride along
+    // on the account; the questions and their blocks hang off the sets' ids and are removed here.
+    const generated = (await tx.generatedProblemSet.findMany({ where: { userId }, select: { id: true } })).map((set) => set.id);
+    await tx.contentBlock.deleteMany({ where: { ownerVersionId: { in: generated } } });
+    await tx.publishedProblem.deleteMany({ where: { ownerKind: 'generated', ownerVersionId: { in: generated } } });
     await tx.learningScope.deleteMany({ where: { ownerUserId: userId } });
     await tx.user.delete({ where: { id: userId } });
 
