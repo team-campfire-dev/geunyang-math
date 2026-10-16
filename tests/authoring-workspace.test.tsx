@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, screen } from './render';
 import { AuthoringWorkspace } from '@/features/authoring/authoring-workspace';
 import type { AuthoringAction, AuthoringWorkspace as Workspace, DraftDetail, DraftEdit } from '@/shared/authoring';
+import type { GeneratedProblem, GenerationResult } from '@/shared/generation';
 
 const workspace: Workspace = {
   role: 'admin',
@@ -13,7 +14,7 @@ const workspace: Workspace = {
   problemSets: [],
   diagnostics: [],
   concepts: [{ key: 'term.denominator', label: '분모', assessable: true }],
-  expertMode: false,
+  expertMode: false, problemWriter: false,
 };
 const problemId = 'fraction-meaning:practice:p1:v3';
 const edit = (withProblem = false): DraftEdit => ({
@@ -44,13 +45,14 @@ const detail = (withProblem = false): DraftDetail => ({
  */
 function serve(withProblem = false) {
   const sent: AuthoringAction[] = [];
-  const state = { draft: detail(withProblem), refuseSaves: 0, restate: undefined as ((sent: DraftEdit) => DraftEdit) | undefined };
+  const state = { draft: detail(withProblem), refuseSaves: 0, restate: undefined as ((sent: DraftEdit) => DraftEdit) | undefined,
+    workspace, generated: undefined as GenerationResult | undefined };
   const reply = (body: unknown, status = 200) => ({ ok: status < 400, status, json: async () => body }) as Response;
   globalThis.fetch = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
     if (url.endsWith('/api/v1/session')) return reply({ user: { id: 'u1', displayName: '선생님' }, developmentLogin: false, googleLogin: true });
     if (url.includes('/api/v1/authoring?draftId=')) return reply({ draft: state.draft });
-    if (url.endsWith('/api/v1/authoring') && init?.method !== 'POST') return reply({ workspace });
+    if (url.endsWith('/api/v1/authoring') && init?.method !== 'POST') return reply({ workspace: state.workspace });
     if (url.endsWith('/api/v1/authoring')) {
       const action = JSON.parse(String(init!.body)) as AuthoringAction;
       sent.push(action);
@@ -58,9 +60,10 @@ function serve(withProblem = false) {
         if (state.refuseSaves > 0) { state.refuseSaves -= 1; return reply({ error: { code: 'SAVE_FAILED', message: '저장하지 못했어요. 입력 형식을 확인해 주세요.' } }, 500); }
         const stored = state.restate ? state.restate(action.edit) : action.edit;
         state.draft = { ...state.draft, edit: stored };
-        return reply({ workspace, draft: state.draft });
+        return reply({ workspace: state.workspace, draft: state.draft });
       }
-      return reply({ workspace });
+      if (action.action === 'draft.generateProblems') return reply({ workspace: state.workspace, generated: state.generated });
+      return reply({ workspace: state.workspace });
     }
     throw new Error(`아무도 답하지 않는 요청: ${url}`);
   }) as typeof fetch;
@@ -255,5 +258,58 @@ describe('taking a step back', () => {
     await act(async () => { fireEvent.keyDown(window, { key: 'z', metaKey: true, shiftKey: true }); });
     expect(screen.getAllByText('새 단계').length).toBeGreaterThan(0);
     await tick(1500);
+  });
+});
+
+describe('questions a model writes for an activity', () => {
+  const generated = (verdict: GeneratedProblem['verdict'], text: string, issues: GeneratedProblem['issues'] = []): GeneratedProblem => ({
+    verdict, claim: '{"kind":"value","expression":"1/4 + 2/4"}', issues,
+    problem: { problemVersionId: 'generated-1', conceptKeys: ['term.denominator'],
+      promptContent: [{ blockId: 'generated-1:prompt', kind: 'core.rich_text', typeVersion: 3, required: true, payload: { text, definitions: [] } }],
+      gradingSpec: { kind: 'rational', numerator: 3, denominator: 4 }, hints: [], solution: [] },
+  });
+  const openActivity = async () => {
+    await openEditor();
+    fireEvent.click(screen.getByRole('button', { name: /직접 해보기/ }));
+    // The activity's own handle on the sheet; the palette offers a block by the same name.
+    await until(() => expect(document.querySelector('.sheet-block-pick')).not.toBeNull());
+    fireEvent.click(document.querySelector('.sheet-block-pick')!);
+  };
+
+  it('is not offered where the deployment has no model', async () => {
+    server = serve(true);
+    await openActivity();
+    await until(() => expect(screen.getByRole('button', { name: /문항 추가/ })).toBeDefined());
+    expect(screen.queryByText('AI로 문제 만들기')).toBeNull();
+  });
+
+  it('shows what the checks found and puts only what the author takes into the activity', async () => {
+    server = serve(true);
+    server.state.workspace = { ...workspace, problemWriter: true };
+    server.state.generated = { model: 'fake', asked: 3, problems: [
+      generated('verified', '$\\frac{1}{4}+\\frac{2}{4}$를 계산해 써 주세요.'),
+      generated('rejected', '틀린 문제예요.', [{ code: 'answer-mismatch', level: 'error', message: 'The answer key is 3/4, but the claim computes 1/2.' }]),
+    ] };
+    await openActivity();
+    await until(() => expect(screen.getByText('AI로 문제 만들기')).toBeDefined());
+    fireEvent.click(screen.getByText('AI로 문제 만들기'));
+    fireEvent.click(screen.getByRole('button', { name: '만들기' }));
+    await until(() => expect(screen.getByText(/2개 중 1개가 검증을 통과했어요\. 나머지는 이유를 읽고 고르세요\. 요청한 3개 중 2개만 왔어요/)).toBeDefined());
+    const asked = server.sent.find((action) => action.action === 'draft.generateProblems') as Extract<AuthoringAction, { action: 'draft.generateProblems' }>;
+    // The activity's own question goes along, so the new ones do not repeat it.
+    expect(asked).toMatchObject({ draftId: 'd1', conceptKeys: ['term.denominator'], count: 3, form: 'mixed', existing: [{ prompt: '분모는 얼마인가요?', answer: '4' }] });
+    // A question that is wrong for certain says why and cannot be taken.
+    expect(screen.getByText('정답이 계산한 값과 달라요.')).toBeDefined();
+    expect(screen.getByText('틀린 곳이 확실해서 넣을 수 없어요.')).toBeDefined();
+    // Nothing was written to the draft by asking.
+    expect(server.saves()).toHaveLength(0);
+    fireEvent.click(screen.getByRole('button', { name: /활동에 넣기/ }));
+    expect(screen.getByRole('button', { name: '넣었어요' })).toBeDefined();
+    await tick(1500);
+    const saved = lastSaved(server)!;
+    const added = saved.problems.find((problem) => problem.problemVersionId !== problemId)!;
+    expect(added.problemVersionId).toBe('fraction-meaning:practice-1:v3');
+    expect(added.promptContent[0].blockId).toBe('fraction-meaning:practice-1:v3:prompt');
+    expect(saved.sections[1].contentBlocks[0].payload.problemVersionIds).toEqual([problemId, added.problemVersionId]);
   });
 });

@@ -27,6 +27,7 @@ export const builtins = new Set([
   'sin', 'cos', 'tan', 'sec', 'csc', 'cot', 'asin', 'acos', 'atan', 'arcsin', 'arccos', 'arctan', 'sinh', 'cosh', 'tanh',
   'exp', 'ln', 'log', 'sqrt', 'cbrt', 'root', 'abs', 'floor', 'ceil', 'round', 'sign', 'min', 'max', 'gcd', 'lcm', 'mod',
   'nCr', 'nPr', 'nHr', 'factorial', 'sum', 'prod', 'diff', 'integral', 'limit', 'mean', 'median', 'var', 'sd', 'svar', 'ssd',
+  'isprime', 'isinteger', 'isnatural', 'iseven', 'isodd', 'isrational',
 ]);
 const constants = ['pi', 'inf'];
 /** Longest first, so `arcsin` is not read as `a·r·c·sin`. */

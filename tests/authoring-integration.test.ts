@@ -8,6 +8,7 @@ import { lessonRecord, importContent, definitionRecords, problemSetRecords } fro
 import type { LessonRecord, StoredLesson } from '@/core/content';
 import { newProblem, nextProblemVersionId, type DraftEdit, type DraftProblem } from '@/shared/authoring';
 import { lessonBundle, seedLessons, writtenAnswer } from './fixtures/content';
+import { takeGenerated } from '@/shared/generation';
 
 const url = process.env.TEST_DATABASE_URL;
 describe.skipIf(!url)('content authoring on MySQL', () => {
@@ -202,7 +203,7 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     expect(await authoringRole(db, learner.id)).toBeNull();
     expect(await authoringRole(db, author.id)).toBe('author');
     expect(await authoringRole(db, admin.id)).toBe('admin');
-    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], courses: [], lessons: [], accounts: [], concepts: [], problemSets: [], diagnostics: [], expertMode: false });
+    expect(await service.workspace(learner.id)).toEqual({ role: null, drafts: [], courses: [], lessons: [], accounts: [], concepts: [], problemSets: [], diagnostics: [], expertMode: false, problemWriter: false });
     await expect(service.createDraft(learner.id, lessonKey)).rejects.toThrow(/권한/);
   });
 
@@ -700,6 +701,52 @@ describe.skipIf(!url)('content authoring on MySQL', () => {
     // A question with no hints says so, and its response format restates the answer that was written.
     expect(stored.hintAvailable).toBe(false);
     expect(stored.responseSpec).toEqual({ kind: 'integer' });
+  });
+
+  it('hands back questions a model wrote, checked and unsaved, and the author takes them like their own', async () => {
+    const admin = await account('admin');
+    const created = await service.createDraft(admin.id, lessonKey);
+    const draftId = created.draft!.id;
+    const edit = structuredClone(created.draft!.edit);
+    const conceptKeys = edit.problems[0].conceptKeys;
+    const action = { action: 'draft.generateProblems', draftId, conceptKeys, misconceptions: ['add-denominators'], count: 1,
+      form: 'choice', note: '', existing: [] } as const;
+    // Without a model the editor is told so, and the action refuses rather than pretending.
+    const without = new AuthoringService(db, () => null);
+    expect((await without.workspace(admin.id)).problemWriter).toBe(false);
+    await expect(without.act(admin.id, action)).rejects.toMatchObject({ code: 'generation_unavailable' });
+
+    const asked: string[] = [];
+    const writer = new AuthoringService(db, () => ({
+      name: 'fake',
+      write: async (_system, user) => { asked.push(user); return [{
+        prompt: '$\\frac{1}{4}+\\frac{2}{3}$을 계산한 값을 골라 주세요.', form: 'choice',
+        options: [{ id: 'a', text: '$\\frac{3}{7}$' }, { id: 'b', text: '$\\frac{11}{12}$' }, { id: 'c', text: '$\\frac{3}{12}$' }],
+        answer: 'b', reducedFraction: false, misreadings: [{ answer: 'a', misconception: 'add-denominators', expression: '(1+2)/(4+3)' }],
+        solves: '{"kind":"value","expression":"1/4 + 2/3"}', hints: ['공통분모를 먼저 찾아요.'], solution: '3/12+8/12=11/12예요.' }]; },
+      solve: async () => 'b',
+    }));
+    expect((await writer.workspace(admin.id)).problemWriter).toBe(true);
+    const response = await writer.act(admin.id, action);
+    expect(asked[0]).toContain('분모끼리 더하기');
+    expect(response.generated!.problems.map((p) => p.verdict)).toEqual(['verified']);
+    // Nothing was written to the draft.
+    expect((await service.draft(admin.id, draftId)).edit).toEqual(created.draft!.edit);
+    // A learner is not an author, and asking for questions is content work.
+    const learner = await account();
+    await expect(writer.act(learner.id, action)).rejects.toMatchObject({ code: 'not_an_author' });
+    await expect(writer.act(admin.id, { ...action, misconceptions: ['no-such-mistake'] })).rejects.toMatchObject({ code: 'misconception_unknown' });
+
+    const taken = takeGenerated(response.generated!.problems[0], lessonKey, 'practice', edit.meta.versionId, edit.problems.map((p) => p.problemVersionId));
+    edit.problems.push(taken);
+    const activity = edit.sections.flatMap((section) => section.contentBlocks).find((block) => block.kind === 'core.problem_set')!;
+    (activity.payload.problemVersionIds as string[]).push(taken.problemVersionId);
+    const saved = await service.saveDraft(admin.id, draftId, edit);
+    expect(saved.draft!.issues).toEqual([]);
+    await service.publishDraft(admin.id, draftId);
+    const stored = (await lessonRecord(db, edit.meta.versionId) as LessonRecord).problems.find((p) => p.problemVersionId === taken.problemVersionId)!;
+    expect(stored.misreadings).toEqual([{ answer: 'a', misconception: 'add-denominators' }]);
+    expect(stored.hintAvailable).toBe(true);
   });
 
   it('publishes an expression answer without leaking it and grades it through learning submissions', async () => {

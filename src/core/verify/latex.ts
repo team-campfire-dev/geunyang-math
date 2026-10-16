@@ -23,8 +23,25 @@ export const UNIT = '\u0002';
 /** 1,000 and 12,345 are numbers, not lists. */
 export const joinThousands = (text: string) => text.replace(/\b\d{1,3}(?:,\d{3})+(?![\d.])/g, (m) => m.replace(/,/g, ''));
 
+/**
+ * A repeating decimal as the fraction it is: `0.\dot{3}` is 1/3, `0.\dot{1}\dot{4}` is 14/99 (the
+ * dots stand over the first and last digit of the block), `0.1\dot{2}` is 11/90 and
+ * `0.\overline{12}` is 12/99. Written as a fraction so it stays exact all the way through.
+ */
+function repeatingDecimals(source: string): string {
+  const fraction = (whole: string, fixed: string, cycle: string) => {
+    const scale = 10n ** BigInt(fixed.length), nines = 10n ** BigInt(cycle.length) - 1n;
+    const numerator = BigInt(whole) * scale * nines + (BigInt(fixed + cycle) - BigInt(fixed || '0'));
+    return `(${numerator}/${scale * nines})`;
+  };
+  return source
+    .replace(/(\d+)\.(\d*)\\overline\s*\{\s*(\d+)\s*\}/g, (_, whole: string, fixed: string, cycle: string) => fraction(whole, fixed, cycle))
+    .replace(/(\d+)\.(\d*)\\dot\s*\{?\s*(\d)\s*\}?(?:(\d*)\\dot\s*\{?\s*(\d)\s*\}?)?/g,
+      (_, whole: string, fixed: string, first: string, middle?: string, last?: string) => fraction(whole, fixed, last ? `${first}${middle ?? ''}${last}` : first));
+}
+
 export function latexToClaim(source: string): string {
-  const s = source
+  const s = repeatingDecimals(source)
     // LaTeX writes ≠ as \ne, never as !=, so `3!=6` is a factorial and an equals sign.
     .replace(/!=/g, '! =')
     // \frac12 is \frac{1}{2}: without braces each argument is one character.
@@ -214,7 +231,7 @@ export function latexToClaim(source: string): string {
 }
 
 /** Words inside `\text{…}` or between math segments: a joining word, a unit, or something unreadable. */
-const units = /^(cm²|cm³|m²|m³|km|cm|mm|m|kg|mg|g|mL|ml|L|원|개|명|번|가지|시간|분|초|일|주|개월|달|년|점|장|권|마리|송이|대|배|쪽|회|층|살|도|%|°|위|째|번째|등|모|칸|조각|잔|병|봉지|상자|켤레|그루|리터|미터|킬로미터|센티미터)$/;
+const units = /^(cm²|cm³|m²|m³|km|cm|mm|m|kg|mg|g|mL|ml|L|원|개|명|번|가지|시간|분|초|일|주|개월|달|년|점|장|권|마리|송이|대|배|쪽|회|층|살|도|%|°|위|째|번째|등|모|칸|조각|잔|병|봉지|상자|켤레|그루|리터|미터|킬로미터|센티미터|판|컵|그릇|통|묶음|줄|바퀴|쌍|자루|벌|톤|그램|킬로그램|밀리리터)$/;
 export function words(text: string): string {
   const t = text.trim();
   if (!t) return ' ';

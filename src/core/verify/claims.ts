@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { derivative, integrate, type FunctionDef } from './calculus';
 import { evaluate, newMeter, type Meter, type Scope } from './evaluate';
-import { parseEquation, parseExpression, parseRelation, type Node } from './expr';
+import { freeSymbols, parseEquation, parseExpression, parseRelation, type Node } from './expr';
 import { add as addNum, approx, exact, fail, int, isReal, mul as mulNum, q, same, sub, weakest, type Num, type Strength } from './numbers';
 import { bounds, integersIn, solveInequality, solveSystem, type Interval } from './solve';
 
@@ -64,7 +64,11 @@ export const claimSchema = z.preprocess((raw) => alias('unknown', 'unknowns')(al
     antiderivative: expression.optional(),
     ...common,
   }).strict(),
-  z.object({ kind: z.literal('choose'), which: z.enum(['true', 'false']), ...common }).strict(),
+  /**
+   * 「옳은 것은?」 over statements, or — with `property`, an expression in x that is 1 or 0, like
+   * `isprime(x)` — 「소수인 것은?」 over values: each option's value is put in for x.
+   */
+  z.object({ kind: z.literal('choose'), which: z.enum(['true', 'false']), property: expression.optional(), ...common }).strict(),
   /**
    * An expression in variables, for options that are expressions: `3(x-2)` matches the option equal
    * to it for every x, so `3x-6` would match too and `3x-2` would not.
@@ -77,7 +81,7 @@ export type ClaimResult =
   | { type: 'value'; value: Num; strength: Strength; notes: string[] }
   | { type: 'values'; values: Num[]; strength: Strength; notes: string[] }
   | { type: 'set'; set: Interval[]; strength: Strength; notes: string[] }
-  | { type: 'choose'; which: 'true' | 'false'; scope: Scope; notes: string[] }
+  | { type: 'choose'; which: 'true' | 'false'; property?: Node; scope: Scope; notes: string[] }
   | { type: 'form'; node: Node; variables: string[]; scope: Scope; strength: Strength; notes: string[] };
 
 /** The scope a claim's `given` and `define` set up. */
@@ -107,7 +111,11 @@ export function evaluateClaim(claim: Claim): ClaimResult {
       const value = evaluate(parse(claim.expression), scope, meter);
       return { type: 'value', value, strength: strengthOf(value, meter), notes: [] };
     }
-    case 'choose': return { type: 'choose', which: claim.which, scope, notes: [] };
+    case 'choose': {
+      const property = claim.property === undefined ? undefined : parse(claim.property);
+      if (property && !freeSymbols(property).has('x')) fail('syntax', 'A property is an expression in x, the value of each option.');
+      return { type: 'choose', which: claim.which, ...(property ? { property } : {}), scope, notes: [] };
+    }
     case 'expression': return { type: 'form', node: parse(claim.expression), variables: claim.variables, scope, strength: 'sampled', notes: [] };
     case 'solve': {
       const equations = claim.equations.map((e) => parseEquation(e, options));

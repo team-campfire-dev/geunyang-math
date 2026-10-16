@@ -24,15 +24,18 @@
     "content:retire": "node --conditions=react-server --import tsx scripts/content.ts retire",
     "content:lock": "node --import tsx scripts/content-lock.ts",
     "pilot:report": "node --conditions=react-server --import tsx scripts/pilot.ts",
-    "problems:check": "node --conditions=react-server --import tsx scripts/check-problems.ts"
+    "problems:check": "node --conditions=react-server --import tsx scripts/check-problems.ts",
+    "guide:sync": "node --import tsx scripts/writing-guide.ts",
+    "problems:generate": "node --conditions=react-server --import tsx scripts/generate-problems.ts"
   },
   "dependencies": {
-    "@prisma/adapter-mariadb": "7.10.0",
-    "@prisma/client": "7.10.0",
+    "@anthropic-ai/sdk": "0.133.0",
+    "@prisma/adapter-mariadb": "7.10.1",
+    "@prisma/client": "7.10.1",
     "dotenv": "17.4.2",
     "google-auth-library": "11.0.2",
-    "katex": "0.17.0",
-    "next": "16.3.5",
+    "katex": "0.18.10",
+    "next": "16.4.2",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "server-only": "0.0.1",
@@ -48,20 +51,9 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "jsdom": "^29.1.1",
-    "prisma": "7.10.0",
+    "prisma": "7.10.1",
     "tsx": "^4.22.4",
     "typescript": "~5.9.3",
     "vitest": "^5.0.0"
-  },
-  "overrides": {
-    "@prisma/adapter-mariadb": {
-      "mariadb": "3.4.7"
-    },
-    "@prisma/config": {
-      "deepmerge-ts": "8.0.0"
-    },
-    "prisma": {
-      "mysql2": "3.23.1"
-    }
   }
 }

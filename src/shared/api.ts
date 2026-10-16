@@ -178,6 +178,8 @@ export type AssignmentView = {
   items: { id: string; problem: PublicProblem; attempt: AttemptView | null; tries: number; firstResult: GradeResult | null }[];
   submissionId: string;
   reason?: string;
+  /** How many of the questions a model wrote for this learner from their own wrong answers. */
+  generated?: number;
   glossary: GlossaryEntry[];
 };
 export type DiagnosticAnswer = { problemVersionId: string; answer: string | null; status: 'correct' | 'incorrect' | 'skipped' };

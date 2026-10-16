@@ -486,3 +486,36 @@
 .editor-misreading-answer small { color: var(--editor-label); font-size: 12px; }
 .editor-misreading select { max-width: 220px; }
 .editor-misreading-actions { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+
+/* Asking a model for questions. What came back is a list to take from, not part of the activity, so
+   it sits on the sunken ground with a quiet border; the verdict is the first thing each card says. */
+.editor-generator { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--editor-rule); }
+.editor-generator > summary { display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+  font-size: 14px; font-weight: 600; color: var(--editor-ink); min-height: var(--editor-control); }
+.editor-generator[open] > summary { margin-bottom: 4px; }
+.editor-generator > .button { margin-top: 14px; }
+.editor-generator textarea { width: 100%; min-height: 72px; resize: vertical; font: inherit; }
+.generated-list { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+.generated-problem { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 1px solid var(--line);
+  border-radius: 9px; background: var(--editor-sunken); font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+.generated-problem > header { display: flex; align-items: center; gap: 8px; }
+.generated-problem > header small { font-size: var(--editor-help-size); color: var(--editor-help); }
+.generated-verdict { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  border: 1px solid var(--line-strong); color: var(--ink-2); background: var(--white); }
+.generated-verified .generated-verdict { border-color: var(--accent); background: var(--editor-active-bg); color: var(--editor-active-text); }
+.generated-unverified .generated-verdict { border-color: var(--editor-warn-line); background: var(--editor-warn-bg); color: var(--editor-warn); }
+.generated-rejected { opacity: .78; }
+.generated-rejected .generated-verdict { text-decoration: line-through; }
+.generated-options { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.generated-options li { display: flex; align-items: baseline; gap: 6px; padding-left: 19px; }
+.generated-options li.correct { padding-left: 0; font-weight: 600; }
+.generated-options small, .generated-answer small { font-size: var(--editor-help-size); color: var(--editor-help); font-weight: 400; }
+.generated-answer { margin: 0; }
+.generated-issues { margin: 0; padding-left: 18px; font-size: 13px; }
+.generated-issues li.error, .generated-issues li.unverified { color: var(--editor-warn); }
+.generated-issues li small { color: var(--editor-help); }
+.generated-problem details summary { cursor: pointer; font-size: 13px; color: var(--editor-label); }
+.generated-part { margin-top: 6px; }
+.generated-claim { margin: 0; font-size: 12px; color: var(--editor-help); }
+.generated-claim code { font-family: var(--mono); overflow-wrap: anywhere; }
+.generated-problem > .button, .generated-problem > .text-button { align-self: flex-start; }

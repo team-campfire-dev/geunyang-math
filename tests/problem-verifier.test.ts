@@ -218,6 +218,8 @@ describe('reading options', () => {
     expect(values('$x=-3$')).toEqual(['-3']);
     expect(values('$x = 2$ 또는 $x = 3$')).toEqual(['2', '3']);
     expect(values('$3$개')).toEqual(['3']);
+    // A counter after a fraction, as a generated question about pizzas wrote it (2026-10-16).
+    expect(values('$\\frac{5}{12}$판')).toEqual(['5/12']);
     expect(values('12 cm')).toEqual(['12']);
     expect(values('$25\\%$')).toEqual(['25']);
     expect(values('$x=1\\pm\\sqrt{2}$')).toEqual(['-0.41421356237', '2.4142135624']);
@@ -714,5 +716,79 @@ describe('cases found by adversarial review', () => {
     for (const expression of ['(8)', '8/1', '-(-8)']) {
       expect(check({ answer: { kind: 'integer', value: 8 }, solves: { kind: 'value', expression } }).issues.map((i) => i.code)).toContain('claim-trivial');
     }
+  });
+});
+
+describe('questions that ask for a judgement: which is prime, which is irrational', () => {
+  const choice = (options: string[], correct: string) => ({ kind: 'choice' as const, options: options.map((text, i) => ({ id: 'abcd'[i], text })), correct });
+  const codes = (input: CheckInput) => verifyProblem(input).issues.map((i) => i.code);
+  const values = (text: string) => { const st = readOption(text); return st && statementValues(st, emptyScope)?.map(show).sort(); };
+
+  it('counts with predicates: 1 when a property holds, 0 when it does not', () => {
+    expect(show(value('sum(isprime(k), k, 1, 10)').value)).toBe('4');
+    expect(show(value('isprime(1) + isprime(2) + isprime(9) + isprime(97)').value)).toBe('2');
+    expect(show(value('isinteger(-4) + isinteger(0) + isinteger(10/5) + isinteger(1/3) + isinteger(-0.5)').value)).toBe('3');
+    expect(show(value('isnatural(0) + isnatural(3) + isnatural(-2)').value)).toBe('1');
+    expect(show(value('iseven(2) + isodd(2) + iseven(0) + iseven(1/2)').value)).toBe('2');
+    expect(show(value('isrational(sqrt(49)) + isrational(sqrt(7)) + isrational(sqrt(0.25)) + isrational(pi) + isrational(1 + sqrt(2)) + isrational(3sqrt(5)/2)').value)).toBe('2');
+  });
+
+  it('does not guess when the form of a number does not show what it is', () => {
+    // √2·√2 is 2, but it is computed in floating point and nothing about its form proves either way.
+    expect(failure({ kind: 'value', expression: 'isrational(sqrt(2) * sqrt(2))' })).toBe('unstable');
+    expect(failure({ kind: 'value', expression: 'isrational(sqrt(2) + sqrt(3))' })).toBe('unstable');
+    expect(failure({ kind: 'value', expression: 'isprime(sqrt(2)^2)' })).toBe('unstable');
+    // Floating point can still say what is certainly not a whole number.
+    expect(show(value('isprime(sqrt(4.0000001)^2)').value)).toBe('0');
+  });
+
+  it('reads repeating decimals exactly', () => {
+    expect(values('$0.\\dot{3}$')).toEqual(['1/3']);
+    expect(values('$0.\\dot{1}\\dot{4}$')).toEqual(['14/99']);
+    expect(values('$0.1\\dot{2}$')).toEqual(['11/90']);
+    expect(values('$0.\\dot{1}2\\dot{3}$')).toEqual(['41/333']);
+    expect(values('$1.\\overline{6}$')).toEqual(['5/3']);
+  });
+
+  it('checks 「소수인 수를 골라 주세요」 by asking each option the property', () => {
+    // From the live run of 2026-10-16, where these were unreadable.
+    const prime = { prompt: '다음 중 소수인 수를 골라 주세요.', answer: choice(['1', '9', '15', '17'], 'd'),
+      misreadings: [{ answer: 'a', misconception: 'one-as-prime' }, { answer: 'b', misconception: 'composite-as-prime' }],
+      solves: { kind: 'choose', which: 'true', property: 'isprime(x)' } };
+    expect(verifyProblem(prime)).toMatchObject({ verdict: 'verified', strength: 'exact' });
+    expect(codes({ ...prime, answer: choice(['1', '9', '15', '17'], 'a') })).toContain('choice-wrong-key');
+    expect(codes({ ...prime, answer: choice(['1', '9', '13', '17'], 'd') })).toContain('choice-ambiguous');
+    const composite = { prompt: '다음 중 합성수인 수를 골라 주세요.', answer: choice(['2', '13', '21', '1'], 'c'),
+      solves: { kind: 'choose', which: 'true', property: '1 - isprime(x) - (x = 1)' } };
+    // `x = 1` is not an expression; a property is arithmetic on predicates, and the claim fails.
+    expect(codes(composite)).toContain('claim-failed');
+    expect(verifyProblem({ ...composite, solves: { kind: 'choose', which: 'true', property: 'isnatural(x - 1) * (1 - isprime(x))' } }).verdict).toBe('verified');
+  });
+
+  it('checks 「무리수인 것은」 and 「무리수가 아닌 것은」, repeating decimals included', () => {
+    const irrational = { prompt: '다음 중 무리수인 것을 골라 주세요.', answer: choice(['$\\sqrt{49}$', '$0.\\dot{3}$', '$\\sqrt{7}$', '$\\sqrt{0.25}$'], 'c'),
+      misreadings: [{ answer: 'a', misconception: 'root-means-irrational' }, { answer: 'b', misconception: 'repeating-as-irrational' }],
+      solves: { kind: 'choose', which: 'true', property: '1 - isrational(x)' } };
+    expect(verifyProblem(irrational).verdict).toBe('verified');
+    const notIrrational = { prompt: '다음 중 무리수가 아닌 것을 골라 주세요.', answer: choice(['$\\sqrt{6}$', '$\\pi$', '$0.\\dot{1}\\dot{4}$', '$2+\\sqrt{3}$'], 'c'),
+      solves: { kind: 'choose', which: 'false', property: '1 - isrational(x)' } };
+    expect(verifyProblem(notIrrational).verdict).toBe('verified');
+  });
+
+  it('leaves an option it cannot judge unverified, never passes it', () => {
+    const unknown = { prompt: '다음 중 유리수인 것을 골라 주세요.', answer: choice(['$\\sqrt{2}\\sqrt{8}$', '$\\sqrt{3}$', '$\\pi$', '$\\sqrt{5}$'], 'a'),
+      solves: { kind: 'choose', which: 'true', property: 'isrational(x)' } };
+    expect(verifyProblem(unknown).verdict).toBe('unverified');
+    expect(codes(unknown)).toContain('option-unreadable');
+  });
+
+  it('does not ask a statement option for the value of its wrong computation', () => {
+    // From the live run: the writer gave each wrong statement as its "computation", which is a relation.
+    const statements = { prompt: '옳은 것을 골라 주세요.', answer: choice(['$-1.2 < -0.9$', '$-1.2 > -0.9$', '$0.7 < 0.65$', '$-0.8 < -0.85$'], 'a'),
+      misreadings: [{ answer: 'b', misconception: 'compare-by-absolute', expression: '-1.2 > -0.9' }],
+      solves: { kind: 'choose', which: 'true' } };
+    const report = verifyProblem(statements);
+    expect(report.verdict).toBe('verified');
+    expect(report.issues).toMatchObject([{ code: 'misreading-unchecked', level: 'warning' }]);
   });
 });

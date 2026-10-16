@@ -5,7 +5,7 @@ import type { AttemptView, LessonSection, ContentBlock } from '@/shared/api';
 import {
   blockFormOf, copyBlock, copyProblem, copySection, dropLooseProblems, editShape,
   insertAfter, issueText, looseProblems, mayGrantRoles, mayPublish, moveBlock, nextBlockId, nextSectionId,
-  problemGist, sectionRoleLabels, sectionRoles, splitProblemSet, versionLabel,
+  problemGist, problemsOfBlock, sectionRoleLabels, sectionRoles, splitProblemSet, versionLabel,
   type AccountRole, type AuthoringRole, type AuthoringWorkspace as Workspace, type DraftDetail,
   type DraftEdit, type DraftIssue, type DraftProblem, type ConceptChoice, type ProblemSetChoice,
   type DiagnosticDraft, type DiagnosticEdit,
@@ -20,6 +20,8 @@ import { AddBlock, BlockCard } from './block-editor';
 import { LessonSheet, type Picked } from './lesson-sheet';
 import { PlacementPanel } from './placement-panel';
 import { ProblemPanel, ProblemSetEditor, ProblemSetPanel, ConceptPicker } from './problem-editor';
+import { ProblemGenerator } from './problem-generator';
+import { takeGenerated, type GenerationRequest, type GenerationResult } from '@/shared/generation';
 import { WrongAnswers } from './wrong-answers';
 import { DefinitionPanel } from './definition-editor';
 import { LessonSettings } from './lesson-settings';
@@ -514,6 +516,12 @@ export function AuthoringWorkspace() {
     const response = await authoringApi.act({ action: 'problem.wrongAnswers', problemVersionId }, session?.user?.id ?? '');
     return response.wrongAnswers ?? [];
   };
+  /** Questions a model writes for an activity. A failure is the panel's to say, beside the button that asked. */
+  const generateFor = async (request: GenerationRequest): Promise<GenerationResult> => {
+    const response = await authoringApi.act({ action: 'draft.generateProblems', draftId: draft.id, ...request }, session?.user?.id ?? '');
+    if (!response.generated) throw new Error('만든 문제를 받지 못했어요.');
+    return response.generated;
+  };
   /** What the server holds is what gets answered, so anything unsaved goes first. */
   const enterTry = async () => {
     if (invalid.length) { setError('정답 입력을 고친 뒤 해볼 수 있어요.'); return; }
@@ -656,6 +664,15 @@ export function AuthoringWorkspace() {
                   concepts={draftConcepts} lessonKey={draft.lessonKey} role={section.role} versionId={edit.meta.versionId}
                   onPick={(id) => setSelected({ kind: 'problem', id })}
                   onChange={(next, problems) => setEdit({ ...edit, sections: writeSectionBlock(selected.index, next), problems })} />
+                {workspace.problemWriter && <ProblemGenerator concepts={draftConcepts} expert={expert}
+                  held={problemsOfBlock(chosenBlock, edit.problems)}
+                  onGenerate={generateFor}
+                  onTake={(generated) => {
+                    const made = takeGenerated(generated, draft.lessonKey, section.role, edit.meta.versionId, problemIds);
+                    const ids = Array.isArray(chosenBlock.payload.problemVersionIds) ? (chosenBlock.payload.problemVersionIds as string[]) : [];
+                    setEdit({ ...edit, problems: [...edit.problems, made],
+                      sections: writeSectionBlock(selected.index, { ...chosenBlock, payload: { ...chosenBlock.payload, problemVersionIds: [...ids, made.problemVersionId] } }) });
+                  }} />}
               </>}
               onChange={(next) => writeBlocks(section.contentBlocks.map((item, position) => (position === selected.index ? next : item)))}
               onMove={(delta) => {

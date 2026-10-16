@@ -5,11 +5,11 @@ import { readMathExpression } from '@/shared/math-expression';
 import { misconceptionOf } from '@/shared/misconception';
 import { claimSchema, claimScope, evaluateClaim, type ClaimResult } from './claims';
 import { evaluate, newMeter } from './evaluate';
-import { literals, parseExpression, type Node } from './expr';
+import { literals, parseExpression, substitute, type Node } from './expr';
 import { latexToClaim } from './latex';
-import { approx, CheckFailure, exact, gcd, int, q, same, show, weakest, type Num, type Strength } from './numbers';
+import { approx, CheckFailure, exact, gcd, int, isZero, q, same, show, weakest, type Num, type Strength } from './numbers';
 import { sameSet, showSet } from './solve';
-import { forAll, readOption, readOptionDetailed, sameValues, statementForm, statementSet, statementTruth, statementValues } from './statement';
+import { forAll, readOption, readOptionDetailed, sameValues, statementForm, statementSet, statementTruth, statementValues, type Statement } from './statement';
 
 /**
  * Checks one problem against the computation it declares (its claim).
@@ -105,6 +105,15 @@ function isLiteral(n: Node): boolean {
 /** Whether any expression in the claim uses a degree sign. */
 const usesDegrees = (claim: { [key: string]: unknown }) => JSON.stringify(claim).includes('°');
 
+/** The one value an option names — `17`, `x = 17` — or null when it names none or several. */
+function valueTerm(statement: Statement): Node | null {
+  if (statement.kind !== 'relation') return null;
+  const { terms, ops } = statement.relation;
+  if (!ops.length) return terms[0];
+  if (ops.length === 1 && ops[0] === '=' && terms[0].k === 'sym' && terms[1].k !== 'sym') return terms[1];
+  return null;
+}
+
 /** Which options agree with what the claim computed, as decided per option, or null for one that cannot be read. */
 function optionMatches(result: ClaimResult, options: { id: string; text: string }[], functionNames: Set<string>, variable: string, units: Map<string, string>, symbol: string | null): Map<string, { match: boolean; strength: Strength } | null> {
   const out = new Map<string, { match: boolean; strength: Strength } | null>();
@@ -115,7 +124,15 @@ function optionMatches(result: ClaimResult, options: { id: string; text: string 
     units.set(option.id, read.unit);
     const statement = read.statement;
     const meter = newMeter();
-    if (result.type === 'choose') {
+    if (result.type === 'choose' && result.property) {
+      // The option is a value — `$17$`, `$x=\sqrt{7}$` — and the property is asked of it.
+      const term = valueTerm(statement);
+      if (!term) { out.set(option.id, null); continue; }
+      try {
+        const holds = evaluate(substitute(result.property, new Map([['x', term]])), scope, meter);
+        out.set(option.id, { match: !isZero(holds) === (result.which === 'true'), strength: holds.q ? 'exact' : 'numeric' });
+      } catch (reason) { if (!(reason instanceof CheckFailure)) throw reason; out.set(option.id, null); }
+    } else if (result.type === 'choose') {
       const truth = statementTruth(statement, scope, meter);
       out.set(option.id, truth && { match: truth.truth === (result.which === 'true'), strength: truth.strength });
     } else if (result.type === 'form') {
@@ -232,7 +249,8 @@ export function verifyProblem(input: CheckInput): Report {
       if (!m.expression) continue;
       // The wrong computation, done: it has to land on the wrong answer it is said to produce.
       try {
-        const wrong = evaluate(parseExpression(m.expression, { functions: functionNames }), scope);
+        // What the option says comes first: a statement has no value, and its "wrong computation" is
+        // often the statement itself (`-1.2 > -0.9`), which is not a value to compute either.
         let stated: Num | null = null;
         if (spec.kind === 'choice') {
           const option = spec.options.find((o) => o.id === m.answer);
@@ -247,6 +265,7 @@ export function verifyProblem(input: CheckInput): Report {
         } else if (readMathExpression(normalizeAnswer(m.answer) ?? '').value) {
           stated = keyValue({ kind: 'expression', expression: normalizeAnswer(m.answer)! });
         }
+        const wrong = evaluate(parseExpression(m.expression, { functions: functionNames }), scope);
         if (!stated) issues.push({ code: 'misreading-unchecked', level: 'unverified', answer: m.answer, message: `"${m.answer}" could not be read as a value to compare with its computation.` });
         else if (!same(stated, wrong).equal) issues.push({ code: 'misreading-derivation', level: 'error', answer: m.answer, message: `The stated wrong computation gives ${show(wrong)}, not ${m.answer}.` });
       } catch (reason) {

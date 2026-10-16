@@ -111,6 +111,7 @@ jobs:
           DEPLOY_KNOWN_HOSTS: ${{ secrets.KNOWN_HOSTS }}
           APP_ENV: ${{ secrets.ENV_FILE }}
           MIGRATION_ENV: ${{ secrets.MIGRATION_ENV_FILE }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           set -euo pipefail
           umask 077
@@ -127,6 +128,14 @@ jobs:
           printf '%s\n' "$DEPLOY_KEY" > "$RUNNER_TEMP/deploy-key"
           printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > "$RUNNER_TEMP/known-hosts"
           printf '%s\n' "$APP_ENV" > "$RUNNER_TEMP/app.env"
+          # Optional and kept in its own secret, so turning question writing on or off never means
+          # rewriting ENV_FILE. Without it the editor simply does not offer the feature.
+          # A key has no spaces, so a trailing newline pasted with it is dropped rather than written.
+          anthropic_key="${ANTHROPIC_API_KEY//[[:space:]]/}"
+          if [[ -n "$anthropic_key" ]]; then
+            [[ "$anthropic_key" =~ ^[A-Za-z0-9_-]+$ ]] || { printf '::error::ANTHROPIC_API_KEY holds characters an API key does not\n'; exit 1; }
+            printf 'ANTHROPIC_API_KEY=%s\n' "$anthropic_key" >> "$RUNNER_TEMP/app.env"
+          fi
           printf '%s\n' "$MIGRATION_ENV" > "$RUNNER_TEMP/migrate.env"
           git archive --format=tar -o "$RUNNER_TEMP/source.tar" "$GITHUB_SHA"
           ssh_options=(-i "$RUNNER_TEMP/deploy-key" -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/known-hosts" -o ConnectTimeout=15)

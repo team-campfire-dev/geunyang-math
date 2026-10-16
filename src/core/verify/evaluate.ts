@@ -1,7 +1,7 @@
 import { derivative, integrate, limit, type FunctionDef } from './calculus';
 import type { Node } from './expr';
 import {
-  abs, add, approx, asInteger, compare, div, exact, exp, fail, int, isReal, isZero, ln, log, mul, neg, ONE, pow, q,
+  abs, add, approx, asInteger, CheckFailure, compare, div, exact, exp, fail, int, isReal, isZero, ln, log, mul, neg, ONE, pow, q,
   realPart, requireReal, sqrt, sub, ZERO, type Num,
 } from './numbers';
 
@@ -32,6 +32,54 @@ function wholeNumber(n: Num, what: string, max = 100_000n): bigint {
   if (value === null || value < 0n) return fail('domain', `${what} must be a whole number.`);
   if (value > max) return fail('bounded', `${what} is too large.`);
   return value;
+}
+/**
+ * Predicates, counted the way a school counts: 1 when it holds and 0 when it does not, so
+ * `sum(isprime(k), k, 1, 10)` is how many primes there are up to 10 and `isprime(x)` is the property
+ * an option of 「소수인 것은?」 must have. None of them guesses: a value computed only in floating
+ * point is said to be a whole number, or not to be one, only when rounding cannot have decided it.
+ */
+const truth = (holds: boolean) => (holds ? ONE : ZERO);
+/** Whether a value is a whole number, or null when floating point cannot tell. */
+function whole(x: Num): boolean | null {
+  if (x.q) return x.q.d === 1n;
+  if (!isReal(x)) return false;
+  return Math.abs(x.re - Math.round(x.re)) > 1e-9 * Math.max(1, Math.abs(x.re)) ? false : null;
+}
+const decided = (answer: boolean | null, what: string) =>
+  answer ?? fail('unstable', `Whether ${what} holds cannot be decided from a value computed in floating point.`);
+function prime(x: Num): boolean {
+  const n = asInteger(x);
+  if (n === null) return decided(whole(x), 'being a whole number') && fail('unstable', 'A prime must be computed exactly.');
+  if (n < 2n) return false;
+  if (n > 10_000_000_000n) fail('bounded', 'The number is too large to test for primality here.');
+  if (n % 2n === 0n) return n === 2n;
+  for (let d = 3n; d * d <= n; d += 2n) if (n % d === 0n) return false;
+  return true;
+}
+/**
+ * Whether an expression is shown irrational by its form: π and e, a root of a rational that is not
+ * a perfect power, and those moved by rational arithmetic (a rational plus one, a nonzero rational
+ * times one). A sum or product of two irrationals proves nothing — √2·√2 is 2 — so it is not taken.
+ */
+function irrationalByForm(n: Node, scope: Scope, meter: Meter): boolean {
+  const value = (m: Node) => { try { return evaluate(m, scope, meter); } catch (reason) { if (reason instanceof CheckFailure) return null; throw reason; } };
+  const rational = (m: Node) => !!value(m)?.q;
+  const nonzeroRational = (m: Node) => { const v = value(m); return !!v?.q && v.q.n !== 0n; };
+  switch (n.k) {
+    case 'sym': return !scope.vars.has(n.name) && (n.name === 'pi' || n.name === 'e');
+    case 'neg': return irrationalByForm(n.a, scope, meter);
+    case 'add': case 'sub': return (rational(n.a) && irrationalByForm(n.b, scope, meter)) || (irrationalByForm(n.a, scope, meter) && rational(n.b));
+    case 'mul': return (nonzeroRational(n.a) && irrationalByForm(n.b, scope, meter)) || (irrationalByForm(n.a, scope, meter) && nonzeroRational(n.b));
+    case 'div': return (irrationalByForm(n.a, scope, meter) && nonzeroRational(n.b)) || (nonzeroRational(n.a) && irrationalByForm(n.b, scope, meter));
+    case 'call': {
+      if (!['sqrt', 'cbrt', 'root'].includes(n.name) || scope.functions.has(n.name)) return false;
+      const radicand = value(n.args[0]), root = value(n);
+      // The radicand is rational and the root is not: a rational root would have come out exact.
+      return !!radicand?.q && radicand.q.n > 0n && !!root && !root.q && isReal(root);
+    }
+    default: return false;
+  }
 }
 /** n(n−1)…(n−count+1), charged to the meter one multiplication at a time. */
 function falling(n: bigint, count: bigint, meter: Meter): bigint {
@@ -161,6 +209,24 @@ function call(name: string, args: Node[], scope: Scope, meter: Meter): Num {
     return value;
   }
   switch (name) {
+    case 'isprime': arity(1); return truth(prime(ev(args[0])));
+    case 'isinteger': arity(1); return truth(decided(whole(ev(args[0])), 'being an integer'));
+    case 'isnatural': { arity(1); const x = ev(args[0]); return truth(decided(whole(x), 'being a natural number') && compare(x, ONE) >= 0); }
+    case 'iseven': case 'isodd': {
+      arity(1);
+      const x = ev(args[0]), n = asInteger(x);
+      if (n === null) return truth(decided(whole(x), 'being a whole number') && fail('unstable', 'Parity needs an exact whole number.'));
+      return truth((((n % 2n) + 2n) % 2n === 0n) === (name === 'iseven'));
+    }
+    case 'isrational': {
+      arity(1);
+      const x = ev(args[0]);
+      if (x.q) return ONE;
+      // A rational number is real, so one with an imaginary part is not one.
+      if (!isReal(x)) return ZERO;
+      if (irrationalByForm(args[0], scope, meter)) return ZERO;
+      return fail('unstable', 'This value is not exact, but its form does not show that it is irrational.');
+    }
     case 'sum': case 'prod': {
       arity(4);
       const variable = bound(args[1], name);

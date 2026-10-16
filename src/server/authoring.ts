@@ -8,6 +8,10 @@ import { maxProblemsPerSet, problemSetRefs, storedLessonOf, validateLesson, vali
 import { gradeAnswer } from '@/core/grading';
 import { frozenProblemSet, lessonRecord, importContent, problemSetRecords, lessonRecords, publishedProblemRecords, definitionRecords, currentDefinitions } from './content-store';
 import { AppError } from './errors';
+import { generateProblems, type ProblemModel } from './problem-generation';
+import { claudeProblemModel, problemWriterAvailable, writerFailure } from './problem-writer';
+import { generationLimits, type GenerationRequest } from '@/shared/generation';
+import { misconceptionOf } from '@/shared/misconception';
 import { choiceLimits, misreadingLimits, normalizeAnswer, type AnswerSpec } from '@/shared/answer';
 import type { ContentBlock, GradeResult, LessonSection, ProblemSetRef } from '@/shared/api';
 import {
@@ -134,6 +138,15 @@ export const authoringActionSchema = z.discriminatedUnion('action', [
     answer: z.string().trim().min(1).max(100), assisted: z.boolean() }).strict(),
   z.object({ action: z.literal('draft.openHint'), draftId: id, problemVersionId: id }).strict(),
   z.object({ action: z.literal('problem.wrongAnswers'), problemVersionId: id }).strict(),
+  z.object({ action: z.literal('draft.generateProblems'), draftId: id,
+    conceptKeys: z.array(id.max(100)).min(1).max(10),
+    misconceptions: z.array(z.string().max(60)).max(generationLimits.maxMisconceptions),
+    count: z.number().int().min(1).max(generationLimits.maxCount),
+    form: z.enum(['choice', 'written', 'mixed']),
+    note: z.string().max(generationLimits.maxNote),
+    existing: z.array(z.object({ prompt: z.string().max(generationLimits.maxExistingText), answer: z.string().max(generationLimits.maxExistingText) }).strict())
+      .max(generationLimits.maxExisting),
+  }).strict(),
 ]);
 
 /**
@@ -281,8 +294,12 @@ type DraftView = { sections: LessonSection[]; problems: StoredProblem[] };
 /** The problem set versions a lesson draft's activities reference, resolved to what they hold. */
 type ResolvedSets = { published: Map<string, StoredProblemSet>; drafted: Map<string, { row: DraftRow; document: StoredProblemSet }> };
 
+/** Accounts with a generation under way. One at a time each: a second press is a mistake, and each one costs. */
+const generating = new Set<string>();
+
 export class AuthoringService {
-  constructor(private db: PrismaClient) {}
+  /** `writer` is the model that writes questions, or null where this deployment has none. */
+  constructor(private db: PrismaClient, private writer: () => ProblemModel | null = () => (problemWriterAvailable() ? claudeProblemModel() : null)) {}
 
   private async require(userId: string): Promise<AuthoringRole> {
     const role = await authoringRole(this.db, userId);
@@ -382,7 +399,7 @@ export class AuthoringService {
 
   async workspace(userId: string): Promise<AuthoringWorkspace> {
     const role = await authoringRole(this.db, userId);
-    if (!role) return { role: null, drafts: [], courses: [], lessons: [], accounts: [], concepts: [], problemSets: [], diagnostics: [], expertMode: false };
+    if (!role) return { role: null, drafts: [], courses: [], lessons: [], accounts: [], concepts: [], problemSets: [], diagnostics: [], expertMode: false, problemWriter: false };
     const [drafts, versions, courses, accounts, concepts, account, identities, setRows, setVersions, setBlocks, diagnosticVersions] = await Promise.all([
       this.db.contentDraft.findMany({ where: { ownerKind: 'lesson', ...(mayEditEveryDraft(role) ? {} : { authorId: userId }) },
         orderBy: { updatedAt: 'desc' }, select: { id: true, ownerKey: true, versionId: true, baseVersionId: true, title: true,
@@ -451,6 +468,7 @@ export class AuthoringService {
       concepts,
       courses,
       expertMode: account?.editorExpertMode ?? false,
+      problemWriter: this.writer() !== null,
       drafts: drafts.map((row) => this.summary(row, userId)),
       problemSets: setRows.map((set) => ({ problemSetId: set.id, name: set.name, courseKey: set.course.key,
         latestVersionId: latestOfSet.get(set.id) ?? null, lessonKeys: heldBy.get(set.id) ?? [] })),
@@ -726,6 +744,38 @@ export class AuthoringService {
       return { answer, count: group.count, learners: group.learners.size, ...(option ? { text: option.text } : {}) };
     }).sort((a, b) => b.count - a.count || b.learners - a.learners || a.answer.localeCompare(b.answer)).slice(0, 12);
     return { workspace: await this.workspace(userId), wrongAnswers };
+  }
+
+  /**
+   * Questions a model writes for a draft, checked before the author sees them (src/server/problem-generation.ts).
+   * The draft is read for what it teaches and nothing is written to it: the author takes what they
+   * want, and only then is it theirs to save and publish like a question written by hand.
+   */
+  async generateProblems(userId: string, draftId: string, request: GenerationRequest): Promise<AuthoringResponse> {
+    const role = await this.require(userId);
+    const row = await this.load(draftId, userId, role);
+    if (row.status === 'published') throw new AppError(409, 'draft_published', '이미 발행한 초안이에요. 새 초안을 만들어 주세요.');
+    const model = this.writer();
+    if (!model) throw new AppError(503, 'generation_unavailable', '이 서비스에는 문제 생성이 켜져 있지 않아요.');
+    const unknown = request.misconceptions.find((key) => !misconceptionOf(key));
+    if (unknown) throw new AppError(422, 'misconception_unknown', `「${unknown}」는 알려진 오개념 이름이 아니에요.`);
+    const stored = row.document as unknown as StoredLesson;
+    const [lesson, concepts] = await Promise.all([
+      this.db.lesson.findUnique({ where: { key: stored.public.lessonKey }, select: { course: { select: { title: true } } } }),
+      this.db.concept.findMany({ where: { key: { in: request.conceptKeys } }, select: { key: true, label: true } }),
+    ]);
+    if (concepts.length !== new Set(request.conceptKeys).size) throw new AppError(422, 'concept_unknown', '없는 개념이 섞여 있어요.');
+    if (generating.has(userId)) throw new AppError(409, 'generation_running', '문제를 만드는 중이에요. 끝난 뒤에 다시 해 보세요.');
+    generating.add(userId);
+    try {
+      const generated = await generateProblems(model, request, {
+        courseTitle: lesson?.course.title ?? null, lessonTitle: stored.public.title,
+        concepts: request.conceptKeys.map((key) => concepts.find((concept) => concept.key === key)!),
+      }).catch((reason: unknown) => { throw writerFailure(reason); });
+      return { workspace: await this.workspace(userId), generated };
+    } finally {
+      generating.delete(userId);
+    }
   }
 
   async draftHint(userId: string, draftId: string, problemVersionId: string): Promise<AuthoringResponse> {
@@ -1298,6 +1348,10 @@ export class AuthoringService {
       case 'draft.tryAnswer': return this.tryAnswer(userId, action.draftId, action.problemVersionId, action.answer, action.assisted);
       case 'draft.openHint': return this.draftHint(userId, action.draftId, action.problemVersionId);
       case 'problem.wrongAnswers': return this.wrongAnswers(userId, action.problemVersionId);
+      case 'draft.generateProblems': {
+        const { action: _, draftId, ...request } = action;
+        return this.generateProblems(userId, draftId, request);
+      }
     }
   }
 }

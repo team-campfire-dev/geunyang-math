@@ -9,9 +9,15 @@ export const gatheredQuestions = 6;
 export async function gatheredPracticePools(db: Prisma.TransactionClient, userId: string, keys: string[]) {
   const pools = new Map(keys.map(key => [key, [] as string[]]));
   if (!keys.length) return pools;
-  const [named, diagnostics, attempts] = await Promise.all([
+  // This learner's own generated questions join the catalogue's, after it: a question written for
+  // them that they have not yet got right is one fewer to write. Nobody else's are ever read.
+  const generatedSets = (await db.generatedProblemSet.findMany({ where: { userId, misconception: { in: keys }, kept: { gt: 0 } },
+    select: { id: true }, orderBy: { createdAt: 'asc' } })).map(set => set.id);
+  const [catalogue, generated, diagnostics, attempts] = await Promise.all([
     db.publishedProblem.findMany({ where: { ownerKind: 'problem_set', misreadings: { not: Prisma.DbNull } },
       orderBy: [{ ownerVersionId: 'asc' }, { order: 'asc' }], select: { ownerVersionId: true, problemVersionId: true, misreadings: true } }),
+    generatedSets.length ? db.publishedProblem.findMany({ where: { ownerKind: 'generated', ownerVersionId: { in: generatedSets } },
+      orderBy: [{ ownerVersionId: 'asc' }, { order: 'asc' }], select: { ownerVersionId: true, problemVersionId: true, misreadings: true } }) : [],
     db.diagnosticVersion.findMany({ select: { problemSetVersionId: true } }),
     db.attempt.findMany({ where: { userId }, orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
       select: { problemVersionId: true, result: true, hintUsed: true,
@@ -28,6 +34,7 @@ export async function gatheredPracticePools(db: Prisma.TransactionClient, userId
       answered.set(attempt.problemVersionId, { result, hintUsed: attempt.hintUsed });
     }
   }
+  const named = [...catalogue, ...generated];
   for (const row of named) {
     const first = answered.get(row.problemVersionId);
     if (banks.has(row.ownerVersionId) || (first?.result.status === 'correct' && !first.result.assisted && !first.hintUsed)) continue;

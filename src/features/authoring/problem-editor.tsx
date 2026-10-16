@@ -115,12 +115,17 @@ function AnswerField({ spec, input, onInput, onChange }: { spec: AnswerSpec; inp
  * is chosen is shown; the rest is searched for. The catalogue grows with the service, and a list
  * that grows with it turns choosing three concepts into reading thirty.
  */
-export function ConceptPicker({ concepts, chosen, onChange, label = '이 문제가 확인하는 개념' }: {
+export function ConceptPicker({ concepts, chosen, onChange, label = '이 문제가 확인하는 개념', noun = '개념' }: {
   concepts: ConceptChoice[]; chosen: string[]; onChange: (next: string[]) => void; label?: string;
+  /** What the list holds, for the sentences around it. The same picker chooses mistakes, too. */
+  noun?: string;
 }) {
   const [query, setQuery] = useState('');
   const asked = query.trim().toLocaleLowerCase();
   const picked = concepts.filter((concept) => chosen.includes(concept.key));
+  // 「개념이」 and 「실수가」: the subject marker follows the noun's last sound.
+  const last = noun.charCodeAt(noun.length - 1) - 0xac00;
+  const subject = `${noun}${last >= 0 && last < 11172 && last % 28 === 0 ? '가' : '이'}`;
   const offered = asked
     ? concepts.filter((concept) => !chosen.includes(concept.key) && concept.label.toLocaleLowerCase().includes(asked)).slice(0, 8)
     : [];
@@ -131,12 +136,12 @@ export function ConceptPicker({ concepts, chosen, onChange, label = '이 문제�
         ? picked.map((concept) => <span key={concept.key} className="editor-chip">{concept.label}
           <button type="button" className="icon-button" aria-label={`${concept.label} 빼기`} title="빼기"
             onClick={() => onChange(chosen.filter((item) => item !== concept.key))}><Icon name="close" size={12} /></button></span>)
-        : <span className="editor-note">{concepts.length ? '아직 고른 개념이 없어요.' : '선택할 수 있는 개념이 없어요.'}</span>}
+        : <span className="editor-note">{concepts.length ? `아직 고른 ${subject} 없어요.` : `선택할 수 있는 ${subject} 없어요.`}</span>}
     </div>
     {!!concepts.length && <label className="editor-field">
-      <input type="search" aria-label={`${label} 검색`} placeholder="개념 이름으로 찾아 더하기" value={query}
+      <input type="search" aria-label={`${label} 검색`} placeholder={`${noun} 이름으로 찾아 더하기`} value={query}
         onChange={(event) => setQuery(event.target.value)} /></label>}
-    {!!asked && !offered.length && <p className="editor-note">찾은 개념이 없어요.</p>}
+    {!!asked && !offered.length && <p className="editor-note">찾은 {subject} 없어요.</p>}
     {!!offered.length && <div className="editor-concept-buttons">
       {offered.map((concept) => <button key={concept.key} type="button" className="editor-chip-add"
         onClick={() => { onChange([...chosen, concept.key]); setQuery(''); }}><Icon name="plus" size={12} />{concept.label}</button>)}

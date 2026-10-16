@@ -3,6 +3,7 @@
 // and so the server can prune the same optional fields before it validates what the editor sent.
 import type { AnswerSpec, ExpectedMisreading } from './answer';
 import type { LessonSection, ContentBlock, GradeResult, GlossaryEntry, ProblemSetRef, PublicProblem } from './api';
+import type { GenerationRequest, GenerationResult } from './generation';
 
 /** A role on an account, not a property of one operator: a teacher system grants the same roles. */
 export type AuthoringRole = 'admin' | 'author';
@@ -200,6 +201,8 @@ export type AuthoringWorkspace = {
    * it off.
    */
   expertMode: boolean;
+  /** Whether this deployment can have a model write questions. Without one the editor does not offer it. */
+  problemWriter: boolean;
 };
 /** A key is what every name in a lesson is built from, so it stays to the letters a name may hold. */
 export const lessonKeyPattern = /^[a-z0-9][a-z0-9-]{1,63}$/;
@@ -254,7 +257,12 @@ export type AuthoringAction =
   | { action: 'draft.tryAnswer'; draftId: string; problemVersionId: string; answer: string; assisted: boolean }
   | { action: 'draft.openHint'; draftId: string; problemVersionId: string }
   /** What learners have written for this question and got wrong, so wrong answers can be named. */
-  | { action: 'problem.wrongAnswers'; problemVersionId: string };
+  | { action: 'problem.wrongAnswers'; problemVersionId: string }
+  /**
+   * Questions a model writes for this draft, each checked before it comes back. Nothing is saved:
+   * the author takes the ones they want into the draft as if they had written them.
+   */
+  | ({ action: 'draft.generateProblems'; draftId: string } & GenerationRequest);
 export type AuthoringResponse = {
   workspace: AuthoringWorkspace; draft?: DraftDetail; publishedVersionId?: string;
   matches?: AccountRole[]; definitions?: DefinitionSummary[];
@@ -270,6 +278,8 @@ export type AuthoringResponse = {
   wrongAnswers?: WrongAnswer[];
   /** The definition a save wrote, so the screen can say so. */
   savedDefinition?: { conceptKey: string };
+  /** Questions a model wrote and the server checked, for the author to take from. */
+  generated?: GenerationResult;
 };
 
 const versionSuffix = /:v(\d+)$/;

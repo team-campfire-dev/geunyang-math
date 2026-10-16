@@ -406,6 +406,14 @@ describe('targeted practice on the home screen', () => {
     await until(() => expect(screen.getByRole('heading', { level: 1, name: own.title })).toBeDefined());
     expect(server.of('practice.gather')).toHaveLength(0);
   });
+  it('says which questions of a gathered set a model wrote for this learner', async () => {
+    const own = { ...assignment({ policy: { kind: 'practice', hints: true, results: 'per-item', solutions: 'after-submission' }, problemSetId: null, title: '분모끼리 더하기 모아 풀기' }), generated: 1 };
+    server = serve({ state: planned({ assignments: [own], plan: { ...learningState().plan, targetedPractice: { ...targeted, recipientId: own.recipientId } } }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByRole('button', { name: '모아 풀기 이어서' })).toBeDefined());
+    fireEvent.click(screen.getByRole('button', { name: '모아 풀기 이어서' }));
+    await until(() => expect(screen.getByText(/^이 문제들은 AI가 내 오답을 보고 새로 만든 문제예요/)).toBeDefined());
+  });
   it('keeps a due review first and exposes the practice reasoning and history', async () => {
     const review = assignment();
     server = serve({ state: planned({ assignments: [review], plan: { ...learningState().plan, targetedPractice: targeted, review: { recipientId: review.recipientId, reason: '복습할 때예요.' } },

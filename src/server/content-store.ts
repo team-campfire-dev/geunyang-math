@@ -15,8 +15,10 @@ const hash = (value: unknown) => createHash('sha256').update(canonicalJson(value
  * A published question as a row: what it is apart from its blocks. The blocks are rows of their own,
  * so reading a question back joins the two. Every question belongs to a problem set version.
  */
-const problemRows = (ownerVersionId: string, problems: StoredProblem[]) =>
-  problems.map((problem, order) => ({ ownerKind: 'problem_set', ownerVersionId, problemVersionId: problem.problemVersionId,
+/** What a GeneratedProblemSet id begins with, so its rows can never be taken for a version's. */
+export const generatedPrefix = 'generated:';
+const problemRows = (ownerVersionId: string, problems: StoredProblem[], ownerKind: 'problem_set' | 'generated' = 'problem_set') =>
+  problems.map((problem, order) => ({ ownerKind, ownerVersionId, problemVersionId: problem.problemVersionId,
     order, conceptKeys: json(problem.conceptKeys), responseSpec: json(problem.responseSpec),
     gradingSpec: json(problem.gradingSpec), hintAvailable: problem.hintAvailable,
     misreadings: problem.misreadings?.length ? json(problem.misreadings) : Prisma.DbNull }));
@@ -89,6 +91,17 @@ export async function indexProblemSetDocument(db: Db, record: StoredProblemSet) 
 export async function indexPublishedProblems(db: Db, ownerVersionId: string, problems: StoredProblem[]) {
   const rows = problemRows(ownerVersionId, problems);
   if (rows.length) await db.publishedProblem.createMany({ data: rows, skipDuplicates: true });
+}
+/**
+ * Writes questions a model wrote for one learner (GeneratedProblemSet). They are read back by name
+ * like any published question, so grading and solving need nothing new, but they belong to no
+ * version: no catalogue, editor or other learner's gathering reads kind 'generated'.
+ */
+export async function indexGeneratedProblems(db: Db, setId: string, problems: StoredProblem[]) {
+  const rows = problemRows(setId, problems, 'generated');
+  if (rows.length) await db.publishedProblem.createMany({ data: rows });
+  const blocks = problemSetRows({ problemSetId: setId, courseKey: '', name: null, versionId: setId, problems });
+  if (blocks.length) await db.contentBlock.createMany({ data: blocks });
 }
 /** Writes the blocks a definition is read from. A definition is saved in place, so what was there goes first. */
 export async function indexDefinitionBlocks(db: Db, definitionId: string, blocks: ContentBlock[]) {
@@ -335,7 +348,10 @@ export async function verifyRowsBelongToVersions(db: Db, bundle: ContentBundle) 
   expected.blocks += bundle.problemSets.reduce((n, s) => n + problemSetRows(s).length, 0);
   expected.problems += bundle.problemSets.reduce((n, s) => n + s.problems.length, 0);
   expected.blocks += bundle.definitions.reduce((n, t) => n + t.blocks.length, 0);
-  const [sections, blocks, problems] = await Promise.all([db.lessonSection.count(), db.contentBlock.count(), db.publishedProblem.count()]);
+  // Questions written for one learner are nobody's version, so they are not counted against one.
+  const [sections, blocks, problems] = await Promise.all([db.lessonSection.count(),
+    db.contentBlock.count({ where: { NOT: { ownerVersionId: { startsWith: generatedPrefix } } } }),
+    db.publishedProblem.count({ where: { ownerKind: { not: 'generated' } } })]);
   if (sections !== expected.sections) throw new ContentError(`Section rows belong to no published lesson: ${sections - expected.sections} extra.`);
   if (blocks !== expected.blocks) throw new ContentError(`Block rows belong to no published version: ${blocks - expected.blocks} extra.`);
   if (problems !== expected.problems) throw new ContentError(`Question rows belong to no published version: ${problems - expected.problems} extra.`);

@@ -2,7 +2,9 @@ import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { LearningService } from '@/server/learning-service';
 import { createDatabase } from '@/server/db';
-import { importContent } from '@/server/content-store';
+import { importContent, verifyContent } from '@/server/content-store';
+import { deleteAccount } from '@/server/account-service';
+import type { ProblemModel, WrittenProblem } from '@/server/problem-generation';
 import { gatheredPracticePools } from '@/server/gathered-practice';
 import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { lessonBundle, seedLessons, writtenAnswer } from './fixtures/content';
@@ -52,6 +54,65 @@ describe.skipIf(!url)('targeted practice lifecycle on MySQL', () => {
     expect((await service.act(who.userId, { action: 'practice.gather', misconception })).recipientId).toBe(opened.recipientId);
     expect(opened.state.recommendationHistory[0].targetedPractice).toMatchObject({ misconception, recipientId: opened.recipientId });
   });
+  it('fills a gathered set the catalogue cannot, from this learner\'s own wrong answers, with checked questions only they get', async () => {
+    const asked: string[] = [];
+    const written = (prompt: string, misreadings: WrittenProblem['misreadings']): WrittenProblem => ({
+      prompt, form: 'written', options: [], answer: '3/4', reducedFraction: false, misreadings,
+      solves: JSON.stringify({ kind: 'value', expression: '1/2 + 1/4' }), hints: ['$\\frac{1}{2}=\\frac{2}{4}$이에요.'], solution: '$\\frac{2}{4}+\\frac{1}{4}=\\frac{3}{4}$이에요.' });
+    const model: ProblemModel = { name: 'fake',
+      write: async (_system, user) => { asked.push(user); return [
+        written('$\\frac{1}{2}+\\frac{1}{4}$을 계산해 써 주세요.', [{ answer: '2/6', misconception, expression: '(1+1)/(2+4)' }]),
+        // Checked and right, but not built to catch this mistake, so it says nothing about it.
+        written('$\\frac{1}{4}+\\frac{1}{2}$을 계산해 써 주세요.', []),
+      ]; },
+      solve: async () => '3/4' };
+    const filling = new LearningService(db, () => model);
+    const who = await learner();
+    expect((await filling.state(who.userId)).plan.targetedPractice?.problemCount).toBe(6);
+    const pool = (await gatheredPracticePools(db, who.userId, [misconception])).get(misconception)!;
+    expect(pool.length).toBeLessThan(6);
+    const opened = await filling.act(who.userId, { action: 'practice.gather', misconception });
+    const assignment = opened.state.assignments.find(item => item.recipientId === opened.recipientId)!;
+    const ids = assignment.items.map(item => item.problem.problemVersionId);
+    // The catalogue's questions first, then the one written for this learner; the off-target one is not kept.
+    expect(ids.slice(0, pool.length)).toEqual(pool);
+    expect(ids.slice(pool.length)).toHaveLength(1);
+    expect(ids.at(-1)).toMatch(/^generated:/);
+    expect(assignment.generated).toBe(1);
+    // The writer read what this learner actually wrote.
+    expect(asked[0]).toContain('학습자의 답: 99999');
+    const set = await db.generatedProblemSet.findFirstOrThrow({ where: { userId: who.userId } });
+    expect(set).toMatchObject({ misconception, requested: 6 - pool.length, kept: 1, courseKey: key });
+    // A wrong answer to it is recorded under the mistake it was written to catch.
+    const graded = await filling.act(who.userId, { action: 'attempt.submit', context: 'assignment', contextId: assignment.recipientId,
+      problemVersionId: ids.at(-1)!, answer: '2/6', requestId: randomUUID() });
+    expect(graded.result).toMatchObject({ status: 'incorrect', misconception });
+    // Nobody else's gathering reads it, and the published content still verifies whole.
+    const other = await learner();
+    expect((await gatheredPracticePools(db, other.userId, [misconception])).get(misconception)).not.toContain(ids.at(-1));
+    await expect(verifyContent(db)).resolves.toBeDefined();
+    // Asking again on another day reuses what is unanswered rather than writing it again.
+    await db.generatedProblemSet.update({ where: { id: set.id }, data: { createdAt: new Date(Date.now() - 2 * 86400000) } });
+    expect((await gatheredPracticePools(db, who.userId, [misconception])).get(misconception)).toContain(ids.at(-1));
+    // Their account takes the questions with it.
+    await deleteAccount(db, who.userId);
+    expect(await db.publishedProblem.count({ where: { ownerVersionId: set.id } })).toBe(0);
+    expect(await db.contentBlock.count({ where: { ownerVersionId: set.id } })).toBe(0);
+  });
+
+  it('writes nothing past the day\'s limit, and says so when there is nothing else to give', async () => {
+    let writes = 0;
+    const model: ProblemModel = { name: 'fake', write: async () => { writes += 1; return []; }, solve: async () => '' };
+    const limited = new LearningService(db, () => model);
+    const who = await learner();
+    await db.generatedProblemSet.createMany({ data: Array.from({ length: 5 }, () => ({ id: `generated:${randomUUID()}`, userId: who.userId,
+      misconception, model: 'fake', requested: 1, kept: 0 })) });
+    expect((await limited.state(who.userId)).plan.targetedPractice?.problemCount).toBeLessThan(6);
+    const opened = await limited.act(who.userId, { action: 'practice.gather', misconception });
+    expect(writes).toBe(0);
+    expect(opened.state.assignments.find(item => item.recipientId === opened.recipientId)?.generated).toBeUndefined();
+  });
+
   it('does not recommend a single miss, an improving pattern, or override a chosen lesson', async () => {
     const single = await learner(1);
     expect((await service.state(single.userId)).plan.targetedPractice).toBeNull();
