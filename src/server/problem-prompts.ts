@@ -55,6 +55,7 @@ export const writerSystem = `${writingGuide}
 - solves: 이 문제가 묻는 계산. 아래 「주장」 형식의 JSON을 문자열로 쓴다.
 - hints: 힌트 1~2개. 각 힌트는 짧은 글이다.
 - solution: 해설. 정답에 닿는 풀이와, 이름표를 단 오답이 왜 나오는지를 쓴다.
+- 힌트와 해설의 수식도 지문처럼 $...$로 감싼다($3x=15$). 맨글로 쓴 식은 수식으로 그려지지 않는다.
 
 ${claimGuide}
 

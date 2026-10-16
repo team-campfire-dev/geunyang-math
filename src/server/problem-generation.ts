@@ -1,5 +1,6 @@
 import 'server-only';
 import { z } from 'zod';
+import { gradeAnswer } from '@/core/grading';
 import { verifyProblem } from '@/core/verify/verify';
 import { answerSpec, choiceLimits, misreadingLimits, type AnswerSpec } from '@/shared/answer';
 import type { ContentBlock } from '@/shared/api';
@@ -52,6 +53,7 @@ type Candidate = { problem: DraftProblem; spec: AnswerSpec; written: WrittenProb
 
 const lengths = { prompt: 2000, option: choiceLimits.maxText, answer: 80, hint: 600, solution: 4000, hints: 3, claim: 2000 } as const;
 const placeholder = (index: number) => `generated-${index + 1}`;
+const formatPiece = /\}\s*,\s*\{\s*$|"(prompt|form|options|answer|reducedFraction|misreadings|solves|hints|solution)"\s*:/;
 const paragraph = (blockId: string, text: string): ContentBlock =>
   ({ blockId, kind: 'core.rich_text', typeVersion: 3, required: true, payload: { text, definitions: [] } });
 
@@ -84,6 +86,10 @@ export function solverRequest(written: Pick<WrittenProblem, 'prompt' | 'form' | 
  * not fit is reported rather than dropped, so an author can see what was asked for and not given.
  */
 export function toCandidate(written: WrittenProblem, index: number, conceptKeys: string[]): Candidate | { invalid: string } {
+  // A response once closed a question inside its solution's text and opened the next (2026-10-16):
+  // the format held, the words did not. Text holding a piece of the format is not a question's text.
+  const texts = [written.prompt, written.solution, ...written.hints, ...written.options.map((option) => option.text)];
+  if (texts.some((text) => formatPiece.test(text))) return { invalid: 'a text holds a piece of the response format' };
   const prompt = written.prompt.trim();
   if (!prompt || prompt.length > lengths.prompt) return { invalid: `prompt length ${prompt.length}` };
   let spec: AnswerSpec | null;
@@ -115,16 +121,33 @@ export function toCandidate(written: WrittenProblem, index: number, conceptKeys:
 /** Reads the claim the writer sent as text. What does not parse is passed on, and the checker says so. */
 const claimOf = (text: string): unknown => { try { return JSON.parse(text); } catch { return text; } };
 
+/**
+ * Expected wrong answers the answer box would refuse — a fraction named on a question answered with
+ * a whole number. Such a name can never be recorded, so it is dropped here rather than condemning
+ * the question: a name is optional, and dropping one cannot let a wrong key through.
+ */
+function unrecordable(spec: AnswerSpec, misreadings: WrittenProblem['misreadings']): Set<string> {
+  if (spec.kind === 'choice') return new Set();
+  return new Set(misreadings.map((m) => m.answer.trim()).filter((answer) => gradeAnswer(answer, spec).status === 'invalid'));
+}
+
 function judge(candidate: Candidate, independent: string | null): GeneratedProblem {
-  const { written, spec, problem } = candidate;
+  const { written, spec } = candidate;
+  const dropped = unrecordable(spec, written.misreadings);
+  const kept = written.misreadings.filter((m) => !dropped.has(m.answer.trim()));
+  const problem: DraftProblem = { ...candidate.problem };
+  const names = kept.map(({ answer, misconception }) => ({ answer: answer.trim(), misconception: misconception.trim() }));
+  if (names.length) problem.misreadings = names; else delete problem.misreadings;
   const report = verifyProblem({
     prompt: [written.prompt, ...(spec.kind === 'choice' ? spec.options.map((option) => option.text) : [])].join('\n'),
     answer: spec,
-    misreadings: written.misreadings.map((m) => ({ answer: m.answer.trim(), misconception: m.misconception.trim(), ...(m.expression.trim() ? { expression: m.expression.trim() } : {}) })),
+    misreadings: kept.map((m) => ({ answer: m.answer.trim(), misconception: m.misconception.trim(), ...(m.expression.trim() ? { expression: m.expression.trim() } : {}) })),
     solves: claimOf(written.solves),
     ...(independent !== null ? { independent } : {}),
   });
   const issues: GenerationIssue[] = [...report.issues];
+  for (const answer of dropped) issues.push({ code: 'misreading-dropped', level: 'warning', answer,
+    message: `The answer box refuses "${answer}", so this expected wrong answer was left out.` });
   // A question nobody answered from its prompt alone has had half its check: the claim may compute
   // something the prompt never asked, and only the solver would have noticed.
   if (independent === null) issues.push({ code: 'independent-missing', level: 'unverified', message: 'The independent solver returned no answer.' });
@@ -157,5 +180,5 @@ export async function generateProblems(model: ProblemModel, request: GenerationR
     const independent = await model.solve(solverSystem, solverRequest(item)).then((answer) => answer.trim() || null, () => null);
     return judge(candidate, independent);
   }));
-  return { problems, model: model.name };
+  return { problems, asked: request.count, model: model.name };
 }

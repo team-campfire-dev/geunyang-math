@@ -214,7 +214,7 @@ export function latexToClaim(source: string): string {
 }
 
 /** Words inside `\text{…}` or between math segments: a joining word, a unit, or something unreadable. */
-const units = /^(cm²|cm³|m²|m³|km|cm|mm|m|kg|mg|g|mL|ml|L|원|개|명|번|가지|시간|분|초|일|주|개월|달|년|점|장|권|마리|송이|대|배|쪽|회|층|살|도|%|°|위|째|번째|등|모|칸|조각|잔|병|봉지|상자|켤레|그루|리터|미터|킬로미터|센티미터)$/;
+const units = /^(cm²|cm³|m²|m³|km|cm|mm|m|kg|mg|g|mL|ml|L|원|개|명|번|가지|시간|분|초|일|주|개월|달|년|점|장|권|마리|송이|대|배|쪽|회|층|살|도|%|°|위|째|번째|등|모|칸|조각|잔|병|봉지|상자|켤레|그루|리터|미터|킬로미터|센티미터|판|컵|그릇|통|묶음|줄|바퀴|쌍|자루|벌|톤|그램|킬로그램|밀리리터)$/;
 export function words(text: string): string {
   const t = text.trim();
   if (!t) return ' ';

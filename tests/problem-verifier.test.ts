@@ -218,6 +218,8 @@ describe('reading options', () => {
     expect(values('$x=-3$')).toEqual(['-3']);
     expect(values('$x = 2$ 또는 $x = 3$')).toEqual(['2', '3']);
     expect(values('$3$개')).toEqual(['3']);
+    // A counter after a fraction, as a generated question about pizzas wrote it (2026-10-16).
+    expect(values('$\\frac{5}{12}$판')).toEqual(['5/12']);
     expect(values('12 cm')).toEqual(['12']);
     expect(values('$25\\%$')).toEqual(['25']);
     expect(values('$x=1\\pm\\sqrt{2}$')).toEqual(['-0.41421356237', '2.4142135624']);

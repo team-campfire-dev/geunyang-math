@@ -286,7 +286,7 @@ describe('questions a model writes for an activity', () => {
   it('shows what the checks found and puts only what the author takes into the activity', async () => {
     server = serve(true);
     server.state.workspace = { ...workspace, problemWriter: true };
-    server.state.generated = { model: 'fake', problems: [
+    server.state.generated = { model: 'fake', asked: 3, problems: [
       generated('verified', '$\\frac{1}{4}+\\frac{2}{4}$를 계산해 써 주세요.'),
       generated('rejected', '틀린 문제예요.', [{ code: 'answer-mismatch', level: 'error', message: 'The answer key is 3/4, but the claim computes 1/2.' }]),
     ] };
@@ -294,7 +294,7 @@ describe('questions a model writes for an activity', () => {
     await until(() => expect(screen.getByText('AI로 문제 만들기')).toBeDefined());
     fireEvent.click(screen.getByText('AI로 문제 만들기'));
     fireEvent.click(screen.getByRole('button', { name: '만들기' }));
-    await until(() => expect(screen.getByText('2개 중 1개가 검증을 통과했어요. 나머지는 이유를 읽고 고르세요.')).toBeDefined());
+    await until(() => expect(screen.getByText(/2개 중 1개가 검증을 통과했어요\. 나머지는 이유를 읽고 고르세요\. 요청한 3개 중 2개만 왔어요/)).toBeDefined());
     const asked = server.sent.find((action) => action.action === 'draft.generateProblems') as Extract<AuthoringAction, { action: 'draft.generateProblems' }>;
     // The activity's own question goes along, so the new ones do not repeat it.
     expect(asked).toMatchObject({ draftId: 'd1', conceptKeys: ['term.denominator'], count: 3, form: 'mixed', existing: [{ prompt: '분모는 얼마인가요?', answer: '4' }] });

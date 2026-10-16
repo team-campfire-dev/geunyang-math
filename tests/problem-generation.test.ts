@@ -87,15 +87,37 @@ describe('writing questions and checking them before an author sees them', () =>
     expect(result.problems[0].problem.promptContent).toHaveLength(1);
   });
 
+  it('leaves out a named wrong answer the answer box refuses instead of condemning the question', async () => {
+    // From the first live run (2026-10-16): a fraction named on an equation answered with a whole number.
+    const equation = root({ prompt: '일차방정식 $3x-5=10$의 해를 써 주세요.', answer: '5',
+      solves: JSON.stringify({ kind: 'solve', equation: '3x - 5 = 10', unknown: 'x' }),
+      misreadings: [{ answer: '5/3', misconception: 'move-without-sign', expression: '(10-5)/3' }, { answer: '15', misconception: 'move-a-factor', expression: '10+5' }] });
+    const result = await generateProblems(fake([equation], () => '5').model, request, context);
+    expect(result.problems[0].verdict).toBe('verified');
+    expect(result.problems[0].problem.misreadings).toEqual([{ answer: '15', misconception: 'move-a-factor' }]);
+    expect(result.problems[0].issues).toMatchObject([{ code: 'misreading-dropped', level: 'warning', answer: '5/3' }]);
+  });
+
   it('leaves an unreadable claim unverified rather than trusting the key', async () => {
     const result = await generateProblems(fake([addition({ solves: '3/4 + 2/9' })], () => 'b').model, request, context);
     expect(result.problems[0].verdict).toBe('unverified');
     expect(result.problems[0].issues.map((i) => i.code)).toContain('claim-invalid');
   });
 
-  it('keeps to the number asked for even when the writer sends more', async () => {
-    const result = await generateProblems(fake(Array.from({ length: 9 }, () => addition()), () => 'b').model, request, context);
+  it('keeps to the number asked for even when the writer sends more, and says when it sent fewer', async () => {
+    const result = await generateProblems(fake(Array.from({ length: 9 }, () => addition()), () => 'b').model, { ...request, count: 6 }, context);
     expect(result.problems).toHaveLength(6);
+    const short = await generateProblems(fake([addition()], () => 'b').model, { ...request, count: 6 }, context);
+    expect(short).toMatchObject({ asked: 6, problems: [{ verdict: 'verified' }] });
+  });
+
+  it('refuses text that holds a piece of the response format', async () => {
+    // A live response closed its question inside the solution and began the next one (2026-10-16).
+    const broken = addition({ solution: '$x = 10$을 넣으면 26이라 14와 달라요.},{' });
+    const leaked = addition({ hints: ['"solves": "3/4 + 2/9"'] });
+    const result = await generateProblems(fake([broken, leaked, addition()], () => 'b').model, request, context);
+    expect(result.problems.map((p) => p.verdict)).toEqual(['rejected', 'rejected', 'verified']);
+    expect(result.problems[0].issues[0].code).toBe('output-invalid');
   });
 
   it('tells the writer the lesson, the mistakes to aim at and the questions already there', () => {

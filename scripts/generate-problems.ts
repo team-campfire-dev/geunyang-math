@@ -50,7 +50,7 @@ async function main() {
     for (const issue of generated.issues) console.log(`    ${issue.level} ${issue.code}${issue.option ? ` [${issue.option}]` : ''}${issue.answer ? ` [${issue.answer}]` : ''}: ${issue.message}`);
   });
   const count = (verdict: string) => result.problems.filter((generated) => generated.verdict === verdict).length;
-  console.log(`\n${result.problems.length} problems from ${result.model}: ${count('verified')} verified, ${count('unverified')} unverified, ${count('rejected')} rejected.`);
+  console.log(`\n${result.problems.length}${result.asked > result.problems.length ? ` of ${result.asked} asked` : ''} problems from ${result.model}: ${count('verified')} verified, ${count('unverified')} unverified, ${count('rejected')} rejected.`);
   if (outAt >= 0) writeFileSync(args[outAt + 1], `${JSON.stringify(result, null, 2)}\n`);
 }
 

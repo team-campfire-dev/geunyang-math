@@ -122,7 +122,8 @@ export function ProblemGenerator({ concepts, held, expert, onGenerate, onTake }:
       {busy ? '만들고 확인하는 중… (1분쯤 걸려요)' : '만들기'}</button>
     {failure && <p className="editor-note editor-warn" role="alert">{failure}</p>}
     {result && counts && <div className="generated-list" aria-live="polite">
-      <p className="editor-note">{counts.all}개 중 {counts.verified}개가 검증을 통과했어요.{counts.verified < counts.all ? ' 나머지는 이유를 읽고 고르세요.' : ''}</p>
+      <p className="editor-note">{counts.all}개 중 {counts.verified}개가 검증을 통과했어요.{counts.verified < counts.all ? ' 나머지는 이유를 읽고 고르세요.' : ''}
+        {result.asked > counts.all ? ` 요청한 ${result.asked}개 중 ${counts.all}개만 왔어요. 더 필요하면 한 번 더 만들어 주세요.` : ''}</p>
       {result.problems.map((generated, at) => <Candidate key={at} generated={generated} taken={taken.has(at)} expert={expert}
         onTake={() => { onTake(generated); setTaken((current) => new Set(current).add(at)); }} />)}
     </div>}

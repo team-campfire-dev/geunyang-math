@@ -40,7 +40,8 @@ export type GeneratedProblem = {
   independent?: string;
   issues: GenerationIssue[];
 };
-export type GenerationResult = { problems: GeneratedProblem[]; model: string };
+/** `asked` is how many were asked for: a writer can send fewer, and the author should hear so. */
+export type GenerationResult = { problems: GeneratedProblem[]; asked: number; model: string };
 
 /** A rejected question is wrong for certain, so there is nothing for an author to decide about it. */
 export const mayTake = (generated: GeneratedProblem) => generated.verdict !== 'rejected';
@@ -77,6 +78,7 @@ export const generationIssueText: Record<string, string> = {
   'misreading-shadowed': '같은 값에 다른 이름표가 먼저 붙어서 이 이름으로 기록되지 않아요.',
   'misreading-derivation': '예상 오답과 함께 낸 잘못된 계산이 그 값에 닿지 않아요.',
   'misreading-unchecked': '예상 오답의 잘못된 계산을 확인하지 못했어요.',
+  'misreading-dropped': '입력 칸이 받지 않는 예상 오답이 있어서 그 이름표는 뺐어요.',
   'independent-disagrees': '지문만 보고 따로 푼 답이 정답과 달라요. 지문이 다른 것을 묻고 있을 수 있어요.',
   'independent-missing': '지문만 보고 따로 푸는 단계가 답을 내지 못했어요.',
   'prompt-numbers': '계산에 지문에 없는 수가 쓰였어요.',
