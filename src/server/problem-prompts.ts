@@ -22,15 +22,20 @@ const claimGuide = `### 주장(solves) 쓰는 법
 | inequality | 부등식의 해, 또는 그 안의 정수 | {"kind":"inequality","inequality":"2x - 3 < 7","variable":"x","select":"count","among":"naturals"} |
 | integral | 정적분 | {"kind":"integral","integrand":"3x^2","variable":"x","from":"0","to":"2","antiderivative":"x^3"} |
 | expression | 보기가 식인 문제 | {"kind":"expression","expression":"3(x - 2)","variables":["x"]} |
-| choose | 「옳은 것은?」「옳지 않은 것은?」 | {"kind":"choose","which":"true"} |
+| choose | 「옳은 것은?」「옳지 않은 것은?」 — 보기가 문장일 때 | {"kind":"choose","which":"true"} |
+| choose + property | 「소수인 것은?」「무리수가 아닌 것은?」 — 보기가 값이고, 성질을 만족하는 하나를 고를 때 | {"kind":"choose","which":"true","property":"isprime(x)"} |
 
 - 모든 종류에 given(상수의 값, {"a":"3"})과 define(문제가 정의한 함수, {"f(x)":"x^2+1"})을 붙일 수 있다.
 - solve의 select: unique(기본, 해가 정확히 하나), all, largest, smallest, positive, negative, sum, product, count. 연립이면 equations와 unknowns를 배열로, 계산할 것을 ask로("ask":"x*y"). 삼각·지수·로그방정식은 where로 구간을 준다("where":"0 <= x < 2pi").
 - inequality의 select: set(기본, 해집합), count, sum, max, min. among: integers(기본) 또는 naturals.
+- property는 보기의 값을 x에 넣었을 때 1(성질을 만족함) 또는 0이 되는 식이다. 판정 함수 isprime(x), isinteger(x), isnatural(x)(1 이상의 정수), iseven(x), isodd(x), isrational(x)는 참이면 1, 거짓이면 0이다. 「무리수인 것」은 "1 - isrational(x)", 「합성수인 것」은 "isnatural(x - 1) * (1 - isprime(x))"처럼 산술로 묶는다. which가 "true"면 property를 만족하는 보기가 정확히 하나여야 하고, "false"면 만족하지 않는 보기가 정확히 하나여야 한다.
+- 판정 함수는 값 계산에도 쓴다: 「1부터 10까지 소수의 개수」는 "sum(isprime(k), k, 1, 10)"이다. 답을 직접 세어 "4"로 쓰지 않는다.
+- 판단을 묻는 객관식의 보기는 값으로 쓴다($17$, $\sqrt{7}$, $0.\dot{3}$). 「1은 소수이다」처럼 말로 된 보기는 서버가 읽지 못해 검증되지 않는다.
+- 순환소수는 $0.\dot{3}$, $0.\dot{1}\dot{4}$, $0.1\dot{2}$처럼 \dot으로 쓴다.
 - choose는 보기마다 참·거짓을 서버가 가린다. 보기는 계산할 수 있는 문장으로 쓴다($\\frac12+\\frac13=\\frac56$, $(a+b)^2=a^2+2ab+b^2$). 말로 된 보기는 서버가 읽지 못한다.
 - 객관식 보기는 서버가 읽을 수 있게 쓴다: 값($\\frac{5}{13}$, $x=-3$, $3$개, 12 cm), 해의 목록($x=2$ 또는 $x=3$), 해집합($-4 \\le x \\le -1$), 식($3(x-2)$). 보기끼리 단위를 섞지 않는다.
 
-**식 문법.** 계산기처럼 쓴다. + - * / ^, 곱셈 기호 생략(2x, 3(x-1)), -x^2는 -(x^2). 함수는 괄호와 함께: sqrt cbrt root(x, n) abs exp ln log(x)(상용로그) log(b, x) sin cos tan floor ceil round gcd lcm mod min max. 경우의 수 n! nCr(n, r) nPr(n, r) nHr(n, r). 통계 mean median var sd(모집단). 미적분 diff(f, x, a) integral(f, x, a, b) limit(f, x, a) sum(f, k, a, b). 상수 pi, e, i. 관계 = < <= > >= !=, 절댓값 |x - 1|.
+**식 문법.** 계산기처럼 쓴다. + - * / ^, 곱셈 기호 생략(2x, 3(x-1)), -x^2는 -(x^2). 함수는 괄호와 함께: sqrt cbrt root(x, n) abs exp ln log(x)(상용로그) log(b, x) sin cos tan floor ceil round gcd lcm mod min max, 판정 isprime isinteger isnatural iseven isodd isrational. 경우의 수 n! nCr(n, r) nPr(n, r) nHr(n, r). 통계 mean median var sd(모집단). 미적분 diff(f, x, a) integral(f, x, a, b) limit(f, x, a) sum(f, k, a, b). 상수 pi, e, i. 관계 = < <= > >= !=, 절댓값 |x - 1|.
 
 **각도.** 30°는 언제나 각 π/6이다. 답이 「몇 도」인 수라면 주장에 °를 쓰지 않는다(삼각형의 나머지 각은 "180 - 50 - 60").`;
 
