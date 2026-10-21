@@ -560,3 +560,25 @@
 @media (max-width: 740px) {
   .editor-actions:has(> .editor-field) > .button { min-height: calc(16px * 1.7 + 22px); }
 }
+
+/* A panel's name is the first line inside it, not a label cut into its top border. The border
+   version read as a broken box wherever two panels met, and as a form from another decade. A
+   floated legend leaves the border whole and sits in the flow like any heading. */
+.editor-panel > legend { float: left; width: 100%; padding: 0; margin: 0 0 6px;
+  font-size: 15px; font-weight: 600; letter-spacing: -.2px; color: var(--editor-ink); }
+.editor-panel > legend + * { clear: both; }
+.editor-panel > legend + .editor-note, .editor-panel > legend + p { margin-top: 0; }
+
+/* One drop-down for the whole editor: the box's edge keeps its 3:1, the browser's own arrow gives
+   way to a quiet chevron, and the box is no taller than the row it sits in. */
+.authoring-page select { appearance: none; -webkit-appearance: none; cursor: pointer;
+  padding-right: 34px; border-radius: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none' stroke='%238a8378' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4.5 6 7.5 9 4.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; background-size: 12px; }
+.authoring-page select:hover:not(:disabled) { border-color: var(--editor-label); }
+.authoring-page select:disabled { cursor: default; opacity: .6; }
+.role-row select, .taught-actions select { min-height: 36px; padding-top: 7px; padding-bottom: 7px; font-size: var(--editor-label-size);
+  background-color: var(--white); color: var(--editor-ink); }
+/* Taking a role away is the quiet choice on the row, said after the choice that matters. */
+.role-row .text-button { color: var(--editor-help); }
+.role-row .text-button:hover:not(:disabled) { color: var(--editor-warn); }
