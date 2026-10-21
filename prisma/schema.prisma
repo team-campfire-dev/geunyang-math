@@ -40,6 +40,7 @@ model User {
   teachingInvite TeachingInvite?
   assignedCourses AssignedCourse[] @relation("AssignedLearner")
   coursesAssigned AssignedCourse[] @relation("AssignedBy")
+  modelUsage   ModelUsage[]
 }
 
 /// Someone who teaches a learner. A person today — a parent, a teacher — and a model later, for the
@@ -161,6 +162,32 @@ model GeneratedProblemSet {
   kept          Int
   createdAt     DateTime @default(now())
   @@index([userId, createdAt])
+}
+
+/// One model call an account caused, with what it cost. Written as each call returns, so a run cut
+/// off halfway still counts what it spent. When the account is deleted the row stays without it:
+/// the money was spent all the same, and the totals an operator reads must still add up.
+model ModelUsage {
+  id               String @id @default(cuid()) @db.VarChar(191)
+  userId           String? @db.VarChar(191)
+  user             User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  /// `ai-practice`, `gathered` or `editor`.
+  feature          String @db.VarChar(30)
+  /// `plan`, `write` or `solve`.
+  step             String @db.VarChar(20)
+  /// The model that answered, which the server-side fallback may have changed.
+  model            String @db.VarChar(60)
+  inputTokens      Int
+  outputTokens     Int
+  cacheReadTokens  Int
+  cacheWriteTokens Int
+  /// Millionths of a US dollar, at the prices in src/server/model-usage.ts when the call was made.
+  costMicros       Int
+  /// The generated set the call was for, when there is one.
+  setId            String? @db.VarChar(191)
+  createdAt        DateTime @default(now())
+  @@index([userId, createdAt])
+  @@index([createdAt])
 }
 
 model RecommendationHistory {

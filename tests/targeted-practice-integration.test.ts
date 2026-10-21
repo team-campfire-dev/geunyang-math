@@ -6,6 +6,8 @@ import { importContent, verifyContent } from '@/server/content-store';
 import { deleteAccount } from '@/server/account-service';
 import type { ProblemModel, WrittenProblem } from '@/server/problem-generation';
 import { gatheredPracticePools } from '@/server/gathered-practice';
+import { AiUsageService } from '@/server/ai-usage-service';
+import type { UsageSink } from '@/server/model-usage';
 import { existingRows, removeRowsAddedSince, type Existing } from './cleanup';
 import { lessonBundle, seedLessons, writtenAnswer } from './fixtures/content';
 
@@ -230,6 +232,71 @@ describe.skipIf(!url)('targeted practice lifecycle on MySQL', () => {
       await ai.act(who.userId, { action: 'practice.ai', scope: { kind: 'all' } }); await ai.settled();
       expect((await ai.state(who.userId)).aiPractice.remaining).toBe(0);
       await expect(ai.act(who.userId, { action: 'practice.ai', scope: { kind: 'all' } })).rejects.toMatchObject({ status: 409 });
+    });
+
+    /** The fake as the real model is: every call it makes is reported to whoever asked, at a fixed size. */
+    const metered = (fake: ProblemModel) => (onUsage?: UsageSink): ProblemModel => {
+      const report = (step: string) => onUsage?.({ step, model: 'claude-sonnet-5-5', input: 1000, output: 500, cacheRead: 2000, cacheWrite: 0 });
+      return { name: fake.name,
+        plan: async (system, user) => { report('plan'); return fake.plan!(system, user); },
+        write: async (system, user) => { report('write'); return fake.write(system, user); },
+        solve: async (system, user) => { report('solve'); return fake.solve(system, user); } };
+    };
+
+    it('writes down what each call cost, for the learner and the set, and shows it only to an operator', async () => {
+      const { fake } = model(planned);
+      const ai = new LearningService(db, metered(fake));
+      const who = await learner(3);
+      await ai.act(who.userId, { action: 'practice.ai', scope: { kind: 'all' } });
+      await ai.settled();
+      const set = await db.generatedProblemSet.findFirstOrThrow({ where: { userId: who.userId, scope: 'all' } });
+      const rows = await db.modelUsage.findMany({ where: { userId: who.userId } });
+      // One plan, one write for the one target, one solve per question written.
+      expect(rows.map(row => row.step).sort()).toEqual(['plan', 'solve', 'solve', 'write']);
+      expect(rows.every(row => row.feature === 'ai-practice' && row.setId === set.id && row.model === 'claude-sonnet-5-5' && row.costMicros === 7400)).toBe(true);
+
+      const operator = await db.user.create({ data: { displayName: 'usage operator', contentAuthor: { create: { role: 'admin' } } } });
+      const author = await db.user.create({ data: { displayName: 'usage author', contentAuthor: { create: { role: 'author' } } } });
+      await expect(new AiUsageService(db).view(author.id)).rejects.toMatchObject({ status: 403 });
+      const view = await new AiUsageService(db).view(operator.id);
+      expect(view.accounts.find(account => account.userId === who.userId)).toMatchObject({ displayName: 'targeted test', last24h: 29600, last30d: 29600, calls: 4, runs: 1 });
+      expect(view.features.find(item => item.feature === 'ai-practice')?.runs).toBeGreaterThanOrEqual(1);
+      expect(view.days).toHaveLength(30);
+
+      // An account that goes takes its name with it, not what it spent.
+      await deleteAccount(db, who.userId);
+      const kept = await db.modelUsage.findMany({ where: { id: { in: rows.map(row => row.id) } } });
+      expect(kept).toHaveLength(4);
+      expect(kept.every(row => row.userId === null)).toBe(true);
+      await db.modelUsage.deleteMany({ where: { id: { in: rows.map(row => row.id) } } });
+    });
+
+    it('starts nothing once an account or the service has spent what it may, and says why', async () => {
+      let writes = 0;
+      const { fake } = model(planned);
+      const counting: ProblemModel = { ...fake, write: async (system, user) => { writes += 1; return fake.write(system, user); } };
+      const ai = new LearningService(db, metered(counting));
+      const who = await learner(3);
+      // Two dollars in the last day is the default for one account.
+      await db.modelUsage.create({ data: { userId: who.userId, feature: 'ai-practice', step: 'write', model: 'claude-sonnet-5-5',
+        inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0, costMicros: 2_000_000 } });
+      const state = await ai.state(who.userId);
+      expect(state.aiPractice).toMatchObject({ remaining: 0, refused: '오늘 쓸 수 있는 AI 사용량을 다 썼어요. 내일 다시 해 보세요.' });
+      await expect(ai.act(who.userId, { action: 'practice.ai', scope: { kind: 'all' } })).rejects.toMatchObject({ status: 409, message: expect.stringContaining('AI 사용량을 다 썼어요') });
+      // A gathered set opens from the catalogue alone, and nothing is written for it.
+      await ai.act(who.userId, { action: 'practice.gather', misconception });
+      expect(writes).toBe(0);
+
+      // The service's own limit stops everyone, whatever each has spent.
+      const saved = process.env.AI_SERVICE_DAILY_USD;
+      process.env.AI_SERVICE_DAILY_USD = '0';
+      try {
+        const other = await learner(3);
+        expect((await ai.state(other.userId)).aiPractice.refused).toBe('오늘은 AI 문제 만들기를 쉬고 있어요. 내일 다시 해 보세요.');
+        await expect(ai.act(other.userId, { action: 'practice.ai', scope: { kind: 'all' } })).rejects.toMatchObject({ status: 409 });
+      } finally {
+        if (saved === undefined) delete process.env.AI_SERVICE_DAILY_USD; else process.env.AI_SERVICE_DAILY_USD = saved;
+      }
     });
 
     it('is not offered where the deployment has no model', async () => {

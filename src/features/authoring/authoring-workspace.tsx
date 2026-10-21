@@ -15,6 +15,7 @@ import { Icon } from '@/features/learning/icons';
 import type { ProblemActions } from '@/features/learning/problem-card';
 import { authoringApi } from './api-client';
 import { TeachingPanel } from './teaching-panel';
+import { AiUsagePanel } from './ai-usage-panel';
 import { RemovalNotice, useEditHistory } from './edit-history';
 import { ExpertMode, useExpertMode } from './expert-mode';
 import { AddBlock, BlockCard } from './block-editor';
@@ -59,7 +60,7 @@ export function AuthoringWorkspace() {
   const [confirming, setConfirming] = useState(false);
   const [loading, setLoading] = useState(true);
   const [matches, setMatches] = useState<AccountRole[] | null>(null);
-  const [libraryPage, setLibraryPage] = useState<'courses' | 'concepts' | 'dictionary' | 'placement' | 'learners' | 'settings'>('courses');
+  const [libraryPage, setLibraryPage] = useState<'courses' | 'concepts' | 'dictionary' | 'placement' | 'learners' | 'usage' | 'settings'>('courses');
   /** The placement being written, which lives beside the lesson draft rather than inside it. */
   const [placement, setPlacement] = useState<DiagnosticDraft | null>(null);
   const [placementEdit, setPlacementEdit] = useState<DiagnosticEdit | null>(null);
@@ -137,7 +138,7 @@ export function AuthoringWorkspace() {
           const params = new URLSearchParams(window.location.search);
           setCourseKey(params.get('course'));
           const page = params.get('view');
-          if (page === 'concepts' || page === 'dictionary' || page === 'placement' || page === 'learners' || page === 'settings') setLibraryPage(page);
+          if (page === 'concepts' || page === 'dictionary' || page === 'placement' || page === 'learners' || page === 'usage' || page === 'settings') setLibraryPage(page);
           const draftId = params.get('draft'); const versionId = params.get('version');
           if (draftId || versionId) {
             const detail = draftId ? (await authoringApi.draft(draftId)).draft
@@ -329,6 +330,7 @@ export function AuthoringWorkspace() {
         <button className={libraryPage === 'concepts' ? 'active' : ''} aria-current={libraryPage === 'concepts' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('concepts'); }}>개념으로 찾기</button>
         <button className={libraryPage === 'placement' ? 'active' : ''} aria-current={libraryPage === 'placement' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('placement'); }}>시작점 확인</button>
         <button className={libraryPage === 'learners' ? 'active' : ''} aria-current={libraryPage === 'learners' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('learners'); }}>학습자</button>
+        {mayPublish(workspace.role) && <button className={libraryPage === 'usage' ? 'active' : ''} aria-current={libraryPage === 'usage' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('usage'); }}>AI 사용량</button>}
         {mayGrantRoles(workspace.role) && <button className={libraryPage === 'settings' ? 'active' : ''} aria-current={libraryPage === 'settings' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('settings'); }}>편집 권한</button>}
       </nav>
       {libraryPage === 'courses' && <CourseLibrary onDirty={setLibraryDirty} workspace={workspace} busy={busy} courseKey={courseKey} onCourse={setCourseKey}
@@ -375,6 +377,9 @@ export function AuthoringWorkspace() {
           <div><h3>학습자를 가르치려면 먼저 로그인해 주세요.</h3>
             <p>편집은 로그인 없이도 열려 있지만, 학습자는 공용 편집 계정이 아니라 내 계정에 연결돼요. <a href="/">학습 화면</a>에서 로그인한 뒤 다시 오세요.</p></div>
         </div></section>)}
+      {/* Spending names accounts, so it needs the operator's own sign-in, not the shared open editor. */}
+      {libraryPage === 'usage' && mayPublish(workspace.role) && (session?.user ? <AiUsagePanel />
+        : <section className="dashboard-section"><p className="editor-note">AI 사용량은 운영자 계정으로 로그인해야 볼 수 있어요. <a href="/">학습 화면</a>에서 로그인한 뒤 다시 오세요.</p></section>)}
       {libraryPage === 'settings' && mayGrantRoles(workspace.role) && <RolePanel accounts={workspace.accounts} busy={busy} matches={matches}
         onSearch={(query) => act({ action: 'account.search', query }, (response) => setMatches(response.matches ?? []))}
         onGrant={(userId, role) => act({ action: 'role.grant', userId, role }, () => setMatches(null))}

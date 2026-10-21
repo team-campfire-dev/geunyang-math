@@ -72,7 +72,7 @@ export function AiPracticePanel({ scope, label, state, lessons, busy, variant, o
     </div>
     <div className="ai-practice-action">
       {action}
-      {!open && <small>{spent ? '오늘은 다 썼어요. 내일 다시 만들 수 있어요.' : `오늘 ${state.aiPractice.remaining}번 더 만들 수 있어요`}</small>}
+      {!open && <small>{state.aiPractice.refused ?? (spent ? '오늘은 다 썼어요. 내일 다시 만들 수 있어요.' : `오늘 ${state.aiPractice.remaining}번 더 만들 수 있어요`)}</small>}
     </div>
   </section>;
 }

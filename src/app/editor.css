@@ -582,3 +582,21 @@
 /* Taking a role away is the quiet choice on the row, said after the choice that matters. */
 .role-row .text-button { color: var(--editor-help); }
 .role-row .text-button:hover:not(:disabled) { color: var(--editor-warn); }
+
+/* What the models cost, for the operator. Three figures first, then plain tables: the numbers are
+   read and compared, so they line up right and nothing decorates them. */
+.authoring-page .usage-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 4px 0 20px; }
+.authoring-page .usage-stat { display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; border: 1px solid var(--editor-panel-line); border-radius: 8px; background: var(--white); min-width: 0; }
+.authoring-page .usage-stat > span { font-size: var(--editor-label-size); color: var(--editor-label); }
+.authoring-page .usage-stat > strong { font-size: 24px; font-weight: 600; letter-spacing: -0.6px; color: var(--editor-ink); font-variant-numeric: tabular-nums; }
+.authoring-page .usage-stat > small { font-size: var(--editor-help-size); color: var(--editor-help); line-height: 1.6; }
+.authoring-page .usage-meter { height: 6px; border-radius: 3px; background: var(--editor-sunken); overflow: hidden; }
+.authoring-page .usage-meter > i { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+.authoring-page .usage-table-wrap { overflow-x: auto; }
+.authoring-page .usage-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.authoring-page .usage-table th { text-align: right; font-weight: 500; font-size: var(--editor-help-size); color: var(--editor-label); padding: 8px 10px; border-bottom: 1px solid var(--editor-rule); white-space: nowrap; }
+.authoring-page .usage-table td { text-align: right; padding: 9px 10px; border-bottom: 1px solid var(--editor-rule); color: var(--editor-ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.authoring-page .usage-table th:first-child, .authoring-page .usage-table td:first-child { text-align: left; white-space: normal; word-break: keep-all; min-width: 104px; }
+.authoring-page .usage-table tr.is-near td { font-weight: 600; }
+.authoring-page .ai-usage code { font-size: 12px; }
+@media (max-width: 740px) { .authoring-page .usage-stats { grid-template-columns: minmax(0, 1fr); } }

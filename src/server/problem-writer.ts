@@ -2,6 +2,7 @@ import 'server-only';
 import Anthropic from '@anthropic-ai/sdk';
 import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
 import { AppError } from './errors';
+import type { UsageSink } from './model-usage';
 import { planSchema } from './ai-practice';
 import { solvedSchema, writtenSchema, type ProblemModel, type WrittenProblem } from './problem-generation';
 
@@ -27,15 +28,24 @@ const fallback = (): { betas: Anthropic.Beta.AnthropicBeta[]; fallbacks: 'defaul
  */
 export const problemWriterAvailable = () => !!process.env.ANTHROPIC_API_KEY && process.env.VITEST !== 'true';
 
-function finished(response: { stop_reason: string | null; usage: { input_tokens: number; output_tokens: number; cache_read_input_tokens?: number | null; cache_creation_input_tokens?: number | null } }, step: string) {
-  console.info(JSON.stringify({ event: 'problem_generation', step, model, stop: response.stop_reason,
-    input: response.usage.input_tokens, output: response.usage.output_tokens,
-    cached: response.usage.cache_read_input_tokens ?? 0, cacheWritten: response.usage.cache_creation_input_tokens ?? 0 }));
+type Answered = { model: string; stop_reason: string | null; usage: { input_tokens: number; output_tokens: number; cache_read_input_tokens?: number | null; cache_creation_input_tokens?: number | null } };
+
+/**
+ * Logs the call, reports what it cost to whoever asked, and refuses an answer that is not one. The
+ * cost is reported first: a refused or cut-off answer was still paid for.
+ */
+function finished(response: Answered, step: string, onUsage?: UsageSink) {
+  const call = { step, model: response.model || model, input: response.usage.input_tokens, output: response.usage.output_tokens,
+    cacheRead: response.usage.cache_read_input_tokens ?? 0, cacheWrite: response.usage.cache_creation_input_tokens ?? 0 };
+  console.info(JSON.stringify({ event: 'problem_generation', step, model, served: call.model, stop: response.stop_reason,
+    input: call.input, output: call.output, cached: call.cacheRead, cacheWritten: call.cacheWrite }));
+  onUsage?.(call);
   if (response.stop_reason === 'refusal') throw new AppError(502, 'generation_refused', '모델이 이 요청을 거절했어요. 요청을 바꿔 다시 해 보세요.');
   if (response.stop_reason === 'max_tokens') throw new AppError(502, 'generation_truncated', '문제가 너무 길어 끝까지 받지 못했어요. 문제 수를 줄여 다시 해 보세요.');
 }
 
-export function claudeProblemModel(client = new Anthropic()): ProblemModel {
+/** `onUsage` hears every call this model makes, for the account that caused it. */
+export function claudeProblemModel(onUsage?: UsageSink, client = new Anthropic()): ProblemModel {
   return {
     name: model,
     async write(system, user): Promise<WrittenProblem[]> {
@@ -46,7 +56,7 @@ export function claudeProblemModel(client = new Anthropic()): ProblemModel {
         messages: [{ role: 'user', content: user }],
         output_config: { effort: 'medium', format: betaZodOutputFormat(writtenSchema) },
       });
-      finished(response, 'write');
+      finished(response, 'write', onUsage);
       if (!response.parsed_output) throw new AppError(502, 'generation_unreadable', '모델의 답을 문제로 읽지 못했어요. 다시 해 보세요.');
       return response.parsed_output.problems;
     },
@@ -57,7 +67,7 @@ export function claudeProblemModel(client = new Anthropic()): ProblemModel {
         messages: [{ role: 'user', content: user }],
         output_config: { effort: 'medium', format: betaZodOutputFormat(planSchema) },
       });
-      finished(response, 'plan');
+      finished(response, 'plan', onUsage);
       if (!response.parsed_output) throw new AppError(502, 'generation_unreadable', '기록을 읽은 결과를 받지 못했어요. 다시 해 보세요.');
       return response.parsed_output;
     },
@@ -68,7 +78,7 @@ export function claudeProblemModel(client = new Anthropic()): ProblemModel {
         messages: [{ role: 'user', content: user }],
         output_config: { effort: 'medium', format: betaZodOutputFormat(solvedSchema) },
       });
-      finished(response, 'solve');
+      finished(response, 'solve', onUsage);
       return response.parsed_output?.answer ?? '';
     },
   };

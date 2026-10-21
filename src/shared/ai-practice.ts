@@ -97,5 +97,7 @@ export type AiPracticeState = {
   available: boolean;
   /** Requests left today. */
   remaining: number;
+  /** Why none may be asked for now although the count allows it — what the service pays for has run out. */
+  refused?: string;
   runs: AiPracticeRun[];
 };

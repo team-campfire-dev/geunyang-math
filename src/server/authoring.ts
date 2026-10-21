@@ -10,10 +10,12 @@ import { frozenProblemSet, lessonRecord, importContent, problemSetRecords, lesso
 import { AppError } from './errors';
 import { generateProblems, type ProblemModel } from './problem-generation';
 import { claudeProblemModel, problemWriterAvailable, writerFailure } from './problem-writer';
+import { budgetRefusal, usageRecorder } from './ai-budget';
+import type { UsageSink } from './model-usage';
 import { generationLimits, type GenerationRequest } from '@/shared/generation';
 import { misconceptionOf } from '@/shared/misconception';
 import { choiceLimits, misreadingLimits, normalizeAnswer, type AnswerSpec } from '@/shared/answer';
-import type { ContentBlock, GradeResult, LessonSection, ProblemSetRef } from '@/shared/api';
+import type { ContentBlock, CourseStage, GradeResult, LessonSection, ProblemSetRef } from '@/shared/api';
 import {
   lessonKeyPattern, mayEditEveryDraft, mayGrantRoles, mayPublish, newProblem, nextBlockId, nextProblemVersionId,
   nextSectionId, problemSetIdPattern, pruneBlock, pruneProblems, pruneSections, suggestDiagnosticVersionId,
@@ -299,7 +301,7 @@ const generating = new Set<string>();
 
 export class AuthoringService {
   /** `writer` is the model that writes questions, or null where this deployment has none. */
-  constructor(private db: PrismaClient, private writer: () => ProblemModel | null = () => (problemWriterAvailable() ? claudeProblemModel() : null)) {}
+  constructor(private db: PrismaClient, private writer: (onUsage?: UsageSink) => ProblemModel | null = (onUsage) => (problemWriterAvailable() ? claudeProblemModel(onUsage) : null)) {}
 
   private async require(userId: string): Promise<AuthoringRole> {
     const role = await authoringRole(this.db, userId);
@@ -755,26 +757,30 @@ export class AuthoringService {
     const role = await this.require(userId);
     const row = await this.load(draftId, userId, role);
     if (row.status === 'published') throw new AppError(409, 'draft_published', '이미 발행한 초안이에요. 새 초안을 만들어 주세요.');
-    const model = this.writer();
-    if (!model) throw new AppError(503, 'generation_unavailable', '이 서비스에는 문제 생성이 켜져 있지 않아요.');
+    if (!this.writer()) throw new AppError(503, 'generation_unavailable', '이 서비스에는 문제 생성이 켜져 있지 않아요.');
     const unknown = request.misconceptions.find((key) => !misconceptionOf(key));
     if (unknown) throw new AppError(422, 'misconception_unknown', `「${unknown}」는 알려진 오개념 이름이 아니에요.`);
     const stored = row.document as unknown as StoredLesson;
     const [lesson, concepts] = await Promise.all([
-      this.db.lesson.findUnique({ where: { key: stored.public.lessonKey }, select: { course: { select: { title: true } } } }),
+      this.db.lesson.findUnique({ where: { key: stored.public.lessonKey }, select: { course: { select: { title: true, stage: true } } } }),
       this.db.concept.findMany({ where: { key: { in: request.conceptKeys } }, select: { key: true, label: true } }),
     ]);
     if (concepts.length !== new Set(request.conceptKeys).size) throw new AppError(422, 'concept_unknown', '없는 개념이 섞여 있어요.');
     if (generating.has(userId)) throw new AppError(409, 'generation_running', '문제를 만드는 중이에요. 끝난 뒤에 다시 해 보세요.');
+    const refused = await budgetRefusal(this.db, userId);
+    if (refused) throw new AppError(429, 'generation_budget', refused);
     generating.add(userId);
+    // What the run costs is written down for this author as each call returns.
+    const recorder = usageRecorder(this.db, userId, 'editor');
     try {
-      const generated = await generateProblems(model, request, {
-        courseTitle: lesson?.course.title ?? null, lessonTitle: stored.public.title,
+      const generated = await generateProblems(this.writer(recorder.sink)!, request, {
+        courseTitle: lesson?.course.title ?? null, stage: (lesson?.course.stage ?? null) as CourseStage | null, lessonTitle: stored.public.title,
         concepts: request.conceptKeys.map((key) => concepts.find((concept) => concept.key === key)!),
       }).catch((reason: unknown) => { throw writerFailure(reason); });
       return { workspace: await this.workspace(userId), generated };
     } finally {
       generating.delete(userId);
+      await recorder.settled();
     }
   }
 
