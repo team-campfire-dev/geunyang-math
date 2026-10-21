@@ -542,3 +542,21 @@
   .taught-actions select { flex: 1 1 100%; font-size: 16px; min-height: 44px; }
   .pill-remove { width: 32px; height: 32px; }
 }
+
+/* Panels stacked in one section. Without room between them the next panel's legend sat on the last
+   panel's bottom border, and two boxes read as one broken one. */
+.dashboard-section > .editor-panel + .editor-panel { margin-top: 20px; }
+/* A labelled field and the button that acts on it, on one line: the button stands level with the
+   box, not with the label above it, and is as tall as the box. */
+.editor-actions:has(> .editor-field) { align-items: flex-end; }
+.editor-actions > .editor-field { margin-top: 0; }
+/* The box is its text's line plus 20px of padding and 2px of border, so the button is the same sum. */
+.editor-actions:has(> .editor-field) > .button { min-height: calc(var(--editor-value-size) * 1.7 + 22px); }
+/* A note beside a button is a line of the row, not a paragraph with room above it. */
+.editor-actions > .editor-note { margin: 0; }
+/* Inside a panel an empty list is said where the list would start, like the note above it. */
+.editor-panel .empty-inline { text-align: left; padding: 14px 0 2px; }
+/* Where the boxes take 16px text so iOS does not zoom (see the 740px block above). */
+@media (max-width: 740px) {
+  .editor-actions:has(> .editor-field) > .button { min-height: calc(16px * 1.7 + 22px); }
+}
