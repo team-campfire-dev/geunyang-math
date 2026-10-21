@@ -33,7 +33,7 @@ const courses = seeds.flatMap((seed) => seed.courses).filter((course) => course.
 const scopeFor = (courseKey: string | null) =>
   placementScope(graph, lessons.filter((lesson) => lesson.courseKey === courseKey).flatMap((lesson) => lesson.conceptKeys));
 const advise = (targetCourseKey: string | null) => recommend({
-  lessons, enrollments: [], assignments: [], dailyMinutes: 10, targetCourseKey, now: new Date(),
+  lessons, enrollments: [], assignments: [], dailyMinutes: 10, targetCourseKeys: targetCourseKey ? [targetCourseKey] : [], now: new Date(),
   readiness: conceptReadiness(labels, null, []),
 }).recommendations[0];
 

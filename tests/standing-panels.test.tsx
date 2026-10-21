@@ -22,7 +22,7 @@ const way = lessons.flatMap((item) => item.conceptKeys);
 
 const path = (props: Partial<Parameters<typeof WayThere>[0]> = {}) => render(
   <WayThere courses={courses} lessons={lessons} readiness={ready([])} onTheWay={way}
-    targetCourseKey="functions" onChooseTarget={vi.fn()} onOpenHistory={vi.fn()} {...props} />);
+    targets={[{ key: 'functions', label: '배우려는 과정' }]} onChooseTarget={vi.fn()} onOpenHistory={vi.fn()} {...props} />);
 const names = () => [...document.querySelectorAll('.way-name')].map((node) => node.firstChild?.textContent);
 
 /**
@@ -48,16 +48,28 @@ describe('the way to what a learner came for', () => {
   it('counts the middle of a long way instead of naming all of it, and still shows where it ends', () => {
     const long: PublicCourse[] = [...courses, { key: 'later', title: '이차함수', summary: '', track: 'middle', stage: 'middle-3' }];
     const longLessons = [...lessons, lesson('l6', 'later', ['later-a'])];
-    path({ courses: long, lessons: longLessons, targetCourseKey: 'later',
+    path({ courses: long, lessons: longLessons, targets: [{ key: 'later', label: '배우려는 과정' }],
       onTheWay: longLessons.flatMap((item) => item.conceptKeys), readiness: ready([]) });
     // Seven ahead, five drawn: four from the front, the target, and a count for what is between.
     expect(names()).toEqual(['분수', '비와 비율', '정수와 유리수', '일차방정식', '이차함수']);
     expect(screen.getByText('… 2개')).toBeTruthy();
   });
 
+  it('ends at every course set for an exam, keeping each one in sight and naming who set it', () => {
+    const long: PublicCourse[] = [...courses, { key: 'later', title: '이차함수', summary: '', track: 'middle', stage: 'middle-3' }];
+    const longLessons = [...lessons, lesson('l6', 'later', ['later-a'])];
+    path({ courses: long, lessons: longLessons, onTheWay: longLessons.flatMap((item) => item.conceptKeys), readiness: ready([]),
+      targets: [{ key: 'integers', label: '배우려는 과정' }, { key: 'systems', label: '선생님이 정한 과정' }, { key: 'later', label: '선생님이 정한 과정' }] });
+    // Seven ahead: the three ends, and the two nearest of the rest; the two in between are counted.
+    expect(names()).toEqual(['분수', '비와 비율', '정수와 유리수', '연립방정식', '이차함수']);
+    expect(screen.getByText('… 2개')).toBeTruthy();
+    const ends = [...document.querySelectorAll('.way-list li.is-target')].map((node) => node.querySelector('em')!.textContent);
+    expect(ends).toEqual(['배우려는 과정', '선생님이 정한 과정', '선생님이 정한 과정']);
+  });
+
   it('offers to be told where to go rather than drawing a path through the whole catalogue', () => {
     const onChooseTarget = vi.fn();
-    path({ targetCourseKey: null, onChooseTarget });
+    path({ targets: [], onChooseTarget });
     expect(document.querySelector('.way-list')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: /배우려는 과정 고르기/ }));
     expect(onChooseTarget).toHaveBeenCalled();

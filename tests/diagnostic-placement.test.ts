@@ -30,7 +30,7 @@ const conceptsOf = (problemVersionId: string) => questions.find((question) => qu
 const answering = (decide: (conceptKeys: string[]) => PlacementAnswer['status']) =>
   playPlacement(lessons, questions, (id) => decide(conceptsOf(id)));
 const advise = (placed: PlacementState | null, targetCourseKey: string | null = null) => recommend({
-  lessons, enrollments: [], assignments: [], dailyMinutes: 10, targetCourseKey, now: new Date(),
+  lessons, enrollments: [], assignments: [], dailyMinutes: 10, targetCourseKeys: targetCourseKey ? [targetCourseKey] : [], now: new Date(),
   readiness: conceptReadiness(labels, placed, []),
 }).recommendations[0];
 const suggest = (placed: PlacementState | null) => advise(placed)?.lessonKey;

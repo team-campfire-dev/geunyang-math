@@ -51,7 +51,7 @@ const learningState = (overrides: Partial<LearningState> = {}): LearningState =>
   diagnostic: null, diagnosticOffering: null,
   plan: { version: '1', readiness: [], review: null, sessionMinutes: 10, preferredLessonKey: null, onTheWay: [] },
   recommendationHistory: [], concepts: [], misconceptions: [], confusion: { version: 1, latestAt: null, concepts: [], repeated: [], evidence: [] },
-  aiPractice: { available: false, remaining: 3, runs: [] }, ...overrides,
+  aiPractice: { available: false, remaining: 3, runs: [] }, teaching: { teachers: [], assignedCourses: [] }, ...overrides,
 });
 const enrolled = (completedSectionIds: string[] = [], status: 'active' | 'completed' = 'active') =>
   learningState({ enrollments: [{ id: 'e1', lessonKey, lessonVersionId: 'fraction-meaning:v2', completedSectionIds, status, attempts: [] }] });

@@ -519,3 +519,26 @@
 .generated-claim { margin: 0; font-size: 12px; color: var(--editor-help); }
 .generated-claim code { font-family: var(--mono); overflow-wrap: anywhere; }
 .generated-problem > .button, .generated-problem > .text-button { align-self: flex-start; }
+
+/* 학습자: the people this account teaches. A row per learner, the courses set for them as removable
+   pills, and the way to set another underneath — the same shape as the role list above it. */
+.invite-code { font-family: var(--mono); font-size: 22px; font-weight: 600; letter-spacing: .12em; color: var(--editor-label);
+  padding: 8px 14px; border: 1px dashed var(--editor-field-line); border-radius: 8px; background: var(--white); }
+.taught-list { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.taught-row { display: grid; gap: 10px; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--white); }
+.taught-who strong { font-size: 14px; font-weight: 600; color: var(--editor-label); }
+.taught-who small { display: block; font-size: var(--editor-help-size); color: var(--editor-help); margin-top: 3px; }
+.taught-courses { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.taught-courses .pill { display: inline-flex; align-items: center; gap: 4px; white-space: normal; }
+.taught-courses .pill small { color: var(--editor-help); }
+.pill-remove { display: inline-grid; place-items: center; width: 22px; height: 22px; margin: -4px -6px -4px 0; border-radius: 4px; color: var(--editor-help); }
+.pill-remove:hover { background: #ebe4d4; color: var(--editor-label); }
+.taught-actions { flex-wrap: wrap; align-items: center; }
+.taught-actions select { width: auto; min-width: 180px; min-height: var(--editor-control); padding: 8px 11px; border: 1px solid var(--editor-field-line);
+  border-radius: 6px; background: var(--white); font: inherit; font-size: 14px; }
+.taught-ending { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.taught-ending small { flex-basis: 100%; font-size: var(--editor-help-size); color: var(--editor-warn); }
+@media (max-width: 760px) {
+  .taught-actions select { flex: 1 1 100%; font-size: 16px; min-height: 44px; }
+  .pill-remove { width: 32px; height: 32px; }
+}

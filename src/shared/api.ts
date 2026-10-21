@@ -3,6 +3,7 @@ import type { ConceptScope, DefinitionRef } from './rich-text';
 import type { Misreading } from './misreading';
 import type { ConfusionSummary } from './confusion';
 import type { AiPracticeNote, AiPracticeState, PracticeScope } from './ai-practice';
+import type { LearnerTeaching } from './teaching';
 /**
  * What the marker decided, and — when it could read one — what kind of slip the answer looks like.
  * `misreading` is the part a report can add up: the message is written for the one moment after an
@@ -263,6 +264,8 @@ export type LearningState = {
   misconceptions: StandingMisconception[];
   confusion: ConfusionSummary;
   aiPractice: AiPracticeState;
+  /** Who teaches this learner and which courses they set. Empty for somebody studying on their own. */
+  teaching: LearnerTeaching;
 };
 export type LearningAction =
   | { action: 'recommendation.choose'; lessonKey: string | null }
@@ -280,5 +283,9 @@ export type LearningAction =
   /** Gathers the questions built to catch one mistake into a set of this learner's own. */
   | { action: 'practice.gather'; misconception: string }
   /** AI 맞춤 연습 over a range. Returns at once; the set appears in the state when it is written. */
-  | { action: 'practice.ai'; scope: PracticeScope };
+  | { action: 'practice.ai'; scope: PracticeScope }
+  /** The learner entering a teacher's invite code: saying yes to being taught by them. */
+  | { action: 'teaching.join'; code: string }
+  /** The learner ending a link. What was set through it goes with it. */
+  | { action: 'teaching.leave'; linkId: string };
 export type ActionResponse = { state: LearningState; result?: GradeResult; hint?: ContentBlock[]; solution?: ContentBlock[]; enrollmentId?: string; recipientId?: string };

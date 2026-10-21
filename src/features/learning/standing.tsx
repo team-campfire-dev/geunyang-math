@@ -19,14 +19,19 @@ const shownAhead = 5;
  * What is behind them is counted rather than named, because a course already finished is not a
  * thing to look at. What is ahead is named, in order, with how much of it is settled.
  */
-export function WayThere({ courses, lessons, readiness, onTheWay, targetCourseKey, onChooseTarget, onOpenHistory }: {
+export function WayThere({ courses, lessons, readiness, onTheWay, targets, onChooseTarget, onOpenHistory }: {
   courses: PublicCourse[]; lessons: PublicLesson[]; readiness: ConceptReadiness[];
-  onTheWay: string[]; targetCourseKey: string | null;
+  onTheWay: string[];
+  /**
+   * Where the path ends: the course the learner chose and the courses somebody set for them, each
+   * with what to call it. Several, when a teacher sets an exam's worth of courses at once.
+   */
+  targets: { key: string; label: string }[];
   onChooseTarget: () => void; onOpenHistory: () => void;
 }) {
   // Without a course named there is nothing to be on the way to: `onTheWay` is the whole catalogue,
   // and drawing a path through thirty-eight courses would be a picture of nothing in particular.
-  if (!targetCourseKey) return <div className="way-there is-unset">
+  if (!targets.length) return <div className="way-there is-unset">
     <div><strong>배우려는 과정을 고르면 여기에 길이 보여요.</strong>
       <p>거기까지 가는 데 필요한 코스와, 그중 어디까지 왔는지를 한 줄로 보여 드려요.</p></div>
     <button className="button secondary" onClick={onChooseTarget}>배우려는 과정 고르기<Icon name="arrow" size={16} /></button>
@@ -39,16 +44,21 @@ export function WayThere({ courses, lessons, readiness, onTheWay, targetCourseKe
   if (!counted.length) return null;
   const behind = counted.filter((entry) => entry.ready === entry.total);
   const ahead = counted.filter((entry) => entry.ready < entry.total);
-  const target = courses.find((course) => course.key === targetCourseKey);
+  const labelOf = (key: string) => targets.find((target) => target.key === key)?.label;
+  const first = courses.find((course) => course.key === targets[0].key);
   if (!ahead.length) return <div className="way-there is-arrived">
-    <div><strong>{target?.title ?? '배우려는 과정'}까지 필요한 건 모두 확인했어요.</strong>
+    <div><strong>{first?.title ?? '배우려는 과정'}{targets.length > 1 ? ` 외 ${targets.length - 1}개 과정` : ''}까지 필요한 건 모두 확인했어요.</strong>
       <p>코스 {behind.length}개를 지나왔어요. 이제 그 과정의 수업을 이어가면 돼요.</p></div>
     <button className="text-button" onClick={onOpenHistory}>자세히 보기<Icon name="arrow" size={15} /></button>
   </div>;
-  // The last one is kept whatever happens: it is what they came for, and a path that does not show
-  // where it ends is a path to nowhere.
-  const drawn = ahead.length > shownAhead ? [...ahead.slice(0, shownAhead - 1), ahead[ahead.length - 1]] : ahead;
+  // Every place the path ends is kept whatever happens — they are what this is for, and a path that
+  // does not show where it ends is a path to nowhere. What is left of the room goes to the nearest.
+  const room = Math.max(1, shownAhead - ahead.filter((entry) => labelOf(entry.course.key)).length);
+  let near = 0;
+  const drawn = ahead.length > shownAhead ? ahead.filter((entry) => labelOf(entry.course.key) || near++ < room) : ahead;
   const hidden = ahead.length - drawn.length;
+  // The gap the count stands in for goes where the first skipped course was.
+  const gapAt = drawn.findIndex((entry, index) => ahead.indexOf(entry) !== index);
   return <section className="way-there" aria-label="배우려는 과정까지 가는 길">
     <div className="way-heading">
       <strong>여기까지 왔어요</strong>
@@ -56,10 +66,10 @@ export function WayThere({ courses, lessons, readiness, onTheWay, targetCourseKe
       <button className="text-button" onClick={onOpenHistory}>자세히 보기<Icon name="arrow" size={15} /></button>
     </div>
     <ol className="way-list">
-      {drawn.map((entry, index) => <li key={entry.course.key} className={entry.course.key === targetCourseKey ? 'is-target' : ''}>
+      {drawn.map((entry, index) => <li key={entry.course.key} className={labelOf(entry.course.key) ? 'is-target' : ''}>
         {/* The gap the count stands in for, drawn where it falls rather than after everything. */}
-        {hidden > 0 && index === drawn.length - 1 && <span className="way-gap" aria-label={`사이에 코스 ${hidden}개`}>… {hidden}개</span>}
-        <span className="way-name">{entry.course.title}{entry.course.key === targetCourseKey && <em>배우려는 과정</em>}</span>
+        {hidden > 0 && index === gapAt && <span className="way-gap" aria-label={`사이에 코스 ${hidden}개`}>… {hidden}개</span>}
+        <span className="way-name">{entry.course.title}{labelOf(entry.course.key) && <em>{labelOf(entry.course.key)}</em>}</span>
         <span className="way-bar" aria-hidden="true"><i style={{ width: `${Math.round((entry.ready / entry.total) * 100)}%` }} /></span>
         <span className="way-count">개념 {entry.total}개 중 {entry.ready}개</span>
       </li>)}

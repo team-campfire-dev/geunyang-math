@@ -14,6 +14,7 @@ import { ApiError, learningApi, type Session } from '@/features/learning/api-cli
 import { Icon } from '@/features/learning/icons';
 import type { ProblemActions } from '@/features/learning/problem-card';
 import { authoringApi } from './api-client';
+import { TeachingPanel } from './teaching-panel';
 import { RemovalNotice, useEditHistory } from './edit-history';
 import { ExpertMode, useExpertMode } from './expert-mode';
 import { AddBlock, BlockCard } from './block-editor';
@@ -58,7 +59,7 @@ export function AuthoringWorkspace() {
   const [confirming, setConfirming] = useState(false);
   const [loading, setLoading] = useState(true);
   const [matches, setMatches] = useState<AccountRole[] | null>(null);
-  const [libraryPage, setLibraryPage] = useState<'courses' | 'concepts' | 'dictionary' | 'placement' | 'settings'>('courses');
+  const [libraryPage, setLibraryPage] = useState<'courses' | 'concepts' | 'dictionary' | 'placement' | 'learners' | 'settings'>('courses');
   /** The placement being written, which lives beside the lesson draft rather than inside it. */
   const [placement, setPlacement] = useState<DiagnosticDraft | null>(null);
   const [placementEdit, setPlacementEdit] = useState<DiagnosticEdit | null>(null);
@@ -136,7 +137,7 @@ export function AuthoringWorkspace() {
           const params = new URLSearchParams(window.location.search);
           setCourseKey(params.get('course'));
           const page = params.get('view');
-          if (page === 'concepts' || page === 'dictionary' || page === 'placement' || page === 'settings') setLibraryPage(page);
+          if (page === 'concepts' || page === 'dictionary' || page === 'placement' || page === 'learners' || page === 'settings') setLibraryPage(page);
           const draftId = params.get('draft'); const versionId = params.get('version');
           if (draftId || versionId) {
             const detail = draftId ? (await authoringApi.draft(draftId)).draft
@@ -327,6 +328,8 @@ export function AuthoringWorkspace() {
         <button className={libraryPage === 'dictionary' ? 'active' : ''} aria-current={libraryPage === 'dictionary' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('dictionary'); }}>뜻풀이 사전</button>
         <button className={libraryPage === 'concepts' ? 'active' : ''} aria-current={libraryPage === 'concepts' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('concepts'); }}>개념으로 찾기</button>
         <button className={libraryPage === 'placement' ? 'active' : ''} aria-current={libraryPage === 'placement' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('placement'); }}>시작점 확인</button>
+        {/* Teaching needs an account of one's own: the shared open editor has no learners to be linked to. */}
+        {session?.user && <button className={libraryPage === 'learners' ? 'active' : ''} aria-current={libraryPage === 'learners' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('learners'); }}>학습자</button>}
         {mayGrantRoles(workspace.role) && <button className={libraryPage === 'settings' ? 'active' : ''} aria-current={libraryPage === 'settings' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('settings'); }}>편집 권한</button>}
       </nav>
       {libraryPage === 'courses' && <CourseLibrary onDirty={setLibraryDirty} workspace={workspace} busy={busy} courseKey={courseKey} onCourse={setCourseKey}
@@ -366,6 +369,7 @@ export function AuthoringWorkspace() {
           const response = await authoringApi.act({ action: 'definition.save', edit }, session?.user?.id ?? '');
           setWorkspace(response.workspace); return response.definitions ?? [];
         }} />}
+      {libraryPage === 'learners' && session?.user && <TeachingPanel userId={session.user.id} />}
       {libraryPage === 'settings' && mayGrantRoles(workspace.role) && <RolePanel accounts={workspace.accounts} busy={busy} matches={matches}
         onSearch={(query) => act({ action: 'account.search', query }, (response) => setMatches(response.matches ?? []))}
         onGrant={(userId, role) => act({ action: 'role.grant', userId, role }, () => setMatches(null))}

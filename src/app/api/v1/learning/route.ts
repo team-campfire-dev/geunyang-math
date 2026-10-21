@@ -10,7 +10,8 @@ export function GET(request: Request) {
   return handle(async () => {
     const service = new LearningService(getDatabase());
     const params = new URL(request.url).searchParams;
-    if (params.get('catalog') === '1') return json(await service.publicCatalog());
+    // Signed in, the catalogue is the one this learner may see; signed out, what is open to everybody.
+    if (params.get('catalog') === '1') return json(await service.publicCatalog(undefined, (await sessionUser(request))?.id ?? null));
     const lessonKey = params.get('lessonKey');
     if (lessonKey) return json(await service.lessonDocument(lessonKey, (await sessionUser(request))?.id));
     return json(await service.state((await requireUser(request)).id));
