@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { plannerRequest, settlePlan, type Profile, type RawPlan } from '@/server/ai-practice';
+import { plannerRequest, settlePlan, warmingFirstWrite, type Profile, type RawPlan } from '@/server/ai-practice';
+import type { ProblemModel } from '@/server/problem-generation';
 import { checkHypothesis, scopeEvidence, scopeKey, parseScopeKey } from '@/shared/ai-practice';
 import type { ConfusionEvidence, ConfusionSummary } from '@/shared/confusion';
 
@@ -107,5 +108,34 @@ describe('what the questions written for a guess found', () => {
       ['q4', { answer: '5', status: 'incorrect' as const, spec }],
     ]);
     expect(checkHypothesis('hypothesis:1', predictions, firsts)).toEqual({ asked: 4, answered: 3, predicted: 1, correct: 1, other: 1 });
+  });
+});
+
+describe('writing every target from one warm cache', () => {
+  it('sends the first write alone and the rest once it has returned, without holding back solving', async () => {
+    const log: string[] = [];
+    let release = () => {};
+    const held = new Promise<void>((resolve) => { release = resolve; });
+    const model: ProblemModel = { name: 'fake',
+      write: async (_system, user) => { log.push(`write ${user} start`); if (user === 'a') await held; log.push(`write ${user} end`); return []; },
+      solve: async (_system, user) => { log.push(`solve ${user}`); return ''; } };
+    const warm = warmingFirstWrite(model);
+    const all = Promise.all([warm.write('s', 'a'), warm.write('s', 'b'), warm.write('s', 'c'), warm.solve('s', 'x')]);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    expect(log).toEqual(['write a start', 'solve x']);
+    release();
+    await all;
+    // Nothing else was written before the first came back.
+    expect(log.slice(2, 3)).toEqual(['write a end']);
+    expect(log.slice(3).sort()).toEqual(['write b end', 'write b start', 'write c end', 'write c start']);
+  });
+
+  it('lets the others go when the first write fails, and fails only the first', async () => {
+    let calls = 0;
+    const model: ProblemModel = { name: 'fake', solve: async () => '',
+      write: async () => { calls += 1; if (calls === 1) throw new Error('down'); return []; } };
+    const warm = warmingFirstWrite(model);
+    const results = await Promise.allSettled([warm.write('s', 'a'), warm.write('s', 'b')]);
+    expect(results.map((result) => result.status)).toEqual(['rejected', 'fulfilled']);
   });
 });

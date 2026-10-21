@@ -302,8 +302,26 @@ const focusWords: Record<PlanTarget['focus'], string> = {
 
 export type WrittenSet = { problems: StoredProblem[]; reasons: Record<string, string>; predictions: Record<string, Prediction[]> };
 
+/**
+ * The writer's instructions are the same long text (about 14k tokens) for every target. Sent all
+ * at once, every request misses the cache and writes it again at 1.25× the input price, which was
+ * more than half of what a set cost (2026-10-21). So the first write goes alone and the others wait
+ * for it, then read the cache at a tenth of the price. Only writes wait: the first target's solving
+ * goes on meanwhile, and a first write that fails still lets the others go.
+ */
+export function warmingFirstWrite(model: ProblemModel): ProblemModel {
+  let first: Promise<unknown> | null = null;
+  return { ...model, write: (system, user) => {
+    if (first) return first.then(() => model.write(system, user));
+    const call = model.write(system, user);
+    first = call.catch(() => undefined);
+    return call;
+  } };
+}
+
 /** Writes each target's questions and keeps what passes, in the plan's order. */
-export async function writeForPlan(model: ProblemModel, plan: PracticePlan, profile: Profile, record: LearnerRecord, setId: string): Promise<WrittenSet> {
+export async function writeForPlan(writer: ProblemModel, plan: PracticePlan, profile: Profile, record: LearnerRecord, setId: string): Promise<WrittenSet> {
+  const model = warmingFirstWrite(writer);
   const written = await Promise.all(plan.targets.map(async (target) => {
     const concept = profile.concepts.find((item) => item.key === target.conceptKey)!;
     const guess = plan.hypotheses.find((hypothesis) => hypothesis.key === target.hypothesis);
