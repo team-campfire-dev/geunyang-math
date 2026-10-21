@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { plannerRequest, settlePlan, warmingFirstWrite, type Profile, type RawPlan } from '@/server/ai-practice';
 import type { ProblemModel } from '@/server/problem-generation';
-import { checkHypothesis, scopeEvidence, scopeKey, parseScopeKey } from '@/shared/ai-practice';
+import { checkHypothesis, coursesLabel, scopeEvidence, scopeKey, parseScopeKey, type PracticeScope } from '@/shared/ai-practice';
 import type { ConfusionEvidence, ConfusionSummary } from '@/shared/confusion';
 
 const evidence = (id: string, conceptKeys: string[], status: 'correct' | 'incorrect', lessonKey: string | null, signal: ConfusionEvidence['first']['signal'] = null): ConfusionEvidence => ({
@@ -34,6 +34,17 @@ describe('what falls inside a range', () => {
       expect(parseScopeKey(scopeKey(scope))).toEqual(scope);
     }
   });
+
+  it('reads several courses as one range, the same range however they were listed', () => {
+    const exam: PracticeScope = { kind: 'courses', keys: ['factors', 'fractions'] };
+    expect(scopeEvidence(summary, exam, lessons).map((e) => e.problemVersionId)).toEqual(['p1', 'p2', 'p3', 'p4', 'p5']);
+    expect(scopeEvidence(summary, { kind: 'courses', keys: ['factors'] }, lessons).map((e) => e.problemVersionId)).toEqual(['p5']);
+    expect(scopeKey(exam)).toBe('courses:factors,fractions');
+    expect(scopeKey({ kind: 'courses', keys: ['fractions', 'factors', 'fractions'] })).toBe('courses:factors,fractions');
+    expect(parseScopeKey('courses:factors,fractions')).toEqual(exam);
+    expect(coursesLabel(['도형의 닮음', '피타고라스 정리', '확률'])).toBe('도형의 닮음 · 피타고라스 정리 · 확률');
+    expect(coursesLabel(['가', '나', '다', '라'])).toBe('가 외 3개 과정');
+  });
 });
 
 describe('settling what the planner asked for', () => {
@@ -48,6 +59,7 @@ describe('settling what the planner asked for', () => {
     items,
     past: [{ key: 'hypothesis:1', name: '분자끼리만 더하기', how: '', confidence: 'low', misconception: '', evidence: ['p0'], conceptKeys: ['fraction-addition'],
       at: '2026-10-14T00:00:00.000Z', check: { asked: 3, answered: 2, predicted: 0, correct: 2, other: 0 } }],
+    stages: ['middle-2'],
   };
   const guess = (over: Partial<RawPlan['hypotheses'][number]> = {}): RawPlan['hypotheses'][number] =>
     ({ name: '통분하고 분자는 그대로 두기', how: '분모만 공통분모로 바꾼다.', evidence: [1, 2], confidence: 'medium', misconception: '', ...over });
@@ -89,6 +101,8 @@ describe('settling what the planner asked for', () => {
     const text = plannerRequest(profile);
     expect(text).toContain('분수의 덧셈 [fraction-addition]: 연습하는 중, 첫 답 맞음 1 · 틀림 2');
     expect(text).toContain('#1 [분수의 덧셈] 수업 「수업」');
+    // What the learner has not learned is said before anything is diagnosed.
+    expect(text).toContain('학년 범위(중2): 제곱근 기호(√)와 무리수는 중3에서 배운다.');
     expect(text).toContain('첫 답: 5/13 — 틀림, 힌트 없이');
     expect(text).toContain('앱이 답에서 읽은 단서: 분모끼리 더하기 [add-denominators]');
     expect(text).toContain('분모끼리 더하기 [add-denominators]: 2문제, 아직 되풀이됨');

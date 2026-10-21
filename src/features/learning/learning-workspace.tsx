@@ -22,7 +22,7 @@ import { AnswerReport, type ReportItem } from './answer-report';
 import { ConfusionSummary, MissedConcept, confusionCardId, confusionRecords } from './confusion-summary';
 import { Icon, type IconName } from './icons';
 import { AiPracticeNote, AiPracticePanel } from './ai-practice';
-import { scopeKey, type PracticeScope } from '@/shared/ai-practice';
+import { coursesLabel, maxScopeCourses, scopeKey, type PracticeScope } from '@/shared/ai-practice';
 
 type Dispatch = (action: LearningAction) => Promise<ActionResponse>;
 const roleLabels = { explanation: '개념 이해', worked_example: '함께 풀기', practice: '직접 연습', check: '확인 퀴즈', summary: '마무리' };
@@ -889,6 +889,12 @@ export function LearningWorkspace() {
       ...state.teaching.assignedCourses.filter((course) => course.courseKey !== own && courses.some((item) => item.key === course.courseKey))
         .map((course) => ({ key: course.courseKey, label: assignedLabel(course.setBy) }))];
   }
+  /** What the home screen's AI practice reads: the courses this learner is heading for, or everything. */
+  function homePractice(): { scope: PracticeScope; label: string } {
+    const keys = targets().map((target) => target.key).slice(0, maxScopeCourses);
+    if (!keys.length) return { scope: { kind: 'all' }, label: '전체 기록' };
+    return { scope: { kind: 'courses', keys }, label: coursesLabel(keys.map((key) => courses.find((course) => course.key === key)?.title ?? key)) };
+  }
   /** The same, said in a few words: the first course, and how many more. */
   function headingTitle() {
     const heading = targets();
@@ -989,7 +995,9 @@ export function LearningWorkspace() {
     return <>
       <div className="page-heading"><h1>{state ? `${state.user.displayName}님, 오늘도 한 걸음.` : '그냥, 다시 시작하는 수학.'}</h1><p>완벽하게 알지 못해도 괜찮아요. 작은 이해가 쌓이면 수학이 편해져요.</p></div>
       <section className="daily-hero"><div className="hero-copy"><span className="hero-eyebrow"><span />{step.eyebrow}</span><h2>{step.title}</h2><p>{step.reason}</p><button className="button hero-button" onClick={step.onAct} disabled={loading || busy}>{step.action}<Icon name="arrow" size={18} /></button><span className="hero-duration"><Icon name="clock" size={13} />{step.note}</span></div><div className="hero-art"><div className="hero-paper"><span className="paper-caption">{step.caption}</span><LessonArt lessonKey={step.art} large /><div className="paper-equation"><span>오늘은 하나만 이해해도 충분해요.</span></div></div><span className="hero-doodle">÷</span><span className="hero-dot" /></div></section>
-      {state && <AiPracticePanel variant="banner" scope={{ kind: 'all' }} label="전체 기록" state={state} lessons={lessons} busy={busy}
+      {/* Where the learner is heading, when somebody has said — an exam's courses read as one range;
+          the whole record otherwise. The record screen always offers the whole record. */}
+      {state && <AiPracticePanel variant="banner" {...homePractice()} state={state} lessons={lessons} busy={busy}
         onStart={startAiPractice} onOpen={openAssignment} />}
       {/* Where they are, which is a different question from what to do next and is answered in the
           same breath. Orientation rather than an invitation: nothing here is a thing to press
