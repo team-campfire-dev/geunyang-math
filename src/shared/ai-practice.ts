@@ -10,7 +10,9 @@ import type { ConfusionEvidence, ConfusionSummary } from './confusion';
  * One rule decides what falls inside a range, here, so the screen that offers the button and the
  * server that reads the record cannot disagree about whether there is enough to read.
  */
-export type PracticeScope = { kind: 'all' } | { kind: 'course'; key: string } | { kind: 'lesson'; key: string };
+export type PracticeScope = { kind: 'all' } | { kind: 'course'; key: string } | { kind: 'lesson'; key: string }
+  /** Several courses read as one range: where the learner is heading — the courses they chose or were set, an exam's worth. */
+  | { kind: 'courses'; keys: string[] };
 
 export const aiPracticeLimits = {
   /** Questions asked for each time. */
@@ -25,18 +27,34 @@ export const aiPracticeLimits = {
   staleMinutes: 10,
 } as const;
 
-export const scopeKey = (scope: PracticeScope) => (scope.kind === 'all' ? 'all' : `${scope.kind}:${scope.key}`);
+/** The most courses one range reads, so its name fits where a set's range is kept. */
+export const maxScopeCourses = 4;
+/** A range's name. Several courses are named in order, so the same courses are the same range however they were listed. */
+export const scopeKey = (scope: PracticeScope) => (scope.kind === 'all' ? 'all'
+  : scope.kind === 'courses' ? `courses:${[...new Set(scope.keys)].sort().join(',')}` : `${scope.kind}:${scope.key}`);
 export function parseScopeKey(key: string): PracticeScope | null {
   if (key === 'all') return { kind: 'all' };
+  const several = /^courses:(.+)$/.exec(key);
+  if (several) return { kind: 'courses', keys: several[1].split(',') };
   const match = /^(course|lesson):(.+)$/.exec(key);
   return match ? { kind: match[1] as 'course' | 'lesson', key: match[2] } : null;
+}
+
+/** Several courses said in a few words: all of them up to three, then the first and how many more. */
+export const coursesLabel = (titles: string[]) => (titles.length <= 3 ? titles.join(' · ') : `${titles[0]} 외 ${titles.length - 1}개 과정`);
+
+/** Whether a lesson is inside a range. Everything is inside the whole record. */
+export function scopeHolds(scope: PracticeScope, lesson: Pick<PublicLesson, 'lessonKey' | 'courseKey'>): boolean {
+  if (scope.kind === 'all') return true;
+  if (scope.kind === 'lesson') return lesson.lessonKey === scope.key;
+  if (scope.kind === 'course') return lesson.courseKey === scope.key;
+  return scope.keys.includes(lesson.courseKey);
 }
 
 /** The concepts a range teaches: every lesson's in a course, one lesson's, or none to filter by. */
 export function scopeConcepts(scope: PracticeScope, lessons: Pick<PublicLesson, 'lessonKey' | 'courseKey' | 'conceptKeys'>[]): Set<string> | null {
   if (scope.kind === 'all') return null;
-  const held = lessons.filter((lesson) => (scope.kind === 'course' ? lesson.courseKey === scope.key : lesson.lessonKey === scope.key));
-  return new Set(held.flatMap((lesson) => lesson.conceptKeys));
+  return new Set(lessons.filter((lesson) => scopeHolds(scope, lesson)).flatMap((lesson) => lesson.conceptKeys));
 }
 
 /**
@@ -46,7 +64,7 @@ export function scopeConcepts(scope: PracticeScope, lessons: Pick<PublicLesson, 
 export function scopeEvidence(summary: ConfusionSummary, scope: PracticeScope, lessons: Pick<PublicLesson, 'lessonKey' | 'courseKey' | 'conceptKeys'>[]): ConfusionEvidence[] {
   if (scope.kind === 'all') return summary.evidence;
   const concepts = scopeConcepts(scope, lessons) ?? new Set<string>();
-  const lessonKeys = new Set(lessons.filter((lesson) => (scope.kind === 'course' ? lesson.courseKey === scope.key : lesson.lessonKey === scope.key)).map((lesson) => lesson.lessonKey));
+  const lessonKeys = new Set(lessons.filter((lesson) => scopeHolds(scope, lesson)).map((lesson) => lesson.lessonKey));
   return summary.evidence.filter((item) => (item.first.source.lessonKey && lessonKeys.has(item.first.source.lessonKey))
     || item.conceptKeys.some((key) => concepts.has(key)));
 }

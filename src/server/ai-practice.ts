@@ -4,14 +4,15 @@ import type { Prisma, PrismaClient } from '@prisma/client';
 import { z } from 'zod';
 import { practicePolicy } from '@/core/assignment';
 import type { StoredProblem } from '@/core/content';
-import { aiPracticeLimits, checkHypothesis, scopeConcepts, scopeEvidence, scopeKey, type Hypothesis, type HypothesisCheck, type PracticeScope, type Prediction } from '@/shared/ai-practice';
-import type { ConceptState, CourseStage, PublicLesson } from '@/shared/api';
+import { aiPracticeLimits, checkHypothesis, coursesLabel, scopeConcepts, scopeEvidence, scopeHolds, scopeKey, type Hypothesis, type HypothesisCheck, type PracticeScope, type Prediction } from '@/shared/ai-practice';
+import { courseStageLabels, type ConceptState, type CourseStage, type PublicLesson } from '@/shared/api';
 import { renameProblem } from '@/shared/authoring';
 import type { ConfusionAttempt, ConfusionEvidence, ConfusionSummary } from '@/shared/confusion';
 import { hypothesisKey, isHypothesisKey, misconceptionOf } from '@/shared/misconception';
 import { generatedPrefix, indexGeneratedProblems, publishedProblemRecords } from './content-store';
 import { keyOf, plain, said, stored } from './learner-generation';
 import { generateProblems, type ProblemModel } from './problem-generation';
+import { notYet } from './stage-range';
 
 /**
  * AI 맞춤 연습. The app writes down what a learner did; a model reads it, guesses what went wrong,
@@ -76,6 +77,8 @@ export type Profile = {
   repeated: { kind: 'misconception' | 'misreading'; key: string; label: string; status: string; problems: number }[];
   items: ProfileItem[];
   past: PastHypothesis[];
+  /** The stages of the courses the questions came from, so what is said to the learner stays inside them. */
+  stages: CourseStage[];
 };
 
 /** How much of the record is written out. Every question troubled is worth more than one answered cleanly. */
@@ -84,6 +87,7 @@ const shown = { troubled: 24, clean: 12, past: 6, pastSets: 6 } as const;
 export function scopeLabel(scope: PracticeScope, record: Pick<LearnerRecord, 'lessons' | 'courses'>): string {
   if (scope.kind === 'all') return '전체 기록';
   if (scope.kind === 'course') return record.courses.find((course) => course.key === scope.key)?.title ?? scope.key;
+  if (scope.kind === 'courses') return coursesLabel(scope.keys.map((key) => record.courses.find((course) => course.key === key)?.title ?? key));
   return record.lessons.find((lesson) => lesson.lessonKey === scope.key)?.title ?? scope.key;
 }
 
@@ -162,7 +166,12 @@ export async function buildProfile(db: Prisma.TransactionClient, record: Learner
   }
   const items = picked.map((item, index) => ({ number: index + 1, evidence: item, problem: problems.get(item.problemVersionId),
     predicted: predictedFor.get(item.problemVersionId) ?? [] }));
-  return { scope, scopeLabel: scopeLabel(scope, record), evidence, concepts, repeated, items, past };
+  const courseOf = (lessonKey: string | null) => record.lessons.find((lesson) => lesson.lessonKey === lessonKey)?.courseKey;
+  const stages = [...new Set(items.flatMap((item) => {
+    const stage = record.courses.find((course) => course.key === courseOf(item.evidence.first.source.lessonKey))?.stage;
+    return stage ? [stage] : [];
+  }))];
+  return { scope, scopeLabel: scopeLabel(scope, record), evidence, concepts, repeated, items, past, stages };
 }
 
 const stateWords: Record<ConceptState, string> = { unknown: '아직 확인 전', practicing: '연습하는 중', independent: '스스로 해결', retained: '꾸준히 기억' };
@@ -216,7 +225,10 @@ function checkText(check: HypothesisCheck): string {
 /** The profile as the planner reads it. Keys are shown in brackets because the plan must name them. */
 export function plannerRequest(profile: Profile): string {
   const labels = new Map(profile.concepts.map((concept) => [concept.key, concept.label]));
-  const lines = [`범위: ${profile.scopeLabel}`, `첫 답이 있는 문제: ${profile.evidence.length}개 (아래에는 그중 ${profile.items.length}개)`, '', '개념별 상태:'];
+  const lines = [`범위: ${profile.scopeLabel}`, `첫 답이 있는 문제: ${profile.evidence.length}개 (아래에는 그중 ${profile.items.length}개)`];
+  // The diagnosis and the reasons are read by the learner, in the words of what they have learned.
+  for (const stage of profile.stages) if (notYet[stage]) lines.push(`학년 범위(${courseStageLabels[stage]}): ${notYet[stage]} 진단과 이유도 그렇게 쓴다.`);
+  lines.push('', '개념별 상태:');
   for (const concept of profile.concepts) {
     lines.push(`- ${concept.label} [${concept.key}]: ${stateWords[concept.state]}, 첫 답 맞음 ${concept.right} · 틀림 ${concept.wrong}`);
   }
@@ -326,7 +338,7 @@ export async function writeForPlan(writer: ProblemModel, plan: PracticePlan, pro
     const concept = profile.concepts.find((item) => item.key === target.conceptKey)!;
     const guess = plan.hypotheses.find((hypothesis) => hypothesis.key === target.hypothesis);
     const lesson = record.lessons.find((item) => item.conceptKeys.includes(target.conceptKey)
-      && (profile.scope.kind === 'all' || (profile.scope.kind === 'lesson' ? item.lessonKey === profile.scope.key : item.courseKey === profile.scope.key)))
+      && scopeHolds(profile.scope, item))
       ?? record.lessons.find((item) => item.conceptKeys.includes(target.conceptKey));
     const course = record.courses.find((item) => item.key === lesson?.courseKey);
     // What the learner wrote: for a guess, the questions it came from; otherwise this concept's wrong first answers.

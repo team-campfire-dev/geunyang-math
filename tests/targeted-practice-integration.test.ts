@@ -218,6 +218,20 @@ describe.skipIf(!url)('targeted practice lifecycle on MySQL', () => {
       expect(checked.ai!.hypotheses![0].check).toMatchObject({ answered: 1, predicted: 1 });
     });
 
+    it('reads the courses a learner is heading for as one range, and only courses they can see', async () => {
+      const { fake, read } = model(planned);
+      const ai = new LearningService(db, () => fake);
+      const who = await learner(3);
+      await expect(ai.act(who.userId, { action: 'practice.ai', scope: { kind: 'courses', keys: [key, 'no-such-course'] } })).rejects.toMatchObject({ status: 404 });
+      await ai.act(who.userId, { action: 'practice.ai', scope: { kind: 'courses', keys: [key] } });
+      await ai.settled();
+      expect(read.at(-1)).toContain('범위: 맞춤 연습 검사');
+      const made = (await ai.state(who.userId)).assignments.find(item => item.ai?.scope === `courses:${key}`)!;
+      expect(made.title).toBe('AI 맞춤 연습 · 맞춤 연습 검사');
+      // Asking again for the same courses in another order opens the same set.
+      expect((await ai.act(who.userId, { action: 'practice.ai', scope: { kind: 'courses', keys: [key, key] } })).recipientId).toBe(made.recipientId);
+    });
+
     it('says when it failed, and stops at the day\'s limit', async () => {
       const { fake } = model(async () => { throw new Error('model down'); });
       const ai = new LearningService(db, () => fake);

@@ -23,7 +23,7 @@ import { buildProfile, newSetId, openPracticeSet, planSchema, plannerRequest, se
 import { plannerSystem } from './problem-prompts';
 import { budgetRefusal, usageRecorder } from './ai-budget';
 import type { UsageSink } from './model-usage';
-import { aiPracticeLimits, checkHypothesis, scopeKey, type AiPracticeRun, type AiPracticeState, type PracticeScope } from '@/shared/ai-practice';
+import { aiPracticeLimits, checkHypothesis, maxScopeCourses, scopeKey, type AiPracticeRun, type AiPracticeState, type PracticeScope } from '@/shared/ai-practice';
 import type { ProblemModel } from './problem-generation';
 import { claudeProblemModel, problemWriterAvailable } from './problem-writer';
 import { assignedCourseKeys, endLink, hiddenCourses, joinByInvite, learnerTeaching } from './teaching';
@@ -78,6 +78,8 @@ export const actionSchema = z.discriminatedUnion('action', [
     z.object({ kind: z.literal('all') }).strict(),
     z.object({ kind: z.literal('course'), key: id.max(100) }).strict(),
     z.object({ kind: z.literal('lesson'), key: id.max(100) }).strict(),
+    // A course's key has no comma, so the range's name reads back to the same courses.
+    z.object({ kind: z.literal('courses'), keys: z.array(id.max(100).regex(/^[^,]+$/)).min(1).max(maxScopeCourses) }).strict(),
   ]) }).strict(),
 ]);
 type Tx = Prisma.TransactionClient;
@@ -157,6 +159,8 @@ export class LearningService {
   private async startAiPractice(userId: string, scope: PracticeScope): Promise<string | undefined> {
     if (!this.writer()?.plan) throw new AppError(503, 'generation_unavailable', '지금은 AI 맞춤 연습을 쓸 수 없어요.');
     const key = scopeKey(scope);
+    // Where a set's range is kept holds 120 characters; four ordinary course keys fit with room to spare.
+    if (key.length > 120) throw new AppError(422, 'scope_too_long', '한 번에 고를 수 있는 과정이 너무 많아요.');
     const open = await this.db.assignmentRecipient.findFirst({ where: { learnerUserId: userId, status: 'assigned',
       assignment: { issuerType: 'self', policySnapshot: { path: '$.ai.scope', equals: key } } }, orderBy: { recommendedAt: 'desc' } });
     if (open) return open.id;
@@ -176,6 +180,7 @@ export class LearningService {
       const courses = (await this.db.course.findMany({ select: { key: true, title: true, stage: true } }))
         .filter(course => seen.has(course.key)).map(course => ({ ...course, stage: course.stage as CourseStage | null }));
       if (scope.kind === 'course' && !courses.some(course => course.key === scope.key)) throw notFound();
+      if (scope.kind === 'courses' && !scope.keys.every(key => courses.some(course => course.key === key))) throw notFound();
       const record: LearnerRecord = { userId, summary: state.confusion, concepts: state.concepts, lessons: state.lessons, courses };
       const profile = await buildProfile(this.db, record, scope);
       if (!profile) throw conflict('이 범위에는 아직 기록이 부족해요. 문제를 몇 개 더 풀면 만들 수 있어요.');

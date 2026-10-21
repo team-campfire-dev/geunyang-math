@@ -21,6 +21,7 @@ const copy: Record<PracticeScope['kind'], { title: string; text: (label: string)
   all: { title: 'AI 맞춤 연습', text: () => `AI가 지금까지 푼 기록을 읽고 어떤 실수였는지 추측해, 그것을 확인하고 다질 ${aiPracticeLimits.questions}문제를 새로 내요.` },
   course: { title: '이 코스로 AI 맞춤 연습', text: (label) => `「${label}」에서 푼 기록을 읽고 어떤 실수였는지 추측해, ${aiPracticeLimits.questions}문제를 새로 내요.` },
   lesson: { title: '이 수업으로 AI 맞춤 연습', text: (label) => `「${label}」에서 푼 기록을 읽고 어떤 실수였는지 추측해, ${aiPracticeLimits.questions}문제를 새로 내요.` },
+  courses: { title: '목표 과정으로 AI 맞춤 연습', text: (label) => `배우려는 과정(${label})에서 푼 기록을 읽고 어떤 실수였는지 추측해, ${aiPracticeLimits.questions}문제를 새로 내요.` },
 };
 
 /**

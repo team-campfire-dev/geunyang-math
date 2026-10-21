@@ -1331,6 +1331,17 @@ describe('AI 맞춤 연습', () => {
     await until(() => expect(server.of('practice.ai')).toEqual([{ action: 'practice.ai', scope: { kind: 'all' } }]));
   });
 
+  it('reads the courses a learner is heading for as one range, from the home screen', async () => {
+    server = serve({ state: withRecord({
+      user: { id: 'u1', displayName: '학습자', targetCourseKey: 'fractions', dailyMinutes: 10 },
+      teaching: { teachers: [], assignedCourses: [{ courseKey: 'decimals', setBy: { kind: 'person', name: '김선생' }, assignedAt: '2026-10-21T00:00:00.000Z' }] } }) });
+    render(<LearningWorkspace />);
+    await until(() => expect(screen.getByText('목표 과정으로 AI 맞춤 연습')).toBeDefined());
+    expect(screen.getByText(/배우려는 과정\(분수 · 소수\)에서 푼 기록을 읽고/)).toBeDefined();
+    fireEvent.click(screen.getByRole('button', { name: /AI에게 문제 받기/ }));
+    await until(() => expect(server.of('practice.ai')).toEqual([{ action: 'practice.ai', scope: { kind: 'courses', keys: ['fractions', 'decimals'] } }]));
+  });
+
   it('says there is not enough to read yet, and is absent where the deployment has no model', async () => {
     server = serve({ state: withRecord({ confusion: { version: 1, latestAt: null, concepts: [], repeated: [], evidence: [answered('q1', 'incorrect')] } }) });
     render(<LearningWorkspace />);
