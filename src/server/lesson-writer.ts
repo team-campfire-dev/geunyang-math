@@ -63,6 +63,7 @@ export const lessonWriterSystem = `${writingGuide}
   - 글자의 \`text\`에는 짧은 수식을 $...$로 쓸 수 있다. 글자 크기는 10~16.
   - 점·변의 이름(A, B, C)은 본문과 같게 쓴다. 본문에서도 점 이름은 그냥 A, B, C로 쓴다($\\text{}$로 감싸지 않는다).
 - **그림이 캔버스를 채운다**: 주된 도형이 가로·세로의 60% 이상을 차지하게 크게 그리고, 사방 여백은 12~20으로 둔다.
+- **사각형끼리 겹치지 않는다.** 큰 판 안에 작은 칸을 담는 것은 괜찮다. 색을 바꾸려고 같은 자리에 도형을 하나 더 겹치지 말고, 프레임에서 그 도형의 \`fill\`을 바꾼다.
 - **글자는 서로 겹치지 않는다**: 글자 상자(대략 글자 수 × 크기 × 0.6 너비, 크기 높이)끼리 4 이상 띄우고, 선 바로 위가 아니라 6 이상 떨어뜨린다. 움직인 뒤의 장면에서도 마찬가지다.
 - **움직이는 그림**: \`frames\`(2~8개)와 \`frameMs\`(1200~2200). 각 프레임은 \`{"caption":"...","changes":[{"id","dx","dy","opacity","rotate","fill","hidden"}]}\`. **프레임의 변화는 앞 프레임에 쌓이지 않는다** — 매번 처음 그림에 그 프레임의 변화만 적용된다. 그래서 계속 보여야 하는 변화는 뒤 프레임마다 다시 적는다. 처음엔 숨겼다가 나타날 도형은 items에서 \`"opacity":0\`으로 두고 보일 프레임마다 \`{"id":…, "opacity":1}\`을 적는다. 첫 프레임은 보통 변화가 없는 처음 상태다. 프레임 caption이 그 장면에서 볼 것을 말한다.
 - **끌어다 놓는 그림**: 옮길 도형에 \`"draggable":true\`, \`id\`, \`label\`(그 도형의 이름, 수식 없이). \`zones\`: \`[{"id","x","y","width","height","label","accepts":[옮길 도형의 id]}]\`. \`task\`: \`{"prompt":"무엇을 어디에 놓을지","promptAlt":"수식 없는 같은 문장(prompt에 $가 있으면 필수)","successText":"다 놓았을 때 보일 한 문장(수식 없이)"}\`. 칸은 도형이 들어갈 만큼 크게, 서로 겹치지 않게 둔다. **칸 이름은 칸 바로 아래 16 높이에 그려지니 그 자리를 비워 둔다.** 옮길 도형은 칸과 칸 이름에서 떨어진 곳(예: 그림 아래쪽 한 줄)에 처음 둔다. 끌어다 놓는 그림에는 frames를 쓰지 않는다.
@@ -238,6 +239,25 @@ function layoutIssues(scene: SceneLike, where: string): string[] {
         seen.add(key);
         issues.push(`${where}: 글자 「${words(p.item)}」와 「${words(q.item)}」가 ${index ? `${index}번째 프레임에서 ` : ''}겹쳐요.`);
       }
+    }
+  }
+  // Boxes on boxes, as tests/course-content.test.ts holds every installed drawing to: a panel may
+  // hold smaller boxes, and nothing else may sit on another box in any scene it plays.
+  for (const [index, frame] of states.entries()) {
+    const boxes = scene.items.filter((item) => item.kind === 'rect' && !item.rotate).map((item) => {
+      const change = item.id ? frame?.changes.find((entry) => entry.id === item.id) : undefined;
+      const opacity = change?.opacity ?? item.opacity ?? 1;
+      return { id: item.id ?? 'rect', box: boundsIn(item, change), visible: opacity > 0 && !change?.hidden };
+    }).filter((entry) => entry.visible);
+    const holds = (outer: Box, inner: Box) => inner.width * inner.height <= (outer.width * outer.height) / 2
+      && inner.x >= outer.x && inner.y >= outer.y && inner.x + inner.width <= outer.x + outer.width && inner.y + inner.height <= outer.y + outer.height;
+    for (let a = 0; a < boxes.length; a++) for (let b = a + 1; b < boxes.length; b++) {
+      const p = boxes[a], q = boxes[b];
+      if (holds(p.box, q.box) || holds(q.box, p.box) || overlapArea(p.box, q.box) <= 0.5) continue;
+      const key = `${p.id}|${q.id}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      issues.push(`${where}: 사각형 ${p.id}와 ${q.id}가 ${index ? `${index}번째 프레임에서 ` : ''}겹쳐요. 색을 바꾸려는 거라면 겹치지 말고 프레임에서 fill을 바꾸세요.`);
     }
   }
   for (const item of scene.items.filter((entry) => entry.draggable)) {

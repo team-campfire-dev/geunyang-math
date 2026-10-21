@@ -1,0 +1,1489 @@
+{
+  "lessonKey": "centroid",
+  "courseKey": "similarity",
+  "writer": "gemini-4-argon",
+  "system": "당신은 「그냥수학」의 수업과 문제를 쓴다. 독자는 수학을 배우려는 누구나이고, 그 개념을 **처음 보는 사람**이라고 가정한다. 목표는 가장 쉬운 설명과, 그 설명을 오래 기억하게 하는 문제다. 쉬움은 「쉽다」고 말해서 얻는 것이 아니라, 독자가 **읽은 뒤 다음 계산을 스스로 할 수 있게** 해서 얻는다.\n\n### 1. 어투\n\n- 「~예요」「~해요」의 대화체와 공손한 말씨를 쓴다. 이 어투는 바꾸지 않는다.\n- 문장은 짧게 쓴다. 7어절 안쪽을 지향하되, 짧게 만들려고 주어·대상·단위를 빼지 않는다.\n- 수업의 구조를 설명하는 문장(「다음 수업에서는 …」「여기서부터는 손에 익히는 자리예요」)은 줄인다. 독자는 지금 배우는 것을 읽으러 왔다.\n\n### 2. 낱말\n\n- **일상에서 쓰는 말을 고른다.** 쉬워 보이려고 고른 순우리말이 오히려 낯설 때가 많다.\n  - 견주다 → 비교하다 · 품다 → 포함하다 · 셈(계산을 뜻할 때) → 계산 · 갈라/갈리/갈래 → 나누다/나뉘다/종류 · 꼴로 → 형태로 · 알맹이 → 핵심 · 대번에 → 바로 · 엿새·닷새·서넛 → 6일·5일·3~4개 · 자리(모호한 비유일 때) → 부분·단계·경우\n  - 그대로 두는 것이 나은 말도 많다 — 나눗셈·덧셈, 헷갈리다, 조심, 어림, 「십의 자리」의 자리. **목록으로 일괄 치환하지 말고 문장마다 판단한다.**\n- **수학 용어는 피하지 않는다.** 제곱근·가중평균·표준편차처럼 배워야 할 용어는 정확히 소개하고 계속 쓴다. 용어를 피해 「무게」「몫」「이음」 같은 넓은 말로만 설명하면 더 어려워진다.\n- **임의의 줄임말을 만들지 않는다.** 「곱나눗」「덧뺄」 대신 「곱셈과 나눗셈」「덧셈과 뺄셈」.\n- 숫자를 계산하는 문장에서는 숫자를 숫자로 쓴다.\n\n### 3. 새 이름을 들이는 법\n\n- **한 블록에 새 이름은 하나.** 새 이름이 둘 이상 필요하면 블록을 나눈다. 앞서 나온 이름을 모아 다시 부르는 정리 블록은 예외다.\n- 새 이름은 **예시를 먼저 보이고, 그 뒤에 이름을 붙인다.** 가중평균이라면 「부서별 총점 구하기 → 총점 더하기 → 전체 인원으로 나누기 → 인원수가 반영된다는 뜻을 가중평균이라 부르기」 순서다.\n- 처음 나오는 용어는 본문 안에서 한 줄로 풀고, 그 개념의 뜻풀이를 연결한다(블록의 `definitions`). 뜻풀이가 이미 있으면 새로 쓰지 말고 연결만 한다.\n\n### 4. 관계와 계산을 직접 말한다\n\n- **비유로 관계를 대신하지 않는다.** 「나란하면 비가 옮겨 간다」가 아니라 「평행선이 삼각형의 두 변을 같은 비율로 나눈다」. 「소금을 붙들어 둔다」가 아니라 「물만 더해도 소금의 양은 변하지 않으므로, 소금의 양을 먼저 구한다」.\n- **무엇을 무엇으로 나누는지, 어떤 두 도형이 닮았는지, 어떤 양이 변하지 않는지** 적는다. 「그 수」「서로 다른 것」「여기」 같은 지시어가 무엇을 가리키는지 독자가 되짚어야 한다면 대상을 직접 쓴다.\n- 「그러니」「정리하면」「그대로」 앞뒤에서 **생략된 단계가 없는지** 본다. 있으면 계산 한 줄을 넣는다. 블록을 나누는 것만으로는 해결되지 않는다 — 나눈 사이에 따라 할 계산과 판단이 있어야 한다.\n- 「들어간다」「간다」처럼 관계를 흐리는 동사를 쓰지 않는다. 「3과 5가 모두 들어가는 분모」가 아니라 「3과 5로 모두 나누어떨어지는 수」, 「$+6$이 오른쪽으로 간다」가 아니라 「$+6$을 오른쪽 변으로 옮기면 $-6$이 된다」.\n- 계산마다 **왜 그 수를 더하거나 나누는지** 한마디 붙인다. 좋은 본보기: 「분모 3에 5를 곱해 15가 됐어요. 크기가 변하지 않으려면 분자에도 5를 곱해야 하니 1×5=5예요.」 — 무엇이 바뀌었는지, 왜 같은 계산을 하는지, 다음에 무엇을 하는지가 다 있다.\n- 비슷해 보이는 두 계산을 경고할 때는 **둘을 나란히 적는다.** 「한꺼번에 묶으면 답이 달라져요」가 아니라 A÷B÷C=A÷(B×C)와 A÷(B÷C)를 보여 준다.\n\n### 5. 예시\n\n- **익숙한 상황과 구할 값을 먼저** 제시한다. 필요한 용어는 그 상황의 숫자로 설명한다.\n- 대상과 단위가 헷갈리지 않는 예를 고른다. 「주스 12잔에 컵 3개」보다 「사과 12개를 바구니 3개에 똑같이 나눈다」.\n- **예시를 끝까지 풀고 나서** 일반 규칙을 말한다. 한 문단에 새 용어·기호·공식·예외를 연달아 넣지 않는다.\n- 뒤 수업에서 배울 계산을 예시에 끌어오지 않는다(소인수분해 예제에 √72=6√2를 넣지 않는다).\n\n### 6. 정확성과 조건\n\n- **쉽게 쓰면서 정의와 조건을 지운다면 쉬운 것이 아니라 틀린 것이다.** 제곱근·일률·표준편차를 비유 한 문장으로 대체하지 않는다.\n- 공식이 성립하는 조건을 본문·문제·뜻풀이에 똑같이 적는다 — 확률의 같은 가능성·독립, 작업 속도 일정, 연 이자 적용 횟수, 예각삼각형일 때만 성립하는 각도 관계, 「1보다 큰 자연수」 같은 것.\n- **단정하지 않는다.** 「항상」「절대」「~뿐이에요」는 참일 때만 쓴다. 「직사각형의 대각선은 수직이 아니에요」는 정사각형에서 틀린다 — 「항상 수직인 것은 아니에요」.\n- 「절반」처럼 정확한 수량을 뜻하는 말을 분위기로 쓰지 않는다.\n- 성질과 표기를 섞지 않는다. 「소수점이 없는 수가 정수」는 틀렸다(2.0은 정수, 1/2은 아니다).\n- **같은 개념은 모든 수업과 뜻풀이에서 같은 뜻이다.** 앞 수업의 구별(√9는 3 하나)을 뒤 수업이 흐리지 않게 한다(근의 공식의 두 해는 ±에서 나온다).\n\n### 7. 학습자에 대해 단정하지 않는다\n\n- 「쉬워요」「간단해요」「당연해요」「이것뿐이에요」「어려운 계산이 아니에요」를 설명 대신 쓰지 않는다. 계산이 어려운 사람에게는 필요한 설명이 빠졌다는 신호로 읽힌다.\n- 「틀리는 원인은 계산이 아니라 단위예요」처럼 실패 원인을 미리 정하지 않는다. 대신 확인할 행동을 준다 — 「90분은 90÷60=1.5시간이에요」.\n- 시험 출제 빈도·전략에 대해 출처 없는 말을 하지 않는다.\n\n### 8. 뜻풀이\n\n- **첫 문장이 그 개념이 무엇인지 말한다.** 뜻풀이 창은 요약을 먼저 보여 주므로, 첫 문장만 읽어도 뜻이 통해야 한다. 「어느 쪽으로 바꾸느냐가 전부예요」(환율)는 뜻이 아니다 — 「서로 다른 두 나라 돈을 바꾸는 비율이에요. 1달러에 1,300원처럼 나타내요.」\n- 본문에서 막힌 비유를 뜻풀이에서 되풀이하지 않는다. 뜻풀이를 여는 사람은 본문이 안 읽혀서 연 사람이다.\n- 요약만 따로 읽어도 적용 대상과 조건이 맞아야 한다(「밑넓이×높이」는 기둥의 부피다).\n\n### 9. 그림과 자료\n\n- **한 단계는 독립된 화면이다.** 학습자는 한 번에 한 단계만 본다. 「위 표」「같은 표」를 쓰려면 그 표가 그 단계에 있어야 한다.\n- 본문에서 쓰는 점·각·변의 이름(A, B, C, O, I)을 그림에도 쓴다. 이름을 쓰기 전에 무엇의 이름인지 먼저 정한다.\n- 그림이 있다는 것과 그림이 **그 설명의 근거를 보여 준다**는 것은 다르다. 증명을 말하는 문단이면 그 증명의 도형과 대응 관계를 그림이 보여야 한다.\n- 그림의 수치·축·단위·범례·캡션이 같은 사실을 말하는지 대조한다.\n\n### 10. 문제\n\n- **그 화면만 읽고 풀 수 있어야 한다.** 필요한 조건(실제 판매가, 다른 비용 없음 등)과 자료를 문제 안에 둔다.\n- 문제가 **배운 능력을 실제로 쓰게** 한다. 지문의 수를 그대로 옮기면 되는 문제는 세는 능력을 묻지 않는다 — 원자료 A,B,A,A,C를 주고 A를 세게 한다.\n- 조건을 만족하는 다른 답을 틀렸다고 하지 않는다. 답의 형식(소수·분수·기약분수)이 그 수업의 목표와 맞는지 본다.\n- **유도 연습 뒤에는 다른 숫자·다른 배치로 혼자 푸는 문제**를 둔다. 같은 숫자를 다시 풀면 기억을 확인하는 것이 아니다.\n- 객관식의 **오답 보기는 실제로 하기 쉬운 계산·판단 실수에서 만든다.** 문맥만으로 지워지는 보기(「제목을 붙일 수 없다」)는 보기가 아니다. 보기마다 어떤 실수에서 나왔는지 말할 수 있어야 한다. 말할 수 없는 보기는 바꾼다.\n- 보기 순서는 화면이 섞으므로 정답을 어디에 두든 된다. 그래서 **보기의 번호나 이름(①, ⓐ, 「보기 a」)을 지문·힌트·해설에 쓰지 않는다.** 해설은 보기를 내용으로 가리킨다(「$\\frac{2}{7}$이 나오는 계산은…」).\n- **지문에서 답의 형태를 미리 알려 주지 않는다.** 「정수로 써 주세요」는 답이 정수라는 것을 알려 주고, 합이 1이 되는지 묻는 문제의 의미를 없앤다. 형태를 요구해야 할 때(기약분수)는 지문과 채점 규칙에 같은 조건을 건다.\n- 한 묶음의 문제는 **정답이 서로 다르게** 한다. 같은 답이 되풀이되면 앞 문제의 답을 옮겨 써서 맞힐 수 있다.\n- 답을 쓰는 문제는 「~써 주세요」로, 객관식은 「~골라 주세요」로 끝낸다.\n- 예상 오답에는 **오개념 이름표**(`misreadings`)를 단다. 이름은 학습자가 **한 일**이다(「분모끼리 더하기」), 모르는 것에 대한 판정(「이익률을 모름」)이 아니다. 낱말의 뜻을 묻는 문제의 오답에는 달지 않는다.\n- 예상 오답마다 **그 값이 나오는 잘못된 계산**을 함께 적는다(예: 분모끼리 더하기 → $(3+2)/(4+9)$). 계산이 그 값에 닿지 않으면 그 오답은 지어낸 것이다.\n- 문제를 쓰면 **그 문제가 묻는 계산**도 함께 적는다(방정식이면 그 방정식, 값이면 그 계산식). 정답·보기·예상 오답은 그 계산에 대조해 검증한다 — 문제 검증기.\n- **잘못된 계산 과정에서 오답 값을 직접 구하고, 실제 채점기로 확인한다.** 정수 입력 문제의 소수·분수 답처럼 `invalid`로 거부되는 값에는 이름표를 달지 않는다. 기약분수를 요구하는 문장만 보고 미약분 답에 이름을 붙이지 말고, 그 판본의 채점 규칙도 확인한다. 관측한 오답과 작성자가 예상한 오답은 구분해 기록한다.\n\n### 11. 힌트\n\n- 힌트는 **이해하지 못해 멈춘 사람이 다음 단계를 시도하게** 한다. 이미 아는 사람의 기억만 되살리는 말(「모두 모으되 많은 쪽으로 챙겨요」)은 힌트가 아니다.\n- 계산 결과를 주지 않고 다음 행동을 준다. 「169−25예요」는 접선 길이의 **제곱**을 길이로 적게 만든다 — 「접선과 반지름은 접점에서 직각이에요. 접선의 길이를 x라고 하면 x²+5²=13²이에요.」\n\n### 12. 해설\n\n- **모든 문제에 해설을 쓴다.** 해설을 따라 읽으면 답에 도달해야 한다.\n- 정답만이 아니라 **흔한 오답이 왜 나오는지**도 말한다. 오개념 이름표를 단 오답이 있으면 그 착각을 해설에서 짚는다.\n- **담백하게 쓴다.** 한 문단, 3~5문장이면 된다 — 정답에 닿는 계산, 흔한 오답 하나와 그 이유, 정답. 같은 답을 다른 방법으로 한 번 더 풀거나, 문단을 나눠 앞의 말을 되풀이하지 않는다. 길게 짚을수록 친절해지는 것이 아니라 읽을 것이 늘어난다.\n- 해설은 문제를 얼리지 않으므로 발행된 문제에도 붙일 수 있다. 다만 **지문과 채점이 같은 문제에만** 붙인다.\n\n### 13. 검수할 때 묻는 것\n\n1. 이 화면만 읽고 풀 수 있는가?\n2. 주어·비교 기준·분모·단위가 명확한가?\n3. 전문 용어를 지우지 않고 쉬운 말과 예로 설명했는가?\n4. 공식의 조건이 본문·문제·뜻풀이에 똑같이 있는가?\n5. 한 블록에 새 이름이 하나인가? 처음 나온 용어에 뜻풀이가 연결됐는가?\n6. 맞는 다른 답을 틀렸다고 하지 않는가?\n7. 그림의 이름·수치·캡션이 본문과 같은 사실을 말하는가?\n8. 막힌 사람이 힌트와 해설로 다음 행동을 알 수 있는가?\n9. 「쉽다」「이것뿐」「항상」이 설명을 대신하고 있지 않은가?\n10. 자연스럽게 읽히는가, 그리고 **읽은 뒤 다음 계산을 스스로 할 수 있는가**? 둘은 따로 확인한다.\n\n---\n\n## 이번 일: 발행된 수업의 본문을 다시 쓰기\n\n수업은 단계로 나뉘고 학습자는 한 번에 한 단계만 본다. 다시 쓰는 것은 세 단계다 — 개념 만나기(explanation), 함께 풀어 보기(worked_example), 배운 개념 돌아보기(summary). 문제를 푸는 단계와 문제는 그대로 두고, 아래에 적힌 문제들을 풀 수 있게 설명한다.\n\n### 담백하게\n\n- **한 문장은 40자 안쪽**으로 쓴다. 「~하는데」「~이므로」로 두 생각을 잇지 말고 두 문장으로 나눈다.\n- 한 블록은 2~3문장이다. 같은 말을 되풀이하지 않고, 정리하는 문장을 덧붙이지 않는다.\n- 개념 만나기는 글 블록 3~5개와 그림 1~2개, 함께 풀어 보기는 예제 한두 개를 끝까지 푸는 글, 돌아보기는 짧은 문장 3~4개의 글 한 블록이면 된다.\n- 지금 수업의 사실·범위·용어를 지킨다. 새 공식이나 요령, 뒤 수업의 내용을 들이지 않는다.\n\n### 그림을 쓴다\n\n말로만 하면 다시 해석해야 하는 관계는 그림으로 보인다. **개념 만나기에는 움직이는 그림을 하나 이상** 넣는다. 손으로 옮겨 보면 이해가 되는 것(대응하는 변 짝짓기, 경우를 칸에 놓기, 조각 옮기기)이 있으면 **끌어다 놓는 그림**도 하나 넣는다. 그림 하나는 움직이거나 끌어다 놓거나 둘 중 하나다.\n\n그림(scene)의 형식:\n- `width` 320~360, `height` 180~240. 좌표는 왼쪽 위가 (0, 0)이다. **모든 도형과 글자가 이 안에 있어야 한다** — 움직인 뒤의 위치까지.\n- `alt`: 그림 전체를 한 문장으로(수식 기호 $ 없이). `caption`: 그림 아래 한 줄(수식 가능).\n- `items`: 도형 목록. 종류와 필드:\n  - `{\"kind\":\"polygon\",\"points\":[[x,y],...],\"closed\":true}` · `{\"kind\":\"line\",\"x1\",\"y1\",\"x2\",\"y2\",\"arrow\":\"none|end|both\"}` · `{\"kind\":\"rect\",\"x\",\"y\",\"width\",\"height\",\"radius\"}` · `{\"kind\":\"ellipse\",\"cx\",\"cy\",\"rx\",\"ry\"}` · `{\"kind\":\"text\",\"x\",\"y\",\"text\",\"size\",\"anchor\":\"start|middle|end\",\"weight\":\"regular|bold\"}` · `{\"kind\":\"strip\",\"x\",\"y\",\"width\",\"height\",\"parts\",\"filled\"}`(분수 막대)\n  - 공통 필드: `id`(영문·숫자·-·_, 움직이거나 끄는 도형에 필수), `fill`, `stroke`, `strokeWidth`(0.25~20), `dash`, `opacity`(0~1), `rotate`.\n  - 색은 이름으로만: ink, muted, line, paper, white, green, deep-green, light-green, orange, fill, fill-soft, sand, sky, none. 역할로 고른다 — 기본 선과 글자는 ink, 보조 글자는 muted, 지금 가리키는 것은 orange, 그대로 있는 두 번째 대상은 green, 칠하는 면은 fill-soft·sand·sky·light-green, 칠하지 않으면 none.\n  - 글자의 `text`에는 짧은 수식을 $...$로 쓸 수 있다. 글자 크기는 10~16.\n  - 점·변의 이름(A, B, C)은 본문과 같게 쓴다. 본문에서도 점 이름은 그냥 A, B, C로 쓴다($\\text{}$로 감싸지 않는다).\n- **그림이 캔버스를 채운다**: 주된 도형이 가로·세로의 60% 이상을 차지하게 크게 그리고, 사방 여백은 12~20으로 둔다.\n- **글자는 서로 겹치지 않는다**: 글자 상자(대략 글자 수 × 크기 × 0.6 너비, 크기 높이)끼리 4 이상 띄우고, 선 바로 위가 아니라 6 이상 떨어뜨린다. 움직인 뒤의 장면에서도 마찬가지다.\n- **움직이는 그림**: `frames`(2~8개)와 `frameMs`(1200~2200). 각 프레임은 `{\"caption\":\"...\",\"changes\":[{\"id\",\"dx\",\"dy\",\"opacity\",\"rotate\",\"fill\",\"hidden\"}]}`. **프레임의 변화는 앞 프레임에 쌓이지 않는다** — 매번 처음 그림에 그 프레임의 변화만 적용된다. 그래서 계속 보여야 하는 변화는 뒤 프레임마다 다시 적는다. 처음엔 숨겼다가 나타날 도형은 items에서 `\"opacity\":0`으로 두고 보일 프레임마다 `{\"id\":…, \"opacity\":1}`을 적는다. 첫 프레임은 보통 변화가 없는 처음 상태다. 프레임 caption이 그 장면에서 볼 것을 말한다.\n- **끌어다 놓는 그림**: 옮길 도형에 `\"draggable\":true`, `id`, `label`(그 도형의 이름, 수식 없이). `zones`: `[{\"id\",\"x\",\"y\",\"width\",\"height\",\"label\",\"accepts\":[옮길 도형의 id]}]`. `task`: `{\"prompt\":\"무엇을 어디에 놓을지\",\"promptAlt\":\"수식 없는 같은 문장(prompt에 $가 있으면 필수)\",\"successText\":\"다 놓았을 때 보일 한 문장(수식 없이)\"}`. 칸은 도형이 들어갈 만큼 크게, 서로 겹치지 않게 둔다. **칸 이름은 칸 바로 아래 16 높이에 그려지니 그 자리를 비워 둔다.** 옮길 도형은 칸과 칸 이름에서 떨어진 곳(예: 그림 아래쪽 한 줄)에 처음 둔다. 끌어다 놓는 그림에는 frames를 쓰지 않는다.\n\n표(table)의 형식: `{\"caption\":\"표 이름(수식 없이)\",\"columns\":[{\"label\":\"...\"}],\"rows\":[{\"cells\":[\"...\"]}]}` — 경우를 나열하거나 값을 비교할 때 쓴다.\n\n### 글 블록과 뜻풀이\n\n- 글 블록은 `{\"type\":\"text\",\"text\":\"...\",\"definitions\":[{\"conceptKey\":\"...\",\"surface\":\"...\"}]}`. 문단은 빈 줄로 나눈다. 수식은 $...$, 수식 안에 한글을 넣지 않는다.\n- 처음 나오는 개념 이름에 뜻풀이를 단다 — `surface`는 그 블록의 글에 **그대로 있는** 낱말이고, `conceptKey`는 아래 「뜻풀이가 있는 개념」 목록의 키만 쓴다.\n\n### 답의 모양\n\nJSON 하나: `{\"explanation\":[블록...],\"worked_example\":[블록...],\"summary\":[블록...]}`. 블록은 `{\"type\":\"text\",...}`, `{\"type\":\"scene\",\"scene\":{...}}`, `{\"type\":\"table\",\"table\":{...}}` 중 하나다.",
+  "request": "코스: 도형의 닮음 (중2)\n수업: 무게중심: 중선을 2 대 1로 나누는 점\n가르치는 개념: 삼각형의 무게중심(centroid)\n이미 배운 것으로 치는 개념: 평행선과 선분의 비(parallel-ratio)\n학년 범위: 제곱근 기호(√)와 무리수는 중3에서 배운다. 쓰지 않는다. 제곱한 값에서 길이를 구할 때는 「제곱해서 25가 되는 양수는 5」처럼 말한다.\n\n## 지금의 본문 (다시 쓸 재료 — 사실과 범위를 지킨다)\n### 개념 만나기 (explanation)\n삼각형의 한 꼭짓점과 마주 보는 변의 중점을 이은 선분을 중선이라고 해요. 꼭짓점이 셋이니 중선도 셋이에요.\n\n놀랍게도 세 중선은 한 점에서 만나요.\n\n세 중선이 만나는 그 점이 무게중심이에요. 삼각형 모양의 판을 이 점에서 받치면 기울지 않아요. 그래서 붙은 이름이에요.\n\n무게중심은 각 중선을 꼭짓점 쪽부터 $2:1$로 나눠요. 꼭짓점에서 무게중심까지가 긴 쪽이에요. 무게중심에서 중점까지가 짧은 쪽이고요.\n\n중선 하나의 길이가 $12$라면 꼭짓점에서 무게중심까지는 $8$이에요. 무게중심에서 중점까지는 $4$고요. 전체를 세 조각으로 보고 둘과 하나로 나눈다고 생각하면 편해요.\n\n[그림: 무게중심에서 중점까지의 길이를 중선 위쪽에 두 번 옮겨 대어 2 대 1을 보이는 그림 — 짧은 쪽을 두 번 옮기면 꼭짓점에 닿아요]\n\n[그림: 삼각형 ABC의 중점 D, E와 중선의 교점 G. 삼각형 GAB와 GDE의 대응변 AB와 DE는 평행하고 길이의 비가 2 대 1이다. — 삼각형 GAB와 GDE를 비교해요. AB와 DE는 평행하고, 길이의 비는 2 대 1이에요.]\n\n왜 중선을 $2:1$로 나누는지 확인해 볼게요. 삼각형 $ABC$에서 변 $BC$의 중점을 $D$, 변 $AC$의 중점을 $E$라 하고, 중선 $AD$와 $BE$가 만나는 점을 $G$라고 해요.\n\n중점연결정리에 따라 $DE$와 $AB$는 평행하고, $AB:DE=2:1$이에요.\n\n$\\triangle GAB$와 $\\triangle GDE$를 비교해요. $\\angle AGB$와 $\\angle DGE$는 맞꼭지각이라 같아요. $AB$와 $DE$가 평행하므로 $\\angle GAB$와 $\\angle GDE$도 엇각으로 같아요. 두 각이 각각 같으니 두 삼각형은 닮음이에요.\n\n대응하는 변은 $AB$와 $DE$, $GA$와 $GD$, $GB$와 $GE$예요. 따라서 $GA:GD=GB:GE=2:1$이에요. 무게중심 $G$는 꼭짓점에서 출발했을 때 중선을 $2:1$로 나눠요.\n\n세 중선을 모두 그으면 넓이가 같은 작은 삼각형 여섯 개가 생겨요. 무게중심과 두 꼭짓점을 이은 삼각형은 그중 두 개로 이루어져 있으므로 전체 넓이의 $\\frac{1}{3}$이에요.\n\n### 함께 풀어 보기 (worked_example)\n중선의 길이가 $12$인 삼각형에서 꼭짓점부터 무게중심까지의 길이를 구해 볼게요.\n\n무게중심은 중선을 $2:1$로 나누니 전체를 세 조각으로 보면 돼요. 한 조각은 $12 \\div 3 = 4$예요.\n\n꼭짓점 쪽은 두 조각이니 $8$, 중점 쪽은 한 조각이니 $4$예요.\n\n거꾸로도 물어요. 무게중심에서 중점까지가 $3$이라면 한 조각이 $3$이니 중선 전체는 $9$예요.\n\n넓이도 해 볼게요. 넓이가 $30$인 삼각형에서 세 중선이 나눈 여섯 조각 중 하나는 $30 \\div 6 = 5$예요.\n\n무게중심과 두 꼭짓점이 만드는 삼각형은 그 여섯 조각 중 둘이니 $10$이에요. 전체의 $\\dfrac{1}{3}$이라는 말과 같아요.\n\n### 배운 개념 돌아보기 (summary)\n꼭짓점과 마주 보는 변의 중점을 이은 선분이 중선이에요. 세 중선은 한 점에서 만나요.\n\n그 점이 무게중심이고, 중선을 꼭짓점 쪽부터 $2:1$로 나눠요. 그렇게 나뉘는 이유는 중점연결정리에 있어요.\n\n전체를 세 조각으로 보고 둘과 하나로 나눈다고 생각하면 편해요.\n\n세 중선은 삼각형을 넓이가 같은 여섯 조각으로 나눠요.\n\n이 수업의 개념은 삼각형의 무게중심이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.\n\n## 이 수업의 문제 (풀 수 있게 설명한다, 그대로 풀어 주지는 않는다)\n- 중선의 길이가 $12$일 때 꼭짓점에서 무게중심까지의 길이를 써 주세요. → 8\n- 중선의 길이가 $12$일 때 무게중심에서 중점까지의 길이를 써 주세요. → 4\n- 무게중심에서 중점까지의 길이가 $3$일 때 중선 전체의 길이를 써 주세요. → 9\n- 넓이가 $30$인 삼각형에서 세 중선이 나눈 여섯 조각 중 하나의 넓이를 써 주세요. → 5\n- 무게중심은 중선을 어떤 비로 나누나요? → 「$2 : 1$」\n- 중선의 길이가 $15$일 때 꼭짓점에서 무게중심까지의 길이를 써 주세요. → 10\n- 넓이가 $54$인 삼각형에서 무게중심과 두 꼭짓점이 만드는 삼각형의 넓이를 써 주세요. → 18\n\n## 뜻풀이가 있는 개념 (키: 이름)\nabsolute-value: 절댓값\naddition: 덧셈\nalways-positive: 늘 성립할 조건\nangle-basics: 각과 맞꼭지각\nasymptote: 점근선\ncalculation-order: 계산 순서와 법칙\ncentroid: 삼각형의 무게중심\nchance: 경우의 수와 확률\nchart-drawing: 도표작성 실습\nchart-making: 도표 만들기\nchart-reading: 도표 읽기\nchart-types: 도표의 종류\ncircle-chord: 현의 성질\ncircle-equation: 원의 방정식\ncircle-measure: 원의 둘레와 넓이\ncircle-tangent: 접선의 성질\ncoefficient: 계수\ncombination: 조합\ncommon-denominator: 통분\ncommon-divisor: 공약수\ncompleting-square: 완전제곱식 만들기\ncomplex-arithmetic: 복소수의 계산\ncomplex-number: 복소수\ncomposite-function: 합성함수\nconcentration: 농도\ncondition-pick: 조건을 걸어 고르기\nconjugate: 켤레복소수\nconstruction-congruence: 작도와 합동\ncontrapositive: 대우\ncoordinate-plane: 좌표평면\ncost-price: 원가와 정가\ncounting-cases: 경우의 수\ncounting-rule: 합의 법칙과 곱의 법칙\ndecimal: 소수\ndecimal-addition: 소수의 덧셈\ndecimal-fraction: 소수와 분수의 관계\ndecimal-place: 소수의 자릿값\ndecimal-to-fraction: 순환소수를 분수로\ndenominator: 분모\ndirect-proportion: 정비례\ndiscount-rate: 할인율\ndiscriminant: 판별식\ndispersion: 범위와 표준편차\ndistance-formula: 두 점 사이의 거리\nelimination-method: 가감법\nequality-property: 등식의 성질\nequation: 방정식\nequation-solution: 방정식의 해\nequivalent-fraction: 동치분수\nexchange-rate: 환율\nexpansion: 전개\nexponent-law: 지수법칙\nexpression-value: 식의 값\nfactor-theorem: 인수정리\nfactorization: 인수분해\nfactorization-formula: 인수분해 공식\nfraction: 분수\nfrequency: 빈도\nfrequency-table: 도수분포표\nfunction: 함수\nfunction-value: 함숫값\ngcd-lcm: 최대공약수와 최소공배수\ngraph-reading: 그래프 읽기\ngrowth-rate: 증감률\nhistogram: 히스토그램\nimaginary-unit: 허수단위\ninequality: 부등식\ninequality-property: 부등식의 성질\ninequality-solution: 부등식의 해\ninscribed-angle: 원주각\ninteger: 정수\nintercept: 절편\ninterest: 이자와 원리합계\ninverse-function: 역함수\ninverse-proportion: 반비례\nirrational-function: 무리함수\nirrational-number: 무리수\nirreducible-fraction: 기약분수\nisosceles: 이등변삼각형\nlike-term: 동류항\nline-equation: 직선의 방정식\nlinear-equation: 일차방정식\nlinear-expression: 일차식\nlinear-function: 일차함수\nlinear-inequality: 일차부등식\nmean: 평균\nmedian-mode: 중앙값과 최빈값\nmonomial: 단항식\nmultiplication-formula: 곱셈 공식\nnegative-number: 음수\nnumeracy-scope: 수리능력의 네 영역\nnumerator: 분자\nparabola-shift: 포물선의 평행이동\nparallel-lines: 평행선과 동위각\nparallel-perpendicular: 평행과 수직\nparallel-ratio: 평행선과 선분의 비\nparallelogram: 평행사변형\npercentage: 백분율\npercentage-of: 비율만큼의 양\npermutation: 순열\nplane-length: 평면에서 길이 구하기\npolygon-angles: 다각형의 내각과 외각\npolyhedron: 다면체와 회전체\npolynomial: 다항식\npolynomial-arithmetic: 다항식의 덧셈과 뺄셈\npolynomial-division: 다항식의 나눗셈\nprime-factorization: 소인수분해\nprime-number: 소수와 합성수\nprobability-meaning: 확률\nprobability-rules: 확률의 계산\nproportion: 비중\nproposition: 명제\npythagoras: 피타고라스 정리\npythagoras-converse: 피타고라스 정리의 역\nquadratic-equation: 이차방정식\nquadratic-formula: 근의 공식\nquadratic-function: 이차함수\nquadratic-inequality: 이차부등식\nquadratic-max-min: 최댓값과 최솟값\nradical-arithmetic: 근호의 계산\nrate: 비율\nratio: 비\nrational-function: 유리함수\nrational-number: 유리수\nrationalizing: 분모의 유리화\nreduce: 약분\nrelative-frequency: 상대도수\nremainder-theorem: 나머지정리\nrepeating-decimal: 순환소수\nrepresentative-value: 대푯값\nroot-coefficient: 근과 계수의 관계\nscatter-plot: 산점도와 상관관계\nsector: 부채꼴\nset: 집합\nset-operation: 집합의 연산\nsigned-addition: 부호가 있는 수의 덧셈\nsimilar-ratio: 닮음비와 넓이·부피의 비\nsimilar-triangles: 삼각형의 닮음\nsimultaneous-equations: 연립방정식\nsimultaneous-inequality: 연립부등식\nslope: 기울기\nsolid-length: 입체에서 길이 구하기\nspecial-angles: 특별한 각의 삼각비\nspecial-quad: 여러 가지 사각형\nspeed: 속력\nsquare-root: 제곱근\nstatistics-reading: 통계로 읽기\nsubstitution-method: 대입법\nsurface-area: 겉넓이\ntable-inference: 표가 말하는 것\ntable-reading: 표 읽기\nterm: 항\ntransposition: 이항\ntriangle-center: 삼각형의 외심과 내심\ntrig-ratio: 삼각비\ntrig-use: 삼각비의 활용\ntwo-variable-equation: 미지수가 두 개인 일차방정식\nunit-conversion: 단위환산\nvariable: 문자\nvariance: 산포도\nverification: 검산\nvertex: 꼭짓점\nvolume: 부피\nweighted-mean: 가중평균\nwork-rate: 일률\nzero-product: 곱이 0이 되는 성질",
+  "attempts": [
+    {
+      "text": "{\"explanation\":[{\"type\":\"text\",\"text\":\"삼각형의 꼭짓점과 마주 보는 변의 중점을 이은 선분을 중선이라고 해요. 삼각형은 꼭짓점이 $3$개이므로 중선도 $3$개 그을 수 있어요.\",\"definitions\":[{\"conceptKey\":\"vertex\",\"surface\":\"꼭짓점\"}]},{\"type\":\"text\",\"text\":\"세 중선이 만나는 한 점을 삼각형의 무게중심이라고 해요. 무게중심은 각 중선을 꼭짓점 쪽부터 $2:1$의 비로 나눠요.\\n\\n중선 전체를 세 조각으로 보면 꼭짓점 쪽이 두 조각, 중점 쪽이 한 조각이에요. 중선의 길이가 $9$라면 꼭짓점 쪽은 $6$, 중점 쪽은 $3$이 돼요.\",\"definitions\":[{\"conceptKey\":\"centroid\",\"surface\":\"삼각형의 무게중심\"},{\"conceptKey\":\"ratio\",\"surface\":\"비\"}]},{\"type\":\"scene\",\"scene\":{\"width\":340,\"height\":220,\"alt\":\"삼각형 ABC의 중선 AD 위에 무게중심 G가 찍혀 있고, 선분 AG와 선분 GD에 해당하는 빈칸에 2조각 막대와 1조각 막대를 끌어다 놓는 그림입니다.\",\"caption\":\"무게중심 G는 중선 AD를 꼭짓점 A 쪽부터 $2:1$로 나눠요.\",\"items\":[{\"kind\":\"polygon\",\"id\":\"tri-abc\",\"points\":[[50,60],[275,18],[275,102]],\"closed\":true,\"fill\":\"fill-soft\",\"stroke\":\"ink\",\"strokeWidth\":1.5},{\"kind\":\"line\",\"id\":\"med-be\",\"x1\":275,\"y1\":18,\"x2\":162.5,\"y2\":81,\"stroke\":\"muted\",\"strokeWidth\":1,\"dash\":\"4,3\"},{\"kind\":\"line\",\"id\":\"med-cf\",\"x1\":275,\"y1\":102,\"x2\":162.5,\"y2\":39,\"stroke\":\"muted\",\"strokeWidth\":1,\"dash\":\"4,3\"},{\"kind\":\"line\",\"id\":\"med-ad\",\"x1\":50,\"y1\":60,\"x2\":275,\"y2\":60,\"stroke\":\"ink\",\"strokeWidth\":2},{\"kind\":\"line\",\"id\":\"guide-a\",\"x1\":50,\"y1\":65,\"x2\":50,\"y2\":118,\"stroke\":\"line\",\"strokeWidth\":1,\"dash\":\"3,3\"},{\"kind\":\"line\",\"id\":\"guide-g\",\"x1\":200,\"y1\":65,\"x2\":200,\"y2\":118,\"stroke\":\"line\",\"strokeWidth\":1,\"dash\":\"3,3\"},{\"kind\":\"line\",\"id\":\"guide-d\",\"x1\":275,\"y1\":65,\"x2\":275,\"y2\":118,\"stroke\":\"line\",\"strokeWidth\":1,\"dash\":\"3,3\"},{\"kind\":\"ellipse\",\"id\":\"pt-a\",\"cx\":50,\"cy\":60,\"rx\":3,\"ry\":3,\"fill\":\"ink\"},{\"kind\":\"ellipse\",\"id\":\"pt-d\",\"cx\":275,\"cy\":60,\"rx\":3,\"ry\":3,\"fill\":\"ink\"},{\"kind\":\"ellipse\",\"id\":\"pt-g\",\"cx\":200,\"cy\":60,\"rx\":4,\"ry\":4,\"fill\":\"orange\",\"stroke\":\"ink\",\"strokeWidth\":1},{\"kind\":\"text\",\"id\":\"txt-a\",\"x\":36,\"y\":64,\"text\":\"A\",\"size\":13,\"anchor\":\"middle\",\"weight\":\"bold\",\"fill\":\"ink\"},{\"kind\":\"text\",\"id\":\"txt-b\",\"x\":288,\"y\":22,\"text\":\"B\",\"size\":12,\"anchor\":\"middle\",\"fill\":\"muted\"},{\"kind\":\"text\",\"id\":\"txt-c\",\"x\":288,\"y\":106,\"text\":\"C\",\"size\":12,\"anchor\":\"middle\",\"fill\":\"muted\"},{\"kind\":\"text\",\"id\":\"txt-d\",\"x\":288,\"y\":64,\"text\":\"D\",\"size\":13,\"anchor\":\"middle\",\"weight\":\"bold\",\"fill\":\"ink\"},{\"kind\":\"text\",\"id\":\"txt-g\",\"x\":200,\"y\":46,\"text\":\"G\",\"size\":13,\"anchor\":\"middle\",\"weight\":\"bold\",\"fill\":\"orange\"},{\"kind\":\"rect\",\"id\":\"bar-1\",\"x\":55,\"y\":180,\"width\":68,\"height\":22,\"radius\":4,\"fill\":\"light-green\",\"stroke\":\"deep-green\",\"strokeWidth\":1.5,\"draggable\":true,\"label\":\"1조각\"},{\"kind\":\"rect\",\"id\":\"bar-2\",\"x\":150,\"y\":180,\"width\":140,\"height\":22,\"radius\":4,\"fill\":\"sand\",\"stroke\":\"orange\",\"strokeWidth\":1.5,\"draggable\":true,\"label\":\"2조각\"}],\"zones\":[{\"id\":\"zone-ag\",\"x\":50,\"y\":120,\"width\":146,\"height\":28,\"label\":\"꼭짓점 쪽 (AG)\",\"accepts\":[\"bar-2\"]},{\"id\":\"zone-gd\",\"x\":202,\"y\":120,\"width\":73,\"height\":28,\"label\":\"중점 쪽 (GD)\",\"accepts\":[\"bar-1\"]}],\"task\":{\"prompt\":\"중선 AD가 나뉘는 길이의 비에 맞게 두 막대를 알맞은 칸에 놓아 보세요.\",\"promptAlt\":\"중선 AD가 나뉘는 길이의 비에 맞게 두 막대를 알맞은 칸에 놓아 보세요.\",\"successText\":\"맞아요! 꼭짓점 A에서 무게중심 G까지가 2조각, 무게중심 G에서 중점 D까지가 1조각이에요.\"}}},{\"type\":\"text\",\"text\":\"왜 중선을 $2:1$로 나누는지 삼각형 ABC에서 확인해 볼게요. 변 BC, AC의 중점을 D, E라 하고, 중선 AD, BE가 만나는 점을 G라고 해요. 두 중점을 이은 선분 DE는 변 AB와 평행하고 $AB:DE=2:1$이에요.\",\"definitions\":[{\"conceptKey\":\"parallel-perpendicular\",\"surface\":\"평행\"}]},{\"type\":\"text\",\"text\":\"$\\\\triangle GAB$와 $\\\\triangle GDE$에서 맞꼭지각인 $\\\\angle AGB$와 $\\\\angle DGE$의 크기가 같아요. 선분 AB와 DE가 평행하므로 엇각인 $\\\\angle GAB$와 $\\\\angle GDE$의 크기도 같아요. 두 각이 각각 같아 두 삼각형은 닮음이므로, 대응변의 길이의 비도 $GA:GD=2:1$이에요.\",\"definitions\":[{\"conceptKey\":\"angle-basics\",\"surface\":\"맞꼭지각\"},{\"conceptKey\":\"similar-triangles\",\"surface\":\"닮음\"}]},{\"type\":\"scene\",\"scene\":{\"width\":340,\"height\":230,\"alt\":\"삼각형 ABC에서 두 중선 AD, BE의 교점 G를 기준으로 삼각형 GAB와 삼각형 GDE의 닮음비가 2 대 1임을 보이고, 세 중선이 넓이를 6등분함을 나타내는 그림입니다.\",\"caption\":\"$\\\\triangle GAB$와 $\\\\triangle GDE$의 닮음으로 $GA:GD=2:1$이 되고, 세 중선은 넓이를 $6$등분해요.\",\"items\":[{\"kind\":\"polygon\",\"id\":\"bg-abc\",\"points\":[[170,26],[44,188],[296,188]],\"closed\":true,\"fill\":\"paper\",\"stroke\":\"none\"},{\"kind\":\"polygon\",\"id\":\"tri-gbc\",\"points\":[[170,134],[44,188],[296,188]],\"closed\":true,\"fill\":\"sky\",\"stroke\":\"none\",\"opacity\":0},{\"kind\":\"polygon\",\"id\":\"tri-gab\",\"points\":[[170,134],[170,26],[44,188]],\"closed\":true,\"fill\":\"sand\",\"stroke\":\"orange\",\"strokeWidth\":2,\"opacity\":0},{\"kind\":\"polygon\",\"id\":\"tri-gde\",\"points\":[[170,134],[170,188],[233,107]],\"closed\":true,\"fill\":\"light-green\",\"stroke\":\"deep-green\",\"strokeWidth\":2,\"opacity\":0},{\"kind\":\"line\",\"id\":\"line-de\",\"x1\":170,\"y1\":188,\"x2\":233,\"y2\":107,\"stroke\":\"deep-green\",\"strokeWidth\":2,\"opacity\":0},{\"kind\":\"line\",\"id\":\"line-cf\",\"x1\":296,\"y1\":188,\"x2\":107,\"y2\":107,\"stroke\":\"ink\",\"strokeWidth\":1.5,\"opacity\":0},{\"kind\":\"line\",\"id\":\"line-ad\",\"x1\":170,\"y1\":26,\"x2\":170,\"y2\":188,\"stroke\":\"ink\",\"strokeWidth\":1.5},{\"kind\":\"line\",\"id\":\"line-be\",\"x1\":44,\"y1\":188,\"x2\":233,\"y2\":107,\"stroke\":\"ink\",\"strokeWidth\":1.5},{\"kind\":\"polygon\",\"id\":\"border-abc\",\"points\":[[170,26],[44,188],[296,188]],\"closed\":true,\"fill\":\"none\",\"stroke\":\"ink\",\"strokeWidth\":1.5},{\"kind\":\"ellipse\",\"id\":\"dot-g\",\"cx\":170,\"cy\":134,\"rx\":3.5,\"ry\":3.5,\"fill\":\"orange\",\"stroke\":\"ink\",\"strokeWidth\":1},{\"kind\":\"text\",\"id\":\"lbl-a\",\"x\":170,\"y\":16,\"text\":\"A\",\"size\":13,\"anchor\":\"middle\",\"weight\":\"bold\",\"fill\":\"ink\"},{\"kind\":\"text\",\"id\":\"lbl-b\",\"x\":30,\"y\":192,\"text\":\"B\",\"size\":13,\"anchor\":\"middle\",\"weight\":\"bold\",\"fill\":\"ink\"},{\"kind\":\"text\",\"id\":\"lbl-c\",\"x\":310,\"y\":192,\"text\":\"C\",\"size\":13,\"anchor\":\"middle\",\"weight\":\"bold\",\"fill\":\"ink\"},{\"kind\":\"text\",\"id\":\"lbl-d\",\"x\":170,\"y\":206,\"text\":\"D\",\"size\":13,\"anchor\":\"middle\",\"weight\":\"bold\",\"fill\":\"ink\"},{\"kind\":\"text\",\"id\":\"lbl-e\",\"x\":245,\"y\":110,\"text\":\"E\",\"size\":13,\"anchor\":\"start\",\"weight\":\"bold\",\"fill\":\"ink\"},{\"kind\":\"text\",\"id\":\"lbl-f\",\"x\":95,\"y\":110,\"text\":\"F\",\"size\":13,\"anchor\":\"end\",\"weight\":\"bold\",\"fill\":\"ink\",\"opacity\":0},{\"kind\":\"text\",\"id\":\"lbl-g\",\"x\":142,\"y\":138,\"text\":\"G\",\"size\":13,\"anchor\":\"end\",\"weight\":\"bold\",\"fill\":\"orange\"},{\"kind\":\"text\",\"id\":\"label-ratio-2\",\"x\":182,\"y\":84,\"text\":\"$2$\",\"size\":13,\"anchor\":\"start\",\"weight\":\"bold\",\"fill\":\"orange\",\"opacity\":0},{\"kind\":\"text\",\"id\":\"label-ratio-1\",\"x\":182,\"y\":164,\"text\":\"$1$\",\"size\":13,\"anchor\":\"start\",\"weight\":\"bold\",\"fill\":\"deep-green\",\"opacity\":0}],\"frames\":[{\"caption\":\"두 중선 AD와 BE가 만나는 점이 무게중심 G예요.\",\"changes\":[]},{\"caption\":\"중점 D, E를 이으면 선분 DE는 변 AB와 평행하고 $AB:DE=2:1$이에요.\",\"changes\":[{\"id\":\"line-de\",\"opacity\":1}]},{\"caption\":\"$\\\\triangle GAB$와 $\\\\triangle GDE$는 닮음이므로 $GA:GD=2:1$이에요.\",\"changes\":[{\"id\":\"line-de\",\"opacity\":1},{\"id\":\"tri-gab\",\"opacity\":1},{\"id\":\"tri-gde\",\"opacity\":1},{\"id\":\"label-ratio-2\",\"opacity\":1},{\"id\":\"label-ratio-1\",\"opacity\":1}]},{\"caption\":\"세 중선은 넓이를 똑같이 $6$조각으로 나누고, $\\\\triangle GBC$는 그중 $2$조각이에요.\",\"changes\":[{\"id\":\"line-cf\",\"opacity\":1},{\"id\":\"lbl-f\",\"opacity\":1},{\"id\":\"tri-gbc\",\"opacity\":1}]}],\"frameMs\":2000}},{\"type\":\"text\",\"text\":\"세 중선을 모두 그으면 삼각형은 넓이가 같은 작은 삼각형 $6$개로 나뉘어요. 무게중심과 두 꼭짓점을 이은 삼각형은 그중 $2$개이니 전체 넓이의 $\\\\frac{1}{3}$이에요.\"}],\"worked_example\":[{\"type\":\"text\",\"text\":\"중선의 길이가 $18$인 삼각형에서 각 부분의 길이를 구해 볼게요. 무게중심은 중선을 $2:1$로 나누므로 전체를 $2+1=3$조각으로 봐요.\\n\\n한 조각의 길이는 $18 \\\\div 3 = 6$이에요. 따라서 꼭짓점 쪽 두 조각은 $6 \\\\times 2 = 12$, 중점 쪽 한 조각은 $6$이에요.\"},{\"type\":\"text\",\"text\":\"반대로 무게중심에서 중점까지의 길이가 $5$일 때 중선 전체의 길이를 구해 볼게요. 무게중심에서 중점까지는 짧은 쪽 한 조각이므로 한 조각의 길이가 $5$예요. 중선 전체는 세 조각이므로 $5 \\\\times 3 = 15$가 돼요.\"},{\"type\":\"text\",\"text\":\"이번에는 넓이가 $24$인 삼각형에 세 중선을 그었을 때 조각의 넓이를 구해 볼게요. 세 중선이 나눈 $6$조각은 넓이가 같으므로 한 조각의 넓이는 $24 \\\\div 6 = 4$예요. 무게중심과 두 꼭짓점을 이은 삼각형은 $2$조각이므로 넓이가 $4 \\\\times 2 = 8$이에요.\"}],\"summary\":[{\"type\":\"text\",\"text\":\"삼각형의 세 중선이 만나는 점을 삼각형의 무게중심이라고 해요. 무게중심은 각 중선을 꼭짓점 쪽부터 $2:1$의 비로 나눠요. 세 중선을 그으면 삼각형은 넓이가 같은 $6$조각으로 나뉘어요. 무게중심과 두 꼭짓점을 이은 삼각형은 그중 $2$조각이어서 전체 넓이의 $\\\\frac{1}{3}$이에요.\",\"definitions\":[{\"conceptKey\":\"centroid\",\"surface\":\"삼각형의 무게중심\"}]}]}",
+      "issues": [
+        "sections.0.contentBlocks.2.payload.items.1.dash: Invalid payload for core.scene@1: Invalid input: expected boolean, received string",
+        "sections.0.contentBlocks.2.payload.items.2.dash: Invalid payload for core.scene@1: Invalid input: expected boolean, received string",
+        "sections.0.contentBlocks.2.payload.items.4.dash: Invalid payload for core.scene@1: Invalid input: expected boolean, received string",
+        "sections.0.contentBlocks.2.payload.items.5.dash: Invalid payload for core.scene@1: Invalid input: expected boolean, received string",
+        "sections.0.contentBlocks.2.payload.items.6.dash: Invalid payload for core.scene@1: Invalid input: expected boolean, received string"
+      ],
+      "ms": 247079,
+      "usage": {
+        "input": 7564,
+        "output": 3261,
+        "thinking": 19060
+      }
+    },
+    {
+      "text": "{\"explanation\":[{\"type\":\"text\",\"text\":\"삼각형의 꼭짓점과 마주 보는 변의 중점을 이은 선분을 중선이라고 해요. 삼각형은 꼭짓점이 $3$개이므로 중선도 $3$개 그을 수 있어요.\",\"definitions\":[{\"conceptKey\":\"vertex\",\"surface\":\"꼭짓점\"}]},{\"type\":\"text\",\"text\":\"세 중선이 만나는 한 점을 삼각형의 무게중심이라고 해요. 무게중심은 각 중선을 꼭짓점 쪽부터 $2:1$의 비로 나눠요.\\n\\n중선 전체를 세 조각으로 보면 꼭짓점 쪽이 두 조각, 중점 쪽이 한 조각이에요. 중선의 길이가 $9$라면 꼭짓점 쪽은 $6$, 중점 쪽은 $3$이 돼요.\",\"definitions\":[{\"conceptKey\":\"centroid\",\"surface\":\"삼각형의 무게중심\"},{\"conceptKey\":\"ratio\",\"surface\":\"비\"}]},{\"type\":\"scene\",\"scene\":{\"width\":340,\"height\":220,\"alt\":\"삼각형 ABC의 중선 AD 위에 무게중심 G가 찍혀 있고, 선분 AG와 선분 GD에 해당하는 빈칸에 2조각 막대와 1조각 막대를 끌어다 놓는 그림입니다.\",\"caption\":\"무게중심 G는 중선 AD를 꼭짓점 A 쪽부터 $2:1$로 나눠요.\",\"items\":[{\"kind\":\"polygon\",\"id\":\"tri-abc\",\"points\":[[50,60],[275,18],[275,102]],\"closed\":true,\"fill\":\"fill-soft\",\"stroke\":\"ink\",\"strokeWidth\":1.5},{\"kind\":\"line\",\"id\":\"med-be\",\"x1\":275,\"y1\":18,\"x2\":162.5,\"y2\":81,\"stroke\":\"muted\",\"strokeWidth\":1,\"dash\":true},{\"kind\":\"line\",\"id\":\"med-cf\",\"x1\":275,\"y1\":102,\"x2\":162.5,\"y2\":39,\"stroke\":\"muted\",\"strokeWidth\":1,\"dash\":true},{\"kind\":\"line\",\"id\":\"med-ad\",\"x1\":50,\"y1\":60,\"x2\":275,\"y2\":60,\"stroke\":\"ink\",\"strokeWidth\":2},{\"kind\":\"line\",\"id\":\"guide-a\",\"x1\":50,\"y1\":65,\"x2\":50,\"y2\":118,\"stroke\":\"line\",\"strokeWidth\":1,\"dash\":true},{\"kind\":\"line\",\"id\":\"guide-g\",\"x1\":200,\"y1\":65,\"x2\":200,\"y2\":118,\"stroke\":\"line\",\"strokeWidth\":1,\"dash\":true},{\"kind\":\"line\",\"id\":\"guide-d\",\"x1\":275,\"y1\":65,\"x2\":275,\"y2\":118,\"stroke\":\"line\",\"strokeWidth\":1,\"dash\":true},{\"kind\":\"ellipse\",\"id\":\"pt-a\",\"cx\":50,\"cy\":60,\"rx\":3,\"ry\":3,\"fill\":\"ink\"},{\"kind\":\"ellipse\",\"id\":\"pt-d\",\"cx\":275,\"cy\":60,\"rx\":3,\"ry\":3,\"fill\":\"ink\"},{\"kind\":\"ellipse\",\"id\":\"pt-g\",\"cx\":200,\"cy\":60,\"rx\":4,\"ry\":4,\"fill\":\"orange\",\"stroke\":\"ink\",\"strokeWidth\":1},{\"kind\":\"text\",\"id\":\"txt-a\",\"x\":36,\"y\":64,\"text\":\"A\",\"size\":13,\"anchor\":\"middle\",\"weight\":\"bold\",\"fill\":\"ink\"},{\"kind\":\"text\",\"id\":\"txt-b\",\"x\":288,\"y\":22,\"text\":\"B\",\"size\":12,\"anchor\":\"middle\",\"fill\":\"muted\"},{\"kind\":\"text\",\"id\":\"txt-c\",\"x\":288,\"y\":106,\"text\":\"C\",\"size\":12,\"anchor\":\"middle\",\"fill\":\"muted\"},{\"kind\":\"text\",\"id\":\"txt-d\",\"x\":288,\"y\":64,\"text\":\"D\",\"size\":13,\"anchor\":\"middle\",\"weight\":\"bold\",\"fill\":\"ink\"},{\"kind\":\"text\",\"id\":\"txt-g\",\"x\":200,\"y\":46,\"text\":\"G\",\"size\":13,\"anchor\":\"middle\",\"weight\":\"bold\",\"fill\":\"orange\"},{\"kind\":\"rect\",\"id\":\"bar-1\",\"x\":55,\"y\":180,\"width\":68,\"height\":22,\"radius\":4,\"fill\":\"light-green\",\"stroke\":\"deep-green\",\"strokeWidth\":1.5,\"draggable\":true,\"label\":\"1조각\"},{\"kind\":\"rect\",\"id\":\"bar-2\",\"x\":150,\"y\":180,\"width\":140,\"height\":22,\"radius\":4,\"fill\":\"sand\",\"stroke\":\"orange\",\"strokeWidth\":1.5,\"draggable\":true,\"label\":\"2조각\"}],\"zones\":[{\"id\":\"zone-ag\",\"x\":50,\"y\":120,\"width\":146,\"height\":28,\"label\":\"꼭짓점 쪽 (AG)\",\"accepts\":[\"bar-2\"]},{\"id\":\"zone-gd\",\"x\":202,\"y\":120,\"width\":73,\"height\":28,\"label\":\"중점 쪽 (GD)\",\"accepts\":[\"bar-1\"]}],\"task\":{\"prompt\":\"중선 AD가 나뉘는 길이의 비에 맞게 두 막대를 알맞은 칸에 놓아 보세요.\",\"promptAlt\":\"중선 AD가 나뉘는 길이의 비에 맞게 두 막대를 알맞은 칸에 놓아 보세요.\",\"successText\":\"맞아요! 꼭짓점 A에서 무게중심 G까지가 2조각, 무게중심 G에서 중점 D까지가 1조각이에요.\"}}},{\"type\":\"text\",\"text\":\"왜 중선을 $2:1$로 나누는지 삼각형 ABC에서 확인해 볼게요. 변 BC, AC의 중점을 D, E라 하고, 중선 AD, BE가 만나는 점을 G라고 해요. 두 중점을 이은 선분 DE는 변 AB와 평행하고 $AB:DE=2:1$이에요.\",\"definitions\":[{\"conceptKey\":\"parallel-perpendicular\",\"surface\":\"평행\"}]},{\"type\":\"text\",\"text\":\"$\\\\triangle GAB$와 $\\\\triangle GDE$에서 맞꼭지각인 $\\\\angle AGB$와 $\\\\angle DGE$의 크기가 같아요. 선분 AB와 DE가 평행하므로 엇각인 $\\\\angle GAB$와 $\\\\angle GDE$의 크기도 같아요. 두 각이 각각 같아 두 삼각형은 닮음이므로, 대응변의 길이의 비도 $GA:GD=2:1$이에요.\",\"definitions\":[{\"conceptKey\":\"angle-basics\",\"surface\":\"맞꼭지각\"},{\"conceptKey\":\"similar-triangles\",\"surface\":\"닮음\"}]},{\"type\":\"scene\",\"scene\":{\"width\":340,\"height\":230,\"alt\":\"삼각형 ABC에서 두 중선 AD, BE의 교점 G를 기준으로 삼각형 GAB와 삼각형 GDE의 닮음비가 2 대 1임을 보이고, 세 중선이 넓이를 6등분함을 나타내는 그림입니다.\",\"caption\":\"$\\\\triangle GAB$와 $\\\\triangle GDE$의 닮음으로 $GA:GD=2:1$이 되고, 세 중선은 넓이를 $6$등분해요.\",\"items\":[{\"kind\":\"polygon\",\"id\":\"bg-abc\",\"points\":[[170,26],[44,188],[296,188]],\"closed\":true,\"fill\":\"paper\",\"stroke\":\"none\"},{\"kind\":\"polygon\",\"id\":\"tri-gbc\",\"points\":[[170,134],[44,188],[296,188]],\"closed\":true,\"fill\":\"sky\",\"stroke\":\"none\",\"opacity\":0},{\"kind\":\"polygon\",\"id\":\"tri-gab\",\"points\":[[170,134],[170,26],[44,188]],\"closed\":true,\"fill\":\"sand\",\"stroke\":\"orange\",\"strokeWidth\":2,\"opacity\":0},{\"kind\":\"polygon\",\"id\":\"tri-gde\",\"points\":[[170,134],[170,188],[233,107]],\"closed\":true,\"fill\":\"light-green\",\"stroke\":\"deep-green\",\"strokeWidth\":2,\"opacity\":0},{\"kind\":\"line\",\"id\":\"line-de\",\"x1\":170,\"y1\":188,\"x2\":233,\"y2\":107,\"stroke\":\"deep-green\",\"strokeWidth\":2,\"opacity\":0},{\"kind\":\"line\",\"id\":\"line-cf\",\"x1\":296,\"y1\":188,\"x2\":107,\"y2\":107,\"stroke\":\"ink\",\"strokeWidth\":1.5,\"opacity\":0},{\"kind\":\"line\",\"id\":\"line-ad\",\"x1\":170,\"y1\":26,\"x2\":170,\"y2\":188,\"stroke\":\"ink\",\"strokeWidth\":1.5},{\"kind\":\"line\",\"id\":\"line-be\",\"x1\":44,\"y1\":188,\"x2\":233,\"y2\":107,\"stroke\":\"ink\",\"strokeWidth\":1.5},{\"kind\":\"polygon\",\"id\":\"border-abc\",\"points\":[[170,26],[44,188],[296,188]],\"closed\":true,\"fill\":\"none\",\"stroke\":\"ink\",\"strokeWidth\":1.5},{\"kind\":\"ellipse\",\"id\":\"dot-g\",\"cx\":170,\"cy\":134,\"rx\":3.5,\"ry\":3.5,\"fill\":\"orange\",\"stroke\":\"ink\",\"strokeWidth\":1},{\"kind\":\"text\",\"id\":\"lbl-a\",\"x\":170,\"y\":16,\"text\":\"A\",\"size\":13,\"anchor\":\"middle\",\"weight\":\"bold\",\"fill\":\"ink\"},{\"kind\":\"text\",\"id\":\"lbl-b\",\"x\":30,\"y\":192,\"text\":\"B\",\"size\":13,\"anchor\":\"middle\",\"weight\":\"bold\",\"fill\":\"ink\"},{\"kind\":\"text\",\"id\":\"lbl-c\",\"x\":310,\"y\":192,\"text\":\"C\",\"size\":13,\"anchor\":\"middle\",\"weight\":\"bold\",\"fill\":\"ink\"},{\"kind\":\"text\",\"id\":\"lbl-d\",\"x\":170,\"y\":206,\"text\":\"D\",\"size\":13,\"anchor\":\"middle\",\"weight\":\"bold\",\"fill\":\"ink\"},{\"kind\":\"text\",\"id\":\"lbl-e\",\"x\":245,\"y\":110,\"text\":\"E\",\"size\":13,\"anchor\":\"start\",\"weight\":\"bold\",\"fill\":\"ink\"},{\"kind\":\"text\",\"id\":\"lbl-f\",\"x\":95,\"y\":110,\"text\":\"F\",\"size\":13,\"anchor\":\"end\",\"weight\":\"bold\",\"fill\":\"ink\",\"opacity\":0},{\"kind\":\"text\",\"id\":\"lbl-g\",\"x\":142,\"y\":138,\"text\":\"G\",\"size\":13,\"anchor\":\"end\",\"weight\":\"bold\",\"fill\":\"orange\"},{\"kind\":\"text\",\"id\":\"label-ratio-2\",\"x\":182,\"y\":84,\"text\":\"$2$\",\"size\":13,\"anchor\":\"start\",\"weight\":\"bold\",\"fill\":\"orange\",\"opacity\":0},{\"kind\":\"text\",\"id\":\"label-ratio-1\",\"x\":182,\"y\":164,\"text\":\"$1$\",\"size\":13,\"anchor\":\"start\",\"weight\":\"bold\",\"fill\":\"deep-green\",\"opacity\":0}],\"frames\":[{\"caption\":\"두 중선 AD와 BE가 만나는 점이 무게중심 G예요.\",\"changes\":[]},{\"caption\":\"중점 D, E를 이으면 선분 DE는 변 AB와 평행하고 $AB:DE=2:1$이에요.\",\"changes\":[{\"id\":\"line-de\",\"opacity\":1}]},{\"caption\":\"$\\\\triangle GAB$와 $\\\\triangle GDE$는 닮음이므로 $GA:GD=2:1$이에요.\",\"changes\":[{\"id\":\"line-de\",\"opacity\":1},{\"id\":\"tri-gab\",\"opacity\":1},{\"id\":\"tri-gde\",\"opacity\":1},{\"id\":\"label-ratio-2\",\"opacity\":1},{\"id\":\"label-ratio-1\",\"opacity\":1}]},{\"caption\":\"세 중선은 넓이를 똑같이 $6$조각으로 나누고, $\\\\triangle GBC$는 그중 $2$조각이에요.\",\"changes\":[{\"id\":\"line-cf\",\"opacity\":1},{\"id\":\"lbl-f\",\"opacity\":1},{\"id\":\"tri-gbc\",\"opacity\":1}]}],\"frameMs\":2000}},{\"type\":\"text\",\"text\":\"세 중선을 모두 그으면 삼각형은 넓이가 같은 작은 삼각형 $6$개로 나뉘어요. 무게중심과 두 꼭짓점을 이은 삼각형은 그중 $2$개이니 전체 넓이의 $\\\\frac{1}{3}$이에요.\"}],\"worked_example\":[{\"type\":\"text\",\"text\":\"중선의 길이가 $18$인 삼각형에서 각 부분의 길이를 구해 볼게요. 무게중심은 중선을 $2:1$로 나누므로 전체를 $2+1=3$조각으로 봐요.\\n\\n한 조각의 길이는 $18 \\\\div 3 = 6$이에요. 따라서 꼭짓점 쪽 두 조각은 $6 \\\\times 2 = 12$, 중점 쪽 한 조각은 $6$이에요.\"},{\"type\":\"text\",\"text\":\"반대로 무게중심에서 중점까지의 길이가 $5$일 때 중선 전체의 길이를 구해 볼게요. 무게중심에서 중점까지는 짧은 쪽 한 조각이므로 한 조각의 길이가 $5$예요. 중선 전체는 세 조각이므로 $5 \\\\times 3 = 15$가 돼요.\"},{\"type\":\"text\",\"text\":\"이번에는 넓이가 $24$인 삼각형에 세 중선을 그었을 때 조각의 넓이를 구해 볼게요. 세 중선이 나눈 $6$조각은 넓이가 같으므로 한 조각의 넓이는 $24 \\\\div 6 = 4$예요. 무게중심과 두 꼭짓점을 이은 삼각형은 $2$조각이므로 넓이가 $4 \\\\times 2 = 8$이에요.\"}],\"summary\":[{\"type\":\"text\",\"text\":\"삼각형의 세 중선이 만나는 점을 삼각형의 무게중심이라고 해요. 무게중심은 각 중선을 꼭짓점 쪽부터 $2:1$의 비로 나눠요. 세 중선을 그으면 삼각형은 넓이가 같은 $6$조각으로 나뉘어요. 무게중심과 두 꼭짓점을 이은 삼각형은 그중 $2$조각이어서 전체 넓이의 $\\\\frac{1}{3}$이에요.\",\"definitions\":[{\"conceptKey\":\"centroid\",\"surface\":\"삼각형의 무게중심\"}]}]}",
+      "issues": [],
+      "ms": 31863,
+      "usage": {
+        "input": 11027,
+        "output": 3251,
+        "thinking": 228
+      }
+    }
+  ],
+  "draft": {
+    "explanation": [
+      {
+        "type": "text",
+        "text": "삼각형의 꼭짓점과 마주 보는 변의 중점을 이은 선분을 중선이라고 해요. 삼각형은 꼭짓점이 $3$개이므로 중선도 $3$개 그을 수 있어요.",
+        "definitions": [
+          {
+            "conceptKey": "vertex",
+            "surface": "꼭짓점"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "세 중선이 만나는 한 점을 삼각형의 무게중심이라고 해요. 무게중심은 각 중선을 꼭짓점 쪽부터 $2:1$의 비로 나눠요.\n\n중선 전체를 세 조각으로 보면 꼭짓점 쪽이 두 조각, 중점 쪽이 한 조각이에요. 중선의 길이가 $9$라면 꼭짓점 쪽은 $6$, 중점 쪽은 $3$이 돼요.",
+        "definitions": [
+          {
+            "conceptKey": "centroid",
+            "surface": "삼각형의 무게중심"
+          },
+          {
+            "conceptKey": "ratio",
+            "surface": "비"
+          }
+        ]
+      },
+      {
+        "type": "scene",
+        "scene": {
+          "width": 340,
+          "height": 220,
+          "alt": "삼각형 ABC의 중선 AD 위에 무게중심 G가 찍혀 있고, 선분 AG와 선분 GD에 해당하는 빈칸에 2조각 막대와 1조각 막대를 끌어다 놓는 그림입니다.",
+          "caption": "무게중심 G는 중선 AD를 꼭짓점 A 쪽부터 $2:1$로 나눠요.",
+          "items": [
+            {
+              "kind": "polygon",
+              "id": "tri-abc",
+              "points": [
+                [
+                  50,
+                  60
+                ],
+                [
+                  275,
+                  18
+                ],
+                [
+                  275,
+                  102
+                ]
+              ],
+              "closed": true,
+              "fill": "fill-soft",
+              "stroke": "ink",
+              "strokeWidth": 1.5
+            },
+            {
+              "kind": "line",
+              "id": "med-be",
+              "x1": 275,
+              "y1": 18,
+              "x2": 162.5,
+              "y2": 81,
+              "stroke": "muted",
+              "strokeWidth": 1,
+              "dash": true
+            },
+            {
+              "kind": "line",
+              "id": "med-cf",
+              "x1": 275,
+              "y1": 102,
+              "x2": 162.5,
+              "y2": 39,
+              "stroke": "muted",
+              "strokeWidth": 1,
+              "dash": true
+            },
+            {
+              "kind": "line",
+              "id": "med-ad",
+              "x1": 50,
+              "y1": 60,
+              "x2": 275,
+              "y2": 60,
+              "stroke": "ink",
+              "strokeWidth": 2
+            },
+            {
+              "kind": "line",
+              "id": "guide-a",
+              "x1": 50,
+              "y1": 65,
+              "x2": 50,
+              "y2": 118,
+              "stroke": "line",
+              "strokeWidth": 1,
+              "dash": true
+            },
+            {
+              "kind": "line",
+              "id": "guide-g",
+              "x1": 200,
+              "y1": 65,
+              "x2": 200,
+              "y2": 118,
+              "stroke": "line",
+              "strokeWidth": 1,
+              "dash": true
+            },
+            {
+              "kind": "line",
+              "id": "guide-d",
+              "x1": 275,
+              "y1": 65,
+              "x2": 275,
+              "y2": 118,
+              "stroke": "line",
+              "strokeWidth": 1,
+              "dash": true
+            },
+            {
+              "kind": "ellipse",
+              "id": "pt-a",
+              "cx": 50,
+              "cy": 60,
+              "rx": 3,
+              "ry": 3,
+              "fill": "ink"
+            },
+            {
+              "kind": "ellipse",
+              "id": "pt-d",
+              "cx": 275,
+              "cy": 60,
+              "rx": 3,
+              "ry": 3,
+              "fill": "ink"
+            },
+            {
+              "kind": "ellipse",
+              "id": "pt-g",
+              "cx": 200,
+              "cy": 60,
+              "rx": 4,
+              "ry": 4,
+              "fill": "orange",
+              "stroke": "ink",
+              "strokeWidth": 1
+            },
+            {
+              "kind": "text",
+              "id": "txt-a",
+              "x": 36,
+              "y": 64,
+              "text": "A",
+              "size": 13,
+              "anchor": "middle",
+              "weight": "bold",
+              "fill": "ink"
+            },
+            {
+              "kind": "text",
+              "id": "txt-b",
+              "x": 288,
+              "y": 22,
+              "text": "B",
+              "size": 12,
+              "anchor": "middle",
+              "fill": "muted"
+            },
+            {
+              "kind": "text",
+              "id": "txt-c",
+              "x": 288,
+              "y": 106,
+              "text": "C",
+              "size": 12,
+              "anchor": "middle",
+              "fill": "muted"
+            },
+            {
+              "kind": "text",
+              "id": "txt-d",
+              "x": 288,
+              "y": 64,
+              "text": "D",
+              "size": 13,
+              "anchor": "middle",
+              "weight": "bold",
+              "fill": "ink"
+            },
+            {
+              "kind": "text",
+              "id": "txt-g",
+              "x": 200,
+              "y": 46,
+              "text": "G",
+              "size": 13,
+              "anchor": "middle",
+              "weight": "bold",
+              "fill": "orange"
+            },
+            {
+              "kind": "rect",
+              "id": "bar-1",
+              "x": 55,
+              "y": 180,
+              "width": 68,
+              "height": 22,
+              "radius": 4,
+              "fill": "light-green",
+              "stroke": "deep-green",
+              "strokeWidth": 1.5,
+              "draggable": true,
+              "label": "1조각"
+            },
+            {
+              "kind": "rect",
+              "id": "bar-2",
+              "x": 150,
+              "y": 180,
+              "width": 140,
+              "height": 22,
+              "radius": 4,
+              "fill": "sand",
+              "stroke": "orange",
+              "strokeWidth": 1.5,
+              "draggable": true,
+              "label": "2조각"
+            }
+          ],
+          "zones": [
+            {
+              "id": "zone-ag",
+              "x": 50,
+              "y": 120,
+              "width": 146,
+              "height": 28,
+              "label": "꼭짓점 쪽 (AG)",
+              "accepts": [
+                "bar-2"
+              ]
+            },
+            {
+              "id": "zone-gd",
+              "x": 202,
+              "y": 120,
+              "width": 73,
+              "height": 28,
+              "label": "중점 쪽 (GD)",
+              "accepts": [
+                "bar-1"
+              ]
+            }
+          ],
+          "task": {
+            "prompt": "중선 AD가 나뉘는 길이의 비에 맞게 두 막대를 알맞은 칸에 놓아 보세요.",
+            "promptAlt": "중선 AD가 나뉘는 길이의 비에 맞게 두 막대를 알맞은 칸에 놓아 보세요.",
+            "successText": "맞아요! 꼭짓점 A에서 무게중심 G까지가 2조각, 무게중심 G에서 중점 D까지가 1조각이에요."
+          }
+        }
+      },
+      {
+        "type": "text",
+        "text": "왜 중선을 $2:1$로 나누는지 삼각형 ABC에서 확인해 볼게요. 변 BC, AC의 중점을 D, E라 하고, 중선 AD, BE가 만나는 점을 G라고 해요. 두 중점을 이은 선분 DE는 변 AB와 평행하고 $AB:DE=2:1$이에요.",
+        "definitions": [
+          {
+            "conceptKey": "parallel-perpendicular",
+            "surface": "평행"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "$\\triangle GAB$와 $\\triangle GDE$에서 맞꼭지각인 $\\angle AGB$와 $\\angle DGE$의 크기가 같아요. 선분 AB와 DE가 평행하므로 엇각인 $\\angle GAB$와 $\\angle GDE$의 크기도 같아요. 두 각이 각각 같아 두 삼각형은 닮음이므로, 대응변의 길이의 비도 $GA:GD=2:1$이에요.",
+        "definitions": [
+          {
+            "conceptKey": "angle-basics",
+            "surface": "맞꼭지각"
+          },
+          {
+            "conceptKey": "similar-triangles",
+            "surface": "닮음"
+          }
+        ]
+      },
+      {
+        "type": "scene",
+        "scene": {
+          "width": 340,
+          "height": 230,
+          "alt": "삼각형 ABC에서 두 중선 AD, BE의 교점 G를 기준으로 삼각형 GAB와 삼각형 GDE의 닮음비가 2 대 1임을 보이고, 세 중선이 넓이를 6등분함을 나타내는 그림입니다.",
+          "caption": "$\\triangle GAB$와 $\\triangle GDE$의 닮음으로 $GA:GD=2:1$이 되고, 세 중선은 넓이를 $6$등분해요.",
+          "items": [
+            {
+              "kind": "polygon",
+              "id": "bg-abc",
+              "points": [
+                [
+                  170,
+                  26
+                ],
+                [
+                  44,
+                  188
+                ],
+                [
+                  296,
+                  188
+                ]
+              ],
+              "closed": true,
+              "fill": "paper",
+              "stroke": "none"
+            },
+            {
+              "kind": "polygon",
+              "id": "tri-gbc",
+              "points": [
+                [
+                  170,
+                  134
+                ],
+                [
+                  44,
+                  188
+                ],
+                [
+                  296,
+                  188
+                ]
+              ],
+              "closed": true,
+              "fill": "sky",
+              "stroke": "none",
+              "opacity": 0
+            },
+            {
+              "kind": "polygon",
+              "id": "tri-gab",
+              "points": [
+                [
+                  170,
+                  134
+                ],
+                [
+                  170,
+                  26
+                ],
+                [
+                  44,
+                  188
+                ]
+              ],
+              "closed": true,
+              "fill": "sand",
+              "stroke": "orange",
+              "strokeWidth": 2,
+              "opacity": 0
+            },
+            {
+              "kind": "polygon",
+              "id": "tri-gde",
+              "points": [
+                [
+                  170,
+                  134
+                ],
+                [
+                  170,
+                  188
+                ],
+                [
+                  233,
+                  107
+                ]
+              ],
+              "closed": true,
+              "fill": "light-green",
+              "stroke": "deep-green",
+              "strokeWidth": 2,
+              "opacity": 0
+            },
+            {
+              "kind": "line",
+              "id": "line-de",
+              "x1": 170,
+              "y1": 188,
+              "x2": 233,
+              "y2": 107,
+              "stroke": "deep-green",
+              "strokeWidth": 2,
+              "opacity": 0
+            },
+            {
+              "kind": "line",
+              "id": "line-cf",
+              "x1": 296,
+              "y1": 188,
+              "x2": 107,
+              "y2": 107,
+              "stroke": "ink",
+              "strokeWidth": 1.5,
+              "opacity": 0
+            },
+            {
+              "kind": "line",
+              "id": "line-ad",
+              "x1": 170,
+              "y1": 26,
+              "x2": 170,
+              "y2": 188,
+              "stroke": "ink",
+              "strokeWidth": 1.5
+            },
+            {
+              "kind": "line",
+              "id": "line-be",
+              "x1": 44,
+              "y1": 188,
+              "x2": 233,
+              "y2": 107,
+              "stroke": "ink",
+              "strokeWidth": 1.5
+            },
+            {
+              "kind": "polygon",
+              "id": "border-abc",
+              "points": [
+                [
+                  170,
+                  26
+                ],
+                [
+                  44,
+                  188
+                ],
+                [
+                  296,
+                  188
+                ]
+              ],
+              "closed": true,
+              "fill": "none",
+              "stroke": "ink",
+              "strokeWidth": 1.5
+            },
+            {
+              "kind": "ellipse",
+              "id": "dot-g",
+              "cx": 170,
+              "cy": 134,
+              "rx": 3.5,
+              "ry": 3.5,
+              "fill": "orange",
+              "stroke": "ink",
+              "strokeWidth": 1
+            },
+            {
+              "kind": "text",
+              "id": "lbl-a",
+              "x": 170,
+              "y": 16,
+              "text": "A",
+              "size": 13,
+              "anchor": "middle",
+              "weight": "bold",
+              "fill": "ink"
+            },
+            {
+              "kind": "text",
+              "id": "lbl-b",
+              "x": 30,
+              "y": 192,
+              "text": "B",
+              "size": 13,
+              "anchor": "middle",
+              "weight": "bold",
+              "fill": "ink"
+            },
+            {
+              "kind": "text",
+              "id": "lbl-c",
+              "x": 310,
+              "y": 192,
+              "text": "C",
+              "size": 13,
+              "anchor": "middle",
+              "weight": "bold",
+              "fill": "ink"
+            },
+            {
+              "kind": "text",
+              "id": "lbl-d",
+              "x": 170,
+              "y": 206,
+              "text": "D",
+              "size": 13,
+              "anchor": "middle",
+              "weight": "bold",
+              "fill": "ink"
+            },
+            {
+              "kind": "text",
+              "id": "lbl-e",
+              "x": 245,
+              "y": 110,
+              "text": "E",
+              "size": 13,
+              "anchor": "start",
+              "weight": "bold",
+              "fill": "ink"
+            },
+            {
+              "kind": "text",
+              "id": "lbl-f",
+              "x": 95,
+              "y": 110,
+              "text": "F",
+              "size": 13,
+              "anchor": "end",
+              "weight": "bold",
+              "fill": "ink",
+              "opacity": 0
+            },
+            {
+              "kind": "text",
+              "id": "lbl-g",
+              "x": 142,
+              "y": 138,
+              "text": "G",
+              "size": 13,
+              "anchor": "end",
+              "weight": "bold",
+              "fill": "orange"
+            },
+            {
+              "kind": "text",
+              "id": "label-ratio-2",
+              "x": 182,
+              "y": 84,
+              "text": "$2$",
+              "size": 13,
+              "anchor": "start",
+              "weight": "bold",
+              "fill": "orange",
+              "opacity": 0
+            },
+            {
+              "kind": "text",
+              "id": "label-ratio-1",
+              "x": 182,
+              "y": 164,
+              "text": "$1$",
+              "size": 13,
+              "anchor": "start",
+              "weight": "bold",
+              "fill": "deep-green",
+              "opacity": 0
+            }
+          ],
+          "frames": [
+            {
+              "caption": "두 중선 AD와 BE가 만나는 점이 무게중심 G예요.",
+              "changes": []
+            },
+            {
+              "caption": "중점 D, E를 이으면 선분 DE는 변 AB와 평행하고 $AB:DE=2:1$이에요.",
+              "changes": [
+                {
+                  "id": "line-de",
+                  "opacity": 1
+                }
+              ]
+            },
+            {
+              "caption": "$\\triangle GAB$와 $\\triangle GDE$는 닮음이므로 $GA:GD=2:1$이에요.",
+              "changes": [
+                {
+                  "id": "line-de",
+                  "opacity": 1
+                },
+                {
+                  "id": "tri-gab",
+                  "opacity": 1
+                },
+                {
+                  "id": "tri-gde",
+                  "opacity": 1
+                },
+                {
+                  "id": "label-ratio-2",
+                  "opacity": 1
+                },
+                {
+                  "id": "label-ratio-1",
+                  "opacity": 1
+                }
+              ]
+            },
+            {
+              "caption": "세 중선은 넓이를 똑같이 $6$조각으로 나누고, $\\triangle GBC$는 그중 $2$조각이에요.",
+              "changes": [
+                {
+                  "id": "line-cf",
+                  "opacity": 1
+                },
+                {
+                  "id": "lbl-f",
+                  "opacity": 1
+                },
+                {
+                  "id": "tri-gbc",
+                  "opacity": 1
+                }
+              ]
+            }
+          ],
+          "frameMs": 2000
+        }
+      },
+      {
+        "type": "text",
+        "text": "세 중선을 모두 그으면 삼각형은 넓이가 같은 작은 삼각형 $6$개로 나뉘어요. 무게중심과 두 꼭짓점을 이은 삼각형은 그중 $2$개이니 전체 넓이의 $\\frac{1}{3}$이에요."
+      }
+    ],
+    "worked_example": [
+      {
+        "type": "text",
+        "text": "중선의 길이가 $18$인 삼각형에서 각 부분의 길이를 구해 볼게요. 무게중심은 중선을 $2:1$로 나누므로 전체를 $2+1=3$조각으로 봐요.\n\n한 조각의 길이는 $18 \\div 3 = 6$이에요. 따라서 꼭짓점 쪽 두 조각은 $6 \\times 2 = 12$, 중점 쪽 한 조각은 $6$이에요."
+      },
+      {
+        "type": "text",
+        "text": "반대로 무게중심에서 중점까지의 길이가 $5$일 때 중선 전체의 길이를 구해 볼게요. 무게중심에서 중점까지는 짧은 쪽 한 조각이므로 한 조각의 길이가 $5$예요. 중선 전체는 세 조각이므로 $5 \\times 3 = 15$가 돼요."
+      },
+      {
+        "type": "text",
+        "text": "이번에는 넓이가 $24$인 삼각형에 세 중선을 그었을 때 조각의 넓이를 구해 볼게요. 세 중선이 나눈 $6$조각은 넓이가 같으므로 한 조각의 넓이는 $24 \\div 6 = 4$예요. 무게중심과 두 꼭짓점을 이은 삼각형은 $2$조각이므로 넓이가 $4 \\times 2 = 8$이에요."
+      }
+    ],
+    "summary": [
+      {
+        "type": "text",
+        "text": "삼각형의 세 중선이 만나는 점을 삼각형의 무게중심이라고 해요. 무게중심은 각 중선을 꼭짓점 쪽부터 $2:1$의 비로 나눠요. 세 중선을 그으면 삼각형은 넓이가 같은 $6$조각으로 나뉘어요. 무게중심과 두 꼭짓점을 이은 삼각형은 그중 $2$조각이어서 전체 넓이의 $\\frac{1}{3}$이에요.",
+        "definitions": [
+          {
+            "conceptKey": "centroid",
+            "surface": "삼각형의 무게중심"
+          }
+        ]
+      }
+    ]
+  },
+  "lesson": {
+    "public": {
+      "lessonKey": "centroid",
+      "versionId": "centroid:v4",
+      "title": "무게중심: 중선을 2 대 1로 나누는 점",
+      "summary": "세 중선이 한 점에서 만나는 것과, 그 점이 중선을 2 대 1로 나누는 것을 확인해요.",
+      "estimatedMinutes": 12,
+      "conceptKeys": [
+        "centroid"
+      ],
+      "prerequisiteConceptKeys": [
+        "parallel-ratio"
+      ],
+      "sectionCount": 5
+    },
+    "sections": [
+      {
+        "sectionId": "centroid:explanation:v4",
+        "role": "explanation",
+        "title": "개념 만나기",
+        "contentBlocks": [
+          {
+            "blockId": "centroid:explanation:text-1:v4",
+            "kind": "core.rich_text",
+            "typeVersion": 3,
+            "required": true,
+            "payload": {
+              "text": "삼각형의 꼭짓점과 마주 보는 변의 중점을 이은 선분을 중선이라고 해요. 삼각형은 꼭짓점이 $3$개이므로 중선도 $3$개 그을 수 있어요.",
+              "definitions": [
+                {
+                  "conceptKey": "vertex",
+                  "surface": "꼭짓점",
+                  "scopeKind": "global"
+                }
+              ]
+            }
+          },
+          {
+            "blockId": "centroid:explanation:text-2:v4",
+            "kind": "core.rich_text",
+            "typeVersion": 3,
+            "required": true,
+            "payload": {
+              "text": "세 중선이 만나는 한 점을 삼각형의 무게중심이라고 해요. 무게중심은 각 중선을 꼭짓점 쪽부터 $2:1$의 비로 나눠요.\n\n중선 전체를 세 조각으로 보면 꼭짓점 쪽이 두 조각, 중점 쪽이 한 조각이에요. 중선의 길이가 $9$라면 꼭짓점 쪽은 $6$, 중점 쪽은 $3$이 돼요.",
+              "definitions": [
+                {
+                  "conceptKey": "centroid",
+                  "surface": "삼각형의 무게중심",
+                  "scopeKind": "global"
+                },
+                {
+                  "conceptKey": "ratio",
+                  "surface": "비",
+                  "scopeKind": "global"
+                }
+              ]
+            }
+          },
+          {
+            "blockId": "centroid:explanation:scene-1:v4",
+            "kind": "core.scene",
+            "typeVersion": 1,
+            "required": true,
+            "payload": {
+              "width": 340,
+              "height": 220,
+              "alt": "삼각형 ABC의 중선 AD 위에 무게중심 G가 찍혀 있고, 선분 AG와 선분 GD에 해당하는 빈칸에 2조각 막대와 1조각 막대를 끌어다 놓는 그림입니다.",
+              "caption": "무게중심 G는 중선 AD를 꼭짓점 A 쪽부터 $2:1$로 나눠요.",
+              "items": [
+                {
+                  "kind": "polygon",
+                  "id": "tri-abc",
+                  "points": [
+                    [
+                      50,
+                      60
+                    ],
+                    [
+                      275,
+                      18
+                    ],
+                    [
+                      275,
+                      102
+                    ]
+                  ],
+                  "closed": true,
+                  "fill": "fill-soft",
+                  "stroke": "ink",
+                  "strokeWidth": 1.5
+                },
+                {
+                  "kind": "line",
+                  "id": "med-be",
+                  "x1": 275,
+                  "y1": 18,
+                  "x2": 162.5,
+                  "y2": 81,
+                  "stroke": "muted",
+                  "strokeWidth": 1,
+                  "dash": true
+                },
+                {
+                  "kind": "line",
+                  "id": "med-cf",
+                  "x1": 275,
+                  "y1": 102,
+                  "x2": 162.5,
+                  "y2": 39,
+                  "stroke": "muted",
+                  "strokeWidth": 1,
+                  "dash": true
+                },
+                {
+                  "kind": "line",
+                  "id": "med-ad",
+                  "x1": 50,
+                  "y1": 60,
+                  "x2": 275,
+                  "y2": 60,
+                  "stroke": "ink",
+                  "strokeWidth": 2
+                },
+                {
+                  "kind": "line",
+                  "id": "guide-a",
+                  "x1": 50,
+                  "y1": 65,
+                  "x2": 50,
+                  "y2": 118,
+                  "stroke": "line",
+                  "strokeWidth": 1,
+                  "dash": true
+                },
+                {
+                  "kind": "line",
+                  "id": "guide-g",
+                  "x1": 200,
+                  "y1": 65,
+                  "x2": 200,
+                  "y2": 118,
+                  "stroke": "line",
+                  "strokeWidth": 1,
+                  "dash": true
+                },
+                {
+                  "kind": "line",
+                  "id": "guide-d",
+                  "x1": 275,
+                  "y1": 65,
+                  "x2": 275,
+                  "y2": 118,
+                  "stroke": "line",
+                  "strokeWidth": 1,
+                  "dash": true
+                },
+                {
+                  "kind": "ellipse",
+                  "id": "pt-a",
+                  "cx": 50,
+                  "cy": 60,
+                  "rx": 3,
+                  "ry": 3,
+                  "fill": "ink"
+                },
+                {
+                  "kind": "ellipse",
+                  "id": "pt-d",
+                  "cx": 275,
+                  "cy": 60,
+                  "rx": 3,
+                  "ry": 3,
+                  "fill": "ink"
+                },
+                {
+                  "kind": "ellipse",
+                  "id": "pt-g",
+                  "cx": 200,
+                  "cy": 60,
+                  "rx": 4,
+                  "ry": 4,
+                  "fill": "orange",
+                  "stroke": "ink",
+                  "strokeWidth": 1
+                },
+                {
+                  "kind": "text",
+                  "id": "txt-a",
+                  "x": 36,
+                  "y": 64,
+                  "text": "A",
+                  "size": 13,
+                  "anchor": "middle",
+                  "weight": "bold",
+                  "fill": "ink"
+                },
+                {
+                  "kind": "text",
+                  "id": "txt-b",
+                  "x": 288,
+                  "y": 22,
+                  "text": "B",
+                  "size": 12,
+                  "anchor": "middle",
+                  "fill": "muted"
+                },
+                {
+                  "kind": "text",
+                  "id": "txt-c",
+                  "x": 288,
+                  "y": 106,
+                  "text": "C",
+                  "size": 12,
+                  "anchor": "middle",
+                  "fill": "muted"
+                },
+                {
+                  "kind": "text",
+                  "id": "txt-d",
+                  "x": 288,
+                  "y": 64,
+                  "text": "D",
+                  "size": 13,
+                  "anchor": "middle",
+                  "weight": "bold",
+                  "fill": "ink"
+                },
+                {
+                  "kind": "text",
+                  "id": "txt-g",
+                  "x": 200,
+                  "y": 46,
+                  "text": "G",
+                  "size": 13,
+                  "anchor": "middle",
+                  "weight": "bold",
+                  "fill": "orange"
+                },
+                {
+                  "kind": "rect",
+                  "id": "bar-1",
+                  "x": 55,
+                  "y": 180,
+                  "width": 68,
+                  "height": 22,
+                  "radius": 4,
+                  "fill": "light-green",
+                  "stroke": "deep-green",
+                  "strokeWidth": 1.5,
+                  "draggable": true,
+                  "label": "1조각"
+                },
+                {
+                  "kind": "rect",
+                  "id": "bar-2",
+                  "x": 150,
+                  "y": 180,
+                  "width": 140,
+                  "height": 22,
+                  "radius": 4,
+                  "fill": "sand",
+                  "stroke": "orange",
+                  "strokeWidth": 1.5,
+                  "draggable": true,
+                  "label": "2조각"
+                }
+              ],
+              "zones": [
+                {
+                  "id": "zone-ag",
+                  "x": 50,
+                  "y": 120,
+                  "width": 146,
+                  "height": 28,
+                  "label": "꼭짓점 쪽 (AG)",
+                  "accepts": [
+                    "bar-2"
+                  ]
+                },
+                {
+                  "id": "zone-gd",
+                  "x": 202,
+                  "y": 120,
+                  "width": 73,
+                  "height": 28,
+                  "label": "중점 쪽 (GD)",
+                  "accepts": [
+                    "bar-1"
+                  ]
+                }
+              ],
+              "task": {
+                "prompt": "중선 AD가 나뉘는 길이의 비에 맞게 두 막대를 알맞은 칸에 놓아 보세요.",
+                "promptAlt": "중선 AD가 나뉘는 길이의 비에 맞게 두 막대를 알맞은 칸에 놓아 보세요.",
+                "successText": "맞아요! 꼭짓점 A에서 무게중심 G까지가 2조각, 무게중심 G에서 중점 D까지가 1조각이에요."
+              }
+            }
+          },
+          {
+            "blockId": "centroid:explanation:text-3:v4",
+            "kind": "core.rich_text",
+            "typeVersion": 3,
+            "required": true,
+            "payload": {
+              "text": "왜 중선을 $2:1$로 나누는지 삼각형 ABC에서 확인해 볼게요. 변 BC, AC의 중점을 D, E라 하고, 중선 AD, BE가 만나는 점을 G라고 해요. 두 중점을 이은 선분 DE는 변 AB와 평행하고 $AB:DE=2:1$이에요.",
+              "definitions": [
+                {
+                  "conceptKey": "parallel-perpendicular",
+                  "surface": "평행",
+                  "scopeKind": "global"
+                }
+              ]
+            }
+          },
+          {
+            "blockId": "centroid:explanation:text-4:v4",
+            "kind": "core.rich_text",
+            "typeVersion": 3,
+            "required": true,
+            "payload": {
+              "text": "$\\triangle GAB$와 $\\triangle GDE$에서 맞꼭지각인 $\\angle AGB$와 $\\angle DGE$의 크기가 같아요. 선분 AB와 DE가 평행하므로 엇각인 $\\angle GAB$와 $\\angle GDE$의 크기도 같아요. 두 각이 각각 같아 두 삼각형은 닮음이므로, 대응변의 길이의 비도 $GA:GD=2:1$이에요.",
+              "definitions": [
+                {
+                  "conceptKey": "angle-basics",
+                  "surface": "맞꼭지각",
+                  "scopeKind": "global"
+                },
+                {
+                  "conceptKey": "similar-triangles",
+                  "surface": "닮음",
+                  "scopeKind": "global"
+                }
+              ]
+            }
+          },
+          {
+            "blockId": "centroid:explanation:scene-2:v4",
+            "kind": "core.scene",
+            "typeVersion": 1,
+            "required": true,
+            "payload": {
+              "width": 340,
+              "height": 230,
+              "alt": "삼각형 ABC에서 두 중선 AD, BE의 교점 G를 기준으로 삼각형 GAB와 삼각형 GDE의 닮음비가 2 대 1임을 보이고, 세 중선이 넓이를 6등분함을 나타내는 그림입니다.",
+              "caption": "$\\triangle GAB$와 $\\triangle GDE$의 닮음으로 $GA:GD=2:1$이 되고, 세 중선은 넓이를 $6$등분해요.",
+              "items": [
+                {
+                  "kind": "polygon",
+                  "id": "bg-abc",
+                  "points": [
+                    [
+                      170,
+                      26
+                    ],
+                    [
+                      44,
+                      188
+                    ],
+                    [
+                      296,
+                      188
+                    ]
+                  ],
+                  "closed": true,
+                  "fill": "paper",
+                  "stroke": "none"
+                },
+                {
+                  "kind": "polygon",
+                  "id": "tri-gbc",
+                  "points": [
+                    [
+                      170,
+                      134
+                    ],
+                    [
+                      44,
+                      188
+                    ],
+                    [
+                      296,
+                      188
+                    ]
+                  ],
+                  "closed": true,
+                  "fill": "sky",
+                  "stroke": "none",
+                  "opacity": 0
+                },
+                {
+                  "kind": "polygon",
+                  "id": "tri-gab",
+                  "points": [
+                    [
+                      170,
+                      134
+                    ],
+                    [
+                      170,
+                      26
+                    ],
+                    [
+                      44,
+                      188
+                    ]
+                  ],
+                  "closed": true,
+                  "fill": "sand",
+                  "stroke": "orange",
+                  "strokeWidth": 2,
+                  "opacity": 0
+                },
+                {
+                  "kind": "polygon",
+                  "id": "tri-gde",
+                  "points": [
+                    [
+                      170,
+                      134
+                    ],
+                    [
+                      170,
+                      188
+                    ],
+                    [
+                      233,
+                      107
+                    ]
+                  ],
+                  "closed": true,
+                  "fill": "light-green",
+                  "stroke": "deep-green",
+                  "strokeWidth": 2,
+                  "opacity": 0
+                },
+                {
+                  "kind": "line",
+                  "id": "line-de",
+                  "x1": 170,
+                  "y1": 188,
+                  "x2": 233,
+                  "y2": 107,
+                  "stroke": "deep-green",
+                  "strokeWidth": 2,
+                  "opacity": 0
+                },
+                {
+                  "kind": "line",
+                  "id": "line-cf",
+                  "x1": 296,
+                  "y1": 188,
+                  "x2": 107,
+                  "y2": 107,
+                  "stroke": "ink",
+                  "strokeWidth": 1.5,
+                  "opacity": 0
+                },
+                {
+                  "kind": "line",
+                  "id": "line-ad",
+                  "x1": 170,
+                  "y1": 26,
+                  "x2": 170,
+                  "y2": 188,
+                  "stroke": "ink",
+                  "strokeWidth": 1.5
+                },
+                {
+                  "kind": "line",
+                  "id": "line-be",
+                  "x1": 44,
+                  "y1": 188,
+                  "x2": 233,
+                  "y2": 107,
+                  "stroke": "ink",
+                  "strokeWidth": 1.5
+                },
+                {
+                  "kind": "polygon",
+                  "id": "border-abc",
+                  "points": [
+                    [
+                      170,
+                      26
+                    ],
+                    [
+                      44,
+                      188
+                    ],
+                    [
+                      296,
+                      188
+                    ]
+                  ],
+                  "closed": true,
+                  "fill": "none",
+                  "stroke": "ink",
+                  "strokeWidth": 1.5
+                },
+                {
+                  "kind": "ellipse",
+                  "id": "dot-g",
+                  "cx": 170,
+                  "cy": 134,
+                  "rx": 3.5,
+                  "ry": 3.5,
+                  "fill": "orange",
+                  "stroke": "ink",
+                  "strokeWidth": 1
+                },
+                {
+                  "kind": "text",
+                  "id": "lbl-a",
+                  "x": 170,
+                  "y": 16,
+                  "text": "A",
+                  "size": 13,
+                  "anchor": "middle",
+                  "weight": "bold",
+                  "fill": "ink"
+                },
+                {
+                  "kind": "text",
+                  "id": "lbl-b",
+                  "x": 30,
+                  "y": 192,
+                  "text": "B",
+                  "size": 13,
+                  "anchor": "middle",
+                  "weight": "bold",
+                  "fill": "ink"
+                },
+                {
+                  "kind": "text",
+                  "id": "lbl-c",
+                  "x": 310,
+                  "y": 192,
+                  "text": "C",
+                  "size": 13,
+                  "anchor": "middle",
+                  "weight": "bold",
+                  "fill": "ink"
+                },
+                {
+                  "kind": "text",
+                  "id": "lbl-d",
+                  "x": 170,
+                  "y": 206,
+                  "text": "D",
+                  "size": 13,
+                  "anchor": "middle",
+                  "weight": "bold",
+                  "fill": "ink"
+                },
+                {
+                  "kind": "text",
+                  "id": "lbl-e",
+                  "x": 245,
+                  "y": 110,
+                  "text": "E",
+                  "size": 13,
+                  "anchor": "start",
+                  "weight": "bold",
+                  "fill": "ink"
+                },
+                {
+                  "kind": "text",
+                  "id": "lbl-f",
+                  "x": 95,
+                  "y": 110,
+                  "text": "F",
+                  "size": 13,
+                  "anchor": "end",
+                  "weight": "bold",
+                  "fill": "ink",
+                  "opacity": 0
+                },
+                {
+                  "kind": "text",
+                  "id": "lbl-g",
+                  "x": 142,
+                  "y": 138,
+                  "text": "G",
+                  "size": 13,
+                  "anchor": "end",
+                  "weight": "bold",
+                  "fill": "orange"
+                },
+                {
+                  "kind": "text",
+                  "id": "label-ratio-2",
+                  "x": 182,
+                  "y": 84,
+                  "text": "$2$",
+                  "size": 13,
+                  "anchor": "start",
+                  "weight": "bold",
+                  "fill": "orange",
+                  "opacity": 0
+                },
+                {
+                  "kind": "text",
+                  "id": "label-ratio-1",
+                  "x": 182,
+                  "y": 164,
+                  "text": "$1$",
+                  "size": 13,
+                  "anchor": "start",
+                  "weight": "bold",
+                  "fill": "deep-green",
+                  "opacity": 0
+                }
+              ],
+              "frames": [
+                {
+                  "caption": "두 중선 AD와 BE가 만나는 점이 무게중심 G예요.",
+                  "changes": []
+                },
+                {
+                  "caption": "중점 D, E를 이으면 선분 DE는 변 AB와 평행하고 $AB:DE=2:1$이에요.",
+                  "changes": [
+                    {
+                      "id": "line-de",
+                      "opacity": 1
+                    }
+                  ]
+                },
+                {
+                  "caption": "$\\triangle GAB$와 $\\triangle GDE$는 닮음이므로 $GA:GD=2:1$이에요.",
+                  "changes": [
+                    {
+                      "id": "line-de",
+                      "opacity": 1
+                    },
+                    {
+                      "id": "tri-gab",
+                      "opacity": 1
+                    },
+                    {
+                      "id": "tri-gde",
+                      "opacity": 1
+                    },
+                    {
+                      "id": "label-ratio-2",
+                      "opacity": 1
+                    },
+                    {
+                      "id": "label-ratio-1",
+                      "opacity": 1
+                    }
+                  ]
+                },
+                {
+                  "caption": "세 중선은 넓이를 똑같이 $6$조각으로 나누고, $\\triangle GBC$는 그중 $2$조각이에요.",
+                  "changes": [
+                    {
+                      "id": "line-cf",
+                      "opacity": 1
+                    },
+                    {
+                      "id": "lbl-f",
+                      "opacity": 1
+                    },
+                    {
+                      "id": "tri-gbc",
+                      "opacity": 1
+                    }
+                  ]
+                }
+              ],
+              "frameMs": 2000
+            }
+          },
+          {
+            "blockId": "centroid:explanation:text-5:v4",
+            "kind": "core.rich_text",
+            "typeVersion": 3,
+            "required": true,
+            "payload": {
+              "text": "세 중선을 모두 그으면 삼각형은 넓이가 같은 작은 삼각형 $6$개로 나뉘어요. 무게중심과 두 꼭짓점을 이은 삼각형은 그중 $2$개이니 전체 넓이의 $\\frac{1}{3}$이에요.",
+              "definitions": []
+            }
+          }
+        ]
+      },
+      {
+        "sectionId": "centroid:example:v4",
+        "role": "worked_example",
+        "title": "함께 풀어 보기",
+        "contentBlocks": [
+          {
+            "blockId": "centroid:example:text-1:v4",
+            "kind": "core.rich_text",
+            "typeVersion": 3,
+            "required": true,
+            "payload": {
+              "text": "중선의 길이가 $18$인 삼각형에서 각 부분의 길이를 구해 볼게요. 무게중심은 중선을 $2:1$로 나누므로 전체를 $2+1=3$조각으로 봐요.\n\n한 조각의 길이는 $18 \\div 3 = 6$이에요. 따라서 꼭짓점 쪽 두 조각은 $6 \\times 2 = 12$, 중점 쪽 한 조각은 $6$이에요.",
+              "definitions": []
+            }
+          },
+          {
+            "blockId": "centroid:example:text-2:v4",
+            "kind": "core.rich_text",
+            "typeVersion": 3,
+            "required": true,
+            "payload": {
+              "text": "반대로 무게중심에서 중점까지의 길이가 $5$일 때 중선 전체의 길이를 구해 볼게요. 무게중심에서 중점까지는 짧은 쪽 한 조각이므로 한 조각의 길이가 $5$예요. 중선 전체는 세 조각이므로 $5 \\times 3 = 15$가 돼요.",
+              "definitions": []
+            }
+          },
+          {
+            "blockId": "centroid:example:text-3:v4",
+            "kind": "core.rich_text",
+            "typeVersion": 3,
+            "required": true,
+            "payload": {
+              "text": "이번에는 넓이가 $24$인 삼각형에 세 중선을 그었을 때 조각의 넓이를 구해 볼게요. 세 중선이 나눈 $6$조각은 넓이가 같으므로 한 조각의 넓이는 $24 \\div 6 = 4$예요. 무게중심과 두 꼭짓점을 이은 삼각형은 $2$조각이므로 넓이가 $4 \\times 2 = 8$이에요.",
+              "definitions": []
+            }
+          }
+        ]
+      },
+      {
+        "sectionId": "centroid:practice:v4",
+        "role": "practice",
+        "title": "직접 풀어 보기",
+        "contentBlocks": [
+          {
+            "blockId": "centroid:practice:problems:v4",
+            "kind": "core.problem_set",
+            "typeVersion": 2,
+            "required": true,
+            "payload": {
+              "problemSetId": "centroid:practice",
+              "problemSetVersionId": "centroid:practice:v1",
+              "problemVersionIds": [
+                "centroid:practice-1:v1",
+                "centroid:practice-2:v1",
+                "centroid:practice-3:v1"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "sectionId": "centroid:check:v4",
+        "role": "check",
+        "title": "혼자 확인하기",
+        "contentBlocks": [
+          {
+            "blockId": "centroid:check:problems:v4",
+            "kind": "core.problem_set",
+            "typeVersion": 2,
+            "required": true,
+            "payload": {
+              "problemSetId": "centroid:check",
+              "problemSetVersionId": "centroid:check:v1",
+              "problemVersionIds": [
+                "centroid:check-1:v1",
+                "centroid:check-2:v1"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "sectionId": "centroid:summary:v4",
+        "role": "summary",
+        "title": "배운 개념 돌아보기",
+        "contentBlocks": [
+          {
+            "blockId": "centroid:summary:text-1:v4",
+            "kind": "core.rich_text",
+            "typeVersion": 3,
+            "required": true,
+            "payload": {
+              "text": "삼각형의 세 중선이 만나는 점을 삼각형의 무게중심이라고 해요. 무게중심은 각 중선을 꼭짓점 쪽부터 $2:1$의 비로 나눠요. 세 중선을 그으면 삼각형은 넓이가 같은 $6$조각으로 나뉘어요. 무게중심과 두 꼭짓점을 이은 삼각형은 그중 $2$조각이어서 전체 넓이의 $\\frac{1}{3}$이에요.",
+              "definitions": [
+                {
+                  "conceptKey": "centroid",
+                  "surface": "삼각형의 무게중심",
+                  "scopeKind": "global"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "review": {
+      "problemSetId": "centroid:review",
+      "problemSetVersionId": "centroid:review:v1",
+      "problemVersionIds": [
+        "centroid:homework-1:v1",
+        "centroid:homework-2:v1"
+      ]
+    }
+  },
+  "issues": [],
+  "status": "ok"
+}

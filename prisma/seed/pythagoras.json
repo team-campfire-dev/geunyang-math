@@ -55,7 +55,7 @@
     {
       "public": {
         "lessonKey": "pythagoras",
-        "versionId": "pythagoras:v2",
+        "versionId": "pythagoras:v3",
         "title": "피타고라스 정리: 두 변을 알면 나머지 하나",
         "summary": "직각삼각형에서 세 변의 제곱 사이에 있는 관계를 넓이로 확인하고 길이를 구해요.",
         "estimatedMinutes": 12,
@@ -71,947 +71,570 @@
       },
       "sections": [
         {
-          "sectionId": "pythagoras:explanation:v2",
+          "sectionId": "pythagoras:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "pythagoras:explanation:theorem:v2",
+              "blockId": "pythagoras:explanation:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "직각삼각형에서는 두 변만 알면 나머지 한 변이 정해져요. 삼각형 모양이 하나로 굳어지니까요.\n\n그 관계가 피타고라스 정리예요. 직각을 낀 두 변을 $a$, $b$라 하고, 가장 긴 변을 $c$라 해 볼게요. 그러면 $a^2 + b^2 = c^2$이에요.\n\n길이끼리 더하는 것이 아니에요. 제곱끼리 더한다는 것이 중요해요. $3 + 4$는 $5$가 아니지만 $3^2 + 4^2$은 $5^2$이거든요.",
-                "definitions": [
-                  {
-                    "conceptKey": "pythagoras",
-                    "surface": "피타고라스 정리",
-                    "scopeKind": "global"
-                  }
-                ]
+                "text": "직각삼각형에서 직각의 맞은편에 있는 변이 가장 길어요. 이 변을 빗변이라고 불러요.\n\n직각을 낀 두 변이 $3$, $4$이면 빗변의 길이는 $5$예요.",
+                "definitions": []
               }
             },
             {
-              "blockId": "pythagoras:explanation:area:v2",
-              "kind": "core.rich_text",
-              "typeVersion": 3,
-              "required": true,
-              "payload": {
-                "text": "왜 그런지는 넓이로 보면 보여요. 세 변마다 정사각형을 그리면 넓이가 각각 $a^2$, $b^2$, $c^2$이에요.\n\n$3$과 $4$인 경우라면 $9$칸과 $16$칸이에요. 이 칸을 모두 옮기면 $25$칸짜리 정사각형이 빈틈없이 채워져요.",
-                "definitions": [
-                  {
-                    "conceptKey": "special-quad",
-                    "surface": "정사각형",
-                    "scopeKind": "global"
-                  }
-                ]
-              }
-            },
-            {
-              "blockId": "pythagoras:explanation:drawing:v2",
+              "blockId": "pythagoras:explanation:scene-1:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "width": 320,
-                "height": 200,
-                "alt": "3과 4를 변으로 하는 두 정사각형의 칸이 모두 옮겨 가 5를 변으로 하는 정사각형을 채우는 그림",
-                "caption": "작은 두 정사각형의 넓이를 합하면 큰 정사각형의 넓이예요",
+                "width": 340,
+                "height": 215,
+                "alt": "직각을 낀 두 변이 3과 4이고 빗변이 5인 직각삼각형의 세 변에 그린 정사각형에서 9칸과 16칸을 합하면 25칸이 되는 그림",
+                "caption": "작은 두 정사각형의 넓이 합($9 + 16$)은 빗변의 정사각형 넓이($25$)와 같아요.",
+                "frameMs": 1800,
                 "items": [
                   {
                     "kind": "polygon",
+                    "id": "sq-c-bg",
                     "points": [
                       [
-                        20,
-                        176
+                        90,
+                        85
                       ],
                       [
-                        59,
-                        176
+                        150,
+                        130
                       ],
                       [
-                        20,
-                        124
+                        195,
+                        70
+                      ],
+                      [
+                        135,
+                        25
                       ]
                     ],
                     "closed": true,
-                    "fill": "fill-soft",
+                    "fill": "paper",
                     "stroke": "ink",
-                    "strokeWidth": 1.6,
-                    "id": "tri"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 40,
-                    "y": 190,
-                    "text": "$3$",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 10,
-                    "y": 152,
-                    "text": "$4$",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 48,
-                    "y": 146,
-                    "text": "$5$",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "orange"
+                    "strokeWidth": 1.5
                   },
                   {
                     "kind": "polygon",
+                    "id": "sq-c-fill-9",
                     "points": [
                       [
-                        230,
-                        26
+                        90,
+                        85
                       ],
                       [
-                        295,
-                        26
+                        126,
+                        112
                       ],
                       [
-                        295,
-                        91
+                        153,
+                        76
                       ],
                       [
-                        230,
-                        91
+                        117,
+                        49
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "none",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "polygon",
+                    "id": "sq-c-fill-16",
+                    "points": [
+                      [
+                        126,
+                        112
+                      ],
+                      [
+                        150,
+                        130
+                      ],
+                      [
+                        195,
+                        70
+                      ],
+                      [
+                        135,
+                        25
+                      ],
+                      [
+                        117,
+                        49
+                      ],
+                      [
+                        153,
+                        76
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "none",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "id": "c-g1",
+                    "x1": 99,
+                    "y1": 73,
+                    "x2": 159,
+                    "y2": 118,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
+                  },
+                  {
+                    "kind": "line",
+                    "id": "c-g2",
+                    "x1": 108,
+                    "y1": 61,
+                    "x2": 168,
+                    "y2": 106,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
+                  },
+                  {
+                    "kind": "line",
+                    "id": "c-g3",
+                    "x1": 117,
+                    "y1": 49,
+                    "x2": 177,
+                    "y2": 94,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
+                  },
+                  {
+                    "kind": "line",
+                    "id": "c-g4",
+                    "x1": 126,
+                    "y1": 37,
+                    "x2": 186,
+                    "y2": 82,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
+                  },
+                  {
+                    "kind": "line",
+                    "id": "c-h1",
+                    "x1": 102,
+                    "y1": 94,
+                    "x2": 147,
+                    "y2": 34,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
+                  },
+                  {
+                    "kind": "line",
+                    "id": "c-h2",
+                    "x1": 114,
+                    "y1": 103,
+                    "x2": 159,
+                    "y2": 43,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
+                  },
+                  {
+                    "kind": "line",
+                    "id": "c-h3",
+                    "x1": 126,
+                    "y1": 112,
+                    "x2": 171,
+                    "y2": 52,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
+                  },
+                  {
+                    "kind": "line",
+                    "id": "c-h4",
+                    "x1": 138,
+                    "y1": 121,
+                    "x2": 183,
+                    "y2": 61,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
+                  },
+                  {
+                    "kind": "polygon",
+                    "id": "sq-c-border",
+                    "points": [
+                      [
+                        90,
+                        85
+                      ],
+                      [
+                        150,
+                        130
+                      ],
+                      [
+                        195,
+                        70
+                      ],
+                      [
+                        135,
+                        25
                       ]
                     ],
                     "closed": true,
                     "fill": "none",
                     "stroke": "ink",
-                    "strokeWidth": 1.4,
-                    "dash": true,
-                    "id": "frame",
-                    "opacity": 0
+                    "strokeWidth": 1.5
                   },
                   {
                     "kind": "rect",
-                    "x": 96,
-                    "y": 26,
-                    "width": 13,
-                    "height": 13,
+                    "id": "sq-a",
+                    "x": 45,
+                    "y": 85,
+                    "width": 45,
+                    "height": 45,
+                    "fill": "light-green",
+                    "stroke": "green",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "line",
+                    "id": "a-g1",
+                    "x1": 60,
+                    "y1": 85,
+                    "x2": 60,
+                    "y2": 130,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
+                  },
+                  {
+                    "kind": "line",
+                    "id": "a-g2",
+                    "x1": 75,
+                    "y1": 85,
+                    "x2": 75,
+                    "y2": 130,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
+                  },
+                  {
+                    "kind": "line",
+                    "id": "a-h1",
+                    "x1": 45,
+                    "y1": 100,
+                    "x2": 90,
+                    "y2": 100,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
+                  },
+                  {
+                    "kind": "line",
+                    "id": "a-h2",
+                    "x1": 45,
+                    "y1": 115,
+                    "x2": 90,
+                    "y2": 115,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "sq-b",
+                    "x": 90,
+                    "y": 130,
+                    "width": 60,
+                    "height": 60,
                     "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "a1",
-                    "opacity": 0
+                    "stroke": "orange",
+                    "strokeWidth": 1.5
                   },
                   {
-                    "kind": "rect",
-                    "x": 109,
-                    "y": 26,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "a2",
-                    "opacity": 0
+                    "kind": "line",
+                    "id": "b-g1",
+                    "x1": 105,
+                    "y1": 130,
+                    "x2": 105,
+                    "y2": 190,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
                   },
                   {
-                    "kind": "rect",
-                    "x": 122,
-                    "y": 26,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "a3",
-                    "opacity": 0
+                    "kind": "line",
+                    "id": "b-g2",
+                    "x1": 120,
+                    "y1": 130,
+                    "x2": 120,
+                    "y2": 190,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
                   },
                   {
-                    "kind": "rect",
-                    "x": 96,
-                    "y": 39,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "a4",
-                    "opacity": 0
+                    "kind": "line",
+                    "id": "b-g3",
+                    "x1": 135,
+                    "y1": 130,
+                    "x2": 135,
+                    "y2": 190,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
                   },
                   {
-                    "kind": "rect",
-                    "x": 109,
-                    "y": 39,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "a5",
-                    "opacity": 0
+                    "kind": "line",
+                    "id": "b-h1",
+                    "x1": 90,
+                    "y1": 145,
+                    "x2": 150,
+                    "y2": 145,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
                   },
                   {
-                    "kind": "rect",
-                    "x": 122,
-                    "y": 39,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "a6",
-                    "opacity": 0
+                    "kind": "line",
+                    "id": "b-h2",
+                    "x1": 90,
+                    "y1": 160,
+                    "x2": 150,
+                    "y2": 160,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
                   },
                   {
-                    "kind": "rect",
-                    "x": 96,
-                    "y": 52,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "a7",
-                    "opacity": 0
+                    "kind": "line",
+                    "id": "b-h3",
+                    "x1": 90,
+                    "y1": 175,
+                    "x2": 150,
+                    "y2": 175,
+                    "stroke": "line",
+                    "strokeWidth": 0.75
                   },
                   {
-                    "kind": "rect",
-                    "x": 109,
-                    "y": 52,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "sand",
+                    "kind": "polygon",
+                    "id": "tri-abc",
+                    "points": [
+                      [
+                        90,
+                        85
+                      ],
+                      [
+                        90,
+                        130
+                      ],
+                      [
+                        150,
+                        130
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
                     "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "a8",
-                    "opacity": 0
+                    "strokeWidth": 2
                   },
                   {
-                    "kind": "rect",
-                    "x": 122,
-                    "y": 52,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "sand",
+                    "kind": "polygon",
+                    "id": "right-angle",
+                    "points": [
+                      [
+                        90,
+                        122
+                      ],
+                      [
+                        98,
+                        122
+                      ],
+                      [
+                        98,
+                        130
+                      ]
+                    ],
+                    "closed": false,
+                    "fill": "none",
                     "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "a9",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 152,
-                    "y": 26,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b1",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 165,
-                    "y": 26,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b2",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 178,
-                    "y": 26,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b3",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 191,
-                    "y": 26,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b4",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 152,
-                    "y": 39,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b5",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 165,
-                    "y": 39,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b6",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 178,
-                    "y": 39,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b7",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 191,
-                    "y": 39,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b8",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 152,
-                    "y": 52,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b9",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 165,
-                    "y": 52,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b10",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 178,
-                    "y": 52,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b11",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 191,
-                    "y": 52,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b12",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 152,
-                    "y": 65,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b13",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 165,
-                    "y": 65,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b14",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 178,
-                    "y": 65,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b15",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 191,
-                    "y": 65,
-                    "width": 13,
-                    "height": 13,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "b16",
-                    "opacity": 0
+                    "strokeWidth": 1.2
                   },
                   {
                     "kind": "text",
-                    "x": 115,
-                    "y": 78,
-                    "text": "$3^2 = 9$",
-                    "size": 11,
+                    "id": "lbl-side-a",
+                    "x": 67,
+                    "y": 76,
+                    "text": "한 변 $3$",
+                    "size": 12,
                     "anchor": "middle",
-                    "fill": "muted",
-                    "id": "la",
-                    "opacity": 0
+                    "fill": "deep-green",
+                    "weight": "bold"
                   },
                   {
                     "kind": "text",
-                    "x": 178,
-                    "y": 91,
-                    "text": "$4^2 = 16$",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "muted",
-                    "id": "lb",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 262,
-                    "y": 104,
-                    "text": "$5^2 = 25$",
-                    "size": 11,
-                    "anchor": "middle",
+                    "id": "lbl-side-b",
+                    "x": 158,
+                    "y": 164,
+                    "text": "한 변 $4$",
+                    "size": 12,
+                    "anchor": "start",
                     "fill": "orange",
-                    "id": "lc",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-side-c",
+                    "x": 104,
+                    "y": 42,
+                    "text": "빗변 $5$",
+                    "size": 12,
+                    "anchor": "end",
+                    "fill": "ink",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-area-a",
+                    "x": 38,
+                    "y": 112,
+                    "text": "$3^2 = 9$",
+                    "size": 12,
+                    "anchor": "end",
+                    "fill": "deep-green",
+                    "weight": "bold",
                     "opacity": 0
                   },
                   {
                     "kind": "text",
-                    "x": 152,
-                    "y": 134,
+                    "id": "lbl-area-b",
+                    "x": 82,
+                    "y": 164,
+                    "text": "$4^2 = 16$",
+                    "size": 12,
+                    "anchor": "end",
+                    "fill": "orange",
+                    "weight": "bold",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-area-c",
+                    "x": 203,
+                    "y": 68,
+                    "text": "$5^2 = 25$",
+                    "size": 13,
+                    "anchor": "start",
+                    "fill": "ink",
+                    "weight": "bold",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "sum-box",
+                    "x": 205,
+                    "y": 102,
+                    "width": 120,
+                    "height": 64,
+                    "radius": 8,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "id": "sum-txt1",
+                    "x": 265,
+                    "y": 128,
                     "text": "$9 + 16 = 25$",
                     "size": 13,
                     "anchor": "middle",
-                    "fill": "orange",
-                    "id": "sum",
+                    "fill": "ink",
+                    "weight": "bold",
                     "opacity": 0
                   },
                   {
                     "kind": "text",
-                    "x": 152,
-                    "y": 160,
-                    "text": "$a^2 + b^2 = c^2$",
-                    "size": 14,
+                    "id": "sum-txt2",
+                    "x": 265,
+                    "y": 152,
+                    "text": "$3^2 + 4^2 = 5^2$",
+                    "size": 13,
                     "anchor": "middle",
-                    "fill": "orange",
-                    "id": "law",
+                    "fill": "deep-green",
+                    "weight": "bold",
                     "opacity": 0
                   }
                 ],
                 "frames": [
                   {
-                    "caption": "직각을 낀 두 변이 $3$과 $4$, 빗변이 $5$인 직각삼각형이에요.",
-                    "changes": [
-                      {
-                        "id": "frame",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "la",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "lb",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "lc",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "sum",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "law",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "a1",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "a2",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "a3",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "a4",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "a5",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "a6",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "a7",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "a8",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "a9",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "b1",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "b2",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "b3",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "b4",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "b5",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "b6",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "b7",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "b8",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "b9",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "b10",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "b11",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "b12",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "b13",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "b14",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "b15",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "b16",
-                        "opacity": 0
-                      }
-                    ]
+                    "caption": "직각삼각형의 세 변(길이 3, 4, 5)에 각각 정사각형을 그려요.",
+                    "changes": []
                   },
                   {
-                    "caption": "세 변마다 정사각형을 그려 칸을 세어 봐요. $9$칸, $16$칸, $25$칸이에요.",
+                    "caption": "직각을 낀 두 변의 정사각형 넓이는 3² = 9칸과 4² = 16칸이에요.",
                     "changes": [
                       {
-                        "id": "frame",
+                        "id": "lbl-area-a",
                         "opacity": 1
                       },
                       {
-                        "id": "la",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "lb",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "lc",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "sum",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "law",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "a1",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "a2",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "a3",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "a4",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "a5",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "a6",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "a7",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "a8",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "a9",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b1",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b2",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b3",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b4",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b5",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b6",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b7",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b8",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b9",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b10",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b11",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b12",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b13",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b14",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b15",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b16",
+                        "id": "lbl-area-b",
                         "opacity": 1
                       }
                     ]
                   },
                   {
-                    "caption": "작은 두 정사각형의 칸을 모두 옮기면 큰 정사각형이 꼭 채워져요.",
+                    "caption": "9칸과 16칸을 합하면 빗변의 정사각형 25칸(5² = 25)이 꼭 맞게 채워져요.",
                     "changes": [
                       {
-                        "id": "frame",
+                        "id": "lbl-area-a",
                         "opacity": 1
                       },
                       {
-                        "id": "la",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "lb",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "lc",
+                        "id": "lbl-area-b",
                         "opacity": 1
                       },
                       {
-                        "id": "sum",
+                        "id": "sq-a",
+                        "opacity": 0.4
+                      },
+                      {
+                        "id": "sq-b",
+                        "opacity": 0.4
+                      },
+                      {
+                        "id": "sq-c-fill-9",
                         "opacity": 1
                       },
                       {
-                        "id": "law",
+                        "id": "sq-c-fill-16",
                         "opacity": 1
                       },
                       {
-                        "id": "a1",
-                        "dx": 134,
-                        "dy": 26,
+                        "id": "lbl-area-c",
                         "opacity": 1
                       },
                       {
-                        "id": "a2",
-                        "dx": 134,
-                        "dy": 26,
+                        "id": "sum-box",
                         "opacity": 1
                       },
                       {
-                        "id": "a3",
-                        "dx": 134,
-                        "dy": 26,
+                        "id": "sum-txt1",
                         "opacity": 1
                       },
                       {
-                        "id": "a4",
-                        "dx": 134,
-                        "dy": 26,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "a5",
-                        "dx": 134,
-                        "dy": 26,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "a6",
-                        "dx": 134,
-                        "dy": 26,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "a7",
-                        "dx": 134,
-                        "dy": 26,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "a8",
-                        "dx": 134,
-                        "dy": 26,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "a9",
-                        "dx": 134,
-                        "dy": 26,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b1",
-                        "dx": 78,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b2",
-                        "dx": 78,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b3",
-                        "dx": 78,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b4",
-                        "dx": 78,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b5",
-                        "dx": 130,
-                        "dy": -13,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b6",
-                        "dx": 65,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b7",
-                        "dx": 65,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b8",
-                        "dx": 65,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b9",
-                        "dx": 117,
-                        "dy": -13,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b10",
-                        "dx": 117,
-                        "dy": -13,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b11",
-                        "dx": 91,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b12",
-                        "dx": 91,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b13",
-                        "dx": 117,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b14",
-                        "dx": 117,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b15",
-                        "dx": 91,
-                        "dy": 13,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "b16",
-                        "dx": 91,
-                        "dy": 13,
+                        "id": "sum-txt2",
                         "opacity": 1
                       }
                     ]
-                  }
-                ],
-                "frameMs": 1800
-              }
-            },
-            {
-              "blockId": "pythagoras:explanation:use:v2",
-              "kind": "core.rich_text",
-              "typeVersion": 3,
-              "required": true,
-              "payload": {
-                "text": "구할 때는 무엇이 빗변인지부터 봐요. 빗변은 직각의 맞은편에 있는 가장 긴 변이에요.\n\n빗변을 구할 때는 더해요. $a^2 + b^2$을 구하고, 제곱해서 그 값이 되는 수를 찾아요.\n\n빗변이 아닌 변을 구할 때는 빼요. $c^2 - a^2$을 구하는 거예요. 빼는 순서를 바꾸면 답이 달라져요. 가장 긴 변이 어느 것인지 먼저 확인하는 버릇을 들이면 좋아요.\n\n지금은 답이 딱 떨어지는 경우만 다뤄요. $3, 4, 5$나 $5, 12, 13$처럼요. 딱 떨어지지 않는 경우는 제곱근을 배우고 나면 어떤 수든 적을 수 있어요.",
-                "definitions": [
-                  {
-                    "conceptKey": "square-root",
-                    "surface": "제곱근",
-                    "scopeKind": "global"
                   }
                 ]
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "pythagoras:example:v2",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "pythagoras:example:text:v2",
+              "blockId": "pythagoras:explanation:text-2:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "피타고라스 정리로 빗변을 구해 볼게요. 직각을 낀 두 변이 $6$과 $8$인 직각삼각형이에요.\n\n빗변을 $c$라 하면 $6^2 + 8^2 = c^2$이에요. $36 + 64 = 100$이니 $c^2 = 100$이고요.\n\n제곱해서 $100$이 되는 양수는 $10$이니 빗변은 $10$이에요.\n\n이번엔 반대예요. 빗변이 $13$이고 한 변이 $5$일 때 나머지 한 변을 구해 볼게요.\n\n$5^2 + x^2 = 13^2$이니 $25 + x^2 = 169$예요. 그러니 $x^2 = 144$, 곧 $x = 12$고요.\n\n여기서 $13^2 - 5^2$을 $(13-5)^2$으로 쓰면 안 돼요. $8^2 = 64$는 $144$가 아니니까요. 제곱을 먼저 하고 나서 빼야 해요.\n\n자주 나오는 세 수를 외워 두면 빨라요. $3, 4, 5$와 그 배수인 $6, 8, 10$, $9, 12, 15$가 있어요. $5, 12, 13$과 $8, 15, 17$, $7, 24, 25$도 자주 나와요.",
+                "text": "작은 두 넓이의 합 $9 + 16$은 큰 넓이 $25$와 같아요.\n\n직각을 낀 두 변이 $a$, $b$이고 빗변이 $c$이면 $a^2 + b^2 = c^2$이에요. 직각삼각형의 세 변 사이의 이 관계를 피타고라스 정리라고 불러요.",
                 "definitions": [
                   {
                     "conceptKey": "pythagoras",
@@ -1020,16 +643,296 @@
                   }
                 ]
               }
+            },
+            {
+              "blockId": "pythagoras:explanation:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "변의 길이끼리 그냥 더하면 $3 + 4 = 7$이라서 $5$와 달라요. 길이를 각각 제곱해 더해야 $3^2 + 4^2 = 5^2$이 성립해요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "pythagoras:explanation:text-4:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "빗변의 길이를 구할 때는 두 변을 제곱해 더한 $a^2 + b^2$을 구해요. 다른 변을 구할 때는 빗변의 제곱에서 빼서 $c^2 - a^2$을 구해요.\n\n마지막으로 제곱해서 그 값이 되는 양수를 찾으면 변의 길이가 돼요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "pythagoras:explanation:scene-2:v3",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 340,
+                "height": 225,
+                "alt": "빗변 x를 구하는 직각삼각형과 다른 한 변 y를 구하는 직각삼각형에 알맞은 계산식을 짝짓는 그림",
+                "caption": "구하려는 변이 빗변인지 먼저 확인하고 제곱의 합과 차를 골라요.",
+                "items": [
+                  {
+                    "kind": "polygon",
+                    "id": "tri-left",
+                    "points": [
+                      [
+                        50,
+                        30
+                      ],
+                      [
+                        50,
+                        86
+                      ],
+                      [
+                        125,
+                        86
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.8
+                  },
+                  {
+                    "kind": "polygon",
+                    "id": "ra-left",
+                    "points": [
+                      [
+                        50,
+                        77
+                      ],
+                      [
+                        59,
+                        77
+                      ],
+                      [
+                        59,
+                        86
+                      ]
+                    ],
+                    "closed": false,
+                    "fill": "none",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "text",
+                    "id": "l-a",
+                    "x": 40,
+                    "y": 62,
+                    "text": "$3$",
+                    "size": 13,
+                    "anchor": "end",
+                    "fill": "ink",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "l-b",
+                    "x": 88,
+                    "y": 104,
+                    "text": "$4$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "l-x",
+                    "x": 96,
+                    "y": 52,
+                    "text": "빗변 $x$",
+                    "size": 13,
+                    "anchor": "start",
+                    "fill": "orange",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "polygon",
+                    "id": "tri-right",
+                    "points": [
+                      [
+                        200,
+                        30
+                      ],
+                      [
+                        200,
+                        86
+                      ],
+                      [
+                        275,
+                        86
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.8
+                  },
+                  {
+                    "kind": "polygon",
+                    "id": "ra-right",
+                    "points": [
+                      [
+                        200,
+                        77
+                      ],
+                      [
+                        209,
+                        77
+                      ],
+                      [
+                        209,
+                        86
+                      ]
+                    ],
+                    "closed": false,
+                    "fill": "none",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "kind": "text",
+                    "id": "r-a",
+                    "x": 190,
+                    "y": 62,
+                    "text": "$3$",
+                    "size": 13,
+                    "anchor": "end",
+                    "fill": "ink",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "r-y",
+                    "x": 238,
+                    "y": 104,
+                    "text": "다른 변 $y$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "deep-green",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "r-c",
+                    "x": 246,
+                    "y": 52,
+                    "text": "빗변 $5$",
+                    "size": 13,
+                    "anchor": "start",
+                    "fill": "ink",
+                    "weight": "bold"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "card-sub",
+                    "x": 95,
+                    "y": 204,
+                    "text": "$5^2 - 3^2$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "deep-green",
+                    "weight": "bold",
+                    "draggable": true,
+                    "label": "제곱의 차"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "card-add",
+                    "x": 245,
+                    "y": 204,
+                    "text": "$3^2 + 4^2$",
+                    "size": 15,
+                    "anchor": "middle",
+                    "fill": "orange",
+                    "weight": "bold",
+                    "draggable": true,
+                    "label": "제곱의 합"
+                  }
+                ],
+                "zones": [
+                  {
+                    "id": "zone-hyp",
+                    "x": 35,
+                    "y": 118,
+                    "width": 120,
+                    "height": 38,
+                    "label": "x²을 구하는 식",
+                    "accepts": [
+                      "card-add"
+                    ]
+                  },
+                  {
+                    "id": "zone-leg",
+                    "x": 185,
+                    "y": 118,
+                    "width": 120,
+                    "height": 38,
+                    "label": "y²을 구하는 식",
+                    "accepts": [
+                      "card-sub"
+                    ]
+                  }
+                ],
+                "task": {
+                  "prompt": "구하려는 변을 제곱한 값($x^2$, $y^2$)에 알맞은 식을 각 칸에 놓아 보세요.",
+                  "promptAlt": "구하려는 변을 제곱한 값에 알맞은 식을 각 칸에 놓아 보세요.",
+                  "successText": "빗변을 구할 때는 제곱해 더하고, 다른 변을 구할 때는 빗변의 제곱에서 빼요."
+                }
+              }
             }
           ]
         },
         {
-          "sectionId": "pythagoras:practice:v2",
+          "sectionId": "pythagoras:example:v3",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "pythagoras:example:text-1:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "직각을 낀 두 변이 $12$, $16$일 때 빗변의 길이 $c$를 구해 볼게요.\n\n$12^2 + 16^2 = c^2$에서 $144 + 256 = 400$이니 $c^2 = 400$이에요. 제곱해서 $400$이 되는 양수는 $20$이라서 빗변의 길이는 $20$이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "pythagoras:example:text-2:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "이번에는 빗변이 $10$이고 한 변이 $8$일 때 나머지 한 변의 길이 $x$를 구해 볼게요.\n\n$8^2 + x^2 = 10^2$에서 $64 + x^2 = 100$이에요. $100$에서 $64$를 빼면 $x^2 = 36$이고, 제곱해서 $36$이 되는 양수는 $6$이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "pythagoras:example:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "이때 $10^2 - 8^2$을 $(10 - 8)^2$으로 계산하지 않도록 조심해요.\n\n$10^2 - 8^2 = 100 - 64 = 36$이지만 $(10 - 8)^2 = 2^2 = 4$라서 결과가 달라요. 반드시 각 변의 길이를 먼저 제곱한 뒤에 빼야 해요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "pythagoras:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "pythagoras:practice:problems:v2",
+              "blockId": "pythagoras:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1046,12 +949,12 @@
           ]
         },
         {
-          "sectionId": "pythagoras:check:v2",
+          "sectionId": "pythagoras:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "pythagoras:check:problems:v2",
+              "blockId": "pythagoras:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1067,29 +970,18 @@
           ]
         },
         {
-          "sectionId": "pythagoras:summary:v2",
+          "sectionId": "pythagoras:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "pythagoras:summary:text:v2",
+              "blockId": "pythagoras:summary:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "직각삼각형에서 $a^2 + b^2 = c^2$이에요. $c$는 직각의 맞은편에 있는 가장 긴 변이고요.\n\n길이끼리가 아니라 제곱끼리 더한다는 것을 놓치지 마세요.\n\n빗변을 구하면 더하고, 다른 변을 구하면 제곱한 뒤에 빼요.\n\n세 변으로 그린 정사각형의 넓이를 옮겨 보면 왜 그런지가 보여요.\n\n이 수업의 개념은 피타고라스 정리예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
-                "definitions": [
-                  {
-                    "conceptKey": "pythagoras",
-                    "surface": "피타고라스 정리",
-                    "scopeKind": "global"
-                  },
-                  {
-                    "conceptKey": "special-quad",
-                    "surface": "정사각형",
-                    "scopeKind": "global"
-                  }
-                ]
+                "text": "직각삼각형에서 직각을 낀 두 변이 $a$, $b$이고 빗변이 $c$이면 $a^2 + b^2 = c^2$이에요. 이 성질을 피타고라스 정리라고 불러요.\n\n빗변을 구할 때는 두 변을 각각 제곱해 더한 $a^2 + b^2$을 계산해요. 다른 한 변을 구할 때는 빗변의 제곱에서 다른 변의 제곱을 뺀 $c^2 - a^2$을 계산해요.",
+                "definitions": []
               }
             }
           ]
@@ -1107,7 +999,7 @@
     {
       "public": {
         "lessonKey": "pythagoras-converse",
-        "versionId": "pythagoras-converse:v2",
+        "versionId": "pythagoras-converse:v3",
         "title": "정리의 역: 직각인지 아닌지 가려낸다",
         "summary": "세 변의 길이만 보고 직각인지, 예각인지, 둔각인지 가려내요.",
         "estimatedMinutes": 11,
@@ -1121,17 +1013,17 @@
       },
       "sections": [
         {
-          "sectionId": "pythagoras-converse:explanation:v2",
+          "sectionId": "pythagoras-converse:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "pythagoras-converse:explanation:converse:v2",
+              "blockId": "pythagoras-converse:explanation:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "피타고라스 정리는 「직각이면 $a^2 + b^2 = c^2$」이라고 말해요. 거꾸로도 성립할까요?\n\n성립해요. 세 변이 $a^2 + b^2 = c^2$을 만족하면 그 삼각형은 직각삼각형이에요. 이것을 피타고라스 정리의 역이라고 불러요.\n\n그래서 자를 대지 않고 길이만으로 직각인지 확인할 수 있어요.\n\n옛날부터 쓰던 방법이 있어요. 끈에 매듭을 열두 개 같은 간격으로 묶고 $3 : 4 : 5$로 삼각형을 만들어요. 그러면 한 각이 정확히 직각이 돼요. 땅에 직각을 그릴 때 쓰던 방법이에요.",
+                "text": "세 변이 $3$, $4$, $5$인 삼각형은 $3^2 + 4^2 = 5^2$이 성립해요.\n\n이처럼 $a^2 + b^2 = c^2$이면 변 $c$의 맞은편 각이 직각이에요.\n\n피타고라스 정리를 거꾸로 말한 것이라 피타고라스 정리의 역이라고 해요.",
                 "definitions": [
                   {
                     "conceptKey": "pythagoras",
@@ -1147,309 +1039,838 @@
               }
             },
             {
-              "blockId": "pythagoras-converse:explanation:triples:v2",
+              "blockId": "pythagoras-converse:explanation:text-2:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$a^2 + b^2 = c^2$을 만족하는 세 자연수를 피타고라스 수라고 해요.\n\n$3, 4, 5$와 $5, 12, 13$, $8, 15, 17$, $7, 24, 25$가 자주 나와요. 이들의 배수도 모두 피타고라스 수고요.",
-                "definitions": [
+                "text": "$3, 4, 5$와 $5, 12, 13$은 $a^2 + b^2 = c^2$을 만족하는 자연수예요.\n\n이처럼 $a^2 + b^2 = c^2$이 되는 세 자연수를 피타고라스 수라고 해요.\n\n$8, 15, 17$과 $7, 24, 25$, 그리고 이들의 배수도 피타고라스 수예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "pythagoras-converse:explanation:scene-1:v3",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 340,
+                "height": 200,
+                "alt": "삼각형 ABC에서 각 C의 크기에 따라 가장 긴 변 c의 제곱과 다른 두 변의 제곱의 합을 막대로 비교하는 그림",
+                "caption": "각 C가 벌어질수록 맞은편 변 $c$가 길어지고 $c^2$도 커져요.",
+                "items": [
                   {
-                    "conceptKey": "pythagoras-converse",
-                    "surface": "피타고라스 수",
-                    "scopeKind": "global"
+                    "id": "tri-f1",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        60,
+                        65
+                      ],
+                      [
+                        60,
+                        155
+                      ],
+                      [
+                        180,
+                        155
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "none",
+                    "opacity": 1
+                  },
+                  {
+                    "id": "right-mark-f1",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        60,
+                        141
+                      ],
+                      [
+                        74,
+                        141
+                      ],
+                      [
+                        74,
+                        155
+                      ]
+                    ],
+                    "closed": false,
+                    "fill": "none",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "opacity": 1
+                  },
+                  {
+                    "id": "side-a-f1",
+                    "kind": "line",
+                    "x1": 60,
+                    "y1": 155,
+                    "x2": 60,
+                    "y2": 65,
+                    "stroke": "ink",
+                    "strokeWidth": 2,
+                    "opacity": 1
+                  },
+                  {
+                    "id": "side-c-f1",
+                    "kind": "line",
+                    "x1": 60,
+                    "y1": 65,
+                    "x2": 180,
+                    "y2": 155,
+                    "stroke": "orange",
+                    "strokeWidth": 2.5,
+                    "opacity": 1
+                  },
+                  {
+                    "id": "label-A-f1",
+                    "kind": "text",
+                    "x": 60,
+                    "y": 52,
+                    "text": "A",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink",
+                    "opacity": 1
+                  },
+                  {
+                    "id": "label-a-f1",
+                    "kind": "text",
+                    "x": 44,
+                    "y": 112,
+                    "text": "$a$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "opacity": 1
+                  },
+                  {
+                    "id": "label-c-f1",
+                    "kind": "text",
+                    "x": 128,
+                    "y": 98,
+                    "text": "$c$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange",
+                    "opacity": 1
+                  },
+                  {
+                    "id": "bar-c-f1",
+                    "kind": "rect",
+                    "x": 278,
+                    "y": 75,
+                    "width": 32,
+                    "height": 80,
+                    "radius": 3,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "opacity": 1
+                  },
+                  {
+                    "id": "rel-f1",
+                    "kind": "text",
+                    "x": 170,
+                    "y": 26,
+                    "text": "$c^2 = a^2 + b^2$ (직각삼각형)",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink",
+                    "opacity": 1
+                  },
+                  {
+                    "id": "tri-f2",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        95,
+                        72
+                      ],
+                      [
+                        60,
+                        155
+                      ],
+                      [
+                        180,
+                        155
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sky",
+                    "stroke": "none",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "side-a-f2",
+                    "kind": "line",
+                    "x1": 60,
+                    "y1": 155,
+                    "x2": 95,
+                    "y2": 72,
+                    "stroke": "ink",
+                    "strokeWidth": 2,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "side-c-f2",
+                    "kind": "line",
+                    "x1": 95,
+                    "y1": 72,
+                    "x2": 180,
+                    "y2": 155,
+                    "stroke": "orange",
+                    "strokeWidth": 2.5,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "label-A-f2",
+                    "kind": "text",
+                    "x": 95,
+                    "y": 58,
+                    "text": "A",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "label-a-f2",
+                    "kind": "text",
+                    "x": 62,
+                    "y": 108,
+                    "text": "$a$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "label-c-f2",
+                    "kind": "text",
+                    "x": 148,
+                    "y": 103,
+                    "text": "$c$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "bar-c-f2",
+                    "kind": "rect",
+                    "x": 278,
+                    "y": 103,
+                    "width": 32,
+                    "height": 52,
+                    "radius": 3,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "rel-f2",
+                    "kind": "text",
+                    "x": 170,
+                    "y": 26,
+                    "text": "$c^2 < a^2 + b^2$ (예각삼각형)",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "tri-f3",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        25,
+                        72
+                      ],
+                      [
+                        60,
+                        155
+                      ],
+                      [
+                        180,
+                        155
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "none",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "side-a-f3",
+                    "kind": "line",
+                    "x1": 60,
+                    "y1": 155,
+                    "x2": 25,
+                    "y2": 72,
+                    "stroke": "ink",
+                    "strokeWidth": 2,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "side-c-f3",
+                    "kind": "line",
+                    "x1": 25,
+                    "y1": 72,
+                    "x2": 180,
+                    "y2": 155,
+                    "stroke": "orange",
+                    "strokeWidth": 2.5,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "label-A-f3",
+                    "kind": "text",
+                    "x": 25,
+                    "y": 58,
+                    "text": "A",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "label-a-f3",
+                    "kind": "text",
+                    "x": 27,
+                    "y": 118,
+                    "text": "$a$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "label-c-f3",
+                    "kind": "text",
+                    "x": 112,
+                    "y": 100,
+                    "text": "$c$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "bar-c-f3",
+                    "kind": "rect",
+                    "x": 278,
+                    "y": 45,
+                    "width": 32,
+                    "height": 110,
+                    "radius": 3,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "rel-f3",
+                    "kind": "text",
+                    "x": 170,
+                    "y": 26,
+                    "text": "$c^2 > a^2 + b^2$ (둔각삼각형)",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "side-b",
+                    "kind": "line",
+                    "x1": 60,
+                    "y1": 155,
+                    "x2": 180,
+                    "y2": 155,
+                    "stroke": "ink",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "id": "label-C",
+                    "kind": "text",
+                    "x": 50,
+                    "y": 173,
+                    "text": "C",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "label-b",
+                    "kind": "text",
+                    "x": 120,
+                    "y": 173,
+                    "text": "$b$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "label-B",
+                    "kind": "text",
+                    "x": 186,
+                    "y": 173,
+                    "text": "B",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "ref-line",
+                    "kind": "line",
+                    "x1": 220,
+                    "y1": 75,
+                    "x2": 322,
+                    "y2": 75,
+                    "stroke": "muted",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "id": "bar-ab",
+                    "kind": "rect",
+                    "x": 232,
+                    "y": 75,
+                    "width": 32,
+                    "height": 80,
+                    "radius": 3,
+                    "fill": "green",
+                    "stroke": "deep-green",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "bar-base",
+                    "kind": "line",
+                    "x1": 220,
+                    "y1": 155,
+                    "x2": 322,
+                    "y2": 155,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "label-bar-ab",
+                    "kind": "text",
+                    "x": 248,
+                    "y": 173,
+                    "text": "$a^2+b^2$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "label-bar-c",
+                    "kind": "text",
+                    "x": 294,
+                    "y": 173,
+                    "text": "$c^2$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange"
+                  }
+                ],
+                "frameMs": 1800,
+                "frames": [
+                  {
+                    "caption": "각 C가 직각이면 $c^2$과 $a^2 + b^2$의 크기가 같아요.",
+                    "changes": []
+                  },
+                  {
+                    "caption": "각 C가 직각보다 작아지면 변 $c$가 짧아져 $c^2 < a^2 + b^2$이 돼요.",
+                    "changes": [
+                      {
+                        "id": "tri-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "right-mark-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "side-a-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "side-c-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "label-A-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "label-a-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "label-c-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "bar-c-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rel-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "tri-f2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "side-a-f2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "side-c-f2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "label-A-f2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "label-a-f2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "label-c-f2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "bar-c-f2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "rel-f2",
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "각 C가 직각보다 커지면 변 $c$가 길어져 $c^2 > a^2 + b^2$이 돼요.",
+                    "changes": [
+                      {
+                        "id": "tri-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "right-mark-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "side-a-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "side-c-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "label-A-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "label-a-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "label-c-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "bar-c-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "rel-f1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "tri-f3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "side-a-f3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "side-c-f3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "label-A-f3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "label-a-f3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "label-c-f3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "bar-c-f3",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "rel-f3",
+                        "opacity": 1
+                      }
+                    ]
                   }
                 ]
               }
             },
             {
-              "blockId": "pythagoras-converse:explanation:drawing:v2",
-              "kind": "core.scene",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "width": 320,
-                "height": 200,
-                "alt": "세 변이 3, 4, 6인 삼각형에서 제곱의 합과 가장 긴 변의 제곱을 막대로 비교하는 그림",
-                "caption": "두 제곱의 합과 가장 긴 변의 제곱 중 어느 쪽이 큰지가 각을 정해요",
-                "items": [
-                  {
-                    "kind": "rect",
-                    "x": 40,
-                    "y": 50,
-                    "width": 100,
-                    "height": 14,
-                    "fill": "green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "bara",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 40,
-                    "y": 72,
-                    "width": 144,
-                    "height": 14,
-                    "fill": "orange",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "barb",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 196,
-                    "y": 61,
-                    "text": "$3^2 + 4^2 = 25$",
-                    "size": 11,
-                    "anchor": "start",
-                    "fill": "muted",
-                    "id": "laba",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 196,
-                    "y": 83,
-                    "text": "$6^2 = 36$",
-                    "size": 11,
-                    "anchor": "start",
-                    "fill": "muted",
-                    "id": "labb",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 140,
-                    "y1": 44,
-                    "x2": 140,
-                    "y2": 96,
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "mark",
-                    "opacity": 0,
-                    "dash": true
-                  },
-                  {
-                    "kind": "polygon",
-                    "points": [
-                      [
-                        40,
-                        168
-                      ],
-                      [
-                        148,
-                        168
-                      ],
-                      [
-                        104.5,
-                        136
-                      ]
-                    ],
-                    "closed": true,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1.6,
-                    "id": "tri"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 70,
-                    "y": 148,
-                    "text": "$4$",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 128,
-                    "y": 148,
-                    "text": "$3$",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 94,
-                    "y": 182,
-                    "text": "$6$",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 236,
-                    "y": 150,
-                    "text": "둔각삼각형",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "orange",
-                    "id": "verdict",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 236,
-                    "y": 172,
-                    "text": "같으면 직각, 크면 둔각",
-                    "size": 10,
-                    "anchor": "middle",
-                    "fill": "muted",
-                    "id": "rule",
-                    "opacity": 0
-                  }
-                ],
-                "frames": [
-                  {
-                    "caption": "세 변이 $3$, $4$, $6$인 삼각형이에요. 직각삼각형일까요?",
-                    "changes": [
-                      {
-                        "id": "bara",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "barb",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "laba",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "labb",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "mark",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "verdict",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "rule",
-                        "opacity": 0
-                      }
-                    ]
-                  },
-                  {
-                    "caption": "가장 긴 변의 제곱과 나머지 두 변의 제곱의 합을 막대로 비교해 봐요.",
-                    "changes": [
-                      {
-                        "id": "bara",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "barb",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "laba",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "labb",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "mark",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "verdict",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "rule",
-                        "opacity": 0
-                      }
-                    ]
-                  },
-                  {
-                    "caption": "$36$이 $25$보다 크네요. 가장 긴 변의 맞은편 각이 직각보다 큰 둔각삼각형이에요.",
-                    "changes": [
-                      {
-                        "id": "bara",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "barb",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "laba",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "labb",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "mark",
-                        "dx": 44,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "verdict",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "rule",
-                        "opacity": 1
-                      }
-                    ]
-                  }
-                ],
-                "frameMs": 1700
-              }
-            },
-            {
-              "blockId": "pythagoras-converse:explanation:compare:v2",
+              "blockId": "pythagoras-converse:explanation:text-3:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "같지 않을 때는 어떻게 될까요. 가장 긴 변을 $c$라 할 때 세 가지로 나뉘어요.\n\n$c^2$이 $a^2 + b^2$보다 작으면 $c$의 맞은편 각이 직각보다 작아요. 그래서 예각삼각형이에요.\n\n$c^2$이 더 크면 그 각이 직각보다 커요. 그래서 둔각삼각형이고요.\n\n가장 긴 변이 더 길어질수록 맞은편 각이 벌어진다고 생각하면 외우지 않아도 돼요.\n\n세 변이 $3$, $4$, $6$이면 $36 > 25$이니 둔각삼각형이에요. $4$, $5$, $6$이면 $36 < 41$이니 예각삼각형이고요.",
+                "text": "가장 긴 변을 $c$라 할 때, 변 $c$의 맞은편 각을 비교해요.\n\n$c^2 < a^2 + b^2$이면 그 각이 직각보다 작아 예각삼각형이에요.\n\n$c^2 > a^2 + b^2$이면 그 각이 직각보다 커서 둔각삼각형이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "pythagoras-converse:explanation:text-4:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $2$, $3$, $4$이면 $4^2 = 16$이고 $2^2 + 3^2 = 13$이에요.\n\n$16 > 13$이므로 가장 긴 변의 제곱이 더 커서 둔각삼각형이에요.\n\n세 변이 $5$, $6$, $7$이면 $49 < 61$이므로 예각삼각형이 돼요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "pythagoras-converse:explanation:scene-2:v3",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 340,
+                "height": 210,
+                "alt": "세 변의 길이가 주어진 삼각형 세 개를 예각삼각형, 직각삼각형, 둔각삼각형 칸에 끌어다 놓는 그림",
+                "caption": "가장 긴 변의 제곱과 나머지 두 변의 제곱의 합을 비교해 보세요.",
+                "items": [
+                  {
+                    "id": "rule-acute",
+                    "kind": "text",
+                    "x": 64,
+                    "y": 24,
+                    "text": "$c^2 < a^2 + b^2$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "rule-right",
+                    "kind": "text",
+                    "x": 170,
+                    "y": 24,
+                    "text": "$c^2 = a^2 + b^2$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "rule-obtuse",
+                    "kind": "text",
+                    "x": 276,
+                    "y": 24,
+                    "text": "$c^2 > a^2 + b^2$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "card-obtuse",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        24,
+                        148
+                      ],
+                      [
+                        42,
+                        186
+                      ],
+                      [
+                        94,
+                        186
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "ink",
+                    "strokeWidth": 2,
+                    "draggable": true,
+                    "label": "변 2, 3, 4"
+                  },
+                  {
+                    "id": "card-right",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        138,
+                        144
+                      ],
+                      [
+                        138,
+                        186
+                      ],
+                      [
+                        202,
+                        186
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "ink",
+                    "strokeWidth": 2,
+                    "draggable": true,
+                    "label": "변 3, 4, 5"
+                  },
+                  {
+                    "id": "card-acute",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        274,
+                        144
+                      ],
+                      [
+                        244,
+                        186
+                      ],
+                      [
+                        308,
+                        186
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sky",
+                    "stroke": "ink",
+                    "strokeWidth": 2,
+                    "draggable": true,
+                    "label": "변 5, 6, 7"
+                  }
+                ],
+                "zones": [
+                  {
+                    "id": "zone-acute",
+                    "x": 18,
+                    "y": 36,
+                    "width": 92,
+                    "height": 64,
+                    "label": "예각삼각형",
+                    "accepts": [
+                      "card-acute"
+                    ]
+                  },
+                  {
+                    "id": "zone-right",
+                    "x": 124,
+                    "y": 36,
+                    "width": 92,
+                    "height": 64,
+                    "label": "직각삼각형",
+                    "accepts": [
+                      "card-right"
+                    ]
+                  },
+                  {
+                    "id": "zone-obtuse",
+                    "x": 230,
+                    "y": 36,
+                    "width": 92,
+                    "height": 64,
+                    "label": "둔각삼각형",
+                    "accepts": [
+                      "card-obtuse"
+                    ]
+                  }
+                ],
+                "task": {
+                  "prompt": "세 변의 길이를 보고 알맞은 삼각형 칸에 놓아 보세요.",
+                  "promptAlt": "세 변의 길이를 보고 알맞은 삼각형 칸에 놓아 보세요.",
+                  "successText": "가장 긴 변의 제곱을 두 변의 제곱의 합과 비교해 삼각형을 정확히 가려냈어요."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "pythagoras-converse:example:v3",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "pythagoras-converse:example:text-1:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $5$, $12$, $13$일 때 가장 긴 변의 제곱은 $13^2 = 169$예요.\n\n나머지 두 변의 제곱의 합은 $5^2 + 12^2 = 25 + 144 = 169$예요.\n\n$169 = 169$로 두 값이 같으므로 직각삼각형이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "pythagoras-converse:example:text-2:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "세 변이 $4$, $5$, $7$일 때 가장 긴 변의 제곱은 $7^2 = 49$예요.\n\n나머지 두 변의 제곱의 합은 $4^2 + 5^2 = 16 + 25 = 41$이에요.\n\n$49 > 41$로 가장 긴 변의 제곱이 더 크므로 둔각삼각형이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "pythagoras-converse:example:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "직각삼각형의 세 변이 $6$, $8$, $x$이고 빗변이 $x$일 때를 볼게요.\n\n직각삼각형이므로 $6^2 + 8^2 = 36 + 64 = 100$이 $x^2$과 같아요.\n\n제곱해서 $100$이 되는 양수는 $10$이므로 $x = 10$이에요.",
                 "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "pythagoras-converse:example:v2",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
-            {
-              "blockId": "pythagoras-converse:example:text:v2",
-              "kind": "core.rich_text",
-              "typeVersion": 3,
-              "required": true,
-              "payload": {
-                "text": "세 변이 $6$, $8$, $10$인 삼각형이 어떤 삼각형인지 가려 볼게요.\n\n가장 긴 변은 $10$이에요. $6^2 + 8^2 = 36 + 64 = 100$이고 $10^2 = 100$이니 같아요.\n\n그러니 직각삼각형이에요. 피타고라스 정리의 역이 말하는 그대로고요.\n\n세 변이 $3$, $4$, $6$이면 어떨까요. 가장 긴 변은 $6$이고 $3^2 + 4^2 = 25$, $6^2 = 36$이에요.\n\n$36$이 더 크니 둔각삼각형이에요.\n\n세 변이 $4$, $5$, $6$이면 $4^2 + 5^2 = 41$이고 $6^2 = 36$이에요. 이번에는 제곱의 합이 더 크니 예각삼각형이고요.\n\n순서는 늘 같아요. 가장 긴 변을 찾고, 그 제곱과 나머지 두 제곱의 합을 비교하면 끝이에요.",
-                "definitions": [
-                  {
-                    "conceptKey": "pythagoras-converse",
-                    "surface": "피타고라스 정리의 역",
-                    "scopeKind": "global"
-                  }
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "sectionId": "pythagoras-converse:practice:v2",
+          "sectionId": "pythagoras-converse:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "pythagoras-converse:practice:problems:v2",
+              "blockId": "pythagoras-converse:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1466,12 +1887,12 @@
           ]
         },
         {
-          "sectionId": "pythagoras-converse:check:v2",
+          "sectionId": "pythagoras-converse:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "pythagoras-converse:check:problems:v2",
+              "blockId": "pythagoras-converse:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1487,26 +1908,21 @@
           ]
         },
         {
-          "sectionId": "pythagoras-converse:summary:v2",
+          "sectionId": "pythagoras-converse:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "pythagoras-converse:summary:text:v2",
+              "blockId": "pythagoras-converse:summary:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "$a^2 + b^2 = c^2$을 만족하면 그 삼각형은 직각삼각형이에요. 피타고라스 정리의 역도 성립하는 거예요.\n\n그런 세 자연수를 피타고라스 수라 하고, $3, 4, 5$와 $5, 12, 13$이 대표예요.\n\n가장 긴 변의 제곱이 더 크면 둔각, 더 작으면 예각이에요.\n\n가장 긴 변이 길어질수록 맞은편 각이 벌어진다고 생각하면 돼요.\n\n이 수업의 개념은 피타고라스 정리의 역이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "세 변의 길이가 $a^2 + b^2 = c^2$을 만족하면 직각삼각형이에요.\n\n이를 피타고라스 정리의 역이라 하고, 이런 세 자연수를 피타고라스 수라고 해요.\n\n가장 긴 변을 $c$라 할 때 $c^2 < a^2 + b^2$이면 예각삼각형이에요.\n\n반대로 $c^2 > a^2 + b^2$이면 둔각삼각형이에요.",
                 "definitions": [
                   {
                     "conceptKey": "pythagoras-converse",
-                    "surface": "피타고라스 수",
-                    "scopeKind": "global"
-                  },
-                  {
-                    "conceptKey": "pythagoras",
-                    "surface": "피타고라스 정리",
+                    "surface": "피타고라스 정리의 역",
                     "scopeKind": "global"
                   }
                 ]
@@ -1527,7 +1943,7 @@
     {
       "public": {
         "lessonKey": "plane-length",
-        "versionId": "plane-length:v2",
+        "versionId": "plane-length:v3",
         "title": "평면에서 길이 구하기: 직각삼각형을 찾아낸다",
         "summary": "직사각형의 대각선, 이등변삼각형의 높이, 두 점 사이의 거리를 피타고라스 정리로 구해요.",
         "estimatedMinutes": 12,
@@ -1543,23 +1959,34 @@
       },
       "sections": [
         {
-          "sectionId": "plane-length:explanation:v2",
+          "sectionId": "plane-length:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "plane-length:explanation:hidden:v2",
+              "blockId": "plane-length:explanation:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "피타고라스 정리는 직각삼각형에서만 쓸 수 있어요. 그러니 문제를 푸는 일은 대개 숨어 있는 직각삼각형을 찾아내는 일이에요.\n\n직사각형의 대각선이 그 예예요. 대각선을 그으면 직사각형이 직각삼각형 둘로 나뉘어요. 대각선은 그 삼각형의 빗변이 되고요. 가로 $8$, 세로 $6$이면 대각선은 $10$이에요.\n\n이등변삼각형의 높이도 마찬가지예요. 꼭지각에서 밑변에 수선을 내리면 밑변이 반으로 나뉘어요. 그러면서 직각삼각형이 생기고요.\n\n밑변이 $16$이고 두 변이 $10$이면 어떨까요. 반으로 나뉜 $8$과 빗변 $10$으로 높이가 $6$이 나와요.",
+                "text": "가로 $4$, 세로 $3$인 직사각형 ABCD에 대각선 AC를 그어요.\n\n직각삼각형 ABC에 피타고라스 정리를 쓰면 $4^2 + 3^2 = 25$예요. 제곱해서 $25$가 되는 양수는 $5$이니 대각선은 $5$예요.",
                 "definitions": [
                   {
                     "conceptKey": "pythagoras",
                     "surface": "피타고라스 정리",
                     "scopeKind": "global"
-                  },
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "plane-length:explanation:text-2:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 변이 $5$이고 밑변이 $6$인 이등변삼각형 EFG의 높이를 구해요.\n\n꼭지각 E에서 밑변에 수선 EH를 내리면 밑변이 $3$과 $3$으로 나뉘어요. 직각삼각형 EFH에서 $3^2 + h^2 = 5^2$이니 높이 $h$는 $4$예요.",
+                "definitions": [
                   {
                     "conceptKey": "isosceles",
                     "surface": "이등변삼각형",
@@ -1569,236 +1996,859 @@
               }
             },
             {
-              "blockId": "plane-length:explanation:drawing:v2",
+              "blockId": "plane-length:explanation:scene-1:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "width": 320,
-                "height": 200,
-                "alt": "직사각형을 대각선으로 나눠 직각삼각형 하나를 옆으로 떼어 내어 대각선의 길이를 구하는 그림",
-                "caption": "대각선을 그으면 직각삼각형이 생겨요",
+                "width": 340,
+                "height": 210,
+                "alt": "가로 4, 세로 3인 직사각형 ABCD의 대각선 AC가 5가 되는 과정과 두 변이 5, 밑변이 6인 이등변삼각형 EFG의 높이 EH가 4가 되는 과정을 보여 주는 그림",
+                "caption": "대각선이나 수선을 그으면 직각삼각형이 생겨요.",
+                "frameMs": 1800,
                 "items": [
                   {
-                    "kind": "rect",
-                    "x": 36,
-                    "y": 52,
-                    "width": 112,
-                    "height": 84,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "box"
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 36,
-                    "y1": 136,
-                    "x2": 148,
-                    "y2": 52,
-                    "stroke": "orange",
-                    "strokeWidth": 2,
-                    "id": "diag"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 92,
-                    "y": 150,
-                    "text": "$8$",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 24,
-                    "y": 96,
-                    "text": "$6$",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
+                    "id": "rect-abcd",
                     "kind": "polygon",
                     "points": [
                       [
-                        36,
-                        136
+                        30,
+                        50
                       ],
                       [
-                        148,
-                        136
+                        30,
+                        134
                       ],
                       [
-                        148,
-                        52
+                        142,
+                        134
+                      ],
+                      [
+                        142,
+                        50
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "tri-abc",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        30,
+                        50
+                      ],
+                      [
+                        30,
+                        134
+                      ],
+                      [
+                        142,
+                        134
                       ]
                     ],
                     "closed": true,
                     "fill": "sand",
+                    "stroke": "none",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "rt-b",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        30,
+                        124
+                      ],
+                      [
+                        40,
+                        124
+                      ],
+                      [
+                        40,
+                        134
+                      ]
+                    ],
+                    "closed": false,
+                    "fill": "none",
                     "stroke": "ink",
-                    "strokeWidth": 1.6,
-                    "id": "half",
+                    "strokeWidth": 1.2,
                     "opacity": 0
                   },
                   {
+                    "id": "diag-ac",
+                    "kind": "line",
+                    "x1": 30,
+                    "y1": 50,
+                    "x2": 142,
+                    "y2": 134,
+                    "arrow": "none",
+                    "stroke": "orange",
+                    "strokeWidth": 2.5,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "lbl-a",
                     "kind": "text",
-                    "x": 242,
-                    "y": 150,
-                    "text": "$8$",
-                    "size": 11,
+                    "x": 20,
+                    "y": 46,
+                    "text": "A",
+                    "size": 12,
                     "anchor": "middle",
-                    "fill": "muted",
-                    "id": "l8",
-                    "opacity": 0
+                    "fill": "ink"
                   },
                   {
+                    "id": "lbl-b",
                     "kind": "text",
-                    "x": 308,
+                    "x": 20,
+                    "y": 144,
+                    "text": "B",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "lbl-c",
+                    "kind": "text",
+                    "x": 152,
+                    "y": 144,
+                    "text": "C",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "lbl-d",
+                    "kind": "text",
+                    "x": 152,
+                    "y": 46,
+                    "text": "D",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "lbl-ab",
+                    "kind": "text",
+                    "x": 18,
                     "y": 96,
+                    "text": "$3$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "lbl-bc",
+                    "kind": "text",
+                    "x": 86,
+                    "y": 152,
+                    "text": "$4$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "lbl-ac",
+                    "kind": "text",
+                    "x": 96,
+                    "y": 84,
+                    "text": "$5$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "eq-rect",
+                    "kind": "text",
+                    "x": 86,
+                    "y": 182,
+                    "text": "$4^2 + 3^2 = 25$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "tri-efg",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        255,
+                        42
+                      ],
+                      [
+                        195,
+                        134
+                      ],
+                      [
+                        315,
+                        134
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "tri-efh",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        255,
+                        42
+                      ],
+                      [
+                        195,
+                        134
+                      ],
+                      [
+                        255,
+                        134
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "none",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "rt-h",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        245,
+                        134
+                      ],
+                      [
+                        245,
+                        124
+                      ],
+                      [
+                        255,
+                        124
+                      ]
+                    ],
+                    "closed": false,
+                    "fill": "none",
+                    "stroke": "deep-green",
+                    "strokeWidth": 1.2,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "alt-eh",
+                    "kind": "line",
+                    "x1": 255,
+                    "y1": 42,
+                    "x2": 255,
+                    "y2": 134,
+                    "arrow": "none",
+                    "stroke": "deep-green",
+                    "strokeWidth": 2.5,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "lbl-e",
+                    "kind": "text",
+                    "x": 255,
+                    "y": 30,
+                    "text": "E",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "lbl-f",
+                    "kind": "text",
+                    "x": 185,
+                    "y": 144,
+                    "text": "F",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "lbl-g",
+                    "kind": "text",
+                    "x": 325,
+                    "y": 144,
+                    "text": "G",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "lbl-h-pt",
+                    "kind": "text",
+                    "x": 255,
+                    "y": 148,
+                    "text": "H",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "deep-green",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "lbl-ef",
+                    "kind": "text",
+                    "x": 212,
+                    "y": 84,
+                    "text": "$5$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "lbl-eg",
+                    "kind": "text",
+                    "x": 298,
+                    "y": 84,
+                    "text": "$5$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "lbl-fg-6",
+                    "kind": "text",
+                    "x": 255,
+                    "y": 152,
                     "text": "$6$",
-                    "size": 11,
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "lbl-fh-3",
+                    "kind": "text",
+                    "x": 225,
+                    "y": 152,
+                    "text": "$3$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "deep-green",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "lbl-hg-3",
+                    "kind": "text",
+                    "x": 285,
+                    "y": 152,
+                    "text": "$3$",
+                    "size": 12,
                     "anchor": "middle",
                     "fill": "muted",
-                    "id": "l6",
                     "opacity": 0
                   },
                   {
+                    "id": "lbl-eh-4",
                     "kind": "text",
-                    "x": 228,
-                    "y": 88,
-                    "text": "$10$",
+                    "x": 268,
+                    "y": 102,
+                    "text": "$4$",
                     "size": 12,
                     "anchor": "middle",
-                    "fill": "orange",
-                    "id": "l10",
+                    "weight": "bold",
+                    "fill": "deep-green",
                     "opacity": 0
                   },
                   {
+                    "id": "eq-iso",
                     "kind": "text",
-                    "x": 160,
-                    "y": 178,
-                    "text": "$6^2 + 8^2 = 100$이니 대각선은 $10$",
+                    "x": 255,
+                    "y": 182,
+                    "text": "$3^2 + h^2 = 25$",
                     "size": 12,
                     "anchor": "middle",
-                    "fill": "orange",
-                    "id": "say",
+                    "weight": "bold",
+                    "fill": "deep-green",
                     "opacity": 0
                   }
                 ],
                 "frames": [
                   {
-                    "caption": "가로 $8$, 세로 $6$인 직사각형이에요. 대각선의 길이는 얼마일까요?",
+                    "caption": "직사각형 ABCD와 이등변삼각형 EFG가 있어요.",
+                    "changes": []
+                  },
+                  {
+                    "caption": "대각선 AC를 그으면 직각삼각형 ABC가 생기고 AC의 길이는 5예요.",
                     "changes": [
                       {
-                        "id": "half",
-                        "opacity": 0
+                        "id": "tri-abc",
+                        "opacity": 1
                       },
                       {
-                        "id": "l8",
-                        "opacity": 0
+                        "id": "rt-b",
+                        "opacity": 1
                       },
                       {
-                        "id": "l6",
-                        "opacity": 0
+                        "id": "diag-ac",
+                        "opacity": 1
                       },
                       {
-                        "id": "l10",
-                        "opacity": 0
+                        "id": "lbl-ac",
+                        "opacity": 1
                       },
                       {
-                        "id": "say",
-                        "opacity": 0
+                        "id": "eq-rect",
+                        "opacity": 1
                       }
                     ]
                   },
                   {
-                    "caption": "대각선이 직사각형을 직각삼각형 둘로 가릅니다. 아래쪽 하나를 골라 볼게요.",
+                    "caption": "수선 EH를 내리면 밑변이 3과 3으로 나뉘고 높이 EH는 4예요.",
                     "changes": [
                       {
-                        "id": "half",
+                        "id": "tri-abc",
                         "opacity": 1
                       },
                       {
-                        "id": "l8",
+                        "id": "rt-b",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "diag-ac",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lbl-ac",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "eq-rect",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "tri-efh",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "rt-h",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "alt-eh",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lbl-h-pt",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lbl-fg-6",
                         "opacity": 0
                       },
                       {
-                        "id": "l6",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "l10",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "say",
-                        "opacity": 0
-                      }
-                    ]
-                  },
-                  {
-                    "caption": "떼어 내어 보면 직각을 낀 두 변이 $6$과 $8$인 직각삼각형이에요.",
-                    "changes": [
-                      {
-                        "id": "half",
-                        "dx": 150,
+                        "id": "lbl-fh-3",
                         "opacity": 1
                       },
                       {
-                        "id": "l8",
+                        "id": "lbl-hg-3",
                         "opacity": 1
                       },
                       {
-                        "id": "l6",
+                        "id": "lbl-eh-4",
                         "opacity": 1
                       },
                       {
-                        "id": "l10",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "say",
+                        "id": "eq-iso",
                         "opacity": 1
                       }
                     ]
                   }
-                ],
-                "frameMs": 1700
+                ]
               }
             },
             {
-              "blockId": "plane-length:explanation:coordinate:v2",
+              "blockId": "plane-length:explanation:text-3:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "좌표평면에서 두 점 사이의 거리도 같은 방법이에요. 두 점을 이은 선분을 빗변으로 삼아요. 그리고 가로로 간 거리와 세로로 간 거리를 두 변으로 하는 직각삼각형을 그리면 돼요.\n\n$(1, 2)$와 $(7, 10)$이라면 가로로 $6$, 세로로 $8$만큼 갔어요. 그러니 거리는 $10$이에요.\n\n가로 거리는 $x$끼리 빼고 세로 거리는 $y$끼리 빼요. 빼는 순서는 상관없어요. 제곱하면 부호가 사라지니까요.",
+                "text": "좌표평면에서 두 점 A$(1, 1)$과 B$(5, 4)$의 거리를 구해요.\n\n가로 거리는 $5 - 1 = 4$이고 세로 거리는 $4 - 1 = 3$이에요. 선분 AB를 빗변으로 두면 $4^2 + 3^2 = 25$에서 거리는 $5$예요.",
                 "definitions": [
                   {
                     "conceptKey": "coordinate-plane",
                     "surface": "좌표평면",
-                    "scopeKind": "global"
-                  },
-                  {
-                    "conceptKey": "plane-length",
-                    "surface": "두 점 사이의 거리",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "plane-length:explanation:tip:v2",
+              "blockId": "plane-length:explanation:scene-2:v3",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 340,
+                "height": 210,
+                "alt": "좌표평면 위의 두 점 A(1, 1)과 B(5, 4)에서 가로 거리 4와 세로 거리 3으로 직각삼각형 ABC를 만들어 빗변 AB의 길이 5를 구하는 그림",
+                "caption": "가로 거리와 세로 거리를 직각을 낀 두 변으로 삼아요.",
+                "frameMs": 1800,
+                "items": [
+                  {
+                    "id": "axis-x",
+                    "kind": "line",
+                    "x1": 35,
+                    "y1": 175,
+                    "x2": 305,
+                    "y2": 175,
+                    "arrow": "end",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "id": "axis-y",
+                    "kind": "line",
+                    "x1": 55,
+                    "y1": 192,
+                    "x2": 55,
+                    "y2": 22,
+                    "arrow": "end",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2
+                  },
+                  {
+                    "id": "lbl-o",
+                    "kind": "text",
+                    "x": 43,
+                    "y": 190,
+                    "text": "O",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "id": "lbl-x",
+                    "kind": "text",
+                    "x": 315,
+                    "y": 179,
+                    "text": "$x$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "lbl-y",
+                    "kind": "text",
+                    "x": 43,
+                    "y": 28,
+                    "text": "$y$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "tri-coord",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        95,
+                        140
+                      ],
+                      [
+                        235,
+                        140
+                      ],
+                      [
+                        235,
+                        35
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "none",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "rt-c",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        223,
+                        140
+                      ],
+                      [
+                        223,
+                        128
+                      ],
+                      [
+                        235,
+                        128
+                      ]
+                    ],
+                    "closed": false,
+                    "fill": "none",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "leg-ac",
+                    "kind": "line",
+                    "x1": 95,
+                    "y1": 140,
+                    "x2": 235,
+                    "y2": 140,
+                    "arrow": "none",
+                    "stroke": "green",
+                    "strokeWidth": 2,
+                    "dash": true,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "leg-bc",
+                    "kind": "line",
+                    "x1": 235,
+                    "y1": 140,
+                    "x2": 235,
+                    "y2": 35,
+                    "arrow": "none",
+                    "stroke": "green",
+                    "strokeWidth": 2,
+                    "dash": true,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "hyp-ab",
+                    "kind": "line",
+                    "x1": 95,
+                    "y1": 140,
+                    "x2": 235,
+                    "y2": 35,
+                    "arrow": "none",
+                    "stroke": "orange",
+                    "strokeWidth": 2.5
+                  },
+                  {
+                    "id": "pt-a",
+                    "kind": "ellipse",
+                    "cx": 95,
+                    "cy": 140,
+                    "rx": 3.5,
+                    "ry": 3.5,
+                    "fill": "ink",
+                    "stroke": "none"
+                  },
+                  {
+                    "id": "pt-b",
+                    "kind": "ellipse",
+                    "cx": 235,
+                    "cy": 35,
+                    "rx": 3.5,
+                    "ry": 3.5,
+                    "fill": "ink",
+                    "stroke": "none"
+                  },
+                  {
+                    "id": "pt-c",
+                    "kind": "ellipse",
+                    "cx": 235,
+                    "cy": 140,
+                    "rx": 3,
+                    "ry": 3,
+                    "fill": "green",
+                    "stroke": "none",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "lbl-pt-a",
+                    "kind": "text",
+                    "x": 88,
+                    "y": 158,
+                    "text": "A$(1, 1)$",
+                    "size": 12,
+                    "anchor": "end",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "lbl-pt-b",
+                    "kind": "text",
+                    "x": 235,
+                    "y": 22,
+                    "text": "B$(5, 4)$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "lbl-pt-c",
+                    "kind": "text",
+                    "x": 245,
+                    "y": 158,
+                    "text": "C$(5, 1)$",
+                    "size": 11,
+                    "anchor": "start",
+                    "fill": "green",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "lbl-dx",
+                    "kind": "text",
+                    "x": 165,
+                    "y": 158,
+                    "text": "$5 - 1 = 4$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "deep-green",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "lbl-dy",
+                    "kind": "text",
+                    "x": 245,
+                    "y": 92,
+                    "text": "$4 - 1 = 3$",
+                    "size": 12,
+                    "anchor": "start",
+                    "weight": "bold",
+                    "fill": "deep-green",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "lbl-ab-len",
+                    "kind": "text",
+                    "x": 150,
+                    "y": 78,
+                    "text": "$5$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "eq-coord",
+                    "kind": "text",
+                    "x": 130,
+                    "y": 44,
+                    "text": "$4^2 + 3^2 = 25$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "두 점 A(1, 1)과 B(5, 4)를 이은 선분 AB가 있어요.",
+                    "changes": []
+                  },
+                  {
+                    "caption": "가로 거리 4와 세로 거리 3을 두 변으로 하는 직각삼각형 ABC를 그려요.",
+                    "changes": [
+                      {
+                        "id": "tri-coord",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "rt-c",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "leg-ac",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "leg-bc",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "pt-c",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lbl-pt-c",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lbl-dx",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lbl-dy",
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "피타고라스 정리로 빗변 AB의 길이 5를 구해요.",
+                    "changes": [
+                      {
+                        "id": "tri-coord",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "rt-c",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "leg-ac",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "leg-bc",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "pt-c",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lbl-pt-c",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lbl-dx",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lbl-dy",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lbl-ab-len",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "eq-coord",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "plane-length:explanation:text-4:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "요령은 하나예요. 구하려는 길이를 빗변으로 삼는 직각삼각형을 그릴 수 있는지 먼저 살펴보세요. 수선을 하나 내리면 생기는 경우가 많아요.\n\n정사각형의 대각선이나 정삼각형의 높이는 딱 떨어지지 않아요. 그런 경우는 제곱근을 배우고 나서 다뤄요.",
+                "text": "가로 거리는 두 점의 $x$좌표끼리 빼고 세로 거리는 $y$좌표끼리 빼요.\n\n뺀 값을 제곱하면 양수가 되어 빼는 순서를 바꾸어도 결과는 같아요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "plane-length:explanation:text-5:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "이렇게 숨은 직각삼각형을 찾아 계산하는 것이 평면에서 길이 구하기예요.\n\n변의 제곱이 자연수의 제곱으로 떨어지지 않는 경우는 제곱근을 배운 뒤에 다뤄요.",
                 "definitions": [
                   {
-                    "conceptKey": "square-root",
-                    "surface": "제곱근",
+                    "conceptKey": "plane-length",
+                    "surface": "평면에서 길이 구하기",
                     "scopeKind": "global"
                   }
                 ]
@@ -1807,40 +2857,49 @@
           ]
         },
         {
-          "sectionId": "plane-length:example:v2",
+          "sectionId": "plane-length:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "plane-length:example:text:v2",
+              "blockId": "plane-length:example:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "밑변이 $16$이고 나머지 두 변이 각각 $10$인 이등변삼각형의 높이를 구해 볼게요.\n\n꼭지각에서 밑변에 수선을 내리면 밑변이 $8$과 $8$로 나뉘어요. 이등변삼각형의 성질이에요.\n\n이제 직각을 낀 한 변이 $8$이고 빗변이 $10$인 직각삼각형이 생겼어요.\n\n$8^2 + h^2 = 10^2$이니 $64 + h^2 = 100$이에요. 그러니 $h^2 = 36$이고 높이는 $6$이고요.\n\n좌표평면도 해 볼게요. $(1, 2)$와 $(7, 10)$ 사이의 거리를 구해요.\n\n가로로 간 거리는 $7 - 1 = 6$, 세로로 간 거리는 $10 - 2 = 8$이에요. $6^2 + 8^2 = 100$이니 거리는 $10$이에요.\n\n$(-2, 1)$과 $(3, 13)$이라면 가로로 $5$, 세로로 $12$이니 거리는 $13$이에요. 음수가 섞여도 걱정할 것이 없어요. 빼서 나온 값을 제곱하니까요.",
-                "definitions": [
-                  {
-                    "conceptKey": "isosceles",
-                    "surface": "이등변삼각형",
-                    "scopeKind": "global"
-                  },
-                  {
-                    "conceptKey": "coordinate-plane",
-                    "surface": "좌표평면",
-                    "scopeKind": "global"
-                  }
-                ]
+                "text": "밑변이 $24$이고 나머지 두 변이 각각 $13$인 이등변삼각형의 높이를 구해 볼게요.\n\n꼭지각에서 밑변에 수선을 내리면 밑변이 $12$와 $12$로 똑같이 나뉘어요. 직각을 낀 한 변이 $12$, 높이가 $h$, 빗변이 $13$인 직각삼각형이 생겨요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "plane-length:example:text-2:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "피타고라스 정리를 쓰면 $12^2 + h^2 = 13^2$에서 $144 + h^2 = 169$예요.\n\n양변에서 $144$를 빼면 $h^2 = 169 - 144 = 25$예요. 제곱해서 $25$가 되는 양수는 $5$이니 높이는 $5$예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "plane-length:example:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 점 $(-1, 2)$와 $(5, 10)$ 사이의 거리도 구해 볼게요.\n\n가로 거리는 $5 - (-1) = 6$이고 세로 거리는 $10 - 2 = 8$이에요. 거리의 제곱은 $6^2 + 8^2 = 100$이고 제곱해서 $100$이 되는 양수는 $10$이에요.",
+                "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "plane-length:practice:v2",
+          "sectionId": "plane-length:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "plane-length:practice:problems:v2",
+              "blockId": "plane-length:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1857,12 +2916,12 @@
           ]
         },
         {
-          "sectionId": "plane-length:check:v2",
+          "sectionId": "plane-length:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "plane-length:check:problems:v2",
+              "blockId": "plane-length:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1878,23 +2937,18 @@
           ]
         },
         {
-          "sectionId": "plane-length:summary:v2",
+          "sectionId": "plane-length:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "plane-length:summary:text:v2",
+              "blockId": "plane-length:summary:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "구하려는 길이를 빗변으로 삼는 직각삼각형을 찾는 것이 먼저예요.\n\n직사각형은 대각선으로 직각삼각형이 생겨요. 이등변삼각형은 꼭지각에서 내린 수선으로 생기고요.\n\n좌표평면에서는 가로로 간 거리와 세로로 간 거리가 두 변이에요.\n\n수선을 하나 내려 보는 것이 가장 자주 쓰는 방법이에요.\n\n이 수업의 개념은 평면에서 길이 구하기예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "구하려는 길이를 한 변으로 하는 직각삼각형을 찾는 것이 평면에서 길이 구하기예요.\n\n직사각형은 대각선을 긋고, 이등변삼각형은 꼭지각에서 밑변에 수선을 내려요. 좌표평면에서는 두 점의 가로 거리와 세로 거리를 직각을 낀 두 변으로 삼아요.\n\n피타고라스 정리로 변의 제곱을 구한 뒤 제곱해서 그 수가 되는 양수를 찾아요.",
                 "definitions": [
-                  {
-                    "conceptKey": "coordinate-plane",
-                    "surface": "좌표평면",
-                    "scopeKind": "global"
-                  },
                   {
                     "conceptKey": "plane-length",
                     "surface": "평면에서 길이 구하기",
@@ -1918,7 +2972,7 @@
     {
       "public": {
         "lessonKey": "solid-length",
-        "versionId": "solid-length:v2",
+        "versionId": "solid-length:v3",
         "title": "입체에서 길이 구하기: 두 번 쓰면 된다",
         "summary": "직육면체의 대각선과 원뿔의 높이를 피타고라스 정리를 두 번 써서 구해요.",
         "estimatedMinutes": 12,
@@ -1934,378 +2988,373 @@
       },
       "sections": [
         {
-          "sectionId": "solid-length:explanation:v2",
+          "sectionId": "solid-length:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "solid-length:explanation:twice:v2",
+              "blockId": "solid-length:explanation:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "입체에서도 쓰는 방법은 같아요. 다만 한 번으로는 안 되고 두 번 써야 하는 경우가 많아요.\n\n직육면체의 대각선이 대표예요. 마주 보는 두 꼭짓점을 이은 선분이에요. 그런데 이 선분이 빗변인 직각삼각형을 한 번에 그릴 수가 없어요.",
+                "text": "입체도형에서도 직각삼각형을 찾으면 피타고라스 정리를 쓸 수 있어요. 마주 보는 두 꼭짓점을 이은 선분이 직육면체의 대각선이에요. 가로 $4$, 세로 $2$, 높이 $4$인 직육면체의 대각선을 구해 볼게요.",
                 "definitions": [
                   {
-                    "conceptKey": "solid-length",
-                    "surface": "직육면체의 대각선",
+                    "conceptKey": "pythagoras",
+                    "surface": "피타고라스 정리",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "solid-length:explanation:steps:v2",
+              "blockId": "solid-length:explanation:text-2:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "그래서 두 걸음으로 나눠요. 먼저 밑면의 대각선을 구해요. 밑면이 가로 $a$, 세로 $b$인 직사각형이니 밑면의 대각선의 제곱은 $a^2 + b^2$이에요.\n\n다음으로 그 대각선과 높이를 두 변으로 하는 직각삼각형을 세워요. 높이는 밑면과 수직이니 정말로 직각이에요.\n\n그러니 직육면체의 대각선의 제곱은 $a^2 + b^2 + c^2$이 돼요. 가로 $2$, 세로 $3$, 높이 $6$이면 $4 + 9 + 36 = 49$이니 대각선은 $7$이에요.",
+                "text": "먼저 밑면의 직각삼각형에서 밑면의 대각선의 제곱을 구해요. 밑면의 가로가 $4$, 세로가 $2$이니 대각선의 제곱은 $4^2 + 2^2 = 20$이에요.",
                 "definitions": []
               }
             },
             {
-              "blockId": "solid-length:explanation:drawing:v2",
+              "blockId": "solid-length:explanation:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "다음으로 밑면의 대각선과 수직인 높이 $4$로 직각삼각형을 세워요. 직육면체의 대각선의 제곱은 $20 + 4^2 = 36$이고 길이는 $6$이에요. 가로 $a$, 세로 $b$, 높이 $c$이면 대각선의 제곱은 $a^2 + b^2 + c^2$이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "solid-length:explanation:scene-1:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "width": 320,
-                "height": 200,
-                "alt": "직육면체에서 밑면의 대각선을 먼저 구하고 그것과 높이로 다시 직각삼각형을 세워 대각선을 구하는 그림",
-                "caption": "밑면에서 한 번, 세워서 또 한 번 쓰면 돼요",
+                "width": 340,
+                "height": 220,
+                "alt": "가로 4, 세로 2, 높이 4인 직육면체에서 밑면의 직각삼각형과 세워진 직각삼각형을 차례로 보여 주는 그림",
+                "caption": "밑면에서 대각선의 제곱을 구한 뒤 높이의 제곱을 더해요.",
                 "items": [
                   {
-                    "kind": "line",
-                    "x1": 36,
-                    "y1": 141,
-                    "x2": 64,
-                    "y2": 117,
-                    "stroke": "muted",
-                    "strokeWidth": 1,
-                    "dash": true
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 64,
-                    "y1": 117,
-                    "x2": 148,
-                    "y2": 117,
-                    "stroke": "muted",
-                    "strokeWidth": 1,
-                    "dash": true
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 64,
-                    "y1": 117,
-                    "x2": 64,
-                    "y2": 54,
-                    "stroke": "muted",
-                    "strokeWidth": 1,
-                    "dash": true
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 36,
-                    "y": 78,
-                    "width": 84,
-                    "height": 63,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "front"
-                  },
-                  {
+                    "id": "tri-base",
                     "kind": "polygon",
                     "points": [
                       [
-                        36,
-                        78
+                        45,
+                        180
                       ],
                       [
-                        64,
-                        54
+                        195,
+                        180
                       ],
                       [
-                        148,
-                        54
-                      ],
-                      [
-                        120,
-                        78
+                        280,
+                        152
                       ]
                     ],
                     "closed": true,
                     "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1.2
-                  },
-                  {
-                    "kind": "polygon",
-                    "points": [
-                      [
-                        120,
-                        78
-                      ],
-                      [
-                        148,
-                        54
-                      ],
-                      [
-                        148,
-                        117
-                      ],
-                      [
-                        120,
-                        141
-                      ]
-                    ],
-                    "closed": true,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1.2
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 36,
-                    "y1": 141,
-                    "x2": 148,
-                    "y2": 117,
                     "stroke": "green",
-                    "strokeWidth": 1.8,
-                    "id": "d1",
+                    "strokeWidth": 2,
                     "opacity": 0
                   },
                   {
-                    "kind": "line",
-                    "x1": 36,
-                    "y1": 141,
-                    "x2": 148,
-                    "y2": 54,
+                    "id": "tri-stand",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        45,
+                        180
+                      ],
+                      [
+                        280,
+                        152
+                      ],
+                      [
+                        280,
+                        37
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
                     "stroke": "orange",
                     "strokeWidth": 2,
-                    "id": "d2",
                     "opacity": 0
                   },
                   {
-                    "kind": "text",
-                    "x": 78,
-                    "y": 155,
-                    "text": "$2$",
-                    "size": 10,
-                    "anchor": "middle",
-                    "fill": "muted"
+                    "id": "edge-bl-fl",
+                    "kind": "line",
+                    "x1": 130,
+                    "y1": 152,
+                    "x2": 45,
+                    "y2": 180,
+                    "stroke": "muted",
+                    "strokeWidth": 1.2,
+                    "dash": true
                   },
                   {
+                    "id": "edge-bl-br",
+                    "kind": "line",
+                    "x1": 130,
+                    "y1": 152,
+                    "x2": 280,
+                    "y2": 152,
+                    "stroke": "muted",
+                    "strokeWidth": 1.2,
+                    "dash": true
+                  },
+                  {
+                    "id": "edge-bl-tbl",
+                    "kind": "line",
+                    "x1": 130,
+                    "y1": 152,
+                    "x2": 130,
+                    "y2": 37,
+                    "stroke": "muted",
+                    "strokeWidth": 1.2,
+                    "dash": true
+                  },
+                  {
+                    "id": "edge-fl-fr",
+                    "kind": "line",
+                    "x1": 45,
+                    "y1": 180,
+                    "x2": 195,
+                    "y2": 180,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "edge-fr-br",
+                    "kind": "line",
+                    "x1": 195,
+                    "y1": 180,
+                    "x2": 280,
+                    "y2": 152,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "edge-tfl-tfr",
+                    "kind": "line",
+                    "x1": 45,
+                    "y1": 65,
+                    "x2": 195,
+                    "y2": 65,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "edge-tfr-tbr",
+                    "kind": "line",
+                    "x1": 195,
+                    "y1": 65,
+                    "x2": 280,
+                    "y2": 37,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "edge-tbl-tbr",
+                    "kind": "line",
+                    "x1": 130,
+                    "y1": 37,
+                    "x2": 280,
+                    "y2": 37,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "edge-tfl-tbl",
+                    "kind": "line",
+                    "x1": 45,
+                    "y1": 65,
+                    "x2": 130,
+                    "y2": 37,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "edge-fl-tfl",
+                    "kind": "line",
+                    "x1": 45,
+                    "y1": 180,
+                    "x2": 45,
+                    "y2": 65,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "edge-fr-tfr",
+                    "kind": "line",
+                    "x1": 195,
+                    "y1": 180,
+                    "x2": 195,
+                    "y2": 65,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "edge-br-tbr",
+                    "kind": "line",
+                    "x1": 280,
+                    "y1": 152,
+                    "x2": 280,
+                    "y2": 37,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "line-base-diag",
+                    "kind": "line",
+                    "x1": 45,
+                    "y1": 180,
+                    "x2": 280,
+                    "y2": 152,
+                    "stroke": "green",
+                    "strokeWidth": 2.5,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "line-space-diag",
+                    "kind": "line",
+                    "x1": 45,
+                    "y1": 180,
+                    "x2": 280,
+                    "y2": 37,
+                    "stroke": "orange",
+                    "strokeWidth": 3,
+                    "opacity": 1
+                  },
+                  {
+                    "id": "lbl-w",
+                    "kind": "text",
+                    "x": 120,
+                    "y": 198,
+                    "text": "가로 $4$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "weight": "regular"
+                  },
+                  {
+                    "id": "lbl-d",
+                    "kind": "text",
+                    "x": 250,
+                    "y": 176,
+                    "text": "세로 $2$",
+                    "size": 13,
+                    "anchor": "start",
+                    "fill": "ink",
+                    "weight": "regular"
+                  },
+                  {
+                    "id": "lbl-h",
+                    "kind": "text",
+                    "x": 288,
+                    "y": 98,
+                    "text": "높이 $4$",
+                    "size": 13,
+                    "anchor": "start",
+                    "fill": "ink",
+                    "weight": "regular"
+                  },
+                  {
+                    "id": "label-base-diag",
+                    "kind": "text",
+                    "x": 155,
+                    "y": 156,
+                    "text": "밑면 대각선의 제곱: $20$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "deep-green",
+                    "weight": "bold",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "label-space-diag-init",
                     "kind": "text",
                     "x": 140,
-                    "y": 136,
-                    "text": "$3$",
-                    "size": 10,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 26,
-                    "y": 110,
-                    "text": "$6$",
-                    "size": 10,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 92,
-                    "y": 122,
-                    "text": "$13$",
-                    "size": 10,
-                    "anchor": "middle",
-                    "fill": "green",
-                    "id": "ld1",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "polygon",
-                    "points": [
-                      [
-                        256,
-                        141
-                      ],
-                      [
-                        308,
-                        141
-                      ],
-                      [
-                        308,
-                        54
-                      ]
-                    ],
-                    "closed": true,
-                    "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1.4,
-                    "id": "step",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 282,
-                    "y": 154,
-                    "text": "밑면 대각선",
-                    "size": 9,
-                    "anchor": "middle",
-                    "fill": "muted",
-                    "id": "sl1",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 316,
-                    "y": 100,
-                    "text": "$6$",
-                    "size": 10,
-                    "anchor": "middle",
-                    "fill": "muted",
-                    "id": "sl2",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 272,
-                    "y": 92,
-                    "text": "$7$",
+                    "y": 102,
+                    "text": "직육면체의 대각선",
                     "size": 12,
                     "anchor": "middle",
                     "fill": "orange",
-                    "id": "sl3",
-                    "opacity": 0
+                    "weight": "bold",
+                    "opacity": 1
                   },
                   {
+                    "id": "label-space-diag-final",
                     "kind": "text",
-                    "x": 160,
-                    "y": 188,
-                    "text": "$2^2 + 3^2 + 6^2 = 49$이니 대각선은 $7$",
-                    "size": 11,
+                    "x": 140,
+                    "y": 102,
+                    "text": "대각선의 길이: $6$",
+                    "size": 12,
                     "anchor": "middle",
                     "fill": "orange",
-                    "id": "say",
+                    "weight": "bold",
                     "opacity": 0
                   }
                 ],
                 "frames": [
                   {
-                    "caption": "가로 $2$, 세로 $3$, 높이 $6$인 직육면체예요. 마주 보는 두 꼭짓점 사이는 얼마일까요?",
+                    "caption": "마주 보는 두 꼭짓점을 이은 직육면체의 대각선을 구해요.",
+                    "changes": []
+                  },
+                  {
+                    "caption": "1단계: 밑면의 직각삼각형에서 대각선의 제곱($4^2+2^2=20$)을 구해요.",
                     "changes": [
                       {
-                        "id": "d1",
-                        "opacity": 0
+                        "id": "tri-base",
+                        "opacity": 0.7
                       },
                       {
-                        "id": "d2",
-                        "opacity": 0
+                        "id": "line-base-diag",
+                        "opacity": 1
                       },
                       {
-                        "id": "ld1",
-                        "opacity": 0
+                        "id": "label-base-diag",
+                        "opacity": 1
                       },
                       {
-                        "id": "step",
-                        "opacity": 0
+                        "id": "line-space-diag",
+                        "opacity": 0.25
                       },
                       {
-                        "id": "sl1",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "sl2",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "sl3",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "say",
+                        "id": "label-space-diag-init",
                         "opacity": 0
                       }
                     ]
                   },
                   {
-                    "caption": "먼저 밑면의 대각선이에요. $2^2 + 3^2 = 13$이에요.",
+                    "caption": "2단계: 밑면의 대각선과 높이 $4$로 세운 직각삼각형에서 대각선($6$)을 구해요.",
                     "changes": [
                       {
-                        "id": "d1",
+                        "id": "tri-stand",
+                        "opacity": 0.65
+                      },
+                      {
+                        "id": "line-base-diag",
                         "opacity": 1
                       },
                       {
-                        "id": "ld1",
+                        "id": "label-base-diag",
                         "opacity": 1
                       },
                       {
-                        "id": "d2",
+                        "id": "line-space-diag",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "label-space-diag-init",
                         "opacity": 0
                       },
                       {
-                        "id": "step",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "sl1",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "sl2",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "sl3",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "say",
-                        "opacity": 0
-                      }
-                    ]
-                  },
-                  {
-                    "caption": "그 대각선과 높이로 직각삼각형을 하나 더 세워요. $13 + 6^2 = 49$이니 대각선은 $7$이에요.",
-                    "changes": [
-                      {
-                        "id": "d1",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "ld1",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "d2",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "step",
-                        "dx": -60,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "sl1",
-                        "dx": -60,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "sl2",
-                        "dx": -60,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "sl3",
-                        "dx": -60,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "say",
+                        "id": "label-space-diag-final",
                         "opacity": 1
                       }
                     ]
@@ -2315,21 +3364,256 @@
               }
             },
             {
-              "blockId": "solid-length:explanation:cone:v2",
+              "blockId": "solid-length:explanation:text-4:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "원뿔에서도 써요. 원뿔은 밑면의 반지름과 높이와 모선이 직각삼각형을 이뤄요.\n\n모선은 꼭짓점과 밑면의 둘레를 잇는 선분이에요. 이 직각삼각형에서는 모선이 빗변이고요. 반지름이 $6$이고 모선이 $10$이면 높이는 $8$이에요.\n\n높이를 알면 부피를 구할 수 있어요. 모선을 알면 옆면인 부채꼴의 반지름을 알 수 있고요. 그래서 원뿔 문제는 대개 이 직각삼각형에서 시작해요.\n\n정리하면 이래요. 입체에서는 어느 평면 위에 직각삼각형이 있는지를 먼저 정하세요. 필요하면 그 결과를 들고 다음 평면으로 넘어가면 돼요.",
+                "text": "원뿔에서는 밑면의 반지름과 높이와 모선이 직각삼각형을 이뤄요. 모선은 꼭짓점과 밑면의 둘레를 잇는 선분이고 직각삼각형의 빗변이에요. 반지름이 $3$이고 모선이 $5$이면 $3^2 + 4^2 = 5^2$에서 높이는 $4$예요.",
                 "definitions": [
                   {
-                    "conceptKey": "volume",
-                    "surface": "부피",
+                    "conceptKey": "vertex",
+                    "surface": "꼭짓점",
                     "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "solid-length:explanation:scene-2:v3",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 340,
+                "height": 220,
+                "alt": "밑면의 반지름이 3, 높이가 4, 모선이 5인 원뿔 안의 직각삼각형을 보여 주는 그림",
+                "caption": "원뿔의 반지름과 높이가 직각을 끼고 모선이 빗변이 돼요.",
+                "items": [
+                  {
+                    "id": "base-ellipse",
+                    "kind": "ellipse",
+                    "cx": 170,
+                    "cy": 152,
+                    "rx": 105,
+                    "ry": 26,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
                   },
                   {
-                    "conceptKey": "sector",
-                    "surface": "부채꼴",
+                    "id": "tri-cone",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        170,
+                        22
+                      ],
+                      [
+                        170,
+                        152
+                      ],
+                      [
+                        275,
+                        152
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "none",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "ra-cone",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        170,
+                        138
+                      ],
+                      [
+                        184,
+                        138
+                      ],
+                      [
+                        184,
+                        152
+                      ]
+                    ],
+                    "closed": false,
+                    "fill": "none",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "line-left-slant",
+                    "kind": "line",
+                    "x1": 170,
+                    "y1": 22,
+                    "x2": 65,
+                    "y2": 152,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "line-height",
+                    "kind": "line",
+                    "x1": 170,
+                    "y1": 22,
+                    "x2": 170,
+                    "y2": 152,
+                    "stroke": "green",
+                    "strokeWidth": 2.5,
+                    "dash": true,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "line-radius",
+                    "kind": "line",
+                    "x1": 170,
+                    "y1": 152,
+                    "x2": 275,
+                    "y2": 152,
+                    "stroke": "green",
+                    "strokeWidth": 2.5,
+                    "opacity": 1
+                  },
+                  {
+                    "id": "line-slant",
+                    "kind": "line",
+                    "x1": 170,
+                    "y1": 22,
+                    "x2": 275,
+                    "y2": 152,
+                    "stroke": "orange",
+                    "strokeWidth": 3,
+                    "opacity": 1
+                  },
+                  {
+                    "id": "label-apex",
+                    "kind": "text",
+                    "x": 170,
+                    "y": 14,
+                    "text": "꼭짓점",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted",
+                    "weight": "regular"
+                  },
+                  {
+                    "id": "label-slant",
+                    "kind": "text",
+                    "x": 232,
+                    "y": 82,
+                    "text": "모선 $5$ (빗변)",
+                    "size": 13,
+                    "anchor": "start",
+                    "fill": "orange",
+                    "weight": "bold"
+                  },
+                  {
+                    "id": "label-radius",
+                    "kind": "text",
+                    "x": 222,
+                    "y": 170,
+                    "text": "반지름 $3$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "fill": "deep-green",
+                    "weight": "bold"
+                  },
+                  {
+                    "id": "label-height",
+                    "kind": "text",
+                    "x": 160,
+                    "y": 92,
+                    "text": "높이 $4$",
+                    "size": 13,
+                    "anchor": "end",
+                    "fill": "deep-green",
+                    "weight": "bold",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "label-pyth",
+                    "kind": "text",
+                    "x": 170,
+                    "y": 204,
+                    "text": "$3^2 + 4^2 = 5^2$",
+                    "size": 14,
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "weight": "bold",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "원뿔에서 꼭짓점과 밑면의 둘레를 이은 선분이 모선이에요.",
+                    "changes": []
+                  },
+                  {
+                    "caption": "꼭짓점에서 밑면에 수직으로 내린 높이와 반지름, 모선이 직각삼각형을 이뤄요.",
+                    "changes": [
+                      {
+                        "id": "tri-cone",
+                        "opacity": 0.65
+                      },
+                      {
+                        "id": "line-height",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ra-cone",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "label-height",
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "모선이 직각과 마주 보는 빗변이어서 $3^2 + 4^2 = 5^2$이 성립해요.",
+                    "changes": [
+                      {
+                        "id": "tri-cone",
+                        "opacity": 0.65
+                      },
+                      {
+                        "id": "line-height",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ra-cone",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "label-height",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "label-pyth",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 1800
+              }
+            },
+            {
+              "blockId": "solid-length:explanation:text-5:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "원뿔의 높이를 구하면 원뿔의 부피를 계산할 수 있어요. 모선의 길이를 구하면 옆면인 부채꼴의 반지름을 알 수 있어요. 이처럼 입체에서 길이 구하기는 도형 안의 직각삼각형을 찾는 데서 시작해요.",
+                "definitions": [
+                  {
+                    "conceptKey": "solid-length",
+                    "surface": "입체에서 길이 구하기",
                     "scopeKind": "global"
                   }
                 ]
@@ -2338,23 +3622,48 @@
           ]
         },
         {
-          "sectionId": "solid-length:example:v2",
+          "sectionId": "solid-length:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "solid-length:example:text:v2",
+              "blockId": "solid-length:example:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "가로 $2$, 세로 $3$, 높이 $6$인 직육면체의 대각선을 구해 볼게요.\n\n먼저 밑면의 대각선이에요. 밑면은 가로 $2$, 세로 $3$인 직사각형이니 대각선의 제곱은 $2^2 + 3^2 = 13$이에요. 이 값은 제곱인 채로 들고 가면 편해요.\n\n이제 그 대각선과 높이 $6$으로 직각삼각형을 세워요. 구하려는 대각선을 $d$라 하면 $13 + 6^2 = d^2$이에요. 그러니 $d^2 = 49$, 곧 $d = 7$이고요.\n\n밑면의 대각선을 굳이 길이로 바꾸지 않은 것이 요령이에요. 제곱인 채로 더하면 되니까요.\n\n원뿔도 해 볼게요. 밑면의 반지름이 $6$이고 모선이 $10$인 원뿔의 높이를 구해요.\n\n반지름과 높이와 모선이 직각삼각형을 이루고 모선이 빗변이에요. 그러니 $6^2 + h^2 = 10^2$이고, $h^2 = 64$이니 높이는 $8$이에요.\n\n높이를 알았으니 부피도 구할 수 있어요. $\\dfrac{1}{3} \\times \\pi \\times 6^2 \\times 8 = 96\\pi$예요.",
+                "text": "가로 $6$, 세로 $3$, 높이 $6$인 직육면체의 대각선을 구해 볼게요. 먼저 밑면은 가로 $6$, 세로 $3$인 직사각형이에요. 밑면의 대각선의 제곱은 $6^2 + 3^2 = 36 + 9 = 45$예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "solid-length:example:text-2:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "밑면의 대각선은 제곱한 값인 $45$ 그대로 두고 다음 계산에 써요. 구하려는 대각선을 $d$라 하면 $45 + 6^2 = d^2$에서 $d^2 = 81$이에요. 제곱해서 $81$이 되는 양수는 $9$여서 대각선의 길이는 $9$예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "solid-length:example:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "밑면의 반지름이 $9$이고 모선이 $15$인 원뿔의 높이를 구해 볼게요. 반지름과 높이 $h$와 모선이 직각삼각형을 이루고 모선이 빗변이에요. $9^2 + h^2 = 15^2$에서 $81 + h^2 = 225$가 돼요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "solid-length:example:text-4:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "양변에서 $81$을 빼면 $h^2 = 144$예요. 제곱해서 $144$가 되는 양수는 $12$여서 원뿔의 높이는 $12$예요. 높이를 알았으니 부피도 $\\dfrac{1}{3} \\times \\pi \\times 9^2 \\times 12 = 324\\pi$로 구할 수 있어요.",
                 "definitions": [
-                  {
-                    "conceptKey": "solid-length",
-                    "surface": "직육면체의 대각선",
-                    "scopeKind": "global"
-                  },
                   {
                     "conceptKey": "volume",
                     "surface": "부피",
@@ -2366,12 +3675,12 @@
           ]
         },
         {
-          "sectionId": "solid-length:practice:v2",
+          "sectionId": "solid-length:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "solid-length:practice:problems:v2",
+              "blockId": "solid-length:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -2388,12 +3697,12 @@
           ]
         },
         {
-          "sectionId": "solid-length:check:v2",
+          "sectionId": "solid-length:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "solid-length:check:problems:v2",
+              "blockId": "solid-length:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -2409,29 +3718,18 @@
           ]
         },
         {
-          "sectionId": "solid-length:summary:v2",
+          "sectionId": "solid-length:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "solid-length:summary:text:v2",
+              "blockId": "solid-length:summary:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "직육면체의 대각선은 피타고라스 정리를 두 번 써서 구해요.\n\n밑면의 대각선을 제곱인 채로 구하고, 거기에 높이의 제곱을 더하면 돼요.\n\n그래서 대각선의 제곱이 $a^2 + b^2 + c^2$이에요.\n\n원뿔에서는 반지름과 높이와 모선이 직각삼각형을 이루고, 모선이 빗변이에요.\n\n이 수업의 개념은 입체에서 길이 구하기예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
-                "definitions": [
-                  {
-                    "conceptKey": "solid-length",
-                    "surface": "직육면체의 대각선",
-                    "scopeKind": "global"
-                  },
-                  {
-                    "conceptKey": "pythagoras",
-                    "surface": "피타고라스 정리",
-                    "scopeKind": "global"
-                  }
-                ]
+                "text": "직육면체의 대각선은 피타고라스 정리를 두 번 써서 구해요.\n\n밑면의 대각선의 제곱에 높이의 제곱을 더하면 대각선의 제곱이 돼요.\n\n가로 $a$, 세로 $b$, 높이 $c$이면 대각선의 제곱은 $a^2 + b^2 + c^2$이에요.\n\n원뿔은 반지름과 높이와 모선이 직각삼각형을 이루며 모선이 빗변이에요.",
+                "definitions": []
               }
             }
           ]

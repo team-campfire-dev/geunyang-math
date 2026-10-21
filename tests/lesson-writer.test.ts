@@ -52,6 +52,11 @@ describe('a lesson written again', () => {
     // A picture in a corner of its canvas.
     const tiny = { ...moving, items: [{ kind: 'polygon', id: 'tri', points: [[10, 30], [60, 30], [10, 10]], closed: true }], frames: [{ changes: [] }, { changes: [{ id: 'tri', opacity: 0.5 }] }] };
     expect(issues({ explanation: [{ type: 'scene', scene: tiny }] }).join()).toContain('그림이 작아요');
+    // A box laid on a box of its own size to recolour it, where a frame's fill would do.
+    const recoloured = { ...moving, items: [...moving.items, { kind: 'rect', id: 'base', x: 220, y: 100, width: 60, height: 60, fill: 'fill-soft' },
+      { kind: 'rect', id: 'paint', x: 220, y: 100, width: 60, height: 60, fill: 'sand', opacity: 0 }],
+      frames: [{ changes: [] }, { changes: [{ id: 'paint', opacity: 1 }, { id: 'sum', opacity: 1 }] }] };
+    expect(issues({ explanation: [{ type: 'scene', scene: recoloured }] }).join()).toContain('fill을 바꾸세요');
     // The house style and the grade's range.
     expect(issues({ summary: [{ type: 'text', text: '빗변은 $\\sqrt{100}$입니다.' }] }).join()).toMatch(/습니다.*제곱근|제곱근.*습니다/s);
     // What the schema refuses comes back in its own words, with where.
