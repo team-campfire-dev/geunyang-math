@@ -27,7 +27,8 @@
     "problems:check": "node --conditions=react-server --import tsx scripts/check-problems.ts",
     "guide:sync": "node --import tsx scripts/writing-guide.ts",
     "problems:generate": "node --conditions=react-server --import tsx scripts/generate-problems.ts",
-    "compare:solutions": "node --env-file-if-exists=.env --conditions=react-server --import tsx scripts/compare-solutions.ts"
+    "compare:solutions": "node --env-file-if-exists=.env --conditions=react-server --import tsx scripts/compare-solutions.ts",
+    "lessons:rewrite": "node --env-file-if-exists=.env --conditions=react-server --import tsx scripts/rewrite-lessons.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.133.0",

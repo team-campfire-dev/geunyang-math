@@ -49,34 +49,48 @@ const geminiResponse = z.object({
   error: z.object({ code: z.number().optional(), message: z.string().optional() }).optional(),
 });
 
+export type GeminiTurn = { role: 'user' | 'model'; text: string };
+export type GeminiReply = { text: string; served: string; usage: { input: number; output: number; thinking?: number } };
+
 /**
- * Gemini, through the Gemini API's generateContent with a JSON schema for the answer. There is no
- * SDK in this project for it, so this is the REST call: the key goes in a header, never the URL.
+ * One generateContent call to Gemini, over the REST API — there is no SDK for it in this project. The
+ * key goes in a header, never the URL. `turns` is the conversation so far, so a caller that sends a
+ * reply back with what was wrong in it can ask for it again; `schema`, when given, is the JSON Schema
+ * the answer must follow, and without it the answer is still asked for as JSON.
  */
+export async function callGemini(system: string, turns: GeminiTurn[], options: { schema?: unknown; model?: string; apiKey?: string } = {}): Promise<GeminiReply> {
+  const apiKey = options.apiKey ?? process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error('Set GEMINI_API_KEY.');
+  const model = options.model ?? 'gemini-4-argon';
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+    method: 'POST', signal: AbortSignal.timeout(600_000),
+    headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: system }] },
+      contents: turns.map((turn) => ({ role: turn.role, parts: [{ text: turn.text }] })),
+      generationConfig: { responseMimeType: 'application/json', ...(options.schema ? { responseJsonSchema: options.schema } : {}),
+        thinkingConfig: { thinkingLevel: 'high' } },
+    }),
+  });
+  const body = geminiResponse.parse(await response.json());
+  if (!response.ok || body.error) throw new AppError(response.status === 429 ? 429 : 502, 'gemini_failed', body.error?.message ?? `Gemini ${response.status}`);
+  const candidate = body.candidates?.[0];
+  if (candidate?.finishReason && candidate.finishReason !== 'STOP') throw new AppError(502, 'gemini_unfinished', `Gemini가 ${candidate.finishReason}로 멈췄어요.`);
+  return { text: (candidate?.content?.parts ?? []).filter((part) => !part.thought).map((part) => part.text ?? '').join(''), served: body.modelVersion ?? model,
+    usage: { input: body.usageMetadata?.promptTokenCount ?? 0, output: body.usageMetadata?.candidatesTokenCount ?? 0, thinking: body.usageMetadata?.thoughtsTokenCount } };
+}
+
+/** Gemini as a writer of 해설: the same call, with the answer held to the 해설 shape. */
 export function geminiExplainer(apiKey = process.env.GEMINI_API_KEY, model = 'gemini-4-argon'): Explainer {
   if (!apiKey) throw new Error('Set GEMINI_API_KEY.');
   const schema = z.toJSONSchema(solutionSchema);
   return {
     name: model,
     async explain(system, user) {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-        method: 'POST', signal: AbortSignal.timeout(300_000),
-        headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: system }] },
-          contents: [{ role: 'user', parts: [{ text: user }] }],
-          generationConfig: { responseMimeType: 'application/json', responseJsonSchema: schema, thinkingConfig: { thinkingLevel: 'high' } },
-        }),
-      });
-      const body = geminiResponse.parse(await response.json());
-      if (!response.ok || body.error) throw new AppError(response.status === 429 ? 429 : 502, 'explanation_failed', body.error?.message ?? `Gemini ${response.status}`);
-      const candidate = body.candidates?.[0];
-      if (candidate?.finishReason && candidate.finishReason !== 'STOP') throw new AppError(502, 'explanation_unfinished', `Gemini가 ${candidate.finishReason}로 멈췄어요.`);
-      const text = (candidate?.content?.parts ?? []).filter((part) => !part.thought).map((part) => part.text ?? '').join('');
-      const parsed = solutionSchema.safeParse((() => { try { return JSON.parse(text); } catch { return null; } })());
+      const reply = await callGemini(system, [{ role: 'user', text: user }], { schema, model, apiKey });
+      const parsed = solutionSchema.safeParse((() => { try { return JSON.parse(reply.text); } catch { return null; } })());
       if (!parsed.success) throw new AppError(502, 'explanation_unreadable', '모델의 답을 해설로 읽지 못했어요.');
-      return { solution: parsed.data.solution, served: body.modelVersion ?? model,
-        usage: { input: body.usageMetadata?.promptTokenCount ?? 0, output: body.usageMetadata?.candidatesTokenCount ?? 0, thinking: body.usageMetadata?.thoughtsTokenCount } };
+      return { solution: parsed.data.solution, served: reply.served, usage: reply.usage };
     },
   };
 }
