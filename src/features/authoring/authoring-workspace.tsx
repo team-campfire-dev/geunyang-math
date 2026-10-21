@@ -328,8 +328,7 @@ export function AuthoringWorkspace() {
         <button className={libraryPage === 'dictionary' ? 'active' : ''} aria-current={libraryPage === 'dictionary' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('dictionary'); }}>뜻풀이 사전</button>
         <button className={libraryPage === 'concepts' ? 'active' : ''} aria-current={libraryPage === 'concepts' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('concepts'); }}>개념으로 찾기</button>
         <button className={libraryPage === 'placement' ? 'active' : ''} aria-current={libraryPage === 'placement' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('placement'); }}>시작점 확인</button>
-        {/* Teaching needs an account of one's own: the shared open editor has no learners to be linked to. */}
-        {session?.user && <button className={libraryPage === 'learners' ? 'active' : ''} aria-current={libraryPage === 'learners' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('learners'); }}>학습자</button>}
+        <button className={libraryPage === 'learners' ? 'active' : ''} aria-current={libraryPage === 'learners' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('learners'); }}>학습자</button>
         {mayGrantRoles(workspace.role) && <button className={libraryPage === 'settings' ? 'active' : ''} aria-current={libraryPage === 'settings' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('settings'); }}>편집 권한</button>}
       </nav>
       {libraryPage === 'courses' && <CourseLibrary onDirty={setLibraryDirty} workspace={workspace} busy={busy} courseKey={courseKey} onCourse={setCourseKey}
@@ -369,7 +368,13 @@ export function AuthoringWorkspace() {
           const response = await authoringApi.act({ action: 'definition.save', edit }, session?.user?.id ?? '');
           setWorkspace(response.workspace); return response.definitions ?? [];
         }} />}
-      {libraryPage === 'learners' && session?.user && <TeachingPanel userId={session.user.id} />}
+      {/* Teaching needs an account of one's own: the shared open editor has no learners to be linked to. */}
+      {libraryPage === 'learners' && (session?.user ? <TeachingPanel userId={session.user.id} />
+        : <section className="dashboard-section"><div className="gentle-empty">
+          <span className="empty-drawing"><Icon name="pencil" size={22} /></span>
+          <div><h3>학습자를 가르치려면 먼저 로그인해 주세요.</h3>
+            <p>편집은 로그인 없이도 열려 있지만, 학습자는 공용 편집 계정이 아니라 내 계정에 연결돼요. <a href="/">학습 화면</a>에서 로그인한 뒤 다시 오세요.</p></div>
+        </div></section>)}
       {libraryPage === 'settings' && mayGrantRoles(workspace.role) && <RolePanel accounts={workspace.accounts} busy={busy} matches={matches}
         onSearch={(query) => act({ action: 'account.search', query }, (response) => setMatches(response.matches ?? []))}
         onGrant={(userId, role) => act({ action: 'role.grant', userId, role }, () => setMatches(null))}
