@@ -5,7 +5,7 @@
  *
  *   npm run compare:solutions -- generate --run <name> --courses similarity,pythagoras,probability [--limit N]
  *   npm run compare:solutions -- blind --run <name>
- *   npm run compare:solutions -- apply --run <name> [--replace]
+ *   npm run compare:solutions -- apply --run <name> [--replace] [--rest <writer>]
  *   npm run compare:solutions -- recheck --run <name>    (the checks again, after changing one)
  *
  * A run lives in comparisons/<name>/: candidates.json (every request and both answers, written as
@@ -13,7 +13,9 @@
  * per question, no names) and key.json (which letter is which). The chooser's picks come back as
  * picks.json — { "<problemVersionId>": { "pick": "a" | "b" | "neither", "note"?: string } }.
  * `apply` writes the picked 해설 into prisma/seed/<course>.json for questions that have none (or all
- * of them with --replace), and result.json with the tally.
+ * of them with --replace), and result.json with the tally. `--rest <writer>` fills the questions nobody
+ * picked with that writer's 해설 — for when the picks made so far already settled it; those are
+ * counted apart from the picks, never as wins.
  */
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
@@ -185,6 +187,8 @@ function apply() {
   const picks = readJson<Record<string, Pick>>(join(dir, 'picks.json'));
   const key = readJson<Record<string, { a: string; b: string }>>(join(dir, 'key.json'));
   const replace = args.includes('--replace');
+  const rest = flag('rest');
+  if (rest && !run.writers.includes(rest)) { console.error(`--rest must be one of ${run.writers.join(', ')}`); process.exit(2); }
   const tally: Record<string, number> = Object.fromEntries([...run.writers, 'neither'].map((name) => [name, 0]));
   const byCourse: Record<string, Record<string, number>> = {};
   const winners = new Map<string, string>();
@@ -196,6 +200,14 @@ function apply() {
     (byCourse[item.courseKey] ??= Object.fromEntries([...run.writers, 'neither'].map((writer) => [writer, 0])))[name] += 1;
     const output = item.outputs[name];
     if (name !== 'neither' && output && !('error' in output)) winners.set(id, output.solution);
+  }
+  const decided = new Set(Object.entries(picks).filter(([, pick]) => pick.pick).map(([id]) => id));
+  let filled = 0;
+  if (rest) for (const item of run.items) {
+    const output = item.outputs[rest];
+    if (decided.has(item.id) || !output || 'error' in output) continue;
+    winners.set(item.id, output.solution);
+    filled += 1;
   }
   let written = 0;
   for (const courseKey of run.courses) {
@@ -212,9 +224,11 @@ function apply() {
   }
   const picked = Object.values(picks).filter((pick) => pick.pick).length;
   writeJson(join(dir, 'result.json'), { run: run.name, decidedAt: new Date().toISOString(), picked, tally, byCourse,
+    ...(rest ? { rest: { writer: rest, questions: filled } } : {}),
     notes: Object.fromEntries(Object.entries(picks).filter(([, pick]) => pick.note).map(([id, pick]) => [id,
       { ...pick, writer: pick.pick === 'a' || pick.pick === 'b' ? key[id]?.[pick.pick] ?? null : null }])) });
-  console.log(`Picked ${picked}: ${Object.entries(tally).map(([name, count]) => `${name} ${count}`).join(' · ')}. Wrote ${written} 해설 into the seed.`);
+  console.log(`Picked ${picked}: ${Object.entries(tally).map(([name, count]) => `${name} ${count}`).join(' · ')}.`
+    + `${rest ? ` Filled ${filled} unpicked with ${rest}.` : ''} Wrote ${written} 해설 into the seed.`);
 }
 
 /** Runs the checks again over what is already written, after a check itself changed. Asks no model. */

@@ -2489,7 +2489,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각삼각형에서 직각을 낀 두 변의 제곱의 합은 빗변의 제곱과 같아요. 빗변의 길이를 $c$라고 하면 $3^2 + 4^2 = c^2$이므로 $c^2 = 9 + 16 = 25$예요. $3 + 4 = 7$은 제곱하지 않고 길이끼리 더한 값이고, $25$는 빗변의 길이를 제곱한 값이에요. 제곱해서 $25$가 되는 양수는 $5$이므로 빗변의 길이는 $5$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:practice-2:v1",
@@ -2526,7 +2536,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각삼각형에서 직각을 낀 두 변의 제곱의 합은 빗변의 제곱과 같아요. 빗변의 길이를 $c$라고 하면 $6^2 + 8^2 = c^2$이고, 계산하면 $36 + 64 = 100$이에요. 길이끼리 그대로 더해 $6 + 8 = 14$라고 하거나, 빗변을 제곱한 값인 $100$을 그대로 답으로 쓰면 안 돼요. 제곱해서 $100$이 되는 양수는 $10$이므로, 빗변의 길이는 $10$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:practice-3:v1",
@@ -2563,7 +2583,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "나머지 한 변의 길이를 $a$라고 하면 $a^2 + 5^2 = 13^2$이에요. 각각 제곱하면 $a^2 + 25 = 169$이고, $169$에서 $25$를 빼면 $a^2 = 144$예요. 제곱하지 않고 $13 - 5 = 8$로 계산하거나, $a^2$의 값인 $144$를 그대로 쓰지 않도록 조심해요. $12 \\times 12 = 144$이므로 제곱해서 $144$가 되는 양수는 $12$예요. 따라서 나머지 한 변의 길이는 $12$예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2608,7 +2638,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각삼각형에서 직각을 낀 두 변의 제곱의 합은 빗변의 제곱과 같아요. 빗변의 길이를 $c$라고 하면 $9^2 + 12^2 = c^2$이므로 $81 + 144 = 225$예요. $15 \\times 15 = 225$이므로 제곱해서 $225$가 되는 양수는 $15$예요. 제곱하지 않고 길이끼리 더한 $9 + 12 = 21$이나, 제곱한 값인 $225$를 그대로 쓰지 않도록 조심해요. 따라서 빗변의 길이는 $15$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:check-2:v1",
@@ -2645,7 +2685,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "나머지 한 변의 길이를 $a$라고 두면 $a^2 + 8^2 = 17^2$이에요. $8^2 = 64$이고 $17^2 = 289$이므로, 빗변의 제곱에서 다른 변의 제곱을 빼면 $a^2 = 289 - 64 = 225$가 돼요. 길이끼리 바로 빼서 $17 - 8 = 9$라고 계산하거나, 제곱한 값인 $225$를 그대로 답으로 쓰지 않도록 조심해요. 제곱해서 $225$가 되는 양수는 $15$이므로, 나머지 한 변의 길이는 $15$예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2690,7 +2740,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각삼각형에서는 직각을 낀 두 변의 길이를 각각 제곱해 더하면 빗변의 길이의 제곱과 같아요. 두 변이 $5$와 $12$이므로 각각 제곱해서 더하면 $5^2 + 12^2 = 25 + 144 = 169$예요. 변의 길이끼리 그대로 더해 $5 + 12 = 17$로 계산하거나, 제곱한 값인 $169$를 그대로 답으로 쓰지 않도록 조심해요. 제곱해서 $169$가 되는 양수는 $13$이므로, 빗변의 길이는 $13$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:homework-2:v1",
@@ -2727,7 +2787,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "나머지 한 변의 길이를 $a$라고 하면 피타고라스 정리에 따라 $a^2 + 7^2 = 25^2$이에요. 빗변이 아닌 다른 변을 구할 때는 제곱한 뒤에 빼므로 $a^2 = 625 - 49 = 576$이 돼요. 길이끼리 바로 빼서 $25 - 7 = 18$로 계산하거나, 제곱한 값인 $576$을 그대로 답으로 쓰지 않도록 조심해요. $24 \\times 24 = 576$이므로 제곱해서 $576$이 되는 양수는 $24$이고, 구하는 나머지 한 변의 길이는 $24$예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2772,7 +2842,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras-converse:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변의 길이 $3$, $4$, $6$ 중에서 가장 긴 변은 $6$이에요. 이 변의 길이를 제곱하면 $6^2 = 6 \\times 6 = 36$이 돼요. $6$에 $2$를 곱해 $6 \\times 2 = 12$로 계산하거나, 나머지 두 변의 제곱의 합인 $3^2 + 4^2 = 25$를 구하지 않도록 조심해요. 따라서 가장 긴 변의 제곱은 $36$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras-converse:practice-2:v1",
@@ -2845,7 +2925,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras-converse:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "짧은 두 변의 제곱의 합과 가장 긴 변의 제곱을 비교해요. 짧은 두 변을 제곱해 더하면 $6^2 + 8^2 = 36 + 64 = 100$이에요. 가장 긴 변을 제곱해도 $10^2 = 100$이에요. 변의 길이를 제곱하지 않고 $6 + 8 = 14$와 $10$을 바로 비교하거나, 크기 관계를 헷갈려 예각삼각형이나 둔각삼각형을 고르면 안 돼요. $6^2 + 8^2 = 10^2$이 성립하므로 정답은 직각삼각형이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras-converse:practice-3:v1",
@@ -2918,7 +3008,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "pythagoras-converse:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 긴 변이 $6$이므로, 짧은 두 변의 제곱의 합 $4^2 + 5^2$과 가장 긴 변의 제곱 $6^2$을 비교해요. 각각 계산하면 $4^2 + 5^2 = 16 + 25 = 41$이고, $6^2 = 36$이에요. $41$과 $36$은 같지 않으므로, 제곱하여 확인하지 않고 직각삼각형이라고 고르면 안 돼요. 또 $41 > 36$에서 $41$이 더 크다고 둔각삼각형으로 고르면 비교 기준을 반대로 본 거예요. 가장 긴 변의 제곱인 $36$이 짧은 두 변의 제곱의 합인 $41$보다 작으므로, 정답은 예각삼각형이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",
@@ -3009,7 +3109,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "pythagoras-converse:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "짧은 두 변을 제곱해 더하면 $3^2 + 4^2 = 9 + 16 = 25$이고, 가장 긴 변을 제곱하면 $6^2 = 36$이에요.\n\n두 변이 $3$과 $4$라고 해서 가장 긴 변을 확인하지 않으면, 세 변이 $3, 4, 5$인 직각삼각형과 헷갈릴 수 있어요. 또 $25$가 $36$보다 작다는 점만 보고 예각삼각형을 고를 수 있는데, 크기를 비교하는 기준은 가장 긴 변의 제곱이에요.\n\n가장 긴 변의 제곱인 $36$이 나머지 두 변의 제곱의 합인 $25$보다 더 크므로, 이 삼각형은 둔각삼각형이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",
@@ -3056,7 +3166,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras-converse:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각삼각형에서 $x$가 빗변이므로 $9^2 + 12^2 = x^2$이에요. 각 변을 제곱해 더하면 $81 + 144 = 225$이므로 $x^2 = 225$가 돼요. $15 \\times 15 = 225$이므로 제곱해서 $225$가 되는 양수는 $15$예요. 제곱한 값인 $225$를 그대로 쓰거나, 제곱하지 않고 $9 + 12 = 21$로 계산하지 않도록 조심해요. 따라서 $x$의 값은 $15$예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -3137,7 +3257,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras-converse:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 긴 변인 $25$의 제곱과 나머지 두 변 $7$, $24$의 제곱의 합을 비교해요. 두 짧은 변의 제곱의 합은 $7^2 + 24^2 = 49 + 576 = 625$이고, 가장 긴 변의 제곱은 $25^2 = 625$예요. 가장 긴 변의 제곱이 더 작으면 예각삼각형이고 더 크면 둔각삼각형이지만, 이 삼각형은 $7^2 + 24^2 = 25^2$으로 두 값이 같아요. 따라서 피타고라스 정리의 역이 성립하므로 정답은 직각삼각형이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras-converse:homework-2:v1",
@@ -3174,7 +3304,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras-converse:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변의 길이 $8$, $15$, $17$ 중에서 가장 긴 변은 $17$이에요. 어떤 수의 제곱은 그 수를 두 번 곱한 값이므로 $17^2 = 17 \times 17 = 289$예요. $17 \times 2 = 34$는 제곱이 아니라 $2$를 곱한 값이고, $8^2 = 64$나 $15^2 = 225$는 가장 긴 변이 아닌 다른 변을 제곱한 값이에요. 따라서 가장 긴 변의 제곱은 $289$예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -3219,7 +3359,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "plane-length:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직사각형에 대각선을 그으면 가로가 $8$, 세로가 $6$인 직각삼각형이 생겨요. 대각선이 직각삼각형의 빗변이므로, 대각선의 길이를 $c$라고 하면 피타고라스 정리로 $8^2 + 6^2 = c^2$이에요. 계산하면 $64 + 36 = 100$이므로 $c^2 = 100$이 돼요. 제곱한 값인 $100$을 그대로 쓰거나, 두 변을 그냥 더해 $8 + 6 = 14$로 계산하지 않도록 조심해요. 제곱해서 $100$이 되는 양수는 $10$이므로, 구하는 대각선의 길이는 $10$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "plane-length:practice-2:v1",
@@ -3256,7 +3406,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "plane-length:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직사각형에 대각선을 그으면 직각삼각형이 생겨요. 가로 $12$와 세로 $5$가 직각을 낀 두 변이고, 대각선이 빗변이에요. 피타고라스 정리에 따라 대각선의 길이를 제곱한 값은 $12^2 + 5^2 = 144 + 25 = 169$예요. 두 변을 제곱하지 않고 $12 + 5 = 17$로 더하거나, 제곱한 값인 $169$를 그대로 쓰면 안 돼요. 제곱해서 $169$가 되는 양수는 $13$이므로, 대각선의 길이는 $13$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "plane-length:practice-3:v1",
@@ -3293,7 +3453,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "plane-length:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(0, 0)$에서 $(3, 4)$까지 가로로 간 거리는 $3$이고 세로로 간 거리는 $4$예요. 두 점 사이의 거리를 빗변 $c$로 하는 직각삼각형을 찾으면 $c^2 = 3^2 + 4^2 = 9 + 16 = 25$가 돼요. 가로와 세로를 그대로 더해 $3 + 4 = 7$로 계산하거나, 제곱한 값인 $25$를 그대로 답으로 쓰지 않도록 조심해요. 제곱해서 $25$가 되는 양수는 $5$이므로 두 점 사이의 거리는 $5$예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -3338,7 +3508,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "plane-length:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점 사이의 거리를 빗변으로 삼는 직각삼각형을 먼저 찾아요. $x$좌표끼리 빼면 가로로 간 거리는 $7 - 1 = 6$이고, $y$좌표끼리 빼면 세로로 간 거리는 $10 - 2 = 8$이에요. 구하려는 거리를 $c$라고 하면 피타고라스 정리에 따라 $c^2 = 6^2 + 8^2 = 36 + 64 = 100$이 돼요. 이때 제곱한 값인 $100$을 그대로 적거나, 가로와 세로를 그냥 더해 $6 + 8 = 14$로 계산하지 않도록 조심해요. 제곱해서 $100$이 되는 양수는 $10$이므로, 두 점 사이의 거리는 $10$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "plane-length:check-2:v1",
@@ -3375,7 +3555,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "plane-length:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이등변삼각형의 꼭지각에서 밑변에 수선을 내리면 밑변이 $16 \\div 2 = 8$씩 똑같이 나뉘어요. 이렇게 나누면 빗변이 $10$이고 밑변이 $8$인 직각삼각형이 생겨요. 구하려는 높이를 $x$라고 하면 $8^2 + x^2 = 10^2$이므로 $x^2 = 100 - 64 = 36$이에요. $36$은 높이를 제곱한 값이니 그대로 답으로 적지 않도록 조심해요. 제곱해서 $36$이 되는 양수는 $6$이므로 높이는 $6$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -3420,7 +3610,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "plane-length:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직사각형에 대각선을 그으면 대각선 $17$을 빗변으로 하는 직각삼각형이 생겨요. 구하려는 다른 한 변의 길이를 $x$라고 하면 피타고라스 정리에 따라 $15^2 + x^2 = 17^2$이에요. 각각 제곱하여 계산하면 $225 + x^2 = 289$이고, $x^2 = 289 - 225 = 64$가 돼요. 여기서 $64$는 변의 길이를 제곱한 값이라서 그대로 답으로 쓰면 안 돼요. 제곱해서 $64$가 되는 양수는 $8$이므로 다른 한 변의 길이는 $8$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "plane-length:homework-2:v1",
@@ -3457,7 +3657,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "plane-length:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "좌표평면에서 두 점 사이의 거리는 가로로 간 거리와 세로로 간 거리를 두 변으로 하는 직각삼각형의 빗변이에요. 가로로 간 거리는 $3 - (-2) = 5$이고, 세로로 간 거리는 $13 - 1 = 12$예요. 음수 부호를 빼먹고 가로를 $3 - 2 = 1$로 구하거나, 두 변의 길이를 그냥 더해 $5 + 12 = 17$로 계산하지 않도록 조심해요. 두 점 사이의 거리를 $c$라고 하면 피타고라스 정리에 따라 $c^2 = 5^2 + 12^2 = 25 + 144 = 169$예요. 제곱해서 $169$가 되는 양수는 $13$이므로, 두 점 사이의 거리는 $13$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -3502,7 +3712,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "solid-length:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면의 대각선을 제곱한 값은 $2^2 + 3^2 = 4 + 9$예요. 여기에 높이의 제곱인 $6^2 = 36$을 더하면 직육면체의 대각선의 제곱은 $4 + 9 + 36 = 49$가 돼요. 이때 $49$는 대각선의 길이를 제곱한 값이므로 그대로 답으로 적지 않도록 조심해요. 제곱해서 $49$가 되는 양수는 $7$이므로, 직육면체의 대각선의 길이는 $7$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "solid-length:practice-2:v1",
@@ -3539,7 +3759,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "solid-length:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "먼저 밑면의 대각선의 제곱을 구하면 $1^2 + 2^2 = 1 + 4 = 5$예요. 여기에 높이의 제곱인 $2^2 = 4$를 더하면 직육면체의 대각선의 제곱은 $5 + 4 = 9$가 돼요. $9$는 길이를 제곱한 값이므로 그대로 답으로 쓰면 안 돼요. 제곱해서 $9$가 되는 양수는 $3$이므로 대각선의 길이는 $3$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "solid-length:practice-3:v1",
@@ -3576,7 +3806,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "solid-length:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원뿔에서는 밑면의 반지름과 높이와 모선이 직각삼각형을 이루고, 모선이 빗변이에요. 원뿔의 높이를 $x$라고 하면 피타고라스 정리에 따라 $6^2 + x^2 = 10^2$이에요. 각각 제곱하면 $36 + x^2 = 100$이므로 $x^2 = 100 - 36 = 64$가 돼요. 모선이 빗변인데 $6^2 + 10^2 = 136$으로 더하거나, 높이의 제곱인 $64$를 그대로 답으로 쓰지 않도록 조심해요. 제곱해서 $64$가 되는 양수는 $8$이므로 원뿔의 높이는 $8$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -3621,7 +3861,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "solid-length:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "먼저 밑면의 대각선을 제곱인 채로 구해요. 가로가 $4$, 세로가 $4$이므로 밑면 대각선의 제곱은 $4^2 + 4^2 = 16 + 16 = 32$예요. 여기에 높이 $7$의 제곱을 더하면 직육면체 대각선의 제곱은 $32 + 7^2 = 32 + 49 = 81$이 돼요. $81$은 길이를 제곱한 값이니 그대로 쓰지 않도록 조심해요. 제곱해서 $81$이 되는 양수는 $9$이므로, 대각선의 길이는 $9$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "solid-length:check-2:v1",
@@ -3658,7 +3908,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "solid-length:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원뿔에서는 밑면의 반지름과 높이와 모선이 직각삼각형을 이루고, 모선이 빗변이에요. 높이를 $h$라고 하면 $5^2 + h^2 = 13^2$이므로 $25 + h^2 = 169$예요. 양변에서 $25$를 빼면 높이의 제곱은 $h^2 = 169 - 25 = 144$가 돼요. 이때 구한 $144$는 높이가 아니라 높이를 제곱한 값이므로 그대로 답으로 쓰지 않도록 조심해요. 제곱해서 $144$가 되는 양수는 $12$이므로 원뿔의 높이는 $12$예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -3703,7 +3963,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "solid-length:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "정육면체의 밑면은 가로와 세로의 길이가 모두 $6$인 정사각형이에요. 밑면의 대각선은 밑변과 높이가 모두 $6$인 직각삼각형의 빗변이 돼요. 피타고라스 정리를 쓰면 밑면의 대각선의 제곱은 $6^2 + 6^2 = 36 + 36 = 72$예요. 높이의 제곱까지 더한 $36 + 36 + 36 = 108$은 밑면이 아니라 정육면체의 대각선의 제곱이에요. 따라서 구하는 밑면의 대각선의 제곱은 $72$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "solid-length:homework-2:v1",
@@ -3740,7 +4010,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "solid-length:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "밑면의 대각선의 제곱은 $3^2 + 4^2 = 9 + 16 = 25$예요. 여기에 높이의 제곱인 $12^2 = 144$를 더하면 직육면체의 대각선의 제곱은 $25 + 144 = 169$가 돼요. 만약 $5$를 썼다면 밑면의 대각선만 구한 것이고, $169$를 썼다면 대각선의 제곱을 그대로 적은 것이에요. 제곱해서 $169$가 되는 양수는 $13$이므로, 직육면체의 대각선의 길이는 $13$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -3785,7 +4065,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각삼각형에서 직각을 낀 두 변의 길이를 각각 제곱해 더하면 빗변의 제곱과 같아요. $8^2 + 15^2 = 64 + 225 = 289$이므로 빗변의 길이를 제곱한 값은 $289$예요. $289$는 빗변을 제곱한 값이지 빗변의 길이가 아니므로, 제곱해서 $289$가 되는 양수를 찾아야 해요. $17 \\times 17 = 289$이므로 빗변의 길이는 $17$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-2:v1",
@@ -3822,7 +4112,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각삼각형에서 직각을 낀 두 변의 제곱의 합은 빗변의 제곱과 같아요. 빗변의 길이를 $c$라고 하면 $7^2 + 24^2 = c^2$이므로 $49 + 576 = 625$예요. $25 \\times 25 = 625$이므로 제곱해서 $625$가 되는 양수는 $25$예요. 빗변의 제곱인 $625$를 그대로 쓰거나, 제곱하지 않고 $7 + 24 = 31$로 더하지 않도록 조심해요. 따라서 빗변의 길이는 $25$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-3:v1",
@@ -3859,7 +4159,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "구하려는 나머지 한 변의 길이를 $x$라고 할게요. 직각삼각형에서 직각을 낀 두 변의 길이를 각각 제곱해 더하면 빗변의 길이의 제곱과 같으므로 $6^2 + x^2 = 10^2$이에요. 계산하면 $36 + x^2 = 100$이고, $100$에서 $36$을 빼면 $x^2 = 64$가 돼요. $64$는 구하려는 길이를 제곱한 값이라서 그대로 답으로 쓰면 안 돼요. 제곱해서 $64$가 되는 양수는 $8$이므로 나머지 한 변의 길이는 $8$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-4:v1",
@@ -3896,7 +4206,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-4:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "나머지 한 변의 길이를 $x$라고 하면, 피타고라스 정리에 따라 $9^2 + x^2 = 15^2$이에요. 각각 제곱하면 $81 + x^2 = 225$가 돼요. 빗변이 아닌 변을 구할 때는 $225$에서 $81$을 빼야 하므로 $x^2 = 225 - 81 = 144$예요. 이때 $144$는 변의 길이를 제곱한 값이므로 그대로 답으로 쓰지 않도록 조심해요. 제곱해서 $144$가 되는 양수는 $12$이므로, 나머지 한 변의 길이는 $12$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-5:v1",
@@ -3969,7 +4289,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-5:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "피타고라스 정리는 직각을 낀 두 변의 제곱의 합이 빗변의 제곱과 같다는 성질이에요. 삼각형에 직각이 있는지 확인하지 않으면 모든 삼각형에서 성립한다고 생각하기 쉬워요. 예를 들어 세 변의 길이가 $3$, $3$, $3$인 삼각형은 $3^2+3^2=18$이고 나머지 한 변의 제곱은 $3^2=9$여서 서로 같지 않아요. 직각이 없는 예각삼각형이나 이등변삼각형에서는 이 성질이 성립하지 않아요. 따라서 피타고라스 정리가 성립하는 삼각형은 직각삼각형이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",
@@ -4048,7 +4378,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-6:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변의 길이를 알 때는 가장 긴 변의 제곱과 나머지 두 변의 제곱의 합을 비교해요. 가장 긴 변인 $13$을 제곱하면 $13^2 = 169$예요. 나머지 두 변인 $5$와 $12$를 각각 제곱해 더하면 $5^2 + 12^2 = 25 + 144 = 169$예요. 변의 길이를 제곱하지 않고 $5 + 12 = 17$과 $13$을 그대로 비교해 예각삼각형으로 고르지 않도록 조심해요. 나머지 두 변의 제곱의 합이 가장 긴 변의 제곱과 같으므로, 정답은 직각삼각형이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-7:v1",
@@ -4121,7 +4461,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-7:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 긴 변이 $4$이므로, 나머지 두 변의 제곱의 합인 $2^2 + 3^2$과 가장 긴 변의 제곱인 $4^2$을 비교해요. 계산하면 $2^2 + 3^2 = 4 + 9 = 13$이고, $4^2 = 16$이에요. 제곱한 값을 확인하지 않고 직각삼각형을 고르면 안 되는데, $13$과 $16$은 같지 않으므로 직각삼각형이 아니에요. 또 $13 < 16$에서 $13$이 작다고 예각삼각형을 고르면 비교 기준을 반대로 본 거예요. 가장 긴 변의 제곱인 $16$이 나머지 두 변의 제곱의 합인 $13$보다 크므로, 정답은 둔각삼각형이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",
@@ -4204,7 +4554,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-8:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "가장 긴 변은 $8$이므로, 나머지 두 변의 제곱의 합과 $8$의 제곱을 비교해요. $6^2 + 7^2 = 36 + 49 = 85$이고, 가장 긴 변의 제곱은 $8^2 = 64$예요. 두 값 $85$와 $64$가 같지 않으므로 직각삼각형이 아니에요. 나머지 두 변의 제곱의 합인 $85$가 더 크다고 해서 둔각삼각형으로 고르면 비교 기준을 반대로 본 거예요. 가장 긴 변의 제곱인 $64$가 나머지 두 변의 제곱의 합인 $85$보다 작으므로, 이 삼각형은 예각삼각형이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",
@@ -4251,7 +4611,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-9:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직각삼각형에서 빗변의 제곱은 다른 두 변의 제곱의 합과 같아요. $x$가 빗변이므로 $x^2 = 12^2 + 16^2 = 144 + 256 = 400$이에요. 여기서 $400$은 $x$를 제곱한 값이므로, 제곱해서 $400$이 되는 양수인 $20$을 찾아야 해요. 두 변 $12$와 $16$이 $3$과 $4$의 $4$배라는 점을 이용해, $3, 4, 5$에서 $5$의 $4$배인 $5 \\times 4 = 20$으로 구해도 돼요. 따라서 $x$의 값은 $20$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-10:v1",
@@ -4288,7 +4658,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-10:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "세 변 $9$, $40$, $41$ 중에서 가장 긴 변은 $41$이에요. $41$의 제곱은 $41$을 두 번 곱하는 계산이므로 $41 \\times 41 = 1681$이에요. $41$에 $2$를 곱해 $41 \\times 2 = 82$로 계산하거나, 다른 변을 골라 $40 \\times 40 = 1600$으로 계산하지 않도록 조심해요. 따라서 가장 긴 변의 제곱은 $1681$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-11:v1",
@@ -4325,7 +4705,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-11:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직사각형의 가로와 세로는 직각으로 만나므로, 대각선을 빗변으로 하는 직각삼각형이 돼요. 대각선의 길이를 $x$라고 하면 피타고라스 정리에 따라 $9^2 + 12^2 = x^2$이에요. 각각 제곱해 더하면 $81 + 144 = 225$이므로 $x^2 = 225$가 돼요. 이때 $225$는 대각선의 길이를 제곱한 값이라서 그대로 답으로 쓰지 않도록 조심해요. 제곱해서 $225$가 되는 양수는 $15$이므로, 대각선의 길이는 $15$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-12:v1",
@@ -4362,7 +4752,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-12:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "점 $(0, 0)$에서 점 $(6, 8)$까지는 가로로 $6$, 세로로 $8$만큼 떨어져 있어요. 두 점 사이의 거리는 가로가 $6$, 세로가 $8$인 직각삼각형의 빗변의 길이와 같아요. 피타고라스 정리로 빗변의 길이의 제곱을 구하면 $6^2 + 8^2 = 36 + 64 = 100$이에요. $6 + 8 = 14$처럼 제곱하지 않고 더하거나, 제곱한 값인 $100$을 그대로 쓰지 않도록 조심해요. 제곱해서 $100$이 되는 양수는 $10$이므로, 두 점 사이의 거리는 $10$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-13:v1",
@@ -4399,7 +4799,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-13:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 점을 잇는 선분을 빗변으로 하는 직각삼각형을 만들면, 가로 길이는 $x$좌표의 차인 $14 - 2 = 12$이고 세로 길이는 $y$좌표의 차인 $8 - 3 = 5$예요. 피타고라스 정리에 따라 두 점 사이의 거리를 제곱한 값은 $12^2 + 5^2 = 144 + 25 = 169$가 돼요. 가로와 세로 길이를 그대로 더해 $12 + 5 = 17$로 계산하거나, 제곱한 값인 $169$를 그대로 답으로 쓰지 않도록 조심해요. 제곱해서 $169$가 되는 양수는 $13$이므로, 두 점 사이의 거리는 $13$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-14:v1",
@@ -4436,7 +4846,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-14:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직사각형의 두 변과 대각선은 대각선 $25$가 빗변인 직각삼각형을 이루어요. 구하려는 다른 한 변의 길이를 $x$라고 하면, 피타고라스 정리에 따라 $7^2 + x^2 = 25^2$이에요. 각각 제곱해 계산하면 $49 + x^2 = 625$이므로 $x^2 = 625 - 49 = 576$이 돼요.\n\n여기서 $576$은 변의 길이를 제곱한 값이므로 그대로 답으로 쓰지 않도록 조심해요. 제곱해서 $576$이 되는 양수는 $24$이므로, 다른 한 변의 길이는 $24$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-15:v1",
@@ -4473,7 +4893,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-15:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "이등변삼각형의 높이는 밑변을 수직으로 똑같이 둘로 나누므로, 나누어진 직각삼각형의 밑변은 $12 \\div 2 = 6$이고 빗변은 $10$이에요. 높이를 $x$라고 하고 피타고라스 정리를 쓰면 $6^2 + x^2 = 10^2$이에요. 계산하면 $36 + x^2 = 100$이므로 $x^2 = 100 - 36 = 64$가 돼요. $64$는 높이를 제곱한 값이에요. 제곱해서 $64$가 되는 양수는 $8$이므로 이등변삼각형의 높이는 $8$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-16:v1",
@@ -4510,7 +4940,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-16:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직육면체의 대각선의 길이를 $x$라고 하면, $x^2$은 가로, 세로, 높이의 제곱을 모두 더한 값과 같아요. 식을 세우면 $x^2 = 2^2 + 3^2 + 6^2$이고, 계산하면 $x^2 = 4 + 9 + 36 = 49$예요. $49$는 대각선의 길이를 제곱한 값이므로 그대로 답으로 쓰지 않도록 조심해요. 제곱해서 $49$가 되는 양수는 $7$이므로 직육면체의 대각선의 길이는 $7$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-17:v1",
@@ -4547,7 +4987,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-17:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직육면체의 대각선의 길이를 제곱한 값은 가로, 세로, 높이를 각각 제곱해서 더한 값과 같아요. 가로 $4$, 세로 $4$, 높이 $7$을 각각 제곱해서 더하면 $4^2 + 4^2 + 7^2 = 16 + 16 + 49 = 81$이에요. $81$은 대각선의 길이를 제곱한 값이므로, $81$을 그대로 답으로 쓰면 안 돼요. 제곱해서 $81$이 되는 양수는 $9$이므로, 직육면체의 대각선의 길이는 $9$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-18:v1",
@@ -4584,7 +5034,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-18:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "원뿔의 높이와 밑면의 반지름은 수직으로 만나고, 모선이 직각삼각형의 빗변이 돼요. 원뿔의 높이를 $h$라고 하면 피타고라스 정리에 따라 $9^2 + h^2 = 15^2$, 즉 $81 + h^2 = 225$예요. 여기서 $81$을 빼면 $h^2 = 225 - 81 = 144$가 나와요. 이때 구한 $144$는 높이가 아니라 높이를 제곱한 값이에요. 제곱해서 $144$가 되는 양수는 $12$이므로, 원뿔의 높이는 $12$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-19:v1",
@@ -4621,7 +5081,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-19:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직육면체의 대각선 길이의 제곱은 가로, 세로, 높이를 각각 제곱해 더한 값과 같아요. 세 모서리의 길이를 각각 제곱해 더하면 $1^2 + 4^2 + 8^2 = 1 + 16 + 64 = 81$이에요. 이때 $81$은 대각선의 길이를 제곱한 값이므로 그대로 답으로 쓰지 않도록 조심해요. 제곱해서 $81$이 되는 양수는 $9$이므로, 직육면체의 대각선의 길이는 $9$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "pythagoras:drill-20:v1",
@@ -4694,7 +5164,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "pythagoras:drill-20:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "직육면체의 대각선은 입체도형 안을 가로질러요. 그래서 먼저 가로와 세로를 이용해 밑면의 직각삼각형에서 피타고라스 정리를 한 번 써요. 이렇게 구한 밑면의 대각선과 직육면체의 높이를 이용해, 세워진 직각삼각형에서 피타고라스 정리를 한 번 더 써야 해요. 밑면의 대각선만 구하고 멈추면 「한 번」이라고 하기 쉽지만, 높이까지 계산해야 직육면체의 대각선이 돼요. 따라서 직육면체의 대각선을 구할 때는 피타고라스 정리를 「두 번」 써요."
+              }
+            }
+          ]
         }
       ]
     }

@@ -1784,7 +1784,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-triangles:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "대응변의 길이의 비는 닮음비인 $2:3$과 같아요. 구하려는 변의 길이를 $x$라고 하면 $2:3 = 4:x$예요. 작은 쪽의 길이가 $2$의 $2$배인 $4$이므로, 큰 쪽의 길이 $x$도 $3$의 $2$배인 $3 \\times 2 = 6$이에요. 닮음비 $2$와 $3$의 차이가 $1$이라고 해서 $4 + 1 = 5$로 더하면 틀려요. 따라서 대응하는 변의 길이는 $6$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similar-triangles:practice-2:v1",
@@ -1857,7 +1867,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "similar-triangles:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음은 크기만 다르고 모양이 같은 관계예요. 모양이 그대로 유지되므로 대응각의 크기는 변하지 않아요. 닮음비는 대응변의 길이의 비일 뿐 각의 크기에는 적용되지 않아요. 예를 들어 한 각이 $60°$인 삼각형을 $2$배로 늘려도 그 각은 $60° \\times 2 = 120°$처럼 「닮음비만큼 커진다」가 아니라 그대로 $60°$예요. 따라서 두 삼각형이 닮음일 때 대응각의 크기는 「서로 같다」예요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",
@@ -1900,7 +1920,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-triangles:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮은 도형의 둘레는 닮음비와 같은 비로 늘어나요. 작은 삼각형과 큰 삼각형의 닮음비가 $1:4$이므로, 큰 삼각형의 둘레는 작은 삼각형의 둘레의 $4$배가 돼요. 작은 삼각형의 둘레 $9$에 $4$를 곱하면 $9 \\times 4 = 36$이에요. 삼각형의 변이 $3$개라고 해서 $9 \\times 4 \\times 3 = 108$처럼 $3$을 또 곱하거나 $9 + 4 = 13$처럼 더하지 않도록 조심해요. 따라서 큰 삼각형의 둘레는 $36$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -1945,7 +1975,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-triangles:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮은 두 삼각형에서 대응변의 비는 일정해요. 대응변인 $\\overline{AB}$와 $\\overline{DE}$의 비가 $6:9$이므로 닮음비는 $2:3$이에요. $\\overline{BC}$와 $\\overline{EF}$의 비도 같아야 하니 $8:\\overline{EF}=2:3$이에요. $\\overline{AB}$보다 $\\overline{DE}$가 $3$만큼 길다고 해서 $8+3=11$로 더하면 안 돼요. 닮음비 $2:3$의 앞쪽 수 $2$에 $4$를 곱해 $8$이 됐으니 뒤쪽 수 $3$에도 $4$를 곱해요. 따라서 $\\overline{EF}$의 길이는 $3 \\times 4 = 12$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similar-triangles:check-2:v1",
@@ -2018,7 +2058,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-triangles:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음은 크기가 달라도 모양이 같은 관계예요. 그래서 변의 길이가 아니라 변의 길이의 비를 비교해요. 두 각의 크기가 각각 같거나, 세 변의 길이의 비가 같거나, 두 변의 길이의 비와 낀 각이 같으면 두 삼각형은 닮음이에요. 반면 두 변의 길이가 각각 같더라도 낀 각의 크기가 다르면 삼각형의 모양이 달라져요. 따라서 닮음이 되는 조건이 아닌 것은 「두 변의 길이가 각각 같다」예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2063,7 +2113,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-triangles:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $3:5$이므로 작은 삼각형과 큰 삼각형의 대응변의 비도 $3:5$예요. 구하려는 변의 길이를 $x$라고 하면 $3:5 = 9:x$가 돼요. 작은 쪽이 $3$에서 $9$로 $3$배가 되었으니, 큰 쪽의 $5$에도 $3$을 곱하면 $5 \\times 3 = 15$예요. $3$에 $6$을 더해 $9$가 되었다고 보고 $5 + 6 = 11$로 계산하면 대응변의 비가 $9:11$이 되어 $3:5$와 달라져요. 따라서 대응하는 변의 길이는 $15$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similar-triangles:homework-2:v1",
@@ -2100,7 +2160,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-triangles:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮은 두 삼각형의 둘레의 비는 닮음비와 같은 $2:5$예요. 비에서 큰 삼각형에 해당하는 $5$가 실제 둘레 $30$이 되었으니 $30 \\div 5 = 6$배가 되었어요. 작은 삼각형에 해당하는 $2$에도 똑같이 $6$을 곱하면 $2 \\times 6 = 12$예요.\n\n$30 \\div 5 = 6$에서 멈추어 $6$이라고 쓰거나, 큰 삼각형의 둘레 $30$을 작은 쪽의 비 $2$에 잘못 맞춰 $30 \\div 2 \\times 5 = 75$로 계산하지 않도록 확인해요. 따라서 작은 삼각형의 둘레는 $12$예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2145,7 +2215,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "parallel-ratio:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형에서 $\\overline{DE}$가 $\\overline{BC}$와 나란하면 다른 두 변을 같은 비로 나눠요. $\\overline{AD} : \\overline{DB} = \\overline{AE} : \\overline{EC}$이므로 $\\overline{EC}$의 길이를 $x$라고 하면 $2 : 3 = 4 : x$예요. $\\overline{AD}$의 길이 $2$에 $2$를 곱해 $\\overline{AE}$의 길이 $4$가 되었으니, $\\overline{DB}$의 길이 $3$에도 $2$를 곱하면 $x = 3 \\times 2 = 6$이에요. 두 변이 같은 비로 나뉜다는 것을 길이의 차가 같다고 착각해 $4 + (3 - 2) = 5$로 계산하지 않도록 조심해요. 따라서 $\\overline{EC}$의 길이는 $6$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "parallel-ratio:practice-2:v1",
@@ -2182,7 +2262,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "parallel-ratio:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 두 변의 중점을 이은 선분은 밑변과 나란하고 길이는 밑변의 절반이에요. 밑변의 길이가 $14$이므로 구하는 선분의 길이는 $14 \\div 2 = 7$이에요. 만약 $14 \\times 2 = 28$이 나왔다면, 밑변의 절반을 구해야 하는데 반대로 $2$배를 한 것이에요. 따라서 정답은 $7$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "parallel-ratio:practice-3:v1",
@@ -2219,7 +2309,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "parallel-ratio:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 두 변의 중점을 이은 선분의 길이는 밑변의 길이의 절반이에요. 반대로 밑변의 길이는 중점을 이은 선분의 길이의 $2$배가 돼요. 중점을 이은 선분의 길이가 $5$이므로 밑변의 길이는 $5 × 2 = 10$이에요. 만약 $5 ÷ 2 = 2.5$로 계산했다면 어느 선분이 절반인지 반대로 생각한 거예요. 따라서 밑변의 길이는 $10$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2264,7 +2364,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "parallel-ratio:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형을 가로지르는 평행선은 두 변을 같은 비로 나누므로 $\\overline{AD} : \\overline{DB} = \\overline{AE} : \\overline{EC}$예요. 구하려는 $\\overline{EC}$의 길이를 $x$라고 하면 $3 : 2 = 6 : x$가 돼요. 앞의 수 $3$에 $2$를 곱해 $6$이 되었으니, 비가 같으려면 뒤의 수 $2$에도 $2$를 곱해야 해요. 만약 비의 순서를 거꾸로 세워 $2 : 3 = 6 : x$로 계산하면 $9$가 나오니 선분의 순서를 맞춰야 해요. 따라서 $2 \\times 2 = 4$이므로 $\\overline{EC}$의 길이는 $4$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "parallel-ratio:check-2:v1",
@@ -2301,7 +2411,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "parallel-ratio:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "사다리꼴에서 평행하지 않은 두 변의 중점을 이은 선분의 길이는 두 밑변의 길이의 평균이에요. 두 밑변의 길이가 $6$과 $10$이므로 두 수를 더한 뒤 $2$로 나누면 $(6+10)\\div 2 = 16\\div 2 = 8$이에요. 사다리꼴에 대각선을 그어 삼각형 두 개로 나누어도 각 밑변의 절반인 $6\\div 2 = 3$과 $10\\div 2 = 5$를 합한 값이어서 $3+5=8$이 나와요.\n\n만약 $2$로 나누지 않고 두 밑변을 더하기만 하면 $6+10=16$이 나오고, 두 밑변을 더하는 대신 빼서 $(10-6)\\div 2 = 2$로 계산하면 틀려요. 따라서 중점을 이은 선분의 길이는 $8$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2346,7 +2466,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "parallel-ratio:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형에서 두 변의 중점을 이은 선분은 밑변과 나란하고, 그 길이는 밑변의 절반이에요. 밑변의 길이가 $22$이므로 중점을 이은 선분의 길이는 $22 \\div 2 = 11$이에요. 만약 $22 \\times 2 = 44$가 나왔다면 밑변의 절반을 구할 때 $2$로 나누는 대신 $2$를 곱한 것이에요. 따라서 두 변의 중점을 이은 선분의 길이는 $11$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "parallel-ratio:homework-2:v1",
@@ -2419,7 +2549,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "parallel-ratio:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\overline{DE}$와 $\\overline{BC}$가 나란하므로, 두 선분이 삼각형의 변과 만나서 생기는 동위각의 크기는 같아요. $\\angle ADE$와 같은 쪽 변에서 같은 위치에 있는 동위각은 $\\angle ABC$예요. $\\angle ACB$는 반대쪽 변에서 $\\angle AED$와 크기가 같은 동위각이고, $\\angle BAC$는 두 삼각형이 함께 쓰는 각이에요. 따라서 $\\angle ADE$와 크기가 같은 각은 $\\angle ABC$예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2464,7 +2604,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "centroid:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "무게중심은 중선을 꼭짓점 쪽부터 $2:1$로 나눠요. 중선 전체를 $2+1=3$조각으로 똑같이 나누면 한 조각의 길이는 $12 \\div 3 = 4$예요. 꼭짓점에서 무게중심까지는 세 조각 중 두 조각이므로 $4 \\times 2 = 8$이에요. 한 조각만 구한 $4$는 무게중심에서 변의 중점까지의 길이이고, 반으로 나눈 $12 \\div 2 = 6$은 $2:1$의 비율이 아니에요. 따라서 꼭짓점에서 무게중심까지의 길이는 $8$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "centroid:practice-2:v1",
@@ -2501,7 +2651,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "centroid:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "무게중심은 중선을 꼭짓점 쪽부터 $2:1$로 나눠요. 중선 전체를 $2+1=3$조각으로 똑같이 나누면 한 조각의 길이는 $12 \\div 3 = 4$예요. 중선을 반으로 나누면 $12 \\div 2 = 6$이 되고, 꼭짓점에서 무게중심까지의 두 조각을 구하면 $4 \\times 2 = 8$이 돼요. 무게중심에서 중점까지는 세 조각 중 한 조각이므로 정답은 $4$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "centroid:practice-3:v1",
@@ -2538,7 +2698,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "centroid:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "무게중심은 중선을 꼭짓점 쪽부터 $2:1$로 나눠요. 중선 전체를 똑같은 세 조각으로 볼 때, 무게중심에서 중점까지의 길이 $3$이 한 조각이에요. 꼭짓점에서 무게중심까지의 길이는 두 조각이므로 $3 \\times 2 = 6$이에요. 만약 $6$을 답으로 썼다면 꼭짓점에서 무게중심까지의 길이만 구한 거예요. 구하려는 중선 전체의 길이는 세 조각을 합한 $6 + 3 = 9$예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2583,7 +2753,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "centroid:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 세 중선은 삼각형을 넓이가 같은 여섯 조각으로 나눠요. 전체 삼각형의 넓이 $30$을 $6$으로 나누면 한 조각의 넓이는 $30 \\div 6 = 5$예요. 중선이 $3$개라고 해서 $30 \\div 3 = 10$으로 계산하면 두 조각을 합친 넓이를 구한 것이 돼요. 따라서 여섯 조각 중 하나의 넓이는 $5$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "centroid:check-2:v1",
@@ -2656,7 +2836,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "centroid:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 세 중선이 만나는 점이 무게중심이에요. 무게중심은 중선 전체를 세 조각으로 보았을 때, 꼭짓점 쪽을 $2$, 변의 중점 쪽을 $1$로 나눠요. 중점이 변을 똑같이 둘로 나눈다는 점과 헷갈려 중선도 똑같이 둘로 나뉜다고 보면 $1 : 1$이 나와요. 나뉜 두 조각끼리 비교하지 않고 전체인 $2 + 1 = 3$과 비교하면 $3 : 1$이나 $3 : 2$가 나와요. 따라서 무게중심은 중선을 $2 : 1$로 나눠요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",
@@ -2707,7 +2897,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "centroid:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "무게중심은 중선을 꼭짓점 쪽부터 $2:1$로 나눠요. 중선 전체를 $2+1=3$조각으로 똑같이 나누면 한 조각의 길이는 $15 \\div 3 = 5$예요. $5$는 무게중심에서 변의 중점까지의 한 조각 길이예요. 꼭짓점에서 무게중심까지는 두 조각이므로 구하는 길이는 $5 \\times 2 = 10$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "centroid:homework-2:v1",
@@ -2744,7 +2944,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "centroid:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 세 중선은 전체 삼각형을 넓이가 같은 $6$조각으로 나눠요. 무게중심과 두 꼭짓점이 만드는 삼각형은 그중 $2$조각을 합친 것이라 전체 넓이의 $\\frac{1}{3}$이에요. 따라서 전체 넓이 $54$를 $3$으로 나누면 $54 \\div 3 = 18$이 돼요. 만약 $54 \\div 6 = 9$가 나왔다면 $6$조각 중 한 조각의 넓이만 구한 거예요. 무게중심과 두 꼭짓점이 만드는 삼각형의 넓이는 $18$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2789,7 +2999,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-ratio:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 도형의 닮음비가 $m:n$일 때 넓이의 비는 각각의 수를 제곱한 $m^2:n^2$이에요. 닮음비가 $1:3$이므로 넓이의 비는 $1^2:3^2 = 1:9$가 돼요. $3$을 제곱하는 대신 $3 \\times 2 = 6$으로 계산하거나, 부피의 비처럼 세제곱하여 $3^3 = 27$로 구하지 않도록 조심해요. 따라서 넓이의 비 $1:a$에서 $a$의 값은 $9$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similar-ratio:practice-2:v1",
@@ -2826,7 +3046,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-ratio:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 입체의 닮음비가 $m:n$이면 부피의 비는 각 수를 세제곱한 $m^3:n^3$이에요. 닮음비가 $1:2$이므로 부피의 비는 $1^3:2^3$이에요. $2^3 = 2 \\times 2 \\times 2 = 8$이므로 부피의 비는 $1:8$이 돼요. 넓이의 비처럼 제곱해서 $2^2 = 4$로 구하거나, $2 \\times 3 = 6$으로 계산하지 않도록 조심해요. 따라서 $a$의 값은 $8$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similar-ratio:practice-3:v1",
@@ -2863,7 +3093,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-ratio:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $2:3$이므로 넓이의 비는 각 수를 제곱한 $2^2:3^2 = 4:9$예요. 작은 도형의 넓이 $8$이 $4$에 $2$를 곱한 값이니, 큰 도형의 넓이도 $9$에 $2$를 곱해 $9 \\times 2 = 18$이 돼요. 닮음비를 제곱하지 않고 그대로 써서 $2:3 = 8:12$로 계산해 $12$를 구하지 않도록 조심해요. 따라서 큰 도형의 넓이는 $18$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2908,7 +3148,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-ratio:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $1:2$이면 부피의 비는 각 수를 세제곱한 $1^3 : 2^3 = 1 : 8$이에요. 작은 입체의 부피가 $5$이고 큰 입체의 부피는 그 $8$배이므로 $5 \\times 8 = 40$이에요. 만약 $5 \\times 2 = 10$이 나왔다면 닮음비를 그대로 곱한 것이고, $5 \\times 4 = 20$이 나왔다면 넓이의 비인 $1^2 : 2^2 = 1 : 4$를 쓴 것이에요. 따라서 큰 입체의 부피는 $40$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similar-ratio:check-2:v1",
@@ -2981,7 +3231,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "similar-ratio:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 닮은 도형의 닮음비가 $m : n$이면 넓이의 비는 $m^2 : n^2$이에요. 넓이의 비가 $9 : 25$이므로 $m^2 = 9$, $n^2 = 25$예요. 제곱해서 $9$가 되는 양수는 $3$이고, 제곱해서 $25$가 되는 양수는 $5$예요. 넓이의 비를 그대로 길이의 비로 쓰면 $9 : 25$가 되고, $9$와 $25$를 거꾸로 제곱하면 $81 : 625$가 되어 틀려요. 따라서 두 도형의 닮음비는 $3 : 5$예요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",
@@ -3032,7 +3292,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-ratio:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 입체의 닮음비가 $m:n$이면 부피의 비는 $m^3:n^3$이에요. 닮음비가 $3:4$이므로 부피의 비는 각 수를 세제곱한 $3^3:4^3$이에요. $3^3 = 3 \\times 3 \\times 3 = 27$이고, $4^3 = 4 \\times 4 \\times 4 = 64$가 돼요. 넓이의 비처럼 제곱해서 $4^2 = 16$으로 계산하거나, $3$에 $9$를 곱해 $27$이 되었다고 보고 $4 \\times 9 = 36$으로 구하지 않도록 조심해요. 부피의 비는 $27:64$이므로 $a$의 값은 $64$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similar-ratio:homework-2:v1",
@@ -3069,7 +3339,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-ratio:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "축척 $1:50000$은 지도와 실제의 닮음비예요. 거리는 넓이가 아니라 길이이므로 $3$cm에 $50000$을 그대로 곱하면 실제 거리는 $3 \\times 50000 = 150000$cm예요. cm 단위를 그대로 답으로 쓰면 $150000$이 되지만, 문제에서는 몇 m인지 물었어요. $100$cm는 $1$m이므로 $150000$을 $100$으로 나누어 $150000 \\div 100 = 1500$m로 고쳐요. 따라서 정답은 $1500$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -3114,7 +3394,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮은 두 삼각형에서 대응하는 변의 길이의 비는 닮음비인 $2:5$와 같아요. 작은 쪽의 변이 $6$이고 구하려는 큰 쪽의 변을 $x$라고 하면 $2:5 = 6:x$예요. $2$에 $3$을 곱해 $6$이 되었으니, 비율이 같으려면 $5$에도 $3$을 곱해야 해요. $2$에 $4$를 더했다고 보고 $5+4=9$로 계산하면 비율이 달라져요. 따라서 대응하는 변의 길이는 $5 \\times 3 = 15$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-2:v1",
@@ -3151,7 +3441,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮은 두 도형에서 둘레의 비는 닮음비와 같으므로, 두 삼각형의 둘레의 비도 $1:3$이에요. 큰 삼각형의 둘레가 작은 삼각형의 둘레의 $3$배라는 뜻이니, 작은 삼각형의 둘레는 $27 \\div 3 = 9$예요. 만약 $27 \\times 3 = 81$이 나왔다면 작은 삼각형과 큰 삼각형의 순서를 반대로 계산한 거예요. 또 넓이의 비인 $1:9$와 헷갈려 $27 \\div 9 = 3$으로 나누지 않도록 조심해요. 따라서 작은 삼각형의 둘레는 $9$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-3:v1",
@@ -3188,7 +3488,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "대응하는 두 변 $\\overline{AB}$와 $\\overline{DE}$의 길이의 비는 $4:10$이고, 간단한 자연수의 비로 나타내면 $2:5$예요. 닮은 도형은 대응변의 길이의 비가 일정하므로 $\\overline{BC}:\\overline{EF} = 2:5$가 돼요. $\\overline{BC} = 6$을 넣으면 $6:\\overline{EF} = 2:5$이고, $2$가 $6$이 되려면 $3$을 곱해야 하므로 $\\overline{EF}$도 $5 \\times 3 = 15$예요. 두 변의 길이의 차인 $10 - 4 = 6$을 $\\overline{BC}$에 더해 $6 + 6 = 12$로 계산하지 않도록 조심해요. 닮은 도형은 변의 길이가 같은 비율로 커지므로 정답은 $15$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-4:v1",
@@ -3225,7 +3535,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-4:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $4:7$이면 대응하는 변의 길이의 비도 $4:7$이에요. 작은 쪽의 변이 $8$이므로, 구하려는 변의 길이를 $x$라고 하면 $4:7 = 8:x$예요. $4$가 $8$로 $2$배가 되었으니, $7$에도 똑같이 $2$를 곱하면 $x = 7 \\times 2 = 14$가 돼요. $4$와 $7$의 차이인 $3$을 더해 $8 + 3 = 11$로 계산했다면, 비는 같은 수를 곱해야 한다는 점을 놓친 거예요. 따라서 대응하는 변의 길이는 $14$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-5:v1",
@@ -3298,7 +3618,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "similarity:drill-5:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "도형을 일정한 비율로 확대하거나 축소한 도형은 처음 도형과 닮음이에요. 예를 들어 한 변이 $2$인 정사각형을 $2$배로 확대하면 한 변이 $4$인 정사각형이 돼요. 이때 대응변의 길이는 $2$와 $4$, 둘레는 $8$과 $16$, 넓이는 $4$와 $16$으로 달라지는데, 이 값들이 같은 것은 두 도형이 합동일 때예요. 반면 도형을 확대하거나 축소해도 각의 크기는 변하지 않아요. 따라서 두 도형이 닮음일 때 언제나 같은 것은 대응각의 크기예요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",
@@ -3349,7 +3679,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-6:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형 $ABC$에서 $\\overline{DE}$와 $\\overline{BC}$가 나란하면, $\\overline{DE}$는 두 변 $\\overline{AB}$와 $\\overline{AC}$를 같은 비율로 나누어요. 구하는 $\\overline{EC}$의 길이를 $x$라고 하면 $\\overline{AD} : \\overline{DB} = \\overline{AE} : \\overline{EC}$이므로 $3 : 6 = 4 : x$예요. $\\overline{DB}$의 길이 $6$이 $\\overline{AD}$의 길이 $3$의 $2$배이므로, $x$도 $4$의 $2$배인 $4 \\times 2 = 8$이에요. 만약 길이의 차이를 같게 보아 $4 + (6 - 3) = 7$로 계산했다면, 나란한 선은 길이의 차이가 아니라 비율을 같게 나눈다는 점을 확인해 보세요. 따라서 $\\overline{EC}$의 길이는 $8$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-7:v1",
@@ -3386,7 +3726,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-7:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형에서 두 변의 중점을 이은 선분의 길이는 밑변의 길이의 $\\frac{1}{2}$이에요. 밑변의 길이가 $30$이므로 $30$을 $2$로 나누면 $30 \\div 2 = 15$예요. 반대로 $2$를 곱해 $30 \\times 2 = 60$으로 계산하지 않도록 조심해요. 따라서 두 변의 중점을 이은 선분의 길이는 $15$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-8:v1",
@@ -3423,7 +3773,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-8:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 두 변의 중점을 이은 선분의 길이는 밑변의 길이의 $\\frac{1}{2}$이에요. 반대로 밑변의 길이는 중점을 이은 선분의 길이의 $2$배예요. 중점을 이은 선분의 길이가 $7$이므로 $2$를 곱하면 $7 \\times 2 = 14$예요. 만약 $7 \\div 2 = 3.5$로 계산했다면 밑변의 길이가 $7$일 때 중점을 이은 선분의 길이를 구한 것이에요. 따라서 밑변의 길이는 $14$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-9:v1",
@@ -3460,7 +3820,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-9:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "사다리꼴에서 평행하지 않은 두 변의 중점을 이은 선분의 길이는 두 밑변의 길이의 평균이에요. 대각선을 하나 그어 사다리꼴을 두 삼각형으로 나누면, 구하는 선분은 각 밑변의 절반인 $8 \\div 2 = 4$와 $14 \\div 2 = 7$을 더한 길이가 되기 때문이에요. 두 밑변을 더한 뒤 $2$로 나누어도 $(8 + 14) \\div 2 = 22 \\div 2 = 11$로 같게 나와요. 만약 $22$가 나왔다면 두 밑변을 더하고 $2$로 나누지 않은 것이고, $3$이 나왔다면 두 밑변을 더하는 대신 $(14 - 8) \\div 2 = 3$으로 뺀 것이에요. 따라서 구하는 선분의 길이는 $11$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-10:v1",
@@ -3533,7 +3903,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-10:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 두 변의 중점을 이으면 원래 삼각형과 닮음비가 $1:2$인 작은 삼각형이 생겨요. 삼각형의 중점연결정리에 따라, 두 변의 중점을 이은 선분은 밑변과 나란하고 그 길이는 밑변의 절반이에요. 밑변의 길이가 중점을 이은 선분의 두 배이므로, 비교하는 기준을 반대로 생각하면 「나란하고 길이가 두 배다」를 고르게 돼요. 중점을 이은 선분이 밑변과 어떤 관계인지 묻고 있으므로 정답은 「나란하고 길이가 절반이다」예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-11:v1",
@@ -3570,7 +3950,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-11:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 무게중심은 중선을 꼭짓점으로부터 $2:1$로 나누어요. 중선 전체를 똑같이 $2+1=3$조각으로 나눈 것 중 꼭짓점에서 무게중심까지는 $2$조각이에요. 한 조각의 길이는 $18 \\div 3 = 6$이고, 두 조각의 길이는 $6 \\times 2 = 12$예요. $6$은 무게중심에서 변의 중점까지의 길이이고, $18 \\div 2 = 9$는 중선을 절반으로 나눈 값이라서 틀려요. 따라서 꼭짓점에서 무게중심까지의 길이는 $12$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-12:v1",
@@ -3607,7 +3997,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-12:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 무게중심은 중선을 꼭짓점으로부터 $2:1$로 나누어요. 전체 중선을 똑같이 $2+1=3$조각으로 나눌 때, 무게중심에서 중점까지의 길이는 그중 $1$조각이에요. 따라서 전체 길이 $18$을 $3$으로 나누면 $18 \\div 3 = 6$이에요.\n\n$6 \\times 2 = 12$는 무게중심에서 꼭짓점까지의 길이를 구한 것이고, $18 \\div 2 = 9$는 중선을 똑같이 둘로 나눈 값이에요. 무게중심에서 중점까지의 길이는 $6$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-13:v1",
@@ -3644,7 +4044,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-13:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 세 중선은 삼각형을 넓이가 같은 여섯 조각으로 나누어요. 전체 넓이 $42$를 여섯 조각으로 똑같이 나누면 한 조각의 넓이는 $42 \\div 6 = 7$이에요. 만약 $42 \\div 3 = 14$로 계산했다면, 여섯 조각 중 두 조각을 합친 넓이를 구한 거예요. 따라서 여섯 조각 중 하나의 넓이는 $7$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-14:v1",
@@ -3681,7 +4091,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-14:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 무게중심은 중선을 꼭짓점으로부터 $2:1$로 나누어요. 무게중심에서 중점까지의 길이가 $5$이므로, 꼭짓점에서 무게중심까지의 길이는 그 $2$배인 $5 \\times 2 = 10$이에요. 만약 $10$이 나왔다면 중선 전체가 아니라 꼭짓점에서 무게중심까지의 길이만 구한 거예요. 중선 전체의 길이는 두 길이를 더한 $10 + 5 = 15$, 즉 짧은 쪽 길이의 $3$배인 $5 \\times 3 = 15$예요. 따라서 중선 전체의 길이는 $15$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-15:v1",
@@ -3754,7 +4174,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-15:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 꼭짓점과 마주 보는 변의 중점을 이은 선분을 중선이라고 해요. 삼각형의 세 중선은 한 점에서 만나며, 이 점을 받치면 기울지 않고 균형을 이뤄요. 외심은 세 변의 수직이등분선이 만나는 점이고, 내심은 세 내각의 이등분선이 만나는 점이며, 수심은 세 꼭짓점에서 마주 보는 변에 내린 수선이 만나는 점이에요. 따라서 삼각형의 세 중선이 만나는 점의 이름은 무게중심이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-16:v1",
@@ -3791,7 +4221,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-16:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "서로 닮은 두 도형의 넓이의 비는 닮음비를 각각 제곱한 비와 같아요. 닮음비가 $1:4$이므로 넓이의 비는 $1^2:4^2$, 즉 $1:16$이에요. $4^2$은 $4 \\times 4 = 16$인데, $4 \\times 2 = 8$로 계산하거나 닮음비의 $4$를 그대로 쓰지 않도록 조심해요. 따라서 넓이의 비 $1:a$에서 $a$의 값은 $16$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-17:v1",
@@ -3828,7 +4268,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-17:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "서로 닮은 두 입체도형의 부피의 비는 닮음비의 세제곱과 같아요. 닮음비가 $1:3$이므로 부피의 비는 각 수를 세제곱한 $1^3:3^3=1:27$이에요. 제곱한 $3^2=9$는 넓이의 비이므로, 부피의 비를 구할 때는 세 번 곱해야 해요. 따라서 $a$의 값은 $27$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-18:v1",
@@ -3865,7 +4315,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-18:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮은 두 입체의 부피의 비는 닮음비를 세제곱한 비예요. 닮음비가 $2:3$이므로 부피의 비는 $2^3:3^3 = 8:27$이 돼요. 작은 입체의 부피 $16$은 $8$에 $2$를 곱한 값이므로, 큰 입체의 부피도 $27$에 $2$를 곱하면 돼요. 닮음비 $2:3$을 그대로 써서 $24$를 구하거나 넓이의 비 $4:9$를 써서 $36$을 구하지 않도록 주의해요. $27 \\times 2 = 54$이므로 큰 입체의 부피는 $54$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-19:v1",
@@ -3902,7 +4362,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-19:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "축척이 $1:25000$이라는 것은 실제 거리가 지도에서의 거리의 $25000$배라는 뜻이에요. 지도에서 $4$cm 떨어져 있으므로 실제 거리는 $4 \\times 25000 = 100000$cm예요. 문제에서 몇 m인지 물었으니 cm로 구한 $100000$을 그대로 쓰거나, $1000$으로 잘못 나누어 $100$이라고 쓰면 안 돼요. $1$m는 $100$cm이므로 $100000$을 $100$으로 나누어야 해요. 따라서 실제 거리는 $100000 \\div 100 = 1000$m이고, 정답은 $1000$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-20:v1",
@@ -3975,7 +4445,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "similarity:drill-20:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "넓이의 비는 닮음비의 두 수를 각각 제곱한 비예요. $2^2 = 4$이고 $3^2 = 9$이므로, 제곱해서 $4$와 $9$가 되는 양수는 각각 $2$와 $3$이에요. $4 : 9$는 넓이의 비를 그대로 닮음비로 본 것이고, $16 : 81$은 넓이의 비를 거꾸로 제곱한 $4^2 : 9^2$이에요. 따라서 두 닮은 도형의 닮음비는 $2 : 3$이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",

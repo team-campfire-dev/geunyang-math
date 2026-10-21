@@ -1637,7 +1637,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "counting-cases:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "옷차림을 만들려면 티셔츠를 고르고, 그리고 바지도 골라야 해요. 티셔츠 $3$종마다 바지 $4$종을 짝지을 수 있으니 두 경우의 수를 곱해요. 만약 $3 + 4 = 7$로 계산했다면 티셔츠 또는 바지 중 하나만 고른 거예요. 티셔츠와 바지를 함께 입는 옷차림은 $3 \\times 4 = 12$이므로 정답은 $12$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "counting-cases:practice-2:v1",
@@ -1674,7 +1684,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "counting-cases:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 하나를 던지면 앞면과 뒷면으로 $2$가지 경우가 나와요. 주사위 하나를 던지면 $1$부터 $6$까지 $6$가지 경우가 나와요. 동전과 주사위를 함께 던지면 동전의 각 경우마다 주사위의 $6$가지 경우가 각각 짝지어져요. $2 + 6 = 8$은 어느 한쪽만 일어날 때처럼 두 경우의 수를 더한 값이에요. 두 일이 함께 일어나므로 곱의 법칙에 따라 $2 \\times 6 = 12$로 계산하면 정답은 $12$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "counting-cases:practice-3:v1",
@@ -1711,7 +1731,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "counting-cases:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위에서 $2$ 이하의 눈은 $1$, $2$로 $2$가지이고, $5$ 이상의 눈은 $5$, $6$으로 $2$가지예요. 만약 「이하」와 「이상」에 $2$와 $5$가 포함된다는 점을 놓치고 $1$과 $6$만 세면 $1 + 1 = 2$가 나오니 조심해요.\n\n두 경우에 겹치는 눈이 없고 「또는」으로 이어져 있으므로 두 가짓수를 더해요. 따라서 구하는 경우의 수는 $2 + 2 = 4$예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -1756,7 +1786,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "counting-cases:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 한 개를 던지면 앞면과 뒷면으로 $2$가지 경우가 나와요. 첫째 동전 그리고 둘째 동전 그리고 셋째 동전을 모두 던지므로 각 경우의 수를 곱해요. 동전 세 개라고 해서 $2+2+2=6$으로 더하면 안 돼요. 동전을 하나씩 더 던질 때마다 경우가 $2$배씩 늘어나므로 $2 \\times 2 \\times 2 = 8$이에요. 따라서 나올 수 있는 경우는 모두 $8$가지예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "counting-cases:check-2:v1",
@@ -1829,7 +1869,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "counting-cases:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 사건이 「또는」으로 이어질 때는 둘 중 한쪽만 일어나는 경우예요. 이때는 각 사건의 경우의 수를 합쳐서 세므로 합의 법칙에 따라 서로 더해요. 단, 더할 때는 두 무리에 겹치는 것이 없는지 확인해야 해요. 「곱한다」는 두 사건이 「그리고」로 이어져 곱의 법칙을 쓸 때 하는 계산이에요. 따라서 정답은 「더한다」예요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",
@@ -1880,7 +1930,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "counting-cases:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "첫 번째 주사위에서 나오는 경우는 $1$부터 $6$까지 $6$가지이고, 두 번째 주사위도 $6$가지예요. 첫 번째 주사위 「그리고」 두 번째 주사위의 눈이 함께 정해지므로 두 경우의 수를 곱해요. 첫 번째 눈 $6$가지마다 두 번째 눈이 $6$가지씩 짝지어지기 때문이에요. 둘 중 하나만 던지는 경우가 아니므로 $6 + 6 = 12$처럼 더하면 안 돼요. 따라서 나올 수 있는 경우는 $6 \\times 6 = 36$가지이고, 정답은 $36$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "counting-cases:homework-2:v1",
@@ -1917,7 +1977,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "counting-cases:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "차림을 완성하려면 모자 하나 그리고 티셔츠 하나를 함께 골라야 해요. 모자 $2$종마다 티셔츠 $5$종을 짝지을 수 있으므로 곱의 법칙에 따라 두 수를 곱해요. 모자나 티셔츠 중 하나만 고르는 경우가 아니니 $2+5=7$처럼 더하면 안 돼요. 따라서 만들 수 있는 차림은 $2\\times5=10$, 모두 $10$가지예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -1965,7 +2035,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-meaning:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 나오는 눈은 $1, 2, 3, 4, 5, 6$이므로 모든 경우의 수는 $6$이에요. 이 중에서 $3$이 나오는 바라는 경우의 수는 $1$이에요. 주사위 눈의 수인 $3$을 경우의 수로 착각해 $\\frac{3}{6}$으로 쓰지 않도록 조심해요. 바라는 경우의 수 $1$을 모든 경우의 수 $6$으로 나누면 정답은 $\\frac{1}{6}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability-meaning:practice-2:v1",
@@ -2005,7 +2085,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-meaning:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "공은 빨간 공 $3$개와 흰 공 $2$개를 합해 모두 $3+2=5$개예요. 하나를 꺼낼 때 모든 경우의 수는 $5$이고, 빨간 공이 나오는 경우의 수는 $3$이에요. 전체 개수 대신 흰 공의 개수 $2$로 나누어 $\\frac{3}{2}$이라고 쓰거나, 흰 공이 나올 확률인 $\\frac{2}{5}$를 쓰지 않도록 조심해요. 바라는 경우의 수 $3$을 모든 경우의 수 $5$로 나누면 빨간 공일 확률은 $\\frac{3}{5}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability-meaning:practice-3:v1",
@@ -2045,7 +2135,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-meaning:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 모든 경우의 수는 $1$부터 $6$까지 $6$가지예요. 그중 짝수는 $2, 4, 6$이므로 바라는 경우의 수는 $3$가지예요. 확률은 바라는 경우의 수를 모든 경우의 수로 나눈 값이어서 $\\frac{3}{6}$이 돼요. 경우의 수인 $3$만 적거나 약분하지 않은 $\\frac{3}{6}$을 그대로 적지 않도록 조심해요. 분자와 분모를 $3$으로 나누어 기약분수로 줄이면 정답은 $\\frac{1}{2}$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2090,7 +2190,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-meaning:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위의 눈은 $1$부터 $6$까지여서 모든 경우의 수는 $6$가지예요. 주사위에는 $7$의 눈이 없으므로 바라는 경우의 수는 $0$가지예요. 확률은 바라는 경우의 수를 모든 경우의 수로 나눈 값이니 $\\frac{0}{6}=0$이 돼요. 절대 일어나지 않으면 확률은 $0$이므로, $7$을 한 가지로 세어 $\\frac{1}{6}$이라 하거나 분모에 $7$을 넣어 $\\frac{1}{7}$로 쓰지 않도록 조심해요. 따라서 정답은 $0$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability-meaning:check-2:v1",
@@ -2130,7 +2240,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-meaning:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 두 개를 던질 때 나오는 모든 경우는 (앞면, 앞면), (앞면, 뒷면), (뒷면, 앞면), (뒷면, 뒷면)으로 $4$가지예요. 이 가운데 모두 앞면인 바라는 경우는 (앞면, 앞면)으로 $1$가지예요. 첫째 동전과 둘째 동전을 구별하지 않고 (앞면, 뒷면)과 (뒷면, 앞면)을 한 가지로 세면 모든 경우의 수가 $3$이 되어 $\\frac{1}{3}$이 나와요. 바라는 경우의 수 $1$을 모든 경우의 수 $4$로 나누면 확률은 $\\frac{1}{4}$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2211,7 +2331,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-meaning:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "확률은 바라는 경우의 수를 모든 경우의 수로 나눈 값이에요. 절대 일어나지 않으면 바라는 경우의 수가 $0$이어서 확률이 $0$이고, 반드시 일어나면 바라는 경우의 수가 모든 경우의 수와 같아서 확률이 $1$이에요. 바라는 경우의 수는 $0$보다 작을 수 없고 모든 경우의 수보다 클 수도 없어요. 그래서 $0$이 빠진 「$0$보다 큰 수」나 $1$보다 큰 수를 포함하는 「$1$ 이상」, 「제한이 없다」는 옳지 않아요. 따라서 확률이 가질 수 있는 값의 범위는 「$0$ 이상 $1$ 이하」예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability-meaning:homework-2:v1",
@@ -2251,7 +2381,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-meaning:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$부터 $10$까지의 수 카드 $10$장 중에서 하나를 뽑으므로 모든 경우의 수는 $10$이에요. 이 중에서 소수는 $2, 3, 5, 7$로 바라는 경우의 수는 $4$예요. $1$은 소수가 아니고 $9$는 $3$으로 나누어떨어지므로, 이 수들을 포함해 $5$개로 세면 $\\frac{5}{10}=\\frac{1}{2}$이 되어 틀려요. 바라는 경우의 수를 모든 경우의 수로 나누면 확률은 $\\frac{4}{10}$예요. 분모와 분자를 $2$로 나누어 기약분수로 줄이면 정답은 $\\frac{2}{5}$예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2299,7 +2439,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-rules:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어떤 사건이 일어나지 않을 확률은 $1$에서 그 사건이 일어날 확률을 빼서 구해요. $1$을 분모가 $10$인 분수로 나타내면 $\\frac{10}{10}$이므로 $\\frac{10}{10}-\\frac{3}{10}=\\frac{7}{10}$이에요. 분자만 빼서 $7$이라고 쓰면 확률이 아니므로 분모 $10$까지 함께 적어야 해요. $7$과 $10$은 더 이상 약분되지 않으므로 정답은 $\\frac{7}{10}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability-rules:practice-2:v1",
@@ -2339,7 +2489,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-rules:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 나오는 모든 경우의 수는 $6$가지이고, 그중 $1$이 나올 확률은 $\\frac{1}{6}$이에요. $1$이 아닐 확률은 여사건의 확률이므로 $1$에서 $1$이 나올 확률을 빼서 구해요. 만약 $\\frac{1}{6}$을 썼다면 $1$이 나올 확률만 구하고 $1$에서 빼지 않은 거예요. $1 - \\frac{1}{6} = \\frac{5}{6}$이므로 정답은 $\\frac{5}{6}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability-rules:practice-3:v1",
@@ -2379,7 +2539,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-rules:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「적어도 하나가 앞면」인 사건의 반대는 두 동전 모두 뒷면이 나오는 사건이에요. 동전 한 개를 던져 뒷면이 나올 확률은 $\\frac{1}{2}$이므로, 두 동전 모두 뒷면이 나올 확률은 $\\frac{1}{2} \\times \\frac{1}{2} = \\frac{1}{4}$이에요. 전체 확률 $1$에서 둘 다 뒷면일 확률을 빼면 $1 - \\frac{1}{4} = \\frac{3}{4}$이 돼요. $1$에서 빼는 계산을 빠뜨리면 둘 다 뒷면일 확률인 $\\frac{1}{4}$을 구하게 되니 조심해요. 따라서 적어도 하나가 앞면일 확률은 $\\frac{3}{4}$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2427,7 +2597,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-rules:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「적어도 하나가 앞면」의 반대는 동전 세 개가 모두 뒷면인 경우예요. 동전 한 개가 뒷면일 확률은 $\\frac{1}{2}$이므로, 세 개가 모두 뒷면일 확률은 $\\frac{1}{2} \\times \\frac{1}{2} \\times \\frac{1}{2} = \\frac{1}{8}$이에요. $\\frac{1}{8}$은 반대의 확률이므로 전체 확률 $1$에서 빼야 해요. $1 - \\frac{1}{8} = \\frac{7}{8}$이므로, 적어도 하나가 앞면일 확률은 $\\frac{7}{8}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability-rules:check-2:v1",
@@ -2467,7 +2647,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-rules:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위를 한 번 던져 $6$이 나올 확률은 $\\frac{1}{6}$이에요. 첫 번째와 두 번째에 던진 결과는 서로 영향을 주지 않아요. 서로 영향을 주지 않는 두 사건이 함께 일어날 확률은 각각의 확률을 곱해서 구해요. 두 확률을 더해 $\\frac{1}{6} + \\frac{1}{6} = \\frac{1}{3}$으로 계산하면 안 되는데, 두 번 다 $6$이 나와야 하므로 덧셈이 아니라 곱셈을 해야 해요. 따라서 정답은 $\\frac{1}{6} \\times \\frac{1}{6} = \\frac{1}{36}$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2515,7 +2705,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-rules:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "여사건의 확률은 $1$에서 그 사건의 확률을 뺀 값이에요. $1$을 분모가 $7$인 분수 $\\frac{7}{7}$로 바꾸어 빼면 $1 - \\frac{2}{7} = \\frac{7}{7} - \\frac{2}{7} = \\frac{5}{7}$예요. 분모와 분자를 바꾼 $\\frac{7}{2}$로 구하거나 분모를 빼놓고 $7 - 2 = 5$만 적지 않도록 조심해요. 더 이상 약분되지 않으므로 정답은 $\\frac{5}{7}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability-rules:homework-2:v1",
@@ -2555,7 +2755,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-rules:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 $2$가 나올 확률은 $\\frac{1}{6}$이고, $5$가 나올 확률도 $\\frac{1}{6}$이에요. 한 번 던져서 $2$와 $5$가 함께 나올 수는 없으므로 두 확률을 더해요. $\\frac{1}{6}+\\frac{1}{6}=\\frac{2}{6}$이고, 분자와 분모를 $2$로 나누어 약분하면 $\\frac{1}{3}$이 돼요. 두 확률을 곱해 $\\frac{1}{6}\\times\\frac{1}{6}=\\frac{1}{36}$으로 계산하거나, 약분하지 않고 $\\frac{2}{6}$를 그대로 쓰지 않도록 조심해요. 따라서 구하는 확률은 $\\frac{1}{3}$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2600,7 +2810,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "옷차림을 완성하려면 티셔츠를 고르고, 그리고 바지도 골라야 해요. 티셔츠 $4$종마다 바지 $5$종을 각각 짝지을 수 있어요. 두 가지를 모두 고르므로 경우의 수를 곱해야 해요. $4+5=9$는 티셔츠나 바지 중 하나만 고를 때의 경우의 수예요. 따라서 만들 수 있는 옷차림은 $4 \\times 5 = 20$, 정답은 $20$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-2:v1",
@@ -2637,7 +2857,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 한 개를 던질 때 나오는 경우는 앞면과 뒷면의 $2$가지예요. 동전이 한 개 늘어날 때마다 경우의 수가 $2$배가 되므로, 동전 네 개의 경우의 수는 모두 곱해서 구해요. $2 \\times 4 = 8$은 경우의 수를 곱하지 않고 $2+2+2+2=8$처럼 더했을 때 나오는 값이에요. $2$를 네 번 곱하면 $2 \\times 2 \\times 2 \\times 2 = 16$이므로, 나올 수 있는 경우는 $16$가지예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-3:v1",
@@ -2674,7 +2904,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위에서 $3$ 이하의 눈은 $1$, $2$, $3$으로 $3$가지예요. $6$의 눈이 나오는 경우는 $6$ 하나로 $1$가지예요.\n\n두 경우는 동시에 일어날 수 없으므로 각각의 경우의 수를 더하면 $3+1=4$예요.\n\n만약 $3$ 이하에서 $3$을 빼고 $1$, $2$만 세면 $2+1=3$이 나오니 조심해요. 정답은 $4$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-4:v1",
@@ -2711,7 +2951,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-4:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "모자 $1$종마다 신발 $6$종을 각각 짝지을 수 있어요. 모자가 $3$종이므로 전체 차림의 수는 $3 \\times 6 = 18$가지예요. 모자와 신발 중 하나만 고르는 것이 아니라 둘 다 골라 한 차림을 만드므로, $3 + 6 = 9$처럼 더하지 않고 곱해야 해요. 따라서 정답은 $18$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-5:v1",
@@ -2748,7 +2998,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-5:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "첫 번째 주사위에서 나올 수 있는 눈은 $1$부터 $6$까지 $6$가지예요. 그 $6$가지마다 두 번째 주사위의 눈도 $6$가지씩 나올 수 있어요. 두 주사위를 함께 던지므로 $6 + 6 = 12$처럼 더하지 않고 $6 \\times 6 = 36$으로 곱해요. 따라서 나올 수 있는 경우는 모두 $36$가지예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-6:v1",
@@ -2785,7 +3045,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-6:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 하나를 던지면 앞면과 뒷면의 $2$가지 경우가 나와요. 주사위 하나를 던지면 $1$부터 $6$까지 $6$가지 눈이 나와요. 동전의 각 면마다 주사위의 눈이 $6$가지씩 짝지어지므로 두 경우의 수를 곱해야 해요. 두 수를 더해서 $2 + 6 = 8$로 계산하지 않도록 조심해요. 따라서 나올 수 있는 경우는 $2 \\times 6 = 12$가지이므로 정답은 $12$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-7:v1",
@@ -2858,7 +3128,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "probability:drill-7:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 사건이 「그리고」로 이어져 연달아 일어나면, 앞 사건의 각 경우마다 뒤 사건의 경우가 모두 짝지어져요. 표로 나타내면 앞 사건은 줄이 되고 뒤 사건은 칸이 되므로, 전체 경우의 수는 줄과 칸의 수를 곱해서 구해요. 「더한다」는 두 사건이 「또는」으로 이어져 둘 중 하나만 일어날 때 쓰는 계산이에요. 따라서 정답은 「곱한다」예요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",
@@ -2904,7 +3184,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-8:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 나오는 모든 눈은 $1$부터 $6$까지 $6$가지예요. 그중 $5$ 이상인 눈은 $5$와 $6$으로 $2$가지예요. $5$ 이상에는 $5$도 포함되므로 $6$ 하나만 세어 $\\frac{1}{6}$이라고 쓰지 않도록 조심해요. 구하는 확률은 전체 $6$가지 중 $2$가지이므로 $\\frac{2}{6}$예요. 분자와 분모를 $2$로 나누어 기약분수로 나타내면 정답은 $\\frac{1}{3}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-9:v1",
@@ -2944,7 +3234,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-9:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 공의 개수는 빨간 공 $4$개와 흰 공 $6$개를 더한 $4+6=10$개예요. 그중에서 흰 공은 $6$개이므로 흰 공일 확률은 $\\frac{6}{10}$이에요. 약분하지 않은 $\\frac{6}{10}$을 그대로 쓰거나, 빨간 공일 확률인 $\\frac{4}{10}=\\frac{2}{5}$를 구하지 않도록 조심해요. $\\frac{6}{10}$의 분자와 분모를 $2$로 나누어 기약분수로 나타내면 정답은 $\\frac{3}{5}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-10:v1",
@@ -2984,7 +3284,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-10:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 하나를 던질 때 나오는 모든 경우는 앞면과 뒷면으로 $2$가지예요. 두 면이 나올 가능성은 같고, 그중 앞면이 나오는 경우는 $1$가지예요. 확률은 어떤 사건이 일어나는 경우의 수를 모든 경우의 수로 나누어 구해요. $1$이나 $2$처럼 경우의 수만 적지 않고, 앞면이 나오는 경우의 수 $1$을 모든 경우의 수 $2$로 나누어야 해요. 따라서 앞면이 나올 확률은 $\\frac{1}{2}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-11:v1",
@@ -3024,7 +3334,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-11:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$부터 $12$까지의 수 카드는 모두 $12$장이므로 전체 경우의 수는 $12$예요. 이 중에서 $4$의 배수는 $4, 8, 12$로 $3$장이에요. 따라서 $4$의 배수를 뽑을 확률은 전체 $12$장 중의 $3$장이므로 $\\frac{3}{12}$이에요. $4$의 배수라는 말만 보고 분자에 $4$를 넣어 $\\frac{4}{12}=\\frac{1}{3}$로 계산하거나, 약분하지 않은 $\\frac{3}{12}$을 그대로 쓰지 않도록 조심해요. $\\frac{3}{12}$의 분자와 분모를 각각 $3$으로 나누면 정답은 $\\frac{1}{4}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-12:v1",
@@ -3061,7 +3381,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-12:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 나올 수 있는 눈은 $1$, $2$, $3$, $4$, $5$, $6$으로 모두 $6$가지예요. 주사위에는 $0$의 눈이 없으므로, $0$이 나오는 경우의 수는 $0$이에요. 절대로 일어나지 않는 사건의 확률은 $\\frac{0}{6}=0$으로 계산해요. 따라서 주사위를 던져 $0$이 나올 확률은 $0$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-13:v1",
@@ -3098,7 +3428,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-13:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 나오는 모든 경우의 수는 $1, 2, 3, 4, 5, 6$으로 $6$가지예요. $6$은 '$6$ 이하'에 포함되므로, $6$ 이하의 눈이 나오는 경우도 $6$가지예요. 모든 경우가 조건에 맞으므로 확률은 $\\frac{6}{6}=1$이에요. 경우의 수인 $6$을 그대로 답으로 쓰거나, $6$을 빼고 세어 $\\frac{5}{6}$로 구하지 않도록 조심해요. 따라서 $6$ 이하가 나올 확률은 $1$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-14:v1",
@@ -3171,7 +3511,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-14:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "확률은 어떤 사건이 일어나는 경우의 수를 전체 경우의 수로 나눈 값이에요. 절대로 일어나지 않는 사건은 경우의 수가 $0$이므로 확률이 $0$이에요. 반드시 일어나는 사건은 경우의 수가 전체 경우의 수와 같으므로 확률이 $1$이에요. 사건이 일어나는 경우의 수가 전체보다 많을 수는 없으니 확률은 $1$을 넘을 수 없고, $0$보다 큰 수라고 하면 확률이 $0$인 경우가 빠져요. 따라서 확률이 가질 수 있는 값의 범위는 $0$ 이상 $1$ 이하예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-15:v1",
@@ -3211,7 +3561,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-15:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "여사건은 어떤 사건이 일어나지 않는 사건이에요. 사건이 일어날 확률과 여사건의 확률을 더하면 $1$이 돼요. 따라서 $1$에서 주어진 확률 $\\frac{1}{4}$을 빼면 여사건의 확률을 구할 수 있어요. $1$을 $\\frac{4}{4}$로 바꾸어 계산하면 $\\frac{4}{4} - \\frac{1}{4} = \\frac{3}{4}$이에요. 분자와 분모가 더 이상 약분되지 않으므로 정답은 $\\frac{3}{4}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-16:v1",
@@ -3251,7 +3611,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-16:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 모든 경우의 수는 $6$가지예요.\n그중 $6$이 나올 확률은 $\\frac{1}{6}$이므로, $6$이 아닐 확률은 전체 확률 $1$에서 $\\frac{1}{6}$을 뺀 $1 - \\frac{1}{6} = \\frac{5}{6}$예요.\n$1$부터 $5$까지 $5$가지 경우를 전체 경우의 수 $6$으로 나누어 구해도 같아요.\n\n$\\frac{1}{6}$은 $6$이 나올 확률이고, $5$는 확률이 아니라 경우의 수이므로 전체 경우의 수 $6$으로 나누어야 해요.\n따라서 정답은 $\\frac{5}{6}$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-17:v1",
@@ -3291,7 +3661,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-17:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "'적어도 하나가 뒷면'인 경우의 반대는 '둘 다 앞면'인 경우예요. 동전 한 개를 던져 앞면이 나올 확률은 $\\frac{1}{2}$이므로, 둘 다 앞면일 확률은 $\\frac{1}{2} \\times \\frac{1}{2} = \\frac{1}{4}$이에요. 전체 확률 $1$에서 반대 경우의 확률을 빼면 $1 - \\frac{1}{4} = \\frac{3}{4}$이 돼요. 만약 $\\frac{1}{4}$이 나왔다면 둘 다 앞면일 확률만 구하고 $1$에서 빼지 않은 것이에요. 따라서 구하는 확률은 $\\frac{3}{4}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-18:v1",
@@ -3331,7 +3711,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-18:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 눈 $6$가지 중 홀수는 $1, 3, 5$의 $3$가지예요. 따라서 한 번 던져 홀수가 나올 확률은 $\\frac{3}{6}$이고, 기약분수로 나타내면 $\\frac{1}{2}$이에요. 첫 번째와 두 번째에 모두 홀수가 나와야 하므로 두 확률을 곱해요. 두 확률을 더해서 $\\frac{1}{2} + \\frac{1}{2} = 1$로 계산하거나, 약분하지 않은 $\\frac{9}{36}$를 그대로 쓰지 않도록 조심해요. $\\frac{1}{2} \\times \\frac{1}{2}$을 계산하면 정답은 $\\frac{1}{4}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-19:v1",
@@ -3371,7 +3761,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-19:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어떤 사건이 일어날 확률과 여사건의 확률을 더하면 $1$이 돼요. 그러므로 여사건의 확률은 $1$에서 $\\frac{3}{8}$을 빼서 구해요. 분모가 $8$인 분수를 빼야 하니 $1$을 $\\frac{8}{8}$로 바꾸어 계산하면 $\\frac{8}{8} - \\frac{3}{8} = \\frac{5}{8}$예요. 분모 $8$에서 분자 $3$을 뺀 $5$만 적으면 분모가 빠진 잘못된 답이 되니 조심해요. $5$와 $8$은 $1$ 외에 공약수가 없으므로 정답은 $\\frac{5}{8}$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-20:v1",
@@ -3444,7 +3844,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-20:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「적어도 하나」는 한 개일 때, 두 개일 때처럼 해당하는 경우가 여러 가지예요. 하지만 그 반대인 「모두 아닌 경우」는 한 가지뿐이에요. 이처럼 어떤 사건이 일어나지 않는 사건을 여사건이라고 해요. 여사건의 확률을 먼저 구한 뒤 전체 확률 $1$에서 빼면 구하려는 확률이 나와요. 따라서 정답은 여사건의 확률이에요."
+              }
+            }
+          ]
         }
       ]
     }

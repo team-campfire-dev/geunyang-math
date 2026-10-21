@@ -48,7 +48,7 @@ export const solutionSystem = `${writingGuide}
 - 「~예요」「~해요」로 쓴다. 「~습니다」를 섞지 않는다.
 - 수식은 $...$로 감싼다. 수식 안에 한글을 넣지 않는다 — 단위와 조사는 수식 밖에 둔다.
 - 그림이 없는 문제다. 지문에 없는 그림·점·이름을 지어내지 않는다.
-- 3~6문장. 문단을 나눌 때는 빈 줄을 쓴다.`;
+- 한 문단, 3~5문장. 같은 답을 다른 방법으로 다시 풀지 않는다.`;
 
 export type ProblemForExplanation = {
   problemVersionId: string;
