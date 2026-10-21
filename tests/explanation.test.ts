@@ -43,6 +43,9 @@ describe('what is checked before anybody reads a 해설', () => {
     expect(codes('빗변은 $5\\frac{$예요.')).toContain('math-error');
     expect(codes('빗변은 $5 \\text{센티}$예요.')).toContain('hangul-in-math');
     expect(codes('①번이 맞아요. 빗변은 $5$예요.')).toContain('option-label');
+    expect(codes('보기 나가 맞아요. 빗변은 $5$예요.')).toContain('option-label');
+    expect(codes('다른 보기는 다른 선이에요. 빗변은 $5$예요.')).not.toContain('option-label');
+    expect(codes('보기 가운데 빗변은 $5$예요.')).not.toContain('option-label');
     expect(codes('답은 $\\frac{3}{4}$예요.', { spec: { kind: 'rational', numerator: 3, denominator: 4 } })).toEqual([]);
   });
 });

@@ -124,7 +124,9 @@ export function checkSolution(text: string, problem: ProblemForExplanation): Sol
     catch { issues.push({ code: 'math-error', message: `그려지지 않는 수식이 있어요: ${math}` }); break; }
   }
   const prose = stripMath(text);
-  if (/[①②③④⑤]|보기\s*[a-dA-D1-5가-라]|\([a-d]\)/.test(prose)) issues.push({ code: 'option-label', message: '보기를 번호나 기호로 가리켰어요.' });
+  // 「보기 가」「보기 나가」「보기 2」 — one letter standing as a label after 보기, perhaps with a
+  // particle, never a word that only starts like one (「보기는」, 「보기 가운데」).
+  if (/[①②③④⑤]|보기\s*[a-dA-D1-5](?![a-zA-Z0-9])|보기\s+[가나다라](?:[가이는을를의와과도]|(?![가-힣]))|\([a-d]\)/.test(prose)) issues.push({ code: 'option-label', message: '보기를 번호나 기호로 가리켰어요.' });
   if (/(습니다|합니다|입니다|됩니다)(?=[.\s]|$)/.test(prose)) issues.push({ code: 'formal', message: '「~습니다」가 섞였어요.' });
   if (problem.course.stage === 'middle-2' && /\\sqrt|√|무리수/.test(text)) issues.push({ code: 'beyond-stage', message: '중2가 아직 배우지 않은 제곱근을 썼어요.' });
   if (text.length > 900) issues.push({ code: 'long', message: `길어요(${text.length}자).` });

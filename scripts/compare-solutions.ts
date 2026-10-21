@@ -6,6 +6,7 @@
  *   npm run compare:solutions -- generate --run <name> --courses similarity,pythagoras,probability [--limit N]
  *   npm run compare:solutions -- blind --run <name>
  *   npm run compare:solutions -- apply --run <name> [--replace]
+ *   npm run compare:solutions -- recheck --run <name>    (the checks again, after changing one)
  *
  * A run lives in comparisons/<name>/: candidates.json (every request and both answers, written as
  * each arrives, so a stopped run carries on), blind.json (what the chooser sees: A and B, shuffled
@@ -44,7 +45,7 @@ const command = args[0];
 const flag = (name: string) => { const at = args.indexOf(`--${name}`); return at >= 0 ? args[at + 1] : undefined; };
 const runName = flag('run');
 if (!command || !runName || !/^[a-z0-9-]+$/.test(runName)) {
-  console.error('Usage: npm run compare:solutions -- <generate|blind|apply> --run <name> [--courses a,b] [--limit N] [--replace]');
+  console.error('Usage: npm run compare:solutions -- <generate|blind|apply|recheck> --run <name> [--courses a,b] [--limit N] [--replace]');
   process.exit(2);
 }
 const dir = join('comparisons', runName);
@@ -216,6 +217,20 @@ function apply() {
   console.log(`Picked ${picked}: ${Object.entries(tally).map(([name, count]) => `${name} ${count}`).join(' · ')}. Wrote ${written} 해설 into the seed.`);
 }
 
-const commands: Record<string, () => unknown> = { generate, blind, apply };
+/** Runs the checks again over what is already written, after a check itself changed. Asks no model. */
+function recheck() {
+  const path = join(dir, 'candidates.json');
+  const run = readJson<Run>(path);
+  let flagged = 0;
+  for (const item of run.items) for (const output of Object.values(item.outputs)) {
+    if ('error' in output) continue;
+    output.issues = checkSolution(output.solution, item.problem);
+    if (output.issues.length) flagged += 1;
+  }
+  writeJson(path, run);
+  console.log(`Checked ${run.items.length} questions again; ${flagged} answers have issues.`);
+}
+
+const commands: Record<string, () => unknown> = { generate, blind, apply, recheck };
 if (!commands[command]) { console.error(`Unknown command: ${command}`); process.exit(2); }
 Promise.resolve(commands[command]()).catch((reason) => { console.error(reason); process.exit(1); });
