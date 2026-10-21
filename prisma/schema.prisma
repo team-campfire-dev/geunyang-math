@@ -34,6 +34,57 @@ model User {
   generatedProblemSets GeneratedProblemSet[]
   contentAuthor ContentAuthor?
   contentDrafts ContentDraft[]
+  /// The people who teach this learner, and the courses set for them.
+  taughtBy     TeachingLink[] @relation("LinkLearner")
+  teaching     TeachingLink[] @relation("LinkTeacher")
+  teachingInvite TeachingInvite?
+  assignedCourses AssignedCourse[] @relation("AssignedLearner")
+  coursesAssigned AssignedCourse[] @relation("AssignedBy")
+}
+
+/// Someone who teaches a learner. A person today — a parent, a teacher — and a model later, for the
+/// adult who studies alone: so the teaching side is a kind and an account only when it is a person.
+/// A learner with no link at all is the ordinary case, not a missing one. A person's link is made by
+/// the learner entering that person's invite code, which is the learner saying yes to being taught.
+model TeachingLink {
+  id            String   @id @default(cuid()) @db.VarChar(191)
+  learnerUserId String   @db.VarChar(191)
+  learner       User     @relation("LinkLearner", fields: [learnerUserId], references: [id], onDelete: Cascade)
+  /// `person` or `ai`. Only a person has an account on the teaching side.
+  teacherKind   String   @db.VarChar(20)
+  teacherUserId String?  @db.VarChar(191)
+  teacher       User?    @relation("LinkTeacher", fields: [teacherUserId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  courses       AssignedCourse[]
+  @@unique([learnerUserId, teacherKind, teacherUserId])
+  @@index([teacherUserId])
+}
+
+/// The code a person hands a learner to be linked to them. One at a time; making a new one retires it.
+model TeachingInvite {
+  code          String   @id @db.VarChar(20)
+  teacherUserId String   @unique @db.VarChar(191)
+  teacher       User     @relation(fields: [teacherUserId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+}
+
+/// A course somebody set for a learner. It opens a course kept to the learners it is set for, and it
+/// joins what the learner said they came for in deciding the placement and the recommendation. Set
+/// through a teaching link, it goes when the link goes; set by an operator, it has no link.
+model AssignedCourse {
+  id               String   @id @default(cuid()) @db.VarChar(191)
+  learnerUserId    String   @db.VarChar(191)
+  learner          User     @relation("AssignedLearner", fields: [learnerUserId], references: [id], onDelete: Cascade)
+  courseKey        String   @db.VarChar(100)
+  course           Course   @relation(fields: [courseKey], references: [key], onDelete: Cascade, onUpdate: Cascade)
+  linkId           String?  @db.VarChar(191)
+  link             TeachingLink? @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  /// The person who set it. Null when a model did, or when that person has since left.
+  assignedByUserId String?  @db.VarChar(191)
+  assignedBy       User?    @relation("AssignedBy", fields: [assignedByUserId], references: [id], onDelete: SetNull)
+  assignedAt       DateTime @default(now())
+  @@unique([learnerUserId, courseKey])
+  @@index([linkId])
 }
 
 /// Permission to write content, held as a role on an account rather than as a property of the one
@@ -162,11 +213,15 @@ model Course {
   stage       String?  @db.VarChar(40)
   /// Who keeps the course. Null is the platform's own; organisations have no model yet.
   ownerUserId String?  @db.VarChar(191)
+  /// Who may see it: `public`, everybody, or `assigned`, only the learners it is set for (and anyone
+  /// who had already started it). Not frozen, like everything else about a course.
+  visibility  String   @default("public") @db.VarChar(20)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   lessons     Lesson[]
   diagnostics Diagnostic[]
   problemSets ProblemSet[]
+  assignments AssignedCourse[]
 }
 
 /// The identity of a problem set: which course keeps it, and its name. A name is the declaration

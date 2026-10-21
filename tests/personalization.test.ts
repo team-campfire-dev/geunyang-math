@@ -24,7 +24,7 @@ const evidence = (status: 'correct' | 'incorrect' | 'invalid', overrides: Partia
   problemVersionId: 'new-check', conceptKeys: ['fraction.meaning'], result: { status, assisted: false, message: 'fixture' }, date: now, check: true, ...overrides,
 });
 function plan(responses: (string | null)[], targetCourseKey: string | null = null) {
-  return recommend({ lessons, enrollments: [], assignments: [], readiness: conceptReadiness(conceptLabels, diagnostic(responses), []), dailyMinutes: 10, targetCourseKey, now });
+  return recommend({ lessons, enrollments: [], assignments: [], readiness: conceptReadiness(conceptLabels, diagnostic(responses), []), dailyMinutes: 10, targetCourseKeys: targetCourseKey ? [targetCourseKey] : [], now });
 }
 
 describe('placement and prerequisite recommendations', () => {
@@ -81,19 +81,19 @@ describe('placement and prerequisite recommendations', () => {
   });
   it('offers a prerequisite without preventing a learner from continuing a chosen lesson', () => {
     const output = recommend({ lessons, enrollments: [{ lessonKey: 'fraction-addition', status: 'active' }], assignments: [],
-      readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 5, targetCourseKey: null, now });
+      readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 5, targetCourseKeys: [], now });
     expect(output.recommendations[0]).toMatchObject({ lessonKey: 'fraction-meaning', suggestedMinutes: 5 });
     expect(output.recommendations[0].reason).toContain('직접 선택');
   });
   it('honors an explicit lesson choice and returns to prerequisite rules when cleared', () => {
-    const input = { lessons, enrollments: [], assignments: [], readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 10, targetCourseKey: null as string | null, now };
+    const input = { lessons, enrollments: [], assignments: [], readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 10, targetCourseKeys: [] as string[], now };
     const chosen = recommend({ ...input, preferredLessonKey: 'fraction-addition' });
     expect(chosen.recommendations[0].lessonKey).toBe('fraction-addition');
     expect(chosen.recommendations[0].reason).toContain('선수 개념');
     expect(recommend({ ...input, preferredLessonKey: null }).recommendations[0].lessonKey).toBe('fraction-meaning');
   });
   it('prioritizes only due unfinished reviews without treating future or missing work as wrong', () => {
-    const output = recommend({ lessons, enrollments: [], readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 10, targetCourseKey: null, now,
+    const output = recommend({ lessons, enrollments: [], readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 10, targetCourseKeys: [], now,
       assignments: [{ recipientId: 'future', status: 'assigned', recommendedAt: '2026-09-17T12:00:00Z', policy: reviewPolicy },
         { recipientId: 'done', status: 'submitted', recommendedAt: '2026-09-10T12:00:00Z', policy: reviewPolicy },
         { recipientId: 'due', status: 'assigned', recommendedAt: now.toISOString(), policy: reviewPolicy }] });
@@ -104,10 +104,10 @@ describe('placement and prerequisite recommendations', () => {
   it('never reminds a learner about a problem set they opened themselves', () => {
     // A set somebody picked is already where they left it. Calling it a due review would turn their
     // own choice into an obligation, and would push an actual review off the home screen.
-    const output = recommend({ lessons, enrollments: [], readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 10, targetCourseKey: null, now,
+    const output = recommend({ lessons, enrollments: [], readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 10, targetCourseKeys: [], now,
       assignments: [{ recipientId: 'mine', status: 'assigned', recommendedAt: '2026-09-10T12:00:00Z', policy: practicePolicy }] });
     expect(output.plan.review).toBeNull();
-    const withReview = recommend({ lessons, enrollments: [], readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 10, targetCourseKey: null, now,
+    const withReview = recommend({ lessons, enrollments: [], readiness: conceptReadiness(conceptLabels, null, []), dailyMinutes: 10, targetCourseKeys: [], now,
       assignments: [{ recipientId: 'mine', status: 'assigned', recommendedAt: '2026-09-10T12:00:00Z', policy: practicePolicy },
         { recipientId: 'review', status: 'assigned', recommendedAt: '2026-09-11T12:00:00Z', policy: reviewPolicy }] });
     expect(withReview.plan.review?.recipientId).toBe('review');

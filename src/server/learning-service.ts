@@ -24,6 +24,8 @@ import { plannerSystem } from './problem-prompts';
 import { aiPracticeLimits, scopeKey, type AiPracticeRun, type AiPracticeState, type PracticeScope } from '@/shared/ai-practice';
 import type { ProblemModel } from './problem-generation';
 import { claudeProblemModel, problemWriterAvailable } from './problem-writer';
+import { assignedCourseKeys, endLink, hiddenCourses, joinByInvite, learnerTeaching } from './teaching';
+import { authoringRole } from './authoring';
 
 /**
  * A placement as a run keeps it: what it has to settle, what it has settled, and **the shape of the
@@ -68,6 +70,8 @@ export const actionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('problemSet.start'), problemSetId: id }).strict(),
   z.object({ action: z.literal('solution.open'), context, contextId: id, problemVersionId: id }).strict(),
   z.object({ action: z.literal('practice.gather'), misconception: id.max(60) }).strict(),
+  z.object({ action: z.literal('teaching.join'), code: z.string().trim().min(1).max(40) }).strict(),
+  z.object({ action: z.literal('teaching.leave'), linkId: id }).strict(),
   z.object({ action: z.literal('practice.ai'), scope: z.discriminatedUnion('kind', [
     z.object({ kind: z.literal('all') }).strict(),
     z.object({ kind: z.literal('course'), key: id.max(100) }).strict(),
@@ -163,7 +167,8 @@ export class LearningService {
     try {
       const state = await this.state(userId);
       if (scope.kind === 'lesson' && !state.lessons.some(lesson => lesson.lessonKey === scope.key)) throw notFound();
-      const courses = await this.db.course.findMany({ select: { key: true, title: true } });
+      const seen = new Set(state.lessons.map(lesson => lesson.courseKey));
+      const courses = (await this.db.course.findMany({ select: { key: true, title: true } })).filter(course => seen.has(course.key));
       if (scope.kind === 'course' && !courses.some(course => course.key === scope.key)) throw notFound();
       const record: LearnerRecord = { summary: state.confusion, concepts: state.concepts, lessons: state.lessons, courses };
       const profile = await buildProfile(this.db, record, scope);
@@ -231,7 +236,8 @@ export class LearningService {
     const open = await this.db.assignmentRecipient.findFirst({ where: { learnerUserId: userId, status: 'assigned',
       assignment: { issuerType: 'self', problemSetVersionId: null, policySnapshot: { path: '$.misconception', equals: misconception } } } });
     if (open) return undefined;
-    const pool = (await gatheredPracticePools(this.db, userId, [misconception])).get(misconception)!;
+    const visible = new Set((await this.catalog(this.db, userId)).map(lesson => lesson.courseKey));
+    const pool = (await gatheredPracticePools(this.db, userId, [misconception], visible)).get(misconception)!;
     if (pool.length >= gatheredQuestions) return undefined;
     filling.add(userId);
     try {
@@ -240,17 +246,44 @@ export class LearningService {
   }
 
   /**
-   * The concepts a placement should cover for one learner: what the course they came for stands on,
-   * or — when they have not said — everything on the line the catalogue is ordered along. A course
-   * on a track beside that line is never asked about by accident. Somebody who came for it says so,
-   * and only then does the descent start from its concepts.
+   * The concepts a placement should cover for one learner: what the courses they are heading for
+   * stand on, or — when there are none — everything on the line the catalogue is ordered along. A
+   * course on a track beside that line is never asked about by accident. Somebody who came for it
+   * says so, and only then does the descent start from its concepts.
    */
-  private async placementTargets(db: Tx, lessons: PublicLesson[], targetCourseKey: string | null): Promise<string[]> {
-    const chosen = lessons.filter(lesson => lesson.courseKey === targetCourseKey).flatMap(lesson => lesson.conceptKeys);
+  private async placementTargets(db: Tx, lessons: PublicLesson[], courseKeys: string[]): Promise<string[]> {
+    const chosen = lessons.filter(lesson => courseKeys.includes(lesson.courseKey)).flatMap(lesson => lesson.conceptKeys);
     if (chosen.length) return chosen;
     const tracks = new Map((await db.course.findMany({ select: { key: true, track: true } })).map(row => [row.key, row.track]));
     return lessons.filter(lesson => isSchoolTrack((tracks.get(lesson.courseKey) ?? defaultCourseTrack) as CourseTrack))
       .flatMap(lesson => lesson.conceptKeys);
+  }
+
+  /**
+   * Where a learner is heading: the course they said they came for, and the courses somebody set
+   * for them. Either may be missing, and both may be — a learner nobody teaches and who has not said
+   * is placed and recommended along the whole school line, as before there were teachers.
+   */
+  private async targetCourses(db: Tx, userId: string, targetCourseKey: string | null): Promise<string[]> {
+    return [...new Set([...(targetCourseKey ? [targetCourseKey] : []), ...await assignedCourseKeys(db, userId)])];
+  }
+
+  /**
+   * After somebody else changed where this learner is heading — a teacher set or took off a course,
+   * or a link ended. The placement carries on as it does when the learner changes it themselves, and
+   * the recommendation history says what moved it.
+   */
+  async retarget(tx: Tx, userId: string, trigger: string) {
+    await this.carryPlacementOn(tx, userId);
+    await this.recordHistory(tx, userId, trigger);
+  }
+
+  private async recordHistory(tx: Tx, userId: string, trigger: string) {
+    const nextState = await this.state(userId, tx);
+    const snapshot = { recommendations: nextState.recommendations, plan: nextState.plan };
+    const fingerprint = createHash('sha256').update(JSON.stringify(snapshot)).digest('hex');
+    const previous = await tx.recommendationHistory.findFirst({ where: { userId }, orderBy: [{ createdAt: 'desc' }, { id: 'desc' }] });
+    if (previous?.fingerprint !== fingerprint) await tx.recommendationHistory.create({ data: { userId, fingerprint, trigger, snapshot: asJson(snapshot) } });
   }
 
   /**
@@ -277,12 +310,12 @@ export class LearningService {
     const run = await tx.diagnosticRun.findUnique({ where: { userId_version: { userId, version: definition.versionId } } });
     const held = run?.placement as StoredPlacement | null;
     if (!run || !held) return;
-    const published = await this.catalog(tx);
+    const published = await this.catalog(tx, userId);
     const learner = await tx.user.findUniqueOrThrow({ where: { id: userId }, select: { targetCourseKey: true } });
     // Against the catalogue this run froze, not today's: a run is replayed on the shape it started
     // with, and a concept the catalogue only learned about afterwards has no question in its bank.
     const graph = conceptGraph(held.lessons);
-    const scope = placementScope(graph, await this.placementTargets(tx, published, learner.targetCourseKey));
+    const scope = placementScope(graph, await this.placementTargets(tx, published, await this.targetCourses(tx, userId, learner.targetCourseKey)));
     const stretches = stretchesOf(held);
     if (stretches[stretches.length - 1].scope.join('\u0000') === scope.join('\u0000')) return;
     const answers = run.answers as unknown as DiagnosticAnswer[];
@@ -296,12 +329,18 @@ export class LearningService {
       status: completed ? 'completed' : 'active', completedAt: completed ? run.completedAt ?? new Date() : null } });
   }
 
-  /** The latest version of every published lesson, in the order its course gives it. */
-  async catalog(db: Tx = this.db): Promise<PublicLesson[]> {
-    const rows = await db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }],
-      select: { lessonKey: true, metadata: true, lesson: { select: { order: true, course: { select: { key: true, order: true, createdAt: true } } } } } });
+  /**
+   * The latest version of every published lesson this viewer may see, in the order its course gives
+   * it. Signed out is `null`, which sees only what is open to everybody. Everything a learner is
+   * offered — the lessons, the shelf, the placement, the recommendation — is drawn from this, so a
+   * course kept to some learners is kept out of all of it at once.
+   */
+  async catalog(db: Tx = this.db, viewerId: string | null = null): Promise<PublicLesson[]> {
+    const [rows, hidden] = await Promise.all([db.lessonVersion.findMany({ orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }],
+      select: { lessonKey: true, metadata: true, lesson: { select: { order: true, course: { select: { key: true, order: true, createdAt: true } } } } } }),
+      hiddenCourses(db, viewerId)]);
     const seen = new Set<string>();
-    return rows.filter(row => { if (seen.has(row.lessonKey)) return false; seen.add(row.lessonKey); return true; })
+    return rows.filter(row => { if (hidden.has(row.lesson.course.key) || seen.has(row.lessonKey)) return false; seen.add(row.lessonKey); return true; })
       .sort((a, b) => a.lesson.course.order - b.lesson.course.order
         || a.lesson.course.createdAt.getTime() - b.lesson.course.createdAt.getTime()
         || a.lesson.course.key.localeCompare(b.lesson.course.key) || a.lesson.order - b.lesson.order || a.lessonKey.localeCompare(b.lessonKey))
@@ -310,8 +349,8 @@ export class LearningService {
 
   // Signed-out screens name the concepts the published catalogue teaches. A concept without a
   // published lesson stays out of the public response until its lesson is released.
-  async publicCatalog(db: Tx = this.db): Promise<PublicCatalog> {
-    const lessons = await this.catalog(db);
+  async publicCatalog(db: Tx = this.db, viewerId: string | null = null): Promise<PublicCatalog> {
+    const lessons = await this.catalog(db, viewerId);
     const taught = new Set(lessons.flatMap(item => item.conceptKeys));
     const published = new Set(lessons.map(item => item.courseKey));
     const [rows, courses] = await Promise.all([
@@ -398,10 +437,11 @@ export class LearningService {
     if (!record) throw notFound();
     // Definitions resolve at delivery so a reworded definition reaches an in-progress lesson version too.
     const [definitions, lessons, lesson] = await Promise.all([
-      currentDefinitions(this.db, definitionReferences(record)), this.catalog(),
+      currentDefinitions(this.db, definitionReferences(record)), this.catalog(this.db, userId ?? null),
       this.db.lesson.findUnique({ where: { key: lessonKey }, select: { course: { select: { key: true } } } }),
     ]);
-    if (!lesson) throw notFound();
+    // A lesson in a course kept from this reader is a lesson that is not there for them.
+    if (!lesson || !lessons.some(item => item.lessonKey === lessonKey)) throw notFound();
     return toPublicLesson(record, lesson.course.key, leafGlossary(glossaryEntries(definitions, lessons, lesson.course.key)));
   }
 
@@ -431,17 +471,17 @@ export class LearningService {
       if (!mayReferenceDefinition(parent, refs[index]) || !blockDefinitionRefs(parent.blocks).some(ref => definitionRefId(ref) === definitionRefId(refs[index]))) throw unavailable();
     }
     const selected = entries.get(definitionRefId(refs.at(-1)!))!;
-    return glossaryEntries([selected], await this.catalog(), lesson.course.key)[0];
+    return glossaryEntries([selected], await this.catalog(this.db, userId ?? null), lesson.course.key)[0];
   }
 
   async conceptHelp(userId: string, input: unknown) {
     const { attemptId } = z.object({ attemptId: id }).strict().parse(input);
-    return loadConceptHelp(this.db, userId, attemptId, () => this.catalog());
+    return loadConceptHelp(this.db, userId, attemptId, () => this.catalog(this.db, userId));
   }
 
   async state(userId: string, db: Tx = this.db): Promise<LearningState> {
     const [user, lessons, enrollments, recipients, diagnostic, history, assessable, offering] = await Promise.all([
-      db.user.findUnique({ where: { id: userId } }), this.catalog(db),
+      db.user.findUnique({ where: { id: userId } }), this.catalog(db, userId),
       db.enrollment.findMany({ where: { userId }, include: { lessonVersion: { select: { id: true, lessonKey: true } },
         attempts: { orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] } }, orderBy: { createdAt: 'asc' } }),
       db.assignmentRecipient.findMany({ where: { learnerUserId: userId }, include: {
@@ -573,7 +613,8 @@ export class LearningService {
     const asking = stored && diagnosticBank ? placement(conceptGraph(stored.lessons), stretchesOf(stored), diagnosticBank, diagnosticAnswers) : null;
     const readiness = conceptReadiness(conceptLabels, completedDiagnostic ? stored : null, evidence);
     const repeatedKeys = confusion.repeated.filter(item => item.kind === 'misconception' && item.status === 'repeated').map(item => item.key);
-    const pools = await gatheredPracticePools(db, userId, lessons.some(lesson => lesson.lessonKey === user.preferredLessonKey) ? [] : repeatedKeys);
+    const pools = await gatheredPracticePools(db, userId, lessons.some(lesson => lesson.lessonKey === user.preferredLessonKey) ? [] : repeatedKeys,
+      new Set(lessons.map(lesson => lesson.courseKey)));
     const mayWrite = repeatedKeys.length > 0 && this.writer() !== null
       && await db.generatedProblemSet.count({ where: { userId, createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } } }) < dailyGenerations;
     const targetedPractice = recommendTargetedPractice(confusion, repeatedKeys.map(key => {
@@ -585,14 +626,17 @@ export class LearningService {
       // Where a model may write what the catalogue lacks, a set comes to its full size.
       return { key, recipientId: open?.id ?? null, problemCount: open?.assignment.items.length ?? (mayWrite ? gatheredQuestions : pools.get(key)?.length ?? 0), completedAt };
     }));
+    const teaching = await learnerTeaching(db, userId);
+    // Only what this learner can see: a course kept back since it was set leads nowhere they can go.
+    const targetCourseKeys = (await this.targetCourses(db, userId, user.targetCourseKey)).filter(key => lessons.some(lesson => lesson.courseKey === key));
     const { recommendations, plan } = recommend({ lessons, enrollments: enrollments.map(e => ({ lessonKey: e.lessonVersion.lessonKey, status: e.status })),
-      assignments, readiness, targetedPractice, dailyMinutes: user.dailyMinutes, targetCourseKey: user.targetCourseKey, now: new Date(), preferredLessonKey: user.preferredLessonKey });
+      assignments, readiness, targetedPractice, dailyMinutes: user.dailyMinutes, targetCourseKeys, now: new Date(), preferredLessonKey: user.preferredLessonKey });
     return {
       user: { id: user.id, displayName: user.displayName, targetCourseKey: user.targetCourseKey, dailyMinutes: user.dailyMinutes },
-      lessons, assignments, recommendations, concepts, misconceptions, plan,
+      lessons, assignments, recommendations, concepts, misconceptions, plan, teaching,
       confusion, aiPractice: await this.aiPracticeState(db, userId),
       diagnosticOffering: offering ? { version: offering.versionId, title: offering.title, description: offering.description,
-        scope: placementScope(conceptGraph(lessons), await this.placementTargets(db, lessons, user.targetCourseKey)).length,
+        scope: placementScope(conceptGraph(lessons), await this.placementTargets(db, lessons, targetCourseKeys)).length,
         estimatedMinutes: offering.estimatedMinutes } : null,
       diagnostic: diagnostic && diagnosticBank && stored ? { id: diagnostic.id, version: diagnostic.version, status: diagnostic.status as 'active' | 'completed',
         completedAt: diagnostic.completedAt?.toISOString() ?? null, answered: diagnosticAnswers.length,
@@ -688,7 +732,7 @@ export class LearningService {
           const outcome = await (async (): Promise<Omit<ActionResponse, 'state'>> => {
           switch (action.action) {
             case 'recommendation.choose': {
-              if (action.lessonKey && !await tx.lessonVersion.findFirst({ where: { lessonKey: action.lessonKey } })) throw notFound();
+              if (action.lessonKey && !(await this.catalog(tx, userId)).some(lesson => lesson.lessonKey === action.lessonKey)) throw notFound();
               await tx.user.update({ where: { id: userId }, data: { preferredLessonKey: action.lessonKey } });
               return {};
             }
@@ -706,10 +750,10 @@ export class LearningService {
               // Only what the course they came for stands on. Without one it is the line the
               // catalogue is ordered along, which is the length this was replacing — so the
               // question is worth asking first.
-              const published = await this.catalog(tx);
+              const published = await this.catalog(tx, userId);
               const shapes = published.map(l => ({ conceptKeys: l.conceptKeys, prerequisiteConceptKeys: l.prerequisiteConceptKeys }));
               const learner = await tx.user.findUniqueOrThrow({ where: { id: userId }, select: { targetCourseKey: true } });
-              const wanted = await this.placementTargets(tx, published, learner.targetCourseKey);
+              const wanted = await this.placementTargets(tx, published, await this.targetCourses(tx, userId, learner.targetCourseKey));
               const scope = placementScope(conceptGraph(shapes), wanted);
               await tx.diagnosticRun.upsert({ where: { userId_version: { userId, version: definition.versionId } }, update: {},
                 create: { userId, version: definition.versionId, document: asJson(definition.problems), answers: [],
@@ -751,7 +795,7 @@ export class LearningService {
             case 'profile.update': {
               // A course with nothing published in it is not a destination — the placement's own
               // course holds the question bank and no lessons. Clearing it is always allowed.
-              if (action.targetCourseKey && !(await tx.lessonVersion.findFirst({ where: { lesson: { course: { key: action.targetCourseKey } } } }))) throw notFound();
+              if (action.targetCourseKey && !(await this.catalog(tx, userId)).some(lesson => lesson.courseKey === action.targetCourseKey)) throw notFound();
               const before = await tx.user.findUniqueOrThrow({ where: { id: userId }, select: { targetCourseKey: true } });
               await tx.user.update({ where: { id: userId }, data: { targetCourseKey: action.targetCourseKey, dailyMinutes: action.dailyMinutes } });
               if (before.targetCourseKey !== action.targetCourseKey) await this.carryPlacementOn(tx, userId);
@@ -762,6 +806,7 @@ export class LearningService {
               if (!version) throw notFound();
               const existing = await tx.enrollment.findFirst({ where: { userId, lessonVersion: { lessonKey: action.lessonKey } } });
               if (existing) return { enrollmentId: existing.id };
+              if (!(await this.catalog(tx, userId)).some(lesson => lesson.lessonKey === action.lessonKey)) throw notFound();
               const enrollment = await tx.enrollment.create({ data: { userId, scopeId: scope.id, lessonVersionId: version.id, completedSectionIds: [] } });
               return { enrollmentId: enrollment.id };
             }
@@ -836,13 +881,19 @@ export class LearningService {
             }
             case 'problemSet.start': return { recipientId: await this.startProblemSet(tx, userId, scope.id, action.problemSetId) };
             case 'practice.gather': return { recipientId: await this.gatherPractice(tx, userId, scope.id, action.misconception, filled) };
+            case 'teaching.join': {
+              await joinByInvite(tx, userId, action.code, async teacher => (await authoringRole(this.db, teacher)) !== null);
+              await this.carryPlacementOn(tx, userId);
+              return {};
+            }
+            case 'teaching.leave': {
+              await endLink(tx, { id: action.linkId, learnerUserId: userId });
+              await this.carryPlacementOn(tx, userId);
+              return {};
+            }
           }
           })();
-          const nextState = await this.state(userId, tx);
-          const snapshot = { recommendations: nextState.recommendations, plan: nextState.plan };
-          const fingerprint = createHash('sha256').update(JSON.stringify(snapshot)).digest('hex');
-          const previous = await tx.recommendationHistory.findFirst({ where: { userId }, orderBy: [{ createdAt: 'desc' }, { id: 'desc' }] });
-          if (previous?.fingerprint !== fingerprint) await tx.recommendationHistory.create({ data: { userId, fingerprint, trigger: action.action, snapshot: asJson(snapshot) } });
+          await this.recordHistory(tx, userId, action.action);
           return outcome;
         }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable, maxWait: 10000, timeout: 20000 });
         break;
@@ -863,7 +914,7 @@ export class LearningService {
    * back means「이어서」, not「처음부터」. After submitting, starting it again is a new sitting.
    */
   async startProblemSet(tx: Tx, userId: string, scopeId: string, problemSetId: string) {
-    const listed = await this.publicProblemSets(tx);
+    const listed = await this.publicProblemSets(tx, await this.catalog(tx, userId));
     const set = listed.find(item => item.problemSetId === problemSetId);
     // Not found rather than forbidden: what is not on the shelf is not a set this learner can pick.
     if (!set) throw notFound();
@@ -913,7 +964,8 @@ export class LearningService {
       orderBy: { recommendedAt: 'desc' },
     });
     if (open) return open.id;
-    const items = (await gatheredPracticePools(tx, userId, [misconception])).get(misconception)!;
+    const visible = new Set((await this.catalog(tx, userId)).map(lesson => lesson.courseKey));
+    const items = (await gatheredPracticePools(tx, userId, [misconception], visible)).get(misconception)!;
     if (!items.length) throw conflict(filled === 'limit' ? '오늘은 새 문제를 더 만들 수 없어요. 내일 다시 해 보세요.'
       : filled === 'failed' ? '이 착각을 다루는 문항을 만들지 못했어요. 잠시 뒤에 다시 해 보세요.' : '이 착각을 다루는 문항이 아직 없어요.');
     const now = new Date();

@@ -5,16 +5,21 @@ import { parseAssignmentPolicy } from '@/core/assignment';
 
 export const gatheredQuestions = 6;
 
-/** The preview and the actual gather use this same eligible, ordered pool. No work is created here. */
-export async function gatheredPracticePools(db: Prisma.TransactionClient, userId: string, keys: string[]) {
+/**
+ * The preview and the actual gather use this same eligible, ordered pool. No work is created here.
+ * `courses` are the courses this learner may see, when some are kept from them; a question from a
+ * course kept from them stays out.
+ */
+export async function gatheredPracticePools(db: Prisma.TransactionClient, userId: string, keys: string[], courses?: ReadonlySet<string>) {
   const pools = new Map(keys.map(key => [key, [] as string[]]));
   if (!keys.length) return pools;
   // This learner's own generated questions join the catalogue's, after it: a question written for
   // them that they have not yet got right is one fewer to write. Nobody else's are ever read.
   const generatedSets = (await db.generatedProblemSet.findMany({ where: { userId, misconception: { in: keys }, kept: { gt: 0 } },
     select: { id: true }, orderBy: { createdAt: 'asc' } })).map(set => set.id);
+  const shelved = courses && (await db.problemSetVersion.findMany({ where: { problemSet: { course: { key: { in: [...courses] } } } }, select: { id: true } })).map(row => row.id);
   const [catalogue, generated, diagnostics, attempts] = await Promise.all([
-    db.publishedProblem.findMany({ where: { ownerKind: 'problem_set', misreadings: { not: Prisma.DbNull } },
+    db.publishedProblem.findMany({ where: { ownerKind: 'problem_set', misreadings: { not: Prisma.DbNull }, ...(shelved ? { ownerVersionId: { in: shelved } } : {}) },
       orderBy: [{ ownerVersionId: 'asc' }, { order: 'asc' }], select: { ownerVersionId: true, problemVersionId: true, misreadings: true } }),
     generatedSets.length ? db.publishedProblem.findMany({ where: { ownerKind: 'generated', ownerVersionId: { in: generatedSets } },
       orderBy: [{ ownerVersionId: 'asc' }, { order: 'asc' }], select: { ownerVersionId: true, problemVersionId: true, misreadings: true } }) : [],

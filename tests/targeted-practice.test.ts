@@ -36,7 +36,7 @@ describe('focused practice recommendations', () => {
   });
   it('preserves lesson choice and due review while adding an automatic practice option', () => {
     const lessons = seedLessons.map(lesson => ({ ...lesson.public, courseKey: 'fractions' }));
-    const input = { lessons, enrollments: [], assignments: [], readiness: [], dailyMinutes: 10, targetCourseKey: null, now: new Date('2026-09-29T03:00:00.000Z'),
+    const input = { lessons, enrollments: [], assignments: [], readiness: [], dailyMinutes: 10, targetCourseKeys: [], now: new Date('2026-09-29T03:00:00.000Z'),
       targetedPractice: recommendTargetedPractice(summary(pattern()), [option()]) };
     expect(recommend(input).plan.targetedPractice).toEqual(input.targetedPractice);
     expect(recommend(input).recommendations).toEqual(recommend({ ...input, targetedPractice: null }).recommendations);
