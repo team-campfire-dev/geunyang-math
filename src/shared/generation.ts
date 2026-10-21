@@ -26,6 +26,11 @@ export type GenerationRequest = {
    * they wrote, and what the answer was. The editor never sends these; the learning service does.
    */
   mistakes?: { prompt: string; wrote: string; answer: string }[];
+  /**
+   * Mistakes a model guessed from this learner's record, with no catalogue name. The writer names
+   * an expected wrong answer by `key` (`hypothesis:1`), so the checker can hold the guess to a value.
+   */
+  hypotheses?: { key: string; mistake: string }[];
 };
 
 export type GenerationVerdict = 'verified' | 'unverified' | 'rejected';
@@ -78,6 +83,7 @@ export const generationIssueText: Record<string, string> = {
   'option-units': '보기마다 단위가 달라서 값을 비교하지 않았어요.',
   'claim-degrees': '정답이 각을 도(°)로 센 수예요. 맞을 수 있지만 사람이 확인해야 해요.',
   'misreading-invalid': '예상 오답의 이름표가 규칙에 맞지 않아요.',
+  'beyond-stage': '이 학년에서 아직 배우지 않은 내용이 들어 있어요.',
   'misreading-correct': '예상 오답이 정답으로 채점돼요.',
   'misreading-unrecordable': '입력 칸이 예상 오답을 받지 않아서 그 실수가 기록될 수 없어요.',
   'misreading-shadowed': '같은 값에 다른 이름표가 먼저 붙어서 이 이름으로 기록되지 않아요.',

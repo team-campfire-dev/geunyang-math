@@ -75,6 +75,8 @@ export async function removeRowsAddedSince(db: PrismaClient, before: Existing) {
   await db.recommendationHistory.deleteMany({ where: { userId: { in: users } } });
   await db.contentDraft.deleteMany({ where: { authorId: { in: users } } });
   await db.contentAuthor.deleteMany({ where: { userId: { in: users } } });
+  // A deleted account's spending stays, without it; a test's spending is the test's and goes.
+  await db.modelUsage.deleteMany({ where: { userId: { in: users } } });
   await db.session.deleteMany({ where: { userId: { in: users } } });
   await db.googleIdentity.deleteMany({ where: { userId: { in: users } } });
   await db.learningScope.deleteMany({ where: { id: { in: scopes } } });

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { aiPracticeLimits, scopeEvidence, scopeKey, type PracticeScope } from '@/shared/ai-practice';
+import { aiPracticeLimits, scopeEvidence, scopeKey, type HypothesisCheck, type PracticeScope } from '@/shared/ai-practice';
 import type { AssignmentView, LearningState } from '@/shared/api';
 import { Icon } from './icons';
 
@@ -11,16 +11,16 @@ import { Icon } from './icons';
  * stream its progress; the last one stays until the set arrives.
  */
 const steps: [number, string][] = [
-  [0, '기록을 읽고, 무엇을 연습하면 좋을지 정하고 있어요'],
-  [12, '고른 부분에 맞춰 문제를 쓰고 있어요'],
+  [0, '풀이 기록을 읽고, 어떤 실수였는지 추측하고 있어요'],
+  [12, '그 실수를 확인할 문제를 쓰고 있어요'],
   [30, '정답을 직접 계산하고, 문제만 보고 따로 풀어 맞춰 보고 있어요'],
 ];
 const stepAt = (seconds: number) => steps.filter(([from]) => seconds >= from).at(-1)![1];
 
 const copy: Record<PracticeScope['kind'], { title: string; text: (label: string) => string }> = {
-  all: { title: 'AI 맞춤 연습', text: () => `AI가 지금까지의 학습 기록을 읽고, 약한 개념과 헷갈린 부분을 골라 ${aiPracticeLimits.questions}문제를 새로 내요.` },
-  course: { title: '이 코스로 AI 맞춤 연습', text: (label) => `「${label}」에서 푼 기록을 읽고, 다시 다질 부분으로 ${aiPracticeLimits.questions}문제를 내요.` },
-  lesson: { title: '이 수업으로 AI 맞춤 연습', text: (label) => `「${label}」에서 틀린 것과 약한 개념을 보고 ${aiPracticeLimits.questions}문제를 새로 내요.` },
+  all: { title: 'AI 맞춤 연습', text: () => `AI가 지금까지 푼 기록을 읽고 어떤 실수였는지 추측해, 그것을 확인하고 다질 ${aiPracticeLimits.questions}문제를 새로 내요.` },
+  course: { title: '이 코스로 AI 맞춤 연습', text: (label) => `「${label}」에서 푼 기록을 읽고 어떤 실수였는지 추측해, ${aiPracticeLimits.questions}문제를 새로 내요.` },
+  lesson: { title: '이 수업으로 AI 맞춤 연습', text: (label) => `「${label}」에서 푼 기록을 읽고 어떤 실수였는지 추측해, ${aiPracticeLimits.questions}문제를 새로 내요.` },
 };
 
 /**
@@ -72,17 +72,39 @@ export function AiPracticePanel({ scope, label, state, lessons, busy, variant, o
     </div>
     <div className="ai-practice-action">
       {action}
-      {!open && <small>{spent ? '오늘은 다 썼어요. 내일 다시 만들 수 있어요.' : `오늘 ${state.aiPractice.remaining}번 더 만들 수 있어요`}</small>}
+      {!open && <small>{state.aiPractice.refused ?? (spent ? '오늘은 다 썼어요. 내일 다시 만들 수 있어요.' : `오늘 ${state.aiPractice.remaining}번 더 만들 수 있어요`)}</small>}
     </div>
   </section>;
 }
 
-/** What the model read and saw, above the questions it wrote. */
+/**
+ * What the questions written for a guess have found so far, from first answers. It reports and
+ * never rules: a guess the learner answered around is not proved wrong, and one they fell into is
+ * not proved right.
+ */
+export function checkWords(check: HypothesisCheck): string {
+  if (!check.answered) return `확인할 문제 ${check.asked}개`;
+  const found = [
+    check.predicted ? `예측한 답이 ${check.predicted}번 나왔어요` : '',
+    check.correct ? `${check.correct}번 맞혔어요` : '',
+    check.other ? `다른 답이 ${check.other}번 나왔어요` : '',
+  ].filter(Boolean).join(' · ');
+  const left = check.asked - check.answered;
+  if (!left && check.correct === check.answered) return `${check.asked}문제 모두 맞혔어요. 이 실수는 아니었을 수 있어요.`;
+  return left ? `${found} · ${left}문제 남았어요` : found;
+}
+
+/** What the model read and saw, and what it guessed, above the questions it wrote. */
 export function AiPracticeNote({ assignment }: { assignment: AssignmentView }) {
   if (!assignment.ai) return null;
+  const guesses = assignment.ai.hypotheses ?? [];
   return <div className="ai-diagnosis">
     <span className="ai-practice-eyebrow"><Icon name="spark" size={14} />AI가 「{assignment.ai.scopeLabel}」 기록에서 본 것</span>
     <p>{assignment.ai.diagnosis}</p>
-    <small>모든 문제는 서버가 정답을 직접 계산하고, 문제만 보고 따로 푼 답과도 맞춰 본 것만 넣었어요.</small>
+    {guesses.length > 0 && <div className="ai-guesses">
+      <strong>AI가 추측한 실수</strong>
+      <ul>{guesses.map((guess) => <li key={guess.name}><span>{guess.name}</span><small>{checkWords(guess.check)}</small></li>)}</ul>
+    </div>}
+    <small>추측은 풀이 기록에서 짐작한 것이에요. 이 문제들에서 그 실수를 하면 바로 드러나도록 만들었어요. 모든 문제는 서버가 정답을 직접 계산하고, 문제만 보고 따로 푼 답과도 맞춰 본 것만 넣었어요.</small>
   </div>;
 }

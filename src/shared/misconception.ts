@@ -311,3 +311,14 @@ export const misconceptionKeys = misconceptions.map((record) => record.key);
 export const misconceptionOf = (key: string): MisconceptionRecord | undefined => byKey.get(key);
 /** What a learner is told they kept doing. The label is about the working, never about them. */
 export const misconceptionLabel = (key: string) => byKey.get(key)?.label ?? key;
+
+/**
+ * A mistake a model guessed from one learner's record, named for the one set written to check it.
+ *
+ * It is not a catalogue entry and never becomes one: the catalogue's names add up across learners,
+ * and a guess is about one person. So it may name an expected wrong answer while a set is written
+ * and checked, and is then taken off the frozen question — grading, the confusion summary and every
+ * gathered set read only the catalogue — and kept beside the set as what the guess predicted.
+ */
+export const hypothesisKey = (index: number) => `hypothesis:${index}`;
+export const isHypothesisKey = (key: string) => /^hypothesis:[1-9]$/.test(key);

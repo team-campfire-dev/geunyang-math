@@ -6,8 +6,10 @@ import { answerSpec, choiceLimits, misreadingLimits, type AnswerSpec } from '@/s
 import type { ContentBlock } from '@/shared/api';
 import type { DraftProblem } from '@/shared/authoring';
 import { generationLimits, type GeneratedProblem, type GenerationIssue, type GenerationRequest, type GenerationResult } from '@/shared/generation';
+import type { CourseStage } from '@/shared/api';
 import { misconceptionLabel } from '@/shared/misconception';
 import { solverSystem, writerSystem } from './problem-prompts';
+import { beyondStage, notYet } from './stage-range';
 
 /**
  * Writes questions with a model and checks them before an author sees them.
@@ -48,7 +50,9 @@ export type ProblemModel = {
 };
 
 /** What the writer is told about the lesson, beyond what the author asked. */
-export type GenerationContext = { courseTitle: string | null; lessonTitle: string; concepts: { key: string; label: string }[] };
+export type GenerationContext = { courseTitle: string | null; lessonTitle: string; concepts: { key: string; label: string }[];
+  /** The learner's stage, when it is known: what is written must stay inside it. */
+  stage?: CourseStage | null };
 
 /** A question as it is about to be judged, before it has a verdict. */
 type Candidate = { problem: DraftProblem; spec: AnswerSpec; written: WrittenProblem; issues: GenerationIssue[] };
@@ -62,6 +66,7 @@ const paragraph = (blockId: string, text: string): ContentBlock =>
 export function writerRequest(request: GenerationRequest, context: GenerationContext): string {
   const lines = [
     `과정: ${context.courseTitle ?? '(정하지 않음)'}`,
+    ...(context.stage && notYet[context.stage] ? [`학년 범위: ${notYet[context.stage]} 지문·보기·정답·힌트·해설 모두에 해당한다.`] : []),
     `수업: ${context.lessonTitle}`,
     `개념: ${context.concepts.map((concept) => concept.label).join(', ') || '(수업의 개념)'}`,
     `문제 수: ${request.count}`,
@@ -69,6 +74,10 @@ export function writerRequest(request: GenerationRequest, context: GenerationCon
   ];
   if (request.misconceptions.length) {
     lines.push(`겨냥할 실수(오답 보기와 예상 오답을 이 실수에서 만든다): ${request.misconceptions.map((key) => `${key}(${misconceptionLabel(key)})`).join(', ')}`);
+  }
+  if (request.hypotheses?.length) {
+    lines.push('', '추측한 실수(이 학습자의 기록에서 짐작한 것). 문제마다 예상 오답 하나 이상을 이 실수에서 만든다. 그 오답의 misconception에는 위의 「겨냥할 실수」에 목록 key가 있으면 **그 목록 key를 쓴다** — 다른 학습자의 기록과 합산되기 때문이다. 그 오답이 목록의 실수와 다를 때만, 또는 목록 key가 없을 때 아래 key를 쓴다. 이 실수를 한 학습자라면 바로 그 오답을 쓰게 되도록 수를 고른다. 지문에서 그 실수를 미리 알려 주거나 경고하지 않는다(「제곱한 값이 아니라」 같은 말) — 그러면 실수를 할지 확인할 수 없다.');
+    for (const item of request.hypotheses) lines.push(`- ${item.key}: ${item.mistake}`);
   }
   if (request.mistakes?.length) {
     lines.push('', '한 학습자가 실제로 이렇게 틀렸다. 이 학습자가 다시 풀 문제를 쓴다 — 같은 개념, 같은 수준에서, 이 실수를 하면 바로 드러나는 새 문제다. 틀린 문제의 수만 바꾸지 말고 상황이나 배치를 바꾼다. 학습자를 지문에 등장시키거나 이 오답을 언급하지 않는다.');
@@ -166,6 +175,17 @@ function judge(candidate: Candidate, independent: string | null): GeneratedProbl
   };
 }
 
+/**
+ * A question that reaches past what the learner has learned is wrong for them however right it is,
+ * so it is rejected rather than left for someone to notice. Only what shows in the text is caught.
+ */
+function withinStage(generated: GeneratedProblem, written: WrittenProblem, stage: CourseStage | null | undefined): GeneratedProblem {
+  const text = [written.prompt, written.answer, written.solution, ...written.hints, ...written.options.map((option) => option.text)].join('\n');
+  const beyond = beyondStage(stage, text);
+  if (!beyond) return generated;
+  return { ...generated, verdict: 'rejected', issues: [...generated.issues, { code: 'beyond-stage', level: 'error', message: beyond }] };
+}
+
 /** A question the writer sent in a shape the editor cannot hold. It is shown, never taken. */
 function malformed(written: WrittenProblem, index: number, reason: string, conceptKeys: string[]): GeneratedProblem {
   const problemVersionId = placeholder(index);
@@ -184,7 +204,7 @@ export async function generateProblems(model: ProblemModel, request: GenerationR
     if ('invalid' in candidate) return malformed(item, index, candidate.invalid, request.conceptKeys);
     // The solver is a separate request that never sees the claim, the key or the expected mistakes.
     const independent = await model.solve(solverSystem, solverRequest(item)).then((answer) => answer.trim() || null, () => null);
-    return judge(candidate, independent);
+    return withinStage(judge(candidate, independent), item, context.stage);
   }));
   return { problems, asked: request.count, model: model.name };
 }

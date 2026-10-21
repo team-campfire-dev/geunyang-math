@@ -66,6 +66,7 @@ https://geunyang-math.team-campfire.dev/api/auth/google/callback
 | `GOOGLE_CLIENT_ID` | 이 프로젝트 전용 Web application 클라이언트 ID |
 | `GOOGLE_CLIENT_SECRET` | 서버 전용 비밀값. `ENV_FILE`에만 두고 빌드 공개 변수로 전달하지 않음 |
 | `DEV_LOGIN_ENABLED` | `false` 고정 |
+| `AI_ACCOUNT_DAILY_USD`, `AI_ACCOUNT_MONTHLY_USD`, `AI_SERVICE_DAILY_USD` | 선택. 모델 생성의 달러 한도(계정 24시간·30일, 서비스 24시간). 없으면 2·20·30. `ENV_FILE`에 넣으면 다음 배포부터 바뀐다([비용 기록과 한도](problem-verification.md#비용-기록과-한도)) |
 
 Google 설정은 앱 환경 파일에만 필요하고 migration 환경 파일에는 넣지 않는다. 앱이 등록 요청의 Host나 사용자 제공 복귀 주소로 callback을 만들지 않는다. 로컬 Google 시험에는 별도로 승인한 loopback URI와 그에 맞는 APP_ORIGIN이 필요하다. 현재 `.env.example`은 Google 로그인을 기본 비활성화한다.
 

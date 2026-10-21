@@ -19,9 +19,11 @@ import { AppError } from './errors';
 import { loadConceptHelp } from './concept-help';
 import { gatheredPracticePools, gatheredQuestions } from './gathered-practice';
 import { dailyGenerations, generateForLearner, type LearnerGeneration } from './learner-generation';
-import { buildProfile, newSetId, openPracticeSet, planSchema, plannerRequest, settlePlan, writeForPlan, type LearnerRecord, type Profile } from './ai-practice';
+import { buildProfile, newSetId, openPracticeSet, planSchema, plannerRequest, settlePlan, storedGuesses, writeForPlan, type LearnerRecord, type Profile } from './ai-practice';
 import { plannerSystem } from './problem-prompts';
-import { aiPracticeLimits, scopeKey, type AiPracticeRun, type AiPracticeState, type PracticeScope } from '@/shared/ai-practice';
+import { budgetRefusal, usageRecorder } from './ai-budget';
+import type { UsageSink } from './model-usage';
+import { aiPracticeLimits, checkHypothesis, scopeKey, type AiPracticeRun, type AiPracticeState, type PracticeScope } from '@/shared/ai-practice';
 import type { ProblemModel } from './problem-generation';
 import { claudeProblemModel, problemWriterAvailable } from './problem-writer';
 import { assignedCourseKeys, endLink, hiddenCourses, joinByInvite, learnerTeaching } from './teaching';
@@ -128,17 +130,19 @@ const filling = new Set<string>();
 const writing = new Set<string>();
 const dayAgo = () => new Date(Date.now() - 24 * 60 * 60 * 1000);
 /** The AI practice note an assignment carries, read defensively: it is JSON the database hands back. */
-function aiNoteOf(snapshot: unknown): { scope: string; scopeLabel: string; diagnosis: string; reasons: Record<string, string> } | null {
+function aiNoteOf(snapshot: unknown) {
   const ai = (snapshot as { ai?: unknown } | null)?.ai as { scope?: unknown; scopeLabel?: unknown; diagnosis?: unknown; reasons?: unknown } | undefined;
   if (!ai || typeof ai.scope !== 'string' || typeof ai.diagnosis !== 'string') return null;
   const reasons = ai.reasons && typeof ai.reasons === 'object' ? Object.fromEntries(Object.entries(ai.reasons).filter(([, v]) => typeof v === 'string')) as Record<string, string> : {};
-  return { scope: ai.scope, scopeLabel: typeof ai.scopeLabel === 'string' ? ai.scopeLabel : '', diagnosis: ai.diagnosis, reasons };
+  // A set from before guesses were kept has none, and says only what it saw.
+  const { hypotheses, predictions } = storedGuesses(ai);
+  return { scope: ai.scope, scopeLabel: typeof ai.scopeLabel === 'string' ? ai.scopeLabel : '', diagnosis: ai.diagnosis, reasons, hypotheses, predictions };
 }
 
 export class LearningService {
   /** `writer` writes questions a gathered set lacks, or null where this deployment has no model. */
   constructor(private readonly db: PrismaClient,
-    private readonly writer: () => ProblemModel | null = () => (problemWriterAvailable() ? claudeProblemModel() : null)) {}
+    private readonly writer: (onUsage?: UsageSink) => ProblemModel | null = (onUsage) => (problemWriterAvailable() ? claudeProblemModel(onUsage) : null)) {}
 
   /** AI practice runs still writing, so a test (or a shutdown) can wait for them. */
   private readonly running = new Set<Promise<void>>();
@@ -151,8 +155,7 @@ export class LearningService {
    * that is still open is opened instead: coming back means 「이어서」.
    */
   private async startAiPractice(userId: string, scope: PracticeScope): Promise<string | undefined> {
-    const model = this.writer();
-    if (!model?.plan) throw new AppError(503, 'generation_unavailable', '지금은 AI 맞춤 연습을 쓸 수 없어요.');
+    if (!this.writer()?.plan) throw new AppError(503, 'generation_unavailable', '지금은 AI 맞춤 연습을 쓸 수 없어요.');
     const key = scopeKey(scope);
     const open = await this.db.assignmentRecipient.findFirst({ where: { learnerUserId: userId, status: 'assigned',
       assignment: { issuerType: 'self', policySnapshot: { path: '$.ai.scope', equals: key } } }, orderBy: { recommendedAt: 'desc' } });
@@ -163,20 +166,27 @@ export class LearningService {
     }
     const used = await this.db.generatedProblemSet.count({ where: { userId, scope: { not: null }, createdAt: { gte: dayAgo() } } });
     if (used >= aiPracticeLimits.daily) throw conflict('오늘은 AI 맞춤 연습을 더 만들 수 없어요. 내일 다시 해 보세요.');
+    const refused = await budgetRefusal(this.db, userId);
+    if (refused) throw conflict(refused);
     writing.add(userId);
     try {
       const state = await this.state(userId);
       if (scope.kind === 'lesson' && !state.lessons.some(lesson => lesson.lessonKey === scope.key)) throw notFound();
       const seen = new Set(state.lessons.map(lesson => lesson.courseKey));
-      const courses = (await this.db.course.findMany({ select: { key: true, title: true } })).filter(course => seen.has(course.key));
+      const courses = (await this.db.course.findMany({ select: { key: true, title: true, stage: true } }))
+        .filter(course => seen.has(course.key)).map(course => ({ ...course, stage: course.stage as CourseStage | null }));
       if (scope.kind === 'course' && !courses.some(course => course.key === scope.key)) throw notFound();
-      const record: LearnerRecord = { summary: state.confusion, concepts: state.concepts, lessons: state.lessons, courses };
+      const record: LearnerRecord = { userId, summary: state.confusion, concepts: state.concepts, lessons: state.lessons, courses };
       const profile = await buildProfile(this.db, record, scope);
       if (!profile) throw conflict('이 범위에는 아직 기록이 부족해요. 문제를 몇 개 더 풀면 만들 수 있어요.');
       const setId = newSetId();
+      // Every call the run makes is written down for this learner and this set as it returns.
+      const recorder = usageRecorder(this.db, userId, 'ai-practice', setId);
+      const model = this.writer(recorder.sink)!;
       await this.db.generatedProblemSet.create({ data: { id: setId, userId, scope: key, model: model.name,
         requested: aiPracticeLimits.questions, kept: 0, status: 'pending' } });
-      const run = this.writeAiPractice(model, userId, setId, scope, profile, record).finally(() => { writing.delete(userId); this.running.delete(run); });
+      const run = this.writeAiPractice(model, userId, setId, scope, profile, record)
+        .then(recorder.settled).finally(() => { writing.delete(userId); this.running.delete(run); });
       this.running.add(run);
       return undefined;
     } catch (reason) { writing.delete(userId); throw reason; }
@@ -205,7 +215,7 @@ export class LearningService {
   }
 
   /** What the screen needs to offer AI practice: whether it can, how often more today, and what is under way. */
-  private async aiPracticeState(db: Tx, userId: string): Promise<AiPracticeState> {
+  private async aiPracticeState(db: Tx, userId: string, refused: string | null): Promise<AiPracticeState> {
     const sets = await db.generatedProblemSet.findMany({ where: { userId, scope: { not: null }, createdAt: { gte: dayAgo() } },
       orderBy: { createdAt: 'desc' }, select: { scope: true, status: true, plan: true, createdAt: true } });
     const latest = new Map<string, (typeof sets)[number]>();
@@ -221,7 +231,8 @@ export class LearningService {
       }
       return [];
     });
-    return { available: !!this.writer()?.plan, remaining: Math.max(0, aiPracticeLimits.daily - sets.length), runs };
+    return { available: !!this.writer()?.plan, remaining: refused ? 0 : Math.max(0, aiPracticeLimits.daily - sets.length), runs,
+      ...(refused ? { refused } : {}) };
   }
 
   /**
@@ -231,18 +242,19 @@ export class LearningService {
    * as this learner's own questions, which the gathering then finds like any other.
    */
   private async fillGathering(userId: string, misconception: string): Promise<LearnerGeneration['reason']> {
-    const model = this.writer();
-    if (!model || !misconceptionOf(misconception) || filling.has(userId)) return undefined;
+    if (!this.writer() || !misconceptionOf(misconception) || filling.has(userId)) return undefined;
     const open = await this.db.assignmentRecipient.findFirst({ where: { learnerUserId: userId, status: 'assigned',
       assignment: { issuerType: 'self', problemSetVersionId: null, policySnapshot: { path: '$.misconception', equals: misconception } } } });
     if (open) return undefined;
     const visible = new Set((await this.catalog(this.db, userId)).map(lesson => lesson.courseKey));
     const pool = (await gatheredPracticePools(this.db, userId, [misconception], visible)).get(misconception)!;
     if (pool.length >= gatheredQuestions) return undefined;
+    if (await budgetRefusal(this.db, userId)) return 'limit';
     filling.add(userId);
+    const recorder = usageRecorder(this.db, userId, 'gathered');
     try {
-      return (await generateForLearner(this.db, model, userId, misconception, gatheredQuestions - pool.length, pool)).reason;
-    } finally { filling.delete(userId); }
+      return (await generateForLearner(this.db, this.writer(recorder.sink)!, userId, misconception, gatheredQuestions - pool.length, pool)).reason;
+    } finally { filling.delete(userId); await recorder.settled(); }
   }
 
   /**
@@ -543,6 +555,8 @@ export class LearningService {
         }
       }
       const ai = aiNoteOf(r.assignment.policySnapshot);
+      /** First answers the learner has been told the result of, for what an AI set's guesses predicted. */
+      const firsts = new Map<string, { answer: string; status: 'correct' | 'incorrect'; spec: StoredProblem['gradingSpec'] }>();
       const items = r.assignment.items.map(item => {
         const p = assignmentProblems.get(item.problemVersionId);
         if (!p) throw new Error(`Missing published problem ${item.problemVersionId}`);
@@ -568,6 +582,10 @@ export class LearningService {
           .filter(a => (a.result as GradeResult).status !== 'invalid');
         // An exam marks as it goes and says nothing until it is handed in.
         const hold = policy.results === 'after-submission' && submission.status !== 'submitted';
+        const firstResult = real.length ? real[0].result as GradeResult : null;
+        if (!hold && firstResult && (firstResult.status === 'correct' || firstResult.status === 'incorrect')) {
+          firsts.set(item.problemVersionId, { answer: real[0].answer, status: firstResult.status, spec: p.gradingSpec });
+        }
         return { id: item.id, problem: { ...publicProblem(p), hintAvailable: policy.hints && p.hintAvailable,
           solutionAvailable: policy.solutions !== 'never' && p.solution.length > 0 },
           attempt: visibleAttempt ? { ...attemptView(visibleAttempt), result: shown(visibleAttempt.result as GradeResult, hold) } : null,
@@ -583,7 +601,8 @@ export class LearningService {
         glossary: leafGlossary(glossaryEntries(assignmentTerms, lessons)),
         reason: typeof (r.assignment.policySnapshot as { reviewReason?: string }).reviewReason === 'string' ? (r.assignment.policySnapshot as { reviewReason: string }).reviewReason : undefined,
         ...(written(r.assignment.items) ? { generated: written(r.assignment.items) } : {}),
-        ...(ai ? { ai: { scope: ai.scope, scopeLabel: ai.scopeLabel, diagnosis: ai.diagnosis } } : {}) };
+        ...(ai ? { ai: { scope: ai.scope, scopeLabel: ai.scopeLabel, diagnosis: ai.diagnosis,
+          ...(ai.hypotheses.length ? { hypotheses: ai.hypotheses.map(hypothesis => ({ name: hypothesis.name, check: checkHypothesis(hypothesis.key, ai.predictions, firsts) })) } : {}) } } : {}) };
     });
     const confusion = summarizeConfusion(confusionObservations, conceptRows, lessons);
     // The course overview and the detailed summary must agree about earned understanding.
@@ -615,7 +634,9 @@ export class LearningService {
     const repeatedKeys = confusion.repeated.filter(item => item.kind === 'misconception' && item.status === 'repeated').map(item => item.key);
     const pools = await gatheredPracticePools(db, userId, lessons.some(lesson => lesson.lessonKey === user.preferredLessonKey) ? [] : repeatedKeys,
       new Set(lessons.map(lesson => lesson.courseKey)));
-    const mayWrite = repeatedKeys.length > 0 && this.writer() !== null
+    // Whether a model may write for this learner now: none at all, or past what the service pays for.
+    const refused = this.writer() ? await budgetRefusal(db, userId) : null;
+    const mayWrite = repeatedKeys.length > 0 && this.writer() !== null && !refused
       && await db.generatedProblemSet.count({ where: { userId, createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } } }) < dailyGenerations;
     const targetedPractice = recommendTargetedPractice(confusion, repeatedKeys.map(key => {
       const gathered = recipients.filter(recipient => recipient.assignment.issuerType === 'self' && !recipient.assignment.problemSetVersionId
@@ -634,7 +655,7 @@ export class LearningService {
     return {
       user: { id: user.id, displayName: user.displayName, targetCourseKey: user.targetCourseKey, dailyMinutes: user.dailyMinutes },
       lessons, assignments, recommendations, concepts, misconceptions, plan, teaching,
-      confusion, aiPractice: await this.aiPracticeState(db, userId),
+      confusion, aiPractice: await this.aiPracticeState(db, userId, refused),
       diagnosticOffering: offering ? { version: offering.versionId, title: offering.title, description: offering.description,
         scope: placementScope(conceptGraph(lessons), await this.placementTargets(db, lessons, targetCourseKeys)).length,
         estimatedMinutes: offering.estimatedMinutes } : null,

@@ -1,6 +1,7 @@
 import { apiRequest } from '@/features/api-client';
 import type { AuthoringAction, AuthoringResponse, AuthoringWorkspace, DraftDetail } from '@/shared/authoring';
 import type { TeachingAction, TeachingResponse, TeachingView } from '@/shared/teaching';
+import type { AiUsageView } from '@/shared/ai-usage';
 
 export const authoringApi = {
   workspace: () => apiRequest<{ workspace: AuthoringWorkspace }>('authoring'),
@@ -16,4 +17,9 @@ export const teachingApi = {
   act: (action: TeachingAction, expectedUserId: string) => apiRequest<TeachingResponse>('teaching', {
     method: 'POST', body: JSON.stringify(action), headers: { 'X-Teaching-User-Id': expectedUserId },
   }),
+};
+
+/** What models cost, for the operator. */
+export const aiUsageApi = {
+  view: () => apiRequest<{ usage: AiUsageView }>('ai-usage'),
 };

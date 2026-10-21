@@ -60,6 +60,21 @@ describe('writing questions and checking them before an author sees them', () =>
     for (const shown of solved) expect(shown).not.toMatch(/solves|add-denominators|3\/4 \+ 2\/9|2sqrt\(3\)/);
   });
 
+  it('rejects a question that reaches past the learner\'s stage, and tells the writer the stage', async () => {
+    const middle2 = { ...context, stage: 'middle-2' as const };
+    const result = await generateProblems(fake([addition(), root()], (user) => (user.includes('보기') ? 'b' : '2√3')).model, request, middle2);
+    expect(result.problems.map((p) => p.verdict)).toEqual(['verified', 'rejected']);
+    expect(result.problems[1].issues.map((issue) => issue.code)).toContain('beyond-stage');
+    expect(writerRequest(request, middle2)).toContain('학년 범위: 제곱근 기호(√)와 무리수는 중3에서 배운다.');
+    expect(writerRequest(request, context)).not.toContain('학년 범위');
+  });
+
+  it('aims at a mistake guessed for one learner by the name it was given, and warns against giving it away', () => {
+    const text = writerRequest({ ...request, hypotheses: [{ key: 'hypothesis:1', mistake: '제곱근을 씌우지 않기 — 제곱의 합을 그대로 쓴다.' }] }, context);
+    expect(text).toContain('- hypothesis:1: 제곱근을 씌우지 않기 — 제곱의 합을 그대로 쓴다.');
+    expect(text).toContain('미리 알려 주거나 경고하지 않는다');
+  });
+
   it('rejects the key that names an option the answer is not among', async () => {
     // GPT's question from 2026-10-01: 35/36 is in no option and the key points at 29/36.
     const wrong = addition({ options: addition().options.map((o) => (o.id === 'b' ? { id: 'b', text: '$\\frac{29}{36}$' } : o.id === 'd' ? { id: 'd', text: '$\\frac{1}{2}$' } : o)) });

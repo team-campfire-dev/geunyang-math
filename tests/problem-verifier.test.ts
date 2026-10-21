@@ -336,6 +336,16 @@ describe('checking generated problems', () => {
     expect(codes({ answer, solves, misreadings: [{ answer: '2/6', misconception: 'add-denominators', expression: '(1+1)/(2+3)' }] })).toContain('misreading-derivation');
   });
 
+  it('holds a mistake guessed for one learner to the same checks, and still refuses a name nobody gave', () => {
+    const answer = { kind: 'rational' as const, numerator: 5, denominator: 6 };
+    const solves = { kind: 'value', expression: '1/2 + 1/3' };
+    expect(codes({ answer, solves, misreadings: [{ answer: '2/5', misconception: 'hypothesis:1', expression: '(1+1)/(2+3)' }] })).toEqual([]);
+    expect(codes({ answer, solves, misreadings: [{ answer: '2/6', misconception: 'hypothesis:1', expression: '(1+1)/(2+3)' }] })).toContain('misreading-derivation');
+    expect(codes({ answer, solves, misreadings: [{ answer: '10/12', misconception: 'hypothesis:1' }] })).toContain('misreading-correct');
+    expect(codes({ answer, solves, misreadings: [{ answer: '2/5', misconception: 'add-denominators' }, { answer: '0.4', misconception: 'hypothesis:2' }] })).toContain('misreading-invalid');
+    expect(codes({ answer, solves, misreadings: [{ answer: '2/5', misconception: 'a-guess' }] })).toContain('misreading-invalid');
+  });
+
   it('rejects an ill-posed problem, and leaves undecidable ones unverified rather than passed', () => {
     expect(check({ answer: { kind: 'integer', value: 2 }, solves: { kind: 'solve', equation: 'x^2 = 4', unknown: 'x' } }).verdict).toBe('rejected');
     expect(check({ answer: { kind: 'integer', value: 2 }, solves: { kind: 'magic' } }).verdict).toBe('unverified');
