@@ -19,9 +19,9 @@ import { AppError } from './errors';
 import { loadConceptHelp } from './concept-help';
 import { gatheredPracticePools, gatheredQuestions } from './gathered-practice';
 import { dailyGenerations, generateForLearner, type LearnerGeneration } from './learner-generation';
-import { buildProfile, newSetId, openPracticeSet, planSchema, plannerRequest, settlePlan, writeForPlan, type LearnerRecord, type Profile } from './ai-practice';
+import { buildProfile, newSetId, openPracticeSet, planSchema, plannerRequest, settlePlan, storedGuesses, writeForPlan, type LearnerRecord, type Profile } from './ai-practice';
 import { plannerSystem } from './problem-prompts';
-import { aiPracticeLimits, scopeKey, type AiPracticeRun, type AiPracticeState, type PracticeScope } from '@/shared/ai-practice';
+import { aiPracticeLimits, checkHypothesis, scopeKey, type AiPracticeRun, type AiPracticeState, type PracticeScope } from '@/shared/ai-practice';
 import type { ProblemModel } from './problem-generation';
 import { claudeProblemModel, problemWriterAvailable } from './problem-writer';
 import { assignedCourseKeys, endLink, hiddenCourses, joinByInvite, learnerTeaching } from './teaching';
@@ -128,11 +128,13 @@ const filling = new Set<string>();
 const writing = new Set<string>();
 const dayAgo = () => new Date(Date.now() - 24 * 60 * 60 * 1000);
 /** The AI practice note an assignment carries, read defensively: it is JSON the database hands back. */
-function aiNoteOf(snapshot: unknown): { scope: string; scopeLabel: string; diagnosis: string; reasons: Record<string, string> } | null {
+function aiNoteOf(snapshot: unknown) {
   const ai = (snapshot as { ai?: unknown } | null)?.ai as { scope?: unknown; scopeLabel?: unknown; diagnosis?: unknown; reasons?: unknown } | undefined;
   if (!ai || typeof ai.scope !== 'string' || typeof ai.diagnosis !== 'string') return null;
   const reasons = ai.reasons && typeof ai.reasons === 'object' ? Object.fromEntries(Object.entries(ai.reasons).filter(([, v]) => typeof v === 'string')) as Record<string, string> : {};
-  return { scope: ai.scope, scopeLabel: typeof ai.scopeLabel === 'string' ? ai.scopeLabel : '', diagnosis: ai.diagnosis, reasons };
+  // A set from before guesses were kept has none, and says only what it saw.
+  const { hypotheses, predictions } = storedGuesses(ai);
+  return { scope: ai.scope, scopeLabel: typeof ai.scopeLabel === 'string' ? ai.scopeLabel : '', diagnosis: ai.diagnosis, reasons, hypotheses, predictions };
 }
 
 export class LearningService {
@@ -168,9 +170,10 @@ export class LearningService {
       const state = await this.state(userId);
       if (scope.kind === 'lesson' && !state.lessons.some(lesson => lesson.lessonKey === scope.key)) throw notFound();
       const seen = new Set(state.lessons.map(lesson => lesson.courseKey));
-      const courses = (await this.db.course.findMany({ select: { key: true, title: true } })).filter(course => seen.has(course.key));
+      const courses = (await this.db.course.findMany({ select: { key: true, title: true, stage: true } }))
+        .filter(course => seen.has(course.key)).map(course => ({ ...course, stage: course.stage as CourseStage | null }));
       if (scope.kind === 'course' && !courses.some(course => course.key === scope.key)) throw notFound();
-      const record: LearnerRecord = { summary: state.confusion, concepts: state.concepts, lessons: state.lessons, courses };
+      const record: LearnerRecord = { userId, summary: state.confusion, concepts: state.concepts, lessons: state.lessons, courses };
       const profile = await buildProfile(this.db, record, scope);
       if (!profile) throw conflict('이 범위에는 아직 기록이 부족해요. 문제를 몇 개 더 풀면 만들 수 있어요.');
       const setId = newSetId();
@@ -543,6 +546,8 @@ export class LearningService {
         }
       }
       const ai = aiNoteOf(r.assignment.policySnapshot);
+      /** First answers the learner has been told the result of, for what an AI set's guesses predicted. */
+      const firsts = new Map<string, { answer: string; status: 'correct' | 'incorrect'; spec: StoredProblem['gradingSpec'] }>();
       const items = r.assignment.items.map(item => {
         const p = assignmentProblems.get(item.problemVersionId);
         if (!p) throw new Error(`Missing published problem ${item.problemVersionId}`);
@@ -568,6 +573,10 @@ export class LearningService {
           .filter(a => (a.result as GradeResult).status !== 'invalid');
         // An exam marks as it goes and says nothing until it is handed in.
         const hold = policy.results === 'after-submission' && submission.status !== 'submitted';
+        const firstResult = real.length ? real[0].result as GradeResult : null;
+        if (!hold && firstResult && (firstResult.status === 'correct' || firstResult.status === 'incorrect')) {
+          firsts.set(item.problemVersionId, { answer: real[0].answer, status: firstResult.status, spec: p.gradingSpec });
+        }
         return { id: item.id, problem: { ...publicProblem(p), hintAvailable: policy.hints && p.hintAvailable,
           solutionAvailable: policy.solutions !== 'never' && p.solution.length > 0 },
           attempt: visibleAttempt ? { ...attemptView(visibleAttempt), result: shown(visibleAttempt.result as GradeResult, hold) } : null,
@@ -583,7 +592,8 @@ export class LearningService {
         glossary: leafGlossary(glossaryEntries(assignmentTerms, lessons)),
         reason: typeof (r.assignment.policySnapshot as { reviewReason?: string }).reviewReason === 'string' ? (r.assignment.policySnapshot as { reviewReason: string }).reviewReason : undefined,
         ...(written(r.assignment.items) ? { generated: written(r.assignment.items) } : {}),
-        ...(ai ? { ai: { scope: ai.scope, scopeLabel: ai.scopeLabel, diagnosis: ai.diagnosis } } : {}) };
+        ...(ai ? { ai: { scope: ai.scope, scopeLabel: ai.scopeLabel, diagnosis: ai.diagnosis,
+          ...(ai.hypotheses.length ? { hypotheses: ai.hypotheses.map(hypothesis => ({ name: hypothesis.name, check: checkHypothesis(hypothesis.key, ai.predictions, firsts) })) } : {}) } } : {}) };
     });
     const confusion = summarizeConfusion(confusionObservations, conceptRows, lessons);
     // The course overview and the detailed summary must agree about earned understanding.

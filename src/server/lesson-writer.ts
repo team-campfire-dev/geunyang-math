@@ -3,6 +3,7 @@ import { ZodError } from 'zod';
 import { validateLesson, type StoredLesson } from '@/core/content';
 import { courseStageLabels, type ContentBlock, type CourseStage } from '@/shared/api';
 import { itemBounds, sceneColors, type SceneItem } from '@/shared/scene';
+import { beyondStage, notYet } from './stage-range';
 import { writingGuide } from './writing-guide';
 
 /**
@@ -30,9 +31,6 @@ export type LessonInput = {
   problems: { prompt: string; answer: string }[];
 };
 
-const notYet: Partial<Record<CourseStage, string>> = {
-  'middle-2': '제곱근 기호(√)와 무리수는 중3에서 배운다. 쓰지 않는다. 제곱한 값에서 길이를 구할 때는 「제곱해서 25가 되는 양수는 5」처럼 말한다.',
-};
 
 export const lessonWriterSystem = `${writingGuide}
 
@@ -203,7 +201,8 @@ export function lessonIssues(lesson: StoredLesson, stage: CourseStage | null): s
     .map((block) => String((block.payload as { text?: unknown }).text ?? ''));
   const plain = prose.join('\n').replace(/\$[^$]*\$/g, ' ');
   if (/(습니다|합니다|입니다|됩니다)(?=[.\s]|$)/.test(plain)) issues.push('「~습니다」가 섞였어요. 「~예요/~해요」로 써요.');
-  if (stage === 'middle-2' && /\\sqrt|√|무리수/.test(prose.join('\n'))) issues.push('중2가 아직 배우지 않은 제곱근을 썼어요.');
+  const beyond = beyondStage(stage, prose.join('\n'));
+  if (beyond) issues.push(beyond);
   for (const text of prose) if (text.length > 320) { issues.push(`글 블록 하나가 길어요(${text.length}자): 「${text.slice(0, 30)}…」 — 나누거나 줄여요.`); break; }
   const long = prose.flatMap((text) => text.replace(/\$[^$]*\$/g, '식').split(/(?<=[.?!요])\s+/)).filter((sentence) => sentence.trim().length > 60);
   if (long.length > 1) issues.push(`문장이 길어요(40자 안쪽으로 나눠요): ${long.slice(0, 3).map((sentence) => `「${sentence.trim().slice(0, 40)}…」`).join(' ')}`);

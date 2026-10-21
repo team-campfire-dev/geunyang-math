@@ -5,7 +5,7 @@ import { parseAssignmentPolicy } from '@/core/assignment';
 import type { StoredProblem } from '@/core/content';
 import { gradeAnswer } from '@/core/grading';
 import { answerText } from '@/shared/answer';
-import type { GradeResult } from '@/shared/api';
+import type { CourseStage, GradeResult } from '@/shared/api';
 import { renameProblem, responseSpecOf, type DraftProblem } from '@/shared/authoring';
 import { misconceptionOf } from '@/shared/misconception';
 import { generatedPrefix, indexGeneratedProblems, publishedProblemRecords } from './content-store';
@@ -75,8 +75,9 @@ export async function courseOf(db: Db, problemVersionId: string) {
   const owner = await db.publishedProblem.findFirst({ where: { problemVersionId, ownerKind: 'problem_set' }, orderBy: { ownerVersionId: 'asc' }, select: { ownerVersionId: true } });
   if (!owner) return null;
   const version = await db.problemSetVersion.findUnique({ where: { id: owner.ownerVersionId },
-    select: { problemSet: { select: { course: { select: { key: true, title: true } } } } } });
-  return version?.problemSet.course ?? null;
+    select: { problemSet: { select: { course: { select: { key: true, title: true, stage: true } } } } } });
+  const course = version?.problemSet.course;
+  return course ? { ...course, stage: course.stage as CourseStage | null } : null;
 }
 
 /** A checked question as it is frozen: the editor's shape with the half a learner sees worked out. */
@@ -113,7 +114,7 @@ export async function generateForLearner(db: Db, model: ProblemModel, userId: st
       conceptKeys: known, misconceptions: [misconception], count: needed, form: 'mixed', note: '',
       existing: [...mistakes.map(({ problem }) => problem), ...besideProblems.values()].map((problem) => ({ prompt: plain(problem), answer: keyOf(problem) })),
       mistakes: mistakes.map(({ problem, answer }) => ({ prompt: plain(problem), wrote: said(problem, answer), answer: keyOf(problem) })),
-    }, { courseTitle: course?.title ?? null, lessonTitle: `「${record.label}」 다시 연습하기`,
+    }, { courseTitle: course?.title ?? null, stage: course?.stage ?? null, lessonTitle: `「${record.label}」 다시 연습하기`,
       concepts: known.map((key) => concepts.find((concept) => concept.key === key)!) });
   } catch (reason) {
     console.warn(JSON.stringify({ event: 'learner_generation_failed', reason: reason instanceof Error ? reason.message : String(reason) }));

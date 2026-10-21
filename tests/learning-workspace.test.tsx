@@ -1318,7 +1318,8 @@ describe('AI 맞춤 연습', () => {
     aiPractice: { available: true, remaining: 3, runs: [] }, ...overrides });
   const written = (): AssignmentView => ({ ...assignment({ id: 'ai1', recipientId: 'r-ai', title: 'AI 맞춤 연습 · 전체 기록', problemSetId: null,
     policy: { kind: 'practice', hints: true, results: 'per-item', solutions: 'after-submission' } }),
-    ai: { scope: 'all', scopeLabel: '전체 기록', diagnosis: '분모를 고를 때 조각 수 대신 전체 수를 쓴 답이 두 번 있었어요.' },
+    ai: { scope: 'all', scopeLabel: '전체 기록', diagnosis: '분모를 고를 때 조각 수 대신 전체 수를 쓴 답이 두 번 있었어요.',
+      hypotheses: [{ name: '분모에 전체 수 쓰기', check: { asked: 3, answered: 2, predicted: 1, correct: 1, other: 0 } }] },
     items: [{ ...assignment().items[0], reason: '분모가 무엇을 세는지 다시 확인해요.' }] });
 
   it('is offered on the home screen and asked for over the whole record', async () => {
@@ -1345,13 +1346,16 @@ describe('AI 맞춤 연습', () => {
     render(<LearningWorkspace />);
     await until(() => expect(screen.getByRole('button', { name: /AI에게 문제 받기/ })).toBeDefined());
     fireEvent.click(screen.getByRole('button', { name: /AI에게 문제 받기/ }));
-    await until(() => expect(screen.getAllByText(/기록을 읽고, 무엇을 연습하면 좋을지 정하고 있어요/).length).toBeGreaterThan(0));
+    await until(() => expect(screen.getAllByText(/풀이 기록을 읽고, 어떤 실수였는지 추측하고 있어요/).length).toBeGreaterThan(0));
     // The server finishes; the next look at the state carries the set, and it opens.
     server.state.learning = withRecord({ assignments: [written()], aiPractice: { available: true, remaining: 2, runs: [] } });
     await tick(4500);
     await until(() => expect(screen.getByRole('heading', { level: 1, name: 'AI 맞춤 연습 · 전체 기록' })).toBeDefined());
     expect(screen.getByText('분모를 고를 때 조각 수 대신 전체 수를 쓴 답이 두 번 있었어요.')).toBeDefined();
     expect(screen.getByText('분모가 무엇을 세는지 다시 확인해요.')).toBeDefined();
+    // What it guessed, and what the questions written for the guess have found so far.
+    expect(screen.getByText('분모에 전체 수 쓰기')).toBeDefined();
+    expect(screen.getByText('예측한 답이 1번 나왔어요 · 1번 맞혔어요 · 1문제 남았어요')).toBeDefined();
   });
 
   it('says why it failed, where it was asked', async () => {

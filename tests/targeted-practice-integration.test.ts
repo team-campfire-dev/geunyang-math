@@ -115,25 +115,37 @@ describe.skipIf(!url)('targeted practice lifecycle on MySQL', () => {
 
   describe('AI 맞춤 연습', () => {
     const concept = record.problems[0].conceptKeys[0];
-    const question = (prompt: string): WrittenProblem => ({ prompt, form: 'written', options: [], answer: '3/4', reducedFraction: false,
-      misreadings: [{ answer: '2/6', misconception, expression: '(1+1)/(2+4)' }],
+    // The wrong answer is named for whatever the request aims at: a guess of its own, or the catalogue's name.
+    const question = (prompt: string, aim: string): WrittenProblem => ({ prompt, form: 'written', options: [], answer: '3/4', reducedFraction: false,
+      misreadings: [{ answer: '2/6', misconception: aim, expression: '(1+1)/(2+4)' }],
       solves: JSON.stringify({ kind: 'value', expression: '1/2 + 1/4' }), hints: ['$\\frac{1}{2}=\\frac{2}{4}$이에요.'], solution: '$\\frac{3}{4}$이에요.' });
     const model = (plan: () => Promise<unknown>) => {
       const read: string[] = [];
+      const wrote: string[] = [];
       const fake: ProblemModel = { name: 'fake',
         plan: async (_system, user) => { read.push(user); return plan(); },
-        write: async () => [question('$\\frac{1}{2}+\\frac{1}{4}$을 계산해 써 주세요.'), question('$\\frac{1}{4}+\\frac{1}{2}$을 계산해 써 주세요.')],
+        write: async (_system, user) => {
+          wrote.push(user);
+          // Told the catalogue's name, it uses it; told only the guess's, that one.
+          const aim = user.includes(`${misconception}(`) ? misconception : 'hypothesis:1';
+          return [question('$\\frac{1}{2}+\\frac{1}{4}$을 계산해 써 주세요.', aim), question('$\\frac{1}{4}+\\frac{1}{2}$을 계산해 써 주세요.', aim)];
+        },
         solve: async () => '3/4' };
-      return { fake, read };
+      return { fake, read, wrote };
     };
-    const planned = async () => ({ diagnosis: '농도를 구할 때 소금의 양으로 나눈 답이 있었어요. 기준을 다시 연습해요.',
-      targets: [{ conceptKey: concept, focus: 'confused', misconception, reason: '서로 다른 문제에서 같은 기준을 잘못 잡았어요.', count: 8 }] });
+    // A guess the catalogue has no name for, pointing at the first two questions.
+    const planned = async () => ({
+      hypotheses: [{ name: '농도의 기준을 소금의 양으로 잡기', how: '소금물 전체가 아니라 소금의 양으로 나눈다.', evidence: [1, 2], confidence: 'medium', misconception: '' }],
+      diagnosis: '농도를 구할 때 소금의 양으로 나눈 답이 있었어요. 기준을 다시 연습해요.',
+      targets: [{ conceptKey: concept, focus: 'confused', hypothesis: 1, reason: '서로 다른 문제에서 같은 기준을 잘못 잡았어요.', count: 8 }] });
+    // The same guess, which the catalogue does have a name for.
+    const catalogued = async () => { const plan = await planned(); plan.hypotheses[0].misconception = misconception; return plan; };
 
     it('reads the record, writes after the request returns, and opens a set that says what it saw and why', async () => {
       // The model waits until the test has looked at the pending request, as a real one takes a minute.
       let release = () => {};
       const held = new Promise<void>(resolve => { release = resolve; });
-      const { fake, read } = model(async () => { await held; return planned(); });
+      const { fake, read, wrote } = model(async () => { await held; return planned(); });
       const ai = new LearningService(db, () => fake);
       const who = await learner(3);
       expect((await ai.state(who.userId)).aiPractice).toMatchObject({ available: true, remaining: 3, runs: [] });
@@ -146,6 +158,11 @@ describe.skipIf(!url)('targeted practice lifecycle on MySQL', () => {
       await ai.settled();
       expect(read[0]).toContain('범위: 전체 기록');
       expect(read[0]).toContain(`[${concept}]`);
+      // What the learner did, question by question, numbered for a guess to point at — and no why.
+      expect(read[0]).toContain('#1 [');
+      expect(read[0]).toContain('첫 답: 99999 — 틀림, 힌트 없이');
+      // The writer was told the guess and the name to give its wrong answer.
+      expect(wrote[0]).toContain('hypothesis:1: 농도의 기준을 소금의 양으로 잡기 — 소금물 전체가 아니라 소금의 양으로 나눈다.');
       const state = await ai.state(who.userId);
       expect(state.aiPractice).toMatchObject({ remaining: 2, runs: [] });
       const made = state.assignments.find(item => item.ai?.scope === 'all')!;
@@ -153,16 +170,34 @@ describe.skipIf(!url)('targeted practice lifecycle on MySQL', () => {
       expect(made.ai!.diagnosis).toContain('소금의 양으로 나눈 답');
       expect(made.items).toHaveLength(2);
       expect(made.items.every(item => item.problem.problemVersionId.startsWith('generated:') && item.reason === '서로 다른 문제에서 같은 기준을 잘못 잡았어요.')).toBe(true);
+      expect(made.ai!.hypotheses).toEqual([{ name: '농도의 기준을 소금의 양으로 잡기', check: { asked: 2, answered: 0, predicted: 0, correct: 0, other: 0 } }]);
+      // The guess stays with the set: the frozen questions carry only the catalogue's names.
+      const frozen = await db.publishedProblem.findMany({ where: { problemVersionId: { in: made.items.map(item => item.problem.problemVersionId) } } });
+      expect(frozen.every(row => row.misreadings === null)).toBe(true);
       // Asking again for the same range opens the set still open.
       expect((await ai.act(who.userId, { action: 'practice.ai', scope: { kind: 'all' } })).recipientId).toBe(made.recipientId);
-      // Its questions are graded like any other, and a named wrong answer is recorded as that mistake.
+      // Its questions are graded like any other; the predicted wrong answer is no catalogue mistake,
+      // but it is what the guess said, and the set says so.
       const graded = await ai.act(who.userId, { action: 'attempt.submit', context: 'assignment', contextId: made.recipientId,
         problemVersionId: made.items[0].problem.problemVersionId, answer: '2/6', requestId: randomUUID() });
-      expect(graded.result).toMatchObject({ status: 'incorrect', misconception });
+      expect(graded.result).toMatchObject({ status: 'incorrect' });
+      expect(graded.result).not.toHaveProperty('misconception');
+      await ai.act(who.userId, { action: 'attempt.submit', context: 'assignment', contextId: made.recipientId,
+        problemVersionId: made.items[1].problem.problemVersionId, answer: '3/4', requestId: randomUUID() });
+      const checked = (await ai.state(who.userId)).assignments.find(item => item.recipientId === made.recipientId)!;
+      expect(checked.ai!.hypotheses![0].check).toEqual({ asked: 2, answered: 2, predicted: 1, correct: 1, other: 0 });
+      // Once the set is finished, the next plan reads the guess and what its questions found.
+      await ai.act(who.userId, { action: 'assignment.submit', recipientId: made.recipientId, requestId: randomUUID() });
+      await ai.act(who.userId, { action: 'practice.ai', scope: { kind: 'lesson', key } });
+      await ai.settled();
+      expect(read.at(-1)).toContain('지난 추측과 확인 결과');
+      expect(read.at(-1)).toContain('「농도의 기준을 소금의 양으로 잡기」');
+      expect(read.at(-1)).toContain('예측한 오답 1번, 맞힘 1번');
+      expect(read.at(-1)).toContain('지난 추측 「농도의 기준을 소금의 양으로 잡기」이 예측한 오답: 2/6');
     });
 
-    it('reads a lesson as the lesson, and refuses a range with too little in it', async () => {
-      const { fake, read } = model(planned);
+    it('reads a lesson as the lesson, takes the catalogue\'s name when the guess has one, and refuses a range with too little in it', async () => {
+      const { fake, read } = model(catalogued);
       const ai = new LearningService(db, () => fake);
       const thin = await learner(2);
       await expect(ai.act(thin.userId, { action: 'practice.ai', scope: { kind: 'lesson', key } })).rejects.toMatchObject({ status: 409 });
@@ -171,7 +206,14 @@ describe.skipIf(!url)('targeted practice lifecycle on MySQL', () => {
       await ai.act(who.userId, { action: 'practice.ai', scope: { kind: 'lesson', key } });
       await ai.settled();
       expect(read.at(-1)).toContain(`범위: ${record.public.title}`);
-      expect((await ai.state(who.userId)).assignments.find(item => item.ai?.scope === `lesson:${key}`)?.title).toBe(`AI 맞춤 연습 · ${record.public.title}`);
+      const made = (await ai.state(who.userId)).assignments.find(item => item.ai?.scope === `lesson:${key}`)!;
+      expect(made.title).toBe(`AI 맞춤 연습 · ${record.public.title}`);
+      // A guess with a catalogue name is recorded under it, so it adds up with everyone else's.
+      const graded = await ai.act(who.userId, { action: 'attempt.submit', context: 'assignment', contextId: made.recipientId,
+        problemVersionId: made.items[0].problem.problemVersionId, answer: '2/6', requestId: randomUUID() });
+      expect(graded.result).toMatchObject({ status: 'incorrect', misconception });
+      const checked = (await ai.state(who.userId)).assignments.find(item => item.recipientId === made.recipientId)!;
+      expect(checked.ai!.hypotheses![0].check).toMatchObject({ answered: 1, predicted: 1 });
     });
 
     it('says when it failed, and stops at the day\'s limit', async () => {

@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { answerText, type AnswerSpec } from '@/shared/answer';
 import { misconceptionOf } from '@/shared/misconception';
 import { courseStageLabels, type CourseStage } from '@/shared/api';
+import { beyondStage, notYet } from './stage-range';
 import { writingGuide } from './writing-guide';
 
 /**
@@ -27,11 +28,6 @@ export type Explainer = {
   explain(system: string, user: string): Promise<{ solution: string; served: string; usage: { input: number; output: number; thinking?: number } }>;
 };
 
-/** What a stage has not learned yet, said to the writer so the explanation stays inside it. */
-const notYet: Partial<Record<CourseStage, string>> = {
-  'middle-2': '제곱근 기호(√)와 무리수는 중3에서 배운다. 쓰지 않는다. 제곱한 값에서 길이를 구할 때는 「제곱해서 25가 되는 양수는 5」처럼 말한다.',
-  'middle-1': '문자를 쓴 방정식의 이항, 제곱근, 피타고라스 정리는 아직 배우지 않았다.',
-};
 
 export const solutionSystem = `${writingGuide}
 
@@ -128,7 +124,8 @@ export function checkSolution(text: string, problem: ProblemForExplanation): Sol
   // particle, never a word that only starts like one (「보기는」, 「보기 가운데」).
   if (/[①②③④⑤]|보기\s*[a-dA-D1-5](?![a-zA-Z0-9])|보기\s+[가나다라](?:[가이는을를의와과도]|(?![가-힣]))|\([a-d]\)/.test(prose)) issues.push({ code: 'option-label', message: '보기를 번호나 기호로 가리켰어요.' });
   if (/(습니다|합니다|입니다|됩니다)(?=[.\s]|$)/.test(prose)) issues.push({ code: 'formal', message: '「~습니다」가 섞였어요.' });
-  if (problem.course.stage === 'middle-2' && /\\sqrt|√|무리수/.test(text)) issues.push({ code: 'beyond-stage', message: '중2가 아직 배우지 않은 제곱근을 썼어요.' });
+  const beyond = beyondStage(problem.course.stage, text);
+  if (beyond) issues.push({ code: 'beyond-stage', message: beyond });
   if (text.length > 900) issues.push({ code: 'long', message: `길어요(${text.length}자).` });
   return issues;
 }

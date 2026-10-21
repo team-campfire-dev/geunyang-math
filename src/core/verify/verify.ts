@@ -1,8 +1,8 @@
 import 'server-only';
 import { gradeAnswer } from '@/core/grading';
-import { answerText, choiceIssue, misreadingsIssue, normalizeAnswer, type AnswerSpec, type ExpectedMisreading } from '@/shared/answer';
+import { answerText, choiceIssue, matchMisreading, misreadingsIssue, normalizeAnswer, type AnswerSpec, type ExpectedMisreading } from '@/shared/answer';
 import { readMathExpression } from '@/shared/math-expression';
-import { misconceptionOf } from '@/shared/misconception';
+import { isHypothesisKey, misconceptionOf } from '@/shared/misconception';
 import { claimSchema, claimScope, evaluateClaim, type ClaimResult } from './claims';
 import { evaluate, newMeter } from './evaluate';
 import { literals, parseExpression, substitute, type Node } from './expr';
@@ -237,15 +237,17 @@ export function verifyProblem(input: CheckInput): Report {
 
   if (input.misreadings?.length) {
     const entries = input.misreadings.map(({ answer, misconception }) => ({ answer, misconception }));
-    const structural = misreadingsIssue(spec, entries, (key) => !!misconceptionOf(key));
+    const structural = misreadingsIssue(spec, entries, (key) => !!misconceptionOf(key) || isHypothesisKey(key));
     if (structural) issues.push({ code: 'misreading-invalid', level: 'error', message: structural });
     const scope = (() => { try { return claimScope(claim, newMeter()); } catch { return { vars: new Map(), functions: new Map() }; } })();
     const functionNames = new Set(scope.functions.keys());
     for (const m of input.misreadings) {
       const graded = gradeAnswer(m.answer, spec, false, entries);
+      // The grader names only the catalogue's mistakes; a guessed one is matched the way it matches them.
+      const recorded = graded.misconception ?? (graded.status === 'incorrect' ? matchMisreading(m.answer, spec, entries) ?? undefined : undefined);
       if (graded.status === 'invalid') issues.push({ code: 'misreading-unrecordable', level: 'error', answer: m.answer, message: `The answer box refuses "${m.answer}" (${graded.message}), so this mistake can never be recorded.` });
       else if (graded.status === 'correct') issues.push({ code: 'misreading-correct', level: 'error', answer: m.answer, message: `"${m.answer}" is graded correct.` });
-      else if (graded.misconception !== m.misconception) issues.push({ code: 'misreading-shadowed', level: 'error', answer: m.answer, message: `"${m.answer}" is recorded as ${graded.misconception ?? 'no named mistake'}, not ${m.misconception}.` });
+      else if (recorded !== m.misconception) issues.push({ code: 'misreading-shadowed', level: 'error', answer: m.answer, message: `"${m.answer}" is recorded as ${recorded ?? 'no named mistake'}, not ${m.misconception}.` });
       if (!m.expression) continue;
       // The wrong computation, done: it has to land on the wrong answer it is said to produce.
       try {
