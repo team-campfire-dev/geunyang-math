@@ -1,0 +1,15 @@
+{
+  "similar-triangles:check-1:v1": {
+    "pick": "a"
+  },
+  "similar-triangles:practice-1:v1": {
+    "pick": "b"
+  },
+  "similar-triangles:practice-2:v1": {
+    "pick": "b",
+    "note": "A는 너무 구구절절이야"
+  },
+  "similar-triangles:practice-3:v1": {
+    "pick": "b"
+  }
+}

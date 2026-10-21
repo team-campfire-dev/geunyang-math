@@ -1,0 +1,550 @@
+{
+  "similar-triangles:practice-1:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "similar-triangles:practice-2:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "similar-triangles:practice-3:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "similar-triangles:check-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similar-triangles:check-2:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "similar-triangles:homework-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similar-triangles:homework-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "parallel-ratio:practice-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "parallel-ratio:practice-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "parallel-ratio:practice-3:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "parallel-ratio:check-1:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "parallel-ratio:check-2:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "parallel-ratio:homework-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "parallel-ratio:homework-2:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "centroid:practice-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "centroid:practice-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "centroid:practice-3:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "centroid:check-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "centroid:check-2:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "centroid:homework-1:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "centroid:homework-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similar-ratio:practice-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similar-ratio:practice-2:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "similar-ratio:practice-3:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similar-ratio:check-1:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "similar-ratio:check-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similar-ratio:homework-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similar-ratio:homework-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similarity:drill-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similarity:drill-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similarity:drill-3:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similarity:drill-4:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similarity:drill-5:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similarity:drill-6:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similarity:drill-7:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "similarity:drill-8:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similarity:drill-9:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similarity:drill-10:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "similarity:drill-11:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "similarity:drill-12:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "similarity:drill-13:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "similarity:drill-14:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similarity:drill-15:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "similarity:drill-16:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similarity:drill-17:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "similarity:drill-18:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similarity:drill-19:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "similarity:drill-20:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "pythagoras:practice-1:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "pythagoras:practice-2:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "pythagoras:practice-3:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras:check-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras:check-2:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "pythagoras:homework-1:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "pythagoras:homework-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras-converse:practice-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras-converse:practice-2:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "pythagoras-converse:practice-3:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "pythagoras-converse:check-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras-converse:check-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras-converse:homework-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras-converse:homework-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "plane-length:practice-1:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "plane-length:practice-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "plane-length:practice-3:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "plane-length:check-1:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "plane-length:check-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "plane-length:homework-1:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "plane-length:homework-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "solid-length:practice-1:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "solid-length:practice-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "solid-length:practice-3:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "solid-length:check-1:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "solid-length:check-2:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "solid-length:homework-1:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "solid-length:homework-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras:drill-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras:drill-2:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "pythagoras:drill-3:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras:drill-4:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "pythagoras:drill-5:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras:drill-6:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "pythagoras:drill-7:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "pythagoras:drill-8:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras:drill-9:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras:drill-10:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras:drill-11:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras:drill-12:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras:drill-13:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras:drill-14:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras:drill-15:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras:drill-16:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "pythagoras:drill-17:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "pythagoras:drill-18:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "pythagoras:drill-19:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "pythagoras:drill-20:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "counting-cases:practice-1:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "counting-cases:practice-2:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "counting-cases:practice-3:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "counting-cases:check-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "counting-cases:check-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "counting-cases:homework-1:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "counting-cases:homework-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability-meaning:practice-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability-meaning:practice-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability-meaning:practice-3:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability-meaning:check-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability-meaning:check-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability-meaning:homework-1:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "probability-meaning:homework-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability-rules:practice-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability-rules:practice-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability-rules:practice-3:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "probability-rules:check-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability-rules:check-2:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability-rules:homework-1:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability-rules:homework-2:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "probability:drill-1:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "probability:drill-2:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "probability:drill-3:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "probability:drill-4:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability:drill-5:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "probability:drill-6:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "probability:drill-7:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "probability:drill-8:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability:drill-9:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability:drill-10:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability:drill-11:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "probability:drill-12:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability:drill-13:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability:drill-14:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "probability:drill-15:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "probability:drill-16:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability:drill-17:v1": {
+    "a": "gemini-4-argon",
+    "b": "claude-opus-5-5"
+  },
+  "probability:drill-18:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "probability:drill-19:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  },
+  "probability:drill-20:v1": {
+    "a": "claude-opus-5-5",
+    "b": "gemini-4-argon"
+  }
+}

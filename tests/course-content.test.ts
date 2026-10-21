@@ -45,6 +45,15 @@ const overlapping = (one: Box, two: Box) => {
   return true;
 };
 
+/**
+ * A panel that holds smaller boxes — the 「또는」 side of a counting picture with its cards inside —
+ * is grouping, not a collision. Unturned, the small box lies wholly inside, and it is at most half
+ * the panel; a tile dropped on a tile of its own size is still the mistake this test is for.
+ */
+const holds = (outer: Box, inner: Box) => !outer.rotate && !inner.rotate
+  && inner.width * inner.height <= outer.width * outer.height / 2
+  && inner.x >= outer.x && inner.y >= outer.y && inner.x + inner.width <= outer.x + outer.width && inner.y + inner.height <= outer.y + outer.height;
+
 describe('the installed courses', () => {
   it('has more than one course, each with lessons in order', () => {
     const courses = seeds.flatMap((seed) => seed.bundle.courses);
@@ -152,6 +161,7 @@ describe('the installed courses', () => {
           }));
           for (let a = 0; a < boxes.length; a += 1) for (let b = a + 1; b < boxes.length; b += 1) {
             const [one, two] = [boxes[a], boxes[b]];
+            if (holds(one, two) || holds(two, one)) continue;
             expect(overlapping(one, two), `${lesson.public.lessonKey} 장면 ${index + 1}에서 ${one.id}와 ${two.id}가 겹친다`).toBe(false);
           }
           if (published.has(lesson.public.lessonKey)) continue;

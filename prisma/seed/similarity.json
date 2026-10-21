@@ -55,7 +55,7 @@
     {
       "public": {
         "lessonKey": "similar-triangles",
-        "versionId": "similar-triangles:v2",
+        "versionId": "similar-triangles:v3",
         "title": "닮음: 크기는 달라도 모양은 같다",
         "summary": "닮음이 무엇인지 정하고, 삼각형이 닮음인지 세 가지 조건으로 가려내요.",
         "estimatedMinutes": 13,
@@ -71,227 +71,611 @@
       },
       "sections": [
         {
-          "sectionId": "similar-triangles:explanation:v2",
+          "sectionId": "similar-triangles:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "similar-triangles:explanation:name:v2",
+              "blockId": "similar-triangles:explanation:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "사진을 확대해도 사람 얼굴은 그대로예요. 길이는 모두 같은 배로 늘어나지만 각은 하나도 변하지 않으니까요.\n\n이렇게 한쪽을 일정한 배로 늘이거나 줄여 다른 쪽과 포갤 수 있을 때, 두 도형이 닮음이라고 해요.\n\n닮은 두 도형에서는 대응각의 크기가 각각 같아요. 대응변의 길이의 비도 모두 같고요.",
+                "text": "세 변이 $3$, $4$, $5$인 삼각형을 $2$배로 늘여 $6$, $8$, $10$인 삼각형을 만들었어요. 변의 길이는 모두 $2$배가 되었지만 세 각의 크기는 그대로예요. 이처럼 일정한 비율로 확대하거나 축소해 포갤 수 있을 때 두 도형은 닮음이에요.",
                 "definitions": [
                   {
                     "conceptKey": "similar-triangles",
                     "surface": "닮음",
                     "scopeKind": "global"
-                  },
-                  {
-                    "conceptKey": "ratio",
-                    "surface": "길이의 비",
-                    "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "similar-triangles:explanation:ratio:v2",
-              "kind": "core.rich_text",
-              "typeVersion": 3,
-              "required": true,
-              "payload": {
-                "text": "그 일정한 비를 닮음비라고 불러요. 닮음비가 $1:2$면 어느 변을 재어도 두 배예요.\n\n합동은 닮음비가 $1:1$인 닮음이에요. 그러니 합동은 닮음의 한 경우예요.",
-                "definitions": [
-                  {
-                    "conceptKey": "construction-congruence",
-                    "surface": "합동",
-                    "scopeKind": "global"
-                  }
-                ]
-              }
-            },
-            {
-              "blockId": "similar-triangles:explanation:drawing:v2",
+              "blockId": "similar-triangles:explanation:scene-1:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "width": 320,
-                "height": 200,
-                "alt": "작은 삼각형이 큰 삼각형의 한 꼭짓점으로 옮겨 가 두 변이 나란해지는 그림",
-                "caption": "포개 보면 남은 변이 나란해요. 모양이 같다는 뜻이에요",
+                "width": 340,
+                "height": 205,
+                "alt": "세 변이 3, 4, 5인 삼각형 ABC를 옮겨 세 변이 6, 8, 10인 삼각형 DEF의 꼭짓점 D에 포개어 보는 그림",
+                "caption": "삼각형 ABC를 옮겨 꼭짓점 A를 D에 맞추면 각이 포개지고 변의 비는 $1:2$예요.",
                 "items": [
                   {
+                    "kind": "polygon",
+                    "id": "tri-def",
+                    "points": [
+                      [
+                        190,
+                        28
+                      ],
+                      [
+                        150,
+                        164
+                      ],
+                      [
+                        310,
+                        164
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "green",
+                    "strokeWidth": 2
+                  },
+                  {
                     "kind": "text",
-                    "x": 160,
-                    "y": 22,
-                    "text": "크기가 다른 두 삼각형",
-                    "size": 11,
+                    "id": "lbl-d",
+                    "x": 196,
+                    "y": 16,
+                    "text": "D",
+                    "size": 12,
                     "anchor": "middle",
-                    "fill": "muted"
+                    "weight": "bold",
+                    "fill": "green"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-e",
+                    "x": 140,
+                    "y": 168,
+                    "text": "E",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "green"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-f",
+                    "x": 322,
+                    "y": 168,
+                    "text": "F",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "green"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-6",
+                    "x": 144,
+                    "y": 134,
+                    "text": "$6$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "green"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-8",
+                    "x": 294,
+                    "y": 134,
+                    "text": "$8$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "green"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-10",
+                    "x": 230,
+                    "y": 182,
+                    "text": "$10$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "green"
                   },
                   {
                     "kind": "polygon",
+                    "id": "tri-abc",
                     "points": [
                       [
-                        40,
-                        168
+                        45,
+                        96
                       ],
                       [
-                        232,
-                        168
+                        25,
+                        164
                       ],
                       [
-                        88,
-                        72
+                        105,
+                        164
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "orange",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-a",
+                    "x": 45,
+                    "y": 82,
+                    "text": "A",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-b",
+                    "x": 14,
+                    "y": 168,
+                    "text": "B",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-c",
+                    "x": 116,
+                    "y": 168,
+                    "text": "C",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-3",
+                    "x": 23,
+                    "y": 128,
+                    "text": "$3$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-4",
+                    "x": 87,
+                    "y": 128,
+                    "text": "$4$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-5",
+                    "x": 65,
+                    "y": 182,
+                    "text": "$5$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "orange"
+                  }
+                ],
+                "frameMs": 1800,
+                "frames": [
+                  {
+                    "caption": "세 변이 $3, 4, 5$인 삼각형 ABC와 $6, 8, 10$인 삼각형 DEF가 있어요.",
+                    "changes": []
+                  },
+                  {
+                    "caption": "꼭짓점 A를 D에 맞추면 각 A와 각 D가 완전히 포개져요.",
+                    "changes": [
+                      {
+                        "id": "tri-abc",
+                        "dx": 145,
+                        "dy": -68
+                      },
+                      {
+                        "id": "lbl-a",
+                        "dx": 131,
+                        "dy": -66
+                      },
+                      {
+                        "id": "lbl-b",
+                        "dx": 142,
+                        "dy": -68
+                      },
+                      {
+                        "id": "lbl-c",
+                        "dx": 148,
+                        "dy": -68
+                      },
+                      {
+                        "id": "lbl-3",
+                        "dx": 145,
+                        "dy": -68
+                      },
+                      {
+                        "id": "lbl-4",
+                        "dx": 145,
+                        "dy": -68
+                      },
+                      {
+                        "id": "lbl-5",
+                        "dx": 145,
+                        "dy": -68
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "대응각의 크기는 서로 같고, 대응변의 길이의 비는 모두 $1:2$예요.",
+                    "changes": [
+                      {
+                        "id": "tri-abc",
+                        "dx": 145,
+                        "dy": -68
+                      },
+                      {
+                        "id": "lbl-a",
+                        "dx": 131,
+                        "dy": -66
+                      },
+                      {
+                        "id": "lbl-b",
+                        "dx": 142,
+                        "dy": -68
+                      },
+                      {
+                        "id": "lbl-c",
+                        "dx": 148,
+                        "dy": -68
+                      },
+                      {
+                        "id": "lbl-3",
+                        "dx": 145,
+                        "dy": -68
+                      },
+                      {
+                        "id": "lbl-4",
+                        "dx": 145,
+                        "dy": -68
+                      },
+                      {
+                        "id": "lbl-5",
+                        "dx": 145,
+                        "dy": -68
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "similar-triangles:explanation:text-2:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 삼각형을 포개면 짝이 되는 대응각의 크기가 각각 같아요. 대응변의 길이의 비도 $3:6$, $4:8$, $5:10$으로 모두 $1:2$예요. 이렇게 일정한 대응변의 길이의 비를 닮음비라고 해요.",
+                "definitions": [
+                  {
+                    "conceptKey": "ratio",
+                    "surface": "비",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "similar-triangles:explanation:scene-2:v3",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 340,
+                "height": 225,
+                "alt": "삼각형 ABC의 세 변이 2, 3, 4일 때 닮음비 1대 2인 삼각형 DEF의 각 변에 길이 4, 6, 8 막대를 놓는 그림",
+                "caption": "각 변에 짝이 되는 대응변을 찾아 $2$배 한 길이를 놓아 보세요.",
+                "items": [
+                  {
+                    "kind": "polygon",
+                    "id": "s2-abc",
+                    "points": [
+                      [
+                        48,
+                        48
+                      ],
+                      [
+                        30,
+                        88
+                      ],
+                      [
+                        90,
+                        88
                       ]
                     ],
                     "closed": true,
                     "fill": "fill-soft",
                     "stroke": "ink",
-                    "strokeWidth": 1.6,
-                    "id": "big"
-                  },
-                  {
-                    "kind": "polygon",
-                    "points": [
-                      [
-                        196,
-                        110
-                      ],
-                      [
-                        292,
-                        110
-                      ],
-                      [
-                        220,
-                        62
-                      ]
-                    ],
-                    "closed": true,
-                    "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1.6,
-                    "id": "small"
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 64,
-                    "y1": 120,
-                    "x2": 136,
-                    "y2": 168,
-                    "stroke": "orange",
-                    "strokeWidth": 2,
-                    "id": "cut",
-                    "opacity": 0
+                    "strokeWidth": 1.5
                   },
                   {
                     "kind": "text",
-                    "x": 150,
-                    "y": 130,
-                    "text": "나란해요",
-                    "size": 10,
+                    "x": 48,
+                    "y": 36,
+                    "text": "A",
+                    "size": 11,
                     "anchor": "middle",
-                    "fill": "orange",
-                    "id": "say",
-                    "opacity": 0
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 20,
+                    "y": 92,
+                    "text": "B",
+                    "size": 11,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 100,
+                    "y": 92,
+                    "text": "C",
+                    "size": 11,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 30,
+                    "y": 64,
+                    "text": "$2$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
                   },
                   {
                     "kind": "text",
                     "x": 60,
-                    "y": 188,
-                    "text": "닮음비는 $1 : 2$",
+                    "y": 102,
+                    "text": "$3$",
                     "size": 11,
                     "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 78,
+                    "y": 64,
+                    "text": "$4$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 150,
+                    "y": 60,
+                    "text": "닮음비 $1:2$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "green"
+                  },
+                  {
+                    "kind": "line",
+                    "x1": 122,
+                    "y1": 70,
+                    "x2": 178,
+                    "y2": 70,
+                    "arrow": "end",
+                    "stroke": "green",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "polygon",
+                    "id": "s2-def",
+                    "points": [
+                      [
+                        235,
+                        26
+                      ],
+                      [
+                        205,
+                        92
+                      ],
+                      [
+                        305,
+                        92
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "green",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "text",
+                    "x": 235,
+                    "y": 15,
+                    "text": "D",
+                    "size": 11,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "green"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 195,
+                    "y": 96,
+                    "text": "E",
+                    "size": 11,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "green"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 315,
+                    "y": 96,
+                    "text": "F",
+                    "size": 11,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "green"
+                  },
+                  {
+                    "kind": "strip",
+                    "id": "strip-6",
+                    "x": 28,
+                    "y": 180,
+                    "width": 60,
+                    "height": 18,
+                    "parts": 6,
+                    "filled": 6,
                     "fill": "orange",
-                    "id": "ratio",
-                    "opacity": 0
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "draggable": true,
+                    "label": "길이 6 막대"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 58,
+                    "y": 212,
+                    "text": "길이 $6$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "strip",
+                    "id": "strip-8",
+                    "x": 130,
+                    "y": 180,
+                    "width": 80,
+                    "height": 18,
+                    "parts": 8,
+                    "filled": 8,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "draggable": true,
+                    "label": "길이 8 막대"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 170,
+                    "y": 212,
+                    "text": "길이 $8$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "strip",
+                    "id": "strip-4",
+                    "x": 250,
+                    "y": 180,
+                    "width": 40,
+                    "height": 18,
+                    "parts": 4,
+                    "filled": 4,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1,
+                    "draggable": true,
+                    "label": "길이 4 막대"
+                  },
+                  {
+                    "kind": "text",
+                    "x": 270,
+                    "y": 212,
+                    "text": "길이 $4$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "muted"
                   }
                 ],
-                "frames": [
+                "zones": [
                   {
-                    "caption": "크기가 다른 두 삼각형이에요. 모양까지 같은지는 어떻게 알까요.",
-                    "changes": [
-                      {
-                        "id": "cut",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "say",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "ratio",
-                        "opacity": 0
-                      }
+                    "id": "zone-de",
+                    "x": 18,
+                    "y": 118,
+                    "width": 92,
+                    "height": 32,
+                    "label": "변 DE",
+                    "accepts": [
+                      "strip-4"
                     ]
                   },
                   {
-                    "caption": "작은 것을 큰 것의 왼쪽 아래 꼭짓점에 맞춰 옮겨 볼게요.",
-                    "changes": [
-                      {
-                        "id": "small",
-                        "dx": -78,
-                        "dy": 29
-                      },
-                      {
-                        "id": "cut",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "say",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "ratio",
-                        "opacity": 0
-                      }
+                    "id": "zone-ef",
+                    "x": 124,
+                    "y": 118,
+                    "width": 92,
+                    "height": 32,
+                    "label": "변 EF",
+                    "accepts": [
+                      "strip-6"
                     ]
                   },
                   {
-                    "caption": "남은 변이 큰 삼각형의 변과 나란해요. 대응각이 같고, 대응변의 비는 어디를 재도 같아요.",
-                    "changes": [
-                      {
-                        "id": "small",
-                        "dx": -156,
-                        "dy": 58
-                      },
-                      {
-                        "id": "cut",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "say",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "ratio",
-                        "opacity": 1
-                      }
+                    "id": "zone-df",
+                    "x": 230,
+                    "y": 118,
+                    "width": 92,
+                    "height": 32,
+                    "label": "변 DF",
+                    "accepts": [
+                      "strip-8"
                     ]
                   }
                 ],
-                "frameMs": 1700
+                "task": {
+                  "prompt": "닮음비가 $1:2$일 때, 삼각형 DEF의 각 변에 알맞은 길이 막대를 놓아 보세요.",
+                  "promptAlt": "닮음비가 1대 2일 때, 삼각형 DEF의 각 변에 알맞은 길이 막대를 놓아 보세요.",
+                  "successText": "대응변의 길이가 모두 2배인 4, 6, 8이 되었어요."
+                }
               }
             },
             {
-              "blockId": "similar-triangles:explanation:conditions:v2",
+              "blockId": "similar-triangles:explanation:text-3:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "삼각형은 조금만 확인해도 닮음인지 알 수 있어요. 조건이 셋 있어요.\n\n첫째, 두 각의 크기가 각각 같으면 닮음이에요. 세 각의 합은 $180°$이니 세 번째 각은 저절로 같아지거든요. 가장 자주 쓰는 조건이에요.\n\n둘째, 두 변의 길이의 비가 같고 그 사이에 낀 각이 같으면 닮음이에요.\n\n셋째, 세 변의 길이의 비가 모두 같으면 닮음이에요.\n\n합동 조건과 나란히 놓고 보면 외우기 쉬워요. 「길이가 같다」를 「길이의 비가 같다」로 바꾸면 그대로 닮음 조건이에요.\n\n닮음은 평행선이 있는 그림에서 가장 자주 나와요. 평행선이 있으면 동위각과 엇각이 같아져요. 두 각이 같아지니 바로 닮음이거든요.",
+                "text": "두 삼각형은 두 각의 크기가 각각 같으면 닮음이에요. 두 변의 길이의 비가 같고 그 끼인각의 크기가 같아도 닮음이에요. 세 변의 길이의 비가 모두 같을 때도 두 삼각형은 닮음이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "similar-triangles:explanation:text-4:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 세 각의 합은 $180^\\circ$여서 두 각만 같아도 나머지 각이 같아져요. 특히 평행선이 있으면 동위각이나 엇각의 크기가 같아져요. 그래서 평행선이 만든 두 삼각형은 두 각이 같아 닮음이 돼요.",
                 "definitions": [
                   {
-                    "conceptKey": "polygon-angles",
-                    "surface": "세 각의 합",
-                    "scopeKind": "global"
-                  },
-                  {
                     "conceptKey": "parallel-lines",
-                    "surface": "평행선",
+                    "surface": "동위각",
                     "scopeKind": "global"
                   }
                 ]
@@ -300,35 +684,69 @@
           ]
         },
         {
-          "sectionId": "similar-triangles:example:v2",
+          "sectionId": "similar-triangles:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "similar-triangles:example:text:v2",
+              "blockId": "similar-triangles:example:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "닮음비가 $2:3$인 두 삼각형이 있어요. 작은 쪽의 한 변이 $4$일 때 대응하는 변의 길이를 구해 볼게요.\n\n$2:3 = 4:x$이니 $2x = 12$, 곧 $x = 6$이에요.\n\n비례식을 세울 때는 순서만 조심하면 돼요. 작은 쪽끼리, 큰 쪽끼리 맞추면 끝이에요.\n\n둘레도 같은 비로 늘어나요. 닮음비가 $1:4$이고 작은 삼각형의 둘레가 $9$라면 큰 쪽은 $36$이에요. 세 변이 모두 네 배이니 합도 네 배거든요.\n\n이번엔 이름이 붙은 문제예요. $\\triangle ABC$와 $\\triangle DEF$가 닮음이에요. $\\overline{AB} = 6$, $\\overline{DE} = 9$, $\\overline{BC} = 8$일 때 $\\overline{EF}$를 구해 볼게요.\n\n$\\overline{AB}$에 대응하는 변이 $\\overline{DE}$이니 닮음비는 $6:9$, 곧 $2:3$이에요.\n\n$\\overline{BC}$에 대응하는 변은 $\\overline{EF}$예요. 그러니 $8 \\times \\dfrac{3}{2} = 12$고요.\n\n이름의 순서가 대응을 말해 준다는 것을 기억하면 헷갈리지 않아요.",
-                "definitions": [
-                  {
-                    "conceptKey": "similar-triangles",
-                    "surface": "닮음",
-                    "scopeKind": "global"
-                  }
-                ]
+                "text": "닮음비가 $3:4$인 두 삼각형이 있어요. 작은 쪽의 한 변이 $6$일 때, 큰 쪽의 대응변의 길이 $x$를 구해 볼게요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "similar-triangles:example:text-2:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "작은 쪽과 큰 쪽의 순서에 맞춰 비례식을 세우면 $3:4 = 6:x$예요. 바깥쪽끼리, 안쪽끼리 곱하면 $3x = 24$가 돼요. 양변을 $3$으로 나누면 $x = 8$이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "similar-triangles:example:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "세 변이 같은 비율로 늘어나므로 삼각형의 둘레도 닮음비를 따라요. 작은 쪽의 둘레가 $15$라면 큰 쪽의 둘레 $y$는 $3:4 = 15:y$를 만족해요. $3y = 60$에서 양변을 $3$으로 나누면 둘레는 $20$이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "similar-triangles:example:text-4:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "이번에는 $\\triangle ABC$와 $\\triangle DEF$가 닮음일 때를 볼게요. $\\overline{AB} = 6$, $\\overline{DE} = 8$, $\\overline{BC} = 12$일 때 $\\overline{EF}$의 길이를 구해 볼게요. 꼭짓점 순서대로 $\\overline{AB}$에 대응하는 변은 $\\overline{DE}$예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "similar-triangles:example:text-5:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "대응변인 $\\overline{AB}$와 $\\overline{DE}$의 비 $6:8$을 약분하면 닮음비는 $3:4$예요. $\\overline{BC}$의 대응변은 $\\overline{EF}$이므로 비례식은 $3:4 = 12:\\overline{EF}$가 돼요. $3 \\times \\overline{EF} = 48$이므로 구하는 $\\overline{EF}$의 길이는 $16$이에요.",
+                "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "similar-triangles:practice:v2",
+          "sectionId": "similar-triangles:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "similar-triangles:practice:problems:v2",
+              "blockId": "similar-triangles:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -345,12 +763,12 @@
           ]
         },
         {
-          "sectionId": "similar-triangles:check:v2",
+          "sectionId": "similar-triangles:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "similar-triangles:check:problems:v2",
+              "blockId": "similar-triangles:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -366,26 +784,21 @@
           ]
         },
         {
-          "sectionId": "similar-triangles:summary:v2",
+          "sectionId": "similar-triangles:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "similar-triangles:summary:text:v2",
+              "blockId": "similar-triangles:summary:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "닮음은 크기만 다르고 모양이 같은 관계예요. 대응각은 같고 대응변의 비는 일정해요.\n\n그 일정한 비가 닮음비예요. 둘레도 같은 비로 늘어나요.\n\n삼각형은 두 각이 같거나, 두 변의 비와 낀 각이 같거나, 세 변의 비가 같으면 닮음이에요.\n\n평행선이 보이면 각이 같아지니 닮음을 먼저 의심해 보세요.\n\n이 수업의 개념은 삼각형의 닮음이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "일정한 비율로 늘이거나 줄여 포갤 수 있는 두 도형은 닮음이에요. 닮은 도형은 대응각이 같고, 대응변과 둘레의 비가 닮음비로 일정해요. 삼각형은 두 각이 같거나, 두 변의 비와 끼인각이 같으면 닮음이에요. 세 변의 길이의 비가 모두 같을 때도 두 삼각형은 닮음이에요.",
                 "definitions": [
                   {
                     "conceptKey": "similar-triangles",
                     "surface": "닮음",
-                    "scopeKind": "global"
-                  },
-                  {
-                    "conceptKey": "parallel-lines",
-                    "surface": "평행선",
                     "scopeKind": "global"
                   }
                 ]
@@ -406,7 +819,7 @@
     {
       "public": {
         "lessonKey": "parallel-ratio",
-        "versionId": "parallel-ratio:v3",
+        "versionId": "parallel-ratio:v4",
         "title": "평행선과 선분의 비: 평행선이 삼각형의 두 변을 같은 비로 나눈다",
         "summary": "삼각형을 가로지르는 평행선이 두 변을 같은 비로 나누는 것을 보고, 중점연결정리까지 가요.",
         "estimatedMinutes": 13,
@@ -421,225 +834,657 @@
       },
       "sections": [
         {
-          "sectionId": "parallel-ratio:explanation:v3",
+          "sectionId": "parallel-ratio:explanation:v4",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "parallel-ratio:explanation:divide:v3",
+              "blockId": "parallel-ratio:explanation:text-1:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "삼각형 $ABC$가 있어요. 변 $AB$ 위의 점 $D$와 변 $AC$ 위의 점 $E$를 잡아요. 그리고 $\\overline{DE}$가 $\\overline{BC}$와 나란하다고 해 볼게요.\n\n그러면 $\\triangle ADE$와 $\\triangle ABC$는 닮음이에요. 각 $A$는 함께 쓰고, 나란하니 동위각이 같아 두 각이 같아지거든요.\n\n닮음이니 대응변의 비가 같아요. 곧 $\\overline{AD} : \\overline{AB} = \\overline{AE} : \\overline{AC}$예요. 정리하면 $\\overline{AD} : \\overline{DB} = \\overline{AE} : \\overline{EC}$가 돼요.\n\n평행선이 두 변을 같은 비로 나눈다는 뜻이에요. 거꾸로도 성립해요. 두 변을 같은 비로 나누는 점을 이으면 그 선분은 밑변과 나란해요.",
+                "text": "삼각형 ABC의 변 AB에 점 D, 변 AC에 점 E를 잡아요. $\\overline{DE}$와 $\\overline{BC}$가 평행하면 동위각인 $\\angle ADE$와 $\\angle ABC$가 같아요. $\\angle A$가 공통이라 삼각형 ADE와 삼각형 ABC는 닮음이에요.",
                 "definitions": [
                   {
-                    "conceptKey": "similar-triangles",
-                    "surface": "닮음",
+                    "conceptKey": "parallel-lines",
+                    "surface": "동위각",
                     "scopeKind": "global"
                   },
                   {
-                    "conceptKey": "parallel-lines",
-                    "surface": "평행선",
+                    "conceptKey": "similar-triangles",
+                    "surface": "닮음",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "parallel-ratio:explanation:drawing:v3",
+              "blockId": "parallel-ratio:explanation:text-2:v4",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 삼각형이 닮음이면 대응변의 비인 $\\overline{AD} : \\overline{AB} = \\overline{AE} : \\overline{AC}$가 성립해요. 전체 변에서 윗부분을 빼도 비가 같아 $\\overline{AD} : \\overline{DB} = \\overline{AE} : \\overline{EC}$가 돼요. 평행선이 두 변을 같은 비로 나누는 성질을 평행선과 선분의 비라고 해요.",
+                "definitions": [
+                  {
+                    "conceptKey": "parallel-ratio",
+                    "surface": "평행선과 선분의 비",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "parallel-ratio:explanation:scene-1:v4",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "width": 320,
-                "height": 200,
-                "alt": "두 변의 중점을 이은 선분을 밑변에 두 번 옮겨 대어 딱 맞는 것을 보이는 그림",
-                "caption": "중점을 이은 선분은 밑변에 꼭 두 번 들어가요",
+                "width": 340,
+                "height": 220,
+                "alt": "삼각형 ABC에서 밑변 BC와 평행한 선분 DE가 두 변 AB, AC를 각각 4대 2와 6대 3의 같은 비로 나누는 그림",
+                "caption": "$\\overline{DE}$와 $\\overline{BC}$가 평행하면 $\\overline{AD} : \\overline{DB} = \\overline{AE} : \\overline{EC}$예요.",
+                "frameMs": 1800,
                 "items": [
                   {
                     "kind": "polygon",
+                    "id": "tri-abc",
                     "points": [
                       [
-                        56,
-                        164
+                        170,
+                        32
                       ],
                       [
-                        264,
-                        164
+                        60,
+                        182
                       ],
                       [
-                        160,
-                        36
+                        280,
+                        182
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "paper",
+                    "stroke": "ink",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "polygon",
+                    "id": "tri-ade",
+                    "points": [
+                      [
+                        170,
+                        32
+                      ],
+                      [
+                        97,
+                        132
+                      ],
+                      [
+                        243,
+                        132
                       ]
                     ],
                     "closed": true,
                     "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1.6,
-                    "id": "tri"
+                    "stroke": "none",
+                    "opacity": 1
                   },
                   {
                     "kind": "line",
-                    "x1": 108,
-                    "y1": 100,
-                    "x2": 212,
-                    "y2": 100,
-                    "stroke": "green",
-                    "strokeWidth": 2.4,
-                    "id": "mid"
-                  },
-                  {
-                    "kind": "ellipse",
-                    "cx": 108,
-                    "cy": 100,
-                    "rx": 3.5,
-                    "ry": 3.5,
-                    "fill": "green",
-                    "id": "d1"
-                  },
-                  {
-                    "kind": "ellipse",
-                    "cx": 212,
-                    "cy": 100,
-                    "rx": 3.5,
-                    "ry": 3.5,
-                    "fill": "green",
-                    "id": "d2"
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 108,
-                    "y1": 100,
-                    "x2": 212,
-                    "y2": 100,
+                    "id": "seg-ad",
+                    "x1": 170,
+                    "y1": 32,
+                    "x2": 97,
+                    "y2": 132,
                     "stroke": "orange",
                     "strokeWidth": 3,
-                    "id": "c1",
                     "opacity": 0
                   },
                   {
                     "kind": "line",
-                    "x1": 108,
-                    "y1": 100,
-                    "x2": 212,
-                    "y2": 100,
+                    "id": "seg-ae",
+                    "x1": 170,
+                    "y1": 32,
+                    "x2": 243,
+                    "y2": 132,
                     "stroke": "orange",
                     "strokeWidth": 3,
-                    "id": "c2",
-                    "opacity": 0,
-                    "dash": true
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "id": "seg-db",
+                    "x1": 97,
+                    "y1": 132,
+                    "x2": 60,
+                    "y2": 182,
+                    "stroke": "green",
+                    "strokeWidth": 3,
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "id": "seg-ec",
+                    "x1": 243,
+                    "y1": 132,
+                    "x2": 280,
+                    "y2": 182,
+                    "stroke": "green",
+                    "strokeWidth": 3,
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "id": "line-de",
+                    "x1": 97,
+                    "y1": 132,
+                    "x2": 243,
+                    "y2": 132,
+                    "stroke": "orange",
+                    "strokeWidth": 2.5
+                  },
+                  {
+                    "kind": "line",
+                    "id": "line-bc",
+                    "x1": 60,
+                    "y1": 182,
+                    "x2": 280,
+                    "y2": 182,
+                    "stroke": "ink",
+                    "strokeWidth": 2.5
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "dot-d",
+                    "cx": 97,
+                    "cy": 132,
+                    "rx": 3.5,
+                    "ry": 3.5,
+                    "fill": "orange"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "dot-e",
+                    "cx": 243,
+                    "cy": 132,
+                    "rx": 3.5,
+                    "ry": 3.5,
+                    "fill": "orange"
                   },
                   {
                     "kind": "text",
-                    "x": 160,
-                    "y": 22,
-                    "text": "두 변의 중점을 이으면",
-                    "size": 11,
+                    "id": "label-A",
+                    "x": 170,
+                    "y": 18,
+                    "text": "A",
+                    "size": 13,
                     "anchor": "middle",
-                    "fill": "muted"
+                    "weight": "bold",
+                    "fill": "ink"
                   },
                   {
                     "kind": "text",
-                    "x": 160,
-                    "y": 188,
-                    "text": "밑변의 절반이고 밑변과 나란해요",
-                    "size": 11,
+                    "id": "label-B",
+                    "x": 44,
+                    "y": 186,
+                    "text": "B",
+                    "size": 13,
                     "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "label-C",
+                    "x": 296,
+                    "y": 186,
+                    "text": "C",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "label-D",
+                    "x": 82,
+                    "y": 134,
+                    "text": "D",
+                    "size": 13,
+                    "anchor": "end",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "label-E",
+                    "x": 258,
+                    "y": 134,
+                    "text": "E",
+                    "size": 13,
+                    "anchor": "start",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "angle-note",
+                    "x": 170,
+                    "y": 102,
+                    "text": "$∠ADE = ∠ABC$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
                     "fill": "orange",
-                    "id": "say",
+                    "opacity": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "len-AD",
+                    "x": 112,
+                    "y": 78,
+                    "text": "$4$",
+                    "size": 13,
+                    "anchor": "end",
+                    "weight": "bold",
+                    "fill": "orange",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "id": "len-AE",
+                    "x": 228,
+                    "y": 78,
+                    "text": "$6$",
+                    "size": 13,
+                    "anchor": "start",
+                    "weight": "bold",
+                    "fill": "orange",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "id": "len-DB",
+                    "x": 56,
+                    "y": 160,
+                    "text": "$2$",
+                    "size": 13,
+                    "anchor": "end",
+                    "weight": "bold",
+                    "fill": "green",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "id": "len-EC",
+                    "x": 284,
+                    "y": 160,
+                    "text": "$3$",
+                    "size": 13,
+                    "anchor": "start",
+                    "weight": "bold",
+                    "fill": "green",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "id": "ratio-note",
+                    "x": 170,
+                    "y": 160,
+                    "text": "$4 : 2 = 6 : 3$",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink",
                     "opacity": 0
                   }
                 ],
                 "frames": [
                   {
-                    "caption": "두 변의 중점을 찾아 이어 봤어요. 이 선분과 밑변은 어떤 사이일까요.",
+                    "caption": "$\\overline{DE}$와 $\\overline{BC}$가 평행하면 동위각인 $\\angle ADE$와 $\\angle ABC$가 같아 두 삼각형은 닮음이에요.",
+                    "changes": []
+                  },
+                  {
+                    "caption": "윗부분 선분이 $\\overline{AD} = 4$, $\\overline{AE} = 6$일 때 두 선분의 비는 $4 : 6 = 2 : 3$이에요.",
                     "changes": [
                       {
-                        "id": "c1",
+                        "id": "angle-note",
                         "opacity": 0
                       },
                       {
-                        "id": "c2",
-                        "opacity": 0
+                        "id": "seg-ad",
+                        "opacity": 1
                       },
                       {
-                        "id": "say",
-                        "opacity": 0
+                        "id": "seg-ae",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "len-AD",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "len-AE",
+                        "opacity": 1
                       }
                     ]
                   },
                   {
-                    "caption": "같은 길이를 잘라 밑변의 왼쪽 절반에 대어 보면 딱 맞아요.",
+                    "caption": "아랫부분 $\\overline{DB} = 2$, $\\overline{EC} = 3$과 비교하면 $\\overline{AD} : \\overline{DB} = \\overline{AE} : \\overline{EC} = 2 : 1$이에요.",
                     "changes": [
                       {
-                        "id": "c1",
-                        "dx": -52,
-                        "dy": 70,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "c2",
+                        "id": "angle-note",
                         "opacity": 0
                       },
                       {
-                        "id": "say",
-                        "opacity": 0
-                      }
-                    ]
-                  },
-                  {
-                    "caption": "한 번 더 옮기면 오른쪽 절반도 딱 맞아요. 두 번 들어가니 밑변의 절반이에요.",
-                    "changes": [
+                        "id": "tri-ade",
+                        "opacity": 0.4
+                      },
                       {
-                        "id": "c1",
-                        "dx": -52,
-                        "dy": 70,
+                        "id": "seg-ad",
                         "opacity": 1
                       },
                       {
-                        "id": "c2",
-                        "dx": 52,
-                        "dy": 70,
+                        "id": "seg-ae",
                         "opacity": 1
                       },
                       {
-                        "id": "say",
+                        "id": "seg-db",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "seg-ec",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "len-AD",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "len-AE",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "len-DB",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "len-EC",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "ratio-note",
                         "opacity": 1
                       }
                     ]
-                  }
-                ],
-                "frameMs": 1700
-              }
-            },
-            {
-              "blockId": "parallel-ratio:explanation:midpoint:v3",
-              "kind": "core.rich_text",
-              "typeVersion": 3,
-              "required": true,
-              "payload": {
-                "text": "삼각형 $ABC$의 변 $AB$, $AC$의 중점을 각각 $D$, $E$라고 해요. 그러면 $AD:DB=AE:EC=1:1$이에요. 두 변을 같은 비로 나누므로 $DE$와 $BC$는 평행해요.\n\n$\\triangle ADE$와 $\\triangle ABC$는 닮음이고, $AD:AB=1:2$예요. 대응하는 변 $DE$와 $BC$의 길이도 $1:2$이므로 $DE$의 길이는 $BC$의 절반이에요.\n\n이처럼 삼각형의 두 변의 중점을 이은 선분이 나머지 변과 평행하고 길이가 그 절반이라는 성질을 중점연결정리라고 해요.",
-                "definitions": [
-                  {
-                    "conceptKey": "parallel-ratio",
-                    "surface": "중점연결정리",
-                    "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "parallel-ratio:explanation:trapezoid:v3",
+              "blockId": "parallel-ratio:explanation:text-3:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "사다리꼴에도 같은 이야기가 있어요. 평행하지 않은 두 변의 중점을 이어 보세요.\n\n그 선분은 두 밑변과 나란해요. 길이는 두 밑변의 길이의 평균이고요. 밑변이 $6$과 $10$이면 $8$이에요.\n\n평행선을 보면 닮음을 떠올리세요. 중점을 보면 절반을 떠올리면 돼요.",
+                "text": "거꾸로 두 변을 같은 비로 나누는 점을 이으면 밑변과 평행해요. 변 AB, AC의 중점 D, E는 두 변을 각각 $1 : 1$로 나눠요. 나누는 비가 같으니 $\\overline{DE}$와 $\\overline{BC}$는 서로 평행해요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "parallel-ratio:explanation:text-4:v4",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "점 D가 변 AB의 중점이면 $\\overline{AD} : \\overline{AB} = 1 : 2$예요. 닮음비도 $1 : 2$여서 $\\overline{DE}$의 길이는 $\\overline{BC}$의 $\\frac{1}{2}$이에요. 이 성질을 삼각형의 중점연결정리라고 불러요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "parallel-ratio:explanation:scene-2:v4",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 340,
+                "height": 230,
+                "alt": "삼각형 ABC의 두 변의 중점 D, E를 이은 그림에서 선분 DE의 길이 6과 선분 EC의 길이 4를 빈칸에 끌어다 놓는 활동",
+                "caption": "중점을 이은 선분 $\\overline{DE}$는 밑변 $\\overline{BC}$의 $\\frac{1}{2}$이고, 점 E는 변 AC를 $1 : 1$로 나눠요.",
+                "items": [
+                  {
+                    "kind": "polygon",
+                    "id": "m-tri",
+                    "points": [
+                      [
+                        125,
+                        22
+                      ],
+                      [
+                        28,
+                        146
+                      ],
+                      [
+                        222,
+                        146
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "paper",
+                    "stroke": "ink",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "line",
+                    "id": "m-de",
+                    "x1": 76,
+                    "y1": 84,
+                    "x2": 174,
+                    "y2": 84,
+                    "stroke": "orange",
+                    "strokeWidth": 2.5
+                  },
+                  {
+                    "kind": "line",
+                    "id": "m-ec-guide",
+                    "x1": 202,
+                    "y1": 115,
+                    "x2": 240,
+                    "y2": 106,
+                    "stroke": "green",
+                    "strokeWidth": 1.5,
+                    "dash": true
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "m-dot-d",
+                    "cx": 76,
+                    "cy": 84,
+                    "rx": 3.5,
+                    "ry": 3.5,
+                    "fill": "orange"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "m-dot-e",
+                    "cx": 174,
+                    "cy": 84,
+                    "rx": 3.5,
+                    "ry": 3.5,
+                    "fill": "orange"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "m-A",
+                    "x": 125,
+                    "y": 14,
+                    "text": "A",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "m-B",
+                    "x": 16,
+                    "y": 150,
+                    "text": "B",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "m-C",
+                    "x": 234,
+                    "y": 150,
+                    "text": "C",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "m-D",
+                    "x": 62,
+                    "y": 86,
+                    "text": "D",
+                    "size": 12,
+                    "anchor": "end",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "m-E",
+                    "x": 186,
+                    "y": 82,
+                    "text": "E",
+                    "size": 12,
+                    "anchor": "start",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "m-len-ad",
+                    "x": 86,
+                    "y": 52,
+                    "text": "$5$",
+                    "size": 12,
+                    "anchor": "end",
+                    "weight": "bold",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "m-len-db",
+                    "x": 40,
+                    "y": 118,
+                    "text": "$5$",
+                    "size": 12,
+                    "anchor": "end",
+                    "weight": "bold",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "m-len-ae",
+                    "x": 164,
+                    "y": 52,
+                    "text": "$4$",
+                    "size": 12,
+                    "anchor": "start",
+                    "weight": "bold",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "m-len-bc",
+                    "x": 125,
+                    "y": 164,
+                    "text": "$\\overline{BC} = 12$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "card-de",
+                    "x": 68,
+                    "y": 184,
+                    "width": 78,
+                    "height": 28,
+                    "radius": 6,
+                    "fill": "sand",
+                    "stroke": "orange",
+                    "strokeWidth": 1.5,
+                    "draggable": true,
+                    "label": "DE = 6"
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "card-ec",
+                    "x": 194,
+                    "y": 184,
+                    "width": 78,
+                    "height": 28,
+                    "radius": 6,
+                    "fill": "light-green",
+                    "stroke": "green",
+                    "strokeWidth": 1.5,
+                    "draggable": true,
+                    "label": "EC = 4"
+                  }
+                ],
+                "zones": [
+                  {
+                    "id": "zone-de",
+                    "x": 86,
+                    "y": 92,
+                    "width": 78,
+                    "height": 28,
+                    "label": "선분 DE",
+                    "accepts": [
+                      "card-de"
+                    ]
+                  },
+                  {
+                    "id": "zone-ec",
+                    "x": 244,
+                    "y": 92,
+                    "width": 78,
+                    "height": 28,
+                    "label": "선분 EC",
+                    "accepts": [
+                      "card-ec"
+                    ]
+                  }
+                ],
+                "task": {
+                  "prompt": "중점 D, E를 이은 삼각형에서 $\\overline{DE}$와 $\\overline{EC}$의 길이를 알맞은 칸에 놓아 보세요.",
+                  "promptAlt": "중점 D, E를 이은 삼각형에서 선분 DE와 선분 EC의 길이를 알맞은 칸에 놓아 보세요.",
+                  "successText": "맞았어요! 중점이니 EC는 AE와 같은 4이고, DE는 밑변 12의 반인 6이에요."
+                }
+              }
+            },
+            {
+              "blockId": "parallel-ratio:explanation:text-5:v4",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "사다리꼴에서 평행하지 않은 두 변의 중점을 이으면 두 밑변과 평행해요. 대각선으로 삼각형 두 개를 만들면 각 조각은 두 밑변의 $\\frac{1}{2}$이에요. 그래서 전체 길이는 두 밑변의 합을 $2$로 나눈 평균과 같아요.",
                 "definitions": [
                   {
-                    "conceptKey": "special-quad",
-                    "surface": "사다리꼴",
+                    "conceptKey": "mean",
+                    "surface": "평균",
                     "scopeKind": "global"
                   }
                 ]
@@ -648,35 +1493,59 @@
           ]
         },
         {
-          "sectionId": "parallel-ratio:example:v3",
+          "sectionId": "parallel-ratio:example:v4",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "parallel-ratio:example:text:v3",
+              "blockId": "parallel-ratio:example:text-1:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "삼각형 $ABC$에서 $\\overline{DE}$가 $\\overline{BC}$와 나란해요. $\\overline{AD} = 2$, $\\overline{DB} = 3$, $\\overline{AE} = 4$일 때 $\\overline{EC}$를 구해 볼게요.\n\n$\\overline{AD} : \\overline{DB} = \\overline{AE} : \\overline{EC}$이니 $2 : 3 = 4 : x$예요.\n\n$2x = 12$이니 $x = 6$이에요.\n\n비를 세울 때는 위와 아래를 섞지 않는 것이 요령이에요. $\\overline{AD}$의 짝은 $\\overline{AE}$, $\\overline{DB}$의 짝은 $\\overline{EC}$예요.\n\n중점연결정리도 해 볼게요. $\\overline{BC} = 14$이고 $D$, $E$가 각각 중점이면 $\\overline{DE} = 7$이에요. 거꾸로 $\\overline{DE} = 5$면 $\\overline{BC} = 10$이고요.\n\n사다리꼴이면 평균이에요. 두 밑변이 $6$과 $10$인 사다리꼴을 볼게요. 두 변의 중점을 이은 선분은 $(6 + 10) \\div 2 = 8$이에요.",
-                "definitions": [
-                  {
-                    "conceptKey": "parallel-ratio",
-                    "surface": "중점연결정리",
-                    "scopeKind": "global"
-                  }
-                ]
+                "text": "삼각형 ABC에서 $\\overline{DE}$와 $\\overline{BC}$가 평행한 경우를 풀어 볼게요. $\\overline{AD} = 3$, $\\overline{DB} = 6$, $\\overline{AE} = 2$일 때 $\\overline{EC}$의 길이를 $x$라고 두어요. 평행선과 선분의 비에 따라 $\\overline{AD} : \\overline{DB} = \\overline{AE} : \\overline{EC}$가 성립해요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "parallel-ratio:example:text-2:v4",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "윗부분인 $\\overline{AD}$의 짝은 $\\overline{AE}$이고 아랫부분인 $\\overline{DB}$의 짝은 $\\overline{EC}$예요. 길이를 대입해 비례식을 세우면 $3 : 6 = 2 : x$가 돼요. 내항의 곱과 외항의 곱이 같으니 $3x = 12$에서 $x = 4$예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "parallel-ratio:example:text-3:v4",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "이번에는 삼각형의 두 변의 중점 D, E를 이은 경우를 볼게요. 밑변 $\\overline{BC}$가 $16$이면 $\\overline{DE}$는 그 $\\frac{1}{2}$인 $16 \\div 2 = 8$이에요. 반대로 $\\overline{DE}$가 $4$라면 밑변 $\\overline{BC}$는 $2$배인 $4 \\times 2 = 8$이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "parallel-ratio:example:text-4:v4",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 밑변의 길이가 $8$과 $12$인 사다리꼴도 같은 원리로 풀어요. 평행하지 않은 두 변의 중점을 이은 선분은 두 밑변의 평균이에요. 두 밑변을 더해 $2$로 나누면 $(8 + 12) \\div 2 = 10$이 돼요.",
+                "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "parallel-ratio:practice:v3",
+          "sectionId": "parallel-ratio:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "parallel-ratio:practice:problems:v3",
+              "blockId": "parallel-ratio:practice:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -693,12 +1562,12 @@
           ]
         },
         {
-          "sectionId": "parallel-ratio:check:v3",
+          "sectionId": "parallel-ratio:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "parallel-ratio:check:problems:v3",
+              "blockId": "parallel-ratio:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -714,26 +1583,21 @@
           ]
         },
         {
-          "sectionId": "parallel-ratio:summary:v3",
+          "sectionId": "parallel-ratio:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "parallel-ratio:summary:text:v3",
+              "blockId": "parallel-ratio:summary:text-1:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "삼각형을 가로지르는 평행선은 두 변을 같은 비로 나눠요. 닮음에서 곧바로 나오는 성질이에요.\n\n거꾸로 같은 비로 나누는 점을 이으면 그 선분은 밑변과 나란해요.\n\n두 변의 중점을 이으면 밑변과 나란하고 길이는 절반이에요. 이것이 중점연결정리예요.\n\n사다리꼴에서는 두 밑변의 평균이 돼요.\n\n이 수업의 개념은 평행선과 선분의 비예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "삼각형에서 밑변과 평행한 선분은 나머지 두 변을 같은 비로 나눠요. 거꾸로 두 변을 같은 비로 나누는 점을 이으면 밑변과 평행해요. 삼각형 두 변의 중점을 이은 선분은 밑변과 평행하고 길이는 $\\frac{1}{2}$이에요. 사다리꼴에서 두 변의 중점을 이은 선분의 길이는 두 밑변의 평균이에요.",
                 "definitions": [
                   {
-                    "conceptKey": "similar-triangles",
-                    "surface": "닮음",
-                    "scopeKind": "global"
-                  },
-                  {
                     "conceptKey": "parallel-ratio",
-                    "surface": "중점연결정리",
+                    "surface": "같은 비",
                     "scopeKind": "global"
                   }
                 ]
@@ -754,7 +1618,7 @@
     {
       "public": {
         "lessonKey": "centroid",
-        "versionId": "centroid:v3",
+        "versionId": "centroid:v4",
         "title": "무게중심: 중선을 2 대 1로 나누는 점",
         "summary": "세 중선이 한 점에서 만나는 것과, 그 점이 중선을 2 대 1로 나누는 것을 확인해요.",
         "estimatedMinutes": 12,
@@ -768,453 +1632,314 @@
       },
       "sections": [
         {
-          "sectionId": "centroid:explanation:v3",
+          "sectionId": "centroid:explanation:v4",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "centroid:explanation:median:v3",
+              "blockId": "centroid:explanation:text-1:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "삼각형의 한 꼭짓점과 마주 보는 변의 중점을 이은 선분을 중선이라고 해요. 꼭짓점이 셋이니 중선도 셋이에요.\n\n놀랍게도 세 중선은 한 점에서 만나요.",
-                "definitions": []
-              }
-            },
-            {
-              "blockId": "centroid:explanation:center:v3",
-              "kind": "core.rich_text",
-              "typeVersion": 3,
-              "required": true,
-              "payload": {
-                "text": "세 중선이 만나는 그 점이 무게중심이에요. 삼각형 모양의 판을 이 점에서 받치면 기울지 않아요. 그래서 붙은 이름이에요.\n\n무게중심은 각 중선을 꼭짓점 쪽부터 $2:1$로 나눠요. 꼭짓점에서 무게중심까지가 긴 쪽이에요. 무게중심에서 중점까지가 짧은 쪽이고요.\n\n중선 하나의 길이가 $12$라면 꼭짓점에서 무게중심까지는 $8$이에요. 무게중심에서 중점까지는 $4$고요. 전체를 세 조각으로 보고 둘과 하나로 나눈다고 생각하면 편해요.",
+                "text": "삼각형의 꼭짓점과 마주 보는 변의 중점을 이은 선분을 중선이라고 해요. 삼각형은 꼭짓점이 $3$개이므로 중선도 $3$개 그을 수 있어요.",
                 "definitions": [
                   {
-                    "conceptKey": "centroid",
-                    "surface": "무게중심",
+                    "conceptKey": "vertex",
+                    "surface": "꼭짓점",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "centroid:explanation:drawing:v3",
-              "kind": "core.scene",
-              "typeVersion": 1,
+              "blockId": "centroid:explanation:text-2:v4",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
               "required": true,
               "payload": {
-                "width": 320,
-                "height": 200,
-                "alt": "무게중심에서 중점까지의 길이를 중선 위쪽에 두 번 옮겨 대어 2 대 1을 보이는 그림",
-                "caption": "짧은 쪽을 두 번 옮기면 꼭짓점에 닿아요",
-                "items": [
+                "text": "세 중선이 만나는 한 점을 삼각형의 무게중심이라고 해요. 무게중심은 각 중선을 꼭짓점 쪽부터 $2:1$의 비로 나눠요.\n\n중선 전체를 세 조각으로 보면 꼭짓점 쪽이 두 조각, 중점 쪽이 한 조각이에요. 중선의 길이가 $9$라면 꼭짓점 쪽은 $6$, 중점 쪽은 $3$이 돼요.",
+                "definitions": [
                   {
-                    "kind": "polygon",
-                    "points": [
-                      [
-                        56,
-                        164
-                      ],
-                      [
-                        264,
-                        164
-                      ],
-                      [
-                        160,
-                        36
-                      ]
-                    ],
-                    "closed": true,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1.6,
-                    "id": "tri"
+                    "conceptKey": "centroid",
+                    "surface": "삼각형의 무게중심",
+                    "scopeKind": "global"
                   },
                   {
-                    "kind": "line",
-                    "x1": 160,
-                    "y1": 36,
-                    "x2": 160,
-                    "y2": 164,
-                    "stroke": "green",
-                    "strokeWidth": 1.6,
-                    "id": "m1"
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 56,
-                    "y1": 164,
-                    "x2": 212,
-                    "y2": 100,
-                    "stroke": "green",
-                    "strokeWidth": 1.2,
-                    "id": "m2",
-                    "dash": true
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 264,
-                    "y1": 164,
-                    "x2": 108,
-                    "y2": 100,
-                    "stroke": "green",
-                    "strokeWidth": 1.2,
-                    "id": "m3",
-                    "dash": true
-                  },
-                  {
-                    "kind": "ellipse",
-                    "cx": 160,
-                    "cy": 121.33,
-                    "rx": 4,
-                    "ry": 4,
-                    "fill": "ink",
-                    "id": "g"
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 168,
-                    "y1": 121.33,
-                    "x2": 168,
-                    "y2": 164,
-                    "stroke": "orange",
-                    "strokeWidth": 3,
-                    "id": "unit",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 168,
-                    "y1": 121.33,
-                    "x2": 168,
-                    "y2": 164,
-                    "stroke": "deep-green",
-                    "strokeWidth": 3,
-                    "id": "c1",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 168,
-                    "y1": 121.33,
-                    "x2": 168,
-                    "y2": 164,
-                    "stroke": "orange",
-                    "strokeWidth": 3,
-                    "id": "c2",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 176,
-                    "y": 134,
-                    "text": "무게중심",
-                    "size": 10,
-                    "anchor": "start",
-                    "fill": "ink",
-                    "id": "gl",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 160,
-                    "y": 22,
-                    "text": "세 중선이 만나는 점",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 160,
-                    "y": 188,
-                    "text": "무게중심은 중선을 $2 : 1$로 나눠요",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "orange",
-                    "id": "say",
-                    "opacity": 0
-                  }
-                ],
-                "frames": [
-                  {
-                    "caption": "세 중선은 한 점에서 만나요. 그 점이 무게중심이에요.",
-                    "changes": [
-                      {
-                        "id": "unit",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "c1",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "c2",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "gl",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "say",
-                        "opacity": 0
-                      }
-                    ]
-                  },
-                  {
-                    "caption": "무게중심에서 밑변의 중점까지를 재어 위로 옮겨 대어 봐요. 한 번으로는 꼭짓점에 못 닿아요.",
-                    "changes": [
-                      {
-                        "id": "unit",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "c1",
-                        "dy": -42.67,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "c2",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "gl",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "say",
-                        "opacity": 0
-                      }
-                    ]
-                  },
-                  {
-                    "caption": "두 번이면 꼭짓점에 딱 닿아요. 위쪽이 아래쪽의 두 배예요.",
-                    "changes": [
-                      {
-                        "id": "unit",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "c1",
-                        "dy": -42.67,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "c2",
-                        "dy": -85.33,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "gl",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "say",
-                        "opacity": 1
-                      }
-                    ]
-                  }
-                ],
-                "frameMs": 1700
-              }
-            },
-            {
-              "blockId": "centroid:proof-drawing:v3",
-              "kind": "core.scene",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "width": 320,
-                "height": 230,
-                "alt": "삼각형 ABC의 중점 D, E와 중선의 교점 G. 삼각형 GAB와 GDE의 대응변 AB와 DE는 평행하고 길이의 비가 2 대 1이다.",
-                "caption": "삼각형 GAB와 GDE를 비교해요. AB와 DE는 평행하고, 길이의 비는 2 대 1이에요.",
-                "items": [
-                  {
-                    "kind": "polygon",
-                    "points": [
-                      [
-                        160,
-                        30
-                      ],
-                      [
-                        40,
-                        185
-                      ],
-                      [
-                        280,
-                        185
-                      ]
-                    ],
-                    "closed": true,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1.5
-                  },
-                  {
-                    "kind": "polygon",
-                    "points": [
-                      [
-                        160,
-                        133.33
-                      ],
-                      [
-                        160,
-                        30
-                      ],
-                      [
-                        40,
-                        185
-                      ]
-                    ],
-                    "closed": true,
-                    "fill": "fill",
-                    "stroke": "green",
-                    "strokeWidth": 1.5
-                  },
-                  {
-                    "kind": "polygon",
-                    "points": [
-                      [
-                        160,
-                        133.33
-                      ],
-                      [
-                        160,
-                        185
-                      ],
-                      [
-                        220,
-                        107.5
-                      ]
-                    ],
-                    "closed": true,
-                    "fill": "sand",
-                    "stroke": "orange",
-                    "strokeWidth": 1.5
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 160,
-                    "y1": 30,
-                    "x2": 160,
-                    "y2": 185,
-                    "stroke": "green",
-                    "strokeWidth": 1.4
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 40,
-                    "y1": 185,
-                    "x2": 220,
-                    "y2": 107.5,
-                    "stroke": "green",
-                    "strokeWidth": 1.4
-                  },
-                  {
-                    "kind": "line",
-                    "x1": 160,
-                    "y1": 185,
-                    "x2": 220,
-                    "y2": 107.5,
-                    "stroke": "orange",
-                    "strokeWidth": 1.4
-                  },
-                  {
-                    "kind": "ellipse",
-                    "cx": 160,
-                    "cy": 133.33,
-                    "rx": 3,
-                    "ry": 3,
-                    "fill": "ink"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 160,
-                    "y": 19,
-                    "text": "A",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "ink"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 28,
-                    "y": 197,
-                    "text": "B",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "ink"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 292,
-                    "y": 197,
-                    "text": "C",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "ink"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 160,
-                    "y": 205,
-                    "text": "D",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "ink"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 238,
-                    "y": 105,
-                    "text": "E",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "ink"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 146,
-                    "y": 127,
-                    "text": "G",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "ink"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 72,
-                    "y": 103,
-                    "text": "2",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "green"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 203,
-                    "y": 156,
-                    "text": "1",
-                    "size": 13,
-                    "anchor": "middle",
-                    "fill": "orange"
+                    "conceptKey": "ratio",
+                    "surface": "비",
+                    "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "centroid:explanation:why:v3",
+              "blockId": "centroid:explanation:scene-1:v4",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 340,
+                "height": 220,
+                "alt": "삼각형 ABC의 중선 AD 위에 무게중심 G가 찍혀 있고, 선분 AG와 선분 GD에 해당하는 빈칸에 2조각 막대와 1조각 막대를 끌어다 놓는 그림입니다.",
+                "caption": "무게중심 G는 중선 AD를 꼭짓점 A 쪽부터 $2:1$로 나눠요.",
+                "items": [
+                  {
+                    "kind": "polygon",
+                    "id": "tri-abc",
+                    "points": [
+                      [
+                        50,
+                        60
+                      ],
+                      [
+                        275,
+                        18
+                      ],
+                      [
+                        275,
+                        102
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "line",
+                    "id": "med-be",
+                    "x1": 275,
+                    "y1": 18,
+                    "x2": 162.5,
+                    "y2": 81,
+                    "stroke": "muted",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "kind": "line",
+                    "id": "med-cf",
+                    "x1": 275,
+                    "y1": 102,
+                    "x2": 162.5,
+                    "y2": 39,
+                    "stroke": "muted",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "kind": "line",
+                    "id": "med-ad",
+                    "x1": 50,
+                    "y1": 60,
+                    "x2": 275,
+                    "y2": 60,
+                    "stroke": "ink",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "line",
+                    "id": "guide-a",
+                    "x1": 50,
+                    "y1": 65,
+                    "x2": 50,
+                    "y2": 118,
+                    "stroke": "line",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "kind": "line",
+                    "id": "guide-g",
+                    "x1": 200,
+                    "y1": 65,
+                    "x2": 200,
+                    "y2": 118,
+                    "stroke": "line",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "kind": "line",
+                    "id": "guide-d",
+                    "x1": 275,
+                    "y1": 65,
+                    "x2": 275,
+                    "y2": 118,
+                    "stroke": "line",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "pt-a",
+                    "cx": 50,
+                    "cy": 60,
+                    "rx": 3,
+                    "ry": 3,
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "pt-d",
+                    "cx": 275,
+                    "cy": 60,
+                    "rx": 3,
+                    "ry": 3,
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "pt-g",
+                    "cx": 200,
+                    "cy": 60,
+                    "rx": 4,
+                    "ry": 4,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "txt-a",
+                    "x": 36,
+                    "y": 64,
+                    "text": "A",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "txt-b",
+                    "x": 288,
+                    "y": 22,
+                    "text": "B",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "txt-c",
+                    "x": 288,
+                    "y": 106,
+                    "text": "C",
+                    "size": 12,
+                    "anchor": "middle",
+                    "fill": "muted"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "txt-d",
+                    "x": 288,
+                    "y": 64,
+                    "text": "D",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "txt-g",
+                    "x": 200,
+                    "y": 46,
+                    "text": "G",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange"
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "bar-1",
+                    "x": 55,
+                    "y": 180,
+                    "width": 68,
+                    "height": 22,
+                    "radius": 4,
+                    "fill": "light-green",
+                    "stroke": "deep-green",
+                    "strokeWidth": 1.5,
+                    "draggable": true,
+                    "label": "1조각"
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "bar-2",
+                    "x": 150,
+                    "y": 180,
+                    "width": 140,
+                    "height": 22,
+                    "radius": 4,
+                    "fill": "sand",
+                    "stroke": "orange",
+                    "strokeWidth": 1.5,
+                    "draggable": true,
+                    "label": "2조각"
+                  }
+                ],
+                "zones": [
+                  {
+                    "id": "zone-ag",
+                    "x": 50,
+                    "y": 120,
+                    "width": 146,
+                    "height": 28,
+                    "label": "꼭짓점 쪽 (AG)",
+                    "accepts": [
+                      "bar-2"
+                    ]
+                  },
+                  {
+                    "id": "zone-gd",
+                    "x": 202,
+                    "y": 120,
+                    "width": 73,
+                    "height": 28,
+                    "label": "중점 쪽 (GD)",
+                    "accepts": [
+                      "bar-1"
+                    ]
+                  }
+                ],
+                "task": {
+                  "prompt": "중선 AD가 나뉘는 길이의 비에 맞게 두 막대를 알맞은 칸에 놓아 보세요.",
+                  "promptAlt": "중선 AD가 나뉘는 길이의 비에 맞게 두 막대를 알맞은 칸에 놓아 보세요.",
+                  "successText": "맞아요! 꼭짓점 A에서 무게중심 G까지가 2조각, 무게중심 G에서 중점 D까지가 1조각이에요."
+                }
+              }
+            },
+            {
+              "blockId": "centroid:explanation:text-3:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "왜 중선을 $2:1$로 나누는지 확인해 볼게요. 삼각형 $ABC$에서 변 $BC$의 중점을 $D$, 변 $AC$의 중점을 $E$라 하고, 중선 $AD$와 $BE$가 만나는 점을 $G$라고 해요.\n\n중점연결정리에 따라 $DE$와 $AB$는 평행하고, $AB:DE=2:1$이에요.\n\n$\\triangle GAB$와 $\\triangle GDE$를 비교해요. $\\angle AGB$와 $\\angle DGE$는 맞꼭지각이라 같아요. $AB$와 $DE$가 평행하므로 $\\angle GAB$와 $\\angle GDE$도 엇각으로 같아요. 두 각이 각각 같으니 두 삼각형은 닮음이에요.\n\n대응하는 변은 $AB$와 $DE$, $GA$와 $GD$, $GB$와 $GE$예요. 따라서 $GA:GD=GB:GE=2:1$이에요. 무게중심 $G$는 꼭짓점에서 출발했을 때 중선을 $2:1$로 나눠요.\n\n세 중선을 모두 그으면 넓이가 같은 작은 삼각형 여섯 개가 생겨요. 무게중심과 두 꼭짓점을 이은 삼각형은 그중 두 개로 이루어져 있으므로 전체 넓이의 $\\frac{1}{3}$이에요.",
+                "text": "왜 중선을 $2:1$로 나누는지 삼각형 ABC에서 확인해 볼게요. 변 BC, AC의 중점을 D, E라 하고, 중선 AD, BE가 만나는 점을 G라고 해요. 두 중점을 이은 선분 DE는 변 AB와 평행하고 $AB:DE=2:1$이에요.",
                 "definitions": [
                   {
-                    "conceptKey": "parallel-ratio",
-                    "surface": "중점연결정리",
+                    "conceptKey": "parallel-perpendicular",
+                    "surface": "평행",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "centroid:explanation:text-4:v4",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "$\\triangle GAB$와 $\\triangle GDE$에서 맞꼭지각인 $\\angle AGB$와 $\\angle DGE$의 크기가 같아요. 선분 AB와 DE가 평행하므로 엇각인 $\\angle GAB$와 $\\angle GDE$의 크기도 같아요. 두 각이 각각 같아 두 삼각형은 닮음이므로, 대응변의 길이의 비도 $GA:GD=2:1$이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "angle-basics",
+                    "surface": "맞꼭지각",
                     "scopeKind": "global"
                   },
                   {
@@ -1224,39 +1949,401 @@
                   }
                 ]
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "centroid:example:v3",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "centroid:example:text:v3",
+              "blockId": "centroid:explanation:scene-2:v4",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 340,
+                "height": 230,
+                "alt": "삼각형 ABC에서 두 중선 AD, BE의 교점 G를 기준으로 삼각형 GAB와 삼각형 GDE의 닮음비가 2 대 1임을 보이고, 세 중선이 넓이를 6등분함을 나타내는 그림입니다.",
+                "caption": "$\\triangle GAB$와 $\\triangle GDE$의 닮음으로 $GA:GD=2:1$이 되고, 세 중선은 넓이를 $6$등분해요.",
+                "items": [
+                  {
+                    "kind": "polygon",
+                    "id": "bg-abc",
+                    "points": [
+                      [
+                        170,
+                        26
+                      ],
+                      [
+                        44,
+                        188
+                      ],
+                      [
+                        296,
+                        188
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "paper",
+                    "stroke": "none"
+                  },
+                  {
+                    "kind": "polygon",
+                    "id": "tri-gbc",
+                    "points": [
+                      [
+                        170,
+                        134
+                      ],
+                      [
+                        44,
+                        188
+                      ],
+                      [
+                        296,
+                        188
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sky",
+                    "stroke": "none",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "polygon",
+                    "id": "tri-gab",
+                    "points": [
+                      [
+                        170,
+                        134
+                      ],
+                      [
+                        170,
+                        26
+                      ],
+                      [
+                        44,
+                        188
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "orange",
+                    "strokeWidth": 2,
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "polygon",
+                    "id": "tri-gde",
+                    "points": [
+                      [
+                        170,
+                        134
+                      ],
+                      [
+                        170,
+                        188
+                      ],
+                      [
+                        233,
+                        107
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "deep-green",
+                    "strokeWidth": 2,
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "id": "line-de",
+                    "x1": 170,
+                    "y1": 188,
+                    "x2": 233,
+                    "y2": 107,
+                    "stroke": "deep-green",
+                    "strokeWidth": 2,
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "id": "line-cf",
+                    "x1": 296,
+                    "y1": 188,
+                    "x2": 107,
+                    "y2": 107,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "line",
+                    "id": "line-ad",
+                    "x1": 170,
+                    "y1": 26,
+                    "x2": 170,
+                    "y2": 188,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "line",
+                    "id": "line-be",
+                    "x1": 44,
+                    "y1": 188,
+                    "x2": 233,
+                    "y2": 107,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "polygon",
+                    "id": "border-abc",
+                    "points": [
+                      [
+                        170,
+                        26
+                      ],
+                      [
+                        44,
+                        188
+                      ],
+                      [
+                        296,
+                        188
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "none",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "dot-g",
+                    "cx": 170,
+                    "cy": 134,
+                    "rx": 3.5,
+                    "ry": 3.5,
+                    "fill": "orange",
+                    "stroke": "ink",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-a",
+                    "x": 170,
+                    "y": 16,
+                    "text": "A",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-b",
+                    "x": 30,
+                    "y": 192,
+                    "text": "B",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-c",
+                    "x": 310,
+                    "y": 192,
+                    "text": "C",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-d",
+                    "x": 170,
+                    "y": 206,
+                    "text": "D",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-e",
+                    "x": 245,
+                    "y": 110,
+                    "text": "E",
+                    "size": 13,
+                    "anchor": "start",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-f",
+                    "x": 95,
+                    "y": 110,
+                    "text": "F",
+                    "size": 13,
+                    "anchor": "end",
+                    "weight": "bold",
+                    "fill": "ink",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "id": "lbl-g",
+                    "x": 142,
+                    "y": 138,
+                    "text": "G",
+                    "size": 13,
+                    "anchor": "end",
+                    "weight": "bold",
+                    "fill": "orange"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "label-ratio-2",
+                    "x": 182,
+                    "y": 84,
+                    "text": "$2$",
+                    "size": 13,
+                    "anchor": "start",
+                    "weight": "bold",
+                    "fill": "orange",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "id": "label-ratio-1",
+                    "x": 182,
+                    "y": 164,
+                    "text": "$1$",
+                    "size": 13,
+                    "anchor": "start",
+                    "weight": "bold",
+                    "fill": "deep-green",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "두 중선 AD와 BE가 만나는 점이 무게중심 G예요.",
+                    "changes": []
+                  },
+                  {
+                    "caption": "중점 D, E를 이으면 선분 DE는 변 AB와 평행하고 $AB:DE=2:1$이에요.",
+                    "changes": [
+                      {
+                        "id": "line-de",
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$\\triangle GAB$와 $\\triangle GDE$는 닮음이므로 $GA:GD=2:1$이에요.",
+                    "changes": [
+                      {
+                        "id": "line-de",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "tri-gab",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "tri-gde",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "label-ratio-2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "label-ratio-1",
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "세 중선은 넓이를 똑같이 $6$조각으로 나누고, $\\triangle GBC$는 그중 $2$조각이에요.",
+                    "changes": [
+                      {
+                        "id": "line-cf",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "lbl-f",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "tri-gbc",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ],
+                "frameMs": 2000
+              }
+            },
+            {
+              "blockId": "centroid:explanation:text-5:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "중선의 길이가 $12$인 삼각형에서 꼭짓점부터 무게중심까지의 길이를 구해 볼게요.\n\n무게중심은 중선을 $2:1$로 나누니 전체를 세 조각으로 보면 돼요. 한 조각은 $12 \\div 3 = 4$예요.\n\n꼭짓점 쪽은 두 조각이니 $8$, 중점 쪽은 한 조각이니 $4$예요.\n\n거꾸로도 물어요. 무게중심에서 중점까지가 $3$이라면 한 조각이 $3$이니 중선 전체는 $9$예요.\n\n넓이도 해 볼게요. 넓이가 $30$인 삼각형에서 세 중선이 나눈 여섯 조각 중 하나는 $30 \\div 6 = 5$예요.\n\n무게중심과 두 꼭짓점이 만드는 삼각형은 그 여섯 조각 중 둘이니 $10$이에요. 전체의 $\\dfrac{1}{3}$이라는 말과 같아요.",
-                "definitions": [
-                  {
-                    "conceptKey": "centroid",
-                    "surface": "무게중심",
-                    "scopeKind": "global"
-                  }
-                ]
+                "text": "세 중선을 모두 그으면 삼각형은 넓이가 같은 작은 삼각형 $6$개로 나뉘어요. 무게중심과 두 꼭짓점을 이은 삼각형은 그중 $2$개이니 전체 넓이의 $\\frac{1}{3}$이에요.",
+                "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "centroid:practice:v3",
+          "sectionId": "centroid:example:v4",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "centroid:example:text-1:v4",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "중선의 길이가 $18$인 삼각형에서 각 부분의 길이를 구해 볼게요. 무게중심은 중선을 $2:1$로 나누므로 전체를 $2+1=3$조각으로 봐요.\n\n한 조각의 길이는 $18 \\div 3 = 6$이에요. 따라서 꼭짓점 쪽 두 조각은 $6 \\times 2 = 12$, 중점 쪽 한 조각은 $6$이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "centroid:example:text-2:v4",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "반대로 무게중심에서 중점까지의 길이가 $5$일 때 중선 전체의 길이를 구해 볼게요. 무게중심에서 중점까지는 짧은 쪽 한 조각이므로 한 조각의 길이가 $5$예요. 중선 전체는 세 조각이므로 $5 \\times 3 = 15$가 돼요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "centroid:example:text-3:v4",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "이번에는 넓이가 $24$인 삼각형에 세 중선을 그었을 때 조각의 넓이를 구해 볼게요. 세 중선이 나눈 $6$조각은 넓이가 같으므로 한 조각의 넓이는 $24 \\div 6 = 4$예요. 무게중심과 두 꼭짓점을 이은 삼각형은 $2$조각이므로 넓이가 $4 \\times 2 = 8$이에요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "centroid:practice:v4",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "centroid:practice:problems:v3",
+              "blockId": "centroid:practice:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1273,12 +2360,12 @@
           ]
         },
         {
-          "sectionId": "centroid:check:v3",
+          "sectionId": "centroid:check:v4",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "centroid:check:problems:v3",
+              "blockId": "centroid:check:problems:v4",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1294,26 +2381,21 @@
           ]
         },
         {
-          "sectionId": "centroid:summary:v3",
+          "sectionId": "centroid:summary:v4",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "centroid:summary:text:v3",
+              "blockId": "centroid:summary:text-1:v4",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "꼭짓점과 마주 보는 변의 중점을 이은 선분이 중선이에요. 세 중선은 한 점에서 만나요.\n\n그 점이 무게중심이고, 중선을 꼭짓점 쪽부터 $2:1$로 나눠요. 그렇게 나뉘는 이유는 중점연결정리에 있어요.\n\n전체를 세 조각으로 보고 둘과 하나로 나눈다고 생각하면 편해요.\n\n세 중선은 삼각형을 넓이가 같은 여섯 조각으로 나눠요.\n\n이 수업의 개념은 삼각형의 무게중심이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "삼각형의 세 중선이 만나는 점을 삼각형의 무게중심이라고 해요. 무게중심은 각 중선을 꼭짓점 쪽부터 $2:1$의 비로 나눠요. 세 중선을 그으면 삼각형은 넓이가 같은 $6$조각으로 나뉘어요. 무게중심과 두 꼭짓점을 이은 삼각형은 그중 $2$조각이어서 전체 넓이의 $\\frac{1}{3}$이에요.",
                 "definitions": [
                   {
                     "conceptKey": "centroid",
-                    "surface": "무게중심",
-                    "scopeKind": "global"
-                  },
-                  {
-                    "conceptKey": "parallel-ratio",
-                    "surface": "중점연결정리",
+                    "surface": "삼각형의 무게중심",
                     "scopeKind": "global"
                   }
                 ]
@@ -1334,7 +2416,7 @@
     {
       "public": {
         "lessonKey": "similar-ratio",
-        "versionId": "similar-ratio:v2",
+        "versionId": "similar-ratio:v3",
         "title": "닮음비와 넓이, 부피: 두 배면 네 배, 여덟 배",
         "summary": "닮음비가 넓이와 부피에서 몇 제곱, 몇 세제곱으로 커지는지 보고 축척에 써요.",
         "estimatedMinutes": 12,
@@ -1350,44 +2432,795 @@
       },
       "sections": [
         {
-          "sectionId": "similar-ratio:explanation:v2",
+          "sectionId": "similar-ratio:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "similar-ratio:explanation:area:v2",
+              "blockId": "similar-ratio:explanation:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "한 변이 $1$인 정사각형과 한 변이 $2$인 정사각형을 비교해 볼게요. 닮음비는 $1:2$예요.\n\n넓이는 어떨까요. 큰 정사각형 안에 작은 것을 넣어 보면 네 개가 들어가요. 넓이의 비는 $1:4$예요.\n\n가로도 두 배, 세로도 두 배이니 두 번 곱해진 거예요. 그래서 닮음비가 $m:n$이면 넓이의 비는 $m^2 : n^2$이에요.\n\n정사각형만 그런 것이 아니에요. 닮은 도형이면 무엇이든 그래요.",
+                "text": "정사각형의 가로와 세로를 $2$배로 늘리면 넓이는 $2 \\times 2 = 4$배가 돼요.\n\n정육면체는 세 모서리가 모두 $2$배가 되어 부피가 $2 \\times 2 \\times 2 = 8$배로 커져요.\n\n길이로 넓이와 부피의 비를 구하는 관계가 닮음비와 넓이·부피의 비예요.",
                 "definitions": [
                   {
                     "conceptKey": "similar-ratio",
-                    "surface": "닮음비",
-                    "scopeKind": "global"
-                  },
-                  {
-                    "conceptKey": "similar-triangles",
-                    "surface": "닮은 도형",
+                    "surface": "닮음비와 넓이·부피의 비",
                     "scopeKind": "global"
                   }
                 ]
               }
             },
             {
-              "blockId": "similar-ratio:explanation:volume:v2",
+              "blockId": "similar-ratio:explanation:scene-1:v3",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 340,
+                "height": 215,
+                "alt": "한 변이 1과 2인 정사각형의 넓이 비 1 대 4와 한 모서리가 1과 2인 정육면체의 부피 비 1 대 8을 비교하는 그림",
+                "caption": "길이가 $2$배가 되면 넓이는 $2^2 = 4$배, 부피는 $2^3 = 8$배가 돼요.",
+                "frameMs": 1800,
+                "items": [
+                  {
+                    "id": "div-line",
+                    "kind": "line",
+                    "x1": 165,
+                    "y1": 18,
+                    "x2": 165,
+                    "y2": 196,
+                    "stroke": "line",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "id": "title-sq",
+                    "kind": "text",
+                    "x": 88,
+                    "y": 28,
+                    "text": "정사각형 (넓이)",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "title-cube",
+                    "kind": "text",
+                    "x": 252,
+                    "y": 28,
+                    "text": "정육면체 (부피)",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "sq-small",
+                    "kind": "rect",
+                    "x": 22,
+                    "y": 118,
+                    "width": 34,
+                    "height": 34,
+                    "fill": "light-green",
+                    "stroke": "deep-green",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "sq-large-base",
+                    "kind": "rect",
+                    "x": 78,
+                    "y": 84,
+                    "width": 68,
+                    "height": 68,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "sq-grid-v",
+                    "kind": "line",
+                    "x1": 112,
+                    "y1": 84,
+                    "x2": 112,
+                    "y2": 152,
+                    "stroke": "orange",
+                    "strokeWidth": 1.5,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "sq-grid-h",
+                    "kind": "line",
+                    "x1": 78,
+                    "y1": 118,
+                    "x2": 146,
+                    "y2": 118,
+                    "stroke": "orange",
+                    "strokeWidth": 1.5,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "sq-len1",
+                    "kind": "text",
+                    "x": 39,
+                    "y": 168,
+                    "text": "길이 $1$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "sq-len2",
+                    "kind": "text",
+                    "x": 112,
+                    "y": 168,
+                    "text": "길이 $2$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "sq-area1",
+                    "kind": "text",
+                    "x": 39,
+                    "y": 188,
+                    "text": "넓이 $1$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "deep-green"
+                  },
+                  {
+                    "id": "sq-area2",
+                    "kind": "text",
+                    "x": 112,
+                    "y": 188,
+                    "text": "넓이 $2^2 = 4$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "sq-ratio",
+                    "kind": "text",
+                    "x": 88,
+                    "y": 56,
+                    "text": "넓이의 비 $1 : 4$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "cb-s-front",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        182,
+                        128
+                      ],
+                      [
+                        206,
+                        128
+                      ],
+                      [
+                        206,
+                        152
+                      ],
+                      [
+                        182,
+                        152
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "deep-green",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "cb-s-top",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        182,
+                        128
+                      ],
+                      [
+                        192,
+                        120
+                      ],
+                      [
+                        216,
+                        120
+                      ],
+                      [
+                        206,
+                        128
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "deep-green",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "cb-s-right",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        206,
+                        128
+                      ],
+                      [
+                        216,
+                        120
+                      ],
+                      [
+                        216,
+                        144
+                      ],
+                      [
+                        206,
+                        152
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "deep-green",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "cb-l-front",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        242,
+                        104
+                      ],
+                      [
+                        290,
+                        104
+                      ],
+                      [
+                        290,
+                        152
+                      ],
+                      [
+                        242,
+                        152
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "cb-l-top",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        242,
+                        104
+                      ],
+                      [
+                        262,
+                        88
+                      ],
+                      [
+                        310,
+                        88
+                      ],
+                      [
+                        290,
+                        104
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "cb-l-right",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        290,
+                        104
+                      ],
+                      [
+                        310,
+                        88
+                      ],
+                      [
+                        310,
+                        136
+                      ],
+                      [
+                        290,
+                        152
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "fill-soft",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "cb-l1-front",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        242,
+                        128
+                      ],
+                      [
+                        290,
+                        128
+                      ],
+                      [
+                        290,
+                        152
+                      ],
+                      [
+                        242,
+                        152
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "orange",
+                    "strokeWidth": 1.5,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "cb-l1-top",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        242,
+                        128
+                      ],
+                      [
+                        262,
+                        112
+                      ],
+                      [
+                        310,
+                        112
+                      ],
+                      [
+                        290,
+                        128
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "orange",
+                    "strokeWidth": 1.5,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "cb-l1-right",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        290,
+                        128
+                      ],
+                      [
+                        310,
+                        112
+                      ],
+                      [
+                        310,
+                        136
+                      ],
+                      [
+                        290,
+                        152
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "orange",
+                    "strokeWidth": 1.5,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "cb-l1-g1",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        266,
+                        152
+                      ],
+                      [
+                        266,
+                        128
+                      ],
+                      [
+                        286,
+                        112
+                      ]
+                    ],
+                    "closed": false,
+                    "fill": "none",
+                    "stroke": "orange",
+                    "strokeWidth": 1.2,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "cb-l1-g2",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        252,
+                        120
+                      ],
+                      [
+                        300,
+                        120
+                      ],
+                      [
+                        300,
+                        144
+                      ]
+                    ],
+                    "closed": false,
+                    "fill": "none",
+                    "stroke": "orange",
+                    "strokeWidth": 1.2,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "cb-l2-front",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        242,
+                        104
+                      ],
+                      [
+                        290,
+                        104
+                      ],
+                      [
+                        290,
+                        128
+                      ],
+                      [
+                        242,
+                        128
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sky",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "cb-l2-top",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        242,
+                        104
+                      ],
+                      [
+                        262,
+                        88
+                      ],
+                      [
+                        310,
+                        88
+                      ],
+                      [
+                        290,
+                        104
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sky",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "cb-l2-right",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        290,
+                        104
+                      ],
+                      [
+                        310,
+                        88
+                      ],
+                      [
+                        310,
+                        112
+                      ],
+                      [
+                        290,
+                        128
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sky",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "cb-l2-g1",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        266,
+                        128
+                      ],
+                      [
+                        266,
+                        104
+                      ],
+                      [
+                        286,
+                        88
+                      ]
+                    ],
+                    "closed": false,
+                    "fill": "none",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "cb-l2-g2",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        252,
+                        96
+                      ],
+                      [
+                        300,
+                        96
+                      ],
+                      [
+                        300,
+                        120
+                      ]
+                    ],
+                    "closed": false,
+                    "fill": "none",
+                    "stroke": "ink",
+                    "strokeWidth": 1.2,
+                    "opacity": 0
+                  },
+                  {
+                    "id": "cb-len1",
+                    "kind": "text",
+                    "x": 198,
+                    "y": 168,
+                    "text": "길이 $1$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "cb-len2",
+                    "kind": "text",
+                    "x": 274,
+                    "y": 168,
+                    "text": "길이 $2$",
+                    "size": 11,
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "id": "cb-vol1",
+                    "kind": "text",
+                    "x": 198,
+                    "y": 188,
+                    "text": "부피 $1$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "deep-green"
+                  },
+                  {
+                    "id": "cb-vol2",
+                    "kind": "text",
+                    "x": 274,
+                    "y": 188,
+                    "text": "부피 $2^3 = 8$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange",
+                    "opacity": 0
+                  },
+                  {
+                    "id": "cb-ratio",
+                    "kind": "text",
+                    "x": 252,
+                    "y": 56,
+                    "text": "부피의 비 $1 : 8$",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange",
+                    "opacity": 0
+                  }
+                ],
+                "frames": [
+                  {
+                    "caption": "닮음비가 $1:2$인 정사각형과 정육면체를 비교해 볼게요.",
+                    "changes": []
+                  },
+                  {
+                    "caption": "정사각형은 가로와 세로가 $2$배가 되어 작은 정사각형 $4$개로 채워져요.",
+                    "changes": [
+                      {
+                        "id": "sq-large-base",
+                        "fill": "sand"
+                      },
+                      {
+                        "id": "sq-grid-v",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sq-grid-h",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sq-area2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sq-ratio",
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "정육면체는 바닥 $1$층에만 작은 정육면체 $4$개가 놓여요.",
+                    "changes": [
+                      {
+                        "id": "sq-large-base",
+                        "fill": "sand"
+                      },
+                      {
+                        "id": "sq-grid-v",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sq-grid-h",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sq-area2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sq-ratio",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cb-l1-front",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cb-l1-top",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cb-l1-right",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cb-l1-g1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cb-l1-g2",
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "$2$층까지 쌓으면 $4 \\times 2 = 8$개가 되어 부피의 비는 $1:8$이에요.",
+                    "changes": [
+                      {
+                        "id": "sq-large-base",
+                        "fill": "sand"
+                      },
+                      {
+                        "id": "sq-grid-v",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sq-grid-h",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sq-area2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "sq-ratio",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cb-l1-front",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cb-l1-top",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cb-l1-right",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cb-l1-g1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cb-l1-g2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cb-l2-front",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cb-l2-top",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cb-l2-right",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cb-l2-g1",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cb-l2-g2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cb-vol2",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "cb-ratio",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "similar-ratio:explanation:text-2:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "입체라면 한 번 더 곱해져요. 가로, 세로, 높이가 모두 $n$배가 되니 부피의 비는 $m^3 : n^3$이에요. 길이가 두 배면 부피는 여덟 배예요.\n\n겉넓이는 넓이이니 $m^2 : n^2$이에요. 「무엇의 비인가」만 보면 몇 번 곱할지 정해져요.\n\n거꾸로도 읽을 수 있어요. 넓이의 비가 $9:25$라면 닮음비는 제곱근을 취해 $3:5$예요. 부피의 비가 $8:27$이라면 닮음비는 $2:3$이고요.",
+                "text": "두 닮은 도형의 닮음비가 $m:n$이면 넓이의 비는 제곱한 $m^2 : n^2$이에요.\n\n입체도형의 겉넓이도 면의 넓이여서 비가 $m^2 : n^2$이 돼요.\n\n부피는 가로, 세로, 높이를 모두 곱해 세제곱한 $m^3 : n^3$이에요.",
                 "definitions": [
-                  {
-                    "conceptKey": "volume",
-                    "surface": "부피",
-                    "scopeKind": "global"
-                  },
                   {
                     "conceptKey": "surface-area",
                     "surface": "겉넓이",
@@ -1397,276 +3230,345 @@
               }
             },
             {
-              "blockId": "similar-ratio:explanation:drawing:v2",
+              "blockId": "similar-ratio:explanation:scene-2:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "width": 320,
-                "height": 200,
-                "alt": "작은 정사각형 네 개가 모여 두 배 크기의 정사각형을 채우는 그림",
-                "caption": "길이가 두 배면 넓이는 네 배예요",
+                "width": 340,
+                "height": 215,
+                "alt": "대응하는 모서리의 길이가 2와 3인 두 닮은 정육면체의 닮음비, 겉넓이의 비, 부피의 비를 알맞은 칸에 놓는 활동",
+                "caption": "닮음비가 $2:3$이면 겉넓이의 비는 $2^2:3^2$, 부피의 비는 $2^3:3^3$이에요.",
                 "items": [
                   {
-                    "kind": "text",
-                    "x": 160,
-                    "y": 20,
-                    "text": "길이가 두 배면 넓이는",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 24,
-                    "y": 78,
-                    "width": 44,
-                    "height": 44,
-                    "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "unit"
-                  },
-                  {
-                    "kind": "text",
-                    "x": 46,
-                    "y": 136,
-                    "text": "$1$",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
+                    "id": "boxA-front",
                     "kind": "polygon",
                     "points": [
                       [
-                        180,
-                        56
+                        74,
+                        44
                       ],
                       [
-                        268,
-                        56
+                        106,
+                        44
                       ],
                       [
-                        268,
-                        144
+                        106,
+                        76
                       ],
                       [
-                        180,
-                        144
+                        74,
+                        76
                       ]
                     ],
                     "closed": true,
-                    "fill": "none",
-                    "stroke": "ink",
-                    "strokeWidth": 1.6,
-                    "dash": true
+                    "fill": "light-green",
+                    "stroke": "deep-green",
+                    "strokeWidth": 1.5
                   },
                   {
+                    "id": "boxA-top",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        74,
+                        44
+                      ],
+                      [
+                        84,
+                        34
+                      ],
+                      [
+                        116,
+                        34
+                      ],
+                      [
+                        106,
+                        44
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "deep-green",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "boxA-right",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        106,
+                        44
+                      ],
+                      [
+                        116,
+                        34
+                      ],
+                      [
+                        116,
+                        66
+                      ],
+                      [
+                        106,
+                        76
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "light-green",
+                    "stroke": "deep-green",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "id": "boxA-txt",
                     "kind": "text",
-                    "x": 224,
-                    "y": 158,
-                    "text": "$2$",
-                    "size": 11,
+                    "x": 138,
+                    "y": 60,
+                    "text": "길이 $2$",
+                    "size": 12,
                     "anchor": "middle",
-                    "fill": "muted"
+                    "weight": "bold",
+                    "fill": "deep-green"
                   },
                   {
-                    "kind": "rect",
-                    "x": 168,
-                    "y": 44,
-                    "width": 44,
-                    "height": 44,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "t1",
-                    "opacity": 0
+                    "id": "boxB-front",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        192,
+                        32
+                      ],
+                      [
+                        236,
+                        32
+                      ],
+                      [
+                        236,
+                        76
+                      ],
+                      [
+                        192,
+                        76
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "orange",
+                    "strokeWidth": 1.5
                   },
                   {
-                    "kind": "rect",
-                    "x": 236,
-                    "y": 44,
-                    "width": 44,
-                    "height": 44,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "t2",
-                    "opacity": 0
+                    "id": "boxB-top",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        192,
+                        32
+                      ],
+                      [
+                        206,
+                        18
+                      ],
+                      [
+                        250,
+                        18
+                      ],
+                      [
+                        236,
+                        32
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "orange",
+                    "strokeWidth": 1.5
                   },
                   {
-                    "kind": "rect",
-                    "x": 168,
-                    "y": 112,
-                    "width": 44,
-                    "height": 44,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "t3",
-                    "opacity": 0
+                    "id": "boxB-right",
+                    "kind": "polygon",
+                    "points": [
+                      [
+                        236,
+                        32
+                      ],
+                      [
+                        250,
+                        18
+                      ],
+                      [
+                        250,
+                        62
+                      ],
+                      [
+                        236,
+                        76
+                      ]
+                    ],
+                    "closed": true,
+                    "fill": "sand",
+                    "stroke": "orange",
+                    "strokeWidth": 1.5
                   },
                   {
-                    "kind": "rect",
-                    "x": 236,
-                    "y": 112,
-                    "width": 44,
-                    "height": 44,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "t4",
-                    "opacity": 0
-                  },
-                  {
+                    "id": "boxB-txt",
                     "kind": "text",
-                    "x": 114,
-                    "y": 186,
-                    "text": "넓이는 네 배, 부피는 여덟 배",
-                    "size": 11,
+                    "x": 278,
+                    "y": 60,
+                    "text": "길이 $3$",
+                    "size": 12,
                     "anchor": "middle",
-                    "fill": "orange",
-                    "id": "say",
-                    "opacity": 0
+                    "weight": "bold",
+                    "fill": "orange"
+                  },
+                  {
+                    "id": "card-area",
+                    "kind": "rect",
+                    "x": 24,
+                    "y": 166,
+                    "width": 82,
+                    "height": 32,
+                    "radius": 6,
+                    "fill": "sand",
+                    "stroke": "orange",
+                    "strokeWidth": 1.5,
+                    "draggable": true,
+                    "label": "4 : 9"
+                  },
+                  {
+                    "id": "card-vol",
+                    "kind": "rect",
+                    "x": 129,
+                    "y": 166,
+                    "width": 82,
+                    "height": 32,
+                    "radius": 6,
+                    "fill": "sky",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "draggable": true,
+                    "label": "8 : 27"
+                  },
+                  {
+                    "id": "card-len",
+                    "kind": "rect",
+                    "x": 234,
+                    "y": 166,
+                    "width": 82,
+                    "height": 32,
+                    "radius": 6,
+                    "fill": "light-green",
+                    "stroke": "deep-green",
+                    "strokeWidth": 1.5,
+                    "draggable": true,
+                    "label": "2 : 3"
                   }
                 ],
-                "frames": [
+                "zones": [
                   {
-                    "caption": "한 변이 두 배인 정사각형이에요. 넓이도 두 배일까요.",
-                    "changes": [
-                      {
-                        "id": "t1",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "t2",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "t3",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "t4",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "say",
-                        "opacity": 0
-                      }
+                    "id": "zone-len",
+                    "x": 20,
+                    "y": 96,
+                    "width": 90,
+                    "height": 38,
+                    "label": "닮음비",
+                    "accepts": [
+                      "card-len"
                     ]
                   },
                   {
-                    "caption": "작은 정사각형을 몇 개 넣어야 채워지는지 놓아 볼게요.",
-                    "changes": [
-                      {
-                        "id": "t1",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "t2",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "t3",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "t4",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "say",
-                        "opacity": 0
-                      }
+                    "id": "zone-area",
+                    "x": 125,
+                    "y": 96,
+                    "width": 90,
+                    "height": 38,
+                    "label": "겉넓이의 비",
+                    "accepts": [
+                      "card-area"
                     ]
                   },
                   {
-                    "caption": "네 개가 빈틈없이 들어가요. 길이가 두 배면 넓이는 네 배, 부피는 여덟 배예요.",
-                    "changes": [
-                      {
-                        "id": "t1",
-                        "dx": 12,
-                        "dy": 12,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "t2",
-                        "dx": -12,
-                        "dy": 12,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "t3",
-                        "dx": 12,
-                        "dy": -12,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "t4",
-                        "dx": -12,
-                        "dy": -12,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "say",
-                        "opacity": 1
-                      }
+                    "id": "zone-vol",
+                    "x": 230,
+                    "y": 96,
+                    "width": 90,
+                    "height": 38,
+                    "label": "부피의 비",
+                    "accepts": [
+                      "card-vol"
                     ]
                   }
                 ],
-                "frameMs": 1700
+                "task": {
+                  "prompt": "대응하는 모서리의 길이가 $2$와 $3$인 두 정육면체의 비를 알맞은 칸에 놓아 보세요.",
+                  "promptAlt": "대응하는 모서리의 길이가 2와 3인 두 정육면체의 비를 알맞은 칸에 놓아 보세요.",
+                  "successText": "닮음비가 2 : 3이면 겉넓이의 비는 제곱인 4 : 9, 부피의 비는 세제곱인 8 : 27이에요."
+                }
               }
             },
             {
-              "blockId": "similar-ratio:explanation:scale:v2",
+              "blockId": "similar-ratio:explanation:text-3:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "이 성질이 가장 자주 쓰이는 곳이 지도의 축척이에요. 축척이 $1:50000$이면 지도에서 $1$은 실제로 $50000$이라는 뜻이에요.\n\n지도에서 $3$cm는 실제로 $150000$cm예요. 곧 $1500$m고요.\n\n넓이를 물으면 한 번 더 조심해야 해요. 축척이 $1:50000$인 지도에서 넓이는 실제의 $50000^2$분의 $1$이니까요.",
-                "definitions": [
-                  {
-                    "conceptKey": "similar-ratio",
-                    "surface": "축척",
-                    "scopeKind": "global"
-                  }
-                ]
+                "text": "넓이의 비가 $4:25$인 두 닮은 도형의 닮음비를 구해 볼게요.\n\n제곱해서 $4$와 $25$가 되는 양수는 $2$와 $5$여서 닮음비는 $2:5$예요.\n\n부피의 비가 주어질 때도 세제곱해서 그 수가 되는 값을 찾으면 돼요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "similar-ratio:explanation:text-4:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "축척이 $1:20000$인 지도는 실제와의 닮음비가 $1:20000$이에요.\n\n지도에서 $4$cm는 실제로 $4 \\times 20000 = 80000$cm, 곧 $800$m예요.\n\n넓이의 비는 제곱을 따르니 실제 넓이는 지도 넓이의 $20000^2$배예요.",
+                "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "similar-ratio:example:v2",
+          "sectionId": "similar-ratio:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "similar-ratio:example:text:v2",
+              "blockId": "similar-ratio:example:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "닮음비가 $2:3$인 두 도형이 있어요. 작은 쪽의 넓이가 $8$일 때 큰 쪽의 넓이를 구해 볼게요.\n\n넓이의 비는 닮음비의 제곱이니 $2^2 : 3^2 = 4 : 9$예요.\n\n$4 : 9 = 8 : x$이니 $4x = 72$, 곧 $x = 18$이에요.\n\n입체도 해 볼게요. 닮음비가 $1:2$이고 작은 입체의 부피가 $5$라면 어떨까요. 부피의 비는 $1 : 8$이니 큰 쪽은 $40$이에요.\n\n거꾸로 묻는 문제도 있어요. 두 닮은 도형의 넓이의 비가 $9:25$라면 닮음비는 얼마일까요. 제곱해서 $9$와 $25$가 되는 수는 $3$과 $5$이니 닮음비는 $3:5$예요.\n\n축척 문제도 계산 방법이 같아요. 축척이 $1:50000$인 지도에서 $3$cm 떨어진 두 곳을 볼게요. 실제로는 $3 \\times 50000 = 150000$cm 떨어져 있어요. $100$으로 나누면 $1500$m고요.",
-                "definitions": [
-                  {
-                    "conceptKey": "similar-ratio",
-                    "surface": "닮음비",
-                    "scopeKind": "global"
-                  }
-                ]
+                "text": "닮음비가 $2:5$인 두 도형에서 작은 쪽의 넓이가 $12$일 때 큰 쪽의 넓이를 구해 볼게요.\n\n넓이의 비는 닮음비의 각 수를 제곱한 $2^2 : 5^2 = 4 : 25$예요.\n\n비례식 $4 : 25 = 12 : x$에서 $4x = 300$이니 큰 도형의 넓이는 $75$예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "similar-ratio:example:text-2:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $1:3$인 두 입체에서 작은 쪽의 부피가 $4$일 때 큰 쪽의 부피를 구해 볼게요.\n\n부피의 비는 닮음비의 각 수를 세제곱한 $1^3 : 3^3 = 1 : 27$이에요.\n\n작은 입체의 부피가 $4$이니 큰 입체의 부피는 $4 \\times 27 = 108$이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "similar-ratio:example:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "축척이 $1:20000$인 지도에서 $6$cm 떨어진 두 지점의 실제 거리를 구해 볼게요.\n\n실제 거리는 지도 거리의 $20000$배여서 $6 \\times 20000 = 120000$cm예요.\n\n$100$cm가 $1$m이니 $120000 \\div 100 = 1200$m가 돼요.",
+                "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "similar-ratio:practice:v2",
+          "sectionId": "similar-ratio:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "similar-ratio:practice:problems:v2",
+              "blockId": "similar-ratio:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1683,12 +3585,12 @@
           ]
         },
         {
-          "sectionId": "similar-ratio:check:v2",
+          "sectionId": "similar-ratio:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "similar-ratio:check:problems:v2",
+              "blockId": "similar-ratio:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1704,26 +3606,21 @@
           ]
         },
         {
-          "sectionId": "similar-ratio:summary:v2",
+          "sectionId": "similar-ratio:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "similar-ratio:summary:text:v2",
+              "blockId": "similar-ratio:summary:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "닮음비가 $m:n$이면 넓이의 비는 $m^2 : n^2$, 부피의 비는 $m^3 : n^3$이에요.\n\n길이가 두 배면 넓이는 네 배, 부피는 여덟 배예요.\n\n겉넓이는 넓이이니 제곱으로 커져요.\n\n축척은 지도와 실제의 닮음비예요. 길이는 그대로 곱하고 넓이는 제곱으로 곱해요.\n\n이 수업의 개념은 닮음비와 넓이·부피의 비예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "두 닮은 도형의 닮음비가 $m:n$이면 넓이와 겉넓이의 비는 $m^2 : n^2$이에요.\n\n입체도형의 부피의 비는 세제곱한 $m^3 : n^3$이 돼요.\n\n넓이나 부피의 비에서는 제곱이나 세제곱해 그 수가 되는 양수로 닮음비를 찾아요.\n\n지도의 축척은 실제와의 닮음비여서 길이는 그대로 곱하고 넓이는 제곱을 곱해요.",
                 "definitions": [
                   {
                     "conceptKey": "similar-ratio",
                     "surface": "닮음비",
-                    "scopeKind": "global"
-                  },
-                  {
-                    "conceptKey": "volume",
-                    "surface": "부피",
                     "scopeKind": "global"
                   }
                 ]
@@ -1784,7 +3681,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-triangles:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "대응변의 길이의 비는 닮음비인 $2:3$과 같아요. 구하려는 변의 길이를 $x$라고 하면 $2:3 = 4:x$예요. 작은 쪽의 길이가 $2$의 $2$배인 $4$이므로, 큰 쪽의 길이 $x$도 $3$의 $2$배인 $3 \\times 2 = 6$이에요. 닮음비 $2$와 $3$의 차이가 $1$이라고 해서 $4 + 1 = 5$로 더하면 틀려요. 따라서 대응하는 변의 길이는 $6$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similar-triangles:practice-2:v1",
@@ -1857,7 +3764,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "similar-triangles:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음은 크기만 다르고 모양이 같은 관계예요. 모양이 그대로 유지되므로 대응각의 크기는 변하지 않아요. 닮음비는 대응변의 길이의 비일 뿐 각의 크기에는 적용되지 않아요. 예를 들어 한 각이 $60°$인 삼각형을 $2$배로 늘려도 그 각은 $60° \\times 2 = 120°$처럼 「닮음비만큼 커진다」가 아니라 그대로 $60°$예요. 따라서 두 삼각형이 닮음일 때 대응각의 크기는 「서로 같다」예요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",
@@ -1900,7 +3817,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-triangles:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮은 도형의 둘레는 닮음비와 같은 비로 늘어나요. 작은 삼각형과 큰 삼각형의 닮음비가 $1:4$이므로, 큰 삼각형의 둘레는 작은 삼각형의 둘레의 $4$배가 돼요. 작은 삼각형의 둘레 $9$에 $4$를 곱하면 $9 \\times 4 = 36$이에요. 삼각형의 변이 $3$개라고 해서 $9 \\times 4 \\times 3 = 108$처럼 $3$을 또 곱하거나 $9 + 4 = 13$처럼 더하지 않도록 조심해요. 따라서 큰 삼각형의 둘레는 $36$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -1945,7 +3872,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-triangles:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮은 두 삼각형에서 대응변의 비는 일정해요. 대응변인 $\\overline{AB}$와 $\\overline{DE}$의 비가 $6:9$이므로 닮음비는 $2:3$이에요. $\\overline{BC}$와 $\\overline{EF}$의 비도 같아야 하니 $8:\\overline{EF}=2:3$이에요. $\\overline{AB}$보다 $\\overline{DE}$가 $3$만큼 길다고 해서 $8+3=11$로 더하면 안 돼요. 닮음비 $2:3$의 앞쪽 수 $2$에 $4$를 곱해 $8$이 됐으니 뒤쪽 수 $3$에도 $4$를 곱해요. 따라서 $\\overline{EF}$의 길이는 $3 \\times 4 = 12$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similar-triangles:check-2:v1",
@@ -2018,7 +3955,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-triangles:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음은 크기가 달라도 모양이 같은 관계예요. 그래서 변의 길이가 아니라 변의 길이의 비를 비교해요. 두 각의 크기가 각각 같거나, 세 변의 길이의 비가 같거나, 두 변의 길이의 비와 낀 각이 같으면 두 삼각형은 닮음이에요. 반면 두 변의 길이가 각각 같더라도 낀 각의 크기가 다르면 삼각형의 모양이 달라져요. 따라서 닮음이 되는 조건이 아닌 것은 「두 변의 길이가 각각 같다」예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2063,7 +4010,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-triangles:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $3:5$이므로 작은 삼각형과 큰 삼각형의 대응변의 비도 $3:5$예요. 구하려는 변의 길이를 $x$라고 하면 $3:5 = 9:x$가 돼요. 작은 쪽이 $3$에서 $9$로 $3$배가 되었으니, 큰 쪽의 $5$에도 $3$을 곱하면 $5 \\times 3 = 15$예요. $3$에 $6$을 더해 $9$가 되었다고 보고 $5 + 6 = 11$로 계산하면 대응변의 비가 $9:11$이 되어 $3:5$와 달라져요. 따라서 대응하는 변의 길이는 $15$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similar-triangles:homework-2:v1",
@@ -2100,7 +4057,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-triangles:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮은 두 삼각형의 둘레의 비는 닮음비와 같은 $2:5$예요. 비에서 큰 삼각형에 해당하는 $5$가 실제 둘레 $30$이 되었으니 $30 \\div 5 = 6$배가 되었어요. 작은 삼각형에 해당하는 $2$에도 똑같이 $6$을 곱하면 $2 \\times 6 = 12$예요.\n\n$30 \\div 5 = 6$에서 멈추어 $6$이라고 쓰거나, 큰 삼각형의 둘레 $30$을 작은 쪽의 비 $2$에 잘못 맞춰 $30 \\div 2 \\times 5 = 75$로 계산하지 않도록 확인해요. 따라서 작은 삼각형의 둘레는 $12$예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2145,7 +4112,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "parallel-ratio:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형에서 $\\overline{DE}$가 $\\overline{BC}$와 나란하면 다른 두 변을 같은 비로 나눠요. $\\overline{AD} : \\overline{DB} = \\overline{AE} : \\overline{EC}$이므로 $\\overline{EC}$의 길이를 $x$라고 하면 $2 : 3 = 4 : x$예요. $\\overline{AD}$의 길이 $2$에 $2$를 곱해 $\\overline{AE}$의 길이 $4$가 되었으니, $\\overline{DB}$의 길이 $3$에도 $2$를 곱하면 $x = 3 \\times 2 = 6$이에요. 두 변이 같은 비로 나뉜다는 것을 길이의 차가 같다고 착각해 $4 + (3 - 2) = 5$로 계산하지 않도록 조심해요. 따라서 $\\overline{EC}$의 길이는 $6$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "parallel-ratio:practice-2:v1",
@@ -2182,7 +4159,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "parallel-ratio:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 두 변의 중점을 이은 선분은 밑변과 나란하고 길이는 밑변의 절반이에요. 밑변의 길이가 $14$이므로 구하는 선분의 길이는 $14 \\div 2 = 7$이에요. 만약 $14 \\times 2 = 28$이 나왔다면, 밑변의 절반을 구해야 하는데 반대로 $2$배를 한 것이에요. 따라서 정답은 $7$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "parallel-ratio:practice-3:v1",
@@ -2219,7 +4206,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "parallel-ratio:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 두 변의 중점을 이은 선분의 길이는 밑변의 길이의 절반이에요. 반대로 밑변의 길이는 중점을 이은 선분의 길이의 $2$배가 돼요. 중점을 이은 선분의 길이가 $5$이므로 밑변의 길이는 $5 × 2 = 10$이에요. 만약 $5 ÷ 2 = 2.5$로 계산했다면 어느 선분이 절반인지 반대로 생각한 거예요. 따라서 밑변의 길이는 $10$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2264,7 +4261,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "parallel-ratio:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형을 가로지르는 평행선은 두 변을 같은 비로 나누므로 $\\overline{AD} : \\overline{DB} = \\overline{AE} : \\overline{EC}$예요. 구하려는 $\\overline{EC}$의 길이를 $x$라고 하면 $3 : 2 = 6 : x$가 돼요. 앞의 수 $3$에 $2$를 곱해 $6$이 되었으니, 비가 같으려면 뒤의 수 $2$에도 $2$를 곱해야 해요. 만약 비의 순서를 거꾸로 세워 $2 : 3 = 6 : x$로 계산하면 $9$가 나오니 선분의 순서를 맞춰야 해요. 따라서 $2 \\times 2 = 4$이므로 $\\overline{EC}$의 길이는 $4$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "parallel-ratio:check-2:v1",
@@ -2301,7 +4308,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "parallel-ratio:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "사다리꼴에서 평행하지 않은 두 변의 중점을 이은 선분의 길이는 두 밑변의 길이의 평균이에요. 두 밑변의 길이가 $6$과 $10$이므로 두 수를 더한 뒤 $2$로 나누면 $(6+10)\\div 2 = 16\\div 2 = 8$이에요. 사다리꼴에 대각선을 그어 삼각형 두 개로 나누어도 각 밑변의 절반인 $6\\div 2 = 3$과 $10\\div 2 = 5$를 합한 값이어서 $3+5=8$이 나와요.\n\n만약 $2$로 나누지 않고 두 밑변을 더하기만 하면 $6+10=16$이 나오고, 두 밑변을 더하는 대신 빼서 $(10-6)\\div 2 = 2$로 계산하면 틀려요. 따라서 중점을 이은 선분의 길이는 $8$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2346,7 +4363,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "parallel-ratio:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형에서 두 변의 중점을 이은 선분은 밑변과 나란하고, 그 길이는 밑변의 절반이에요. 밑변의 길이가 $22$이므로 중점을 이은 선분의 길이는 $22 \\div 2 = 11$이에요. 만약 $22 \\times 2 = 44$가 나왔다면 밑변의 절반을 구할 때 $2$로 나누는 대신 $2$를 곱한 것이에요. 따라서 두 변의 중점을 이은 선분의 길이는 $11$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "parallel-ratio:homework-2:v1",
@@ -2419,7 +4446,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "parallel-ratio:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$\\overline{DE}$와 $\\overline{BC}$가 나란하므로, 두 선분이 삼각형의 변과 만나서 생기는 동위각의 크기는 같아요. $\\angle ADE$와 같은 쪽 변에서 같은 위치에 있는 동위각은 $\\angle ABC$예요. $\\angle ACB$는 반대쪽 변에서 $\\angle AED$와 크기가 같은 동위각이고, $\\angle BAC$는 두 삼각형이 함께 쓰는 각이에요. 따라서 $\\angle ADE$와 크기가 같은 각은 $\\angle ABC$예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2464,7 +4501,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "centroid:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "무게중심은 중선을 꼭짓점 쪽부터 $2:1$로 나눠요. 중선 전체를 $2+1=3$조각으로 똑같이 나누면 한 조각의 길이는 $12 \\div 3 = 4$예요. 꼭짓점에서 무게중심까지는 세 조각 중 두 조각이므로 $4 \\times 2 = 8$이에요. 한 조각만 구한 $4$는 무게중심에서 변의 중점까지의 길이이고, 반으로 나눈 $12 \\div 2 = 6$은 $2:1$의 비율이 아니에요. 따라서 꼭짓점에서 무게중심까지의 길이는 $8$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "centroid:practice-2:v1",
@@ -2501,7 +4548,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "centroid:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "무게중심은 중선을 꼭짓점 쪽부터 $2:1$로 나눠요. 중선 전체를 $2+1=3$조각으로 똑같이 나누면 한 조각의 길이는 $12 \\div 3 = 4$예요. 중선을 반으로 나누면 $12 \\div 2 = 6$이 되고, 꼭짓점에서 무게중심까지의 두 조각을 구하면 $4 \\times 2 = 8$이 돼요. 무게중심에서 중점까지는 세 조각 중 한 조각이므로 정답은 $4$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "centroid:practice-3:v1",
@@ -2538,7 +4595,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "centroid:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "무게중심은 중선을 꼭짓점 쪽부터 $2:1$로 나눠요. 중선 전체를 똑같은 세 조각으로 볼 때, 무게중심에서 중점까지의 길이 $3$이 한 조각이에요. 꼭짓점에서 무게중심까지의 길이는 두 조각이므로 $3 \\times 2 = 6$이에요. 만약 $6$을 답으로 썼다면 꼭짓점에서 무게중심까지의 길이만 구한 거예요. 구하려는 중선 전체의 길이는 세 조각을 합한 $6 + 3 = 9$예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2583,7 +4650,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "centroid:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 세 중선은 삼각형을 넓이가 같은 여섯 조각으로 나눠요. 전체 삼각형의 넓이 $30$을 $6$으로 나누면 한 조각의 넓이는 $30 \\div 6 = 5$예요. 중선이 $3$개라고 해서 $30 \\div 3 = 10$으로 계산하면 두 조각을 합친 넓이를 구한 것이 돼요. 따라서 여섯 조각 중 하나의 넓이는 $5$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "centroid:check-2:v1",
@@ -2656,7 +4733,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "centroid:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 세 중선이 만나는 점이 무게중심이에요. 무게중심은 중선 전체를 세 조각으로 보았을 때, 꼭짓점 쪽을 $2$, 변의 중점 쪽을 $1$로 나눠요. 중점이 변을 똑같이 둘로 나눈다는 점과 헷갈려 중선도 똑같이 둘로 나뉜다고 보면 $1 : 1$이 나와요. 나뉜 두 조각끼리 비교하지 않고 전체인 $2 + 1 = 3$과 비교하면 $3 : 1$이나 $3 : 2$가 나와요. 따라서 무게중심은 중선을 $2 : 1$로 나눠요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",
@@ -2707,7 +4794,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "centroid:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "무게중심은 중선을 꼭짓점 쪽부터 $2:1$로 나눠요. 중선 전체를 $2+1=3$조각으로 똑같이 나누면 한 조각의 길이는 $15 \\div 3 = 5$예요. $5$는 무게중심에서 변의 중점까지의 한 조각 길이예요. 꼭짓점에서 무게중심까지는 두 조각이므로 구하는 길이는 $5 \\times 2 = 10$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "centroid:homework-2:v1",
@@ -2744,7 +4841,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "centroid:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 세 중선은 전체 삼각형을 넓이가 같은 $6$조각으로 나눠요. 무게중심과 두 꼭짓점이 만드는 삼각형은 그중 $2$조각을 합친 것이라 전체 넓이의 $\\frac{1}{3}$이에요. 따라서 전체 넓이 $54$를 $3$으로 나누면 $54 \\div 3 = 18$이 돼요. 만약 $54 \\div 6 = 9$가 나왔다면 $6$조각 중 한 조각의 넓이만 구한 거예요. 무게중심과 두 꼭짓점이 만드는 삼각형의 넓이는 $18$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2789,7 +4896,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-ratio:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 도형의 닮음비가 $m:n$일 때 넓이의 비는 각각의 수를 제곱한 $m^2:n^2$이에요. 닮음비가 $1:3$이므로 넓이의 비는 $1^2:3^2 = 1:9$가 돼요. $3$을 제곱하는 대신 $3 \\times 2 = 6$으로 계산하거나, 부피의 비처럼 세제곱하여 $3^3 = 27$로 구하지 않도록 조심해요. 따라서 넓이의 비 $1:a$에서 $a$의 값은 $9$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similar-ratio:practice-2:v1",
@@ -2826,7 +4943,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-ratio:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 입체의 닮음비가 $m:n$이면 부피의 비는 각 수를 세제곱한 $m^3:n^3$이에요. 닮음비가 $1:2$이므로 부피의 비는 $1^3:2^3$이에요. $2^3 = 2 \\times 2 \\times 2 = 8$이므로 부피의 비는 $1:8$이 돼요. 넓이의 비처럼 제곱해서 $2^2 = 4$로 구하거나, $2 \\times 3 = 6$으로 계산하지 않도록 조심해요. 따라서 $a$의 값은 $8$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similar-ratio:practice-3:v1",
@@ -2863,7 +4990,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-ratio:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $2:3$이므로 넓이의 비는 각 수를 제곱한 $2^2:3^2 = 4:9$예요. 작은 도형의 넓이 $8$이 $4$에 $2$를 곱한 값이니, 큰 도형의 넓이도 $9$에 $2$를 곱해 $9 \\times 2 = 18$이 돼요. 닮음비를 제곱하지 않고 그대로 써서 $2:3 = 8:12$로 계산해 $12$를 구하지 않도록 조심해요. 따라서 큰 도형의 넓이는 $18$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2908,7 +5045,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-ratio:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $1:2$이면 부피의 비는 각 수를 세제곱한 $1^3 : 2^3 = 1 : 8$이에요. 작은 입체의 부피가 $5$이고 큰 입체의 부피는 그 $8$배이므로 $5 \\times 8 = 40$이에요. 만약 $5 \\times 2 = 10$이 나왔다면 닮음비를 그대로 곱한 것이고, $5 \\times 4 = 20$이 나왔다면 넓이의 비인 $1^2 : 2^2 = 1 : 4$를 쓴 것이에요. 따라서 큰 입체의 부피는 $40$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similar-ratio:check-2:v1",
@@ -2981,7 +5128,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "similar-ratio:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 닮은 도형의 닮음비가 $m : n$이면 넓이의 비는 $m^2 : n^2$이에요. 넓이의 비가 $9 : 25$이므로 $m^2 = 9$, $n^2 = 25$예요. 제곱해서 $9$가 되는 양수는 $3$이고, 제곱해서 $25$가 되는 양수는 $5$예요. 넓이의 비를 그대로 길이의 비로 쓰면 $9 : 25$가 되고, $9$와 $25$를 거꾸로 제곱하면 $81 : 625$가 되어 틀려요. 따라서 두 도형의 닮음비는 $3 : 5$예요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",
@@ -3032,7 +5189,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-ratio:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 입체의 닮음비가 $m:n$이면 부피의 비는 $m^3:n^3$이에요. 닮음비가 $3:4$이므로 부피의 비는 각 수를 세제곱한 $3^3:4^3$이에요. $3^3 = 3 \\times 3 \\times 3 = 27$이고, $4^3 = 4 \\times 4 \\times 4 = 64$가 돼요. 넓이의 비처럼 제곱해서 $4^2 = 16$으로 계산하거나, $3$에 $9$를 곱해 $27$이 되었다고 보고 $4 \\times 9 = 36$으로 구하지 않도록 조심해요. 부피의 비는 $27:64$이므로 $a$의 값은 $64$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similar-ratio:homework-2:v1",
@@ -3069,7 +5236,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similar-ratio:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "축척 $1:50000$은 지도와 실제의 닮음비예요. 거리는 넓이가 아니라 길이이므로 $3$cm에 $50000$을 그대로 곱하면 실제 거리는 $3 \\times 50000 = 150000$cm예요. cm 단위를 그대로 답으로 쓰면 $150000$이 되지만, 문제에서는 몇 m인지 물었어요. $100$cm는 $1$m이므로 $150000$을 $100$으로 나누어 $150000 \\div 100 = 1500$m로 고쳐요. 따라서 정답은 $1500$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -3114,7 +5291,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮은 두 삼각형에서 대응하는 변의 길이의 비는 닮음비인 $2:5$와 같아요. 작은 쪽의 변이 $6$이고 구하려는 큰 쪽의 변을 $x$라고 하면 $2:5 = 6:x$예요. $2$에 $3$을 곱해 $6$이 되었으니, 비율이 같으려면 $5$에도 $3$을 곱해야 해요. $2$에 $4$를 더했다고 보고 $5+4=9$로 계산하면 비율이 달라져요. 따라서 대응하는 변의 길이는 $5 \\times 3 = 15$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-2:v1",
@@ -3151,7 +5338,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮은 두 도형에서 둘레의 비는 닮음비와 같으므로, 두 삼각형의 둘레의 비도 $1:3$이에요. 큰 삼각형의 둘레가 작은 삼각형의 둘레의 $3$배라는 뜻이니, 작은 삼각형의 둘레는 $27 \\div 3 = 9$예요. 만약 $27 \\times 3 = 81$이 나왔다면 작은 삼각형과 큰 삼각형의 순서를 반대로 계산한 거예요. 또 넓이의 비인 $1:9$와 헷갈려 $27 \\div 9 = 3$으로 나누지 않도록 조심해요. 따라서 작은 삼각형의 둘레는 $9$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-3:v1",
@@ -3188,7 +5385,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "대응하는 두 변 $\\overline{AB}$와 $\\overline{DE}$의 길이의 비는 $4:10$이고, 간단한 자연수의 비로 나타내면 $2:5$예요. 닮은 도형은 대응변의 길이의 비가 일정하므로 $\\overline{BC}:\\overline{EF} = 2:5$가 돼요. $\\overline{BC} = 6$을 넣으면 $6:\\overline{EF} = 2:5$이고, $2$가 $6$이 되려면 $3$을 곱해야 하므로 $\\overline{EF}$도 $5 \\times 3 = 15$예요. 두 변의 길이의 차인 $10 - 4 = 6$을 $\\overline{BC}$에 더해 $6 + 6 = 12$로 계산하지 않도록 조심해요. 닮은 도형은 변의 길이가 같은 비율로 커지므로 정답은 $15$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-4:v1",
@@ -3225,7 +5432,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-4:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮음비가 $4:7$이면 대응하는 변의 길이의 비도 $4:7$이에요. 작은 쪽의 변이 $8$이므로, 구하려는 변의 길이를 $x$라고 하면 $4:7 = 8:x$예요. $4$가 $8$로 $2$배가 되었으니, $7$에도 똑같이 $2$를 곱하면 $x = 7 \\times 2 = 14$가 돼요. $4$와 $7$의 차이인 $3$을 더해 $8 + 3 = 11$로 계산했다면, 비는 같은 수를 곱해야 한다는 점을 놓친 거예요. 따라서 대응하는 변의 길이는 $14$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-5:v1",
@@ -3298,7 +5515,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "similarity:drill-5:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "도형을 일정한 비율로 확대하거나 축소한 도형은 처음 도형과 닮음이에요. 예를 들어 한 변이 $2$인 정사각형을 $2$배로 확대하면 한 변이 $4$인 정사각형이 돼요. 이때 대응변의 길이는 $2$와 $4$, 둘레는 $8$과 $16$, 넓이는 $4$와 $16$으로 달라지는데, 이 값들이 같은 것은 두 도형이 합동일 때예요. 반면 도형을 확대하거나 축소해도 각의 크기는 변하지 않아요. 따라서 두 도형이 닮음일 때 언제나 같은 것은 대응각의 크기예요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",
@@ -3349,7 +5576,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-6:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형 $ABC$에서 $\\overline{DE}$와 $\\overline{BC}$가 나란하면, $\\overline{DE}$는 두 변 $\\overline{AB}$와 $\\overline{AC}$를 같은 비율로 나누어요. 구하는 $\\overline{EC}$의 길이를 $x$라고 하면 $\\overline{AD} : \\overline{DB} = \\overline{AE} : \\overline{EC}$이므로 $3 : 6 = 4 : x$예요. $\\overline{DB}$의 길이 $6$이 $\\overline{AD}$의 길이 $3$의 $2$배이므로, $x$도 $4$의 $2$배인 $4 \\times 2 = 8$이에요. 만약 길이의 차이를 같게 보아 $4 + (6 - 3) = 7$로 계산했다면, 나란한 선은 길이의 차이가 아니라 비율을 같게 나눈다는 점을 확인해 보세요. 따라서 $\\overline{EC}$의 길이는 $8$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-7:v1",
@@ -3386,7 +5623,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-7:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형에서 두 변의 중점을 이은 선분의 길이는 밑변의 길이의 $\\frac{1}{2}$이에요. 밑변의 길이가 $30$이므로 $30$을 $2$로 나누면 $30 \\div 2 = 15$예요. 반대로 $2$를 곱해 $30 \\times 2 = 60$으로 계산하지 않도록 조심해요. 따라서 두 변의 중점을 이은 선분의 길이는 $15$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-8:v1",
@@ -3423,7 +5670,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-8:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 두 변의 중점을 이은 선분의 길이는 밑변의 길이의 $\\frac{1}{2}$이에요. 반대로 밑변의 길이는 중점을 이은 선분의 길이의 $2$배예요. 중점을 이은 선분의 길이가 $7$이므로 $2$를 곱하면 $7 \\times 2 = 14$예요. 만약 $7 \\div 2 = 3.5$로 계산했다면 밑변의 길이가 $7$일 때 중점을 이은 선분의 길이를 구한 것이에요. 따라서 밑변의 길이는 $14$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-9:v1",
@@ -3460,7 +5717,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-9:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "사다리꼴에서 평행하지 않은 두 변의 중점을 이은 선분의 길이는 두 밑변의 길이의 평균이에요. 대각선을 하나 그어 사다리꼴을 두 삼각형으로 나누면, 구하는 선분은 각 밑변의 절반인 $8 \\div 2 = 4$와 $14 \\div 2 = 7$을 더한 길이가 되기 때문이에요. 두 밑변을 더한 뒤 $2$로 나누어도 $(8 + 14) \\div 2 = 22 \\div 2 = 11$로 같게 나와요. 만약 $22$가 나왔다면 두 밑변을 더하고 $2$로 나누지 않은 것이고, $3$이 나왔다면 두 밑변을 더하는 대신 $(14 - 8) \\div 2 = 3$으로 뺀 것이에요. 따라서 구하는 선분의 길이는 $11$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-10:v1",
@@ -3533,7 +5800,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-10:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 두 변의 중점을 이으면 원래 삼각형과 닮음비가 $1:2$인 작은 삼각형이 생겨요. 삼각형의 중점연결정리에 따라, 두 변의 중점을 이은 선분은 밑변과 나란하고 그 길이는 밑변의 절반이에요. 밑변의 길이가 중점을 이은 선분의 두 배이므로, 비교하는 기준을 반대로 생각하면 「나란하고 길이가 두 배다」를 고르게 돼요. 중점을 이은 선분이 밑변과 어떤 관계인지 묻고 있으므로 정답은 「나란하고 길이가 절반이다」예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-11:v1",
@@ -3570,7 +5847,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-11:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 무게중심은 중선을 꼭짓점으로부터 $2:1$로 나누어요. 중선 전체를 똑같이 $2+1=3$조각으로 나눈 것 중 꼭짓점에서 무게중심까지는 $2$조각이에요. 한 조각의 길이는 $18 \\div 3 = 6$이고, 두 조각의 길이는 $6 \\times 2 = 12$예요. $6$은 무게중심에서 변의 중점까지의 길이이고, $18 \\div 2 = 9$는 중선을 절반으로 나눈 값이라서 틀려요. 따라서 꼭짓점에서 무게중심까지의 길이는 $12$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-12:v1",
@@ -3607,7 +5894,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-12:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 무게중심은 중선을 꼭짓점으로부터 $2:1$로 나누어요. 전체 중선을 똑같이 $2+1=3$조각으로 나눌 때, 무게중심에서 중점까지의 길이는 그중 $1$조각이에요. 따라서 전체 길이 $18$을 $3$으로 나누면 $18 \\div 3 = 6$이에요.\n\n$6 \\times 2 = 12$는 무게중심에서 꼭짓점까지의 길이를 구한 것이고, $18 \\div 2 = 9$는 중선을 똑같이 둘로 나눈 값이에요. 무게중심에서 중점까지의 길이는 $6$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-13:v1",
@@ -3644,7 +5941,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-13:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 세 중선은 삼각형을 넓이가 같은 여섯 조각으로 나누어요. 전체 넓이 $42$를 여섯 조각으로 똑같이 나누면 한 조각의 넓이는 $42 \\div 6 = 7$이에요. 만약 $42 \\div 3 = 14$로 계산했다면, 여섯 조각 중 두 조각을 합친 넓이를 구한 거예요. 따라서 여섯 조각 중 하나의 넓이는 $7$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-14:v1",
@@ -3681,7 +5988,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-14:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 무게중심은 중선을 꼭짓점으로부터 $2:1$로 나누어요. 무게중심에서 중점까지의 길이가 $5$이므로, 꼭짓점에서 무게중심까지의 길이는 그 $2$배인 $5 \\times 2 = 10$이에요. 만약 $10$이 나왔다면 중선 전체가 아니라 꼭짓점에서 무게중심까지의 길이만 구한 거예요. 중선 전체의 길이는 두 길이를 더한 $10 + 5 = 15$, 즉 짧은 쪽 길이의 $3$배인 $5 \\times 3 = 15$예요. 따라서 중선 전체의 길이는 $15$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-15:v1",
@@ -3754,7 +6071,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-15:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "삼각형의 꼭짓점과 마주 보는 변의 중점을 이은 선분을 중선이라고 해요. 삼각형의 세 중선은 한 점에서 만나며, 이 점을 받치면 기울지 않고 균형을 이뤄요. 외심은 세 변의 수직이등분선이 만나는 점이고, 내심은 세 내각의 이등분선이 만나는 점이며, 수심은 세 꼭짓점에서 마주 보는 변에 내린 수선이 만나는 점이에요. 따라서 삼각형의 세 중선이 만나는 점의 이름은 무게중심이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-16:v1",
@@ -3791,7 +6118,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-16:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "서로 닮은 두 도형의 넓이의 비는 닮음비를 각각 제곱한 비와 같아요. 닮음비가 $1:4$이므로 넓이의 비는 $1^2:4^2$, 즉 $1:16$이에요. $4^2$은 $4 \\times 4 = 16$인데, $4 \\times 2 = 8$로 계산하거나 닮음비의 $4$를 그대로 쓰지 않도록 조심해요. 따라서 넓이의 비 $1:a$에서 $a$의 값은 $16$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-17:v1",
@@ -3828,7 +6165,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-17:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "서로 닮은 두 입체도형의 부피의 비는 닮음비의 세제곱과 같아요. 닮음비가 $1:3$이므로 부피의 비는 각 수를 세제곱한 $1^3:3^3=1:27$이에요. 제곱한 $3^2=9$는 넓이의 비이므로, 부피의 비를 구할 때는 세 번 곱해야 해요. 따라서 $a$의 값은 $27$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-18:v1",
@@ -3865,7 +6212,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-18:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "닮은 두 입체의 부피의 비는 닮음비를 세제곱한 비예요. 닮음비가 $2:3$이므로 부피의 비는 $2^3:3^3 = 8:27$이 돼요. 작은 입체의 부피 $16$은 $8$에 $2$를 곱한 값이므로, 큰 입체의 부피도 $27$에 $2$를 곱하면 돼요. 닮음비 $2:3$을 그대로 써서 $24$를 구하거나 넓이의 비 $4:9$를 써서 $36$을 구하지 않도록 주의해요. $27 \\times 2 = 54$이므로 큰 입체의 부피는 $54$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-19:v1",
@@ -3902,7 +6259,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "similarity:drill-19:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "축척이 $1:25000$이라는 것은 실제 거리가 지도에서의 거리의 $25000$배라는 뜻이에요. 지도에서 $4$cm 떨어져 있으므로 실제 거리는 $4 \\times 25000 = 100000$cm예요. 문제에서 몇 m인지 물었으니 cm로 구한 $100000$을 그대로 쓰거나, $1000$으로 잘못 나누어 $100$이라고 쓰면 안 돼요. $1$m는 $100$cm이므로 $100000$을 $100$으로 나누어야 해요. 따라서 실제 거리는 $100000 \\div 100 = 1000$m이고, 정답은 $1000$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "similarity:drill-20:v1",
@@ -3975,7 +6342,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "similarity:drill-20:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "넓이의 비는 닮음비의 두 수를 각각 제곱한 비예요. $2^2 = 4$이고 $3^2 = 9$이므로, 제곱해서 $4$와 $9$가 되는 양수는 각각 $2$와 $3$이에요. $4 : 9$는 넓이의 비를 그대로 닮음비로 본 것이고, $16 : 81$은 넓이의 비를 거꾸로 제곱한 $4^2 : 9^2$이에요. 따라서 두 닮은 도형의 닮음비는 $2 : 3$이에요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",

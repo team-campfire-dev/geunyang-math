@@ -46,7 +46,7 @@
     {
       "public": {
         "lessonKey": "counting-cases",
-        "versionId": "counting-cases:v2",
+        "versionId": "counting-cases:v3",
         "title": "경우의 수: 더할 때와 곱할 때",
         "summary": "「또는」이면 더하고 「그리고」면 곱하는 이유를 세어 보며 확인해요.",
         "estimatedMinutes": 11,
@@ -58,17 +58,17 @@
       },
       "sections": [
         {
-          "sectionId": "counting-cases:explanation:v2",
+          "sectionId": "counting-cases:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "counting-cases:explanation:count:v2",
+              "blockId": "counting-cases:explanation:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "일어날 수 있는 일이 모두 몇 가지인지 센 것이 경우의 수예요.\n\n세는 방법은 둘뿐이에요. 문제의 말이 「또는」인지 「그리고」인지에 따라 나뉘어요.",
+                "text": "주사위 한 개를 던지면 $1$부터 $6$까지 $6$가지 눈이 나와요. 이처럼 어떤 일이 일어날 수 있는 가짓수를 경우의 수라고 해요.",
                 "definitions": [
                   {
                     "conceptKey": "counting-cases",
@@ -79,12 +79,12 @@
               }
             },
             {
-              "blockId": "counting-cases:explanation:sum:v2",
+              "blockId": "counting-cases:explanation:text-2:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "「또는」은 둘 중 하나만 일어나는 경우예요. 동전을 던지거나 주사위를 던지거나, 둘 중 하나만 한다면 $2 + 6 = 8$가지예요. 두 무리를 나란히 놓고 세면 되니 더하는 거예요.\n\n이것을 합의 법칙이라고 해요.\n\n단, 두 무리에 겹치는 것이 없어야 해요. 주사위에서 「$2$의 배수 또는 $3$의 배수」라면 어떨까요. $6$이 양쪽에 들어 있으니 그냥 더하면 두 번 세게 돼요.",
+                "text": "빵 A, B $2$종류와 우유, 주스, 물 $3$종류가 있어요. 「또는」으로 하나만 고르면 합의 법칙에 따라 $2+3=5$가지예요. 단, 더할 때는 양쪽에 겹치는 경우가 없어야 해요.",
                 "definitions": [
                   {
                     "conceptKey": "counting-rule",
@@ -95,12 +95,12 @@
               }
             },
             {
-              "blockId": "counting-cases:explanation:product:v2",
+              "blockId": "counting-cases:explanation:text-3:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "「그리고」는 둘 다 일어나는 경우예요. 동전도 던지고 주사위도 던진다고 해 볼게요.\n\n동전이 앞면일 때마다 주사위가 여섯 가지예요. 뒷면일 때도 여섯 가지고요. 그래서 $2 \\times 6 = 12$가지예요.\n\n이것이 곱의 법칙이에요. 줄과 칸으로 된 표를 떠올리면 왜 곱하는지가 보여요. 줄이 $2$개, 칸이 $6$개인 표의 칸 수가 $12$개인 것과 같으니까요.",
+                "text": "이번에는 빵 하나와 음료 하나를 모두 골라 볼게요. 빵마다 음료 $3$가지가 이어져 $2 \\times 3 = 6$가지예요. 「그리고」처럼 둘 다 일어날 때는 곱의 법칙에 따라 곱해요.",
                 "definitions": [
                   {
                     "conceptKey": "counting-rule",
@@ -111,639 +111,740 @@
               }
             },
             {
-              "blockId": "counting-cases:explanation:drawing:v2",
+              "blockId": "counting-cases:explanation:scene-1:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "width": 320,
-                "height": 200,
-                "alt": "동전과 주사위의 경우를 나란히 놓아 더하는 것과 줄과 칸으로 짝지어 곱하는 것을 비교하는 그림",
-                "caption": "또는이면 나란히 놓고 세고, 그리고면 줄과 칸을 만들어요",
+                "width": 340,
+                "height": 220,
+                "alt": "빵 2종류와 음료 3종류에서 하나만 고를 때 나란히 더하는 5가지와 각각 하나씩 고를 때 줄과 칸으로 곱하는 6가지를 비교하는 그림",
+                "caption": "「또는」이면 나란히 세어 더하고, 「그리고」면 줄과 칸을 곱해 세어요.",
                 "items": [
                   {
+                    "kind": "rect",
+                    "id": "box-or",
+                    "x": 16,
+                    "y": 16,
+                    "width": 142,
+                    "height": 188,
+                    "radius": 8,
+                    "fill": "fill-soft",
+                    "stroke": "line",
+                    "strokeWidth": 1
+                  },
+                  {
                     "kind": "text",
-                    "x": 160,
-                    "y": 20,
-                    "text": "동전 하나와 주사위 하나",
+                    "id": "title-or",
+                    "x": 87,
+                    "y": 36,
+                    "text": "또는 (더하기)",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "or-a",
+                    "x": 28,
+                    "y": 52,
+                    "width": 54,
+                    "height": 26,
+                    "radius": 5,
+                    "fill": "sand",
+                    "stroke": "orange",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "text",
+                    "id": "or-a-txt",
+                    "x": 55,
+                    "y": 69,
+                    "text": "A",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "or-b",
+                    "x": 92,
+                    "y": 52,
+                    "width": 54,
+                    "height": 26,
+                    "radius": 5,
+                    "fill": "sand",
+                    "stroke": "orange",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "text",
+                    "id": "or-b-txt",
+                    "x": 119,
+                    "y": 69,
+                    "text": "B",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "or-1",
+                    "x": 24,
+                    "y": 92,
+                    "width": 38,
+                    "height": 26,
+                    "radius": 5,
+                    "fill": "light-green",
+                    "stroke": "green",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "text",
+                    "id": "or-1-txt",
+                    "x": 43,
+                    "y": 109,
+                    "text": "우유",
                     "size": 11,
                     "anchor": "middle",
-                    "fill": "muted",
-                    "id": "title"
+                    "weight": "regular",
+                    "fill": "ink"
                   },
                   {
                     "kind": "rect",
-                    "x": 30,
-                    "y": 44,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "c1"
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 60,
-                    "y": 44,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "c2"
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 120,
-                    "y": 96,
-                    "width": 26,
-                    "height": 18,
+                    "id": "or-2",
+                    "x": 68,
+                    "y": 92,
+                    "width": 38,
+                    "height": 26,
+                    "radius": 5,
                     "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "d1"
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 150,
-                    "y": 96,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "d2"
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 180,
-                    "y": 96,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "d3"
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 210,
-                    "y": 96,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "d4"
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 240,
-                    "y": 96,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "d5"
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 270,
-                    "y": 96,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "light-green",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "d6"
+                    "stroke": "green",
+                    "strokeWidth": 1.5
                   },
                   {
                     "kind": "text",
-                    "x": 45,
+                    "id": "or-2-txt",
+                    "x": 87,
+                    "y": 109,
+                    "text": "주스",
+                    "size": 11,
+                    "anchor": "middle",
+                    "weight": "regular",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "or-3",
+                    "x": 112,
+                    "y": 92,
+                    "width": 38,
+                    "height": 26,
+                    "radius": 5,
+                    "fill": "light-green",
+                    "stroke": "green",
+                    "strokeWidth": 1.5
+                  },
+                  {
+                    "kind": "text",
+                    "id": "or-3-txt",
+                    "x": 131,
+                    "y": 109,
+                    "text": "물",
+                    "size": 11,
+                    "anchor": "middle",
+                    "weight": "regular",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "or-sum",
+                    "x": 87,
+                    "y": 152,
+                    "text": "$2 + 3 = 5$가지",
+                    "size": 14,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "id": "or-sub",
+                    "x": 87,
+                    "y": 178,
+                    "text": "나란히 놓고 더하기",
+                    "size": 11,
+                    "anchor": "middle",
+                    "weight": "regular",
+                    "fill": "muted",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "box-and",
+                    "x": 172,
+                    "y": 16,
+                    "width": 152,
+                    "height": 188,
+                    "radius": 8,
+                    "fill": "fill-soft",
+                    "stroke": "line",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "title-and",
+                    "x": 248,
                     "y": 36,
-                    "text": "동전 $2$가지",
-                    "size": 10,
+                    "text": "그리고 (곱하기)",
+                    "size": 13,
                     "anchor": "middle",
-                    "fill": "muted",
-                    "id": "cl"
+                    "weight": "bold",
+                    "fill": "ink"
                   },
                   {
                     "kind": "text",
-                    "x": 195,
-                    "y": 88,
-                    "text": "주사위 $6$가지",
-                    "size": 10,
+                    "id": "col-1",
+                    "x": 229,
+                    "y": 56,
+                    "text": "우유",
+                    "size": 11,
                     "anchor": "middle",
-                    "fill": "muted",
-                    "id": "dl"
+                    "weight": "regular",
+                    "fill": "deep-green"
                   },
                   {
                     "kind": "text",
-                    "x": 160,
-                    "y": 104,
-                    "text": "$2 + 6 = 8$",
+                    "id": "col-2",
+                    "x": 265,
+                    "y": 56,
+                    "text": "주스",
+                    "size": 11,
+                    "anchor": "middle",
+                    "weight": "regular",
+                    "fill": "deep-green"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "col-3",
+                    "x": 301,
+                    "y": 56,
+                    "text": "물",
+                    "size": 11,
+                    "anchor": "middle",
+                    "weight": "regular",
+                    "fill": "deep-green"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "row-a",
+                    "x": 194,
+                    "y": 81,
+                    "text": "A",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "row-b",
+                    "x": 194,
+                    "y": 113,
+                    "text": "B",
+                    "size": 12,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange"
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "cell-a1",
+                    "x": 213,
+                    "y": 64,
+                    "width": 32,
+                    "height": 26,
+                    "radius": 4,
+                    "fill": "white",
+                    "stroke": "line",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "cell-a2",
+                    "x": 249,
+                    "y": 64,
+                    "width": 32,
+                    "height": 26,
+                    "radius": 4,
+                    "fill": "white",
+                    "stroke": "line",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "cell-a3",
+                    "x": 285,
+                    "y": 64,
+                    "width": 32,
+                    "height": 26,
+                    "radius": 4,
+                    "fill": "white",
+                    "stroke": "line",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "cell-b1",
+                    "x": 213,
+                    "y": 96,
+                    "width": 32,
+                    "height": 26,
+                    "radius": 4,
+                    "fill": "white",
+                    "stroke": "line",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "cell-b2",
+                    "x": 249,
+                    "y": 96,
+                    "width": 32,
+                    "height": 26,
+                    "radius": 4,
+                    "fill": "white",
+                    "stroke": "line",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "cell-b3",
+                    "x": 285,
+                    "y": 96,
+                    "width": 32,
+                    "height": 26,
+                    "radius": 4,
+                    "fill": "white",
+                    "stroke": "line",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "and-prod",
+                    "x": 248,
+                    "y": 152,
+                    "text": "$2 \\times 3 = 6$가지",
                     "size": 14,
                     "anchor": "middle",
-                    "fill": "orange",
-                    "id": "sum",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 60,
-                    "y": 128,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "g1",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 90,
-                    "y": 128,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "g2",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 120,
-                    "y": 128,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "g3",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 150,
-                    "y": 128,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "g4",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 180,
-                    "y": 128,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "g5",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 210,
-                    "y": 128,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "g6",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 60,
-                    "y": 152,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "g7",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 90,
-                    "y": 152,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "g8",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 120,
-                    "y": 152,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "g9",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 150,
-                    "y": 152,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "g10",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 180,
-                    "y": 152,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "g11",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 210,
-                    "y": 152,
-                    "width": 26,
-                    "height": 18,
-                    "fill": "fill-soft",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "g12",
+                    "weight": "bold",
+                    "fill": "deep-green",
                     "opacity": 0
                   },
                   {
                     "kind": "text",
-                    "x": 160,
-                    "y": 188,
-                    "text": "$2 \\times 6 = 12$",
-                    "size": 14,
+                    "id": "and-sub",
+                    "x": 248,
+                    "y": 178,
+                    "text": "줄과 칸을 곱하기",
+                    "size": 11,
                     "anchor": "middle",
-                    "fill": "orange",
-                    "id": "prod",
+                    "weight": "regular",
+                    "fill": "muted",
                     "opacity": 0
                   }
                 ],
+                "frameMs": 1800,
                 "frames": [
                   {
-                    "caption": "동전 하나는 $2$가지, 주사위 하나는 $6$가지예요.",
+                    "caption": "빵 A, B $2$종류와 음료 우유, 주스, 물 $3$종류가 있어요.",
+                    "changes": []
+                  },
+                  {
+                    "caption": "둘 중 하나만 고르면(「또는」) 나란히 더해 $2 + 3 = 5$가지예요.",
                     "changes": [
                       {
-                        "id": "sum",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "prod",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "title",
+                        "id": "or-sum",
                         "opacity": 1
                       },
                       {
-                        "id": "cl",
+                        "id": "or-sub",
                         "opacity": 1
-                      },
-                      {
-                        "id": "dl",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "g1",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g2",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g3",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g4",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g5",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g6",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g7",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g8",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g9",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g10",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g11",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g12",
-                        "opacity": 0
                       }
                     ]
                   },
                   {
-                    "caption": "「동전 또는 주사위」는 둘 중 하나만 고르는 것이니 나란히 놓고 세면 돼요.",
+                    "caption": "둘 다 고르면(「그리고」) 빵 A마다 음료가 $3$가지씩 짝지어져요.",
                     "changes": [
                       {
-                        "id": "c1",
-                        "dy": 22
-                      },
-                      {
-                        "id": "c2",
-                        "dy": 22
-                      },
-                      {
-                        "id": "d1",
-                        "dx": -30,
-                        "dy": -30
-                      },
-                      {
-                        "id": "d2",
-                        "dx": -30,
-                        "dy": -30
-                      },
-                      {
-                        "id": "d3",
-                        "dx": -30,
-                        "dy": -30
-                      },
-                      {
-                        "id": "d4",
-                        "dx": -30,
-                        "dy": -30
-                      },
-                      {
-                        "id": "d5",
-                        "dx": -30,
-                        "dy": -30
-                      },
-                      {
-                        "id": "d6",
-                        "dx": -30,
-                        "dy": -30
-                      },
-                      {
-                        "id": "cl",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "dl",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "sum",
+                        "id": "or-sum",
                         "opacity": 1
                       },
                       {
-                        "id": "prod",
-                        "opacity": 0
+                        "id": "or-sub",
+                        "opacity": 1
                       },
                       {
-                        "id": "g1",
-                        "opacity": 0
+                        "id": "cell-a1",
+                        "fill": "sand"
                       },
                       {
-                        "id": "g2",
-                        "opacity": 0
+                        "id": "cell-a2",
+                        "fill": "sand"
                       },
                       {
-                        "id": "g3",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g4",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g5",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g6",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g7",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g8",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g9",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g10",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g11",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "g12",
-                        "opacity": 0
+                        "id": "cell-a3",
+                        "fill": "sand"
                       }
                     ]
                   },
                   {
-                    "caption": "「동전 그리고 주사위」는 짝을 짓는 것이라 줄과 칸이 생겨요. 훨씬 많아지죠.",
+                    "caption": "빵 B마다도 $3$가지씩 있어 줄과 칸을 곱한 $2 \\times 3 = 6$가지예요.",
                     "changes": [
                       {
-                        "id": "c1",
-                        "hidden": true
-                      },
-                      {
-                        "id": "c2",
-                        "hidden": true
-                      },
-                      {
-                        "id": "d1",
-                        "hidden": true
-                      },
-                      {
-                        "id": "d2",
-                        "hidden": true
-                      },
-                      {
-                        "id": "d3",
-                        "hidden": true
-                      },
-                      {
-                        "id": "d4",
-                        "hidden": true
-                      },
-                      {
-                        "id": "d5",
-                        "hidden": true
-                      },
-                      {
-                        "id": "d6",
-                        "hidden": true
-                      },
-                      {
-                        "id": "cl",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "dl",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "sum",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "title",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "prod",
+                        "id": "or-sum",
                         "opacity": 1
                       },
                       {
-                        "id": "g1",
+                        "id": "or-sub",
                         "opacity": 1
                       },
                       {
-                        "id": "g2",
+                        "id": "cell-a1",
+                        "fill": "sand"
+                      },
+                      {
+                        "id": "cell-a2",
+                        "fill": "sand"
+                      },
+                      {
+                        "id": "cell-a3",
+                        "fill": "sand"
+                      },
+                      {
+                        "id": "cell-b1",
+                        "fill": "light-green"
+                      },
+                      {
+                        "id": "cell-b2",
+                        "fill": "light-green"
+                      },
+                      {
+                        "id": "cell-b3",
+                        "fill": "light-green"
+                      },
+                      {
+                        "id": "and-prod",
                         "opacity": 1
                       },
                       {
-                        "id": "g3",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "g4",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "g5",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "g6",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "g7",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "g8",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "g9",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "g10",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "g11",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "g12",
+                        "id": "and-sub",
                         "opacity": 1
                       }
                     ]
                   }
-                ],
-                "frameMs": 1800
+                ]
               }
             },
             {
-              "blockId": "counting-cases:explanation:tree:v2",
+              "blockId": "counting-cases:explanation:text-4:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "가짓수가 적을 때는 수형도를 그려도 좋아요. 나뭇가지처럼 뻗어 나가게 그린 그림이에요.\n\n첫 번째 것으로 가지를 치고, 각 가지마다 두 번째 것으로 또 가지를 쳐요. 끝의 개수가 곧 경우의 수예요.\n\n동전을 세 번 던지면 $2 \\times 2 \\times 2 = 8$가지예요. 던질 때마다 두 배가 되는 거예요.\n\n문제를 읽을 때 「또는」과 「그리고」를 먼저 찾으세요. 그 한 단어가 더할지 곱할지를 정해요.",
-                "definitions": [
+                "text": "동전 두 개를 던지면 첫째 $2$가지마다 둘째 $2$가지씩 가지를 쳐요. 이렇게 경우를 나뭇가지 모양으로 그린 그림을 수형도라고 해요. 가지 끝을 세면 전체 경우가 $2 \\times 2 = 4$가지예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "counting-cases:explanation:scene-2:v3",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 340,
+                "height": 220,
+                "alt": "동전 두 개를 던질 때 나오는 가지를 따라 네 가지 결과를 빈칸에 끌어다 놓는 수형도 그림",
+                "caption": "각 가지를 따라가며 나오는 결과를 빈칸에 놓아 수형도를 완성해 보세요.",
+                "items": [
                   {
-                    "conceptKey": "counting-cases",
-                    "surface": "경우의 수",
-                    "scopeKind": "global"
+                    "kind": "text",
+                    "id": "c1-h",
+                    "x": 90,
+                    "y": 28,
+                    "text": "앞",
+                    "size": 14,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "c1-t",
+                    "x": 250,
+                    "y": 28,
+                    "text": "뒤",
+                    "size": 14,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "deep-green"
+                  },
+                  {
+                    "kind": "line",
+                    "id": "br-1",
+                    "x1": 82,
+                    "y1": 35,
+                    "x2": 50,
+                    "y2": 54,
+                    "stroke": "orange",
+                    "strokeWidth": 1.5,
+                    "arrow": "end"
+                  },
+                  {
+                    "kind": "line",
+                    "id": "br-2",
+                    "x1": 98,
+                    "y1": 35,
+                    "x2": 130,
+                    "y2": 54,
+                    "stroke": "orange",
+                    "strokeWidth": 1.5,
+                    "arrow": "end"
+                  },
+                  {
+                    "kind": "line",
+                    "id": "br-3",
+                    "x1": 242,
+                    "y1": 35,
+                    "x2": 210,
+                    "y2": 54,
+                    "stroke": "green",
+                    "strokeWidth": 1.5,
+                    "arrow": "end"
+                  },
+                  {
+                    "kind": "line",
+                    "id": "br-4",
+                    "x1": 258,
+                    "y1": 35,
+                    "x2": 290,
+                    "y2": 54,
+                    "stroke": "green",
+                    "strokeWidth": 1.5,
+                    "arrow": "end"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "c2-hh",
+                    "x": 50,
+                    "y": 74,
+                    "text": "앞",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "c2-ht",
+                    "x": 130,
+                    "y": 74,
+                    "text": "뒤",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "c2-th",
+                    "x": 210,
+                    "y": 74,
+                    "text": "앞",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "c2-tt",
+                    "x": 290,
+                    "y": 74,
+                    "text": "뒤",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "tray",
+                    "x": 16,
+                    "y": 154,
+                    "width": 308,
+                    "height": 38,
+                    "radius": 6,
+                    "fill": "fill-soft",
+                    "stroke": "line",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "item-th",
+                    "x": 50,
+                    "y": 178,
+                    "text": "뒤-앞",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "deep-green",
+                    "draggable": true,
+                    "label": "뒤-앞"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "item-hh",
+                    "x": 130,
+                    "y": 178,
+                    "text": "앞-앞",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange",
+                    "draggable": true,
+                    "label": "앞-앞"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "item-tt",
+                    "x": 210,
+                    "y": 178,
+                    "text": "뒤-뒤",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "deep-green",
+                    "draggable": true,
+                    "label": "뒤-뒤"
+                  },
+                  {
+                    "kind": "text",
+                    "id": "item-ht",
+                    "x": 290,
+                    "y": 178,
+                    "text": "앞-뒤",
+                    "size": 13,
+                    "anchor": "middle",
+                    "weight": "bold",
+                    "fill": "orange",
+                    "draggable": true,
+                    "label": "앞-뒤"
                   }
-                ]
+                ],
+                "zones": [
+                  {
+                    "id": "zone-hh",
+                    "x": 16,
+                    "y": 86,
+                    "width": 68,
+                    "height": 30,
+                    "label": "앞 다음 앞",
+                    "accepts": [
+                      "item-hh"
+                    ]
+                  },
+                  {
+                    "id": "zone-ht",
+                    "x": 96,
+                    "y": 86,
+                    "width": 68,
+                    "height": 30,
+                    "label": "앞 다음 뒤",
+                    "accepts": [
+                      "item-ht"
+                    ]
+                  },
+                  {
+                    "id": "zone-th",
+                    "x": 176,
+                    "y": 86,
+                    "width": 68,
+                    "height": 30,
+                    "label": "뒤 다음 앞",
+                    "accepts": [
+                      "item-th"
+                    ]
+                  },
+                  {
+                    "id": "zone-tt",
+                    "x": 256,
+                    "y": 86,
+                    "width": 68,
+                    "height": 30,
+                    "label": "뒤 다음 뒤",
+                    "accepts": [
+                      "item-tt"
+                    ]
+                  }
+                ],
+                "task": {
+                  "prompt": "수형도의 각 가지 끝에 알맞은 결과를 끌어다 놓아 보세요.",
+                  "promptAlt": "수형도의 각 가지 끝에 알맞은 결과를 끌어다 놓아 보세요.",
+                  "successText": "가지 끝이 4개이므로 동전 두 개를 던질 때의 경우의 수는 4예요."
+                }
               }
             }
           ]
         },
         {
-          "sectionId": "counting-cases:example:v2",
+          "sectionId": "counting-cases:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "counting-cases:example:text:v2",
+              "blockId": "counting-cases:example:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "티셔츠 $3$종과 바지 $4$종으로 만들 수 있는 옷차림은 몇 가지일까요.\n\n티셔츠를 고르고 「그리고」 바지를 고르니 곱해요. $3 \\times 4 = 12$가지예요.\n\n티셔츠 하나마다 바지가 네 가지씩이니 $4 + 4 + 4$로 세어도 같아요.\n\n이번엔 「또는」이에요. 주사위 하나를 던져 $2$ 이하 또는 $5$ 이상이 나오는 경우를 세요.\n\n$2$ 이하는 $1, 2$로 두 가지, $5$ 이상은 $5, 6$으로 두 가지예요. 겹치는 것이 없으니 $2 + 2 = 4$가지예요.\n\n동전 세 개를 던지는 경우도 해 볼게요. 각 동전이 두 가지씩이고 셋을 모두 던지니 $2 \\times 2 \\times 2 = 8$가지예요.\n\n헷갈릴 때는 작은 경우를 직접 적어 보세요. 동전 두 개라면 앞앞, 앞뒤, 뒤앞, 뒤뒤로 네 가지예요. $2 \\times 2$와 맞고요.",
-                "definitions": [
-                  {
-                    "conceptKey": "counting-rule",
-                    "surface": "곱해요",
-                    "scopeKind": "global"
-                  }
-                ]
+                "text": "상의 $4$종류와 바지 $2$종류로 만들 수 있는 옷차림을 세어 볼게요. 상의를 고르고 「그리고」 바지를 고르므로 곱의 법칙을 써요. 상의마다 바지 $2$종류가 짝지어져 $4 \\times 2 = 8$가지예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "counting-cases:example:text-2:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "주사위 한 개에서 $2$ 이하의 눈은 $1, 2$로 $2$가지예요. $4$ 이상의 눈은 $4, 5, 6$으로 $3$가지예요. 겹치는 눈이 없고 「또는」으로 이어지므로 $2+3=5$가지예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "counting-cases:example:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "동전 두 개와 주사위 한 개를 함께 던지는 경우도 곱해서 구해요. 각 동전은 $2$가지씩, 주사위는 $6$가지 눈이 잇달아 나와요. 모두 곱하면 $2 \\times 2 \\times 6 = 24$가지예요.",
+                "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "counting-cases:practice:v2",
+          "sectionId": "counting-cases:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "counting-cases:practice:problems:v2",
+              "blockId": "counting-cases:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -760,12 +861,12 @@
           ]
         },
         {
-          "sectionId": "counting-cases:check:v2",
+          "sectionId": "counting-cases:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "counting-cases:check:problems:v2",
+              "blockId": "counting-cases:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -781,26 +882,26 @@
           ]
         },
         {
-          "sectionId": "counting-cases:summary:v2",
+          "sectionId": "counting-cases:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "counting-cases:summary:text:v2",
+              "blockId": "counting-cases:summary:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "「또는」이면 더하고 「그리고」면 곱해요. 이것이 합의 법칙과 곱의 법칙이에요.\n\n더할 때는 두 무리에 겹치는 것이 없는지 확인해야 해요.\n\n곱하는 이유는 줄과 칸으로 된 표의 칸 수를 세는 것과 같기 때문이에요.\n\n가짓수가 적으면 수형도를 그려 끝을 세어도 돼요.\n\n이 수업의 개념은 경우의 수예요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
+                "text": "일어날 수 있는 모든 가짓수를 경우의 수라고 해요. 겹치지 않는 두 일이 「또는」으로 이어지면 합의 법칙으로 더해요. 두 일이 「그리고」로 함께 일어나면 곱의 법칙으로 곱해요. 가짓수가 적을 때는 수형도를 그려 가지 끝을 세어도 돼요.",
                 "definitions": [
-                  {
-                    "conceptKey": "counting-rule",
-                    "surface": "합의 법칙과 곱의 법칙",
-                    "scopeKind": "global"
-                  },
                   {
                     "conceptKey": "counting-cases",
                     "surface": "경우의 수",
+                    "scopeKind": "global"
+                  },
+                  {
+                    "conceptKey": "counting-rule",
+                    "surface": "합의 법칙",
                     "scopeKind": "global"
                   }
                 ]
@@ -821,7 +922,7 @@
     {
       "public": {
         "lessonKey": "probability-meaning",
-        "versionId": "probability-meaning:v2",
+        "versionId": "probability-meaning:v3",
         "title": "확률의 뜻: 전체 중에서 얼마만큼",
         "summary": "확률이 경우의 수의 비라는 것을 확인하고, 값이 0과 1 사이인 이유를 봐요.",
         "estimatedMinutes": 11,
@@ -837,23 +938,34 @@
       },
       "sections": [
         {
-          "sectionId": "probability-meaning:explanation:v2",
+          "sectionId": "probability-meaning:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "probability-meaning:explanation:meaning:v2",
+              "blockId": "probability-meaning:explanation:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "어떤 일이 일어날 가능성을 하나의 수로 나타낸 것이 확률이에요.\n\n일어날 수 있는 모든 경우가 똑같이 일어날 만하다고 해 볼게요. 그러면 확률은 「바라는 경우의 수 ÷ 모든 경우의 수」예요. 앞 수업에서 센 경우의 수를 그대로 쓰는 거예요.\n\n주사위 하나를 던져 $3$이 나올 확률을 볼게요. 모든 경우가 여섯 가지이고 바라는 경우가 한 가지예요. 그러니 $\\dfrac{1}{6}$이에요.\n\n「똑같이 일어날 만하다」는 조건이 중요해요. 한쪽으로 기운 주사위라면 이렇게 셀 수 없어요.",
+                "text": "주머니에 든 초록 공 $3$개와 흰 공 $1$개 중 하나를 꺼내요.\n모든 경우 $4$가지 중에서 초록 공이 나오는 경우는 $3$가지예요.\n이처럼 어떤 일이 일어날 가능성을 수로 나타낸 것이 확률이에요.",
                 "definitions": [
                   {
                     "conceptKey": "probability-meaning",
                     "surface": "확률",
                     "scopeKind": "global"
-                  },
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "probability-meaning:explanation:text-2:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "확률은 바라는 경우의 수를 모든 경우의 수로 나눈 값이에요.\n초록 공이 나올 확률은 $3$을 $4$로 나눈 $\\dfrac{3}{4}$이에요.\n모든 경우가 일어날 가능성이 같을 때만 이렇게 계산해요.",
+                "definitions": [
                   {
                     "conceptKey": "counting-cases",
                     "surface": "경우의 수",
@@ -863,309 +975,410 @@
               }
             },
             {
-              "blockId": "probability-meaning:explanation:drawing:v2",
+              "blockId": "probability-meaning:explanation:scene-1:v3",
               "kind": "core.scene",
               "typeVersion": 1,
               "required": true,
               "payload": {
-                "width": 320,
-                "height": 200,
-                "alt": "주머니 속 공 다섯 개를 모두 꺼내 한 줄로 늘어놓고 그중 빨강 셋을 세는 그림",
-                "caption": "일어날 수 있는 경우 전부와 그중 바라는 경우를 세요",
+                "width": 340,
+                "height": 210,
+                "alt": "초록 공 3개와 흰 공 1개 중에서 하나를 꺼낼 때 모든 경우 4가지와 초록 공이 나오는 경우 3가지를 세어 확률 4분의 3을 구하는 그림",
+                "caption": "모든 경우 $4$가지 중 초록 공이 나오는 경우는 $3$가지여서 확률은 $\\dfrac{3}{4}$이에요.",
                 "items": [
                   {
-                    "kind": "polygon",
-                    "points": [
-                      [
-                        60,
-                        56
-                      ],
-                      [
-                        140,
-                        56
-                      ],
-                      [
-                        150,
-                        128
-                      ],
-                      [
-                        50,
-                        128
-                      ]
-                    ],
-                    "closed": true,
-                    "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1.4,
-                    "id": "bag"
+                    "kind": "rect",
+                    "id": "all-box",
+                    "x": 16,
+                    "y": 16,
+                    "width": 308,
+                    "height": 82,
+                    "radius": 8,
+                    "fill": "fill-soft",
+                    "stroke": "line",
+                    "strokeWidth": 1.5
                   },
                   {
                     "kind": "text",
-                    "x": 100,
-                    "y": 46,
-                    "text": "주머니",
-                    "size": 10,
+                    "id": "all-label",
+                    "x": 28,
+                    "y": 35,
+                    "text": "모든 경우: 4가지",
+                    "size": 13,
+                    "weight": "bold",
+                    "anchor": "start",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "ellipse",
+                    "id": "ball-a",
+                    "cx": 66,
+                    "cy": 68,
+                    "rx": 20,
+                    "ry": 20,
+                    "fill": "light-green",
+                    "stroke": "green",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "text",
+                    "id": "txt-a",
+                    "x": 66,
+                    "y": 73,
+                    "text": "A",
+                    "size": 13,
+                    "weight": "bold",
                     "anchor": "middle",
-                    "fill": "muted",
-                    "id": "bagl"
+                    "fill": "deep-green"
                   },
                   {
                     "kind": "ellipse",
-                    "cx": 80,
-                    "cy": 84,
-                    "rx": 11,
-                    "ry": 11,
-                    "fill": "orange",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "r1"
+                    "id": "ball-b",
+                    "cx": 136,
+                    "cy": 68,
+                    "rx": 20,
+                    "ry": 20,
+                    "fill": "light-green",
+                    "stroke": "green",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "text",
+                    "id": "txt-b",
+                    "x": 136,
+                    "y": 73,
+                    "text": "B",
+                    "size": 13,
+                    "weight": "bold",
+                    "anchor": "middle",
+                    "fill": "deep-green"
                   },
                   {
                     "kind": "ellipse",
-                    "cx": 105,
-                    "cy": 84,
-                    "rx": 11,
-                    "ry": 11,
-                    "fill": "orange",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "r2"
+                    "id": "ball-c",
+                    "cx": 206,
+                    "cy": 68,
+                    "rx": 20,
+                    "ry": 20,
+                    "fill": "light-green",
+                    "stroke": "green",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "kind": "text",
+                    "id": "txt-c",
+                    "x": 206,
+                    "y": 73,
+                    "text": "C",
+                    "size": 13,
+                    "weight": "bold",
+                    "anchor": "middle",
+                    "fill": "deep-green"
                   },
                   {
                     "kind": "ellipse",
-                    "cx": 92,
-                    "cy": 106,
-                    "rx": 11,
-                    "ry": 11,
-                    "fill": "orange",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "r3"
-                  },
-                  {
-                    "kind": "ellipse",
-                    "cx": 118,
-                    "cy": 106,
-                    "rx": 11,
-                    "ry": 11,
+                    "id": "ball-d",
+                    "cx": 276,
+                    "cy": 68,
+                    "rx": 20,
+                    "ry": 20,
                     "fill": "white",
                     "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "w1"
+                    "strokeWidth": 2
                   },
                   {
-                    "kind": "ellipse",
-                    "cx": 70,
-                    "cy": 106,
-                    "rx": 11,
-                    "ry": 11,
-                    "fill": "white",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "w2"
+                    "kind": "text",
+                    "id": "txt-d",
+                    "x": 276,
+                    "y": 73,
+                    "text": "D",
+                    "size": 13,
+                    "weight": "bold",
+                    "anchor": "middle",
+                    "fill": "ink"
                   },
                   {
-                    "kind": "line",
-                    "x1": 29,
-                    "y1": 152,
-                    "x2": 131,
-                    "y2": 152,
+                    "kind": "rect",
+                    "id": "pick-box",
+                    "x": 38,
+                    "y": 43,
+                    "width": 196,
+                    "height": 50,
+                    "radius": 8,
+                    "fill": "none",
                     "stroke": "orange",
-                    "strokeWidth": 1.6,
-                    "id": "tie",
+                    "strokeWidth": 2.5,
+                    "dash": true,
                     "opacity": 0
                   },
                   {
                     "kind": "text",
-                    "x": 80,
-                    "y": 144,
-                    "text": "빨강 셋",
-                    "size": 10,
-                    "anchor": "middle",
+                    "id": "pick-label",
+                    "x": 20,
+                    "y": 128,
+                    "text": "바라는 경우: 초록 공 3가지",
+                    "size": 13,
+                    "weight": "bold",
+                    "anchor": "start",
                     "fill": "orange",
-                    "id": "tiel",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "strip",
+                    "id": "prob-strip",
+                    "x": 20,
+                    "y": 142,
+                    "width": 184,
+                    "height": 34,
+                    "parts": 4,
+                    "filled": 3,
+                    "fill": "sand",
+                    "stroke": "orange",
+                    "strokeWidth": 1.5,
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "rect",
+                    "id": "res-box",
+                    "x": 220,
+                    "y": 116,
+                    "width": 104,
+                    "height": 74,
+                    "radius": 8,
+                    "fill": "sand",
+                    "stroke": "orange",
+                    "strokeWidth": 2,
                     "opacity": 0
                   },
                   {
                     "kind": "text",
-                    "x": 252,
-                    "y": 170,
-                    "text": "$\\frac{3}{5}$",
-                    "size": 18,
+                    "id": "res-title",
+                    "x": 272,
+                    "y": 140,
+                    "text": "초록 공 확률",
+                    "size": 12,
+                    "weight": "bold",
+                    "anchor": "middle",
+                    "fill": "ink",
+                    "opacity": 0
+                  },
+                  {
+                    "kind": "text",
+                    "id": "res-val",
+                    "x": 272,
+                    "y": 172,
+                    "text": "$3 \\div 4 = \\dfrac{3}{4}$",
+                    "size": 14,
+                    "weight": "bold",
                     "anchor": "middle",
                     "fill": "orange",
-                    "id": "say",
                     "opacity": 0
                   }
                 ],
+                "frameMs": 1800,
                 "frames": [
                   {
-                    "caption": "주머니에 빨간 공 셋과 흰 공 둘이 들어 있어요.",
+                    "caption": "초록 공 3개(A, B, C)와 흰 공 1개(D)로 모든 경우는 4가지예요.",
+                    "changes": []
+                  },
+                  {
+                    "caption": "그중 초록 공이 나오는 바라는 경우는 A, B, C로 3가지예요.",
                     "changes": [
                       {
-                        "id": "tie",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "tiel",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "say",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "bag",
+                        "id": "pick-box",
                         "opacity": 1
                       },
                       {
-                        "id": "bagl",
+                        "id": "pick-label",
+                        "opacity": 1
+                      },
+                      {
+                        "id": "prob-strip",
                         "opacity": 1
                       }
                     ]
                   },
                   {
-                    "caption": "하나를 꺼낸다면 일어날 수 있는 경우는 모두 다섯 가지예요.",
+                    "caption": "바라는 경우의 수 3을 모든 경우의 수 4로 나누면 확률은 3/4이에요.",
                     "changes": [
                       {
-                        "id": "r1",
-                        "dx": -40,
-                        "dy": 86,
+                        "id": "pick-box",
                         "opacity": 1
                       },
                       {
-                        "id": "r2",
-                        "dx": -25,
-                        "dy": 86,
+                        "id": "pick-label",
                         "opacity": 1
                       },
                       {
-                        "id": "r3",
-                        "dx": 28,
-                        "dy": 64,
+                        "id": "prob-strip",
                         "opacity": 1
                       },
                       {
-                        "id": "w1",
-                        "dx": 42,
-                        "dy": 64,
+                        "id": "res-box",
                         "opacity": 1
                       },
                       {
-                        "id": "w2",
-                        "dx": 130,
-                        "dy": 64,
+                        "id": "res-title",
                         "opacity": 1
                       },
                       {
-                        "id": "bag",
-                        "opacity": 0.3
-                      },
-                      {
-                        "id": "bagl",
-                        "opacity": 0.3
-                      },
-                      {
-                        "id": "tie",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "tiel",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "say",
-                        "opacity": 0
-                      }
-                    ]
-                  },
-                  {
-                    "caption": "그중 빨강이 셋이니 빨간 공이 나올 확률은 다섯 중 셋이에요.",
-                    "changes": [
-                      {
-                        "id": "r1",
-                        "dx": -40,
-                        "dy": 86,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "r2",
-                        "dx": -25,
-                        "dy": 86,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "r3",
-                        "dx": 28,
-                        "dy": 64,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "w1",
-                        "dx": 42,
-                        "dy": 64,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "w2",
-                        "dx": 130,
-                        "dy": 64,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "bag",
-                        "opacity": 0.3
-                      },
-                      {
-                        "id": "bagl",
-                        "opacity": 0.3
-                      },
-                      {
-                        "id": "tie",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "tiel",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "say",
+                        "id": "res-val",
                         "opacity": 1
                       }
                     ]
                   }
-                ],
-                "frameMs": 1700
+                ]
               }
             },
             {
-              "blockId": "probability-meaning:explanation:range:v2",
+              "blockId": "probability-meaning:explanation:text-3:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "확률은 언제나 $0$ 이상 $1$ 이하예요. 바라는 경우가 전체보다 많을 수는 없으니까요.\n\n절대 일어나지 않는 일의 확률은 $0$이에요. 주사위에서 $7$이 나올 확률이 그래요.\n\n반드시 일어나는 일의 확률은 $1$이고요. $6$ 이하가 나올 확률이 그래요.",
+                "text": "같은 주머니에서 노란 공이 나오는 경우는 $0$가지예요.\n절대로 일어나지 않는 일의 확률은 $0 \\div 4 = 0$이에요.\n반드시 일어나는 일의 확률은 $4 \\div 4 = 1$이에요.",
                 "definitions": []
               }
             },
             {
-              "blockId": "probability-meaning:explanation:write:v2",
+              "blockId": "probability-meaning:explanation:text-4:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "확률은 분수로도, 소수로도, 백분율로도 쓸 수 있어요. $\\dfrac{1}{2}$과 $0.5$와 $50\\%$는 같은 말이에요.\n\n분수로 적을 때는 약분해서 기약분수로 적는 것이 보통이에요. $\\dfrac{3}{6}$이라고 쓰기보다 $\\dfrac{1}{2}$이라고 적어요.",
+                "text": "바라는 경우의 수는 $0$보다 작거나 전체보다 클 수 없어요.\n따라서 어떤 일이 일어날 확률은 항상 $0$ 이상 $1$ 이하예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "probability-meaning:explanation:scene-2:v3",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 340,
+                "height": 210,
+                "alt": "4칸으로 나뉜 분수 막대 중 0칸, 3칸, 4칸 색칠된 막대를 각각 확률 0, 확률 4분의 3, 확률 1 칸에 끌어다 놓는 그림",
+                "caption": "확률은 절대로 일어나지 않을 때 $0$, 반드시 일어날 때 $1$이에요.",
+                "items": [
+                  {
+                    "kind": "rect",
+                    "id": "bag-info",
+                    "x": 16,
+                    "y": 14,
+                    "width": 308,
+                    "height": 32,
+                    "radius": 6,
+                    "fill": "fill-soft",
+                    "stroke": "line",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "kind": "text",
+                    "id": "bag-text",
+                    "x": 170,
+                    "y": 35,
+                    "text": "주머니: 초록 공 3개, 흰 공 1개 (모든 경우 4가지)",
+                    "size": 12,
+                    "weight": "bold",
+                    "anchor": "middle",
+                    "fill": "ink"
+                  },
+                  {
+                    "kind": "strip",
+                    "id": "bar-3",
+                    "x": 24,
+                    "y": 158,
+                    "width": 78,
+                    "height": 28,
+                    "parts": 4,
+                    "filled": 3,
+                    "fill": "light-green",
+                    "stroke": "green",
+                    "strokeWidth": 1.5,
+                    "draggable": true,
+                    "label": "4칸 중 3칸 색칠된 막대"
+                  },
+                  {
+                    "kind": "strip",
+                    "id": "bar-4",
+                    "x": 131,
+                    "y": 158,
+                    "width": 78,
+                    "height": 28,
+                    "parts": 4,
+                    "filled": 4,
+                    "fill": "sky",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "draggable": true,
+                    "label": "4칸 모두 색칠된 막대"
+                  },
+                  {
+                    "kind": "strip",
+                    "id": "bar-0",
+                    "x": 238,
+                    "y": 158,
+                    "width": 78,
+                    "height": 28,
+                    "parts": 4,
+                    "filled": 0,
+                    "fill": "white",
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "draggable": true,
+                    "label": "색칠된 칸이 없는 막대"
+                  }
+                ],
+                "zones": [
+                  {
+                    "id": "zone-zero",
+                    "x": 16,
+                    "y": 62,
+                    "width": 94,
+                    "height": 48,
+                    "label": "노란 공 (확률 0)",
+                    "accepts": [
+                      "bar-0"
+                    ]
+                  },
+                  {
+                    "id": "zone-three",
+                    "x": 123,
+                    "y": 62,
+                    "width": 94,
+                    "height": 48,
+                    "label": "초록 공 (확률 3/4)",
+                    "accepts": [
+                      "bar-3"
+                    ]
+                  },
+                  {
+                    "id": "zone-four",
+                    "x": 230,
+                    "y": 62,
+                    "width": 94,
+                    "height": 48,
+                    "label": "초록·흰 공 (확률 1)",
+                    "accepts": [
+                      "bar-4"
+                    ]
+                  }
+                ],
+                "task": {
+                  "prompt": "색칠한 칸 수를 보고 각 경우에 알맞은 확률 막대를 옮겨 놓아 보세요.",
+                  "promptAlt": "색칠한 칸 수를 보고 각 경우에 알맞은 확률 막대를 옮겨 놓아 보세요.",
+                  "successText": "절대 일어나지 않으면 0, 반드시 일어나면 1, 그사이는 전체 중 바라는 경우의 비율이에요."
+                }
+              }
+            },
+            {
+              "blockId": "probability-meaning:explanation:text-5:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "확률은 분수, 소수, 백분율로 나타낼 수 있어요.\n분수로 쓸 때는 분자와 분모를 약분하여 기약분수로 적어요.\n전체 $6$가지 중 $2$가지라면 $\\dfrac{2}{6}$를 $2$로 약분해 $\\dfrac{1}{3}$로 써요.",
                 "definitions": [
-                  {
-                    "conceptKey": "fraction",
-                    "surface": "분수",
-                    "scopeKind": "global"
-                  },
-                  {
-                    "conceptKey": "percentage",
-                    "surface": "백분율",
-                    "scopeKind": "global"
-                  },
                   {
                     "conceptKey": "irreducible-fraction",
                     "surface": "기약분수",
@@ -1177,40 +1390,115 @@
           ]
         },
         {
-          "sectionId": "probability-meaning:example:v2",
+          "sectionId": "probability-meaning:example:v3",
           "role": "worked_example",
           "title": "함께 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "probability-meaning:example:text:v2",
+              "blockId": "probability-meaning:example:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "빨간 공 $3$개와 흰 공 $2$개가 든 주머니가 있어요. 하나를 꺼낼 때 빨간 공일 확률을 구해 볼게요.\n\n공은 모두 $5$개이니 일어날 수 있는 경우는 다섯 가지예요.\n\n그중 빨간 공은 셋이니 확률은 $\\dfrac{3}{5}$이에요.\n\n주사위도 해 볼게요. 짝수는 $2, 4, 6$으로 세 가지이니 짝수가 나올 확률은 $\\dfrac{3}{6} = \\dfrac{1}{2}$이에요.\n\n동전 두 개를 던져 모두 앞면일 확률은 어떨까요. 모든 경우가 $2 \\times 2 = 4$가지이고 모두 앞면인 경우는 한 가지이니 $\\dfrac{1}{4}$예요.\n\n$1$부터 $10$까지의 수 카드에서 하나를 뽑는 경우도 같은 방법이에요. 소수가 나올 확률을 구해 볼게요. 여기서 소수는 $1$과 자기 자신으로만 나누어떨어지는 수예요. $2, 3, 5, 7$로 네 가지이니 $\\dfrac{4}{10} = \\dfrac{2}{5}$고요.\n\n분자를 셀 때는 빠뜨린 것이 없는지 살피세요. 분모를 셀 때는 두 번 센 것이 없는지 살피면 돼요.",
+                "text": "서로 다른 동전 두 개를 던질 때 앞면이 한 개만 나올 확률을 구해 볼게요.\n동전 한 개가 나오는 경우는 앞면과 뒷면으로 $2$가지씩이에요.\n두 동전을 함께 던지면 모든 경우의 수는 $2 \\times 2 = 4$예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "probability-meaning:example:table-1:v3",
+              "kind": "core.table",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "caption": "동전 두 개를 던질 때 일어나는 모든 경우",
+                "columns": [
+                  {
+                    "label": "동전 A"
+                  },
+                  {
+                    "label": "동전 B"
+                  },
+                  {
+                    "label": "앞면의 개수"
+                  }
+                ],
+                "rows": [
+                  {
+                    "cells": [
+                      "앞면",
+                      "앞면",
+                      "2개"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "앞면",
+                      "뒷면",
+                      "1개"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "뒷면",
+                      "앞면",
+                      "1개"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "뒷면",
+                      "뒷면",
+                      "0개"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "probability-meaning:example:text-2:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "모든 경우 $4$가지 중 앞면이 한 개만 나오는 경우는 $2$가지예요.\n바라는 경우의 수 $2$를 모든 경우의 수 $4$로 나누면 $\\dfrac{2}{4}$예요.\n분자와 분모를 $2$로 약분하면 구하는 확률은 $\\dfrac{1}{2}$이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "probability-meaning:example:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "이번에는 $1$부터 $9$까지 적힌 카드 $9$장 중 한 장을 뽑아 볼게요.\n소수가 적힌 카드가 나올 확률을 구하려고 해요.\n소수는 $1$보다 크고 $1$과 자기 자신으로만 나누어떨어지는 자연수예요.",
                 "definitions": [
                   {
                     "conceptKey": "prime-number",
                     "surface": "소수",
                     "scopeKind": "global"
-                  },
-                  {
-                    "conceptKey": "probability-meaning",
-                    "surface": "확률",
-                    "scopeKind": "global"
                   }
                 ]
+              }
+            },
+            {
+              "blockId": "probability-meaning:example:text-4:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "카드 $9$장 중 한 장을 뽑는 모든 경우의 수는 $9$예요.\n$1$은 소수가 아니어서 $1$부터 $9$까지의 소수는 $2, 3, 5, 7$로 $4$가지예요.\n따라서 소수가 나올 확률은 $4$를 $9$로 나눈 $\\dfrac{4}{9}$예요.",
+                "definitions": []
               }
             }
           ]
         },
         {
-          "sectionId": "probability-meaning:practice:v2",
+          "sectionId": "probability-meaning:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "probability-meaning:practice:problems:v2",
+              "blockId": "probability-meaning:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1227,12 +1515,12 @@
           ]
         },
         {
-          "sectionId": "probability-meaning:check:v2",
+          "sectionId": "probability-meaning:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "probability-meaning:check:problems:v2",
+              "blockId": "probability-meaning:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1248,29 +1536,18 @@
           ]
         },
         {
-          "sectionId": "probability-meaning:summary:v2",
+          "sectionId": "probability-meaning:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "probability-meaning:summary:text:v2",
+              "blockId": "probability-meaning:summary:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "확률은 바라는 경우의 수를 모든 경우의 수로 나눈 값이에요.\n\n모든 경우가 똑같이 일어날 만할 때에만 이렇게 셀 수 있어요.\n\n확률은 늘 $0$ 이상 $1$ 이하예요. 절대 일어나지 않으면 $0$, 반드시 일어나면 $1$이고요.\n\n분수로 적을 때는 기약분수로 줄여 적어요.\n\n이 수업의 개념은 확률이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
-                "definitions": [
-                  {
-                    "conceptKey": "probability-meaning",
-                    "surface": "확률",
-                    "scopeKind": "global"
-                  },
-                  {
-                    "conceptKey": "irreducible-fraction",
-                    "surface": "기약분수",
-                    "scopeKind": "global"
-                  }
-                ]
+                "text": "확률은 바라는 경우의 수를 모든 경우의 수로 나눈 값이에요.\n모든 경우가 일어날 가능성이 같을 때만 이 계산을 써요.\n확률은 $0$ 이상 $1$ 이하이고, 절대 일어나지 않으면 $0$, 반드시 일어나면 $1$이에요.\n확률을 분수로 나타낼 때는 약분하여 기약분수로 적어요.",
+                "definitions": []
               }
             }
           ]
@@ -1288,7 +1565,7 @@
     {
       "public": {
         "lessonKey": "probability-rules",
-        "versionId": "probability-rules:v2",
+        "versionId": "probability-rules:v3",
         "title": "확률의 계산: 여사건과 곱셈",
         "summary": "일어나지 않을 확률과, 두 번 이어 일어날 확률을 구하는 방법을 익혀요.",
         "estimatedMinutes": 12,
@@ -1302,183 +1579,17 @@
       },
       "sections": [
         {
-          "sectionId": "probability-rules:explanation:v2",
+          "sectionId": "probability-rules:explanation:v3",
           "role": "explanation",
           "title": "개념 만나기",
           "contentBlocks": [
             {
-              "blockId": "probability-rules:explanation:complement:v2",
+              "blockId": "probability-rules:explanation:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "확률을 하나하나 세지 않고도 구할 수 있는 길이 셋 있어요.\n\n첫째는 여사건이에요. 어떤 사건 $A$가 일어나지 않는 경우를 $A$의 여사건이라고 해요.\n\n$A$가 일어나거나 일어나지 않거나 둘 중 하나예요. 그러니 두 확률을 더하면 $1$이에요.\n\n일어나지 않을 확률은 $1$에서 일어날 확률을 뺀 값이고요. $A$의 확률이 $\\dfrac{3}{10}$이면 여사건의 확률은 $\\dfrac{7}{10}$이에요.\n\n「적어도 하나」를 묻는 문제에서 특히 힘을 발휘해요. 적어도 하나의 반대는 「하나도 없다」 하나뿐이거든요. 그 한 가지만 구하고 $1$에서 빼면 돼요.",
-                "definitions": [
-                  {
-                    "conceptKey": "probability-rules",
-                    "surface": "여사건",
-                    "scopeKind": "global"
-                  }
-                ]
-              }
-            },
-            {
-              "blockId": "probability-rules:explanation:add:v2",
-              "kind": "core.rich_text",
-              "typeVersion": 3,
-              "required": true,
-              "payload": {
-                "text": "둘째는 서로 겹치지 않는 두 사건의 합이에요. 주사위에서 $2$가 나오는 것과 $5$가 나오는 것은 함께 일어날 수 없어요.\n\n그러니 $2$ 또는 $5$가 나올 확률은 두 확률을 더해요. $\\dfrac{2}{6} = \\dfrac{1}{3}$이에요.\n\n경우의 수에서 「또는」이면 더했던 것과 같은 이야기예요.",
-                "definitions": [
-                  {
-                    "conceptKey": "counting-cases",
-                    "surface": "경우의 수",
-                    "scopeKind": "global"
-                  }
-                ]
-              }
-            },
-            {
-              "blockId": "probability-rules:explanation:drawing:v2",
-              "kind": "core.scene",
-              "typeVersion": 1,
-              "required": true,
-              "payload": {
-                "width": 320,
-                "height": 200,
-                "alt": "전체가 1인 막대에서 사건이 차지한 부분을 뺀 나머지를 떼어 내어 여사건의 확률을 재는 그림",
-                "caption": "여사건은 전체에서 사건을 뺀 나머지예요",
-                "items": [
-                  {
-                    "kind": "text",
-                    "x": 160,
-                    "y": 44,
-                    "text": "전체 $1$",
-                    "size": 10,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "strip",
-                    "x": 40,
-                    "y": 56,
-                    "width": 240,
-                    "height": 34,
-                    "parts": 10,
-                    "filled": 3,
-                    "fill": "fill",
-                    "stroke": "ink",
-                    "strokeWidth": 1
-                  },
-                  {
-                    "kind": "text",
-                    "x": 76,
-                    "y": 106,
-                    "text": "사건 $A$는 $\\frac{3}{10}$",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "muted"
-                  },
-                  {
-                    "kind": "rect",
-                    "x": 112,
-                    "y": 56,
-                    "width": 168,
-                    "height": 34,
-                    "fill": "sand",
-                    "stroke": "ink",
-                    "strokeWidth": 1,
-                    "id": "cover",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 196,
-                    "y": 78,
-                    "text": "여사건",
-                    "size": 11,
-                    "anchor": "middle",
-                    "fill": "ink",
-                    "id": "coverl",
-                    "opacity": 0
-                  },
-                  {
-                    "kind": "text",
-                    "x": 160,
-                    "y": 182,
-                    "text": "$1 - \\frac{3}{10} = \\frac{7}{10}$",
-                    "size": 15,
-                    "anchor": "middle",
-                    "fill": "orange",
-                    "id": "say",
-                    "opacity": 0
-                  }
-                ],
-                "frames": [
-                  {
-                    "caption": "전체를 $1$로 보면 사건 $A$는 열 칸 중 세 칸만큼이에요.",
-                    "changes": [
-                      {
-                        "id": "cover",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "coverl",
-                        "opacity": 0
-                      },
-                      {
-                        "id": "say",
-                        "opacity": 0
-                      }
-                    ]
-                  },
-                  {
-                    "caption": "남은 부분이 $A$가 일어나지 않는 경우예요. 이것을 여사건이라 해요.",
-                    "changes": [
-                      {
-                        "id": "cover",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "coverl",
-                        "opacity": 1
-                      },
-                      {
-                        "id": "say",
-                        "opacity": 0
-                      }
-                    ]
-                  },
-                  {
-                    "caption": "떼어 내어 재면 전체에서 $A$를 뺀 만큼이에요.",
-                    "changes": [
-                      {
-                        "id": "cover",
-                        "dy": 70,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "coverl",
-                        "dy": 70,
-                        "opacity": 1
-                      },
-                      {
-                        "id": "say",
-                        "opacity": 1
-                      }
-                    ]
-                  }
-                ],
-                "frameMs": 1700
-              }
-            },
-            {
-              "blockId": "probability-rules:explanation:multiply:v2",
-              "kind": "core.rich_text",
-              "typeVersion": 3,
-              "required": true,
-              "payload": {
-                "text": "셋째는 서로 영향을 주지 않는 두 사건이 함께 일어날 확률이에요. 이때는 곱해요.\n\n동전을 두 번 던져 모두 앞면일 확률은 $\\dfrac{1}{2} \\times \\dfrac{1}{2} = \\dfrac{1}{4}$이에요.\n\n주사위를 두 번 던져 두 번 다 $6$이 나올 확률은 $\\dfrac{1}{6} \\times \\dfrac{1}{6} = \\dfrac{1}{36}$이고요.\n\n앞에서 나온 결과가 뒤에 아무 영향을 주지 않아요. 그래서 곱할 수 있는 거예요.",
+                "text": "제비 $5$개 중 당첨 제비가 $2$개일 때 당첨될 확률은 $\\dfrac{2}{5}$예요.\n\n이처럼 어떤 사건이 일어나지 않는 사건을 여사건이라고 해요. 전체 확률 $1$에서 $\\dfrac{2}{5}$를 빼면 여사건의 확률은 $\\dfrac{3}{5}$예요.",
                 "definitions": [
                   {
                     "conceptKey": "probability-meaning",
@@ -1487,39 +1598,503 @@
                   }
                 ]
               }
-            }
-          ]
-        },
-        {
-          "sectionId": "probability-rules:example:v2",
-          "role": "worked_example",
-          "title": "함께 풀어 보기",
-          "contentBlocks": [
+            },
             {
-              "blockId": "probability-rules:example:text:v2",
+              "blockId": "probability-rules:explanation:scene-1:v3",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 340,
+                "height": 200,
+                "alt": "전체 확률 1인 막대에서 당첨될 확률 5분의 2를 빼면 여사건의 확률 5분의 3이 남는 모습을 보여 주는 그림",
+                "caption": "여사건의 확률은 전체 확률 $1$에서 사건이 일어날 확률을 뺀 값이에요.",
+                "items": [
+                  {
+                    "id": "total-line",
+                    "kind": "line",
+                    "x1": 20,
+                    "y1": 38,
+                    "x2": 320,
+                    "y2": 38,
+                    "stroke": "ink",
+                    "strokeWidth": 1.5,
+                    "arrow": "both"
+                  },
+                  {
+                    "id": "total-txt",
+                    "kind": "text",
+                    "x": 170,
+                    "y": 24,
+                    "text": "전체 확률 $1$",
+                    "size": 13,
+                    "weight": "bold",
+                    "fill": "ink",
+                    "anchor": "middle"
+                  },
+                  {
+                    "id": "bar-a",
+                    "kind": "rect",
+                    "x": 20,
+                    "y": 55,
+                    "width": 120,
+                    "height": 60,
+                    "fill": "sand",
+                    "stroke": "orange",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "id": "div-a",
+                    "kind": "line",
+                    "x1": 80,
+                    "y1": 55,
+                    "x2": 80,
+                    "y2": 115,
+                    "stroke": "orange",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "id": "txt-a1",
+                    "kind": "text",
+                    "x": 80,
+                    "y": 80,
+                    "text": "당첨",
+                    "size": 13,
+                    "weight": "bold",
+                    "fill": "orange",
+                    "anchor": "middle"
+                  },
+                  {
+                    "id": "txt-a2",
+                    "kind": "text",
+                    "x": 80,
+                    "y": 102,
+                    "text": "$\\dfrac{2}{5}$",
+                    "size": 13,
+                    "weight": "bold",
+                    "fill": "orange",
+                    "anchor": "middle"
+                  },
+                  {
+                    "id": "bar-comp",
+                    "kind": "rect",
+                    "x": 140,
+                    "y": 55,
+                    "width": 180,
+                    "height": 60,
+                    "fill": "light-green",
+                    "stroke": "deep-green",
+                    "strokeWidth": 2
+                  },
+                  {
+                    "id": "div-c1",
+                    "kind": "line",
+                    "x1": 200,
+                    "y1": 55,
+                    "x2": 200,
+                    "y2": 115,
+                    "stroke": "deep-green",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "id": "div-c2",
+                    "kind": "line",
+                    "x1": 260,
+                    "y1": 55,
+                    "x2": 260,
+                    "y2": 115,
+                    "stroke": "deep-green",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "id": "txt-c1",
+                    "kind": "text",
+                    "x": 230,
+                    "y": 80,
+                    "text": "여사건 (당첨 안 됨)",
+                    "size": 13,
+                    "weight": "bold",
+                    "fill": "deep-green",
+                    "anchor": "middle"
+                  },
+                  {
+                    "id": "txt-c2",
+                    "kind": "text",
+                    "x": 230,
+                    "y": 102,
+                    "text": "$\\dfrac{3}{5}$",
+                    "size": 13,
+                    "weight": "bold",
+                    "fill": "deep-green",
+                    "anchor": "middle"
+                  },
+                  {
+                    "id": "eq-box",
+                    "kind": "rect",
+                    "x": 20,
+                    "y": 135,
+                    "width": 300,
+                    "height": 42,
+                    "radius": 6,
+                    "fill": "fill-soft",
+                    "stroke": "line",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "id": "eq-1",
+                    "kind": "text",
+                    "x": 170,
+                    "y": 161,
+                    "text": "$\\dfrac{2}{5} + \\dfrac{3}{5} = 1$ (두 확률의 합은 $1$)",
+                    "size": 13,
+                    "weight": "bold",
+                    "fill": "ink",
+                    "anchor": "middle",
+                    "opacity": 1
+                  },
+                  {
+                    "id": "eq-2",
+                    "kind": "text",
+                    "x": 170,
+                    "y": 161,
+                    "text": "여사건의 확률 $= 1 - \\dfrac{2}{5} = \\dfrac{3}{5}$",
+                    "size": 13,
+                    "weight": "bold",
+                    "fill": "deep-green",
+                    "anchor": "middle",
+                    "opacity": 0
+                  }
+                ],
+                "frameMs": 1800,
+                "frames": [
+                  {
+                    "caption": "어떤 사건과 그 여사건의 확률을 합하면 전체 확률 $1$이 돼요.",
+                    "changes": []
+                  },
+                  {
+                    "caption": "전체 확률 $1$에서 당첨될 확률 $\\dfrac{2}{5}$를 덜어 내요.",
+                    "changes": [
+                      {
+                        "id": "bar-a",
+                        "dy": 6,
+                        "opacity": 0.25
+                      },
+                      {
+                        "id": "div-a",
+                        "dy": 6,
+                        "opacity": 0.25
+                      },
+                      {
+                        "id": "txt-a1",
+                        "dy": 6,
+                        "opacity": 0.25
+                      },
+                      {
+                        "id": "txt-a2",
+                        "dy": 6,
+                        "opacity": 0.25
+                      },
+                      {
+                        "id": "eq-1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "eq-2",
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  {
+                    "caption": "남은 여사건의 확률은 $1 - \\dfrac{2}{5} = \\dfrac{3}{5}$이에요.",
+                    "changes": [
+                      {
+                        "id": "bar-a",
+                        "dy": 6,
+                        "opacity": 0.25
+                      },
+                      {
+                        "id": "div-a",
+                        "dy": 6,
+                        "opacity": 0.25
+                      },
+                      {
+                        "id": "txt-a1",
+                        "dy": 6,
+                        "opacity": 0.25
+                      },
+                      {
+                        "id": "txt-a2",
+                        "dy": 6,
+                        "opacity": 0.25
+                      },
+                      {
+                        "id": "eq-1",
+                        "opacity": 0
+                      },
+                      {
+                        "id": "eq-2",
+                        "opacity": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "probability-rules:explanation:text-2:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "동전 두 개를 던져 적어도 하나가 앞면일 확률을 구해 볼게요.\n\n하나하나 세도 되지만 여사건이 빨라요. 「적어도 하나가 앞면」의 반대는 「하나도 앞면이 아니다」예요. 곧 둘 다 뒷면인 경우 하나뿐이고요.\n\n모든 경우가 네 가지이니 둘 다 뒷면일 확률은 $\\dfrac{1}{4}$이에요. 그러니 구하려는 확률은 $1 - \\dfrac{1}{4} = \\dfrac{3}{4}$고요.\n\n동전이 셋이면 더 유리해요. 모두 뒷면일 확률이 $\\dfrac{1}{8}$이니 적어도 하나가 앞면일 확률은 $\\dfrac{7}{8}$이에요. 일곱 가지를 세지 않아도 되죠.\n\n곱하는 경우도 해 볼게요. 주사위를 두 번 던져 두 번 다 $6$이 나올 확률이에요.\n\n첫 번째가 $6$일 확률이 $\\dfrac{1}{6}$, 두 번째도 $\\dfrac{1}{6}$이에요. 서로 영향을 주지 않으니 $\\dfrac{1}{6} \\times \\dfrac{1}{6} = \\dfrac{1}{36}$이고요.\n\n「적어도」가 보이면 여사건을 떠올리세요. 「두 번 다」가 보이면 곱하기를 먼저 떠올리면 돼요.",
+                "text": "「적어도 한 번은 성공한다」의 여사건은 「모두 실패한다」 한 가지예요.\n\n성공하는 경우를 다 세지 않고 모두 실패할 확률을 구해 $1$에서 빼요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "probability-rules:explanation:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "주머니에 노란 공 $2$개, 파란 공 $3$개, 빨간 공 $4$개가 들어 있어요.\n\n공 한 개를 꺼낼 때 노란 공과 파란 공은 동시에 나올 수 없어요. 노란 공 또는 파란 공이 나올 확률은 두 확률을 더해 $\\dfrac{2}{9} + \\dfrac{3}{9} = \\dfrac{5}{9}$예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "probability-rules:explanation:text-4:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "동전과 주사위를 함께 던지면 두 결과는 서로 영향을 주지 않아요.\n\n이런 확률의 계산에서는 두 사건이 일어날 확률을 서로 곱해요. 앞면일 확률 $\\dfrac{1}{2}$과 $3$의 배수일 확률 $\\dfrac{1}{3}$을 곱하면 $\\dfrac{1}{2} \\times \\dfrac{1}{3} = \\dfrac{1}{6}$이에요.",
                 "definitions": [
                   {
                     "conceptKey": "probability-rules",
-                    "surface": "여사건",
+                    "surface": "확률의 계산",
                     "scopeKind": "global"
                   }
                 ]
+              }
+            },
+            {
+              "blockId": "probability-rules:explanation:scene-2:v3",
+              "kind": "core.scene",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "width": 360,
+                "height": 230,
+                "alt": "사건 A의 확률 2분의 1과 사건 B의 확률 3분의 1로 여사건, 덧셈, 곱셈 식을 알맞은 칸에 짝짓는 그림",
+                "caption": "상황에 따라 $1$에서 빼거나, 두 확률을 더하거나 곱해요.",
+                "items": [
+                  {
+                    "id": "info-box",
+                    "kind": "rect",
+                    "x": 15,
+                    "y": 14,
+                    "width": 330,
+                    "height": 32,
+                    "radius": 6,
+                    "fill": "fill-soft",
+                    "stroke": "line",
+                    "strokeWidth": 1
+                  },
+                  {
+                    "id": "info-txt",
+                    "kind": "text",
+                    "x": 180,
+                    "y": 35,
+                    "text": "사건 A의 확률은 $\\dfrac{1}{2}$, 사건 B의 확률은 $\\dfrac{1}{3}$이에요.",
+                    "size": 12,
+                    "weight": "bold",
+                    "fill": "ink",
+                    "anchor": "middle"
+                  },
+                  {
+                    "id": "slot-1",
+                    "kind": "rect",
+                    "x": 25,
+                    "y": 160,
+                    "width": 90,
+                    "height": 44,
+                    "radius": 6,
+                    "fill": "paper",
+                    "stroke": "line",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "id": "slot-2",
+                    "kind": "rect",
+                    "x": 135,
+                    "y": 160,
+                    "width": 90,
+                    "height": 44,
+                    "radius": 6,
+                    "fill": "paper",
+                    "stroke": "line",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "id": "slot-3",
+                    "kind": "rect",
+                    "x": 245,
+                    "y": 160,
+                    "width": 90,
+                    "height": 44,
+                    "radius": 6,
+                    "fill": "paper",
+                    "stroke": "line",
+                    "strokeWidth": 1,
+                    "dash": true
+                  },
+                  {
+                    "id": "chip-add",
+                    "kind": "text",
+                    "x": 70,
+                    "y": 187,
+                    "text": "$\\dfrac{1}{2} + \\dfrac{1}{3}$",
+                    "size": 14,
+                    "weight": "bold",
+                    "fill": "deep-green",
+                    "anchor": "middle",
+                    "draggable": true,
+                    "label": "2분의 1 더하기 3분의 1"
+                  },
+                  {
+                    "id": "chip-mul",
+                    "kind": "text",
+                    "x": 180,
+                    "y": 187,
+                    "text": "$\\dfrac{1}{2} \\times \\dfrac{1}{3}$",
+                    "size": 14,
+                    "weight": "bold",
+                    "fill": "ink",
+                    "anchor": "middle",
+                    "draggable": true,
+                    "label": "2분의 1 곱하기 3분의 1"
+                  },
+                  {
+                    "id": "chip-comp",
+                    "kind": "text",
+                    "x": 290,
+                    "y": 187,
+                    "text": "$1 - \\dfrac{1}{2}$",
+                    "size": 14,
+                    "weight": "bold",
+                    "fill": "orange",
+                    "anchor": "middle",
+                    "draggable": true,
+                    "label": "1 빼기 2분의 1"
+                  }
+                ],
+                "zones": [
+                  {
+                    "id": "zone-comp",
+                    "x": 15,
+                    "y": 60,
+                    "width": 102,
+                    "height": 58,
+                    "label": "A의 여사건",
+                    "accepts": [
+                      "chip-comp"
+                    ]
+                  },
+                  {
+                    "id": "zone-add",
+                    "x": 129,
+                    "y": 60,
+                    "width": 102,
+                    "height": 58,
+                    "label": "A 또는 B",
+                    "accepts": [
+                      "chip-add"
+                    ]
+                  },
+                  {
+                    "id": "zone-mul",
+                    "x": 243,
+                    "y": 60,
+                    "width": 102,
+                    "height": 58,
+                    "label": "A와 B 동시",
+                    "accepts": [
+                      "chip-mul"
+                    ]
+                  }
+                ],
+                "task": {
+                  "prompt": "각 확률을 구하는 계산 식을 알맞은 칸에 놓아 보세요.",
+                  "successText": "여사건은 1에서 빼고, 또는은 더하고, 동시에 일어날 때는 곱해요."
+                }
               }
             }
           ]
         },
         {
-          "sectionId": "probability-rules:practice:v2",
+          "sectionId": "probability-rules:example:v3",
+          "role": "worked_example",
+          "title": "함께 풀어 보기",
+          "contentBlocks": [
+            {
+              "blockId": "probability-rules:example:text-1:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "주사위를 두 번 던져 첫 번째는 $2$, 두 번째는 $5$ 이상이 나올 확률을 구해요.\n\n첫 번째 주사위에서 $2$가 나올 확률은 $\\dfrac{1}{6}$이에요. 두 번째에서 $5$ 또는 $6$이 나올 확률은 $\\dfrac{2}{6}$를 약분한 기약분수 $\\dfrac{1}{3}$이에요.",
+                "definitions": [
+                  {
+                    "conceptKey": "irreducible-fraction",
+                    "surface": "기약분수",
+                    "scopeKind": "global"
+                  }
+                ]
+              }
+            },
+            {
+              "blockId": "probability-rules:example:text-2:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "주사위를 두 번 던질 때 앞의 결과는 뒤의 결과에 영향을 주지 않아요.\n\n따라서 두 사건이 모두 일어날 확률은 두 확률을 곱해 구해요. $\\dfrac{1}{6} \\times \\dfrac{1}{3} = \\dfrac{1}{18}$이에요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "probability-rules:example:text-3:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "당첨 확률이 $\\dfrac{1}{3}$인 제비를 다시 넣으며 두 번 뽑아요.\n\n적어도 한 번 당첨될 사건의 여사건은 두 번 모두 꽝인 사건이에요. 한 번 뽑아 꽝이 나올 확률은 $1 - \\dfrac{1}{3} = \\dfrac{2}{3}$예요.",
+                "definitions": []
+              }
+            },
+            {
+              "blockId": "probability-rules:example:text-4:v3",
+              "kind": "core.rich_text",
+              "typeVersion": 3,
+              "required": true,
+              "payload": {
+                "text": "두 번 모두 꽝이 나올 확률은 $\\dfrac{2}{3} \\times \\dfrac{2}{3} = \\dfrac{4}{9}$이고, 구하는 확률은 $1 - \\dfrac{4}{9} = \\dfrac{5}{9}$예요.\n\n동전을 여러 개 던져 적어도 하나가 앞면일 확률도 여사건으로 구해요. 뒷면이 나올 확률 $\\dfrac{1}{2}$을 동전 개수만큼 곱한 뒤 $1$에서 빼면 돼요.",
+                "definitions": []
+              }
+            }
+          ]
+        },
+        {
+          "sectionId": "probability-rules:practice:v3",
           "role": "practice",
           "title": "직접 풀어 보기",
           "contentBlocks": [
             {
-              "blockId": "probability-rules:practice:problems:v2",
+              "blockId": "probability-rules:practice:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1536,12 +2111,12 @@
           ]
         },
         {
-          "sectionId": "probability-rules:check:v2",
+          "sectionId": "probability-rules:check:v3",
           "role": "check",
           "title": "혼자 확인하기",
           "contentBlocks": [
             {
-              "blockId": "probability-rules:check:problems:v2",
+              "blockId": "probability-rules:check:problems:v3",
               "kind": "core.problem_set",
               "typeVersion": 2,
               "required": true,
@@ -1557,29 +2132,18 @@
           ]
         },
         {
-          "sectionId": "probability-rules:summary:v2",
+          "sectionId": "probability-rules:summary:v3",
           "role": "summary",
           "title": "배운 개념 돌아보기",
           "contentBlocks": [
             {
-              "blockId": "probability-rules:summary:text:v2",
+              "blockId": "probability-rules:summary:text-1:v3",
               "kind": "core.rich_text",
               "typeVersion": 3,
               "required": true,
               "payload": {
-                "text": "여사건의 확률은 $1$에서 그 사건의 확률을 뺀 값이에요.\n\n「적어도 하나」를 물으면 여사건이 훨씬 쉬워요. 반대가 한 가지뿐이니까요.\n\n함께 일어날 수 없는 두 사건 중 하나가 일어날 확률은 더해서 구해요.\n\n서로 영향을 주지 않는 두 사건이 함께 일어날 확률은 곱해서 구해요.\n\n이 수업의 개념은 확률의 계산이에요. 이름을 눌러 뜻풀이를 다시 읽을 수 있어요.",
-                "definitions": [
-                  {
-                    "conceptKey": "probability-rules",
-                    "surface": "여사건",
-                    "scopeKind": "global"
-                  },
-                  {
-                    "conceptKey": "probability-meaning",
-                    "surface": "확률",
-                    "scopeKind": "global"
-                  }
-                ]
+                "text": "사건 $A$가 일어나지 않을 여사건의 확률은 $1$에서 $A$의 확률을 빼요.\n\n「적어도 하나」의 확률은 모두 일어나지 않을 확률을 구해 $1$에서 빼요.\n\n동시에 일어날 수 없는 두 사건 중 하나가 일어날 확률은 더해요.\n\n서로 영향을 주지 않는 두 사건이 함께 일어날 확률은 곱해요.",
+                "definitions": []
               }
             }
           ]
@@ -1637,7 +2201,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "counting-cases:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "옷차림을 만들려면 티셔츠를 고르고, 그리고 바지도 골라야 해요. 티셔츠 $3$종마다 바지 $4$종을 짝지을 수 있으니 두 경우의 수를 곱해요. 만약 $3 + 4 = 7$로 계산했다면 티셔츠 또는 바지 중 하나만 고른 거예요. 티셔츠와 바지를 함께 입는 옷차림은 $3 \\times 4 = 12$이므로 정답은 $12$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "counting-cases:practice-2:v1",
@@ -1674,7 +2248,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "counting-cases:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 하나를 던지면 앞면과 뒷면으로 $2$가지 경우가 나와요. 주사위 하나를 던지면 $1$부터 $6$까지 $6$가지 경우가 나와요. 동전과 주사위를 함께 던지면 동전의 각 경우마다 주사위의 $6$가지 경우가 각각 짝지어져요. $2 + 6 = 8$은 어느 한쪽만 일어날 때처럼 두 경우의 수를 더한 값이에요. 두 일이 함께 일어나므로 곱의 법칙에 따라 $2 \\times 6 = 12$로 계산하면 정답은 $12$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "counting-cases:practice-3:v1",
@@ -1711,7 +2295,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "counting-cases:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위에서 $2$ 이하의 눈은 $1$, $2$로 $2$가지이고, $5$ 이상의 눈은 $5$, $6$으로 $2$가지예요. 만약 「이하」와 「이상」에 $2$와 $5$가 포함된다는 점을 놓치고 $1$과 $6$만 세면 $1 + 1 = 2$가 나오니 조심해요.\n\n두 경우에 겹치는 눈이 없고 「또는」으로 이어져 있으므로 두 가짓수를 더해요. 따라서 구하는 경우의 수는 $2 + 2 = 4$예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -1756,7 +2350,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "counting-cases:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 한 개를 던지면 앞면과 뒷면으로 $2$가지 경우가 나와요. 첫째 동전 그리고 둘째 동전 그리고 셋째 동전을 모두 던지므로 각 경우의 수를 곱해요. 동전 세 개라고 해서 $2+2+2=6$으로 더하면 안 돼요. 동전을 하나씩 더 던질 때마다 경우가 $2$배씩 늘어나므로 $2 \\times 2 \\times 2 = 8$이에요. 따라서 나올 수 있는 경우는 모두 $8$가지예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "counting-cases:check-2:v1",
@@ -1829,7 +2433,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "counting-cases:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 사건이 「또는」으로 이어질 때는 둘 중 한쪽만 일어나는 경우예요. 이때는 각 사건의 경우의 수를 합쳐서 세므로 합의 법칙에 따라 서로 더해요. 단, 더할 때는 두 무리에 겹치는 것이 없는지 확인해야 해요. 「곱한다」는 두 사건이 「그리고」로 이어져 곱의 법칙을 쓸 때 하는 계산이에요. 따라서 정답은 「더한다」예요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",
@@ -1880,7 +2494,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "counting-cases:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "첫 번째 주사위에서 나오는 경우는 $1$부터 $6$까지 $6$가지이고, 두 번째 주사위도 $6$가지예요. 첫 번째 주사위 「그리고」 두 번째 주사위의 눈이 함께 정해지므로 두 경우의 수를 곱해요. 첫 번째 눈 $6$가지마다 두 번째 눈이 $6$가지씩 짝지어지기 때문이에요. 둘 중 하나만 던지는 경우가 아니므로 $6 + 6 = 12$처럼 더하면 안 돼요. 따라서 나올 수 있는 경우는 $6 \\times 6 = 36$가지이고, 정답은 $36$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "counting-cases:homework-2:v1",
@@ -1917,7 +2541,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "counting-cases:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "차림을 완성하려면 모자 하나 그리고 티셔츠 하나를 함께 골라야 해요. 모자 $2$종마다 티셔츠 $5$종을 짝지을 수 있으므로 곱의 법칙에 따라 두 수를 곱해요. 모자나 티셔츠 중 하나만 고르는 경우가 아니니 $2+5=7$처럼 더하면 안 돼요. 따라서 만들 수 있는 차림은 $2\\times5=10$, 모두 $10$가지예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -1965,7 +2599,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-meaning:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 나오는 눈은 $1, 2, 3, 4, 5, 6$이므로 모든 경우의 수는 $6$이에요. 이 중에서 $3$이 나오는 바라는 경우의 수는 $1$이에요. 주사위 눈의 수인 $3$을 경우의 수로 착각해 $\\frac{3}{6}$으로 쓰지 않도록 조심해요. 바라는 경우의 수 $1$을 모든 경우의 수 $6$으로 나누면 정답은 $\\frac{1}{6}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability-meaning:practice-2:v1",
@@ -2005,7 +2649,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-meaning:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "공은 빨간 공 $3$개와 흰 공 $2$개를 합해 모두 $3+2=5$개예요. 하나를 꺼낼 때 모든 경우의 수는 $5$이고, 빨간 공이 나오는 경우의 수는 $3$이에요. 전체 개수 대신 흰 공의 개수 $2$로 나누어 $\\frac{3}{2}$이라고 쓰거나, 흰 공이 나올 확률인 $\\frac{2}{5}$를 쓰지 않도록 조심해요. 바라는 경우의 수 $3$을 모든 경우의 수 $5$로 나누면 빨간 공일 확률은 $\\frac{3}{5}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability-meaning:practice-3:v1",
@@ -2045,7 +2699,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-meaning:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 모든 경우의 수는 $1$부터 $6$까지 $6$가지예요. 그중 짝수는 $2, 4, 6$이므로 바라는 경우의 수는 $3$가지예요. 확률은 바라는 경우의 수를 모든 경우의 수로 나눈 값이어서 $\\frac{3}{6}$이 돼요. 경우의 수인 $3$만 적거나 약분하지 않은 $\\frac{3}{6}$을 그대로 적지 않도록 조심해요. 분자와 분모를 $3$으로 나누어 기약분수로 줄이면 정답은 $\\frac{1}{2}$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2090,7 +2754,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-meaning:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위의 눈은 $1$부터 $6$까지여서 모든 경우의 수는 $6$가지예요. 주사위에는 $7$의 눈이 없으므로 바라는 경우의 수는 $0$가지예요. 확률은 바라는 경우의 수를 모든 경우의 수로 나눈 값이니 $\\frac{0}{6}=0$이 돼요. 절대 일어나지 않으면 확률은 $0$이므로, $7$을 한 가지로 세어 $\\frac{1}{6}$이라 하거나 분모에 $7$을 넣어 $\\frac{1}{7}$로 쓰지 않도록 조심해요. 따라서 정답은 $0$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability-meaning:check-2:v1",
@@ -2130,7 +2804,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-meaning:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 두 개를 던질 때 나오는 모든 경우는 (앞면, 앞면), (앞면, 뒷면), (뒷면, 앞면), (뒷면, 뒷면)으로 $4$가지예요. 이 가운데 모두 앞면인 바라는 경우는 (앞면, 앞면)으로 $1$가지예요. 첫째 동전과 둘째 동전을 구별하지 않고 (앞면, 뒷면)과 (뒷면, 앞면)을 한 가지로 세면 모든 경우의 수가 $3$이 되어 $\\frac{1}{3}$이 나와요. 바라는 경우의 수 $1$을 모든 경우의 수 $4$로 나누면 확률은 $\\frac{1}{4}$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2211,7 +2895,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-meaning:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "확률은 바라는 경우의 수를 모든 경우의 수로 나눈 값이에요. 절대 일어나지 않으면 바라는 경우의 수가 $0$이어서 확률이 $0$이고, 반드시 일어나면 바라는 경우의 수가 모든 경우의 수와 같아서 확률이 $1$이에요. 바라는 경우의 수는 $0$보다 작을 수 없고 모든 경우의 수보다 클 수도 없어요. 그래서 $0$이 빠진 「$0$보다 큰 수」나 $1$보다 큰 수를 포함하는 「$1$ 이상」, 「제한이 없다」는 옳지 않아요. 따라서 확률이 가질 수 있는 값의 범위는 「$0$ 이상 $1$ 이하」예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability-meaning:homework-2:v1",
@@ -2251,7 +2945,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-meaning:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$부터 $10$까지의 수 카드 $10$장 중에서 하나를 뽑으므로 모든 경우의 수는 $10$이에요. 이 중에서 소수는 $2, 3, 5, 7$로 바라는 경우의 수는 $4$예요. $1$은 소수가 아니고 $9$는 $3$으로 나누어떨어지므로, 이 수들을 포함해 $5$개로 세면 $\\frac{5}{10}=\\frac{1}{2}$이 되어 틀려요. 바라는 경우의 수를 모든 경우의 수로 나누면 확률은 $\\frac{4}{10}$예요. 분모와 분자를 $2$로 나누어 기약분수로 줄이면 정답은 $\\frac{2}{5}$예요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2299,7 +3003,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-rules:practice-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어떤 사건이 일어나지 않을 확률은 $1$에서 그 사건이 일어날 확률을 빼서 구해요. $1$을 분모가 $10$인 분수로 나타내면 $\\frac{10}{10}$이므로 $\\frac{10}{10}-\\frac{3}{10}=\\frac{7}{10}$이에요. 분자만 빼서 $7$이라고 쓰면 확률이 아니므로 분모 $10$까지 함께 적어야 해요. $7$과 $10$은 더 이상 약분되지 않으므로 정답은 $\\frac{7}{10}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability-rules:practice-2:v1",
@@ -2339,7 +3053,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-rules:practice-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 나오는 모든 경우의 수는 $6$가지이고, 그중 $1$이 나올 확률은 $\\frac{1}{6}$이에요. $1$이 아닐 확률은 여사건의 확률이므로 $1$에서 $1$이 나올 확률을 빼서 구해요. 만약 $\\frac{1}{6}$을 썼다면 $1$이 나올 확률만 구하고 $1$에서 빼지 않은 거예요. $1 - \\frac{1}{6} = \\frac{5}{6}$이므로 정답은 $\\frac{5}{6}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability-rules:practice-3:v1",
@@ -2379,7 +3103,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-rules:practice-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「적어도 하나가 앞면」인 사건의 반대는 두 동전 모두 뒷면이 나오는 사건이에요. 동전 한 개를 던져 뒷면이 나올 확률은 $\\frac{1}{2}$이므로, 두 동전 모두 뒷면이 나올 확률은 $\\frac{1}{2} \\times \\frac{1}{2} = \\frac{1}{4}$이에요. 전체 확률 $1$에서 둘 다 뒷면일 확률을 빼면 $1 - \\frac{1}{4} = \\frac{3}{4}$이 돼요. $1$에서 빼는 계산을 빠뜨리면 둘 다 뒷면일 확률인 $\\frac{1}{4}$을 구하게 되니 조심해요. 따라서 적어도 하나가 앞면일 확률은 $\\frac{3}{4}$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2427,7 +3161,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-rules:check-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「적어도 하나가 앞면」의 반대는 동전 세 개가 모두 뒷면인 경우예요. 동전 한 개가 뒷면일 확률은 $\\frac{1}{2}$이므로, 세 개가 모두 뒷면일 확률은 $\\frac{1}{2} \\times \\frac{1}{2} \\times \\frac{1}{2} = \\frac{1}{8}$이에요. $\\frac{1}{8}$은 반대의 확률이므로 전체 확률 $1$에서 빼야 해요. $1 - \\frac{1}{8} = \\frac{7}{8}$이므로, 적어도 하나가 앞면일 확률은 $\\frac{7}{8}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability-rules:check-2:v1",
@@ -2467,7 +3211,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-rules:check-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위를 한 번 던져 $6$이 나올 확률은 $\\frac{1}{6}$이에요. 첫 번째와 두 번째에 던진 결과는 서로 영향을 주지 않아요. 서로 영향을 주지 않는 두 사건이 함께 일어날 확률은 각각의 확률을 곱해서 구해요. 두 확률을 더해 $\\frac{1}{6} + \\frac{1}{6} = \\frac{1}{3}$으로 계산하면 안 되는데, 두 번 다 $6$이 나와야 하므로 덧셈이 아니라 곱셈을 해야 해요. 따라서 정답은 $\\frac{1}{6} \\times \\frac{1}{6} = \\frac{1}{36}$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2515,7 +3269,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-rules:homework-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "여사건의 확률은 $1$에서 그 사건의 확률을 뺀 값이에요. $1$을 분모가 $7$인 분수 $\\frac{7}{7}$로 바꾸어 빼면 $1 - \\frac{2}{7} = \\frac{7}{7} - \\frac{2}{7} = \\frac{5}{7}$예요. 분모와 분자를 바꾼 $\\frac{7}{2}$로 구하거나 분모를 빼놓고 $7 - 2 = 5$만 적지 않도록 조심해요. 더 이상 약분되지 않으므로 정답은 $\\frac{5}{7}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability-rules:homework-2:v1",
@@ -2555,7 +3319,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability-rules:homework-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 $2$가 나올 확률은 $\\frac{1}{6}$이고, $5$가 나올 확률도 $\\frac{1}{6}$이에요. 한 번 던져서 $2$와 $5$가 함께 나올 수는 없으므로 두 확률을 더해요. $\\frac{1}{6}+\\frac{1}{6}=\\frac{2}{6}$이고, 분자와 분모를 $2$로 나누어 약분하면 $\\frac{1}{3}$이 돼요. 두 확률을 곱해 $\\frac{1}{6}\\times\\frac{1}{6}=\\frac{1}{36}$으로 계산하거나, 약분하지 않고 $\\frac{2}{6}$를 그대로 쓰지 않도록 조심해요. 따라서 구하는 확률은 $\\frac{1}{3}$이에요."
+              }
+            }
+          ]
         }
       ]
     },
@@ -2600,7 +3374,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-1:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "옷차림을 완성하려면 티셔츠를 고르고, 그리고 바지도 골라야 해요. 티셔츠 $4$종마다 바지 $5$종을 각각 짝지을 수 있어요. 두 가지를 모두 고르므로 경우의 수를 곱해야 해요. $4+5=9$는 티셔츠나 바지 중 하나만 고를 때의 경우의 수예요. 따라서 만들 수 있는 옷차림은 $4 \\times 5 = 20$, 정답은 $20$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-2:v1",
@@ -2637,7 +3421,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-2:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 한 개를 던질 때 나오는 경우는 앞면과 뒷면의 $2$가지예요. 동전이 한 개 늘어날 때마다 경우의 수가 $2$배가 되므로, 동전 네 개의 경우의 수는 모두 곱해서 구해요. $2 \\times 4 = 8$은 경우의 수를 곱하지 않고 $2+2+2+2=8$처럼 더했을 때 나오는 값이에요. $2$를 네 번 곱하면 $2 \\times 2 \\times 2 \\times 2 = 16$이므로, 나올 수 있는 경우는 $16$가지예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-3:v1",
@@ -2674,7 +3468,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-3:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위에서 $3$ 이하의 눈은 $1$, $2$, $3$으로 $3$가지예요. $6$의 눈이 나오는 경우는 $6$ 하나로 $1$가지예요.\n\n두 경우는 동시에 일어날 수 없으므로 각각의 경우의 수를 더하면 $3+1=4$예요.\n\n만약 $3$ 이하에서 $3$을 빼고 $1$, $2$만 세면 $2+1=3$이 나오니 조심해요. 정답은 $4$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-4:v1",
@@ -2711,7 +3515,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-4:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "모자 $1$종마다 신발 $6$종을 각각 짝지을 수 있어요. 모자가 $3$종이므로 전체 차림의 수는 $3 \\times 6 = 18$가지예요. 모자와 신발 중 하나만 고르는 것이 아니라 둘 다 골라 한 차림을 만드므로, $3 + 6 = 9$처럼 더하지 않고 곱해야 해요. 따라서 정답은 $18$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-5:v1",
@@ -2748,7 +3562,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-5:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "첫 번째 주사위에서 나올 수 있는 눈은 $1$부터 $6$까지 $6$가지예요. 그 $6$가지마다 두 번째 주사위의 눈도 $6$가지씩 나올 수 있어요. 두 주사위를 함께 던지므로 $6 + 6 = 12$처럼 더하지 않고 $6 \\times 6 = 36$으로 곱해요. 따라서 나올 수 있는 경우는 모두 $36$가지예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-6:v1",
@@ -2785,7 +3609,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-6:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 하나를 던지면 앞면과 뒷면의 $2$가지 경우가 나와요. 주사위 하나를 던지면 $1$부터 $6$까지 $6$가지 눈이 나와요. 동전의 각 면마다 주사위의 눈이 $6$가지씩 짝지어지므로 두 경우의 수를 곱해야 해요. 두 수를 더해서 $2 + 6 = 8$로 계산하지 않도록 조심해요. 따라서 나올 수 있는 경우는 $2 \\times 6 = 12$가지이므로 정답은 $12$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-7:v1",
@@ -2858,7 +3692,17 @@
               }
             }
           ],
-          "solution": [],
+          "solution": [
+            {
+              "blockId": "probability:drill-7:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "두 사건이 「그리고」로 이어져 연달아 일어나면, 앞 사건의 각 경우마다 뒤 사건의 경우가 모두 짝지어져요. 표로 나타내면 앞 사건은 줄이 되고 뒤 사건은 칸이 되므로, 전체 경우의 수는 줄과 칸의 수를 곱해서 구해요. 「더한다」는 두 사건이 「또는」으로 이어져 둘 중 하나만 일어날 때 쓰는 계산이에요. 따라서 정답은 「곱한다」예요."
+              }
+            }
+          ],
           "misreadings": [
             {
               "answer": "b",
@@ -2904,7 +3748,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-8:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 나오는 모든 눈은 $1$부터 $6$까지 $6$가지예요. 그중 $5$ 이상인 눈은 $5$와 $6$으로 $2$가지예요. $5$ 이상에는 $5$도 포함되므로 $6$ 하나만 세어 $\\frac{1}{6}$이라고 쓰지 않도록 조심해요. 구하는 확률은 전체 $6$가지 중 $2$가지이므로 $\\frac{2}{6}$예요. 분자와 분모를 $2$로 나누어 기약분수로 나타내면 정답은 $\\frac{1}{3}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-9:v1",
@@ -2944,7 +3798,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-9:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "전체 공의 개수는 빨간 공 $4$개와 흰 공 $6$개를 더한 $4+6=10$개예요. 그중에서 흰 공은 $6$개이므로 흰 공일 확률은 $\\frac{6}{10}$이에요. 약분하지 않은 $\\frac{6}{10}$을 그대로 쓰거나, 빨간 공일 확률인 $\\frac{4}{10}=\\frac{2}{5}$를 구하지 않도록 조심해요. $\\frac{6}{10}$의 분자와 분모를 $2$로 나누어 기약분수로 나타내면 정답은 $\\frac{3}{5}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-10:v1",
@@ -2984,7 +3848,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-10:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "동전 하나를 던질 때 나오는 모든 경우는 앞면과 뒷면으로 $2$가지예요. 두 면이 나올 가능성은 같고, 그중 앞면이 나오는 경우는 $1$가지예요. 확률은 어떤 사건이 일어나는 경우의 수를 모든 경우의 수로 나누어 구해요. $1$이나 $2$처럼 경우의 수만 적지 않고, 앞면이 나오는 경우의 수 $1$을 모든 경우의 수 $2$로 나누어야 해요. 따라서 앞면이 나올 확률은 $\\frac{1}{2}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-11:v1",
@@ -3024,7 +3898,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-11:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "$1$부터 $12$까지의 수 카드는 모두 $12$장이므로 전체 경우의 수는 $12$예요. 이 중에서 $4$의 배수는 $4, 8, 12$로 $3$장이에요. 따라서 $4$의 배수를 뽑을 확률은 전체 $12$장 중의 $3$장이므로 $\\frac{3}{12}$이에요. $4$의 배수라는 말만 보고 분자에 $4$를 넣어 $\\frac{4}{12}=\\frac{1}{3}$로 계산하거나, 약분하지 않은 $\\frac{3}{12}$을 그대로 쓰지 않도록 조심해요. $\\frac{3}{12}$의 분자와 분모를 각각 $3$으로 나누면 정답은 $\\frac{1}{4}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-12:v1",
@@ -3061,7 +3945,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-12:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 나올 수 있는 눈은 $1$, $2$, $3$, $4$, $5$, $6$으로 모두 $6$가지예요. 주사위에는 $0$의 눈이 없으므로, $0$이 나오는 경우의 수는 $0$이에요. 절대로 일어나지 않는 사건의 확률은 $\\frac{0}{6}=0$으로 계산해요. 따라서 주사위를 던져 $0$이 나올 확률은 $0$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-13:v1",
@@ -3098,7 +3992,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-13:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 나오는 모든 경우의 수는 $1, 2, 3, 4, 5, 6$으로 $6$가지예요. $6$은 '$6$ 이하'에 포함되므로, $6$ 이하의 눈이 나오는 경우도 $6$가지예요. 모든 경우가 조건에 맞으므로 확률은 $\\frac{6}{6}=1$이에요. 경우의 수인 $6$을 그대로 답으로 쓰거나, $6$을 빼고 세어 $\\frac{5}{6}$로 구하지 않도록 조심해요. 따라서 $6$ 이하가 나올 확률은 $1$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-14:v1",
@@ -3171,7 +4075,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-14:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "확률은 어떤 사건이 일어나는 경우의 수를 전체 경우의 수로 나눈 값이에요. 절대로 일어나지 않는 사건은 경우의 수가 $0$이므로 확률이 $0$이에요. 반드시 일어나는 사건은 경우의 수가 전체 경우의 수와 같으므로 확률이 $1$이에요. 사건이 일어나는 경우의 수가 전체보다 많을 수는 없으니 확률은 $1$을 넘을 수 없고, $0$보다 큰 수라고 하면 확률이 $0$인 경우가 빠져요. 따라서 확률이 가질 수 있는 값의 범위는 $0$ 이상 $1$ 이하예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-15:v1",
@@ -3211,7 +4125,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-15:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "여사건은 어떤 사건이 일어나지 않는 사건이에요. 사건이 일어날 확률과 여사건의 확률을 더하면 $1$이 돼요. 따라서 $1$에서 주어진 확률 $\\frac{1}{4}$을 빼면 여사건의 확률을 구할 수 있어요. $1$을 $\\frac{4}{4}$로 바꾸어 계산하면 $\\frac{4}{4} - \\frac{1}{4} = \\frac{3}{4}$이에요. 분자와 분모가 더 이상 약분되지 않으므로 정답은 $\\frac{3}{4}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-16:v1",
@@ -3251,7 +4175,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-16:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 하나를 던질 때 모든 경우의 수는 $6$가지예요.\n그중 $6$이 나올 확률은 $\\frac{1}{6}$이므로, $6$이 아닐 확률은 전체 확률 $1$에서 $\\frac{1}{6}$을 뺀 $1 - \\frac{1}{6} = \\frac{5}{6}$예요.\n$1$부터 $5$까지 $5$가지 경우를 전체 경우의 수 $6$으로 나누어 구해도 같아요.\n\n$\\frac{1}{6}$은 $6$이 나올 확률이고, $5$는 확률이 아니라 경우의 수이므로 전체 경우의 수 $6$으로 나누어야 해요.\n따라서 정답은 $\\frac{5}{6}$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-17:v1",
@@ -3291,7 +4225,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-17:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "'적어도 하나가 뒷면'인 경우의 반대는 '둘 다 앞면'인 경우예요. 동전 한 개를 던져 앞면이 나올 확률은 $\\frac{1}{2}$이므로, 둘 다 앞면일 확률은 $\\frac{1}{2} \\times \\frac{1}{2} = \\frac{1}{4}$이에요. 전체 확률 $1$에서 반대 경우의 확률을 빼면 $1 - \\frac{1}{4} = \\frac{3}{4}$이 돼요. 만약 $\\frac{1}{4}$이 나왔다면 둘 다 앞면일 확률만 구하고 $1$에서 빼지 않은 것이에요. 따라서 구하는 확률은 $\\frac{3}{4}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-18:v1",
@@ -3331,7 +4275,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-18:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "주사위 눈 $6$가지 중 홀수는 $1, 3, 5$의 $3$가지예요. 따라서 한 번 던져 홀수가 나올 확률은 $\\frac{3}{6}$이고, 기약분수로 나타내면 $\\frac{1}{2}$이에요. 첫 번째와 두 번째에 모두 홀수가 나와야 하므로 두 확률을 곱해요. 두 확률을 더해서 $\\frac{1}{2} + \\frac{1}{2} = 1$로 계산하거나, 약분하지 않은 $\\frac{9}{36}$를 그대로 쓰지 않도록 조심해요. $\\frac{1}{2} \\times \\frac{1}{2}$을 계산하면 정답은 $\\frac{1}{4}$이에요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-19:v1",
@@ -3371,7 +4325,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-19:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "어떤 사건이 일어날 확률과 여사건의 확률을 더하면 $1$이 돼요. 그러므로 여사건의 확률은 $1$에서 $\\frac{3}{8}$을 빼서 구해요. 분모가 $8$인 분수를 빼야 하니 $1$을 $\\frac{8}{8}$로 바꾸어 계산하면 $\\frac{8}{8} - \\frac{3}{8} = \\frac{5}{8}$예요. 분모 $8$에서 분자 $3$을 뺀 $5$만 적으면 분모가 빠진 잘못된 답이 되니 조심해요. $5$와 $8$은 $1$ 외에 공약수가 없으므로 정답은 $\\frac{5}{8}$예요."
+              }
+            }
+          ]
         },
         {
           "problemVersionId": "probability:drill-20:v1",
@@ -3444,7 +4408,17 @@
               }
             }
           ],
-          "solution": []
+          "solution": [
+            {
+              "blockId": "probability:drill-20:v1:solution",
+              "kind": "core.rich_text",
+              "typeVersion": 1,
+              "required": true,
+              "payload": {
+                "text": "「적어도 하나」는 한 개일 때, 두 개일 때처럼 해당하는 경우가 여러 가지예요. 하지만 그 반대인 「모두 아닌 경우」는 한 가지뿐이에요. 이처럼 어떤 사건이 일어나지 않는 사건을 여사건이라고 해요. 여사건의 확률을 먼저 구한 뒤 전체 확률 $1$에서 빼면 구하려는 확률이 나와요. 따라서 정답은 여사건의 확률이에요."
+              }
+            }
+          ]
         }
       ]
     }

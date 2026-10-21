@@ -1,0 +1,273 @@
+<title>그냥수학 해설 고르기</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: one question at a time — the question on paper, the two 해설 side by side as two sheets, the
+   choice under each sheet. A strip of squares above says how far along the choosing is. */
+:root {
+  --paper: #faf6ee; --card: #fffdf8; --ink: #2b2622; --ink-2: #574e44; --muted: #8a8378;
+  --line: #e3ded2; --line-strong: #d5cdbc; --clay: #d2674a; --clay-deep: #b3543a; --clay-soft: #f5e3d9;
+  --warn: #8a5a30; --warn-soft: #fff4e7; --done: #6b6358; --done-soft: #efe9da;
+  --body: "Pretendard", "Noto Sans KR", -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif;
+  --hand: "Gaegu", "Noto Sans KR", cursive;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1f1c19; --card: #282420; --ink: #f1ece3; --ink-2: #d3cabd; --muted: #a39a8c;
+  --line: #3a352f; --line-strong: #4a443c; --clay: #e07a5d; --clay-deep: #f09378; --clay-soft: #3d2a22;
+  --warn: #e7b98f; --warn-soft: #3a2c1f; --done: #d3cabd; --done-soft: #34302a; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #1f1c19; --card: #282420; --ink: #f1ece3; --ink-2: #d3cabd; --muted: #a39a8c;
+  --line: #3a352f; --line-strong: #4a443c; --clay: #e07a5d; --clay-deep: #f09378; --clay-soft: #3d2a22;
+  --warn: #e7b98f; --warn-soft: #3a2c1f; --done: #d3cabd; --done-soft: #34302a; color-scheme: dark }
+
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.75; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 48px; display: grid; gap: 18px; }
+button, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--clay); outline-offset: 2px; }
+
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--paper); padding-block: 10px; display: grid; gap: 10px; border-bottom: 1px solid var(--line); }
+.top-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
+h1 { font-size: 20px; font-weight: 700; letter-spacing: -.4px; margin: 0; text-wrap: balance; }
+.hand { font-family: var(--hand); font-size: 17px; color: var(--muted); }
+.count { font-variant-numeric: tabular-nums; color: var(--ink-2); font-size: 13px; }
+.count b { color: var(--ink); }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { border: 1px solid var(--line-strong); background: var(--card); border-radius: 999px; padding: 4px 12px; font-size: 13px; color: var(--ink-2); }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.strip { display: flex; flex-wrap: wrap; gap: 3px; }
+.cell { width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--line-strong); background: var(--card); padding: 0; }
+.cell.picked { background: var(--done-soft); border-color: var(--done); }
+.cell.neither { background: var(--warn-soft); border-color: var(--warn); }
+.cell.current { outline: 2px solid var(--clay); outline-offset: 1px; }
+
+.banner { border: 1px solid var(--line-strong); background: var(--card); border-radius: 10px; padding: 12px 16px; font-size: 13px; color: var(--ink-2); }
+.banner.warn { border-color: var(--warn); background: var(--warn-soft); color: var(--warn); }
+
+.question { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; display: grid; gap: 10px; }
+.where { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 10px; }
+.where .num { font-variant-numeric: tabular-nums; }
+.prompt { font-size: 17px; line-height: 1.8; }
+.prompt p, .sheet p, .facts p { margin: 0; }
+.facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 14px; font-size: 14px; margin: 0; }
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; min-width: 0; }
+.options { display: flex; flex-wrap: wrap; gap: 6px; }
+.options span { border: 1px solid var(--line); border-radius: 6px; padding: 2px 10px; background: var(--paper); }
+
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+/* The two sheets stand as tall as the longer one, so the two choices sit level however long each 해설 runs. */
+.sheet { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px 14px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.sheet .pick { margin-top: auto; }
+.sheet.chosen { border-color: var(--clay); box-shadow: 0 0 0 1px var(--clay); }
+.sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.letter { font-family: var(--hand); font-size: 24px; font-weight: 700; color: var(--ink); line-height: 1; }
+.text { display: grid; gap: 10px; line-height: 1.85; min-width: 0; overflow-wrap: anywhere; }
+.issues { display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.issues li { font-size: 12px; color: var(--warn); background: var(--warn-soft); border-radius: 4px; padding: 1px 8px; }
+.pick { justify-self: stretch; border: 1px solid var(--ink); background: var(--card); border-radius: 8px; padding: 9px 14px; font-weight: 500; }
+.pick:hover { background: var(--done-soft); }
+.sheet.chosen .pick { background: var(--clay); border-color: var(--clay); color: #fffdf8; }
+
+.after { display: grid; gap: 10px; }
+.after-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.text-button { border: 0; background: none; padding: 6px 2px; color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; font-size: 14px; }
+.text-button[aria-pressed="true"] { color: var(--warn); font-weight: 700; }
+.nav { display: flex; gap: 8px; }
+.nav button { border: 1px solid var(--line-strong); background: var(--card); border-radius: 8px; padding: 7px 14px; font-size: 14px; }
+.nav button:disabled { opacity: .4; cursor: default; }
+label.note { display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
+textarea { width: 100%; min-height: 64px; resize: vertical; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--card); padding: 8px 10px; font-size: 14px; line-height: 1.6; }
+.keys { font-size: 12px; color: var(--muted); }
+.saved { font-size: 12px; color: var(--muted); min-height: 1.4em; }
+math { font-size: 1.06em; }
+@media (max-width: 720px) { .pair { grid-template-columns: minmax(0, 1fr); } .keys { display: none; } .prompt { font-size: 16px; } }
+@media (prefers-reduced-motion: no-preference) { .sheet { transition: border-color .15s, box-shadow .15s; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="top-row">
+      <h1 id="title">해설 고르기</h1>
+      <span class="count" id="count">불러오는 중이에요.</span>
+    </div>
+    <div class="filters" id="filters" aria-label="코스로 거르기"></div>
+    <div class="strip" id="strip" aria-label="문항 목록"></div>
+  </header>
+
+  <p class="banner" id="intro">같은 문제에 해설 두 개가 있어요. 누가 썼는지는 가려 두었고, A와 B의 순서는 문항마다 섞었어요. 학생에게 더 잘 설명하는 쪽을 골라 주세요.</p>
+  <p class="banner warn" id="nostore" hidden>이 화면에서는 고른 것을 저장할 수 없어요. claude.ai에 로그인한 채로 이 페이지를 열어 주세요.</p>
+
+  <section class="question" id="question" aria-live="polite">
+    <p class="where">해설 후보를 불러오고 있어요.</p>
+  </section>
+
+  <section class="pair" id="pair"></section>
+
+  <section class="after" id="after" hidden>
+    <div class="after-row">
+      <button type="button" class="text-button" id="neither" aria-pressed="false">둘 다 별로예요</button>
+      <div class="nav">
+        <button type="button" id="prev">이전</button>
+        <button type="button" id="next">다음 안 고른 문항</button>
+      </div>
+    </div>
+    <label class="note" for="note">메모 (선택) — 무엇이 더 나았는지, 고칠 곳이 있는지
+      <textarea id="note" placeholder="예: B는 오답 설명이 좋은데 문장이 길어요"></textarea>
+    </label>
+    <span class="saved" id="saved"></span>
+    <span class="keys">키보드: ← → 문항 이동 · A / B 고르기 · N 둘 다 별로</span>
+  </section>
+</div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const state = { items: [], picks: {}, index: 0, course: '전체', db: null, writable: true, task: '해설' };
+  const docId = (id) => id; // problem version ids are already valid path segments (letters, digits, : - .)
+
+  function save(id, body) {
+    if (!state.db || !state.writable) return;
+    $('saved').textContent = '저장 중이에요…';
+    state.db.doc('picks/' + docId(id)).set({ ...body, updatedAt: new Date().toISOString() })
+      .then(() => { $('saved').textContent = '저장했어요.'; })
+      .catch((error) => {
+        if (error && error.code === 'invalid_argument') { state.writable = false; $('nostore').hidden = false; }
+        $('saved').textContent = '저장하지 못했어요. 잠시 뒤 다시 골라 주세요.';
+      });
+  }
+
+  const visible = () => state.items.map((item, i) => ({ item, i })).filter(({ item }) => state.course === '전체' || item.course === state.course);
+  const pickOf = (id) => state.picks[id] && state.picks[id].pick;
+
+  function renderTop() {
+    const all = state.items.length;
+    const done = state.items.filter((item) => pickOf(item.id)).length;
+    const tally = { a: 0, b: 0, neither: 0 };
+    for (const item of state.items) { const p = pickOf(item.id); if (p) tally[p] += 1; }
+    $('count').innerHTML = `<b>${done}</b> / ${all} 골랐어요 · A ${tally.a} · B ${tally.b} · 둘 다 별로 ${tally.neither}`;
+    const courses = ['전체', ...new Set(state.items.map((item) => item.course))];
+    $('filters').replaceChildren(...courses.map((course) => {
+      const button = document.createElement('button');
+      button.type = 'button'; button.className = 'chip'; button.textContent = course;
+      button.setAttribute('aria-pressed', String(state.course === course));
+      button.onclick = () => { state.course = course; const first = visible().find(({ item }) => !pickOf(item.id)) || visible()[0]; if (first) state.index = first.i; render(); };
+      return button;
+    }));
+    $('strip').replaceChildren(...visible().map(({ item, i }) => {
+      const cell = document.createElement('button');
+      const p = pickOf(item.id);
+      cell.type = 'button';
+      cell.className = 'cell' + (p === 'neither' ? ' neither' : p ? ' picked' : '') + (i === state.index ? ' current' : '');
+      cell.title = `${i + 1}. ${item.lesson}`;
+      cell.setAttribute('aria-label', `${i + 1}번 ${item.lesson}${p ? ' 고름' : ''}`);
+      cell.onclick = () => { state.index = i; render(); };
+      return cell;
+    }));
+  }
+
+  function renderItem() {
+    const item = state.items[state.index];
+    if (!item) return;
+    const p = pickOf(item.id);
+    const facts = [['정답', item.answer], ...(item.hints.length ? [['힌트', item.hints.join(' ')]] : []),
+      ...(item.misreadings.length ? [['예상 오답', item.misreadings.join(' · ')]] : [])];
+    $('question').innerHTML = `
+      <p class="where"><span class="num">${state.index + 1} / ${state.items.length}</span><span>${item.course}</span><span>${item.lesson}</span></p>
+      <div class="prompt">${item.prompt}</div>
+      ${item.options.length ? `<div class="options" aria-label="보기">${item.options.map((option) => `<span>${option}</span>`).join('')}</div>` : ''}
+      <dl class="facts">${facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>`;
+    $('pair').replaceChildren(...['a', 'b'].map((side) => {
+      const sheet = document.createElement('article');
+      sheet.className = 'sheet' + (p === side ? ' chosen' : '');
+      sheet.setAttribute('aria-label', `해설 ${side.toUpperCase()}`);
+      const issues = item[side].issues;
+      sheet.innerHTML = `<div class="sheet-head"><span class="letter">${side.toUpperCase()}</span><span class="hand">${p === side ? '이걸 골랐어요' : ''}</span></div>
+        <div class="text">${item[side].html}</div>
+        ${issues.length ? `<ul class="issues" aria-label="자동 검사">${issues.map((issue) => `<li>${issue}</li>`).join('')}</ul>` : ''}`;
+      const button = document.createElement('button');
+      button.type = 'button'; button.className = 'pick';
+      button.textContent = p === side ? `${side.toUpperCase()}를 골랐어요` : `${side.toUpperCase()}가 더 나아요`;
+      button.onclick = () => choose(side);
+      sheet.append(button);
+      return sheet;
+    }));
+    $('after').hidden = false;
+    $('neither').setAttribute('aria-pressed', String(p === 'neither'));
+    const note = $('note');
+    if (document.activeElement !== note) note.value = (state.picks[item.id] && state.picks[item.id].note) || '';
+    const list = visible();
+    const at = list.findIndex(({ i }) => i === state.index);
+    $('prev').disabled = at <= 0;
+    $('next').disabled = !list.some(({ item: other, i }) => i !== state.index && !pickOf(other.id));
+  }
+
+  function render() { renderTop(); renderItem(); }
+
+  function choose(pick) {
+    const item = state.items[state.index];
+    const note = $('note').value.trim();
+    state.picks[item.id] = { pick, ...(note ? { note } : {}) };
+    save(item.id, state.picks[item.id]);
+    // On to the next one not yet chosen, in the order shown, so a run of choosing is one tap each.
+    const list = visible();
+    const at = list.findIndex(({ i }) => i === state.index);
+    const next = [...list.slice(at + 1), ...list.slice(0, at)].find(({ item: other }) => !pickOf(other.id));
+    if (next) state.index = next.i;
+    render();
+    if (!next) $('saved').textContent = '모두 골랐어요. Claude에게 「다 골랐어」라고 말해 주세요.';
+  }
+
+  let noteTimer = 0;
+  $('note').addEventListener('input', () => {
+    clearTimeout(noteTimer);
+    noteTimer = setTimeout(() => {
+      const item = state.items[state.index];
+      const note = $('note').value.trim();
+      const held = state.picks[item.id] || { pick: null };
+      if ((held.note || '') === note) return;
+      state.picks[item.id] = { ...held, note };
+      save(item.id, state.picks[item.id]);
+    }, 900);
+  });
+  $('neither').onclick = () => choose('neither');
+  $('prev').onclick = () => { const list = visible(); const at = list.findIndex(({ i }) => i === state.index); if (at > 0) { state.index = list[at - 1].i; render(); } };
+  $('next').onclick = () => { const list = visible(); const at = list.findIndex(({ i }) => i === state.index);
+    const next = [...list.slice(at + 1), ...list.slice(0, at)].find(({ item }) => !pickOf(item.id)); if (next) { state.index = next.i; render(); } };
+  document.addEventListener('keydown', (event) => {
+    if (event.target instanceof HTMLTextAreaElement || event.metaKey || event.ctrlKey || event.altKey) return;
+    const key = event.key.toLowerCase();
+    if (key === 'arrowright') { const list = visible(); const at = list.findIndex(({ i }) => i === state.index); if (list[at + 1]) { state.index = list[at + 1].i; render(); } }
+    else if (key === 'arrowleft') $('prev').click();
+    else if (key === 'a' || key === 'b') choose(key);
+    else if (key === 'n') choose('neither');
+  });
+
+  fetch('blind.json').then((response) => response.json()).then((data) => {
+    state.items = data.items || [];
+    state.task = data.task || '해설';
+    $('title').textContent = `${state.task} 고르기`;
+    const first = state.items.findIndex((item) => !pickOf(item.id));
+    state.index = first >= 0 ? first : 0;
+    render();
+  }).catch(() => { $('question').innerHTML = '<p class="where">해설 후보를 불러오지 못했어요. 페이지를 새로 고쳐 주세요.</p>'; });
+
+  // The choices live in the page's store, so they reach Claude and survive another device.
+  if (window.claude && window.claude.use) {
+    window.claude.use('db').then((db) => {
+      if (!db) { $('nostore').hidden = false; return; }
+      state.db = db;
+      db.collection('picks').onSnapshot((snap) => {
+        for (const doc of snap.docs) { const body = doc.data(); if (body) state.picks[doc.id] = { pick: body.pick || null, ...(body.note ? { note: body.note } : {}) }; }
+        if (state.items.length) {
+          const current = state.items[state.index];
+          if (!pickOf(current.id) || snap.docChanges().length) render();
+        }
+      }, () => { $('nostore').hidden = false; });
+    });
+  } else { $('nostore').hidden = false; }
+})();
+</script>

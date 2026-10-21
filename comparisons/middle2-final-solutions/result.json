@@ -1,0 +1,28 @@
+{
+  "run": "middle2-final-solutions",
+  "decidedAt": "2026-10-21T02:37:48.489Z",
+  "picked": 4,
+  "tally": {
+    "claude-opus-5-5": 0,
+    "gemini-4-argon": 4,
+    "neither": 0
+  },
+  "byCourse": {
+    "similarity": {
+      "claude-opus-5-5": 0,
+      "gemini-4-argon": 4,
+      "neither": 0
+    }
+  },
+  "rest": {
+    "writer": "gemini-4-argon",
+    "questions": 133
+  },
+  "notes": {
+    "similar-triangles:practice-2:v1": {
+      "pick": "b",
+      "note": "A는 너무 구구절절이야",
+      "writer": "gemini-4-argon"
+    }
+  }
+}
