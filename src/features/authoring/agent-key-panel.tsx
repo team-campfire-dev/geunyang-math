@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { agentInstructions, agentKeyDays, type AgentKeyAction, type AgentKeyDays, type AgentKeyView, type AgentKeysView } from '@/shared/agent';
+import { agentInstructions, agentKeyDays, connectorUrl, type AgentKeyAction, type AgentKeyDays, type AgentKeyView, type AgentKeysView } from '@/shared/agent';
 import { Icon } from '@/features/learning/icons';
 import { apiOrigin } from '@/features/api-client';
 import { agentKeysApi } from './api-client';
@@ -13,9 +13,10 @@ const used = (key: AgentKeyView) => (key.lastUsedAt
   : '아직 쓰지 않음');
 
 /**
- * Codes this account gives an AI so it can write lessons as this account. A code is shown once, the
- * moment it is made, together with the words to paste into the conversation; after that only its first
- * characters are kept, so a lost code is revoked and made again rather than looked up.
+ * Codes this account gives an AI so it can write lessons as this account. A chat app is given the
+ * connector address and asks for the code on our own connect page; a tool that sends requests itself
+ * is given the code with the API's address. A code is shown once, the moment it is made; after that
+ * only its first characters are kept, so a lost code is revoked and made again rather than looked up.
  */
 export function AgentKeyPanel({ userId }: { userId: string }) {
   const [view, setView] = useState<AgentKeysView | null>(null);
@@ -25,7 +26,7 @@ export function AgentKeyPanel({ userId }: { userId: string }) {
   const [days, setDays] = useState<AgentKeyDays>(7);
   const [publish, setPublish] = useState(false);
   const [issued, setIssued] = useState<{ key: AgentKeyView; code: string } | null>(null);
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState('');
 
   useEffect(() => {
     let live = true;
@@ -39,7 +40,7 @@ export function AgentKeyPanel({ userId }: { userId: string }) {
     try {
       const response = await agentKeysApi.act(action, userId);
       setView(response.view);
-      if (response.issued) { setIssued(response.issued); setCopied(false); setName(''); setPublish(false); }
+      if (response.issued) { setIssued(response.issued); setCopied(''); setName(''); setPublish(false); }
       // A code just revoked is no use to paste anywhere, so it is not left on screen.
       if (action.action === 'key.revoke' && issued?.key.id === action.keyId) setIssued(null);
     } catch (reason) { setError(messageOf(reason)); }
@@ -47,26 +48,43 @@ export function AgentKeyPanel({ userId }: { userId: string }) {
   };
 
   if (!view) return <section className="dashboard-section">{error ? <p className="error-banner" role="alert">{error}</p> : <p className="editor-note">불러오는 중이에요.</p>}</section>;
-  const instructions = issued ? agentInstructions(apiOrigin || window.location.origin, issued.code) : '';
-  const copy = async () => {
-    try { await navigator.clipboard.writeText(instructions); setCopied(true); }
+  const origin = apiOrigin || window.location.origin;
+  const connector = connectorUrl(origin);
+  const copy = async (what: string, text: string) => {
+    try { await navigator.clipboard.writeText(text); setCopied(what); }
     catch { setError('복사하지 못했어요. 글을 직접 골라 복사해 주세요.'); }
   };
+  const copyLabel = (what: string, label: string) => (copied === what ? '복사했어요' : label);
 
   return <section className="dashboard-section agent-keys">
     <div className="section-heading"><div><h2>AI 연결</h2>
-      <p className="editor-note">AI에게 코드를 건네면 그 AI가 내 계정으로 수업 초안을 고칠 수 있어요. 코드는 내가 가진 권한보다 더 할 수 없고, 거두면 바로 막혀요.</p></div></div>
+      <p className="editor-note">Claude·ChatGPT·Gemini 채팅 창에서 이 서비스를 연결하면, 그 AI가 내 계정으로 수업 초안을 만들고 고칠 수 있어요. 연결할 때 여기서 만든 코드를 넣어요. 코드는 내가 가진 권한보다 더 할 수 없고, 거두면 그 코드로 맺은 연결이 모두 바로 끊겨요.</p></div></div>
     {error && <p className="error-banner" role="alert">{error}</p>}
+
+    <fieldset className="editor-panel">
+      <legend>채팅 앱에 연결하는 법</legend>
+      <div className="editor-actions">
+        <code className="agent-connector">{connector}</code>
+        <button type="button" className="button secondary" onClick={() => void copy('url', connector)}><Icon name="copy" size={15} />{copyLabel('url', '주소 복사')}</button>
+      </div>
+      <ol className="agent-steps">
+        <li><strong>Claude</strong> — 설정 → 커넥터 → 「커스텀 커넥터 추가」에 이 주소를 넣어요.</li>
+        <li><strong>ChatGPT</strong> — 설정의 앱(커넥터)에서 MCP 서버를 추가하고, 인증은 OAuth로 둬요.</li>
+        <li><strong>Gemini</strong> — 웹 앱에서 MCP 서버 주소로 「커스텀 앱」을 추가해요. Google이 지금은 미국의 개인 계정에만 열어 두었어요.</li>
+      </ol>
+      <p className="editor-note">추가하면 그냥수학의 연결 화면이 열려요. 거기에 아래에서 만든 코드를 넣으면 연결돼요. 연결된 뒤에는 채팅에서 「중2 일차방정식 수업의 설명을 더 쉽게 고쳐 줘」처럼 말하면 돼요.</p>
+    </fieldset>
 
     {issued && <fieldset className="editor-panel agent-issued">
       <legend>새 코드 · {issued.key.name}</legend>
-      <p className="editor-note"><strong>이 코드는 지금 한 번만 보여요.</strong> 아래 글을 복사해 AI와의 대화에 붙여 넣으세요. 잃어버리면 거두고 새로 만들면 돼요.</p>
-      <textarea className="agent-instructions" readOnly value={instructions} rows={9} aria-label="AI에게 건넬 안내와 코드"
-        onFocus={(event) => event.currentTarget.select()} />
+      <p className="editor-note"><strong>이 코드는 지금 한 번만 보여요.</strong> 채팅 앱의 연결 화면에 넣으세요. 잃어버리면 거두고 새로 만들면 돼요.</p>
+      <input className="agent-code" readOnly value={issued.code} aria-label="새 코드" onFocus={(event) => event.currentTarget.select()} />
       <div className="editor-actions">
-        <button type="button" className="button primary" onClick={() => void copy()}><Icon name="copy" size={15} />{copied ? '복사했어요' : '안내와 코드 복사'}</button>
+        <button type="button" className="button primary" onClick={() => void copy('code', issued.code)}><Icon name="copy" size={15} />{copyLabel('code', '코드 복사')}</button>
+        <button type="button" className="button secondary" onClick={() => void copy('api', agentInstructions(origin, issued.code))}>{copyLabel('api', 'API 안내와 함께 복사')}</button>
         <button type="button" className="text-button" onClick={() => setIssued(null)}>닫기</button>
       </div>
+      <p className="editor-note">「API 안내와 함께 복사」는 Claude Code처럼 요청을 직접 보내는 도구에 붙여 넣는 글이에요.</p>
     </fieldset>}
 
     <fieldset className="editor-panel">
@@ -75,6 +93,7 @@ export function AgentKeyPanel({ userId }: { userId: string }) {
         <span className="role-who">
           <strong>{key.name}<em>{key.hint}…</em></strong>
           <small>{key.mayPublish ? '발행까지' : '초안과 검토 요청까지'} · {day(key.expiresAt)}까지 · {used(key)}</small>
+          <small>{key.connections.length ? `연결된 앱: ${key.connections.map((connection) => connection.name).join(', ')}` : '연결된 앱 없음'}</small>
         </span>
         <button type="button" className="text-button" disabled={busy} onClick={() => void act({ action: 'key.revoke', keyId: key.id })}>
           <Icon name="close" size={14} />거두기</button>

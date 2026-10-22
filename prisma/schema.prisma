@@ -109,7 +109,45 @@ model AgentKey {
   expiresAt  DateTime
   lastUsedAt DateTime?
   createdAt  DateTime @default(now())
+  grants     AgentGrant[]
   @@index([userId])
+}
+
+/// A chat app that asked to connect: Claude, ChatGPT, Gemini or anything else that speaks MCP.
+/// Anyone may register one, so it proves nothing by itself; it only names where a connection
+/// sends its code back to, and a key holder decides whether to connect it.
+model AgentClient {
+  id           String @id @default(cuid()) @db.VarChar(191)
+  /// What the app presents as its client_id: one handed out at registration, or the URL of its metadata document.
+  clientId     String @unique @db.VarChar(500)
+  name         String @db.VarChar(200)
+  /// The exact addresses an authorization may be sent back to.
+  redirectUris Json
+  createdAt    DateTime @default(now())
+  grants       AgentGrant[]
+}
+
+/// One app connected with one key. It holds the short-lived authorization code while the app
+/// fetches its tokens, then the tokens themselves; refreshing replaces them in place. Revoking
+/// the key removes every connection made with it.
+model AgentGrant {
+  id               String @id @default(cuid()) @db.VarChar(191)
+  keyId            String @db.VarChar(191)
+  key              AgentKey @relation(fields: [keyId], references: [id], onDelete: Cascade)
+  clientId         String @db.VarChar(191)
+  client           AgentClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  resource         String @db.VarChar(500)
+  codeHash         String? @unique @db.VarChar(64)
+  codeChallenge    String? @db.VarChar(128)
+  redirectUri      String? @db.Text
+  codeExpiresAt    DateTime?
+  accessHash       String? @unique @db.VarChar(64)
+  accessExpiresAt  DateTime?
+  refreshHash      String? @unique @db.VarChar(64)
+  lastUsedAt       DateTime?
+  createdAt        DateTime @default(now())
+  @@index([keyId])
+  @@index([clientId])
 }
 model ContentAuthor {
   userId    String @id @db.VarChar(191)

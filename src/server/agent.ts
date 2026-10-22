@@ -6,6 +6,7 @@ import { blockSchemas } from '@/core/content';
 import { hashSessionToken } from './auth';
 import { AuthoringService, authoringActionSchema, authoringRole } from './authoring';
 import { AppError } from './errors';
+import { keyOfAccessToken } from './agent-oauth';
 import { writingGuide } from './writing-guide';
 import { blockForms, mayPublish, type AuthoringAction, type AuthoringResponse, type AuthoringWorkspace } from '@/shared/authoring';
 import {
@@ -19,9 +20,11 @@ const keyActionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('key.revoke'), keyId: z.string().min(1).max(191) }).strict(),
 ]);
 
-const viewOf = (key: AgentKey): AgentKeyView => ({
+type KeyRow = AgentKey & { grants?: { lastUsedAt: Date | null; client: { name: string } }[] };
+const viewOf = (key: KeyRow): AgentKeyView => ({
   id: key.id, name: key.name, hint: key.hint, mayPublish: key.mayPublish,
   expiresAt: key.expiresAt.toISOString(), lastUsedAt: key.lastUsedAt?.toISOString() ?? null, createdAt: key.createdAt.toISOString(),
+  connections: (key.grants ?? []).map((grant) => ({ name: grant.client.name, lastUsedAt: grant.lastUsedAt?.toISOString() ?? null })),
 });
 
 /**
@@ -42,7 +45,9 @@ export class AgentKeyService {
   async view(userId: string): Promise<AgentKeysView> {
     const role = await this.require(userId);
     await this.db.agentKey.deleteMany({ where: { userId, expiresAt: { lte: new Date() } } });
-    const keys = await this.db.agentKey.findMany({ where: { userId }, orderBy: [{ createdAt: 'desc' }, { id: 'asc' }] });
+    const keys = await this.db.agentKey.findMany({ where: { userId }, orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
+      // A connection counts once it has tokens; one that stopped at the sign-in page is not one.
+      include: { grants: { where: { accessHash: { not: null } }, orderBy: { createdAt: 'asc' }, select: { lastUsedAt: true, client: { select: { name: true } } } } } });
     return { keys: keys.map(viewOf), mayPublish: mayPublish(role) };
   }
 
@@ -72,14 +77,17 @@ const usageGranularityMs = 60_000;
 
 /**
  * The key a request carries, or a refusal. Only the bearer header is read: a code is not a cookie, so
- * a browser never sends one on its own and there is no other site's request to guard against.
+ * a browser never sends one on its own and there is no other site's request to guard against. The
+ * bearer is the code itself, from a tool that can send a header, or a token a chat app was given
+ * when it connected with the code.
  */
 export async function agentOf(db: PrismaClient, request: Request): Promise<AgentKey> {
-  const code = /^Bearer (\S+)$/.exec(request.headers.get('authorization') ?? '')?.[1];
+  const bearer = /^Bearer (\S+)$/i.exec(request.headers.get('authorization') ?? '')?.[1];
   const refused = new AppError(401, 'agent_unauthenticated', '코드가 없거나 맞지 않아요. 편집 화면의 「AI 연결」에서 코드를 확인해 주세요.');
-  if (!code || !agentCodePattern.test(code)) throw refused;
-  const key = await db.agentKey.findUnique({ where: { tokenHash: hashSessionToken(code) } });
+  if (!bearer) throw refused;
   const now = new Date();
+  const key = agentCodePattern.test(bearer) ? await db.agentKey.findUnique({ where: { tokenHash: hashSessionToken(bearer) } })
+    : await keyOfAccessToken(db, bearer);
   if (!key || key.expiresAt <= now) throw refused;
   if (!key.lastUsedAt || now.getTime() - key.lastUsedAt.getTime() > usageGranularityMs) {
     await db.agentKey.update({ where: { id: key.id }, data: { lastUsedAt: now } });

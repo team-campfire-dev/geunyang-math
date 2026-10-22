@@ -17,6 +17,8 @@ export type AgentKeyView = {
   hint: string;
   mayPublish: boolean;
   expiresAt: string; lastUsedAt: string | null; createdAt: string;
+  /** The chat apps connected with this code, by the name each registered under. */
+  connections: { name: string; lastUsedAt: string | null }[];
 };
 
 export type AgentKeyAction =
@@ -32,9 +34,12 @@ export type AgentKeysView = {
 /** A key just made, with the code that will not be shown again. */
 export type AgentKeyResponse = { view: AgentKeysView; issued?: { key: AgentKeyView; code: string } };
 
+/** The address a chat app is given to connect: Claude, ChatGPT and Gemini all take an MCP server URL. */
+export const connectorUrl = (origin: string) => `${origin}/api/mcp`;
+
 /**
- * What to paste into a conversation with an AI along with the code: where to call and how to begin.
- * The AI reads the rest from the guide the route returns, so this stays short and never goes stale.
+ * For a tool that can send a header itself (Claude Code, Codex, a script): where to call and how to
+ * begin. The AI reads the rest from the guide the route returns, so this stays short and never goes stale.
  */
 export function agentInstructions(origin: string, code: string): string {
   return [
