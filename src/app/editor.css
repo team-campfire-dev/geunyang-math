@@ -520,6 +520,15 @@
 .generated-claim code { font-family: var(--mono); overflow-wrap: anywhere; }
 .generated-problem > .button, .generated-problem > .text-button { align-self: flex-start; }
 
+/* AI 연결: codes an AI writes lessons with, and the address a chat app connects to. The code is shown
+   once, in a box that selects itself whole so it is copied entire even where the clipboard is refused. */
+.agent-issued { border-color: var(--accent); }
+.agent-keys .role-who em { font-family: var(--mono); }
+.agent-connector, .agent-code { font-family: var(--mono); font-size: 13px; padding: 9px 12px; border: 1px solid var(--editor-field-line);
+  border-radius: 8px; background: var(--white); color: var(--editor-label); overflow-wrap: anywhere; }
+.agent-code { width: 100%; margin: 6px 0 10px; }
+.agent-steps { margin: 12px 0 4px; padding-left: 20px; display: grid; gap: 6px; font-size: 13px; line-height: 1.7; color: var(--editor-label); }
+
 /* 학습자: the people this account teaches. A row per learner, the courses set for them as removable
    pills, and the way to set another underneath — the same shape as the role list above it. */
 .invite-code { font-family: var(--mono); font-size: 22px; font-weight: 600; letter-spacing: .12em; color: var(--editor-label);

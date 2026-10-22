@@ -139,7 +139,7 @@ const definitionLink = z.object({
   occurrence: z.number().int().min(1).max(100).optional(),
 }).strict().refine((definition) => (definition.scopeKind ?? 'global') === 'global' ? !definition.scopeKey : !!definition.scopeKey,
   { message: 'A scoped definition must name the scope it belongs to, and a global one must not' });
-const blockSchemas = {
+export const blockSchemas = {
   'core.rich_text@1': z.object({ text: richText }).strict(),
   'core.rich_text@3': z.object({ text: richText, definitions: z.array(definitionLink).max(20) }).strict()
     .superRefine((payload, ctx) => {

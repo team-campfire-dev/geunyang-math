@@ -2,6 +2,7 @@ import { apiRequest } from '@/features/api-client';
 import type { AuthoringAction, AuthoringResponse, AuthoringWorkspace, DraftDetail } from '@/shared/authoring';
 import type { TeachingAction, TeachingResponse, TeachingView } from '@/shared/teaching';
 import type { AiUsageView } from '@/shared/ai-usage';
+import type { AgentKeyAction, AgentKeyResponse, AgentKeysView } from '@/shared/agent';
 
 export const authoringApi = {
   workspace: () => apiRequest<{ workspace: AuthoringWorkspace }>('authoring'),
@@ -22,4 +23,12 @@ export const teachingApi = {
 /** What models cost, for the operator. */
 export const aiUsageApi = {
   view: () => apiRequest<{ usage: AiUsageView }>('ai-usage'),
+};
+
+/** The codes this account gives an AI to write lessons with. */
+export const agentKeysApi = {
+  view: () => apiRequest<{ view: AgentKeysView }>('agent-keys'),
+  act: (action: AgentKeyAction, expectedUserId: string) => apiRequest<AgentKeyResponse>('agent-keys', {
+    method: 'POST', body: JSON.stringify(action), headers: { 'X-Agent-Keys-User-Id': expectedUserId },
+  }),
 };
