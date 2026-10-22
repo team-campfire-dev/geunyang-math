@@ -37,6 +37,8 @@ export const agentKeysApi = {
 /** What readers said about lessons, for the operator. */
 export const feedbackApi = {
   inbox: () => apiRequest<{ inbox: FeedbackInbox }>('feedback'),
+  /** Everybody's feedback on one lesson, for the draft open beside it. */
+  editing: (lessonKey: string) => apiRequest<{ feedback: LessonFeedbackView }>(`feedback?lessonKey=${encodeURIComponent(lessonKey)}&for=editing`),
   act: (action: FeedbackAction, expectedUserId: string) => apiRequest<{ feedback: LessonFeedbackView }>('feedback', {
     method: 'POST', body: JSON.stringify(action), headers: { 'X-Feedback-User-Id': expectedUserId },
   }),

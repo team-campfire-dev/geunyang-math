@@ -45,11 +45,20 @@ export class FeedbackService {
     return (await authoringRole(this.db, userId)) === 'admin';
   }
 
-  private item(row: ItemRow, viewerId: string | null): FeedbackItem {
+  /**
+   * Whether the viewer prepares lessons here — a teacher or an operator. They read what was said about
+   * a lesson where they fix it and mark it dealt with; only an operator also sees who said it.
+   */
+  async editor(userId: string): Promise<boolean> {
+    if (openAuthoring()) return false;
+    return !!(await authoringRole(this.db, userId));
+  }
+
+  private item(row: ItemRow, viewerId: string | null, named = true): FeedbackItem {
     return { id: row.id, lessonKey: row.lessonKey, lessonVersionId: row.lessonVersionId, sectionId: row.sectionId,
       blockId: row.blockId, problemVersionId: row.problemVersionId, quote: row.quote, reason: row.reason as FeedbackReason | null, body: row.body,
       status: row.status as FeedbackStatus, createdAt: row.createdAt.toISOString(), resolvedAt: row.resolvedAt?.toISOString() ?? null,
-      author: { name: row.author.displayName, mine: row.authorUserId === viewerId } };
+      author: { name: named || row.authorUserId === viewerId ? row.author.displayName : '학습자', mine: row.authorUserId === viewerId } };
   }
 
   /** One lesson as its screen draws it. Signed out sees nothing and may leave nothing. */
@@ -62,6 +71,19 @@ export class FeedbackService {
       where: { lessonKey, ...(reviewer ? {} : { authorUserId: viewerId }) },
       orderBy: [{ createdAt: 'asc' }, { id: 'asc' }], select: itemRow });
     return { accepting: lesson.feedbackOpen, reviewer, items: rows.map((row) => this.item(row, viewerId)) };
+  }
+
+  /**
+   * One lesson as the editor shows it beside the draft: everybody's feedback, for somebody who fixes
+   * lessons. A teacher who is not an operator reads what was said but not who said it.
+   */
+  async editing(lessonKey: string, viewerId: string): Promise<LessonFeedbackView> {
+    if (!await this.editor(viewerId)) throw new AppError(403, 'not_an_editor', '수업 의견은 편집 권한이 있는 계정으로 볼 수 있어요.');
+    const [lesson, named] = await Promise.all([
+      this.db.lesson.findUnique({ where: { key: lessonKey }, select: { feedbackOpen: true } }), this.reviewer(viewerId)]);
+    if (!lesson) return { accepting: true, reviewer: true, items: [] };
+    const rows = await this.db.lessonFeedback.findMany({ where: { lessonKey }, orderBy: [{ createdAt: 'asc' }, { id: 'asc' }], select: itemRow });
+    return { accepting: lesson.feedbackOpen, reviewer: true, items: rows.map((row) => this.item(row, viewerId, named)) };
   }
 
   /**
@@ -158,15 +180,19 @@ export class FeedbackService {
       return { feedback: await this.lesson(action.lessonKey, userId) };
     }
     const row = await this.db.lessonFeedback.findUnique({ where: { id: action.feedbackId }, select: { lessonKey: true, authorUserId: true } });
+    const editor = reviewer || await this.editor(userId);
     // Somebody else's feedback is not there for a reader who only sees their own.
-    if (!row || (!reviewer && row.authorUserId !== userId)) throw missing();
+    if (!row || (!editor && row.authorUserId !== userId)) throw missing();
     switch (action.action) {
       case 'feedback.remove':
+        // A teacher settles what was said, but taking somebody's words away is the operator's call.
+        if (!reviewer && row.authorUserId !== userId) throw new AppError(403, 'not_a_reviewer', '다른 사람의 의견은 운영자가 지워요.');
         await this.db.lessonFeedback.delete({ where: { id: action.feedbackId } });
         break;
       case 'feedback.resolve':
       case 'feedback.reopen': {
-        if (!reviewer) throw new AppError(403, 'not_a_reviewer', '의견을 처리하는 것은 운영자가 해요.');
+        // Whoever fixes the lesson says the note is dealt with: an operator, or a teacher at the editor.
+        if (!editor) throw new AppError(403, 'not_a_reviewer', '의견을 처리하는 것은 수업을 고치는 사람이 해요.');
         const resolving = action.action === 'feedback.resolve';
         await this.db.lessonFeedback.update({ where: { id: action.feedbackId },
           data: resolving ? { status: 'resolved', resolvedAt: new Date(), resolvedByUserId: userId } : { status: 'open', resolvedAt: null, resolvedByUserId: null } });

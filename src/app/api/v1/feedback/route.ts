@@ -9,12 +9,16 @@ export const dynamic = 'force-dynamic';
 
 /**
  * Feedback on lessons. `?lessonKey=` is one lesson as its screen draws it, and asks nobody to sign in —
- * signed out simply has nothing there. Without it, it is the operator's list of everything said.
+ * signed out simply has nothing there; with `&for=editing` it is everybody's, for the editor. Without
+ * a lesson, it is the operator's list of everything said.
  */
 export function GET(request: Request) {
   return handle(async () => {
     const service = new FeedbackService(getDatabase());
-    const lessonKey = new URL(request.url).searchParams.get('lessonKey');
+    const params = new URL(request.url).searchParams;
+    const lessonKey = params.get('lessonKey');
+    // The editor reads everybody's feedback on the lesson it has open; the lesson screen, the reader's own.
+    if (lessonKey && params.get('for') === 'editing') return json({ feedback: await service.editing(lessonKey, (await requireUser(request)).id) });
     if (lessonKey) return json({ feedback: await service.lesson(lessonKey, (await sessionUser(request))?.id ?? null) });
     return json({ inbox: await service.inbox((await requireUser(request)).id) });
   });

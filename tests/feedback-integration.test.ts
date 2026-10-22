@@ -95,7 +95,6 @@ describe.skipIf(!url)('lesson feedback on MySQL', () => {
     const learner = await person('learner'), other = await person('other'), operator = await person('operator', 'admin'), teacher = await person('teacher', 'author');
     const [item] = (await feedback.act(learner.id, { action: 'feedback.add', reason: null, ...at(), body: '헷갈려요' })).feedback.items;
     await expect(feedback.act(learner.id, { action: 'feedback.resolve', feedbackId: item.id })).rejects.toMatchObject({ status: 403 });
-    await expect(feedback.act(teacher.id, { action: 'feedback.resolve', feedbackId: item.id })).rejects.toMatchObject({ status: 404 });
     await expect(feedback.act(other.id, { action: 'feedback.remove', feedbackId: item.id })).rejects.toMatchObject({ status: 404 });
     await feedback.act(operator.id, { action: 'feedback.resolve', feedbackId: item.id });
     const settled = (await feedback.lesson(place.lessonKey, learner.id)).items.find((entry) => entry.id === item.id)!;
@@ -105,6 +104,20 @@ describe.skipIf(!url)('lesson feedback on MySQL', () => {
     expect((await db.lessonFeedback.findUniqueOrThrow({ where: { id: item.id } })).resolvedByUserId).toBeNull();
     await feedback.act(learner.id, { action: 'feedback.remove', feedbackId: item.id });
     expect(await db.lessonFeedback.count({ where: { id: item.id } })).toBe(0);
+  });
+
+  it('shows a teacher at the editor everybody\'s feedback without names, and lets them settle it', async () => {
+    const learner = await person('learner'), teacher = await person('teacher', 'author'), operator = await person('operator', 'admin');
+    const [item] = (await feedback.act(learner.id, { action: 'feedback.add', reason: 'hard', ...at(), body: '' })).feedback.items;
+    await expect(feedback.editing(place.lessonKey, learner.id)).rejects.toMatchObject({ status: 403 });
+    const seen = (await feedback.editing(place.lessonKey, teacher.id)).items.find((entry) => entry.id === item.id)!;
+    expect(seen.author).toEqual({ name: '학습자', mine: false });
+    expect((await feedback.editing(place.lessonKey, operator.id)).items.find((entry) => entry.id === item.id)!.author.name).toBe(learner.displayName);
+    // The teacher fixes the lesson and says so; taking the learner's words away is still the operator's.
+    await feedback.act(teacher.id, { action: 'feedback.resolve', feedbackId: item.id });
+    expect((await db.lessonFeedback.findUniqueOrThrow({ where: { id: item.id } })).status).toBe('resolved');
+    await expect(feedback.act(teacher.id, { action: 'feedback.remove', feedbackId: item.id })).rejects.toMatchObject({ status: 403 });
+    await feedback.act(operator.id, { action: 'feedback.remove', feedbackId: item.id });
   });
 
   it('gives the operator a list that says where each note points and whether it still matches', async () => {

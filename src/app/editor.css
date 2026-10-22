@@ -634,3 +634,40 @@
 .feedback-tally button.active{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 .feedback-tally button.active b{color:var(--paper)}
 .feedback-entry .feedback-reason-tag{display:inline-flex;margin-right:7px;padding:1px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent-deep);font-size:12px;vertical-align:1px}
+
+/* 학습자 의견 — the right column as a document's margin. */
+.inspector-tabs { display: flex; gap: 4px; padding: 3px; margin-bottom: 16px; border-radius: 9px; background: var(--editor-active-bg); }
+.inspector-tabs button { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 7px 10px; border-radius: 7px; font-size: 13px; color: var(--ink-2); }
+.inspector-tabs button.active { background: var(--white); color: var(--ink); font-weight: 600; box-shadow: 0 1px 3px #2b262214; }
+.inspector-tabs b { min-width: 18px; padding: 0 5px; border-radius: 9px; background: var(--accent); color: var(--white); font-size: 11px; line-height: 18px; }
+/* The margin runs the length of the step beside it, so it scrolls with the step instead of staying put. */
+.editor-inspector.showing-feedback { position: static; max-height: none; overflow: visible; }
+.inspector-feedback-hint { display: flex; align-items: center; gap: 7px; width: 100%; margin: 0 0 14px; padding: 9px 12px; border-radius: 8px; background: var(--accent-soft); color: var(--accent-deep); font-size: 13px; text-align: left; }
+.feedback-margin-head { display: flex; justify-content: flex-end; margin-bottom: 8px; font-size: 12px; color: var(--muted); }
+.feedback-margin-head label { display: inline-flex; align-items: center; gap: 6px; }
+.margin-cards { display: grid; gap: 10px; }
+.margin-cards.aligned { display: block; position: relative; }
+.margin-cards.aligned .margin-card { position: absolute; left: 0; right: 0; transition: top .18s ease, transform .18s ease; }
+@media (prefers-reduced-motion: reduce) { .margin-cards.aligned .margin-card { transition: none; } }
+.margin-card { display: grid; gap: 6px; padding: 11px 13px; border: 1px solid var(--line); border-radius: 9px; background: var(--white); cursor: pointer; font-size: 13px; }
+.margin-card:hover { border-color: var(--line-strong); }
+.margin-card.active { border-color: var(--accent); box-shadow: 0 8px 22px #2b26221c; transform: translateX(-8px); z-index: 2; }
+.margin-card.resolved { opacity: .65; }
+.margin-card header { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--muted); }
+.margin-card header strong { color: var(--ink); font-weight: 600; }
+.margin-card blockquote { margin: 0; padding: 1px 0 1px 9px; border-left: 2px solid var(--accent); color: var(--ink-2); font-size: 12px; line-height: 1.7; overflow-wrap: anywhere; }
+.margin-card blockquote .rich-text { font-size: inherit; line-height: inherit; color: inherit; }
+.margin-card p { margin: 0; line-height: 1.7; color: var(--ink); white-space: pre-wrap; overflow-wrap: anywhere; word-break: keep-all; }
+.margin-card .feedback-reason-tag { display: inline-flex; margin-right: 6px; padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-deep); font-size: 12px; }
+.margin-card small { font-size: 11px; color: var(--muted); }
+.margin-card footer { display: flex; justify-content: flex-end; gap: 14px; }
+.margin-card footer .text-button { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; }
+.margin-loose, .margin-elsewhere { display: grid; gap: 8px; margin-top: 22px; padding-top: 14px; border-top: 1px dashed var(--line); }
+.margin-loose h4, .margin-elsewhere h4 { margin: 0; font-size: 13px; }
+.margin-elsewhere .text-button { justify-content: flex-start; gap: 8px; }
+.margin-elsewhere b { color: var(--accent-deep); }
+/* A block learners spoke about wears a mark in the gutter, beside the frame a chosen block wears. */
+.sheet-block.noted::before { content: ""; position: absolute; left: -16px; top: 2px; bottom: 2px; width: 3px; border-radius: 2px; background: #e3a68c; }
+.sheet-problem.noted::before { left: -9px; }
+::highlight(editor-feedback) { background-color: #f6e4d8; text-decoration: underline; text-decoration-color: #d2674a; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+::highlight(editor-feedback-active) { background-color: #efcdb8; }

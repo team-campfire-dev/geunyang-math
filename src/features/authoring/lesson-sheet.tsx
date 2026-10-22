@@ -93,7 +93,7 @@ export type Picked = { kind: 'block'; index: number } | { kind: 'problem'; id: s
  * puts a frame around each so it can be picked. A paragraph is the exception — chosen, it becomes
  * the text it is made of, because a paragraph is written by typing into it.
  */
-export function LessonSheet({ meta, section, index, problems, definitions, glossary, courseTitle, selected, published, issues, trying, onMeta, onSection, onBlocks, onProblem, onSelect, add }: {
+export function LessonSheet({ meta, section, index, problems, definitions, glossary, courseTitle, selected, published, issues, trying, noted, onMeta, onSection, onBlocks, onProblem, onSelect, add }: {
   meta: DraftMeta; section: LessonSection; index: number; problems: DraftProblem[]; definitions: DefinitionChoice[]; glossary: GlossaryContext; courseTitle: string;
   selected: Picked | null; published: boolean;
   /** What publishing refused, so the lesson can show where rather than list it somewhere else. */
@@ -104,6 +104,8 @@ export function LessonSheet({ meta, section, index, problems, definitions, gloss
    * exactly the screen a learner meets, with no handles on it.
    */
   trying?: { actions: (problemVersionId: string) => ProblemActions; attempts: Record<string, AttemptView>; busy: boolean };
+  /** Blocks (by id) and questions (`problem:` and id) learners left feedback on that is not dealt with yet. */
+  noted?: Set<string>;
   onMeta: (next: DraftMeta) => void; onSection: (next: LessonSection) => void;
   onBlocks: (blocks: ContentBlock[]) => void; onProblem: (next: DraftProblem) => void;
   onSelect: (next: Picked | null) => void; add: ReactNode;
@@ -159,12 +161,12 @@ export function LessonSheet({ meta, section, index, problems, definitions, gloss
           const writeProblem = (position: number, next: ContentBlock) => held && onProblem({ ...held,
             promptContent: held.promptContent.map((item, at) => (at === position ? next : item)) });
           const first = held?.promptContent.findIndex((item) => item.kind === 'core.rich_text') ?? -1;
-          return <div key={problem.problemVersionId} className={`sheet-block sheet-problem${chosen ? ' chosen' : ''}${trouble ? ' amiss' : ''}`}
+          return <div key={problem.problemVersionId} className={`sheet-block sheet-problem${chosen ? ' chosen' : ''}${trouble ? ' amiss' : ''}${noted?.has(`problem:${problem.problemVersionId}`) ? ' noted' : ''}`}
             onClick={(event) => { event.stopPropagation(); onSelect({ kind: 'problem', id: problem.problemVersionId }); }}>
             <button type="button" className="sheet-block-pick" aria-pressed={chosen}
               onClick={(event) => { event.stopPropagation(); onSelect(chosen ? null : { kind: 'problem', id: problem.problemVersionId }); }}>
               {numberOf(problem.problemVersionId)}번 문항</button>
-            <div className="problem-card">
+            <div className="problem-card" data-feedback-problem={problem.problemVersionId}>
               <div className="problem-kicker"><Icon name="pencil" size={14} />문항 미리보기{expert && <span>{problem.problemVersionId}</span>}</div>
               <ContentBlocks glossary={{ ...glossary, entries: leafGlossary(glossary.entries, problem.conceptKeys) }} blocks={problem.promptContent}
                 wrap={(block, position, drawn, className) => (chosen && !published && held && block.kind === 'core.rich_text'
@@ -182,12 +184,13 @@ export function LessonSheet({ meta, section, index, problems, definitions, gloss
           const writing = chosen && !published && block.kind === 'core.rich_text';
           const trouble = issues.some((issue) => issue.blockId === block.blockId);
           const label = blockFormOf(block)?.label ?? `${block.kind}@${block.typeVersion}`;
-          return <div key={block.blockId} className={`sheet-block${chosen ? ' chosen' : ''}${writing ? ' writing' : ''}${trouble ? ' amiss' : ''}`}
+          return <div key={block.blockId} className={`sheet-block${chosen ? ' chosen' : ''}${writing ? ' writing' : ''}${trouble ? ' amiss' : ''}${noted?.has(block.blockId) ? ' noted' : ''}`}
             onClick={(event) => { event.stopPropagation(); onSelect({ kind: 'block', index: position }); }}>
             {/* The frame's own handle, so a block can be chosen and named without a pointer. */}
             <button type="button" className="sheet-block-pick" aria-pressed={chosen}
               onClick={(event) => { event.stopPropagation(); onSelect(chosen ? null : { kind: 'block', index: position }); }}>{label}</button>
-            <div className={className}>
+            {/* Where learners' feedback finds the block, inside the frame so the frame's own label is not read as the block's words. */}
+            <div className={className} data-feedback-block={block.blockId}>
               {writing
                 ? <Paragraph block={block} definitions={definitions} focus onChange={(next) => write(position, next)} />
                 : block.kind === 'core.scene' && Array.isArray(block.payload.items) && !block.payload.items.length

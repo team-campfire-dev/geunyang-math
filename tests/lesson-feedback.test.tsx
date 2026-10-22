@@ -4,6 +4,7 @@ import katex from 'katex';
 import { fireEvent, render, screen, waitFor } from './render';
 import { FeedbackLayer, FeedbackSpot } from '@/features/learning/lesson-feedback';
 import { quoteOf, rangeOf } from '@/features/learning/feedback-quote';
+import { placeCards } from '@/features/authoring/feedback-margin';
 import type { FeedbackItem, LessonFeedbackView } from '@/shared/feedback';
 
 const place = { lessonKey: 'fractions', lessonVersionId: 'fractions-v2', sectionId: 'explain' };
@@ -98,5 +99,15 @@ describe('quoting dragged words', () => {
     expect(found.toString()).toContain('로   나눠요');
     expect(rangeOf('없는 말', block)).toBeNull();
     block.remove();
+  });
+});
+
+describe('cards in the margin', () => {
+  const cards = [{ id: 'a', top: 0, height: 100 }, { id: 'b', top: 40, height: 80 }, { id: 'c', top: 400, height: 60 }];
+  it('stands each card level with its place, pushed below the one above it', () => {
+    expect(placeCards(cards, null)).toEqual({ a: 0, b: 110, c: 400 });
+  });
+  it('keeps the chosen card at its place and makes room above it', () => {
+    expect(placeCards(cards, 'b')).toEqual({ a: -70, b: 40, c: 400 });
   });
 });
