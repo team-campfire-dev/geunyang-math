@@ -1,4 +1,5 @@
 import type { ActionResponse, ConceptHelp, DefinitionRequest, GlossaryEntry, LessonDocument, LearningAction, LearningState, PublicCatalog } from '@/shared/api';
+import type { FeedbackAction, LessonFeedbackView } from '@/shared/feedback';
 import { apiOrigin, apiRequest as request } from '../api-client';
 import { canUseWebAuthentication } from './auth-client';
 
@@ -22,5 +23,13 @@ export const learningApi = {
   deleteAccount: () => request<unknown>('account', { method: 'DELETE' }),
   action: (action: LearningAction, expectedUserId: string) => request<ActionResponse>('learning', {
     method: 'POST', body: JSON.stringify(action), headers: { 'X-Learning-User-Id': expectedUserId },
+  }),
+};
+
+/** Feedback on a lesson: what this reader may see of it, and saying something at a place in it. */
+export const feedbackApi = {
+  lesson: (lessonKey: string) => request<{ feedback: LessonFeedbackView }>(`feedback?lessonKey=${encodeURIComponent(lessonKey)}`),
+  act: (action: FeedbackAction, expectedUserId: string) => request<{ feedback: LessonFeedbackView }>('feedback', {
+    method: 'POST', body: JSON.stringify(action), headers: { 'X-Feedback-User-Id': expectedUserId },
   }),
 };

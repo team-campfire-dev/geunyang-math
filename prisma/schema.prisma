@@ -42,6 +42,8 @@ model User {
   coursesAssigned AssignedCourse[] @relation("AssignedBy")
   modelUsage   ModelUsage[]
   agentKeys    AgentKey[]
+  feedback     LessonFeedback[] @relation("FeedbackAuthor")
+  feedbackResolved LessonFeedback[] @relation("FeedbackResolver")
 }
 
 /// Someone who teaches a learner. A person today — a parent, a teacher — and a model later, for the
@@ -343,9 +345,45 @@ model Lesson {
   courseId  String   @db.VarChar(191)
   course    Course   @relation(fields: [courseId], references: [id])
   order     Int
+  /// Whether a reader may leave feedback on this lesson while doing it. A lesson is not a version, so
+  /// turning it off or on reaches everybody at once and needs nothing republished.
+  feedbackOpen Boolean @default(true)
   createdAt DateTime @default(now())
   versions  LessonVersion[]
+  feedback  LessonFeedback[]
   @@index([courseId, order])
+}
+
+/// Something a reader said about one place in a lesson: a block in a step, a question in a block, or a
+/// few words they dragged over. It names the version they were reading, because a later version may
+/// have moved or reworded what they meant; the words they picked are kept as they read them.
+model LessonFeedback {
+  id               String    @id @default(cuid()) @db.VarChar(191)
+  authorUserId     String    @db.VarChar(191)
+  author           User      @relation("FeedbackAuthor", fields: [authorUserId], references: [id], onDelete: Cascade)
+  lessonKey        String    @db.VarChar(100)
+  lesson           Lesson    @relation(fields: [lessonKey], references: [key], onDelete: Cascade)
+  lessonVersionId  String    @db.VarChar(191)
+  sectionId        String    @db.VarChar(191)
+  /// Absent for the step as a whole.
+  blockId          String?   @db.VarChar(191)
+  /// A question inside a problem-set block, when the feedback is about that question.
+  problemVersionId String?   @db.VarChar(191)
+  /// The words the reader dragged over, as the page showed them.
+  quote            String?   @db.Text
+  /// One of the quick answers (`confusing`, `hard`, `wrong`, `broken`, `good`), when one was pressed.
+  reason           String?   @db.VarChar(20)
+  /// What they wrote. Empty when a quick answer said it all.
+  body             String    @db.Text
+  /// `open` until somebody who looks after the lesson has dealt with it, then `resolved`.
+  status           String    @default("open") @db.VarChar(20)
+  resolvedByUserId String?   @db.VarChar(191)
+  resolvedBy       User?     @relation("FeedbackResolver", fields: [resolvedByUserId], references: [id], onDelete: SetNull)
+  resolvedAt       DateTime?
+  createdAt        DateTime  @default(now())
+  @@index([lessonKey, createdAt])
+  @@index([status, createdAt])
+  @@index([authorUserId, createdAt])
 }
 
 /// The identity of a diagnostic: which course keeps it. Versions hang off it as they do a lesson.

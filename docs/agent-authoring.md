@@ -29,10 +29,10 @@ MCP 도구(발행하지 않는 코드에 25개):
 
 | 묶음 | 도구 |
 |---|---|
-| 읽기 | `get_guide`(권한·규칙·블록 형식·작성 지침 전문) `list_lessons` `list_concepts` `read_draft` `read_published_lesson` `list_definitions` `wrong_answers` |
+| 읽기 | `get_guide`(권한·규칙·블록 형식·작성 지침 전문) `list_lessons` `list_concepts` `read_draft` `read_published_lesson` `list_definitions` `wrong_answers` `lesson_feedback`(학습자가 남긴 [수업 의견](lesson-feedback.md) — 운영자 코드만, 남긴 사람 이름은 빼고) |
 | 열기·만들기 | `open_lesson_draft`(열린 초안이 있으면 그것, 없으면 새로) `create_lesson` |
 | 고치기 | `update_lesson_info` `add_section` `update_section` `move_section` `remove_section` `add_block` `update_block` `move_block` `remove_block` `add_problem` `update_problem` `move_problem` `remove_problem` |
-| 확인·마무리 | `validate_draft` `try_answer` `request_review` |
+| 확인·마무리 | `validate_draft` `try_answer` `request_review` `resolve_feedback`(반영한 의견을 처리함으로) |
 | 발행을 맡긴 코드만 | `publish_draft` |
 
 고치는 도구는 **한 곳씩** 바꾼다. 서버가 그때의 초안을 읽어 그 자리만 바꾸고, 아래의 「읽은 뒤 바뀌었으면 거절」 검사를 거쳐 저장한 뒤 개요(모든 단계·블록·문항의 이름과 한 줄 요약, 남은 issues)를 돌려준다. 채팅 모델이 긴 수업 JSON을 통째로 다시 써 보내다 깨뜨리는 일을 막으려는 설계다.

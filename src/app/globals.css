@@ -926,3 +926,43 @@ html[data-answer-dock=open] .mobile-nav{visibility:hidden}
 .invite-form input{letter-spacing:.08em;text-transform:uppercase}
 .invite-form .button{flex-shrink:0;height:44px}
 @media(max-width:480px){.teacher-list li{flex-wrap:wrap}.teacher-leave{max-width:100%;justify-content:flex-start}.teacher-leave small{text-align:left}}
+
+/* Feedback on a lesson: a mark on the edge of what can be pointed at, and a note opened under it. */
+.feedback-layer{position:relative}
+.feedback-target{position:relative}
+.feedback-mark{position:absolute;top:-10px;right:-10px;z-index:2;display:inline-flex;align-items:center;justify-content:center;gap:3px;min-width:26px;height:26px;padding:0 6px;border-radius:13px;background:var(--white);border:1px solid var(--line-strong);color:var(--muted);font-size:11px;letter-spacing:0;opacity:.5;transition:opacity .15s,color .15s,border-color .15s}
+.feedback-target:hover>.feedback-mark,.feedback-mark:focus-visible,.feedback-mark.noted,.feedback-mark.open{opacity:1}
+.feedback-mark:hover,.feedback-mark.open{color:var(--accent-deep);border-color:var(--accent)}
+.feedback-mark.noted{color:var(--accent-deep);border-color:#e6c9ba;background:var(--accent-soft)}
+@media (hover:none){.feedback-mark{opacity:.8}}
+.feedback-pick{position:absolute;z-index:5;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:var(--ink);color:var(--paper);font-size:12px;white-space:nowrap;box-shadow:0 6px 16px #2b26222b}
+.feedback-pick:hover{background:#413a32}
+.feedback-thread{display:grid;gap:12px;padding:14px 15px 15px;background:var(--white);border:1px solid var(--line-strong);border-radius:10px;white-space:normal}
+.feedback-popover{position:absolute;z-index:6;max-height:min(460px,70vh);overflow:auto;box-shadow:0 14px 34px #2b262224,0 2px 6px #2b262212;animation:feedback-in .14s ease-out}
+.feedback-popover-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:-4px -6px -4px 0;font-size:13px;color:var(--ink)}
+@keyframes feedback-in{from{opacity:0;transform:translateY(-4px)}}
+@media (prefers-reduced-motion:reduce){.feedback-popover{animation:none}}
+@media (max-width:740px){.feedback-popover{position:fixed;top:auto!important;left:12px!important;right:12px;width:auto!important;bottom:calc(12px + env(safe-area-inset-bottom));max-height:70dvh}}
+.feedback-thread blockquote{margin:0 0 6px;padding:1px 0 1px 10px;border-left:2px solid var(--line-strong);color:var(--muted);font-size:12px;line-height:1.7;overflow-wrap:anywhere}
+.feedback-thread blockquote.draft{border-left-color:var(--accent)}
+.feedback-note p{font-size:13px;line-height:1.8;color:var(--ink-2);white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere}
+.feedback-note footer{display:flex;flex-wrap:wrap;align-items:center;gap:2px 12px;margin-top:4px;font-size:12px;color:var(--muted)}
+.feedback-note footer>span{margin-right:auto}
+.feedback-note.resolved>p{color:var(--muted)}
+.feedback-note+.feedback-note,.feedback-note+form{border-top:1px dashed var(--line);padding-top:12px}
+.feedback-thread textarea{display:block;width:100%;min-height:76px;resize:vertical;border:1px solid var(--line-strong);border-radius:6px;background:#fffdf8;padding:10px 12px;font:inherit;font-size:13px;line-height:1.7;color:var(--ink)}
+.feedback-actions{display:flex;align-items:center;gap:14px;margin-top:9px}
+.feedback-actions>span{margin-right:auto}
+.feedback-actions .button{min-height:36px;padding:8px 14px}
+.feedback-sent{margin-top:14px;font-size:12px;color:var(--accent-deep)}
+.feedback-sent:empty{display:none}
+::highlight(lesson-feedback){background-color:#f3dccd}
+::highlight(lesson-feedback-draft){background-color:#ebc9b4}
+.feedback-thread blockquote .rich-text{font-size:inherit;line-height:inherit;color:inherit}
+.feedback-reasons{display:flex;flex-wrap:wrap;gap:7px}
+.feedback-reason{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:6px 11px;border:1px solid var(--line-strong);border-radius:999px;background:#fffdf8;color:var(--ink-2);font-size:12px;white-space:nowrap;transition:background .12s,border-color .12s,color .12s}
+.feedback-reason:not(:disabled):hover{border-color:var(--accent);color:var(--accent-deep);background:var(--accent-soft)}
+.feedback-compose{display:grid;gap:10px}
+.feedback-compose form{display:grid}
+.feedback-write{justify-self:start}
+.feedback-reason-tag{display:inline-flex;align-items:center;gap:4px;margin-right:7px;padding:1px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent-deep);font-size:12px;vertical-align:1px;white-space:nowrap}

@@ -592,9 +592,9 @@ export function unsupportedRequiredBlocks(blocks: ContentBlock[], problems: Publ
 export function ContentBlocks({ blocks, problems = [], renderProblem = () => null, glossary = noGlossary, wrap }: {
   blocks: ContentBlock[]; problems?: PublicProblem[]; renderProblem?: BlockContext['renderProblem']; glossary?: GlossaryContext;
   /**
-   * Puts something of the caller's own around each block. A lesson needs nothing around one, so this
-   * is normally absent; the editor draws the same lesson but has to make every block pickable, and
-   * without this it would need a second renderer that could drift from the one that ships.
+   * Puts something of the caller's own around each block. The editor makes every block pickable, and
+   * a lesson gives each one somewhere to leave feedback; without this either would need a second
+   * renderer that could drift from the one that ships.
    */
   wrap?: (block: ContentBlock, index: number, drawn: ReactNode, className: string) => ReactNode;
 }) {
