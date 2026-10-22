@@ -138,7 +138,11 @@ jobs:
           fi
           printf '%s\n' "$MIGRATION_ENV" > "$RUNNER_TEMP/migrate.env"
           git archive --format=tar -o "$RUNNER_TEMP/source.tar" "$GITHUB_SHA"
-          ssh_options=(-i "$RUNNER_TEMP/deploy-key" -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/known-hosts" -o ConnectTimeout=15)
+          # The remote build prints nothing for minutes (its output is suppressed), and an idle
+          # connection was cut mid-build on 2026-10-22, leaving the remote deploy running unwatched.
+          # Keepalives keep the line in use for as long as the remote side is working.
+          ssh_options=(-i "$RUNNER_TEMP/deploy-key" -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/known-hosts" -o ConnectTimeout=15
+            -o ServerAliveInterval=30 -o ServerAliveCountMax=10)
           destination="$DEPLOY_USER@$DEPLOY_HOST"
           ssh "${ssh_options[@]}" "$destination" bash -s -- "$GITHUB_SHA" <<'REMOTE'
           set -euo pipefail
