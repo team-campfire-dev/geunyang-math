@@ -3,6 +3,7 @@ import type { AuthoringAction, AuthoringResponse, AuthoringWorkspace, DraftDetai
 import type { TeachingAction, TeachingResponse, TeachingView } from '@/shared/teaching';
 import type { AiUsageView } from '@/shared/ai-usage';
 import type { AgentKeyAction, AgentKeyResponse, AgentKeysView } from '@/shared/agent';
+import type { FeedbackAction, FeedbackInbox, LessonFeedbackView } from '@/shared/feedback';
 
 export const authoringApi = {
   workspace: () => apiRequest<{ workspace: AuthoringWorkspace }>('authoring'),
@@ -30,5 +31,13 @@ export const agentKeysApi = {
   view: () => apiRequest<{ view: AgentKeysView }>('agent-keys'),
   act: (action: AgentKeyAction, expectedUserId: string) => apiRequest<AgentKeyResponse>('agent-keys', {
     method: 'POST', body: JSON.stringify(action), headers: { 'X-Agent-Keys-User-Id': expectedUserId },
+  }),
+};
+
+/** What readers said about lessons, for the operator. */
+export const feedbackApi = {
+  inbox: () => apiRequest<{ inbox: FeedbackInbox }>('feedback'),
+  act: (action: FeedbackAction, expectedUserId: string) => apiRequest<{ feedback: LessonFeedbackView }>('feedback', {
+    method: 'POST', body: JSON.stringify(action), headers: { 'X-Feedback-User-Id': expectedUserId },
   }),
 };

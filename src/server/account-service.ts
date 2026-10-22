@@ -42,9 +42,9 @@ async function assertDeletable(db: Tx, userId: string) {
 /**
  * Deletes one person's account and everything the service learned about them, in one transaction.
  * The order is the foreign keys' own: a row is removed only after everything pointing at it is
- * gone. Seven tables ride along on the account itself (`onDelete: Cascade`) — sessions, the Google
- * identity, diagnostic runs, recommendation history, the question sets a model wrote for them, and
- * the content rows the check above rules out.
+ * gone. Eight tables ride along on the account itself (`onDelete: Cascade`) — sessions, the Google
+ * identity, diagnostic runs, recommendation history, the question sets a model wrote for them, the
+ * feedback they left on lessons, and the content rows the check above rules out.
  */
 export async function deleteAccount(db: PrismaClient, userId: string): Promise<DeletionReport> {
   return db.$transaction(async (tx) => {
