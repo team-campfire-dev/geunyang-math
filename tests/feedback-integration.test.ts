@@ -53,9 +53,9 @@ describe.skipIf(!url)('lesson feedback on MySQL', () => {
 
   it('keeps what a reader said at a place, and shows it to them and to an operator only', async () => {
     const learner = await person('learner'), other = await person('other'), operator = await person('operator', 'admin');
-    await feedback.act(learner.id, { action: 'feedback.add', ...at(), body: '  그림에서 칸이 몇 개인지 잘 안 보여요 ' });
-    await feedback.act(learner.id, { action: 'feedback.add', ...at({ blockId: place.prose, quote: '  이 \n 문장이\t헷갈려요  ' }), body: '무슨 뜻인지 모르겠어요' });
-    const mine = await feedback.act(learner.id, { action: 'feedback.add', ...at({ blockId: place.set, problemVersionId: place.problem }), body: '답이 두 개 같아요' });
+    await feedback.act(learner.id, { action: 'feedback.add', reason: null, ...at(), body: '  그림에서 칸이 몇 개인지 잘 안 보여요 ' });
+    await feedback.act(learner.id, { action: 'feedback.add', reason: null, ...at({ blockId: place.prose, quote: '  이 \n 문장이\t헷갈려요  ' }), body: '무슨 뜻인지 모르겠어요' });
+    const mine = await feedback.act(learner.id, { action: 'feedback.add', reason: null, ...at({ blockId: place.set, problemVersionId: place.problem }), body: '답이 두 개 같아요' });
     expect(mine.feedback.reviewer).toBe(false);
     expect(mine.feedback.items.map((item) => [item.blockId, item.problemVersionId, item.quote, item.body])).toEqual([
       [place.figure, null, null, '그림에서 칸이 몇 개인지 잘 안 보여요'],
@@ -63,6 +63,10 @@ describe.skipIf(!url)('lesson feedback on MySQL', () => {
       [place.set, place.problem, null, '답이 두 개 같아요'],
     ]);
     expect(mine.feedback.items.every((item) => item.author.mine && item.status === 'open')).toBe(true);
+    // A quick answer stands alone, without a word written.
+    const quick = await feedback.act(learner.id, { action: 'feedback.add', reason: 'confusing', ...at({ blockId: place.prose, quote: '여기' }), body: '' });
+    expect(quick.feedback.items.at(-1)).toMatchObject({ reason: 'confusing', body: '', quote: '여기' });
+    await feedback.act(learner.id, { action: 'feedback.remove', feedbackId: quick.feedback.items.at(-1)!.id });
     // Another reader sees none of it; an operator sees all of it, with who said it.
     expect((await feedback.lesson(place.lessonKey, other.id)).items.filter((item) => item.author.name === learner.displayName)).toEqual([]);
     const reviewed = await feedback.lesson(place.lessonKey, operator.id);
@@ -74,13 +78,14 @@ describe.skipIf(!url)('lesson feedback on MySQL', () => {
 
   it('refuses a place the reader was not shown', async () => {
     const learner = await person('learner');
-    const add = (extra: Parameters<typeof at>[0]) => feedback.act(learner.id, { action: 'feedback.add', ...at(extra), body: '?' });
+    const add = (extra: Parameters<typeof at>[0]) => feedback.act(learner.id, { action: 'feedback.add', reason: null, ...at(extra), body: '?' });
     await expect(add({ blockId: 'no-such-block' })).rejects.toMatchObject({ status: 404 });
     await expect(add({ blockId: place.figure, problemVersionId: place.problem })).rejects.toMatchObject({ status: 404 });
     await expect(add({ blockId: null, problemVersionId: place.problem })).rejects.toMatchObject({ status: 400 });
-    await expect(feedback.act(learner.id, { action: 'feedback.add', ...at(), lessonKey: 'no-such-lesson', body: '?' })).rejects.toMatchObject({ status: 404 });
-    await expect(feedback.act(learner.id, { action: 'feedback.add', ...at(), body: '   ' })).rejects.toThrow();
-    await expect(feedback.act(learner.id, { action: 'feedback.add', ...at(), body: 'x'.repeat(feedbackLimits.body + 1) })).rejects.toThrow();
+    await expect(feedback.act(learner.id, { action: 'feedback.add', reason: null, ...at(), lessonKey: 'no-such-lesson', body: '?' })).rejects.toMatchObject({ status: 404 });
+    await expect(feedback.act(learner.id, { action: 'feedback.add', reason: null, ...at(), body: '   ' })).rejects.toMatchObject({ status: 400 });
+    await expect(feedback.act(learner.id, { action: 'feedback.add', reason: 'bored', ...at(), body: '' })).rejects.toThrow();
+    await expect(feedback.act(learner.id, { action: 'feedback.add', reason: null, ...at(), body: 'x'.repeat(feedbackLimits.body + 1) })).rejects.toThrow();
     // A long drag is kept as the start of what was dragged.
     const long = await add({ blockId: place.prose, quote: '가'.repeat(feedbackLimits.quote + 40) });
     expect(long.feedback.items.at(-1)!.quote).toHaveLength(feedbackLimits.quote);
@@ -88,7 +93,7 @@ describe.skipIf(!url)('lesson feedback on MySQL', () => {
 
   it('lets an operator settle feedback and the reader take back their own', async () => {
     const learner = await person('learner'), other = await person('other'), operator = await person('operator', 'admin'), teacher = await person('teacher', 'author');
-    const [item] = (await feedback.act(learner.id, { action: 'feedback.add', ...at(), body: '헷갈려요' })).feedback.items;
+    const [item] = (await feedback.act(learner.id, { action: 'feedback.add', reason: null, ...at(), body: '헷갈려요' })).feedback.items;
     await expect(feedback.act(learner.id, { action: 'feedback.resolve', feedbackId: item.id })).rejects.toMatchObject({ status: 403 });
     await expect(feedback.act(teacher.id, { action: 'feedback.resolve', feedbackId: item.id })).rejects.toMatchObject({ status: 404 });
     await expect(feedback.act(other.id, { action: 'feedback.remove', feedbackId: item.id })).rejects.toMatchObject({ status: 404 });
@@ -104,7 +109,7 @@ describe.skipIf(!url)('lesson feedback on MySQL', () => {
 
   it('gives the operator a list that says where each note points and whether it still matches', async () => {
     const learner = await person('learner'), operator = await person('operator', 'admin'), teacher = await person('teacher', 'author');
-    await feedback.act(learner.id, { action: 'feedback.add', ...at({ blockId: place.prose, quote: '여기' }), body: '목록에 나와야 해요' });
+    await feedback.act(learner.id, { action: 'feedback.add', reason: null, ...at({ blockId: place.prose, quote: '여기' }), body: '목록에 나와야 해요' });
     await expect(feedback.inbox(teacher.id)).rejects.toMatchObject({ status: 403 });
     await expect(feedback.inbox(learner.id)).rejects.toMatchObject({ status: 403 });
     const inbox = await feedback.inbox(operator.id);
@@ -124,10 +129,10 @@ describe.skipIf(!url)('lesson feedback on MySQL', () => {
     closed = place.lessonKey;
     expect((await feedback.act(operator.id, { action: 'lesson.accepting', lessonKey: place.lessonKey, accepting: false })).feedback.accepting).toBe(false);
     expect((await feedback.lesson(place.lessonKey, learner.id)).accepting).toBe(false);
-    await expect(feedback.act(learner.id, { action: 'feedback.add', ...at(), body: '닫혔나요?' })).rejects.toMatchObject({ status: 409 });
+    await expect(feedback.act(learner.id, { action: 'feedback.add', reason: null, ...at(), body: '닫혔나요?' })).rejects.toMatchObject({ status: 409 });
     expect((await feedback.inbox(operator.id)).lessons.find((lesson) => lesson.lessonKey === place.lessonKey)!.accepting).toBe(false);
     await feedback.act(operator.id, { action: 'lesson.accepting', lessonKey: place.lessonKey, accepting: true });
     closed = null;
-    await feedback.act(learner.id, { action: 'feedback.add', ...at(), body: '다시 열렸어요' });
+    await feedback.act(learner.id, { action: 'feedback.add', reason: null, ...at(), body: '다시 열렸어요' });
   });
 });

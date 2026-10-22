@@ -371,6 +371,9 @@ model LessonFeedback {
   problemVersionId String?   @db.VarChar(191)
   /// The words the reader dragged over, as the page showed them.
   quote            String?   @db.Text
+  /// One of the quick answers (`confusing`, `hard`, `wrong`, `broken`, `good`), when one was pressed.
+  reason           String?   @db.VarChar(20)
+  /// What they wrote. Empty when a quick answer said it all.
   body             String    @db.Text
   /// `open` until somebody who looks after the lesson has dealt with it, then `resolved`.
   status           String    @default("open") @db.VarChar(20)

@@ -13,6 +13,7 @@ CREATE TABLE `LessonFeedback` (
     `blockId` VARCHAR(191) NULL,
     `problemVersionId` VARCHAR(191) NULL,
     `quote` TEXT NULL,
+    `reason` VARCHAR(20) NULL,
     `body` TEXT NOT NULL,
     `status` VARCHAR(20) NOT NULL DEFAULT 'open',
     `resolvedByUserId` VARCHAR(191) NULL,

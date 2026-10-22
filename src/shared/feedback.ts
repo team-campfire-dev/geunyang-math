@@ -8,6 +8,21 @@
 
 export type FeedbackStatus = 'open' | 'resolved';
 
+/**
+ * What most feedback is, said in one press. A reader who only wants to say 「헷갈려요」 should not have
+ * to type it; a sentence is there for when the press is not enough. Each one is something the person
+ * fixing the lesson does something different about, which is why there are only these.
+ */
+export type FeedbackReason = 'confusing' | 'hard' | 'wrong' | 'broken' | 'good';
+export const feedbackReasons: readonly { key: FeedbackReason; label: string }[] = [
+  { key: 'confusing', label: '헷갈려요' },
+  { key: 'hard', label: '어려워요' },
+  { key: 'wrong', label: '틀린 것 같아요' },
+  { key: 'broken', label: '화면이 이상해요' },
+  { key: 'good', label: '이해됐어요' },
+];
+export const reasonLabel = (reason: FeedbackReason | null) => feedbackReasons.find((item) => item.key === reason)?.label ?? null;
+
 /** Where in a lesson somebody pointed. A block is absent for the step as a whole. */
 export type FeedbackPlace = {
   lessonKey: string;
@@ -20,6 +35,8 @@ export type FeedbackPlace = {
 
 export type FeedbackItem = FeedbackPlace & {
   id: string;
+  reason: FeedbackReason | null;
+  /** Empty when a quick answer said it all. */
   body: string;
   status: FeedbackStatus;
   createdAt: string;
@@ -54,7 +71,7 @@ export type FeedbackInbox = { entries: FeedbackEntry[]; lessons: FeedbackLesson[
 export const feedbackLimits = { body: 1000, quote: 500, perDay: 100 } as const;
 
 export type FeedbackAction =
-  | ({ action: 'feedback.add'; body: string } & FeedbackPlace)
+  | ({ action: 'feedback.add'; reason: FeedbackReason | null; body: string } & FeedbackPlace)
   | { action: 'feedback.remove'; feedbackId: string }
   | { action: 'feedback.resolve'; feedbackId: string }
   | { action: 'feedback.reopen'; feedbackId: string }

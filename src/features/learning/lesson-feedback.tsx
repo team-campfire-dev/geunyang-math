@@ -1,16 +1,17 @@
 'use client';
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from 'react';
-import { feedbackLimits, type FeedbackAction, type FeedbackItem, type LessonFeedbackView } from '@/shared/feedback';
+import { feedbackLimits, feedbackReasons, reasonLabel, type FeedbackAction, type FeedbackItem, type FeedbackReason, type LessonFeedbackView } from '@/shared/feedback';
 import { feedbackApi } from './api-client';
 import { quoteOf, rangeOf } from './feedback-quote';
-import { Icon } from './icons';
+import { Icon, type IconName } from './icons';
 import { RichText } from './content-blocks';
 
 /** Where in a step somebody is pointing: a block, a question in it, and the words they dragged over. */
 export type FeedbackTarget = { blockId: string; problemVersionId: string | null; quote: string | null };
 type Place = { lessonKey: string; lessonVersionId: string; sectionId: string };
 
+const reasonIcons: Record<FeedbackReason, IconName> = { confusing: 'question', hard: 'steep', wrong: 'alert', broken: 'screen', good: 'smile' };
 const messageOf = (reason: unknown) => (reason instanceof Error ? reason.message : '의견을 보내지 못했어요. 다시 시도해 주세요.');
 const sameSpot = (a: Pick<FeedbackTarget, 'blockId' | 'problemVersionId'>, b: Pick<FeedbackTarget, 'blockId' | 'problemVersionId'>) =>
   a.blockId === b.blockId && (a.problemVersionId ?? null) === (b.problemVersionId ?? null);
@@ -179,12 +180,15 @@ export function FeedbackSpot({ blockId, problemVersionId = null, mark, className
 
 /**
  * The note itself, as a layer over the lesson rather than a block pushed into it: the step stays where
- * it was while somebody writes. Pressing outside closes it, unless something is half written.
+ * it was while somebody writes. Most of what anybody says fits one of a few quick answers, which go
+ * in one press; the field to write in opens only when they ask for it. Pressing outside closes it,
+ * unless something is half written.
  */
 function FeedbackThread({ style }: { style: CSSProperties }) {
   const context = useContext(FeedbackContext)!;
   const { view, place, active, act } = context;
   const [body, setBody] = useState('');
+  const [writing, setWriting] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const field = useRef<HTMLTextAreaElement>(null);
@@ -192,14 +196,15 @@ function FeedbackThread({ style }: { style: CSSProperties }) {
   const items = context.itemsAt(active!);
   useEffect(() => {
     layer.current?.scrollIntoView({ block: 'nearest' });
-    field.current?.focus({ preventScroll: true });
+    layer.current?.querySelector<HTMLButtonElement>('.feedback-reason')?.focus({ preventScroll: true });
   }, []);
-  const writing = useRef(false);
-  writing.current = !!body.trim();
+  useEffect(() => { if (writing) field.current?.focus({ preventScroll: true }); }, [writing]);
+  const halfWritten = useRef(false);
+  halfWritten.current = !!body.trim();
   useEffect(() => {
     const away = (event: PointerEvent) => {
       const target = event.target as Element | null;
-      if (writing.current || !target || layer.current?.contains(target) || target.closest('.feedback-mark, .feedback-pick')) return;
+      if (halfWritten.current || !target || layer.current?.contains(target) || target.closest('.feedback-mark, .feedback-pick')) return;
       context.close();
     };
     document.addEventListener('pointerdown', away);
@@ -213,12 +218,13 @@ function FeedbackThread({ style }: { style: CSSProperties }) {
     catch (reason) { setError(messageOf(reason)); }
     finally { setBusy(false); }
   };
-  const send = (event: FormEvent) => {
-    event.preventDefault();
-    if (!body.trim()) return;
-    void run({ action: 'feedback.add', ...place, blockId: active!.blockId, problemVersionId: active!.problemVersionId, quote: active!.quote, body: body.trim() },
+  /** A quick answer goes at once, and takes along whatever was written beside it. */
+  const send = (reason: FeedbackReason | null) => {
+    if (!reason && !body.trim()) return;
+    void run({ action: 'feedback.add', ...place, blockId: active!.blockId, problemVersionId: active!.problemVersionId, quote: active!.quote, reason, body: body.trim() },
       () => { setBody(''); context.onSent(); });
   };
+  const submit = (event: FormEvent) => { event.preventDefault(); send(null); };
   const when = (iso: string) => new Date(iso).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' });
 
   return <div className="feedback-thread feedback-popover" data-feedback-chrome role="dialog" aria-label="이 자리의 의견" ref={layer} style={style}
@@ -227,7 +233,7 @@ function FeedbackThread({ style }: { style: CSSProperties }) {
       <button type="button" className="icon-button" aria-label="의견 닫기" onClick={context.close}><Icon name="close" size={15} /></button></div>
     {items.map((item) => <article key={item.id} className={`feedback-note ${item.status}`}>
       {item.quote && <blockquote><RichText text={item.quote} /></blockquote>}
-      <p>{item.body}</p>
+      <p>{item.reason && <span className="feedback-reason-tag"><Icon name={reasonIcons[item.reason]} size={13} />{reasonLabel(item.reason)}</span>}{item.body}</p>
       <footer>
         <span>{view.reviewer && !item.author.mine ? item.author.name : '내 의견'} · {when(item.createdAt)}
           {item.lessonVersionId !== place.lessonVersionId && ' · 다른 판본에서'}
@@ -239,19 +245,28 @@ function FeedbackThread({ style }: { style: CSSProperties }) {
           onClick={() => void run({ action: 'feedback.remove', feedbackId: item.id })}>지우기</button>}
       </footer>
     </article>)}
-    {view.accepting ? <form onSubmit={send}>
+    {view.accepting ? <div className="feedback-compose">
       {active!.quote && <blockquote className="draft"><RichText text={active!.quote} /></blockquote>}
-      <label className="sr-only" htmlFor="feedback-body">의견</label>
-      <textarea id="feedback-body" ref={field} value={body} rows={3} maxLength={feedbackLimits.body} disabled={busy}
-        placeholder={active!.quote ? '이 부분에서 무엇이 헷갈렸나요?' : '여기서 헷갈리거나 이상한 점이 있었나요?'}
-        onChange={(event) => setBody(event.target.value)}
-        onKeyDown={(event) => { if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) send(event); }} />
-      {error && <p className="field-error" role="alert">{error}</p>}
-      <div className="feedback-actions">
-        <span className="muted small">수업을 다듬는 데 쓰여요.</span>
-        <button type="submit" className="button primary" disabled={busy || !body.trim()}>{busy ? '보내는 중…' : '보내기'}</button>
+      <div className="feedback-reasons" role="group" aria-label={active!.quote ? '이 부분은' : '여기는'}>
+        {feedbackReasons.map((reason) => <button key={reason.key} type="button" className={`feedback-reason reason-${reason.key}`} disabled={busy}
+          onClick={() => send(reason.key)}><Icon name={reasonIcons[reason.key]} size={15} />{reason.label}</button>)}
       </div>
-    </form> : <>
+      {writing ? <form onSubmit={submit}>
+        <label className="sr-only" htmlFor="feedback-body">의견</label>
+        <textarea id="feedback-body" ref={field} value={body} rows={3} maxLength={feedbackLimits.body} disabled={busy}
+          placeholder={active!.quote ? '이 부분에서 무엇이 헷갈렸나요?' : '여기서 헷갈리거나 이상한 점이 있었나요?'}
+          onChange={(event) => setBody(event.target.value)}
+          onKeyDown={(event) => { if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) submit(event); }} />
+        {error && <p className="field-error" role="alert">{error}</p>}
+        <div className="feedback-actions">
+          <span className="muted small">위에서 하나 골라도 함께 가요.</span>
+          <button type="submit" className="button primary" disabled={busy || !body.trim()}>{busy ? '보내는 중…' : '보내기'}</button>
+        </div>
+      </form> : <>
+        {error && <p className="field-error" role="alert">{error}</p>}
+        <button type="button" className="text-button feedback-write" onClick={() => setWriting(true)}><Icon name="pencil" size={14} />직접 쓰기</button>
+      </>}
+    </div> : <>
       {error && <p className="field-error" role="alert">{error}</p>}
       <p className="muted small">이 수업은 지금 의견을 받지 않아요.</p>
     </>}

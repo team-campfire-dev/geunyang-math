@@ -4,13 +4,14 @@ import { z } from 'zod';
 import { AppError } from './errors';
 import { authoringRole, openAuthoring } from './authoring';
 import { LearningService } from './learning-service';
-import { cleanQuote, feedbackLimits, type FeedbackEntry, type FeedbackInbox, type FeedbackItem, type FeedbackStatus, type LessonFeedbackView } from '@/shared/feedback';
+import { cleanQuote, feedbackLimits, feedbackReasons, type FeedbackEntry, type FeedbackInbox, type FeedbackItem, type FeedbackReason, type FeedbackStatus, type LessonFeedbackView } from '@/shared/feedback';
 
 const id = z.string().min(1).max(191);
 const actionSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('feedback.add'), lessonKey: id.max(100), lessonVersionId: id, sectionId: id,
     blockId: id.nullable(), problemVersionId: id.nullable(), quote: z.string().max(feedbackLimits.quote * 4).nullable(),
-    body: z.string().trim().min(1).max(feedbackLimits.body) }).strict(),
+    reason: z.enum(feedbackReasons.map((item) => item.key) as [FeedbackReason, ...FeedbackReason[]]).nullable(),
+    body: z.string().trim().max(feedbackLimits.body) }).strict(),
   z.object({ action: z.literal('feedback.remove'), feedbackId: id }).strict(),
   z.object({ action: z.literal('feedback.resolve'), feedbackId: id }).strict(),
   z.object({ action: z.literal('feedback.reopen'), feedbackId: id }).strict(),
@@ -18,7 +19,7 @@ const actionSchema = z.discriminatedUnion('action', [
 ]);
 
 const itemRow = { id: true, lessonKey: true, lessonVersionId: true, sectionId: true, blockId: true, problemVersionId: true,
-  quote: true, body: true, status: true, createdAt: true, resolvedAt: true, authorUserId: true,
+  quote: true, reason: true, body: true, status: true, createdAt: true, resolvedAt: true, authorUserId: true,
   author: { select: { displayName: true } } } satisfies Prisma.LessonFeedbackSelect;
 type ItemRow = Prisma.LessonFeedbackGetPayload<{ select: typeof itemRow }>;
 
@@ -46,7 +47,7 @@ export class FeedbackService {
 
   private item(row: ItemRow, viewerId: string | null): FeedbackItem {
     return { id: row.id, lessonKey: row.lessonKey, lessonVersionId: row.lessonVersionId, sectionId: row.sectionId,
-      blockId: row.blockId, problemVersionId: row.problemVersionId, quote: row.quote, body: row.body,
+      blockId: row.blockId, problemVersionId: row.problemVersionId, quote: row.quote, reason: row.reason as FeedbackReason | null, body: row.body,
       status: row.status as FeedbackStatus, createdAt: row.createdAt.toISOString(), resolvedAt: row.resolvedAt?.toISOString() ?? null,
       author: { name: row.author.displayName, mine: row.authorUserId === viewerId } };
   }
@@ -113,6 +114,8 @@ export class FeedbackService {
 
   /** Checks that a place is one this reader was shown, then keeps what they said about it. */
   private async add(userId: string, input: Extract<z.infer<typeof actionSchema>, { action: 'feedback.add' }>) {
+    // A quick answer may stand alone; with neither, nothing was said.
+    if (!input.reason && !input.body) throw new AppError(400, 'feedback_empty', '무엇이 있었는지 골라 주거나 적어 주세요.');
     const lesson = await this.db.lesson.findUnique({ where: { key: input.lessonKey }, select: { feedbackOpen: true } });
     // A lesson in a course kept from this reader is a lesson that is not there for them.
     const visible = lesson && (await new LearningService(this.db).catalog(this.db, userId)).some((item) => item.lessonKey === input.lessonKey);
@@ -138,7 +141,7 @@ export class FeedbackService {
     }
     await this.db.lessonFeedback.create({ data: { authorUserId: userId, lessonKey: input.lessonKey, lessonVersionId: input.lessonVersionId,
       sectionId: input.sectionId, blockId: input.blockId, problemVersionId: input.problemVersionId,
-      quote: input.quote === null ? null : cleanQuote(input.quote), body: input.body } });
+      quote: input.quote === null ? null : cleanQuote(input.quote), reason: input.reason, body: input.body } });
   }
 
   async act(userId: string, input: unknown): Promise<{ feedback: LessonFeedbackView }> {

@@ -959,3 +959,10 @@ html[data-answer-dock=open] .mobile-nav{visibility:hidden}
 ::highlight(lesson-feedback){background-color:#f3dccd}
 ::highlight(lesson-feedback-draft){background-color:#ebc9b4}
 .feedback-thread blockquote .rich-text{font-size:inherit;line-height:inherit;color:inherit}
+.feedback-reasons{display:flex;flex-wrap:wrap;gap:7px}
+.feedback-reason{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:6px 11px;border:1px solid var(--line-strong);border-radius:999px;background:#fffdf8;color:var(--ink-2);font-size:12px;white-space:nowrap;transition:background .12s,border-color .12s,color .12s}
+.feedback-reason:not(:disabled):hover{border-color:var(--accent);color:var(--accent-deep);background:var(--accent-soft)}
+.feedback-compose{display:grid;gap:10px}
+.feedback-compose form{display:grid}
+.feedback-write{justify-self:start}
+.feedback-reason-tag{display:inline-flex;align-items:center;gap:4px;margin-right:7px;padding:1px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent-deep);font-size:12px;vertical-align:1px;white-space:nowrap}

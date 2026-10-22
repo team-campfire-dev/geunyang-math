@@ -393,7 +393,7 @@ const tools: Tool[] = [
   },
   {
     name: 'lesson_feedback', title: '수업 의견 읽기', readOnly: true,
-    description: '학습자가 수업을 하다가 남긴 의견을 봐요. 어느 단계(sectionId)·블록(blockId)·문제(problemVersionId)에 남겼는지, 끌어 고른 글(quote)이 무엇인지 함께 와요. current가 false면 그 뒤에 고쳐진 자리라 지금 판본과 다를 수 있어요. 운영자 코드로만 읽을 수 있어요.',
+    description: '학습자가 수업을 하다가 남긴 의견을 봐요. 어느 단계(sectionId)·블록(blockId)·문제(problemVersionId)에 남겼는지, 끌어 고른 글(quote)이 무엇인지 함께 와요. reason은 한 번에 누른 빠른 답(confusing 헷갈려요 · hard 어려워요 · wrong 틀린 것 같아요 · broken 화면이 이상해요 · good 이해됐어요)이고 body는 직접 쓴 말이에요(없으면 빈 문자열). current가 false면 그 뒤에 고쳐진 자리라 지금 판본과 다를 수 있어요. 운영자 코드로만 읽을 수 있어요.',
     input: z.object({ lessonKey: z.string().max(100).optional().describe('이 수업의 의견만'), status: z.enum(['open', 'resolved', 'all']).default('open') }),
     run: async ({ db, key }, args) => (await new FeedbackService(db).inbox(key.userId)).entries
       .filter((entry) => (!args.lessonKey || entry.lessonKey === args.lessonKey) && (args.status === 'all' || entry.status === (args.status ?? 'open')))

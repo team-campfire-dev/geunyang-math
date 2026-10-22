@@ -628,3 +628,9 @@
 .feedback-entry-foot>span{margin-right:auto}
 .feedback-entry-foot a.text-button{text-decoration:none}
 .feedback-entry blockquote .rich-text{font-size:inherit;line-height:inherit;color:inherit}
+.feedback-tally{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.feedback-tally button{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border:1px solid var(--line-strong);border-radius:999px;background:var(--white);color:var(--ink-2);font-size:12px}
+.feedback-tally button b{font-weight:600;color:var(--muted)}
+.feedback-tally button.active{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.feedback-tally button.active b{color:var(--paper)}
+.feedback-entry .feedback-reason-tag{display:inline-flex;margin-right:7px;padding:1px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent-deep);font-size:12px;vertical-align:1px}
