@@ -13,11 +13,13 @@ import {
 import { ApiError, learningApi, type Session } from '@/features/learning/api-client';
 import { Icon } from '@/features/learning/icons';
 import type { ProblemActions } from '@/features/learning/problem-card';
-import { authoringApi } from './api-client';
+import { feedbackApi, authoringApi } from './api-client';
 import { TeachingPanel } from './teaching-panel';
 import { AiUsagePanel } from './ai-usage-panel';
 import { AgentKeyPanel } from './agent-key-panel';
 import { FeedbackPanel } from './feedback-panel';
+import { FeedbackMargin } from './feedback-margin';
+import type { FeedbackAction, FeedbackItem, LessonFeedbackView } from '@/shared/feedback';
 import { RemovalNotice, useEditHistory } from './edit-history';
 import { ExpertMode, useExpertMode } from './expert-mode';
 import { AddBlock, BlockCard } from './block-editor';
@@ -47,6 +49,11 @@ export function AuthoringWorkspace() {
   const [sectionIndex, setSectionIndex] = useState(0);
   /** What is being worked on — a block or a question — or nothing, which means the lesson itself. */
   const [selected, setSelected] = useState<Picked | null>(null);
+  /** The right column: what the chosen thing is made of, or what learners said about this step. */
+  const [rightTab, setRightTab] = useState<'edit' | 'feedback'>('edit');
+  const [lessonFeedback, setLessonFeedback] = useState<LessonFeedbackView | null>(null);
+  const [activeFeedback, setActiveFeedback] = useState<string | null>(null);
+  const [feedbackBusy, setFeedbackBusy] = useState(false);
   /**
    * Trying the lesson rather than writing it. What happens here is not learning and is kept nowhere:
    * the answers live until the mode is left, which is why they are held on this screen and not sent
@@ -109,6 +116,7 @@ export function AuthoringWorkspace() {
     setAttempts({});
     setAssisted({});
     setConfirming(false); setShowDefinitions(false); setLessonPage('write');
+    setRightTab('edit'); setActiveFeedback(null);
   }, [openEdit, markSaved]);
   /**
    * Moving to another step starts at the top of it. The page is a lesson long, and keeping the old
@@ -124,6 +132,24 @@ export function AuthoringWorkspace() {
     setTrying(false); setAttempts({}); setAssisted({}); setAnswerInputs({}); setDefinitionDirty(false);
   }, [openEdit, markSaved]);
   const notifyRemoval = useCallback((what: string) => setRemoved({ what, at: Date.now() }), []);
+
+  // What learners said about the lesson open here. It needs an account of one's own, like teaching:
+  // the shared open editor is nobody to show learners' words to.
+  const feedbackLesson = draft?.lessonKey ?? null;
+  const loadFeedback = useCallback(async (lessonKey: string) => {
+    try { setLessonFeedback((await feedbackApi.editing(lessonKey)).feedback); } catch { setLessonFeedback(null); }
+  }, []);
+  useEffect(() => {
+    setLessonFeedback(null);
+    if (feedbackLesson && session?.user) void loadFeedback(feedbackLesson);
+  }, [feedbackLesson, session?.user, loadFeedback]);
+  const actOnFeedback = async (action: FeedbackAction) => {
+    if (!feedbackLesson || !session?.user || feedbackBusy) return;
+    setFeedbackBusy(true);
+    try { await feedbackApi.act(action, session.user.id); await loadFeedback(feedbackLesson); }
+    catch (reason) { setError(reason instanceof ApiError ? reason.message : '요청을 처리하지 못했어요.'); }
+    finally { setFeedbackBusy(false); }
+  };
 
   useEffect(() => {
     let active = true;
@@ -384,7 +410,7 @@ export function AuthoringWorkspace() {
       {/* Feedback names the learners who left it, so it needs the operator's own sign-in too. */}
       {libraryPage === 'feedback' && mayPublish(workspace.role) && (session?.user ? <FeedbackPanel userId={session.user.id} onEdit={(lessonKey, sectionId) => {
         // Opens the draft at the step the note is about; a lesson nobody is editing gets a draft started.
-        const step = (detail: DraftDetail) => setSectionIndex(Math.max(0, detail.edit.sections.findIndex((section) => section.sectionId === sectionId)));
+        const step = (detail: DraftDetail) => { setSectionIndex(Math.max(0, detail.edit.sections.findIndex((section) => section.sectionId === sectionId))); setRightTab('feedback'); };
         const started = workspace.drafts.find((item) => item.lessonKey === lessonKey && item.status !== 'published');
         if (started) void run(async () => { const detail = (await authoringApi.draft(started.id)).draft; open(detail);
           setCourseKey(workspace.lessons.find((lesson) => lesson.lessonKey === lessonKey)?.courseKey ?? null); step(detail); });
@@ -422,6 +448,24 @@ export function AuthoringWorkspace() {
   /** Questions no activity in the lesson holds. Homework holds some without any section showing them. */
   const loose = looseProblems(edit);
   const chosenBlock = selected?.kind === 'block' ? section.contentBlocks[selected.index] : undefined;
+  // Learners' feedback on this step: what to underline in it, and what the right column counts.
+  const feedbackHere = (lessonFeedback?.items ?? []).filter((item) => item.status === 'open' && item.sectionId === section.sectionId);
+  const noted = new Set(feedbackHere.flatMap((item) => item.problemVersionId ? [`problem:${item.problemVersionId}`] : item.blockId ? [item.blockId] : []));
+  const openFeedback = (lessonFeedback?.items ?? []).filter((item) => item.status === 'open').length;
+  const feedbackChosen = feedbackHere.filter((item) => selected?.kind === 'problem' ? item.problemVersionId === selected.id
+    : selected?.kind === 'block' && !item.problemVersionId && item.blockId === section.contentBlocks[selected.index]?.blockId);
+  /** From a note to the thing it is about, picked for editing. */
+  const fixFeedback = (item: FeedbackItem) => {
+    if (item.sectionId !== section.sectionId) {
+      const at = edit.sections.findIndex((entry) => entry.sectionId === item.sectionId);
+      if (at >= 0) goToSection(at);
+    }
+    const holder = edit.sections.find((entry) => entry.sectionId === item.sectionId) ?? section;
+    const index = holder.contentBlocks.findIndex((block) => block.blockId === item.blockId);
+    setRightTab('edit');
+    if (item.problemVersionId) setSelected({ kind: 'problem', id: item.problemVersionId });
+    else if (index >= 0) setSelected({ kind: 'block', index });
+  };
   const chosenProblem = selected?.kind === 'problem'
     ? edit.problems.find((problem) => problem.problemVersionId === selected.id) : undefined;
   // A question is held by exactly one activity, and that activity is what says where it sits.
@@ -645,7 +689,7 @@ export function AuthoringWorkspace() {
       </aside>
 
       <LessonSheet meta={edit.meta} section={section} index={sectionIndex} problems={edit.problems} definitions={draft.definitions} glossary={{ entries: draft.glossary, currentLessonKey: draft.lessonKey }} courseTitle={courseTitle}
-        selected={selected} published={published} issues={issues}
+        selected={selected} published={published} issues={issues} noted={trying ? undefined : noted}
         trying={trying ? { actions: tryActions, attempts, busy: tryBusy } : undefined}
         onMeta={(meta) => setEdit({ ...edit, meta })} onSection={writeSection} onBlocks={writeBlocks}
         onProblem={writeProblem} onSelect={setSelected}
@@ -653,8 +697,19 @@ export function AuthoringWorkspace() {
           onAdd={(block) => { writeBlocks([...section.contentBlocks, block]); setSelected({ kind: 'block', index: section.contentBlocks.length }); }} />} />
 
       {/* What the chosen thing is made of. With nothing chosen, the lesson itself is what is chosen. */}
-      {!trying && <aside className="editor-inspector" id="lesson-inspector" aria-label="수업 편집 도구">
+      {!trying && <aside className={`editor-inspector${rightTab === 'feedback' ? ' showing-feedback' : ''}`} id="lesson-inspector" aria-label="수업 편집 도구">
+        {lessonFeedback && lessonFeedback.items.length > 0 && <div className="inspector-tabs" role="tablist" aria-label="오른쪽에 보일 것">
+          <button type="button" role="tab" aria-selected={rightTab === 'edit'} className={rightTab === 'edit' ? 'active' : ''} onClick={() => setRightTab('edit')}>편집</button>
+          <button type="button" role="tab" aria-selected={rightTab === 'feedback'} className={rightTab === 'feedback' ? 'active' : ''} onClick={() => setRightTab('feedback')}>
+            학습자 의견{openFeedback > 0 && <b>{openFeedback}</b>}</button>
+        </div>}
+        {rightTab === 'feedback' && lessonFeedback ? <FeedbackMargin items={lessonFeedback.items} sectionId={section.sectionId}
+          steps={edit.sections.map((item) => ({ sectionId: item.sectionId, title: item.title }))} baseVersionId={draft.baseVersionId}
+          active={activeFeedback} busy={feedbackBusy} onActive={setActiveFeedback} onAct={(action) => void actOnFeedback(action)}
+          onFix={fixFeedback} onStep={goToSection} /> : <>
         <div className="inspector-heading"><strong>{selected ? '선택한 내용' : '이 단계'}</strong>{selected && <button className="text-button" onClick={() => setSelected(null)}>선택 해제</button>}<a className="inspector-return text-button" href="#lesson-preview">본문으로 ↑</a></div>
+        {feedbackChosen.length > 0 && <button type="button" className="inspector-feedback-hint" onClick={() => { setRightTab('feedback'); setActiveFeedback(feedbackChosen[0].id); }}>
+          <Icon name="comment" size={14} />{selected?.kind === 'problem' ? '이 문항' : '이 블록'}에 학습자 의견 {feedbackChosen.length}개 — 보기</button>}
         {chosenProblem && holder
           ? <fieldset className="editor-inspector-block" disabled={published}>
             <Amiss issues={issuesOfProblem(chosenProblem.problemVersionId)} describe={describe} expert={expert} />
@@ -738,6 +793,7 @@ export function AuthoringWorkspace() {
               }}><Icon name="close" size={14} />이 단계 삭제</button>}
             </div>
           </fieldset>}
+        </>}
       </aside>}
     </div>
 
