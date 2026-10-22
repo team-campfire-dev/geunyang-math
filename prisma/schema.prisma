@@ -41,6 +41,7 @@ model User {
   assignedCourses AssignedCourse[] @relation("AssignedLearner")
   coursesAssigned AssignedCourse[] @relation("AssignedBy")
   modelUsage   ModelUsage[]
+  agentKeys    AgentKey[]
 }
 
 /// Someone who teaches a learner. A person today — a parent, a teacher — and a model later, for the
@@ -91,6 +92,25 @@ model AssignedCourse {
 /// Permission to write content, held as a role on an account rather than as a property of the one
 /// operator. A teacher system grants content work by writing rows here; routes and screens ask for
 /// the role, never for a particular person.
+/// A code an account gives an AI so it can write lessons as that account, through /api/v1/agent.
+/// Only the hash is kept: the code is shown once, when it is made. The key never holds more than its
+/// account does — the role is read again on every call — and without `mayPublish` it can write
+/// drafts and ask for review, but not change what learners see.
+model AgentKey {
+  id         String @id @default(cuid()) @db.VarChar(191)
+  userId     String @db.VarChar(191)
+  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// What the owner calls it, e.g. the AI it was given to.
+  name       String @db.VarChar(80)
+  tokenHash  String @unique @db.VarChar(64)
+  /// The code's first characters, so two keys can be told apart without the code.
+  hint       String @db.VarChar(16)
+  mayPublish Boolean @default(false)
+  expiresAt  DateTime
+  lastUsedAt DateTime?
+  createdAt  DateTime @default(now())
+  @@index([userId])
+}
 model ContentAuthor {
   userId    String @id @db.VarChar(191)
   user      User @relation(fields: [userId], references: [id], onDelete: Cascade)

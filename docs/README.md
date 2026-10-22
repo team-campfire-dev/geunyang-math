@@ -22,6 +22,7 @@
 | [개인화](personalization.md) | 진단·추천·학습 증거·복습 분량과 간격의 규칙 |
 | [블라인드 비교](blind-comparison.md) | 두 모델이 같은 문제에 쓴 해설을 이름을 가리고 골라, 고른 것을 씨앗에 넣는 도구. 순서·검사·모델 설정과 실행 기록 |
 | [가르치는 관계와 공개 범위](teaching.md) | 초대 코드로 맺는 관계, 정해 준 과정이 배치·추천에 하는 일, 코스 공개 범위, AI 교사가 들어올 자리 |
+| [AI 편집 통로](agent-authoring.md) | 작성자가 건넨 코드로 AI가 수업 초안을 고치는 API. 코드의 권한·발행 여부, 닿는 동작, 저장 충돌 검사 |
 | [DB 콘텐츠 관리](content-management.md) | 콘텐츠 저장·내보내기·등록·불변 판본과 기존 기록 보존 |
 | [운영 배포](deployment.md) | Oracle·DB·NPM·Google 설정, 배포·복구 절차와 릴리스별 근거 |
 | [모바일 구조](mobile-architecture.md) | 공용 UI·API·정적 export, native 인증과 오프라인 후속 범위 |
