@@ -106,16 +106,16 @@ export class GoogleLoginService {
     // transaction rolls back all nested records before retrying the existing identity.
     for (let retry = 0; ; retry++) {
       try {
-        const user = await this.db.$transaction(async tx => {
+        const { user, sessionId } = await this.db.$transaction(async tx => {
           let account = await tx.googleIdentity.findUnique({ where: { subject: identity.subject }, include: { user: true } });
           if (!account) account = await tx.googleIdentity.create({ data: { subject: identity.subject,
             user: { create: { displayName: identity.displayName, learningScopes: { create: { kind: 'personal' } } } },
           }, include: { user: true } });
           if (validToken(previousToken)) await tx.session.deleteMany({ where: { tokenHash: hashSessionToken(previousToken), authMethod: 'google' } });
-          await tx.session.create({ data: { userId: account.userId, tokenHash: hashSessionToken(token), authMethod: 'google', expiresAt: new Date(Date.now() + sessionLifetimeMs) } });
-          return account.user;
+          const session = await tx.session.create({ data: { userId: account.userId, tokenHash: hashSessionToken(token), authMethod: 'google', expiresAt: new Date(Date.now() + sessionLifetimeMs) } });
+          return { user: account.user, sessionId: session.id };
         });
-        return { user, cookie: authCookie(googleCookieName(), token, sessionLifetimeMs / 1000) };
+        return { user, sessionId, cookie: authCookie(googleCookieName(), token, sessionLifetimeMs / 1000) };
       } catch (error) {
         if (retry < 2 && error instanceof Prisma.PrismaClientKnownRequestError && ['P2002', 'P2034'].includes(error.code)) continue;
         throw error;

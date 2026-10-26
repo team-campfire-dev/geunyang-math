@@ -16,6 +16,7 @@ import type { ProblemActions } from '@/features/learning/problem-card';
 import { feedbackApi, authoringApi } from './api-client';
 import { TeachingPanel } from './teaching-panel';
 import { AiUsagePanel } from './ai-usage-panel';
+import { LearnerSessionsPanel } from './learner-sessions-panel';
 import { AgentKeyPanel } from './agent-key-panel';
 import { FeedbackPanel } from './feedback-panel';
 import { FeedbackMargin } from './feedback-margin';
@@ -69,7 +70,7 @@ export function AuthoringWorkspace() {
   const [confirming, setConfirming] = useState(false);
   const [loading, setLoading] = useState(true);
   const [matches, setMatches] = useState<AccountRole[] | null>(null);
-  const [libraryPage, setLibraryPage] = useState<'courses' | 'concepts' | 'dictionary' | 'placement' | 'learners' | 'feedback' | 'usage' | 'agents' | 'settings'>('courses');
+  const [libraryPage, setLibraryPage] = useState<'courses' | 'concepts' | 'dictionary' | 'placement' | 'learners' | 'sessions' | 'feedback' | 'usage' | 'agents' | 'settings'>('courses');
   /** The placement being written, which lives beside the lesson draft rather than inside it. */
   const [placement, setPlacement] = useState<DiagnosticDraft | null>(null);
   const [placementEdit, setPlacementEdit] = useState<DiagnosticEdit | null>(null);
@@ -166,7 +167,7 @@ export function AuthoringWorkspace() {
           const params = new URLSearchParams(window.location.search);
           setCourseKey(params.get('course'));
           const page = params.get('view');
-          if (page === 'concepts' || page === 'dictionary' || page === 'placement' || page === 'learners' || page === 'feedback' || page === 'usage' || page === 'agents' || page === 'settings') setLibraryPage(page);
+          if (page === 'concepts' || page === 'dictionary' || page === 'placement' || page === 'learners' || page === 'sessions' || page === 'feedback' || page === 'usage' || page === 'agents' || page === 'settings') setLibraryPage(page);
           const draftId = params.get('draft'); const versionId = params.get('version');
           if (draftId || versionId) {
             const detail = draftId ? (await authoringApi.draft(draftId)).draft
@@ -358,6 +359,7 @@ export function AuthoringWorkspace() {
         <button className={libraryPage === 'concepts' ? 'active' : ''} aria-current={libraryPage === 'concepts' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('concepts'); }}>개념으로 찾기</button>
         <button className={libraryPage === 'placement' ? 'active' : ''} aria-current={libraryPage === 'placement' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('placement'); }}>시작점 확인</button>
         <button className={libraryPage === 'learners' ? 'active' : ''} aria-current={libraryPage === 'learners' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('learners'); }}>학습자</button>
+        {mayPublish(workspace.role) && <button className={libraryPage === 'sessions' ? 'active' : ''} aria-current={libraryPage === 'sessions' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('sessions'); }}>학습 세션</button>}
         {mayPublish(workspace.role) && <button className={libraryPage === 'feedback' ? 'active' : ''} aria-current={libraryPage === 'feedback' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('feedback'); }}>수업 의견</button>}
         {mayPublish(workspace.role) && <button className={libraryPage === 'usage' ? 'active' : ''} aria-current={libraryPage === 'usage' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('usage'); }}>AI 사용량</button>}
         {workspace.role && <button className={libraryPage === 'agents' ? 'active' : ''} aria-current={libraryPage === 'agents' ? 'page' : undefined} onClick={() => { if (discardChanges(libraryDirty)) setLibraryPage('agents'); }}>AI 연결</button>}
@@ -407,6 +409,9 @@ export function AuthoringWorkspace() {
           <div><h3>학습자를 가르치려면 먼저 로그인해 주세요.</h3>
             <p>편집은 로그인 없이도 열려 있지만, 학습자는 공용 편집 계정이 아니라 내 계정에 연결돼요. <a href="/">학습 화면</a>에서 로그인한 뒤 다시 오세요.</p></div>
         </div></section>)}
+      {/* Sittings name learners and hold what they answered, so they need the operator's own sign-in. */}
+      {libraryPage === 'sessions' && mayPublish(workspace.role) && (session?.user ? <LearnerSessionsPanel />
+        : <section className="dashboard-section"><p className="editor-note">학습 세션은 운영자 계정으로 로그인해야 볼 수 있어요. <a href="/">학습 화면</a>에서 로그인한 뒤 다시 오세요.</p></section>)}
       {/* Feedback names the learners who left it, so it needs the operator's own sign-in too. */}
       {libraryPage === 'feedback' && mayPublish(workspace.role) && (session?.user ? <FeedbackPanel userId={session.user.id} onEdit={(lessonKey, sectionId) => {
         // Opens the draft at the step the note is about; a lesson nobody is editing gets a draft started.

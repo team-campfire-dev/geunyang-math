@@ -44,6 +44,7 @@ model User {
   agentKeys    AgentKey[]
   feedback     LessonFeedback[] @relation("FeedbackAuthor")
   feedbackResolved LessonFeedback[] @relation("FeedbackResolver")
+  visits       LearnerVisit[]
 }
 
 /// Someone who teaches a learner. A person today — a parent, a teacher — and a model later, for the
@@ -269,6 +270,32 @@ model LearningScope {
   enrollments Enrollment[]
   assignments Assignment[]
   attempts    Attempt[]
+}
+
+/// One time a signed-in learner came to the learning screen, and what they came in. It is how an
+/// operator reads a sitting back: a page opened again and again, a login that quietly stopped, a
+/// phone's in-app browser. Only kinds are kept — never the address, the browser's own string or what
+/// was on the screen — and the rows go with the account.
+model LearnerVisit {
+  id        String   @id @default(cuid()) @db.VarChar(191)
+  userId    String   @db.VarChar(191)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// The login it came on (`Session.id`). Not a relation: a session row goes at logout, its visits stay.
+  sessionId String?  @db.VarChar(191)
+  /// `login` as Google sign-in made the session, `open` for the page loading, `return` for coming
+  /// back to a page the browser had kept, `logout` as the learner signed out.
+  kind      String   @db.VarChar(20)
+  /// `phone`, `tablet`, `desktop` or `unknown`.
+  device    String   @db.VarChar(20)
+  /// `android`, `ios`, `windows`, `macos`, `linux` or `other`.
+  os        String   @db.VarChar(20)
+  /// `chrome`, `safari`, `samsung`, `edge`, `firefox`, `whale` or `other`.
+  browser   String   @db.VarChar(20)
+  /// The app whose own browser the page was opened in — `instagram`, `kakaotalk`, `facebook`,
+  /// `naver`, `line`, or `webview` for one it does not name. Null in an ordinary browser.
+  inApp     String?  @db.VarChar(20)
+  createdAt DateTime @default(now())
+  @@index([userId, createdAt])
 }
 
 model Session {
@@ -538,6 +565,9 @@ model Enrollment {
   lessonVersionId      String @db.VarChar(191)
   lessonVersion        LessonVersion @relation(fields: [lessonVersionId], references: [id])
   completedSectionIds Json
+  /// When each finished step was finished, by its id. Null for an enrollment that finished nothing
+  /// since this was kept, and a step finished before then is in `completedSectionIds` alone.
+  sectionTimes        Json?
   status              String @default("active") @db.VarChar(20)
   createdAt           DateTime @default(now())
   completedAt         DateTime?

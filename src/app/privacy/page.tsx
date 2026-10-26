@@ -11,13 +11,14 @@ export default function PrivacyPage() {
   return <div className="privacy-page">
     <header className="privacy-header"><Link href="/" aria-label="그냥수학 홈"><span className="brand-word">그냥<span>수학</span></span></Link><Link href="/">학습 공간으로 돌아가기 <span aria-hidden="true">↗</span></Link></header>
     <main id="main-content" className="privacy-content">
-      <div className="privacy-heading"><h1>개인정보 안내</h1><p>나의 배움을 이어가기 위해 어떤 정보를 사용하는지,<br className="privacy-desktop-break" /> 보관한 정보를 어떻게 삭제할 수 있는지 알려드려요.</p><span className="privacy-date">안내 기준일 · 2026년 9월 14일</span></div>
+      <div className="privacy-heading"><h1>개인정보 안내</h1><p>나의 배움을 이어가기 위해 어떤 정보를 사용하는지,<br className="privacy-desktop-break" /> 보관한 정보를 어떻게 삭제할 수 있는지 알려드려요.</p><span className="privacy-date">안내 기준일 · 2026년 10월 26일</span></div>
       <article className="privacy-sheet">
         <section><span className="privacy-number">01</span><h2>계정 연결과 학습 기록</h2>
           <p>Google 로그인으로 같은 학습 공간을 다시 찾을 수 있도록 Google 계정의 고유 식별자(<code>sub</code>)와 표시 이름을 데이터베이스에 저장합니다. 로그인할 때 Google이 제공한 이메일 확인 상태(<code>email_verified</code>)를 검증합니다.</p>
           <p>이메일 주소와 프로필 사진, Google의 액세스 토큰·갱신 토큰·ID 토큰은 영구 저장하지 않습니다.</p>
           <p>수업 학습과 복습을 이어가기 위해 다음 정보를 계정과 연결해 저장합니다.</p>
-          <ul><li>학습 목표와 하루 학습 시간</li><li>시작한 수업과 단계별 진도, 완료 기록</li><li>문제에 입력한 답안과 풀이 결과, 힌트 사용 기록</li><li>배정된 과제와 제출 기록</li><li>시작점 진단의 답안·건너뛰기·결과와 진행 상태</li><li>직접 고른 추천 수업과 추천이 달라진 이유·학습 상태 기록</li></ul>
+          <ul><li>학습 목표와 하루 학습 시간</li><li>시작한 수업과 단계별 진도, 완료 기록</li><li>문제에 입력한 답안과 풀이 결과, 힌트 사용 기록</li><li>배정된 과제와 제출 기록</li><li>시작점 진단의 답안·건너뛰기·결과와 진행 상태</li><li>직접 고른 추천 수업과 추천이 달라진 이유·학습 상태 기록</li><li>학습 단계를 마친 시각</li><li>로그인한 채로 학습 화면을 열거나 다시 돌아온 시각, 로그인·로그아웃한 시각과 그때의 기기 종류(폰·태블릿·컴퓨터, 운영체제, 브라우저, 카카오톡·인스타그램 같은 앱 안 브라우저인지)</li></ul>
+          <p>단계를 마친 시각과 기기 종류는 운영자가 학습 흐름과 로그인·접속 문제를 살피는 데에만 사용합니다. 브라우저가 보내는 기기 정보 원문과 IP 주소는 이 기록에 저장하지 않습니다.</p>
         </section>
         <section><span className="privacy-number">02</span><h2>로그인을 유지하는 정보</h2>
           <p>서비스 세션 쿠키는 로그인 상태를 유지하며 유효기간은 7일입니다. Google 로그인 도중 사용하는 임시 쿠키의 유효기간은 10분입니다. 두 쿠키 모두 페이지의 자바스크립트에서 읽을 수 없는 <code>HttpOnly</code> 방식으로 설정합니다.</p>

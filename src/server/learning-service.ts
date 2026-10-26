@@ -849,7 +849,9 @@ export class LearningService {
                 const attempts = await tx.attempt.findMany({ where: { userId, enrollmentId: enrollment.id, problemVersionId } });
                 if (!attempts.some(a => (a.result as GradeResult).status !== 'invalid')) throw conflict('문제를 먼저 풀어 주세요. 틀려도 다음 단계로 갈 수 있어요.');
               }
-              await tx.enrollment.update({ where: { id: enrollment.id }, data: { completedSectionIds: [...done, action.sectionId] } }); return {};
+              // When it was finished is kept beside what was finished, so a step passed in three seconds reads as that.
+              const times = { ...(enrollment.sectionTimes as Record<string, string> | null ?? {}), [action.sectionId]: new Date().toISOString() };
+              await tx.enrollment.update({ where: { id: enrollment.id }, data: { completedSectionIds: [...done, action.sectionId], sectionTimes: times } }); return {};
             }
             case 'hint.open': {
               const target = await this.activity(tx, userId, action.context, action.contextId, action.problemVersionId);
