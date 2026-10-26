@@ -43,14 +43,18 @@ export function readCookie(request: Request, name: string): string | null {
 export function readSessionToken(request: Request) {
   return readCookie(request, googleCookieName()) ?? (developmentLoginEnabled(request) ? readCookie(request, 'gm_session') : null);
 }
-export async function sessionUser(request: Request) {
+/** The login a request came on, with its account — or null when it came on none that is still good. */
+export async function currentSession(request: Request) {
   const googleToken = googleLoginEnabled() ? readCookie(request, googleCookieName()) : null;
   const developmentToken = developmentLoginEnabled(request) ? readCookie(request, 'gm_session') : null;
   const token = googleToken ?? developmentToken;
   if (!validToken(token)) return null;
   const session = await getDatabase().session.findUnique({ where: { tokenHash: hashSessionToken(token) }, include: { user: true } });
   const method = googleToken !== null ? 'google' : 'development';
-  return session && session.authMethod === method && session.expiresAt > new Date() ? session.user : null;
+  return session && session.authMethod === method && session.expiresAt > new Date() ? { id: session.id, user: session.user } : null;
+}
+export async function sessionUser(request: Request) {
+  return (await currentSession(request))?.user ?? null;
 }
 export async function requireUser(request: Request) {
   const user = await sessionUser(request);

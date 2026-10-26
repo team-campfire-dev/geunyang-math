@@ -71,12 +71,16 @@ function serve(options: { signedIn?: boolean; state?: LearningState; lesson?: Le
     catalogue: options.catalogue ?? catalogue,
     developmentLogin: false,
     deletes: 0,
+    visits: [] as (string | null)[],
     after: undefined as ((action: LearningAction) => LearningState) | undefined,
   };
   const reply = (body: unknown, status = 200) => ({ ok: status < 400, status, json: async () => body }) as Response;
   globalThis.fetch = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
-    if (url.endsWith('/api/v1/session')) return reply({ user: state.signedIn ? { id: state.learning.user.id, displayName: state.learning.user.displayName } : null, developmentLogin: state.developmentLogin, googleLogin: true });
+    // The screen names the visit as it opens or comes back; any other ask for the session names none.
+    const asked = /\/api\/v1\/session(?:\?visit=(open|return))?$/.exec(url);
+    if (asked) state.visits.push(asked[1] ?? null);
+    if (asked) return reply({ user: state.signedIn ? { id: state.learning.user.id, displayName: state.learning.user.displayName } : null, developmentLogin: state.developmentLogin, googleLogin: true });
     // The development login this deployment offers: it makes a learner and signs them in.
     if (url.endsWith('/api/v1/dev-session')) {
       state.signedIn = true;
@@ -154,6 +158,16 @@ describe('a lesson opened without starting it', () => {
     // Moving on is reading, not progress: nothing is sent and the step still turns.
     expect(server.sent).toHaveLength(0);
     expect(stepCount()).toBe('2 / 2');
+  });
+});
+
+describe('a visit the operator reads back', () => {
+  it('is named once as the screen opens, and again only when the browser brings the page back', async () => {
+    await openLesson();
+    expect(server.state.visits).toEqual(['open']);
+    // A page restored from the browser's cache is the learner coming back, not a new page.
+    await act(async () => { window.dispatchEvent(Object.assign(new Event('pageshow'), { persisted: true })); });
+    await until(() => expect(server.state.visits).toEqual(['open', 'return']));
   });
 });
 

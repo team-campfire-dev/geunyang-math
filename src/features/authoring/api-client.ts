@@ -2,6 +2,7 @@ import { apiRequest } from '@/features/api-client';
 import type { AuthoringAction, AuthoringResponse, AuthoringWorkspace, DraftDetail } from '@/shared/authoring';
 import type { TeachingAction, TeachingResponse, TeachingView } from '@/shared/teaching';
 import type { AiUsageView } from '@/shared/ai-usage';
+import type { LearnerSessionsDetail, LearnerSessionsList } from '@/shared/learner-sessions';
 import type { AgentKeyAction, AgentKeyResponse, AgentKeysView } from '@/shared/agent';
 import type { FeedbackAction, FeedbackInbox, LessonFeedbackView } from '@/shared/feedback';
 
@@ -24,6 +25,12 @@ export const teachingApi = {
 /** What models cost, for the operator. */
 export const aiUsageApi = {
   view: () => apiRequest<{ usage: AiUsageView }>('ai-usage'),
+};
+
+/** Learners' sittings read back, for the operator. */
+export const learnerSessionsApi = {
+  list: () => apiRequest<{ list: LearnerSessionsList }>('learner-sessions'),
+  detail: (userId: string) => apiRequest<{ detail: LearnerSessionsDetail }>(`learner-sessions?userId=${encodeURIComponent(userId)}`),
 };
 
 /** The codes this account gives an AI to write lessons with. */

@@ -11,7 +11,8 @@ export function supportsWebAuthentication(browserOrigin: string, nativePlatform:
 }
 
 export const learningApi = {
-  session: () => request<Session>('session'),
+  /** Who is signed in. The learning screen names a `visit` as it opens or comes back, which the operator reads later. */
+  session: (visit?: 'open' | 'return') => request<Session>(visit ? `session?visit=${visit}` : 'session'),
   catalog: () => request<PublicCatalog>('learning?catalog=1'),
   state: () => request<LearningState>('learning'),
   lesson: (key: string) => request<LessonDocument>(`learning?lessonKey=${encodeURIComponent(key)}`),

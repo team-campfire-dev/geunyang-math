@@ -610,6 +610,39 @@
 .authoring-page .ai-usage code { font-size: 12px; }
 @media (max-width: 740px) { .authoring-page .usage-stats { grid-template-columns: minmax(0, 1fr); } }
 
+/* A learner's sittings, read back. Each sitting is a sheet: when and in what, what it says, then
+   every line in time order. Times line up on the left so gaps read at a glance; what somebody else
+   did, and the coming and going of pages, stay quiet so the learner's own work stands out. */
+.authoring-page .learner-sessions .usage-table tr.is-selected td { background: var(--editor-active-bg); }
+.authoring-page .learner-sessions .usage-table .text-button { font-weight: 600; padding: 0; min-height: 0; }
+.authoring-page .sitting-who { font-size: 17px; font-weight: 600; margin: 8px 0 14px; }
+.authoring-page .sitting-who small { margin-left: 10px; font-size: var(--editor-help-size); font-weight: 400; color: var(--editor-help); }
+.authoring-page .sitting { border: 1px solid var(--editor-panel-line); border-radius: 9px; background: var(--white); padding: 16px 20px; margin-bottom: 14px; }
+.authoring-page .sitting.is-outside { background: transparent; border-style: dashed; padding: 10px 20px; }
+.authoring-page .sitting header { margin-bottom: 10px; }
+.authoring-page .sitting h3 { font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.authoring-page .sitting h3 small { margin-left: 10px; font-size: var(--editor-help-size); font-weight: 400; color: var(--editor-help); }
+.authoring-page .sitting-notes { list-style: none; margin: 0 0 12px; padding: 10px 14px; border-radius: 7px; background: var(--editor-sunken); display: grid; gap: 4px; }
+.authoring-page .sitting-notes li { font-size: 13px; line-height: 1.6; color: var(--editor-label); padding-left: 14px; position: relative; }
+.authoring-page .sitting-notes li::before { content: ''; position: absolute; left: 0; top: .62em; width: 6px; height: 6px; border-radius: 50%; background: var(--faint); }
+.authoring-page .sitting-notes li:is(.is-in-app, .is-relogin, .is-skimmed, .is-stopped, .is-struggled, .is-reopened)::before { background: var(--accent); }
+.authoring-page .sitting-events { list-style: none; margin: 0; padding: 0; }
+.authoring-page .sitting-event { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 12px; align-items: baseline; padding: 6px 0; border-top: 1px dashed var(--editor-rule); font-size: 13px; line-height: 1.6; }
+.authoring-page .sitting-event:first-child { border-top: 0; }
+.authoring-page .sitting-event time { font-size: 12px; color: var(--editor-help); font-variant-numeric: tabular-nums; }
+.authoring-page .sitting-what { color: var(--editor-ink); overflow-wrap: anywhere; }
+.authoring-page .sitting-what small { color: var(--editor-help); }
+.authoring-page .sitting-what .pill { padding: 2px 7px; margin-right: 6px; font-size: 11px; }
+.authoring-page .sitting-what code { font-size: 12px; }
+.authoring-page .sitting-meta { font-size: 12px; color: var(--editor-help); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
+.authoring-page .sitting-event.is-quiet .sitting-what { color: var(--editor-help); }
+.authoring-page .sitting-event.is-wrong .sitting-what { color: var(--editor-warn); }
+@media (max-width: 740px) {
+  .authoring-page .sitting { padding: 14px; }
+  .authoring-page .sitting-event { grid-template-columns: 56px minmax(0, 1fr); }
+  .authoring-page .sitting-meta { grid-column: 2; text-align: left; }
+}
+
 /* 수업 의견 */
 .feedback-filters{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 18px;margin-bottom:18px}
 .feedback-filters .editor-field{min-width:240px}

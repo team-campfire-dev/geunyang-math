@@ -329,6 +329,8 @@ export function LearningWorkspace() {
   const [googleStarting, setGoogleStarting] = useState(false);
   const googleStartingRef = useRef(false);
   const loadGeneration = useRef(0);
+  /** Whether this page load has told the server it opened. React mounts twice in development, and that is one visit. */
+  const opened = useRef(false);
   const authReturn = useRef<{ message: string | null; returnTo: AuthReturn | null } | null>(null);
   const [document, setDocument] = useState<LessonDocument | null>(null);
   const [lessonLoading, setLessonLoading] = useState(false);
@@ -429,11 +431,11 @@ export function LearningWorkspace() {
     try { clearAuthReturn(window.sessionStorage); } catch { /* Browser storage may be restricted. */ }
   }
 
-  async function refresh(restoreAfterLogin = false) {
+  async function refresh(restoreAfterLogin = false, visit?: 'open' | 'return') {
     const generation = ++loadGeneration.current;
     setLoading(true); setError('');
     try {
-      const nextSession = await learningApi.session();
+      const nextSession = await learningApi.session(visit);
       if (generation !== loadGeneration.current) return;
       // A pageshow listener keeps its initial closure; compare the confirmed account via a ref.
       // Clear the old account before fetching more data, even if the new account's load fails.
@@ -519,10 +521,11 @@ export function LearningWorkspace() {
         } catch { /* The allowlisted message still works if this browser restricts history changes. */ }
       }
     }
-    void refresh(true);
+    void refresh(true, opened.current ? undefined : 'open');
+    opened.current = true;
     const onPageShow = (event: PageTransitionEvent) => {
       googleStartingRef.current = false; setGoogleStarting(false);
-      if (event.persisted) void refresh();
+      if (event.persisted) void refresh(false, 'return');
     };
     window.addEventListener('pageshow', onPageShow);
     return () => { loadGeneration.current += 1; window.removeEventListener('pageshow', onPageShow); };
