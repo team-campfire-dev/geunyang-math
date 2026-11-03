@@ -54,29 +54,50 @@ export function reviewAttempt(ids: string[], records: Map<string, ConfusionEvide
   return (signal && wrong.find(attempt => attempt.signal?.kind === signal.kind && attempt.signal.key === signal.key)) || wrong[0];
 }
 type Gather = (key: string) => void | Promise<void>;
-type PatternProps = {
-  item: RepeatedConfusion; records: Map<string, ConfusionEvidence>; onGather: Gather; busy?: boolean; continuing: boolean;
-  onOpenLesson: (key: string) => void;
-};
 
-function Standing({ item }: { item: RepeatedConfusion }) {
-  return <span className="confusion-meta">
-    <span className="confusion-badge">{item.status === 'improving' ? '최근에는 스스로 해결' : `${item.evidenceIds.length}문제에서 반복`}</span>
-    <time dateTime={item.lastSeenAt}>{day(item.lastSeenAt)}</time>
-  </span>;
+/** A recorded answer drawn the way it was written: the choice's own text, math, or the raw text. */
+function Written({ attempt, problem }: { attempt: ConfusionAttempt; problem: ConfusionEvidence }) {
+  const option = problem.responseSpec.options?.find(item => item.id === attempt.answer.trim());
+  const written = answerLatex(attempt.answer);
+  return option ? <RichText text={option.text} /> : written ? <RichText text={`$${written}$`} /> : <span className="confusion-written">{attempt.answer}</span>;
 }
 
 /**
- * What a repeated mistake is and what to do about it. The first one on the page asks for practice
- * with the one ink button there is; the ones folded under it ask more quietly, because a page where
- * five buttons say the same thing has not said which to press.
+ * One question whose first answer was missed, read again as it was asked: the question, the first
+ * answer struck through, the one that put it right if there was one, and what the answer gave away.
  */
-function PatternBody({ item, records, onGather, busy, continuing, onOpenLesson, lead }: PatternProps & { lead: boolean }) {
-  const attempt = reviewAttempt(item.evidenceIds, records, item);
+function MistakeCard({ problem, busy, onOpenLesson }: { problem: ConfusionEvidence; busy?: boolean; onOpenLesson: (key: string) => void }) {
+  const fixed = problem.corrections.find(attempt => attempt.status === 'correct');
+  const lessonKey = problem.first.source.lessonKey;
+  return <article className="mistake-card">
+    <div className="mistake-prompt"><ContentBlocks blocks={problem.promptContent} /></div>
+    <div className="mistake-answers">
+      <div className="is-wrong"><small>첫 답</small><Written attempt={problem.first} problem={problem} /><Icon name="close" size={14} /></div>
+      {fixed && <div className="is-right"><small>다시 쓴 답</small><Written attempt={fixed} problem={problem} /><Icon name="check" size={14} /></div>}
+    </div>
+    {problem.first.signal && <p className="mistake-signal">답에서 읽은 단서: <b>{problem.first.signal.label}</b></p>}
+    <div className="mistake-foot">
+      <span>{sourceLabels[problem.first.source.kind]} · {problem.first.source.title} · <time dateTime={problem.first.createdAt}>{day(problem.first.createdAt)}</time>{problem.first.hintUsed ? ' · 힌트 사용' : ''}</span>
+      <span className="mistake-tools">
+        <ConceptHelp key={problem.first.id} attemptId={problem.first.id} context="history" busy={busy} />
+        {lessonKey && <button className="text-button" disabled={busy} onClick={() => onOpenLesson(lessonKey)}>수업 보기</button>}
+      </span>
+    </div>
+  </article>;
+}
+
+/**
+ * A mistake made on more than one question, with those questions under it. The first one on the
+ * page asks for practice with the one ink button there is; the others ask more quietly, because a
+ * page where five buttons say the same thing has not said which to press.
+ */
+function MistakeGroup({ item, shown, records, onGather, busy, continuing, onOpenLesson, lead }: {
+  item: RepeatedConfusion; shown: string[]; records: Map<string, ConfusionEvidence>; onGather: Gather; busy?: boolean;
+  continuing: boolean; onOpenLesson: (key: string) => void; lead: boolean;
+}) {
   const [error, setError] = useState('');
   const [starting, setStarting] = useState(false);
   const pending = useRef(false);
-  const lessonKey = attempt?.source.lessonKey;
   async function gather() {
     if (pending.current) return;
     pending.current = true; setStarting(true); setError('');
@@ -84,21 +105,22 @@ function PatternBody({ item, records, onGather, busy, continuing, onOpenLesson, 
     catch (reason) { setError(reason instanceof Error ? reason.message : '문제를 준비하지 못했어요. 다시 눌러 주세요.'); }
     finally { pending.current = false; setStarting(false); }
   }
-  return <>
-    <div className="confusion-note"><RichText text={item.note} /></div>
-    {item.status === 'improving' && <p className="muted small">{item.description}</p>}
-    <div className="confusion-tools">
+  return <section className={`mistake-group is-${item.status}`} id={item.kind === 'misconception' ? confusionCardId(item.key) : undefined} tabIndex={-1} aria-labelledby={`mistake-${item.kind}-${item.key}`}>
+    <header>
+      <div>
+        <span className="mistake-group-kind">되풀이된 실수 <span className="confusion-badge">{item.status === 'improving' ? '최근에는 스스로 해결' : `${item.evidenceIds.length}문제에서 반복`}</span></span>
+        <h3 id={`mistake-${item.kind}-${item.key}`}>{item.label}</h3>
+        <div className="confusion-note"><RichText text={item.note} /></div>
+        {item.status === 'improving' && <p className="muted small">{item.description}</p>}
+      </div>
       {item.kind === 'misconception' && item.status === 'repeated'
         && <button className={lead ? 'button primary' : 'button secondary'} disabled={busy || starting} onClick={() => void gather()}>
           {starting ? '문제 준비 중… (새로 만들면 30초쯤)' : continuing ? '모아 풀기 이어서' : '이것만 모아 풀기'}</button>}
-      {attempt && <ConceptHelp key={attempt.id} attemptId={attempt.id} context="history" busy={busy || starting} />}
-      {!(item.kind === 'misconception' && item.status === 'repeated') && lessonKey
-        && <button className="text-button" disabled={busy} onClick={() => onOpenLesson(lessonKey)}>관련 수업 다시 보기</button>}
-    </div>
+    </header>
     {error && <p className="field-error" role="alert">{error}</p>}
-    <Evidence ids={item.evidenceIds} records={records} />
+    {shown.length > 0 && <div className="mistake-cards">{shown.map(id => records.get(id) && <MistakeCard key={id} problem={records.get(id)!} busy={busy} onOpenLesson={onOpenLesson} />)}</div>}
     {item.improvementEvidenceIds.length > 0 && <Evidence ids={item.improvementEvidenceIds} records={records} label="이후 스스로 푼 근거" />}
-  </>;
+  </section>;
 }
 
 /** A concept missed on two different questions, opened from its course in 「코스별 학습 상태」. */
@@ -115,36 +137,45 @@ export function MissedConcept({ concept, records, busy, onOpenLesson }: {
   </div>;
 }
 
+/**
+ * 오답 노트: every question whose first answer was missed, gathered under the mistake it showed.
+ * A mistake seen on two different questions heads its own group; a slip seen once waits with the
+ * others at the end. What was put right afterwards stays on the card, struck-through answer and all.
+ */
 export function ConfusionSummary({ summary, onOpenLesson, onGather, busy, continuingKeys = [] }: {
   summary: Summary; onOpenLesson: (key: string) => void; onGather: Gather; busy?: boolean; continuingKeys?: string[];
 }) {
+  const [onlyOpen, setOnlyOpen] = useState(false);
   const records = confusionRecords(summary);
-  // One thing asked for at a time: the most recent mistake still repeating. The rest wait folded.
-  const lead = summary.repeated.find(item => item.status === 'repeated');
-  const rest = summary.repeated.filter(item => item !== lead);
+  const wrong = summary.evidence.filter(item => item.first.status === 'incorrect');
+  const unfixed = wrong.filter(item => !item.corrections.some(attempt => attempt.status === 'correct'));
+  const shown = new Set((onlyOpen ? unfixed : wrong).map(item => item.problemVersionId));
+  const grouped = new Set(summary.repeated.flatMap(item => item.evidenceIds));
+  const loose = (onlyOpen ? unfixed : wrong).filter(item => !grouped.has(item.problemVersionId));
+  const lead = summary.repeated.find(item => item.kind === 'misconception' && item.status === 'repeated');
   const missed = summary.concepts.filter(item => item.state === 'missed').length;
-  const common = (item: RepeatedConfusion) => ({ item, records, busy, onGather, onOpenLesson, continuing: continuingKeys.includes(item.key) });
-  const id = (item: RepeatedConfusion) => item.kind === 'misconception' ? confusionCardId(item.key) : undefined;
-  return <section className="dashboard-section confusion-summary" aria-label="헷갈림 요약" id="confusion-summary" tabIndex={-1}>
-    <div className="section-heading"><div><span className="eyebrow">다시 살펴볼 것</span><h2>헷갈림 요약</h2></div>
-      {summary.latestAt && <span className="muted small">최근 풀이 <time dateTime={summary.latestAt}>{day(summary.latestAt)}</time></span>}
+  return <section className="mistake-note" aria-label="오답 노트" id="confusion-summary" tabIndex={-1}>
+    <div className="mistake-note-bar">
+      <dl className="mistake-note-counts">
+        <div><dt>푼 문제</dt><dd>{summary.evidence.length}</dd></div>
+        <div><dt>첫 답 놓침</dt><dd>{wrong.length}</dd></div>
+        <div><dt>아직 못 고침</dt><dd>{unfixed.length}</dd></div>
+      </dl>
+      {wrong.length > 0 && <div className="mistake-filter" role="group" aria-label="보여 줄 문제">
+        <button className={!onlyOpen ? 'active' : ''} aria-pressed={!onlyOpen} onClick={() => setOnlyOpen(false)}>전체</button>
+        <button className={onlyOpen ? 'active' : ''} aria-pressed={onlyOpen} onClick={() => setOnlyOpen(true)}>아직 못 고친 것</button>
+      </div>}
     </div>
-    <details className="history-guide"><summary>기록을 읽는 기준</summary><p>수업과 제출한 문제집의 첫 답을 함께 살펴봤어요. 같은 문제를 여러 번 풀어도 한 문제로 세고, 고쳐 쓴 답은 따로 보여줘요. 서로 다른 두 문제 이상에서 같은 실수가 나오면 「되풀이된 실수」로 모아요. 답에서 읽은 단서라 이유를 단정하지는 않아요. 풀이 근거를 펼치면 당시의 답과 힌트 사용 여부를 볼 수 있어요.</p></details>
+    <details className="history-guide"><summary>기록을 읽는 기준</summary><p>수업과 제출한 문제집의 첫 답을 함께 살펴봤어요. 같은 문제를 여러 번 풀어도 한 문제로 세고, 고쳐 쓴 답은 따로 보여줘요. 서로 다른 두 문제 이상에서 같은 실수가 나오면 「되풀이된 실수」로 모아요. 답에서 읽은 단서라 이유를 단정하지는 않아요.</p></details>
     {!summary.evidence.length && <p className="empty-inline">아직 살펴볼 풀이가 없어요. 수업에서 답하거나 문제집을 제출하면 여기에 모여요.</p>}
-    {lead && <article className="confusion-card confusion-lead is-repeated" id={id(lead)} tabIndex={-1}>
-      <div className="confusion-card-heading"><h3>{lead.label}</h3><Standing item={lead} /></div>
-      <PatternBody {...common(lead)} lead />
-    </article>}
-    {rest.length > 0 && <div className="confusion-more">
-      <h3>{lead ? '그 밖에 되풀이된 실수' : '되풀이된 실수와 최근 변화'} <span className="count-label">{rest.length}</span></h3>
-      <ul className="confusion-list">{rest.map(item => <li key={`${item.kind}:${item.key}`}>
-        <details className={`confusion-card is-${item.status}`} id={id(item)} tabIndex={-1}>
-          <summary><span className="confusion-name">{item.label}</span><Standing item={item} /><Icon name="chevron" size={16} /></summary>
-          <div className="confusion-fold"><PatternBody {...common(item)} lead={false} /></div>
-        </details>
-      </li>)}</ul>
-    </div>}
-    {summary.evidence.length > 0 && !summary.repeated.length && <p className="empty-inline">아직 되풀이된 실수는 없어요.</p>}
+    {summary.evidence.length > 0 && !wrong.length && !summary.repeated.length && <p className="empty-inline">아직 첫 답을 놓친 문제가 없어요.</p>}
+    {onlyOpen && wrong.length > 0 && !unfixed.length && <p className="empty-inline">놓친 문제는 모두 다시 풀어 맞혔어요.</p>}
+    {summary.repeated.map(item => <MistakeGroup key={`${item.kind}:${item.key}`} item={item} shown={item.evidenceIds.filter(id => shown.has(id))}
+      records={records} onGather={onGather} busy={busy} continuing={continuingKeys.includes(item.key)} onOpenLesson={onOpenLesson} lead={item === lead} />)}
+    {loose.length > 0 && <section className="mistake-group">
+      <header><div><h3>{summary.repeated.length ? '그 밖에 놓친 문제' : '첫 답을 놓친 문제'}</h3></div></header>
+      <div className="mistake-cards">{loose.map(item => <MistakeCard key={item.problemVersionId} problem={item} busy={busy} onOpenLesson={onOpenLesson} />)}</div>
+    </section>}
     {missed > 0 && <p className="confusion-pointer">서로 다른 문제에서 첫 답을 놓친 개념 {missed}개는 아래 「코스별 학습 상태」에서 코스를 펼치면 볼 수 있어요.</p>}
   </section>;
 }

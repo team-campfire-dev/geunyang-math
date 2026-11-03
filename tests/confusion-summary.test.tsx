@@ -21,7 +21,7 @@ const props = () => ({ onOpenLesson: vi.fn(), onGather: vi.fn() });
 const missed = (summary = fixture(), onOpenLesson = vi.fn()) =>
   render(<MissedConcept concept={summary.concepts[0]} records={confusionRecords(summary)} onOpenLesson={onOpenLesson} />);
 
-describe('learner confusion summary', () => {
+describe('learner mistake note', () => {
   it('opens the actual question and choice text with first/corrected answers and their context', async () => {
     const onOpenLesson = vi.fn();
     missed(fixture(), onOpenLesson);
@@ -49,22 +49,32 @@ describe('learner confusion summary', () => {
     expect(screen.getByText(/첫 답을 놓친 개념 1개는 아래 「코스별 학습 상태」/)).toBeDefined();
   });
 
-  it('asks about one mistake at a time and folds the rest into a list of names', () => {
+  it('lays every repeated mistake out with its questions, and asks for practice with one ink button', () => {
     const summary = fixture();
     const pattern = (key: string, label: string, lastSeenAt: string) => ({ kind: 'misconception' as const, key, label, note: `${label}를 확인해요.`,
       status: 'repeated' as const, description: '서로 다른 두 문제의 첫 답에서 비슷한 실수가 나왔어요.', evidenceIds: ['p1'], improvementEvidenceIds: [], lastSeenAt });
     summary.repeated = [pattern('newest', '가장 최근 실수', '2026-09-29T00:00:00Z'), pattern('older', '지난 실수', '2026-09-28T00:00:00Z'), pattern('oldest', '오래된 실수', '2026-09-27T00:00:00Z')];
     render(<ConfusionSummary summary={summary} {...props()} />);
-    expect(screen.getByRole('heading', { name: '가장 최근 실수' })).toBeDefined();
-    const rest = screen.getByText('지난 실수').closest('details')!;
-    expect(rest.open).toBe(false);
-    expect(screen.getByText('오래된 실수').closest('details')!.open).toBe(false);
-    // One ink button on the page; the folded ones ask more quietly.
+    // Nothing is folded away: each mistake is a heading with the question that showed it under it.
+    expect(screen.getAllByRole('heading', { level: 3 }).map(node => node.textContent)).toEqual(['가장 최근 실수', '지난 실수', '오래된 실수']);
+    expect(screen.getAllByText('분수의 덧셈을 골라 보세요.')).toHaveLength(3);
+    // One ink button on the page; the others ask more quietly.
     const buttons = screen.getAllByRole('button', { name: '이것만 모아 풀기' });
     expect(buttons.map(button => button.className)).toEqual(['button primary', 'button secondary', 'button secondary']);
     // The server's sentence about how it counts is said once, in the guide, not on every card.
     expect(screen.queryByText(/비슷한 실수가 나왔어요/)).toBeNull();
     expect(screen.getByText(/답에서 읽은 단서라 이유를 단정하지는 않아요/).closest('details')!.className).toBe('history-guide');
+  });
+
+  it('shows the first answer struck out beside the one that put it right, and can keep to the ones not yet put right', () => {
+    const summary = fixture();
+    render(<ConfusionSummary summary={summary} {...props()} />);
+    expect(screen.getByText('분모끼리 더하기').closest('.is-wrong')).not.toBeNull();
+    expect(screen.getByText('통분해서 더하기').closest('.is-right')).not.toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: '아직 못 고친 것' }));
+    // The only miss here was put right afterwards, so there is nothing left to show and it says so.
+    expect(screen.queryByText('분수의 덧셈을 골라 보세요.')).toBeNull();
+    expect(screen.getByText('놓친 문제는 모두 다시 풀어 맞혔어요.')).toBeDefined();
   });
 
   it('offers existing gathered practice only for active named patterns', () => {
@@ -103,10 +113,9 @@ describe('from a summary to explanation and practice', () => {
     const load = vi.spyOn(learningApi, 'conceptHelp').mockResolvedValue({ concepts: [{ key: 'fractions', label: '분수', definition: null, lesson: null }] });
     const gather = vi.fn().mockRejectedValueOnce(new Error('연습 문제를 준비하지 못했어요.')).mockResolvedValue(undefined);
     render(<ConfusionSummary summary={pattern()} onOpenLesson={vi.fn()} onGather={gather} />);
-    const card = screen.getByRole('heading', { name: '분모끼리 더하기' }).closest('article')!;
+    const card = screen.getByRole('heading', { name: '분모끼리 더하기' }).closest('section')!;
     const ui = within(card);
     expect(load).not.toHaveBeenCalled();
-    expect(card.querySelector('details')!.open).toBe(false);
     fireEvent.click(ui.getByRole('button', { name: '관련 개념 설명' }));
     expect(await ui.findByText('아직 이 개념에 연결된 설명이 없어요.')).toBeTruthy();
     expect(load).toHaveBeenCalledWith('first');
