@@ -124,6 +124,11 @@ const until = async (check: () => void, tries = 40) => {
   }
   check();
 };
+/** Waits for something to be on the screen, and hands it back. */
+const found = async <T,>(get: () => T) => { await until(() => { get(); }); return get(); };
+/** A course in 연습장's contents, found by its name rather than by the count beside it. */
+const shelfOf = (name: string) => [...window.document.querySelectorAll('#practice-index button')]
+  .find((node) => node.querySelector('.course-index-name')?.textContent === name)!;
 const openLesson = async () => {
   render(<LearningWorkspace />);
   await until(() => expect(screen.getAllByText('분수의 의미').length).toBeGreaterThan(0));
@@ -385,6 +390,7 @@ describe('a set too long to hold on one screen', () => {
     render(<LearningWorkspace />);
     await until(() => expect(screen.getAllByRole('button', { name: '연습장' }).length).toBeGreaterThan(0));
     fireEvent.click(screen.getAllByRole('button', { name: '연습장' })[0]);
+    fireEvent.click(await found(() => screen.getByRole('button', { name: /끝낸 것/ })));
     await until(() => expect(screen.getByText('다 푼 문제집')).toBeDefined());
     fireEvent.click(screen.getAllByRole('button', { name: /분수 모아 풀기/ })[0]);
     await until(() => expect(window.document.querySelector('.answer-report')).not.toBeNull());
@@ -408,7 +414,7 @@ describe('targeted practice on the home screen', () => {
     server = serve({ state: planned({ diagnosticOffering: { version: 'v1', title: '시작점 확인', description: '', scope: 10, estimatedMinutes: 5 } }) });
     render(<LearningWorkspace />);
     await until(() => expect(screen.getByText('오늘의 맞춤 연습')).toBeDefined());
-    expect(document_text('.hero-copy')).toContain('3문제');
+    expect(document_text('.home-now')).toContain('3문제');
     fireEvent.click(screen.getByRole('button', { name: '이 실수만 모아 풀기' }));
     await until(() => expect(server.of('practice.gather')).toEqual([{ action: 'practice.gather', misconception: 'add-denominators' }]));
   });
@@ -483,6 +489,7 @@ describe('a mistake the record keeps showing', () => {
     render(<LearningWorkspace />);
     await until(() => expect(screen.getAllByRole('button', { name: '연습장' }).length).toBeGreaterThan(0));
     fireEvent.click(screen.getAllByRole('button', { name: '연습장' })[0]);
+    fireEvent.click(await found(() => screen.getByRole('button', { name: /끝낸 것/ })));
     await until(() => expect(screen.getByText('다 푼 문제집')).toBeDefined());
     fireEvent.click(screen.getAllByRole('button', { name: /모아 풀기/ })[0]);
     await until(() => expect(screen.getByRole('heading', { level: 1, name: '「분모끼리 더하기」 모아 풀기' })).toBeDefined());
@@ -563,6 +570,8 @@ describe('reading the worked solution', () => {
       render(<LearningWorkspace />);
       await until(() => expect(screen.getAllByRole('button', { name: '연습장' }).length).toBeGreaterThan(0));
       fireEvent.click(screen.getAllByRole('button', { name: '연습장' })[0]);
+      // A set still to hand in is among the work to do; one handed in waits under 「끝낸 것」.
+      if (view.status === 'submitted') fireEvent.click(await found(() => screen.getByRole('button', { name: /끝낸 것/ })));
       await until(() => expect(screen.getByRole('button', { name: /분수의 의미 연습/ })).toBeDefined());
       fireEvent.click(screen.getByRole('button', { name: /분수의 의미 연습/ }));
       await until(() => expect(screen.getByRole('heading', { level: 1, name: '분수의 의미 연습' })).toBeDefined());
@@ -577,7 +586,7 @@ describe('reading the worked solution', () => {
 });
 
 describe('the lessons the home screen puts nearest', () => {
-  const shelf = () => [...window.document.querySelectorAll('.page-home .class-grid .class-card h3')].map((node) => node.textContent);
+  const shelf = () => [...window.document.querySelectorAll('.page-home .lesson-row strong')].map((node) => node.textContent);
   const heading = () => [...window.document.querySelectorAll('.page-home .dashboard-section h2')][0]?.textContent;
 
   it('does not offer the lesson the hero is already offering', async () => {
@@ -717,9 +726,10 @@ describe('a course beside the line the catalogue is ordered along', () => {
     render(<LearningWorkspace />);
     await until(() => expect(screen.getAllByRole('button', { name: '수업' }).length).toBeGreaterThan(0));
     fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
-    await until(() => expect(screen.getAllByText('응용계산').length).toBeGreaterThan(1));
+    await until(() => expect(screen.getAllByText('응용계산').length).toBeGreaterThan(0));
   };
-  const headings = () => [...window.document.querySelectorAll('.track-heading h2, .catalog-banner strong')].map((node) => node.textContent);
+  const headings = () => [...window.document.querySelectorAll('.course-index-track > span, .course-index-name')].map((node) => node.textContent);
+  const pick = (name: string) => fireEvent.click([...window.document.querySelectorAll('.course-index button')].find((node) => node.querySelector('.course-index-name')?.textContent === name)!);
 
   it('is listed under its own line rather than after the last school course', async () => {
     server = twoTracks();
@@ -728,20 +738,17 @@ describe('a course beside the line the catalogue is ordered along', () => {
     expect(headings()).toEqual(['기초 과정', '분수', 'NCS 수리영역', '응용계산']);
   });
 
-  it('groups the chips into the same lines, and keeps both reachable after one is picked', async () => {
+  it('keeps every line in the contents, and opens the course picked from them', async () => {
     server = twoTracks();
     await openCatalogue();
-    const rows = () => [...window.document.querySelectorAll('.course-filter-line')].map((row) => [...row.children].map((node) => node.textContent));
-    expect(rows()).toEqual([['모든 코스'], ['분수'], ['응용계산']]);
-    fireEvent.click(screen.getByRole('button', { name: '응용계산' }));
-    // Picking narrows the courses listed below, never the chips: the school line stays one click away.
-    expect(rows()).toEqual([['모든 코스'], ['분수'], ['응용계산']]);
-    expect(headings()).toEqual(['NCS 수리영역', '응용계산']);
+    pick('응용계산');
+    // Picking opens one course on the page; the contents beside it still name both lines.
+    expect(window.document.querySelector('#course-page-title')!.textContent).toBe('응용계산');
+    expect(headings()).toEqual(['기초 과정', '분수', 'NCS 수리영역', '응용계산']);
   });
 
-  it('cuts a line into the school years it holds, in the catalogue and in the chips', async () => {
-    // 「중2까지 했어요」 names a place in the catalogue; 「수학 과정」 does not. The chips and the
-    // list are cut the same way, so the chip a learner presses and the heading they scroll to match.
+  it('cuts a line into the school years it holds', async () => {
+    // 「중2까지 했어요」 names a place in the catalogue; 「수학 과정」 does not, so the contents are cut by year.
     const spread: PublicLesson[] = [...catalogue,
       { ...catalogue[0], lessonKey: 'negative-number', versionId: 'negative-number:v1', title: '음수와 수직선', courseKey: 'integers' },
       { ...catalogue[0], lessonKey: 'linear-function', versionId: 'linear-function:v1', title: '일차함수와 그래프', courseKey: 'functions' }];
@@ -756,10 +763,8 @@ describe('a course beside the line the catalogue is ordered along', () => {
     fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
     await until(() => expect(screen.getAllByText('정수와 유리수').length).toBeGreaterThan(0));
     // 기초 과정 keeps no years, so its courses sit under the line itself; 중학교 과정 is cut in two.
-    expect([...window.document.querySelectorAll('.track-heading h2, .stage-heading, .catalog-banner strong')].map((node) => node.textContent))
+    expect([...window.document.querySelectorAll('.course-index-track > span, .course-index-stage, .course-index-name')].map((node) => node.textContent))
       .toEqual(['기초 과정', '분수', '중학교 과정', '중1', '정수와 유리수', '중2', '일차함수']);
-    expect([...window.document.querySelectorAll('.course-filter-line')].map((row) => [...row.children].map((node) => node.textContent)))
-      .toEqual([['모든 코스'], ['분수'], ['중1', '정수와 유리수'], ['중2', '일차함수']]);
   });
 
   it('says nothing about lines when every course is on the same one', async () => {
@@ -768,7 +773,7 @@ describe('a course beside the line the catalogue is ordered along', () => {
     await until(() => expect(screen.getAllByRole('button', { name: '수업' }).length).toBeGreaterThan(0));
     fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
     await until(() => expect(screen.getByText('분수의 의미')).toBeDefined());
-    expect(window.document.querySelector('.track-heading')).toBeNull();
+    expect(window.document.querySelector('.course-index-track')).toBeNull();
   });
 });
 
@@ -779,9 +784,9 @@ describe('picking a problem set to solve', () => {
     await until(() => expect(screen.getAllByRole('button', { name: '연습장' }).length).toBeGreaterThan(0));
     fireEvent.click(screen.getAllByRole('button', { name: '연습장' })[0]);
     await until(() => expect(screen.getByText('문제집 골라 풀기')).toBeDefined());
-    // A course is closed until it is opened, so no set is offered before somebody asks for one.
+    // The page opens on the work to do, so no set is offered before somebody picks a course.
     expect(screen.queryByText('분수의 의미 연습')).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: /문제집 2개/ }));
+    fireEvent.click(shelfOf('분수'));
     await until(() => expect(screen.getByText('분수의 의미 연습')).toBeDefined());
     // The sets arrive in lesson order, and the lesson they belong to names the group.
     expect(screen.getAllByText(/분수의 의미 (연습|확인)/).map((node) => node.textContent))
@@ -814,22 +819,19 @@ describe('picking a problem set to solve', () => {
     expect(window.document.getElementById('shelf-fractions-fraction-meaning')).not.toBeNull();
   });
 
-  it('leaves a course open when another one is opened, since a shelf hides nothing', async () => {
+  it('opens one course\u2019s sets at a time, and keeps every course in the contents', async () => {
     serve({ catalogue: twoCourses });
     render(<LearningWorkspace />);
     await until(() => expect(screen.getAllByRole('button', { name: '연습장' }).length).toBeGreaterThan(0));
     fireEvent.click(screen.getAllByRole('button', { name: '연습장' })[0]);
-    await until(() => expect(screen.getByRole('button', { name: /문제집 2개/ })).toBeDefined());
-    fireEvent.click(screen.getByRole('button', { name: /문제집 2개/ }));
+    await until(() => expect(shelfOf('분수')).toBeDefined());
+    fireEvent.click(shelfOf('분수'));
     await until(() => expect(screen.getByText('분수의 의미 연습')).toBeDefined());
-    fireEvent.click(screen.getByRole('button', { name: /문제집 1개/ }));
+    fireEvent.click(shelfOf('소수'));
     await until(() => expect(screen.getByText('소수의 의미 연습')).toBeDefined());
-    // Opening the second did not close the first, which is what an accordion would have done.
-    expect(screen.getByText('분수의 의미 연습')).toBeDefined();
-    // And the head is still a toggle: pressing it again puts that one course away.
-    fireEvent.click(screen.getByRole('button', { name: /문제집 2개/ }));
-    await until(() => expect(screen.queryByText('분수의 의미 연습')).toBeNull());
-    expect(screen.getByText('소수의 의미 연습')).toBeDefined();
+    // The page turns to the course picked; the other is still a name away in the contents.
+    expect(screen.queryByText('분수의 의미 연습')).toBeNull();
+    expect(shelfOf('분수')).toBeDefined();
   });
 
   it('wears its lesson\u2019s drawing, so the sets under one lesson are read as siblings', async () => {
@@ -837,14 +839,13 @@ describe('picking a problem set to solve', () => {
     render(<LearningWorkspace />);
     await until(() => expect(screen.getAllByRole('button', { name: '연습장' }).length).toBeGreaterThan(0));
     fireEvent.click(screen.getAllByRole('button', { name: '연습장' })[0]);
-    await until(() => expect(screen.getByRole('button', { name: /문제집 2개/ })).toBeDefined());
-    fireEvent.click(screen.getByRole('button', { name: /문제집 2개/ }));
-    fireEvent.click(screen.getByRole('button', { name: /문제집 1개/ }));
-    await until(() => expect(screen.getByText('소수의 의미 연습')).toBeDefined());
+    await until(() => expect(shelfOf('분수')).toBeDefined());
+    fireEvent.click(shelfOf('분수'));
+    await until(() => expect(screen.getByText('분수의 의미 확인')).toBeDefined());
     const tone = (node: Element) => [...node.classList].find((name) => name.startsWith('art-'));
     const marks = [...window.document.querySelectorAll('.shelf-set > .class-art.small')].map(tone);
     // Every set carries one, and the two 분수의 의미 sets carry the same one because one lesson shows both.
-    expect(marks).toHaveLength(3);
+    expect(marks).toHaveLength(2);
     expect(marks[0]).toBe(marks[1]);
     // And it is the lesson's own drawing, not one the set made up: the card on 수업 wears it too.
     fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
@@ -1065,8 +1066,8 @@ describe('the first step a new learner is asked for', () => {
  * and two ways to overrule the recommendation, all at once and all at the same weight.
  */
 describe('the one thing the home screen offers', () => {
-  const hero = () => window.document.querySelector('.page-home .hero-copy');
-  const heroAction = () => hero()!.querySelector('.hero-button')!.textContent;
+  const hero = () => window.document.querySelector('.page-home .home-now');
+  const heroAction = () => hero()!.querySelector('.home-now-action')!.textContent;
 
   it('sends a learner with no record at all to find their starting point', async () => {
     server = serve({ state: learningState({ diagnosticOffering: { version: 'v3', title: '시작점 확인', description: '지금 어디쯤인지 봐요', scope: 20, estimatedMinutes: 5 } }) });
@@ -1139,7 +1140,8 @@ describe('the lessons screen and the size of the catalogue', () => {
     fireEvent.click(screen.getAllByRole('button', { name: '수업' })[0]);
     await until(() => expect(screen.getByRole('heading', { level: 1, name: '배우고 싶은 코스부터.' })).toBeDefined());
   };
-  const courseNames = () => [...window.document.querySelectorAll('.catalog-banner strong')].map((node) => node.textContent);
+  const courseNames = () => [...window.document.querySelectorAll('.course-index-name')].map((node) => node.textContent);
+  const pick = (name: string) => fireEvent.click([...window.document.querySelectorAll('.course-index button')].find((node) => node.querySelector('.course-index-name')?.textContent === name)!);
   const cards = () => [...window.document.querySelectorAll('.page-lessons .class-grid .class-card h3')].map((node) => node.textContent);
 
   it('opens on the courses this learner actually has, not on the whole catalogue', async () => {
@@ -1169,13 +1171,13 @@ describe('the lessons screen and the size of the catalogue', () => {
   it('names every course it is not drawing, and draws none of their lessons', async () => {
     await open({ user: { id: 'u1', displayName: '학습자', targetCourseKey: 'functions', dailyMinutes: 10 } });
     fireEvent.click(screen.getByRole('button', { name: '전체 4' }));
-    // Every course is named — nothing is hidden — but only the learner's own is opened, so the
-    // screen is four headings and one grid rather than four grids.
+    // Every course is named in the contents — nothing is hidden — but only the learner's own is
+    // open, so the screen is four names and one grid rather than four grids.
     expect(courseNames()).toEqual(['분수', '정수와 유리수', '일차함수', '이차함수']);
     expect(cards()).toEqual(['일차함수와 그래프']);
-    // And any of them opens when asked.
-    fireEvent.click(screen.getByRole('button', { name: /이차함수/, expanded: false }));
-    expect(cards()).toContain('이차함수와 그래프');
+    // And any of them opens when asked, in place of the one that was open.
+    pick('이차함수');
+    expect(cards()).toEqual(['이차함수와 그래프']);
   });
 
   it('finds a lesson by name across the whole catalogue, whatever the scope is showing', async () => {
@@ -1184,7 +1186,8 @@ describe('the lessons screen and the size of the catalogue', () => {
     fireEvent.change(screen.getByPlaceholderText('코스나 수업 이름으로 찾기'), { target: { value: '그래프' } });
     // Two lessons in two courses neither of which is this learner's, found by their own names.
     expect(courseNames()).toEqual(['일차함수', '이차함수']);
-    expect(cards()).toEqual(['일차함수와 그래프', '이차함수와 그래프']);
+    // The first of them is open; the other is a name away in the contents.
+    expect(cards()).toEqual(['일차함수와 그래프']);
     expect(screen.getByText(/찾기는 범위와 상관없이 카탈로그 전체를 봐요/)).toBeDefined();
   });
 
@@ -1202,15 +1205,14 @@ describe('the lessons screen and the size of the catalogue', () => {
       user: { id: 'u1', displayName: '학습자', targetCourseKey: 'fractions', dailyMinutes: 10 },
       enrollments: [{ id: 'e1', lessonKey: 'fraction-meaning', lessonVersionId: 'fraction-meaning:v1', completedSectionIds: [], status: 'completed', attempts: [] }],
     });
-    const banner = window.document.querySelector('.catalog-banner')!;
-    expect(banner.textContent).toContain('1 / 1개 완료');
-    expect(banner.querySelector('.catalog-progress b')!.getAttribute('style')).toContain('width: 100%');
-    // An empty bar under every course of a catalogue nobody has started says 「you have done none of
-    // this」 thirty-eight times over. The count above it already says it once, quietly.
+    const progress = window.document.querySelector('.course-page-progress')!;
+    expect(progress.textContent).toContain('1 / 1개 완료');
+    expect(progress.querySelector('b')!.getAttribute('style')).toContain('width: 100%');
+    // An empty bar under a course nobody has started says 「you have done none of this」. The count
+    // beside it already says it once, quietly.
     fireEvent.click(screen.getByRole('button', { name: '전체 4' }));
-    const untouched = [...window.document.querySelectorAll('.catalog-banner')]
-      .find((node) => node.textContent?.includes('이차함수'))!;
-    expect(untouched.querySelector('.catalog-progress b')).toBeNull();
+    pick('이차함수');
+    expect(window.document.querySelector('.course-page-progress b')).toBeNull();
   });
 });
 

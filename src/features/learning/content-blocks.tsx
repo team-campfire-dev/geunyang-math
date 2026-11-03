@@ -41,7 +41,17 @@ export function RichText({ text, definitions = [], glossary = noGlossary, asCapt
   const open = openDefinition ? entryOf(openDefinition) : undefined;
   // Only the math renderer creates HTML. Text and authored content remain React text nodes.
   const nodes: ReactNode[] = [];
-  const pushText = (value: string, key: number) => { if (value) nodes.push(<span key={key}>{value}</span>); };
+  // A blank line between paragraphs is drawn as a short gap rather than a whole empty line. The
+  // newlines stay in the text, so a quote dragged across two paragraphs still reads as written.
+  const pushText = (value: string, key: number) => {
+    if (!value) return;
+    if (asCaption) { nodes.push(<span key={key}>{value}</span>); return; }
+    let at = key;
+    for (const piece of value.split(/(\n[ \t]*\n\s*)/)) {
+      if (piece) nodes.push(<span key={at} className={/^\n[ \t]*\n/.test(piece) ? 'paragraph-break' : undefined}>{piece}</span>);
+      at += piece.length;
+    }
+  };
   for (const segment of splitRichText(text)) {
     if (segment.kind === 'math') {
       try {
