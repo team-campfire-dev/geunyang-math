@@ -65,4 +65,14 @@ describe('the math the catalogue ships', () => {
     // The way to name a quantity inside a formula, for when prose cannot carry it.
     expect(broken('\\text{평균} = \\frac{\\text{합계}}{\\text{개수}}', false)).toBe(false);
   });
+
+  it('keeps a fraction inside a sentence at reading size, so its numbers stay above the 12px floor', () => {
+    // What is drawn, without the source KaTeX keeps beside it for screen readers.
+    const drawn = (equation: string) => {
+      const html = katex.renderToString(equation, { ...mathOptions, displayMode: false });
+      return html.slice(html.indexOf('katex-html'));
+    };
+    expect(drawn('\\frac{1}{2}')).toBe(drawn('\\dfrac{1}{2}'));
+    expect(drawn('\\tfrac{1}{2}')).not.toBe(drawn('\\frac{1}{2}'));
+  });
 });

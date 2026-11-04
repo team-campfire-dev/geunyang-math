@@ -106,12 +106,13 @@ const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (character) =>
  * A drawing's label as HTML. The stored value is the same plain string prose stores, so a scene
  * still carries no markup; only this renderer turns `$...$` into a formula, and every character
  * around it is escaped on the way. A label is never display math — it sits beside a shape, not on
- * a line of its own.
+ * a line of its own. It also keeps TeX's own small fraction: labels are placed by hand around the
+ * size they were drawn at, so the full-size fraction prose uses would push them into their shapes.
  */
 function labelHtml(text: string): string {
   return splitRichText(text).map((segment) => {
     if (segment.kind !== 'math') return escapeHtml(segment.value);
-    try { return katex.renderToString(segment.equation, { ...mathOptions, displayMode: false }); }
+    try { return katex.renderToString(segment.equation, { ...mathOptions, macros: {}, displayMode: false }); }
     catch { return escapeHtml(segment.value); }
   }).join('');
 }

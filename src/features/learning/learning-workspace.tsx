@@ -9,7 +9,8 @@ import { assertLearningResponseAccount, clearAuthReturn, GOOGLE_LOGIN_PATH, isNa
 import { DiagnosticPanel } from './diagnostic-panel';
 import { FirstStep } from './first-step';
 import { ReadinessList } from './readiness-list';
-import { StandingByCourse, WayThere } from './standing';
+import { LearnedCount, StandingByCourse, WayThere } from './standing';
+import { courseStandings } from '@/shared/standing';
 import { TeacherLinks, assignedLabel } from './teacher-links';
 import { GoogleLoginButton } from './google-login-button';
 import { ServiceFooter } from './service-footer';
@@ -23,6 +24,7 @@ import { AnswerReport, type ReportItem } from './answer-report';
 import { ConfusionSummary, MissedConcept, confusionCardId, confusionRecords } from './confusion-summary';
 import { Icon, type IconName } from './icons';
 import { AiPracticeNote, AiPracticePanel } from './ai-practice';
+import { problemIdsIn } from '@/shared/authoring';
 import { coursesLabel, maxScopeCourses, scopeKey, type PracticeScope } from '@/shared/ai-practice';
 
 type Dispatch = (action: LearningAction) => Promise<ActionResponse>;
@@ -1121,6 +1123,7 @@ export function LearningWorkspace() {
     // learner's own, or else the first listed. Nothing else draws its lessons.
     const current = shown.find((course) => course.key === selectedCourse)
       ?? shown.find((course) => mine.has(course.key)) ?? shown[0];
+    const standings = courseStandings({ lessons, courses, readiness: state?.plan.readiness ?? [] });
     const facts = (course: PublicCourse) => {
       const lessonsHere = held(course);
       return { lessonsHere,
@@ -1185,12 +1188,13 @@ export function LearningWorkspace() {
             {byStage(shown, track).map((year) => <div key={year.stage ?? track}>
               {year.stage && <span className="course-index-stage">{courseStageLabels[year.stage]}</span>}
               <ul>{year.courses.map((course) => {
-                const { lessonsHere, complete } = facts(course);
+                const { lessonsHere } = facts(course);
+                const learned = standings.get(course.key);
                 return <li key={course.key}><button className={course.key === current.key ? 'active' : ''} aria-current={course.key === current.key ? 'true' : undefined}
                   onClick={() => { setSelectedCourse(course.key); setCourseIndexOpen(false); }}>
                   <span className="course-index-name">{course.title}</span>
                   {mine.has(course.key) && <em aria-label="내 과정" />}
-                  <small>{state ? `${complete} / ${lessonsHere.length}` : lessonsHere.length}</small>
+                  <small>{state && learned ? <LearnedCount {...learned} /> : lessonsHere.length}</small>
                 </button></li>;
               })}</ul>
             </div>)}
@@ -1329,7 +1333,7 @@ export function LearningWorkspace() {
           <div className="section-heading"><div><span className="eyebrow">배움의 흐름</span><h2 id="history-courses-title">코스별 학습 상태</h2></div></div>
           <p className="history-description">코스를 펼치면 직접 풀어서 쌓인 개념별 기록을 볼 수 있어요. 놓친 개념은 눌러서 그때의 풀이와 설명을 봐요.</p>
           <details className="history-guide"><summary>학습 상태를 읽는 기준</summary><p>「스스로 해결」은 힌트 없이 푼 기록, 「꾸준히 기억」은 이후 복습에서도 확인한 기록이에요. 「놓침」은 서로 다른 두 문제 이상에서 첫 답을 놓친 기록이에요. 아직 확인 전이라고 해서 모른다는 뜻은 아니에요.</p></details>
-          <StandingByCourse courses={courses} lessons={lessons} concepts={state.concepts} busy={busy}
+          <StandingByCourse courses={courses} lessons={lessons} concepts={state.concepts} readiness={state.plan.readiness} busy={busy}
             missed={new Map(state.confusion.concepts.filter(item => item.state === 'missed').map(item => [item.key, item.evidenceIds.filter(id => records.get(id)?.first.status === 'incorrect').length]))}
             renderMissed={key => { const concept = state.confusion.concepts.find(item => item.key === key); return concept && <MissedConcept concept={concept} records={records} busy={busy} onOpenLesson={lesson => void openLesson(lesson)} />; }} />
         </section>
@@ -1404,6 +1408,12 @@ export function LearningWorkspace() {
       // One column to read down, the way a page is read. The steps are a bar across the top rather
       // than a list beside the text, so the text keeps the width, and moving on stays at the foot of
       // the screen however long the step is.
+      // A step with questions in it has not been understood because somebody pressed a button. Moving on
+      // stays possible, since the pace is theirs, but it is only the black button once the questions are answered.
+      const stepProblems = problemIdsIn(section.contentBlocks);
+      const answering = currentEnrollment?.status === 'active' && stepProblems.length > 0;
+      const answeredHere = stepProblems.filter((id) => currentEnrollment?.attempts.some((item) => item.problemVersionId === id && item.result.status !== 'invalid')).length;
+      const skipping = answering && answeredHere < stepProblems.length;
       return <div className="lesson-reading">
         <div className="lesson-header">
           <button className="back-button" onClick={() => navigate('lessons')}><Icon name="back" size={17} />수업 목록</button>
@@ -1425,9 +1435,9 @@ export function LearningWorkspace() {
         {unsupported && <div className="error-banner" role="alert">필수 콘텐츠를 표시할 수 없어 단계 완료를 멈췄어요. 지원되는 앱 버전에서 다시 열어 주세요.</div>}
         <div className="lesson-controls">
           <button className="button secondary" disabled={sectionIndex === 0 || busy} onClick={() => setSectionIndex((value) => value - 1)}><Icon name="back" size={17} />이전</button>
-          <span>{sectionIndex + 1} / {document.sections.length}</span>
+          {answering ? <span className="lesson-answered">{stepProblems.length}문제 중 {answeredHere}문제 답했어요</span> : <span>{sectionIndex + 1} / {document.sections.length}</span>}
           {!currentEnrollment && isLast ? <button className="button primary" disabled={busy || unsupported} onClick={() => void startLesson()}>수업 시작하기<Icon name="arrow" size={17} /></button>
-            : <button className="button primary" disabled={busy || unsupported} onClick={() => void nextSection()}>{busy ? '저장 중…' : isLast ? completed ? '내 학습으로' : '수업 완료하기' : currentEnrollment?.status === 'active' ? '이해했어요, 다음으로' : '다음 단계'}<Icon name="arrow" size={17} /></button>}
+            : <button className={`button ${skipping ? 'secondary' : 'primary'} lesson-next`} disabled={busy || unsupported} onClick={() => void nextSection()}>{busy ? '저장 중…' : isLast ? completed ? '내 학습으로' : '수업 완료하기' : currentEnrollment?.status === 'active' ? answering ? skipping ? '건너뛰고 다음으로' : '다음으로' : '이해했어요, 다음으로' : '다음 단계'}<Icon name="arrow" size={17} /></button>}
         </div>
         {lessonSets.length > 0 && <button className="text-button lesson-sets" disabled={busy} onClick={() => openCourseSets(document.courseKey, document.lessonKey)}><Icon name="pencil" size={14} />이 수업의 문제집 {lessonSets.length}개</button>}
       </div>;
