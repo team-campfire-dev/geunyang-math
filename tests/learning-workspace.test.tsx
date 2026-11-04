@@ -135,7 +135,7 @@ const openLesson = async () => {
   fireEvent.click(screen.getAllByRole('button', { name: /분수의 의미/ })[0]);
   await until(() => expect(screen.getByRole('heading', { level: 1, name: '분수의 의미' })).toBeDefined());
 };
-const stepCount = () => document_text('.lesson-controls span');
+const stepCount = () => globalThis.document.querySelector('.lesson-where')?.textContent?.split(' · ')[0];
 const document_text = (selector: string) => window.document.querySelector(selector)!.textContent;
 const statusPill = () => window.document.querySelector('.lesson-header .pill')!.textContent;
 
@@ -219,6 +219,41 @@ describe('a step is finished when the server says so', () => {
     await tick();
     expect(server.of('lesson.complete')).toHaveLength(0);
     expect(screen.queryByText('오늘의 이해가 하나 더 쌓였어요.')).toBeNull();
+  });
+});
+
+describe('moving on from a step with questions in it', () => {
+  const asking: ContentBlock = { blockId: 'set0', kind: 'core.problem_set', typeVersion: 2, required: true, payload: { problemVersionIds: [problemId] } };
+  const open = async (attempts: AttemptView[]) => {
+    server = serve({ lesson: document([asking]), state: learningState({ enrollments: [{ id: 'e1', lessonKey, lessonVersionId: 'fraction-meaning:v2', completedSectionIds: [], status: 'active', attempts }] }) });
+    await openLesson();
+  };
+  const attempt = (status: 'incorrect' | 'invalid'): AttemptView => ({ id: 't1', problemVersionId: problemId, answer: '3', result: { status, message: '다시 살펴봐요.', assisted: false }, hintUsed: false });
+
+  it('stays possible before answering, but is not the black button and does not claim understanding', async () => {
+    await open([]);
+    expect(screen.queryByRole('button', { name: /이해했어요/ })).toBeNull();
+    const skip = screen.getByRole('button', { name: /건너뛰고 다음으로/ });
+    expect(skip.className).toContain('secondary');
+    expect(skip.hasAttribute('disabled')).toBe(false);
+    expect(screen.getByText('1문제 중 0문제 답했어요')).toBeDefined();
+  });
+
+  it('becomes the black button once every question is answered, right or wrong', async () => {
+    await open([attempt('incorrect')]);
+    expect(screen.getByRole('button', { name: /^다음으로/ }).className).toContain('primary');
+    expect(screen.getByText('1문제 중 1문제 답했어요')).toBeDefined();
+  });
+
+  it('does not count an answer that could not be read', async () => {
+    await open([attempt('invalid')]);
+    expect(screen.getByRole('button', { name: /건너뛰고 다음으로/ })).toBeDefined();
+  });
+
+  it('keeps saying 이해했어요 on a step that only asks for reading', async () => {
+    server = serve({ state: enrolled() });
+    await openLesson();
+    expect(screen.getByRole('button', { name: /이해했어요, 다음으로/ }).className).toContain('primary');
   });
 });
 

@@ -1,4 +1,4 @@
-import type { PublicCourse, PublicLesson } from './api';
+import type { ConceptReadiness, PublicCourse, PublicLesson } from './api';
 
 /**
  * Where a concept lives: the first course, in the catalogue's order, whose lessons teach it.
@@ -50,4 +50,17 @@ export function conceptsByCourse(input: {
     const keys = held.get(course.key);
     return keys?.length ? [{ course, conceptKeys: keys }] : [];
   });
+}
+
+/**
+ * How many of each course's concepts a learner has learned: the number every screen shows for a course.
+ * The whole course rather than the part on somebody's way, so it does not change with what they came for.
+ */
+export function courseStandings(input: {
+  lessons: PublicLesson[]; courses: PublicCourse[]; readiness: Pick<ConceptReadiness, 'key' | 'readiness'>[];
+}): Map<string, { ready: number; total: number }> {
+  const { lessons, courses, readiness } = input;
+  const ready = new Set(readiness.filter((item) => item.readiness === 'ready').map((item) => item.key));
+  return new Map(conceptsByCourse({ lessons, courses, conceptKeys: readiness.map((item) => item.key) })
+    .map(({ course, conceptKeys }) => [course.key, { ready: conceptKeys.filter((key) => ready.has(key)).length, total: conceptKeys.length }]));
 }

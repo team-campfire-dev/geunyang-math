@@ -5,8 +5,12 @@
  * the editor's preview. `strict: 'error'` is what refuses a Hangul word standing bare in math mode:
  * KaTeX cannot typeset it, and with `throwOnError: false` it draws the TeX source in red instead of
  * failing loudly. Korean belongs in prose, or inside `\\text{}` when a formula must name a quantity.
+ *
+ * `\frac` draws at full size everywhere. Left alone, TeX shrinks a fraction inside a sentence to about
+ * 70%, which put the numbers a learner is asked to read below the 12px floor, in the lessons about
+ * fractions of all places. `\tfrac` stays available for a small one on purpose.
  */
-export const mathOptions = { throwOnError: false, trust: false, strict: 'error' as const, maxExpand: 1000 };
+export const mathOptions = { throwOnError: false, trust: false, strict: 'error' as const, maxExpand: 1000, macros: { '\\frac': '\\dfrac' } };
 
 export type RichTextSegment =
   | { kind: 'text'; value: string; start: number }

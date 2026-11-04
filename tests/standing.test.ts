@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { conceptsByCourse } from '@/shared/standing';
+import { conceptsByCourse, courseStandings } from '@/shared/standing';
 import type { PublicCourse, PublicLesson } from '@/shared/api';
 
 const lesson = (lessonKey: string, courseKey: string, conceptKeys: string[]): PublicLesson =>
@@ -41,5 +41,19 @@ describe('gathering concepts into the courses that teach them', () => {
   it('drops a concept no lesson teaches, because it is a word rather than a step', () => {
     const grouped = conceptsByCourse({ lessons, courses, conceptKeys: ['fraction', 'term.only-in-the-glossary'] });
     expect(grouped.flatMap((entry) => entry.conceptKeys)).toEqual(['fraction']);
+  });
+});
+
+describe('courseStandings', () => {
+  const readiness = (ready: string[], all = ['fraction', 'denominator', 'fraction-add']) =>
+    all.map((key) => ({ key, readiness: ready.includes(key) ? 'ready' as const : 'needs-practice' as const }));
+
+  it('counts what has been learned out of the whole course, and only `ready` counts as learned', () => {
+    const standings = courseStandings({ lessons, courses, readiness: readiness(['fraction', 'fraction-add']) });
+    expect(standings.get('fractions')).toEqual({ ready: 2, total: 3 });
+  });
+
+  it('leaves out a course nothing can be said about', () => {
+    expect(courseStandings({ lessons, courses, readiness: readiness([]) }).has('integers')).toBe(false);
   });
 });

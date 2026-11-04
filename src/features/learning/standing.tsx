@@ -2,11 +2,21 @@
 
 import { useState, type ReactNode } from 'react';
 import { conceptStateLabels, type ConceptReadiness, type ConceptState, type PublicCourse, type PublicLesson } from '@/shared/api';
-import { conceptsByCourse } from '@/shared/standing';
+import { conceptsByCourse, courseStandings } from '@/shared/standing';
 import { Icon } from './icons';
 
 /** How many courses of the way ahead are drawn before the rest are counted instead of named. */
 const shownAhead = 5;
+
+/**
+ * How far a learner is in a course, and the one way it is said anywhere a course is listed. It used to
+ * be said three ways: concepts on the way on one screen, lessons finished on the next, concepts with
+ * any record on the third, so the same course read 4/5, 3/3 and 5/5 with no word for what was counted.
+ */
+export function LearnedCount({ ready, total }: { ready: number; total: number }) {
+  return <span className="learned-count"><span>익힌 개념 {ready}/{total}</span>
+    <span className="learned-bar" aria-hidden="true"><i style={{ width: `${total ? Math.round((ready / total) * 100) : 0}%` }} /></span></span>;
+}
 
 /**
  * How far along the way to what a learner came for they are, course by course.
@@ -42,6 +52,9 @@ export function WayThere({ courses, lessons, readiness, onTheWay, targets, onCho
     ready: entry.conceptKeys.filter((key) => settled.get(key) === 'ready').length,
   }));
   if (!counted.length) return null;
+  // Which courses are left is a question about the way. How far along one is, is the same count as
+  // everywhere else, so a course does not read differently here for being on somebody's path.
+  const standings = courseStandings({ lessons, courses, readiness });
   const behind = counted.filter((entry) => entry.ready === entry.total);
   const ahead = counted.filter((entry) => entry.ready < entry.total);
   const labelOf = (key: string) => targets.find((target) => target.key === key)?.label;
@@ -70,15 +83,11 @@ export function WayThere({ courses, lessons, readiness, onTheWay, targets, onCho
         {/* The gap the count stands in for, drawn where it falls rather than after everything. */}
         {hidden > 0 && index === gapAt && <span className="way-gap" aria-label={`사이에 코스 ${hidden}개`}>… {hidden}개</span>}
         <span className="way-name">{entry.course.title}{labelOf(entry.course.key) && <em>{labelOf(entry.course.key)}</em>}</span>
-        <span className="way-bar" aria-hidden="true"><i style={{ width: `${Math.round((entry.ready / entry.total) * 100)}%` }} /></span>
-        <span className="way-count">개념 {entry.total}개 중 {entry.ready}개</span>
+        <LearnedCount {...(standings.get(entry.course.key) ?? { ready: entry.ready, total: entry.total })} />
       </li>)}
     </ol>
   </section>;
 }
-
-/** The four states in the order they are earned, so a bar reads left to right as progress. */
-const order: ConceptState[] = ['retained', 'independent', 'practicing', 'unknown'];
 
 /**
  * What the record says, course by course.
@@ -88,24 +97,26 @@ const order: ConceptState[] = ['retained', 'independent', 'practicing', 'unknown
  * still here — a row opens onto exactly the chips that were there before — but they are something
  * to go and read rather than something to scroll past on the way to everything else.
  */
-export function StandingByCourse({ courses, lessons, concepts, busy = false, missed = new Map(), renderMissed }: {
+export function StandingByCourse({ courses, lessons, concepts, readiness, busy = false, missed = new Map(), renderMissed }: {
   courses: PublicCourse[]; lessons: PublicLesson[];
-  concepts: { key: string; label: string; state: ConceptState }[]; busy?: boolean;
+  concepts: { key: string; label: string; state: ConceptState }[];
+  /** What a row counts. `concepts` is what it opens onto, and what says whether a course has been touched. */
+  readiness: ConceptReadiness[]; busy?: boolean;
   /** Concepts whose first answer was missed on different questions, with how many. */
   missed?: Map<string, number>; renderMissed?: (key: string) => ReactNode;
 }) {
   const [open, setOpen] = useState<string | null>(null);
   const state = new Map(concepts.map((concept) => [concept.key, concept]));
+  const standings = courseStandings({ lessons, courses, readiness });
   const rows = conceptsByCourse({ lessons, courses, conceptKeys: concepts.map((concept) => concept.key) }).map((entry) => {
     const held = entry.conceptKeys.flatMap((key) => state.get(key) ?? []);
-    const count = (name: ConceptState) => held.filter((concept) => concept.state === name).length;
     return { course: entry.course, held, missed: held.filter((concept) => missed.has(concept.key)).length,
-      counts: Object.fromEntries(order.map((name) => [name, count(name)])) as Record<ConceptState, number> };
+      unknown: held.filter((concept) => concept.state === 'unknown').length };
   });
   if (!rows.length) return <p className="empty-inline">아직 학습 상태를 말할 개념이 없어요.</p>;
   // A course where nothing has been touched says the same thing as every other untouched course, so
   // they are counted together at the end rather than filling the list with the same sentence.
-  const started = (row: typeof rows[number]) => row.counts.unknown < row.held.length || row.missed > 0;
+  const started = (row: typeof rows[number]) => row.unknown < row.held.length || row.missed > 0;
   const touched = rows.filter(started);
   const untouched = rows.filter((row) => !started(row));
   const row = (entry: typeof rows[number]) => {
@@ -114,11 +125,7 @@ export function StandingByCourse({ courses, lessons, concepts, busy = false, mis
       <h3><button aria-expanded={shown} aria-controls={`standing-${entry.course.key}`} disabled={busy}
         onClick={() => setOpen(shown ? null : entry.course.key)}>
         <span className="standing-name">{entry.course.title}{entry.missed > 0 && <em className="standing-missed">놓친 개념 {entry.missed}</em>}</span>
-        <span className="standing-bar" aria-hidden="true">
-          {order.map((name) => entry.counts[name] > 0
-            && <i key={name} className={name} style={{ flexGrow: entry.counts[name] }} />)}
-        </span>
-        <span className="standing-count">{entry.held.length - entry.counts.unknown} / {entry.held.length}</span>
+        <LearnedCount {...(standings.get(entry.course.key) ?? { ready: 0, total: entry.held.length })} />
         <Icon name="chevron" size={16} />
       </button></h3>
       {shown && <div className="concept-list" id={`standing-${entry.course.key}`}>{entry.held.map((concept) => {

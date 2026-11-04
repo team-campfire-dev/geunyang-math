@@ -41,8 +41,14 @@ describe('the way to what a learner came for', () => {
   it('says how much of a course is settled rather than only whether it is', () => {
     path({ readiness: ready(['integers-a']) });
     const half = [...document.querySelectorAll('.way-list li')].find((node) => node.textContent?.includes('정수와 유리수'))!;
-    expect(half.textContent).toContain('개념 2개 중 1개');
-    expect(half.querySelector('.way-bar i')!.getAttribute('style')).toContain('width: 50%');
+    expect(half.textContent).toContain('익힌 개념 1/2');
+    expect(half.querySelector('.learned-bar i')!.getAttribute('style')).toContain('width: 50%');
+  });
+
+  it('counts the whole course, so it reads the same here as on the other screens', () => {
+    // Only one of 정수와 유리수's two concepts is on the way; the course still counts as two.
+    path({ onTheWay: ['integers-a'], targets: [{ key: 'integers', label: '배우려는 과정' }], readiness: ready([]) });
+    expect(document.querySelector('.way-list li')!.textContent).toContain('익힌 개념 0/2');
   });
 
   it('counts the middle of a long way instead of naming all of it, and still shows where it ends', () => {
@@ -86,8 +92,8 @@ describe('the way to what a learner came for', () => {
 describe('the standing a learner has, course by course', () => {
   const concepts = (over: Record<string, ConceptState> = {}) =>
     lessons.flatMap((item) => item.conceptKeys).map((key) => ({ key, label: `개념 ${key}`, state: over[key] ?? 'unknown' as ConceptState }));
-  const standing = (over: Record<string, ConceptState> = {}) => render(
-    <StandingByCourse courses={courses} lessons={lessons} concepts={concepts(over)} />);
+  const standing = (over: Record<string, ConceptState> = {}, learned: string[] = []) => render(
+    <StandingByCourse courses={courses} lessons={lessons} concepts={concepts(over)} readiness={ready(learned)} />);
   const rowNames = () => [...document.querySelectorAll('.standing-courses')[0].querySelectorAll('.standing-name')].map((node) => node.textContent);
 
   it('folds away the courses nothing has been touched in, instead of repeating the same row', () => {
@@ -118,16 +124,16 @@ describe('the standing a learner has, course by course', () => {
     expect(list.textContent).toContain('연습하는 중');
   });
 
-  it('counts a course by what is no longer unknown in it', () => {
-    standing({ 'ratios-a': 'independent' });
+  it('counts a course by what has been learned in it, the same way the other screens do', () => {
+    // Two concepts have a record and one of them is learned: the count is the learned one.
+    standing({ 'ratios-a': 'independent', 'ratios-b': 'practicing' }, ['ratios-a']);
     const row = [...document.querySelectorAll('.standing-course')].find((node) => node.textContent?.includes('비와 비율'))!;
-    expect(row.querySelector('.standing-count')!.textContent).toBe('1 / 2');
-    // One bar segment per state that has anything in it, weighted by how many.
-    expect([...row.querySelectorAll('.standing-bar i')].map((node) => node.className)).toEqual(['independent', 'unknown']);
+    expect(row.querySelector('.learned-count')!.textContent).toBe('익힌 개념 1/2');
+    expect(row.querySelector('.learned-bar i')!.getAttribute('style')).toContain('width: 50%');
   });
 
   it('marks the courses holding a missed concept, and opens that concept onto what was missed', () => {
-    render(<StandingByCourse courses={courses} lessons={lessons} concepts={concepts()}
+    render(<StandingByCourse courses={courses} lessons={lessons} concepts={concepts()} readiness={ready([])}
       missed={new Map([['equations-b', 3]])} renderMissed={(key) => <p>{key}의 풀이</p>} />);
     // Missed is not untouched: the course stands with the ones started, and says how many it holds.
     expect(rowNames()).toEqual(['일차방정식놓친 개념 1']);

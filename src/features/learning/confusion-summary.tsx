@@ -72,7 +72,7 @@ function MistakeCard({ problem, busy, onOpenLesson }: { problem: ConfusionEviden
   return <article className="mistake-card">
     <div className="mistake-prompt"><ContentBlocks blocks={problem.promptContent} /></div>
     <div className="mistake-answers">
-      <div className="is-wrong"><small>첫 답</small><Written attempt={problem.first} problem={problem} /><Icon name="close" size={14} /></div>
+      <div className="is-wrong"><small>첫 답</small><div className="mistake-struck"><Written attempt={problem.first} problem={problem} /></div><Icon name="close" size={14} /></div>
       {fixed && <div className="is-right"><small>다시 쓴 답</small><Written attempt={fixed} problem={problem} /><Icon name="check" size={14} /></div>}
     </div>
     {problem.first.signal && <p className="mistake-signal">답에서 읽은 단서: <b>{problem.first.signal.label}</b></p>}

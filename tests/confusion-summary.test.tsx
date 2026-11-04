@@ -158,4 +158,10 @@ describe('from a summary to explanation and practice', () => {
     expect(screen.queryByText('sqrt(8)/2')).toBeNull();
     expect(screen.getByText('첫 답')).toBeTruthy();
   });
+  it('strikes the first answer in the note, never its label', () => {
+    render(<ConfusionSummary summary={fixture()} {...props()} />);
+    expect(screen.getByText('첫 답').closest('.mistake-struck')).toBeNull();
+    expect(screen.getByText('분모끼리 더하기').closest('.mistake-struck')).not.toBeNull();
+    expect(screen.getByText('통분해서 더하기').closest('.mistake-struck')).toBeNull();
+  });
 });
